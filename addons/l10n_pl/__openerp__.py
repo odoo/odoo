@@ -47,7 +47,5 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
               'l10n_chart_pl_wizard.xml'
     ],
     'auto_install': False,
-    'installable': True,
+    'installable': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

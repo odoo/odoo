@@ -43,8 +43,5 @@
         'wizard/account_wizard.xml',
     ],
     'demo': [],
-    'installable': True,
-    'images': [],
+    'installable': False,
 }
-
-

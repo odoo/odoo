@@ -1,4 +1,4 @@
-﻿# -*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
@@ -30,7 +30,5 @@
     "data" : ["account_chart.xml",
                     'account_tax.xml','l10n_chart_no_wizard.xml'],
     "active": False,
-    "installable": True
+    "installable": False
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

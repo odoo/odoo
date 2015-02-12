@@ -40,8 +40,5 @@ Accounting chart and localization for Ecuador.
         'l10n_chart_ec_wizard.xml',
     ],
     'demo': [],
-    'installable': True,
-    'images': ['images/config_chart_l10n_ec.jpeg','images/l10n_ec_chart.jpeg'],
+    'installable': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

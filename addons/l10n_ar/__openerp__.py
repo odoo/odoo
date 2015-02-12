@@ -39,7 +39,5 @@ Plan contable argentino e impuestos de acuerdo a disposiciones vigentes
     ],
     'demo': [],
     'active': False,
-    'installable': True,
-    'images': ['images/config_chart_l10n_ar.jpeg','images/l10n_ar_chart.jpeg'],
+    'installable': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

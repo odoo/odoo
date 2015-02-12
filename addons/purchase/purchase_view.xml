@@ -90,7 +90,7 @@
         <field name="name">On Draft Invoices</field>
         <field name="res_model">account.invoice</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,calendar,graph</field>
+        <field name="view_mode">tree,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
         <field name="domain">[('type','=','in_invoice')]</field>
         <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
@@ -163,13 +163,23 @@
                 </calendar>
             </field>
         </record>
+        <record model="ir.ui.view" id="purchase_order_pivot">
+            <field name="name">purchase.order.pivot</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <pivot string="Purchase Order" display_quantity="True">
+                    <field name="partner_id" type="row"/>
+                    <field name="amount_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
         <record model="ir.ui.view" id="purchase_order_graph">
             <field name="name">purchase.order.graph</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <graph string="Purchase Order" type="bar">
+                <graph string="Purchase Order">
                     <field name="partner_id"/>
-                    <field name="amount_total" operator="+" widget="monetary"/>
+                    <field name="amount_total" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -216,12 +226,12 @@
                         <group>
                             <field name="date_order"/>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code','=','incoming')]" widget="selection" context="{'special_shortened_wh_name': True}" groups="stock.group_locations"/>
-                            <field name="related_location_id" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code','=','incoming')]" options="{'no_create': True}" context="{'special_shortened_wh_name': True}" groups="stock.group_locations"/>
+                            <field name="related_usage" invisible="1"/>
                             <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id, context)"
-                                attrs="{'invisible':['|', ('picking_type_id','=',False), ('related_location_id','!=', False)], 
-                                'required': [('picking_type_id','!=',False), ('related_location_id','=', False)]}" 
+                                attrs="{'invisible':[('related_usage','!=','customer')],
+                                'required': [('related_usage','=', 'customer')]}"
                                 groups="stock.group_locations"/>
                         </group>
                     </group>
@@ -229,12 +239,19 @@
                         <page string="Products">
                             <field name="order_line">
                                 <tree string="Purchase Order Lines" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,False,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)" context="{'partner_id': parent.partner_id}"/>
+                                    <field name="product_id"
+                                           on_change="onchange_product_id(parent.pricelist_id, product_id, 0, False,
+                                                parent.partner_id, parent.date_order, parent.fiscal_position, date_planned,
+                                                name, False, parent.state, True, context)"
+                                           context="{'partner_id': parent.partner_id}"/>
                                     <field name="name"/>
                                     <field name="date_planned"/>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting" domain="[('type','not in',('view','template'))]"/>
-                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
+                                    <field name="product_qty"
+                                           on_change="onchange_product_id(parent.pricelist_id, product_id, product_qty,
+                                                product_uom, parent.partner_id, parent.date_order, parent.fiscal_position,
+                                                date_planned, name, False, parent.state, False, context)"/>
                                     <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
                                     <field name="price_unit"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
@@ -253,11 +270,10 @@
                                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </group>
                             <div class="oe_clear"/>
-                            <field name="notes" class="oe_inline" placeholder="Terms and conditions..."/>
+                            <field name="notes" class="oe_inline" placeholder="An administrator can set up default Terms and conditions in your Company settings."/>
                         </page>
-                        <page string="RFQ &amp; Bid">
+                        <page string="Bid">
                             <group>
-                                <field name="incoterm_id"/>
                                 <field name="bid_date"/>
                                 <field name="bid_validity"/>
                             </group>
@@ -268,6 +284,7 @@
                                     <field name="minimum_planned_date"/>
                                     <field name="location_id" groups="stock.group_locations"/>
                                     <field name="shipped" groups="base.group_no_one"/>
+                                    <field name="incoterm_id"/>
                                 </group>
                                 <group>
                                     <field name="invoice_method"/>
@@ -347,7 +364,7 @@
                     <field name="name" string="Reference"/>
                     <field name="date_order" />
                     <field name="partner_id"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="minimum_planned_date" invisible="context.get('quotation_only', False)"/>
                     <field name="origin"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary"/>
@@ -363,7 +380,7 @@
             <field name="res_model">purchase.order</field>
             <field name="context">{}</field>
             <field name="domain">[('state','in',('draft','sent','bid','cancel', 'confirmed'))]</field>
-            <field name="view_mode">tree,form,graph,calendar</field>
+            <field name="view_mode">tree,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -386,7 +403,7 @@
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="view_mode">tree,form,graph,calendar</field>
+            <field name="view_mode">tree,form,pivot,graph,calendar</field>
             <field name="context">{}</field>
             <field name="domain">[('state','not in',('draft','sent','bid', 'confirmed'))]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
@@ -412,10 +429,17 @@
                         <group>
                             <group>
                                 <field name="product_id"
-                                    on_change="onchange_product_id(parent.pricelist_id,product_id,0,False,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,context)" context="{'partner_id': parent.partner_id}"/>
+                                       on_change="onchange_product_id(parent.pricelist_id, product_id, 0, False,
+                                            parent.partner_id, parent.date_order, parent.fiscal_position, date_planned,
+                                            name, False, 'draft', True, context)"
+                                       context="{'partner_id': parent.partner_id}"/>
                                 <label for="product_qty"/>
                                 <div>
-                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,'draft',context)" class="oe_inline"/>
+                                    <field name="product_qty"
+                                           on_change="onchange_product_id(parent.pricelist_id, product_id, product_qty,
+                                                product_uom, parent.partner_id, parent.date_order, parent.fiscal_position,
+                                                date_planned, name, False, 'draft', True, context)"
+                                           class="oe_inline"/>
                                     <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,'draft',context)" class="oe_inline"/>
                                 </div>
                                 <field name="price_unit"/>
@@ -424,7 +448,7 @@
                                 <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="date_planned" widget="date"/>
                                 <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>
                         </group>
                         <notebook>
@@ -489,7 +513,7 @@
                                 <field name="taxes_id" widget="many2many_tags"
                                     domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="date_planned" widget="date" readonly="1"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting"/>
                                 <field name="invoiced"/>
                             </group>
@@ -599,7 +623,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_purchase_line_product_tree">
-            <field name="context">{'search_default_product_id': active_id, 'default_product_id': active_id}</field>
+            <field name="context">{}</field><!-- force empty -->
             <field name="name">Purchases</field>
             <field name="res_model">purchase.order.line</field>
             <field name="view_id" ref="purchase_order_line_tree"/>
@@ -641,7 +665,7 @@
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
+                   <button class="oe_inline oe_stat_button" name="action_view_purchases" type="object"
                        icon="fa-shopping-cart">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>

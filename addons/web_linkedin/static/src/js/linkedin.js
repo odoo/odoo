@@ -525,4 +525,3 @@ openerp.web_linkedin = function(instance) {
         },
     });
 };
-// vim:et fdc=0 fdl=0:

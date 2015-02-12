@@ -40,7 +40,6 @@ internal transfer document is needed.
 """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/warehouse',
-    'images': [],
     'depends': ['purchase', 'sale_stock'],
     'data': ['stock_dropshipping.xml'],
     'test': [
@@ -53,4 +52,3 @@ internal transfer document is needed.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

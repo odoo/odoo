@@ -48,7 +48,6 @@ Three reports are available:
 """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/accounting',
-    'images': ['images/budget.jpeg','images/budgetary_position.jpeg'],
     'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',
@@ -73,5 +72,3 @@ Three reports are available:
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

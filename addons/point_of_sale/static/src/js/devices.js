@@ -373,11 +373,14 @@ openerp.point_of_sale.load_devices = function load_devices(instance,module){ //m
         scale_read: function(){
             var self = this;
             var ret = new $.Deferred();
+            if (self.use_debug_weight) {
+                return (new $.Deferred()).resolve({weight:this.debug_weight, unit:'Kg', info:'ok'});
+            }
             this.message('scale_read',{})
                 .then(function(weight){
-                    ret.resolve(self.use_debug_weight ? self.debug_weight : weight);
+                    ret.resolve(weight);
                 }, function(){ //failed to read weight
-                    ret.resolve(self.use_debug_weight ? self.debug_weight : {weight:0.0, unit:'Kg', info:'ok'});
+                    ret.resolve({weight:0.0, unit:'Kg', info:'ok'});
                 });
             return ret;
         },
@@ -416,9 +419,9 @@ openerp.point_of_sale.load_devices = function load_devices(instance,module){ //m
                             send_printing_job();
                         },function(error){
                             if (error) {
-                                self.pos.pos_widget.screen_selector.show_popup('error-traceback',{
-                                    'message': _t('Printing Error: ') + error.data.message,
-                                    'comment': error.data.debug,
+                                self.pos.chrome.screen_selector.show_popup('error-traceback',{
+                                    'title': _t('Printing Error: ') + error.data.message,
+                                    'body':  error.data.debug,
                                 });
                                 return;
                             }
@@ -507,6 +510,9 @@ openerp.point_of_sale.load_devices = function load_devices(instance,module){ //m
         },
 
         scan: function(code){
+            if (!code) {
+                return;
+            }
             var parsed_result = this.barcode_parser.parse_barcode(code);
             
             if(parsed_result.type in {'product':'', 'weight':'', 'price':''}){    //barcode is associated to a product

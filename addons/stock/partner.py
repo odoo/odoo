@@ -35,5 +35,3 @@ class res_partner(osv.osv):
           string="Supplier Location",
           help="This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -3,6 +3,7 @@
 from hashlib import sha1
 import logging
 from lxml import etree, objectify
+from openerp.tools.translate import _
 from pprint import pformat
 import time
 from urllib import urlencode
@@ -196,27 +197,27 @@ class PaymentTxOgone(osv.Model):
         transaction record. """
         reference, pay_id, shasign = data.get('orderID'), data.get('PAYID'), data.get('SHASIGN')
         if not reference or not pay_id or not shasign:
-            error_msg = 'Ogone: received data with missing reference (%s) or pay_id (%s) or shashign (%s)' % (reference, pay_id, shasign)
-            _logger.error(error_msg)
+            error_msg = _('Ogone: received data with missing reference (%s) or pay_id (%s) or shashign (%s)') % (reference, pay_id, shasign)
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
 
         # find tx -> @TDENOTE use paytid ?
         tx_ids = self.search(cr, uid, [('reference', '=', reference)], context=context)
         if not tx_ids or len(tx_ids) > 1:
-            error_msg = 'Ogone: received data for reference %s' % (reference)
+            error_msg = _('Ogone: received data for reference %s') % (reference)
             if not tx_ids:
-                error_msg += '; no order found'
+                error_msg += _('; no order found')
             else:
-                error_msg += '; multiple order found'
-            _logger.error(error_msg)
+                error_msg += _('; multiple order found')
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
         tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
 
         # verify shasign
         shasign_check = self.pool['payment.acquirer']._ogone_generate_shasign(tx.acquirer_id, 'out', data)
         if shasign_check.upper() != shasign.upper():
-            error_msg = 'Ogone: invalid shasign, received %s, computed %s, for data %s' % (shasign, shasign_check, data)
-            _logger.error(error_msg)
+            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (shasign, shasign_check, data)
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
 
         return tx
@@ -224,10 +225,10 @@ class PaymentTxOgone(osv.Model):
     def _ogone_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
         invalid_parameters = []
 
-        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
+        # TODO: txn_id: should be false at draft, set afterwards, and verified with txn details
         if tx.acquirer_reference and data.get('PAYID') != tx.acquirer_reference:
             invalid_parameters.append(('PAYID', data.get('PAYID'), tx.acquirer_reference))
-        # check what is buyed
+        # check what is bought
         if float_compare(float(data.get('amount', '0.0')), tx.amount, 2) != 0:
             invalid_parameters.append(('amount', data.get('amount'), '%.2f' % tx.amount))
         if data.get('currency') != tx.currency_id.name:
@@ -237,7 +238,7 @@ class PaymentTxOgone(osv.Model):
 
     def _ogone_form_validate(self, cr, uid, tx, data, context=None):
         if tx.state == 'done':
-            _logger.warning('Ogone: trying to validate an already validated tx (ref %s)' % tx.reference)
+            _logger.info('Ogone: trying to validate an already validated tx (ref %s)', tx.reference)
             return True
 
         status = int(data.get('STATUS', '0'))
@@ -330,7 +331,7 @@ class PaymentTxOgone(osv.Model):
         if error_code:
             error_msg = ogone.OGONE_ERROR_MAP.get(error_code)
             error = '%s\n\n%s: %s' % (error_str, error_code, error_msg)
-            _logger.error(error)
+            _logger.info(error)
             raise Exception(error)      # TODO specific exception
 
         tx.write({'partner_reference': alias})

@@ -140,6 +140,3 @@ class pos_order(osv.osv):
             
              
     
-
-
-

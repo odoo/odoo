@@ -72,8 +72,5 @@ configuration of their taxes and fiscal positions manually.
     'test': ['test/l10n_fr_report.yml'],
     'demo': [],
     'auto_install': False,
-    'installable': True,
-    'images': ['images/config_chart_l10n_fr.jpeg','images/l10n_fr_chart.jpeg'],
+    'installable': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

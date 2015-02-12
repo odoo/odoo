@@ -64,6 +64,10 @@ Main Features
         'mail_alias_view.xml',
         'res_users_view.xml',
         'views/mail.xml',
+        'wizard/email_template_preview_view.xml',
+        'views/email_template_view.xml',
+        'views/ir_actions_view.xml',
+        'views/res_partner_view.xml'
     ],
     'demo': [
         'data/mail_demo.xml',
@@ -71,14 +75,6 @@ Main Features
     ],
     'installable': True,
     'application': True,
-    'images': [
-        'images/inbox.jpeg',
-        'images/messages_form.jpeg',
-        'images/messages_list.jpeg',
-        'images/email.jpeg',
-        'images/join_a_group.jpeg',
-        'images/share_a_message.jpeg',
-    ],
     'qweb': [
         'static/src/xml/mail.xml',
         'static/src/xml/mail_followers.xml',
@@ -86,4 +82,3 @@ Main Features
         'static/src/xml/suggestions.xml',
     ],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

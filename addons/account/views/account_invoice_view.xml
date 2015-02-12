@@ -14,13 +14,24 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_invoice_pivot">
+            <field name="name">account.invoice.pivot</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <pivot string="Invoices" display_quantity="true">
+                    <field name="partner_id"/>
+                    <field name="amount_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_invoice_graph">
             <field name="name">account.invoice.graph</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <graph string="Invoices" type="bar">
+                <graph string="Invoices">
                     <field name="partner_id"/>
-                    <field name="amount_total" operator="+" widget="monetary"/>
+                    <field name="amount_total" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -60,8 +71,8 @@
                             <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                         </group>
                         <group>
-                            <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id)]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)" groups="account.group_account_user"/>
-                            <field name="invoice_line_tax_id" context="{'type':parent.get('type')}" domain="[('type_tax_use','!=','as_child'),('company_id', '=', parent.company_id)]" widget="many2many_tags"/>
+                            <field domain="[('company_id', '=', parent.company_id)]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)" groups="account.group_account_user"/>
+                            <field name="invoice_line_tax_id" context="{'type':parent.get('type')}" domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]" widget="many2many_tags"/>
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)], ('state','not in',('close','cancelled'))]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
@@ -115,15 +126,15 @@
                     <field name="reference" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="journal_id" invisible="1"/>
-                    <field name="date" invisible="1" groups="account.group_account_user"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                    <field name="user_id"/>
+                    <field name="user_id" string="Salesperson"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="residual" sum="Residual Amount" widget="monetary"/>
                     <field name="amount_untaxed" sum="Untaxed Amount" widget="monetary"/>
                     <field name="amount_total" sum="Total Amount" widget="monetary"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="amount_total_signed" sum="Total Amount" widget="monetary" groups="base.group_multi_currency"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -191,7 +202,7 @@
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
-                                        domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('internal_type', '=', 'other')]"
+                                        domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other')]"
                                         on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]"/>
@@ -201,7 +212,7 @@
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
-                                        domain="[('type_tax_use','!=','as_child'),('company_id', '=', parent.company_id)]"/>
+                                        domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>
@@ -215,6 +226,7 @@
                                 </div>
                                 <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_total_signed" widget="monetary" groups="base.group_multi_currency" />
                                 <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                 <field name="residual" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                 <field name="reconciled" invisible="1"/>
@@ -230,10 +242,9 @@
                                     </tree>
                                 </field>
                             </div>
-                            <div class="oe_clear">
-                                <label for="comment"/>
+                            <div>
+                                <field name="comment" placeholder="Additional notes..."/>
                             </div>
-                            <field name="comment"/>
                         </page>
                         <page string="Other Info">
                             <group>
@@ -241,7 +252,7 @@
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id"/>
                                     <field name="user_id" string="Responsible" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
                                     <field name="name" invisible="1"/>
-                                    <field name="payment_term" options="{'no_create': True}"/>
+                                    <field name="payment_term" options="{'no_create': True}" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)"/>
                                 </group>
                                 <group>
                                     <field name="move_id" groups="account.group_account_user"/>
@@ -324,7 +335,7 @@
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
-                                        domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('internal_type', '=', 'other')]"
+                                        domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other')]"
                                         on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]"/>
@@ -334,7 +345,7 @@
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
-                                        domain="[('type_tax_use','!=','as_child'),('company_id', '=', parent.company_id)]"/>
+                                        domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>
@@ -348,17 +359,15 @@
                                 </div>
                                 <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_total_signed" widget="monetary" groups="base.group_multi_currency" />
                                 <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
-                                <field name="residual" groups="account.group_account_user" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
+                                <field name="residual" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                 <field name="reconciled" invisible="1"/>
                                 <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1" widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
                             </group>
                             <group>
-                                    <field name="payment_term" class="oe_inline"/>
+                                    <field name="payment_term" class="oe_inline" on_change="onchange_payment_term_date_invoice(payment_term,date_invoice)"/>
                             </group>
-                            <div class="oe_clear">
-                                <label for="comment"/>
-                            </div>
                             <field name="comment" class="oe_inline" placeholder="Additional notes..."/>
                         </page>
                         <page string="Other Info">
@@ -471,7 +480,7 @@
             <field name="name">Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
@@ -511,7 +520,7 @@
             <field name="name">Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
@@ -532,7 +541,7 @@
             <field name="name">Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'default_type':'out_refund', 'type':'out_refund', 'journal_type': 'sale'}</field>
@@ -568,7 +577,7 @@
             <field name="name">Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase'}</field>

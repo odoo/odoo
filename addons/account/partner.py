@@ -2,8 +2,9 @@
 
 from operator import itemgetter
 import time
+from openerp.exceptions import UserError
 
-from openerp import api, fields, models
+from openerp import api, fields, models, _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -31,7 +32,7 @@ class account_fiscal_position(models.Model):
     @api.constrains('country_id', 'country_group_id')
     def _check_country(self):
         if self.country_id and self.country_group_id:
-            raise Warning(_('You can not select a country and a group of countries.'))
+            raise UserError(_('You can not select a country and a group of countries.'))
 
     @api.v7
     def map_tax(self, cr, uid, fposition_id, taxes, context=None):
@@ -290,8 +291,8 @@ class res_partner(models.Model):
     ref_companies = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
     last_time_entries_checked = fields.Datetime(oldname='last_reconciliation_date',
-        string='Latest Manual Reconciliation Date', readonly=True, copy=False,
-        help='Last time the manual reconciliation was performed for this partner. '
+        string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
+        help='Last time the invoices & payments matching was performed for this partner. '
              'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit '
              'or if you click the "Done" button.')
 

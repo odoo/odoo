@@ -13,7 +13,7 @@ from openerp import modules
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -48,6 +48,7 @@ class Forum(models.Model):
     faq = fields.Html('Guidelines', default=_get_default_faq, translate=True)
     description = fields.Html(
         'Description',
+        translate=True,
         default='<p> This community is for professionals and enthusiasts of our products and services.'
                 'Share and discuss the best content and new marketing ideas,'
                 'build your professional profile and become a better marketer together.</p>')
@@ -68,6 +69,14 @@ class Forum(models.Model):
     allow_question = fields.Boolean('Questions', help="Users can answer only once per question. Contributors can edit answers and mark the right ones.", default=True)
     allow_discussion = fields.Boolean('Discussions', default=True)
     allow_link = fields.Boolean('Links', help="When clicking on the post, it redirects to an external link", default=True)
+    allow_bump = fields.Boolean('Allow Bump', default=True,
+                                help='Posts without answers older than 10 days will display a popup'
+                                     'when displayed on the website to propose users to share them '
+                                     'on social networks, bumping the question at top of the thread.')
+    allow_share = fields.Boolean('Sharing Options', default=True,
+                                 help='After posting the user will be proposed to share its question'
+                                      'or answer on social networks, enabling social network propagation'
+                                      'of the forum content.')
     # karma generation
     karma_gen_question_new = fields.Integer(string='Asking a question', default=2)
     karma_gen_question_upvote = fields.Integer(string='Question upvoted', default=5)
@@ -138,6 +147,13 @@ class Post(models.Model):
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     content = fields.Html('Content')
+    plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
+
+    @api.one
+    @api.depends('content')
+    def _get_plain_content(self):
+        self.plain_content = tools.html2plaintext(self.content)[0:500] if self.content else False
+
     content_link = fields.Char('URL', help="URL of Link Articles")
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], string='Status', default='active')
@@ -157,14 +173,21 @@ class Post(models.Model):
     create_date = fields.Datetime('Asked on', select=True, readonly=True)
     create_uid = fields.Many2one('res.users', string='Created by', select=True, readonly=True)
     write_date = fields.Datetime('Update on', select=True, readonly=True)
+    bump_date = fields.Datetime('Bumped on', readonly=True,
+                                help="Technical field allowing to bump a question. Writing on this field will trigger"
+                                     "a write on write_date and therefore bump the post. Directly writing on write_date"
+                                     "is currently not supported and this field is a workaround.")
     write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
     relevancy = fields.Float('Relevancy', compute="_compute_relevancy", store=True)
 
     @api.one
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
     def _compute_relevancy(self):
-        days = (datetime.today() - datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
-        self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
+        if self.create_date:
+            days = (datetime.today() - datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
+            self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
+        else:
+            self.relevancy = 0
 
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
@@ -279,6 +302,15 @@ class Post(models.Model):
         self.can_comment = user.karma >= self.karma_comment
         self.can_comment_convert = user.karma >= self.karma_comment_convert
 
+    def name_get(self, cr, uid, ids, context=None):
+        result = []
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.parent_id and not post.name:
+                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
+            else:
+                result.append((post.id, '%s' % (post.name)))
+        return result
+
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
         if content and self.env.user.karma < forum.karma_dofollow:
@@ -294,7 +326,7 @@ class Post(models.Model):
         post = super(Post, self.with_context(mail_create_nolog=True)).create(vals)
         # deleted or closed questions
         if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
-            raise Warning(_('Posting answer on a [Deleted] or [Closed] question is not possible'))
+            raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible'))
         # karma-based access
         if not post.parent_id and not post.can_ask:
             raise KarmaError('Not enough karma to create a new question')
@@ -316,6 +348,17 @@ class Post(models.Model):
             post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
             self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
         return post
+
+    @api.multi
+    @api.depends('name', 'post_type')
+    def name_get(self):
+        result = []
+        for post in self:
+            if post.post_type == 'discussion' and post.parent_id and not post.name:
+                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
+            else:
+                result.append((post.id, '%s' % (post.name)))
+        return result
 
     @api.multi
     def write(self, vals):
@@ -402,6 +445,16 @@ class Post(models.Model):
         return super(Post, self).unlink()
 
     @api.multi
+    def bump(self):
+        """ Bump a question: trigger a write_date by writing on a dummy bump_date
+        field. One cannot bump a question more than once every 10 days. """
+        self.ensure_one()
+        if self.forum_id.allow_bump and not self.child_ids and (datetime.today() - datetime.strptime(self.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9:
+            # write through super to bypass karma; sudo to allow public user to bump any post
+            return self.sudo().write({'bump_date': fields.Datetime.now()})
+        return False
+
+    @api.multi
     def vote(self, upvote=True):
         Vote = self.env['forum.post.vote']
         vote_ids = Vote.search([('post_id', 'in', self._ids), ('user_id', '=', self._uid)])
@@ -441,7 +494,7 @@ class Post(models.Model):
             'subtype': 'mail.mt_comment',
             'date': self.create_date,
         }
-        new_message = self.browse(question.id).with_context(mail_create_nosubcribe=True).message_post(**values)
+        new_message = self.browse(question.id).with_context(mail_create_nosubscribe=True).message_post(**values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()
@@ -560,7 +613,7 @@ class Vote(models.Model):
 
         # own post check
         if vote.user_id.id == vote.post_id.create_uid.id:
-            raise Warning('Not allowed to vote for its own post')
+            raise UserError(_('Not allowed to vote for its own post'))
         # karma check
         if vote.vote == '1' and not vote.post_id.can_upvote:
             raise KarmaError('Not enough karma to upvote.')
@@ -580,7 +633,7 @@ class Vote(models.Model):
             for vote in self:
                 # own post check
                 if vote.user_id.id == vote.post_id.create_uid.id:
-                    raise Warning('Not allowed to vote for its own post')
+                    raise UserError(_('Not allowed to vote for its own post'))
                 # karma check
                 if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0') and not vote.post_id.can_upvote:
                     raise KarmaError('Not enough karma to upvote.')

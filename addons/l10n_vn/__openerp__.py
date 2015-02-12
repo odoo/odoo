@@ -37,6 +37,5 @@ This module applies to companies based in Vietnamese Accounting Standard (VAS).
     "data" : ["account_chart.xml","account_tax.xml","l10n_vn_wizard.xml"],
     "demo" : [],
     'auto_install': False,
-    "installable": True,
+    "installable": False,
 }
-

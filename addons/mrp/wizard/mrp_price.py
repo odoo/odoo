@@ -51,6 +51,3 @@ class mrp_price(osv.osv_memory):
             'report_name':'product.price',
             'datas' : datas,
        }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

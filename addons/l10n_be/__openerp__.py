@@ -80,9 +80,6 @@ Wizards provided by this module:
         'views/report_vatpartnerlisting.xml',
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
     'website': 'https://www.odoo.com/page/accounting',
-    'images': ['images/1_config_chart_l10n_be.jpeg','images/2_l10n_be_chart.jpeg'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

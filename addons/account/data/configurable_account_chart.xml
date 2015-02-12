@@ -156,9 +156,6 @@
 
         <!-- Taxes -->
 
-<!-- TODO : change apply model changes
-
-
         <record id="configurable_chart_template" model="account.chart.template">
             <field name="name">Configurable Account Chart Template</field>
             <field name="account_root_id" ref="conf_chart0"/>
@@ -171,10 +168,10 @@
             <field name="property_account_expense_opening" ref="conf_o_expense"/>
             <field name="complete_tax_set" eval="False"/>
         </record>
- -->
+
          <!-- VAT Codes -->
         <!-- Purchases + Output VAT -->
-<!-- 
+
         <record id="otaxs" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">OTAX S</field>
@@ -214,9 +211,9 @@
             <field name="account_paid_id" ref="conf_ova"/>
             <field name="type_tax_use">purchase</field>
         </record>
--->
+
         <!-- Sales + Input VAT -->
-<!-- 
+
         <record id="itaxs" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">ITAX S</field>
@@ -256,7 +253,6 @@
             <field name="account_paid_id" ref="conf_iva"/>
             <field name="type_tax_use">sale</field>
         </record>
-  -->
 
 
         <!-- = = = = = = = = = = = = = = = -->
@@ -264,7 +260,7 @@
         <!-- = = = = = = = = = = = = = = = -->
 
 
-<!--         <record id="fiscal_position_normal_taxes_template1" model="account.fiscal.position.template">
+        <record id="fiscal_position_normal_taxes_template1" model="account.fiscal.position.template">
             <field name="name">Normal Taxes</field>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
@@ -272,14 +268,14 @@
         <record id="fiscal_position_tax_exempt_template2" model="account.fiscal.position.template">
             <field name="name">Tax Exempt</field>
             <field name="chart_template_id" ref="configurable_chart_template"/>
-        </record> -->
+        </record>
 
         <!-- = = = = = = = = = = = = = = = -->
         <!-- Fiscal Position Tax Templates -->
         <!-- = = = = = = = = = = = = = = = -->
 
 
-<!--         <record id="fiscal_position_normal_taxes" model="account.fiscal.position.tax.template">
+        <record id="fiscal_position_normal_taxes" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_normal_taxes_template1"/>
             <field name="tax_src_id" ref="itaxs"/>
             <field name="tax_dest_id" ref="otaxs"/>
@@ -290,18 +286,17 @@
             <field name="tax_src_id" ref="itaxx"/>
             <field name="tax_dest_id" ref="otaxx"/>
         </record>
- -->
 
         <!--  Assigned Default Taxes For Different Account -->
 
-<!--         <record id="conf_a_sale" model="account.account.template">
+        <record id="conf_a_sale" model="account.account.template">
             <field name="tax_ids" eval="[(6,0,[ref('itaxs')])]"/>
         </record>
 
         <record id="conf_a_expense" model="account.account.template">
             <field name="tax_ids" eval="[(6,0,[ref('otaxs')])]"/>
         </record>
--->
+
         <record id="action_wizard_multi_chart_todo" model="ir.actions.todo">
             <field name="name">Set Your Accounting Options</field>
             <field name="action_id" ref="account.action_wizard_multi_chart"/>

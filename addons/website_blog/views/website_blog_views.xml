@@ -22,12 +22,11 @@
                     <sheet>
                         <group>
                             <field name="name"/>
-                            <field name="description"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
                     </div>
                 </form>
             </field>
@@ -54,6 +53,12 @@
             <field name="arch" type="xml">
                 <form string="Blog Post">
                     <sheet>
+                        <div class="oe_right oe_button_box">
+                            <button class="oe_inline oe_stat_button" name="open_website_url"
+                                type="object" icon="fa-globe">
+                                <field name="website_published" widget="website_button"/>
+                            </button>
+                        </div>
                         <group>
                             <field name="name" placeholder="Name"/>
                             <field name="tag_ids" widget="many2many_tags"/>
@@ -74,7 +79,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
                     </div>
                 </form>
             </field>

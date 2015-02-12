@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class crm_make_sale(osv.osv_memory):
@@ -88,7 +89,7 @@ class crm_make_sale(osv.osv_memory):
                             ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner.property_product_pricelist.id
                 if False in partner_addr.values():
-                    raise osv.except_osv(_('Insufficient Data!'), _('No address(es) defined for this customer.'))
+                    raise UserError(_('No address(es) defined for this customer.'))
 
                 vals = {
                     'origin': _('Opportunity: %s') % str(case.id),
@@ -101,7 +102,10 @@ class crm_make_sale(osv.osv_memory):
                     'date_order': fields.date.context_today(self,cr,uid,context=context),
                     'fiscal_position': fpos,
                     'payment_term':payment_term,
-                    'opportunity_id': case.id
+                    'opportunity_id': case.id,
+                    'campaign_id': case.campaign_id and case.campaign_id.id or False,
+                    'medium_id': case.medium_id and case.medium_id.id or False,
+                    'source_id': case.source_id and case.source_id.id or False,
                 }
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid
@@ -148,6 +152,3 @@ class crm_make_sale(osv.osv_memory):
         'close': False,
         'partner_id': _selectPartner,
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

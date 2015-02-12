@@ -122,6 +122,3 @@ class mrp_product_produce(osv.osv_memory):
         self.pool.get('mrp.production').action_produce(cr, uid, production_id,
                             data.product_qty, data.mode, data, context=context)
         return {}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

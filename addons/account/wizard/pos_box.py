@@ -1,16 +1,13 @@
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
-import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 class CashBox(models.TransientModel):
     _register = False
-
 
     name = fields.Char(string='Reason', required=True)
     # Attention, we don't set a domain, because there is a journal_type key 
     # in the context of the action
     amount = fields.Float(string='Amount', digits=0, required=True)
-
 
     @api.multi
     def run(self):
@@ -27,10 +24,10 @@ class CashBox(models.TransientModel):
         for box in self:
             for record in records:
                 if not record.journal_id:
-                    raise Warning(_("Please check that the field 'Journal' is set on the Bank Statement"))
+                    raise UserError(_("Please check that the field 'Journal' is set on the Bank Statement"))
                     
                 if not record.journal_id.internal_account_id:
-                    raise Warning(_("Please check that the field 'Internal Transfers Account' is set on the payment method '%s'.") % (record.journal_id.name,))
+                    raise UserError(_("Please check that the field 'Internal Transfers Account' is set on the payment method '%s'.") % (record.journal_id.name,))
 
                 box._create_bank_statement_line(record)
 
@@ -50,7 +47,7 @@ class CashBoxIn(CashBox):
     @api.one
     def _compute_values_for_statement_line(self, record):
         if not record.journal_id.internal_account_id:
-            raise Warning(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
+            raise UserError(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         return {
             'statement_id': record.id,
             'journal_id': record.journal_id.id,
@@ -67,7 +64,7 @@ class CashBoxOut(CashBox):
     @api.one
     def _compute_values_for_statement_line(self, record):
         if not record.journal_id.internal_account_id:
-            raise Warning(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
+            raise UserError(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         amount = self.amount or 0.0
         return {
             'statement_id': record.id,

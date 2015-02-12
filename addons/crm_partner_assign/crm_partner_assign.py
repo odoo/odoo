@@ -85,8 +85,8 @@ class res_partner(osv.osv):
 class crm_lead(osv.osv):
     _inherit = "crm.lead"
     _columns = {
-        'partner_latitude': fields.float('Geo Latitude'),
-        'partner_longitude': fields.float('Geo Longitude'),
+        'partner_latitude': fields.float('Geo Latitude', digits=(16, 5)),
+        'partner_longitude': fields.float('Geo Longitude', digits=(16, 5)),
         'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner',track_visibility='onchange' , help="Partner this case has been forwarded/assigned to.", select=True),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
@@ -226,6 +226,3 @@ class crm_lead(osv.osv):
                         res_partner_ids[lead.id] = partner_id
                         break
         return res_partner_ids
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

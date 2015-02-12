@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-import difflib
 import lxml
 import random
 
@@ -20,7 +19,6 @@ class Blog(osv.Model):
     _columns = {
         'name': fields.char('Blog Name', required=True),
         'subtitle': fields.char('Blog Subtitle'),
-        'description': fields.text('Description'),
     }
 
     def all_tags(self, cr, uid, ids, min_limit=1, context=None):
@@ -66,8 +64,15 @@ class BlogTag(osv.Model):
 class BlogPost(osv.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
     _order = 'id DESC'
+    _mail_post_access = 'read'
+
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        res = super(BlogPost, self)._website_url(cr, uid, ids, field_name, arg, context=context)
+        for blog_post in self.browse(cr, uid, ids, context=context):
+            res[blog_post.id] = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
+        return res
 
     def _compute_ranking(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -89,10 +94,6 @@ class BlogPost(osv.Model):
             'blog.tag', string='Tags',
         ),
         'content': fields.html('Content', translate=True, sanitize=False),
-        # website control
-        'website_published': fields.boolean(
-            'Publish', help="Publish on the website", copy=False,
-        ),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
@@ -137,6 +138,8 @@ class BlogPost(osv.Model):
         :return result: (html, mappin), where html is the updated html with ID
                         and mapping is a list of (old_ID, new_ID), where old_ID
                         is None is the paragraph is a new one. """
+
+        existing_attributes = []
         mapping = []
         if not html:
             return html, mapping
@@ -144,7 +147,6 @@ class BlogPost(osv.Model):
             tags = ['p']
         if attribute is None:
             attribute = 'data-unique-id'
-        counter = 0
 
         # form a tree
         root = lxml.html.fragment_fromstring(html, create_parent='div')
@@ -155,17 +157,22 @@ class BlogPost(osv.Model):
         # - img src -> check URL
         # - a href -> check URL
         for node in root.iter():
-            if not node.tag in tags:
+            if node.tag not in tags:
                 continue
             ancestor_tags = [parent.tag for parent in node.iterancestors()]
-            if ancestor_tags:
-                ancestor_tags.pop()
-            ancestor_tags.append('counter_%s' % counter)
-            new_attribute = '/'.join(reversed(ancestor_tags))
+
             old_attribute = node.get(attribute)
-            node.set(attribute, new_attribute)
-            mapping.append((old_attribute, counter))
-            counter += 1
+            new_attribute = old_attribute
+            if old_attribute in existing_attributes:
+                if ancestor_tags:
+                    ancestor_tags.pop()
+                counter = random.randint(10000, 99999)
+                ancestor_tags.append('counter_%s' % counter)
+                new_attribute = '/'.join(reversed(ancestor_tags))
+                node.set(attribute, new_attribute)
+
+            existing_attributes.append(new_attribute)
+            mapping.append((old_attribute, new_attribute))
 
         html = lxml.html.tostring(root, pretty_print=False, method='html')
         # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
@@ -178,14 +185,22 @@ class BlogPost(osv.Model):
             content = self.browse(cr, uid, id, context=context).content
         if content is False:
             return content
+
         content, mapping = self.html_tag_nodes(content, attribute='data-chatter-id', tags=['p'], context=context)
-        for old_attribute, new_attribute in mapping:
-            if not old_attribute:
-                continue
-            msg_ids = self.pool['mail.message'].search(cr, SUPERUSER_ID, [('path', '=', old_attribute)], context=context)
-            self.pool['mail.message'].write(cr, SUPERUSER_ID, msg_ids, {'path': new_attribute}, context=context)
+        if id:  # not creating
+            existing = [x[0] for x in mapping if x[0]]
+            msg_ids = self.pool['mail.message'].search(cr, SUPERUSER_ID, [
+                ('res_id', '=', id),
+                ('model', '=', self._name),
+                ('path', 'not in', existing),
+                ('path', '!=', False)
+            ], context=context)
+            self.pool['mail.message'].unlink(cr, SUPERUSER_ID, msg_ids, context=context)
+
         return content
 
+        if isinstance(ids, (int, long)):
+            ids = [ids]
     def _check_for_publication(self, cr, uid, ids, vals, context=None):
         if vals.get('website_published'):
             base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
@@ -215,7 +230,36 @@ class BlogPost(osv.Model):
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'content' in vals:
-            vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
+            vals['content'] = self._postproces_content(cr, uid, ids[0], vals['content'], context=context)
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
         self._check_for_publication(cr, uid, ids, vals, context=context)
         return result
+
+
+
+class Website(osv.Model):
+    _inherit = "website"
+
+    def page_search_dependencies(self, cr, uid, view_id, context=None):
+        dep = super(Website, self).page_search_dependencies(cr, uid, view_id, context=context)
+
+        post_obj = self.pool.get('blog.post')
+
+        view = self.pool.get('ir.ui.view').browse(cr, uid, view_id, context=context)
+        name = view.key.replace("website.", "")
+        fullname = "website.%s" % name
+
+        dom = [
+            '|', ('content', 'ilike', '/page/%s' % name), ('content', 'ilike', '/page/%s' % fullname)
+        ]
+        posts = post_obj.search(cr, uid, dom, context=context)
+        if posts:
+            page_key = _('Blog Post')
+            dep[page_key] = []
+        for p in post_obj.browse(cr, uid, posts, context=context):
+            dep[page_key].append({
+                'text': _('Blog Post <b>%s</b> probably has a link to this page !' % p.name),
+                'link': p.website_url
+            })
+
+        return dep

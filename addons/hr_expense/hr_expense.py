@@ -25,6 +25,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 def _employee_get(obj, cr, uid, context=None):
     if context is None:
@@ -114,7 +115,7 @@ class hr_expense_expense(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state != 'draft':
-                raise osv.except_osv(_('Warning!'),_('You can only delete draft expenses!'))
+                raise UserError(_('You can only delete draft expenses!'))
         return super(hr_expense_expense, self).unlink(cr, uid, ids, context)
 
     def onchange_currency_id(self, cr, uid, ids, currency_id=False, company_id=False, context=None):
@@ -140,7 +141,7 @@ class hr_expense_expense(osv.osv):
     def expense_confirm(self, cr, uid, ids, context=None):
         for expense in self.browse(cr, uid, ids):
             if not expense.line_ids:
-                raise osv.except_osv(_('Error!'), _('You cannot submit expense which has no expense line.'))
+                raise UserError(_('You cannot submit expense which has no expense line.'))
             if expense.employee_id and expense.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
         return self.write(cr, uid, ids, {'state': 'confirm', 'date_confirm': time.strftime('%Y-%m-%d')}, context=context)
@@ -169,7 +170,7 @@ class hr_expense_expense(osv.osv):
         else:
             journal_id = journal_obj.search(cr, uid, [('type', '=', 'purchase'), ('company_id', '=', company_id)])
             if not journal_id:
-                raise osv.except_osv(_('Error!'), _("No expense journal found. Please make sure you have a journal with type 'purchase' configured."))
+                raise UserError(_("No expense journal found. Please make sure you have a journal with type 'purchase' configured."))
             journal_id = journal_id[0]
 
         return {
@@ -238,7 +239,7 @@ class hr_expense_expense(osv.osv):
         move_obj = self.pool.get('account.move')
         for exp in self.browse(cr, uid, ids, context=context):
             if not exp.employee_payable_account_id:
-                raise osv.except_osv(_('Error!'), _('No employee account payable found for the expense '))
+                raise UserError(_('No employee account payable found for the expense '))
 
             company_currency = exp.company_id.currency_id.id
             diff_currency_p = exp.currency_id.id != company_currency
@@ -310,39 +311,41 @@ class hr_expense_expense(osv.osv):
             tax_l = []
             base_tax_amount = line.total_amount
             #Calculating tax on the line and creating move?
-            for tax in tax_obj.compute_all(cr, uid, taxes,
+            for tax in tax_obj.compute_all(cr, uid, [tax.id for tax in taxes],
                     line.unit_amount ,
-                    exp.currency_id,
-                    line.unit_quantity, line.product_id,
-                    exp.user_id.partner_id)['taxes']:
-                tax_code_id = tax['base_code_id']
-                if not tax_code_id:
-                    continue
-                res[-1]['tax_code_id'] = tax_code_id
-                ## 
-                is_price_include = tax_obj.read(cr,uid,tax['id'],['price_include'],context)['price_include']
-                if is_price_include:
-                    ## We need to deduce the price for the tax
-                    res[-1]['price'] = res[-1]['price']  - (tax['amount'] * tax['base_sign'] or 0.0)
-                    # tax amount countains base amount without the tax
-                    base_tax_amount = (base_tax_amount - tax['amount']) * tax['base_sign']
-                else:
-                    base_tax_amount = base_tax_amount * tax['base_sign']
-
-                assoc_tax = {
-                             'type':'tax',
-                             'name':tax['name'],
-                             'price_unit': tax['price_unit'],
-                             'quantity': 1,
-                             'price':  tax['amount'] * tax['base_sign'] or 0.0,
-                             'account_id': tax['account_collected_id'] or mres['account_id'],
-                             'tax_code_id': tax['tax_code_id'],
-                             'tax_amount': tax['amount'] * tax['base_sign'],
-                             }
-                tax_l.append(assoc_tax)
-
-            res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, base_tax_amount, context={'date': exp.date_confirm})
-            res += tax_l
+                    exp.currency_id.id,
+                    line.unit_quantity, line.product_id.id,
+                    exp.user_id.partner_id.id)['taxes']:
+                pass
+# TODO: Need to adapt changes according to new tax design.
+#                 tax_code_id = tax['base_code_id']
+#                 if not tax_code_id:
+#                     continue
+#                 res[-1]['tax_code_id'] = tax_code_id
+#                 ## 
+#                 is_price_include = tax_obj.read(cr,uid,tax['id'],['price_include'],context)['price_include']
+#                 if is_price_include:
+#                     ## We need to deduce the price for the tax
+#                     res[-1]['price'] = res[-1]['price']  - (tax['amount'] * tax['base_sign'] or 0.0)
+#                     # tax amount countains base amount without the tax
+#                     base_tax_amount = (base_tax_amount - tax['amount']) * tax['base_sign']
+#                 else:
+#                     base_tax_amount = base_tax_amount * tax['base_sign']
+# 
+#                 assoc_tax = {
+#                              'type':'tax',
+#                              'name':tax['name'],
+#                              'price_unit': tax['price_unit'],
+#                              'quantity': 1,
+#                              'price':  tax['amount'] * tax['base_sign'] or 0.0,
+#                              'account_id': tax['account_collected_id'] or mres['account_id'],
+#                              'tax_code_id': tax['tax_code_id'],
+#                              'tax_amount': tax['amount'] * tax['base_sign'],
+#                              }
+#                 tax_l.append(assoc_tax)
+# 
+#             res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, base_tax_amount, context={'date': exp.date_confirm})
+#             res += tax_l
         return res
 
     def move_line_get_item(self, cr, uid, line, context=None):
@@ -353,11 +356,11 @@ class hr_expense_expense(osv.osv):
             if not acc:
                 acc = line.product_id.categ_id.property_account_expense_categ
             if not acc:
-                raise osv.except_osv(_('Error!'), _('No purchase account found for the product %s (or for his category), please configure one.') % (line.product_id.name))
+                raise UserError(_('No purchase account found for the product %s (or for his category), please configure one.') % (line.product_id.name))
         else:
             acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company.id})
             if not acc:
-                raise osv.except_osv(_('Error!'), _('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
+                raise UserError(_('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
         return {
             'type':'src',
             'name': line.name.split('\n')[0][:64],
@@ -481,5 +484,3 @@ class account_move_line(osv.osv):
                     if new_status_is_paid:
                         expense_obj.write(cr, uid, [expense.id], {'state': 'paid'}, context=context)
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

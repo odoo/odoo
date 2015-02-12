@@ -49,7 +49,5 @@ After installing this module, the Configuration wizard for accounting is launche
              'l10n_sg_chart_tax.xml',
              'l10n_sg_wizard.xml',
     ],
-    'installable': True,
+    'installable': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

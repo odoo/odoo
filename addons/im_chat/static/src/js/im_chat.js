@@ -130,7 +130,9 @@
             var self = this;
             var session_id = message.to_id[0];
             var uuid = message.to_id[1];
-            if (! this.get("window_focus")) {
+            var from_id = message['from_id'] ? message['from_id'][0] : false;
+            var current_user = openerp.session ? openerp.session.uid : false;
+            if (! this.get("window_focus") && from_id != current_user) {
                 this.set("waiting_messages", this.get("waiting_messages") + 1);
             }
             var conv = this.sessions[uuid];
@@ -414,12 +416,17 @@
         click_option_shortcut: function(){
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',
+                name : 'Shortcode',
                 res_model: 'im_chat.shortcode',
                 view_mode: 'tree,form',
                 view_type: 'tree',
                 views: [[false, 'list'], [false, 'form']],
-                target: "current",
+                target: "new",
                 limit: 80,
+                flags: {
+                    action_buttons: true,
+                    pager: true,
+                }
             });
         },
         click_header: function(event){
@@ -594,31 +601,29 @@
         events: {
             "click": "clicked",
         },
+        start: function() {
+            // Create the InstantMessaging widget and put it in the DOM
+            var im = new openerp.im_chat.InstantMessaging(self);
+            openerp.im_chat.single = im;
+            im.appendTo(openerp.client.$el);
+            // Bind the click action to the ImTopButton
+            this.on("clicked", im, im.switch_display);
+            return this._super();
+        },
         clicked: function(ev) {
             ev.preventDefault();
             this.trigger("clicked");
         },
     });
 
-    if(openerp.web && openerp.web.UserMenu) {
-        openerp.web.UserMenu.include({
-            do_update: function(){
-                var self = this;
-                var Users = new openerp.web.Model('res.users');
-                Users.call('has_group', ['base.group_user']).done(function(is_employee) {
-                    if (is_employee) {
-                        self.update_promise.then(function() {
-                            var im = new openerp.im_chat.InstantMessaging(self);
-                            openerp.im_chat.single = im;
-                            im.appendTo(openerp.client.$el);
-                            var button = new openerp.im_chat.ImTopButton(this);
-                            button.on("clicked", im, im.switch_display);
-                            button.appendTo(window.$('.oe_systray'));
-                        });
-                    }
-                });
-                return this._super.apply(this, arguments);
-            },
+    // Guard: only for the backend
+    if (openerp.web && openerp.web.Model) {
+        // Put the ImTopButton widget in the systray menu if the user is an employee
+        var Users = new openerp.web.Model('res.users');
+        Users.call('has_group', ['base.group_user']).done(function(is_employee) {
+            if (is_employee) {
+                openerp.web.SystrayItems.push(openerp.im_chat.ImTopButton);
+            }
         });
     }
 

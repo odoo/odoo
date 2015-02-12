@@ -36,7 +36,6 @@ modules.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
-    'images': ['images/crm_statistics_dashboard.jpeg', 'images/opportunity_to_quote.jpeg'],
     'depends': ['sale', 'crm', 'web_kanban_gauge'],
     'data': [
         'wizard/crm_make_sale_view.xml',
@@ -49,4 +48,3 @@ modules.
     'installable': True,
     'auto_install': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

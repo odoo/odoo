@@ -36,4 +36,3 @@ class account_report_general_ledger(models.TransientModel):
 
         return self.env['report'].with_context(context).get_action(self.env['account.report.general.ledger'], 'account.report_generalledger', data=data)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

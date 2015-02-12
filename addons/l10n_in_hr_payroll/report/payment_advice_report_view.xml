@@ -51,7 +51,7 @@
                     <field name="bank_id" widget="selection"/>
                     <field name="employee_bank_no"/>
                     <separator orientation="vertical"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By">

@@ -24,8 +24,8 @@ class account_config_settings(models.TransientModel):
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', required=True,
         string='Default company currency', help="Main currency of the company.")
     paypal_account = fields.Char(related='company_id.paypal_account', size=128, string='Paypal account',
-        help="""Paypal account (email) for receiving online payments (credit card, etc.) 
-             If you set a paypal account, the customer  will be able to pay your invoices or quotations 
+        help="""Paypal account (email) for receiving online payments (credit card, etc.)
+             If you set a paypal account, the customer  will be able to pay your invoices or quotations
              with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal.""")
     company_footer = fields.Text(related='company_id.rml_footer', string='Bank accounts footer preview',
         readonly=True, help="Bank accounts as printed in the footer of each printed document")
@@ -39,20 +39,20 @@ class account_config_settings(models.TransientModel):
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
         ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method',
-        help="""If you select 'Round per line' : for each tax, the tax amount will first be 
-             computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, 
-             leading to the total amount for that tax. If you select 'Round globally': for each tax, 
-             the tax amount will be computed for each PO/SO/invoice line, then these amounts will be 
-             summed and eventually this total tax amount will be rounded. If you sell with tax included, 
-             you should choose 'Round per line' because you certainly want the sum of your tax-included line 
+        help="""If you select 'Round per line' : for each tax, the tax amount will first be
+             computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed,
+             leading to the total amount for that tax. If you select 'Round globally': for each tax,
+             the tax amount will be computed for each PO/SO/invoice line, then these amounts will be
+             summed and eventually this total tax amount will be rounded. If you sell with tax included,
+             you should choose 'Round per line' because you certainly want the sum of your tax-included line
              subtotals to be equal to the total amount with taxes.""")
     sale_tax = fields.Many2one('account.tax.template', string='Default sale tax')
     purchase_tax = fields.Many2one('account.tax.template', string='Default purchase tax')
     sale_tax_rate = fields.Float(string='Sales tax (%)')
     purchase_tax_rate = fields.Float(string='Purchase tax (%)')
-    complete_tax_set = fields.Boolean(string='Complete set of taxes', 
-        help='''This boolean helps you to choose if you want to propose to the user to encode 
-             the sales and purchase rates or use the usual m2o fields. This last choice assumes that 
+    complete_tax_set = fields.Boolean(string='Complete set of taxes',
+        help='''This boolean helps you to choose if you want to propose to the user to encode
+             the sales and purchase rates or use the usual m2o fields. This last choice assumes that
              the set of tax defined for the chosen template is complete''')
 
     has_fiscal_year = fields.Boolean(string='Company has a fiscal year')
@@ -73,7 +73,7 @@ class account_config_settings(models.TransientModel):
         help='This allows you to check writing and printing.\n'
              '-This installs the module account_check_writing.')
     module_account_accountant = fields.Boolean(string='Full accounting features: journals, legal statements, chart of accounts, etc.',
-        help="""If you do not check this box, you will be able to do invoicing & payments, 
+        help="""If you do not check this box, you will be able to do invoicing & payments,
              but not accounting (Journal Items, Chart of  Accounts, ...)""")
     module_account_asset = fields.Boolean(string='Assets management',
         help='This allows you to manage the assets owned by a company or a person.\n'
@@ -113,7 +113,7 @@ class account_config_settings(models.TransientModel):
     default_purchase_tax = fields.Many2one('account.tax', string='Default purchase tax',
         help="This purchase tax will be assigned by default on new products.")
     decimal_precision = fields.Integer(string='Decimal precision on journal entries',
-        help="""As an example, a decimal precision of 2 will allow journal entries  like: 9.99 EUR, 
+        help="""As an example, a decimal precision of 2 will allow journal entries  like: 9.99 EUR,
              whereas a decimal precision of 4 will allow journal  entries like: 0.0231 EUR.""")
     group_multi_currency = fields.Boolean(string='Allow multi currencies',
         implied_group='base.group_multi_currency',
@@ -121,11 +121,14 @@ class account_config_settings(models.TransientModel):
     group_analytic_accounting = fields.Boolean(string='Analytic accounting',
         implied_group='analytic.group_analytic_accounting',
         help="Allows you to use the analytic accounting.")
-    group_check_supplier_invoice_total = fields.Boolean(string='Check the total of supplier invoices', 
+    group_check_supplier_invoice_total = fields.Boolean(string='Check the total of supplier invoices',
         implied_group="account.group_supplier_inv_check_total")
+    currency_exchange_journal_id = fields.Many2one('account.journal',
+        related='company_id.currency_exchange_journal_id',
+        string="Rate Difference Journal",)
     income_currency_exchange_account_id = fields.Many2one('account.account',
         related='company_id.income_currency_exchange_account_id',
-        string="Gain Exchange Rate Account", 
+        string="Gain Exchange Rate Account",
         domain="[('internal_type', '=', 'other'), ('deprecated', '=', False)]")
     expense_currency_exchange_account_id = fields.Many2one('account.account',
         related='company_id.expense_currency_exchange_account_id',

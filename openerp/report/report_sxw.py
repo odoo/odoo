@@ -32,6 +32,7 @@ import logging
 import openerp.tools as tools
 import zipfile
 import common
+from openerp.exceptions import AccessError
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -438,9 +439,9 @@ class report_sxw(report_rml, preprocess.report):
                             'res_id': obj.id,
                             }, context=ctx
                         )
-                    except Exception:
+                    except AccessError:
                         #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
-                        _logger.error('Could not create saved report attachment', exc_info=True)
+                        _logger.info('Could not create saved report attachment', exc_info=True)
                 results.append(result)
             if results:
                 if results[0][1]=='pdf':
@@ -628,6 +629,3 @@ class report_sxw(report_rml, preprocess.report):
         create_doc = self.generators['makohtml2html']
         html = create_doc(mako_html,html_parser.localcontext)
         return html,'html'
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

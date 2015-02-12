@@ -135,14 +135,9 @@ class website_links(models.Model):
         else:
             vals['url'] = VALIDATE_URL(vals['url'])
 
-        search_domain = [('url', '=', vals['url'])]
-
-        if 'campaign_id' in vals:
-            search_domain.append(('campaign_id', '=', vals['campaign_id']))
-        if 'channel_id' in vals:
-            search_domain.append(('channel_id', '=', vals['channel_id']))
-        if 'source_id' in vals:
-            search_domain.append(('source_id', '=', vals['source_id']))
+        search_domain = []
+        for fname, value in vals.iteritems():
+            search_domain.append((fname, '=', value))
 
         result = self.search(search_domain, limit=1)
 
@@ -151,6 +146,11 @@ class website_links(models.Model):
 
         if not vals.get('title'):
             vals['title'] = self._get_title_from_url(vals['url'])
+
+        # Prevent the UTMs to be set by the values of UTM cookies
+        for (key, fname) in self.env['utm.mixin'].tracking_fields():
+            if fname not in vals:
+                vals[fname] = False
 
         link = super(website_links, self).create(vals)
 

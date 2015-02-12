@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import api, fields, models, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class account_analytic_line(models.Model):
@@ -53,7 +53,7 @@ class account_analytic_line(models.Model):
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id
             if not a:
-                raise Warning(_('There is no expense account defined ' \
+                raise UserError(_('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod.id,))
         else:
@@ -61,7 +61,7 @@ class account_analytic_line(models.Model):
             if not a:
                 a = prod.categ_id.property_account_income_categ.id
             if not a:
-                raise Warning(_('There is no income account defined ' \
+                raise UserError(_('There is no income account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod_id,))
  
@@ -118,13 +118,13 @@ class account_analytic_line(models.Model):
         if journal_id.type != 'sale':
             account = self.product_id.property_account_expense.id or self.product_id.categ_id.property_account_expense_categ.id
             if not account:
-                raise Warning(_('There is no expense account defined ' \
+                raise UserError(_('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (self.product_id.name, self.product_id.id,))
         else:
             account = self.product_id.property_account_income.id or self.product_id.categ_id.property_account_income_categ.id
             if not account:
-                raise Warning(_('There is no income account defined ' \
+                raise UserError(_('There is no income account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (self.product_id.name, self.product_id.id,))
 

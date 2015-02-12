@@ -35,6 +35,26 @@ class MailMailStats(osv.Model):
     _rec_name = 'message_id'
     _order = 'message_id'
 
+    def _compute_state(self, cr, uid, stat_ids, field_names, arg, context=None):
+        stats = self.browse(cr, uid, stat_ids, context=context)
+        res = dict([(stat, False) for stat in stat_ids])
+
+        self.write(cr, uid, stat_ids, {'state_update': fields.datetime.now()}, context=context)
+
+        for stat in stats:
+            if stat.exception:
+                res[stat.id] = 'exception'
+            if stat.sent:
+                res[stat.id] = 'sent'
+            if stat.opened:
+                res[stat.id] = 'opened'
+            if stat.replied:
+                res[stat.id] = 'replied'
+            if stat.bounced:
+                res[stat.id] = 'bounced'
+
+        return res
+
     _columns = {
         'mail_mail_id': fields.many2one('mail.mail', 'Mail', ondelete='set null'),
         'mail_mail_id_int': fields.integer(
@@ -66,6 +86,10 @@ class MailMailStats(osv.Model):
         'replied': fields.datetime('Replied', help='Date when this email has been replied for the first time.'),
         'bounced': fields.datetime('Bounced', help='Date when this email has bounced.'),
         'links_click_ids': fields.one2many('website.links.click', 'mail_stat_id', 'Links click'),
+        'state': fields.function(_compute_state, string='State', type="selection", 
+                                 selection=[('outgoing', 'Outgoing'), ('exception', 'Exception'), ('sent', 'Sent'), ('opened', 'Opened'), ('replied', 'Replied'), ('bounced', 'Bounced')],
+                                 store={'mail.mail.statistics': (lambda self, cr, uid, ids, context=None: ids, ['exception', 'sent', 'opened', 'replied', 'bounced'], 10)}),
+        'state_update': fields.datetime('State Update', help='Last state update of the mail'),
     }
 
     _defaults = {

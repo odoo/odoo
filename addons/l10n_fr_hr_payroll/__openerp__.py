@@ -51,7 +51,5 @@ TODO:
         'views/report_l10nfrfichepaye.xml',
         'l10n_fr_hr_payroll_reports.xml',
     ],
-    'installable': True
+    'installable': False
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

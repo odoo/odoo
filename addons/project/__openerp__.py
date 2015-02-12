@@ -27,16 +27,6 @@
     'category': 'Project Management',
     'sequence': 8,
     'summary': 'Projects, Tasks',
-    'images': [
-        'images/gantt.png',
-        'images/project_task_tree.jpeg',
-        'images/project_task.jpeg',
-        'images/project.jpeg',
-        'images/task_analysis.jpeg',
-        'images/project_kanban.jpeg',
-        'images/task_kanban.jpeg',
-        'images/task_stages.jpeg'
-    ],
     'depends': [
         'base_setup',
         'product',
@@ -81,4 +71,3 @@ Dashboard / Reports for Project Management will include:
     'auto_install': False,
     'application': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -56,12 +56,14 @@ The kernel of OpenERP, needed for all installation.
         'ir/ir_values_view.xml',
         'ir/osv_memory_autovacuum.xml',
         'ir/ir_model_report.xml',
+        'ir/report_ir_model.xml',
         'ir/ir_logging_view.xml',
         'ir/ir_qweb.xml',
         'workflow/workflow_view.xml',
         'module/module_view.xml',
         'module/module_data.xml',
         'module/module_report.xml',
+        'module/report/report_ir_module_reference.xml',
         'module/wizard/base_module_update_view.xml',
         'module/wizard/base_language_install_view.xml',
         'module/wizard/base_import_language_view.xml',
@@ -86,6 +88,7 @@ The kernel of OpenERP, needed for all installation.
     ],
     'demo': [
         'base_demo.xml',
+        'res/res_currency_demo.xml',
         'res/res_partner_demo.xml',
         'res/res_partner_demo.yml',
         'res/res_partner_image_demo.xml',
@@ -97,5 +100,5 @@ The kernel of OpenERP, needed for all installation.
     ],
     'installable': True,
     'auto_install': True,
+    'post_init_hook': 'post_init',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

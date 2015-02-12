@@ -12,6 +12,6 @@ class account_state_open(models.TransientModel):
         if active_ids:
             invoice = self.env['account.invoice'].browse(active_ids[0])
             if invoice.reconciled:
-                raise Warning(_('Invoice is already reconciled.'))
+                raise UserError(_('Invoice is already reconciled.'))
             invoice.signal_workflow('open_test')
         return {'type': 'ir.actions.act_window_close'}

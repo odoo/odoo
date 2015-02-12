@@ -11,15 +11,15 @@
 <template id="index" inherit_id="website_event.index" name="Event's Ticket">
     <xpath expr="//li[@t-foreach='event_ids']/div/h4" position="before">
         <t t-if="event.state in ['draft', 'confirm'] and event.event_ticket_ids">
-            <span t-if="not event.seats_available" class="label label-danger pull-right">Sold Out</span>
-            <span t-if="event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="label pull-right label-info">
+            <span t-if="event.seats_availability == 'limited' and not event.seats_available" class="label label-danger pull-right">Sold Out</span>
+            <span t-if="event.seats_availability ==  'limited' and event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="label pull-right label-info">
                 Only <t t-esc="event.seats_available"/> Remaining
             </span>
         </t>
     </xpath>
 </template>
 
-<template id="registration_template" inherit_id="website_event.registration_template" customize_show="True" name="Event's Ticket form">
+<template id="registration_template" inherit_id="website_event.registration_template">
     <xpath expr="//tbody" position="replace">
         <tbody>
             <t t-foreach="event.event_ticket_ids" t-as="ticket">
@@ -62,19 +62,19 @@
                         </span>
                     </td>
                     <td>
-                        <select t-if="ticket.seats_available" t-attf-name="nb_register-#{ticket.id}" class="form-control">
-                            <t t-foreach="range(0, ticket.seats_available > 9 and 10 or ticket.seats_available+1 )" t-as="nb">
+                        <select t-if="ticket.seats_available or ticket.seats_availability == 'unlimited'" t-attf-name="nb_register-#{ticket.id}" class="form-control">
+                            <t t-foreach="range(0, (ticket.seats_availability == 'unlimited' or ticket.seats_available > 9) and 10 or ticket.seats_available + 1)" t-as="nb">
                                 <option t-esc="nb"/>
                             </t>
                         </select>
-                        <span t-if="not ticket.seats_available">Sold Out</span>
+                        <span t-if="ticket.seats_availability == 'limited' and not ticket.seats_available">Sold Out</span>
                     </td>
                 </tr>
             </t>
         </tbody>
     </xpath>
     <xpath expr="//button[@type='submit']" position="replace">
-        <button type="submit" t-if="event.seats_available" class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Order Now</button>
+        <button type="submit" t-if="event.seats_available or event.seats_availability == 'unlimited'" class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Order Now</button>
         <form t-if="not event.event_ticket_ids">
             <div class="alert alert-info">
                 Event registration not yet started. 

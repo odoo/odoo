@@ -15,7 +15,7 @@
                     <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                    <field name="categ_id"/>
+                    <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                     <field string="Product Variant" name="product_variant_ids" filter_domain="['|', ('product_variant_ids.name','ilike',self), ('product_variant_ids.attribute_value_ids.name','ilike',self)]"/>
                     <field name="company_id"/>
                     <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
@@ -81,17 +81,15 @@
                                     </group>
                                 </group>
                                 <group colspan="4">
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                                 <field name="description" placeholder="describe the product characteristics..."/>
                             </page>
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
-                                    <group name="general">
+                                    <group name="general" col="4">
                                         <field name="standard_price"/>
-                                    </group>
-                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
-                                        <field name="uom_po_id"/>
+                                        <field name="uom_po_id" groups="product.group_uom"/>
                                     </group>
                                 </group>
                                 <separator string="Suppliers"/>
@@ -218,6 +216,7 @@
             <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="domain" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
@@ -257,6 +256,11 @@
                                 <field string="List of Variants" name="product_variant_count" widget="statinfo" />
                             </button>
                         </div>
+                        <p class="oe_grey">
+                            <strong>Warning</strong>: adding or deleting attributes
+                            will delete and recreate existing variants and lead
+                            to the loss of their possible customizations.
+                        </p>
                         <field name="attribute_line_ids" widget="one2many_list" context="{'show_attribute': False}">
                             <tree string="Variants" editable="bottom">
                                 <field name="attribute_id"/>
@@ -285,6 +289,9 @@
                                 <div class="oe_kanban_details">
                                     <h4>
                                         <a type="open">
+                                             <span t-if="record.default_code.value">
+                                                 [<field name="default_code"/>]
+                                              </span>
                                              <field name="name"/> 
                                         </a>
                                     </h4>
@@ -414,6 +421,7 @@
             <field name="model">product.attribute</field>
             <field name="arch" type="xml">
                 <tree string="Variant Values" editable="top">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                 </tree>
             </field>
@@ -554,7 +562,7 @@
             parent="base.menu_product"
             sequence="30" groups="base.group_no_one"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
-            <field name="name">Internal Categories</field>
+            <field name="name">Product Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.category</field>
             <field name="view_type">form</field>
@@ -728,12 +736,18 @@
         <menuitem
             action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
 
+        <record model="ir.actions.act_window" id="action_packaging_view">
+            <field name="name">Packagings</field>
+            <field name="res_model">product.packaging</field>
+        </record>
+
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
                 <tree string="Packaging">
                     <field name="sequence" widget="handle"/>
+                    <field name="name"/>
                     <field name="product_tmpl_id"/>
                     <field name="barcode"/>
                     <field name="qty"/>
@@ -762,22 +776,24 @@
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
                 <form string="Packaging">
-                    <group col="4">
-                        <field name="product_tmpl_id"/>
-                        <newline/>
-                        <field name="barcode"/>
-                        <field name="sequence" invisible="1"/>
-                        <newline/>
-                        <field name="qty"/>
-                        <field name="ul"/>
-                        <separator colspan="4" string="Palletization"/>
-                        <field name="ul_qty"/>
-                        <field name="rows"/>
-                        <field name="ul_container"/>
-                        <field name="weight"/>
-                        <separator colspan="4" string="Other Info"/>
-                        <field colspan="4" name="name"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="product_tmpl_id"/>
+                            <newline/>
+                            <field name="barcode"/>
+                            <field name="sequence" invisible="1"/>
+                            <newline/>
+                            <field name="qty"/>
+                            <field name="ul"/>
+                            <separator colspan="4" string="Palletization"/>
+                            <field name="ul_qty"/>
+                            <field name="rows"/>
+                            <field name="ul_container"/>
+                            <field name="weight"/>
+                            <separator colspan="4" string="Other Info"/>
+                            <field colspan="4" name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -818,7 +834,7 @@
                         <field name="min_qty"/>
                         <field name="product_uom" groups="product.group_uom"/>
                         <field name="delay"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     </group>
                     <p groups="product.group_purchase_pricelist" class="oe_grey">The prices below will only be taken into account when your pricelist is set as based on supplier prices.</p>
                     <field groups="product.group_purchase_pricelist" name="pricelist_ids">
@@ -845,7 +861,7 @@
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="min_qty"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 </tree>
             </field>
         </record>

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:26+0000\n"
-"PO-Revision-Date: 2014-10-15 15:49+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"PO-Revision-Date: 2014-12-08 07:35+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-16 05:53+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-12-09 06:43+0000\n"
+"X-Generator: Launchpad (build 17283)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -30,6 +30,15 @@ msgid ""
 "    \n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    Çinli iller verilerini ekle\n"
+"\n"
+"    Hesap tablosu küçük işletme artırmak için\n"
+"    \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -45,6 +54,16 @@ msgid ""
 "bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"=======================\n"
+"\n"
+"Bu modül Satış Noktası: birkaç restoran özellikleri ekler\n"
+"- Fatura Yazdırma: sipariş ödenmesi önce bir makbuz yazdırmanızı sağlar\n"
+"- Bill Splitting: Allows you to split an order into different orders\n"
+"- Kitchen Order Printing: allows you to print orders updates to kitchen or "
+"bar printers\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -57,6 +76,13 @@ msgid ""
 "sale discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"=======================\n"
+"\n"
+"Bu modül Kasiyer hızlı bir satış indirim yüzdesini\n"
+"vermek sağlar.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -74,6 +100,18 @@ msgid ""
 " \n"
 " "
 msgstr ""
+"\n"
+"\n"
+"Macar lokalizasyonu için bazı modüller\n"
+"==========================================\n"
+"\n"
+"This module consists :\n"
+"\n"
+" - Generic Hungarian chart of accounts\n"
+" - Hungarian taxes\n"
+" - Hungarian Bank information\n"
+" \n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_claim
@@ -89,6 +127,16 @@ msgid ""
 "automatically new claims based on incoming emails.\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Müşteri Şikayetlerini Yönetme.\n"
+"=======================\n"
+"Bu uygulama size müşteriler/tedarikçiler iddiaları ve şikayetlerini "
+"izlemenize olanak sağlar.\n"
+"\n"
+"It is fully integrated with the email gateway so that you can create\n"
+"automatically new claims based on incoming emails.\n"
+"    "
 
 #. module: base
 #: code:addons/base/res/res_config.py:379
@@ -134,6 +182,33 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    \n"
+"Giriş ve çıkış faturalar Belçika yerelleştirme (account_code için prereq):\n"
+"============================================================================"
+"\n"
+"    - Rename 'reference' field labels to 'Communication'\n"
+"    - Add support for Belgian Structured Communication\n"
+"\n"
+"A Structured Communication can be generated automatically on outgoing "
+"invoices according to the following algorithms:\n"
+"-----------------------------------------------------------------------------"
+"----------------------------------------\n"
+"    1) Random : +++RRR/RRRR/RRRDD+++\n"
+"        **R..R =** Random Digits, **DD =** Check Digits\n"
+"    2) Date : +++DOY/YEAR/SSSDD+++\n"
+"        **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check "
+"Digits\n"
+"    3) Customer Reference +++RRR/RRRR/SSSDDD+++\n"
+"        **R..R =** Customer Reference without non-numeric characters, **SSS "
+"=** Sequence Number, **DD =** Check Digits  \n"
+"        \n"
+"The preferred type of Structured Communication and associated Algorithm can "
+"be\n"
+"specified on the Partner records. A 'random' Structured Communication will\n"
+"generated if no algorithm is specified on the Partner record. \n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -166,6 +241,9 @@ msgid ""
 "    Display your network of certified people on your website\n"
 "    "
 msgstr ""
+"\n"
+"    Web sitenizde sertifikalı kişilerin ağınıza görüntüler\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -199,6 +277,10 @@ msgid ""
 "==========================================\n"
 "    "
 msgstr ""
+"\n"
+"Belçika Bordro Kuralları Muhasebe Veri.\n"
+"==========================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -231,6 +313,33 @@ msgid ""
 "module named account_voucher.\n"
 "    "
 msgstr ""
+"\n"
+"Muhasebe ve Finansal Yönetim.\n"
+"====================================\n"
+"\n"
+"Finansal ve muhasebe modülünün Kapsamı:\n"
+"--------------------------------------------\n"
+"    * Genel Muhasebe\n"
+"    * Maliyet / Analiz muhasebesi\n"
+"    * Üçüncü taraf muhasebesi\n"
+"    * Vergi yönetimi\n"
+"    * Bütçeler\n"
+"    * Müşteri ve Tedarikçi Faturalar\n"
+"    * Banka Tabloları\n"
+"    * İş Ortağı tarafında Mutabakat süreci\n"
+"\n"
+"Creates a dashboard for accountants that includes:\n"
+"--------------------------------------------------\n"
+"    * List of Customer Invoices to Approve\n"
+"    * Company Analysis\n"
+"    * Graph of Treasury\n"
+"\n"
+"Processes like maintaining general ledgers are done through the defined "
+"Financial Journals (entry move line or grouping is maintained through a "
+"journal) \n"
+"for a particular financial year and for preparation of vouchers there is a "
+"module named account_voucher.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_order_dates
@@ -261,6 +370,17 @@ msgid ""
 "You can assign several contracts per employee.\n"
 "    "
 msgstr ""
+"\n"
+"Sözleşmeleri yönetmek için personelin formda'ki tüm bilgilerini ekleme.\n"
+"=============================================================\n"
+"\n"
+"    * sözleşme\n"
+"    * PDoğum Yeri,\n"
+"    * MSağlık Kontrol Tarihi\n"
+"    * Şirket Araç\n"
+"\n"
+"Personel başına birkaç sözleşme atayabilirsiniz.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_email_template
@@ -4625,7 +4745,7 @@ msgstr "(şirket adresi düzenleyin)"
 #. module: base
 #: view:res.company:base.view_company_form
 msgid "(reload fonts)"
-msgstr ""
+msgstr "(fontları yenile)"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -4686,7 +4806,7 @@ msgstr "11. %U veya %W      ==> 48 (49 hafta)"
 #. module: base
 #: view:res.lang:base.res_lang_form
 msgid "12. %w              ==> 5 ( Friday is the 6th day)"
-msgstr "12. %w             ==> 5 ( Cuma 6'ncı gün)"
+msgstr "12. %w              ==> 5 ( Cuma 6'ncı gün)"
 
 #. module: base
 #: report:ir.module.reference:0
@@ -4985,7 +5105,7 @@ msgstr "Erişim Kuralları"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
 msgid "Account Analytic Defaults"
-msgstr "Analitik Varsayılan Hesaplar"
+msgstr "Analiz Varsayılan Hesaplar"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_charts
@@ -5011,7 +5131,7 @@ msgstr "Hesap Sahibi"
 #. module: base
 #: field:res.partner.bank,owner_name:0
 msgid "Account Owner Name"
-msgstr "Hesap Sahibi Adı"
+msgstr "Hesap Sahibinin Adı"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules_accounting
@@ -5355,7 +5475,7 @@ msgstr "Bu modülü kaldırmak için Yönetici erişim gereklidir"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
 msgid "Advanced Events"
-msgstr ""
+msgstr "Gelişmiş Etkinlikler"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_report_designer
@@ -5371,7 +5491,7 @@ msgstr "Gelişmiş Arama (onaylanmamış)"
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
-msgstr ""
+msgstr "Adyen Ödeme Alıcı"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -5458,7 +5578,7 @@ msgstr "Amerikan Samoası"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Amharic / አምሃርኛ"
-msgstr ""
+msgstr "Aramice / አምሃርኛ"
 
 #. module: base
 #: help:ir.actions.client,tag:0
@@ -5608,7 +5728,7 @@ msgstr "Arjantin"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar
 msgid "Argentina Localization Chart Account"
-msgstr ""
+msgstr "Arjantin Yerelleştirme Hesap Planı"
 
 #. module: base
 #: field:ir.cron,args:0
@@ -5758,7 +5878,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_automation
 msgid "Automation"
-msgstr ""
+msgstr "Otomasyon"
 
 #. module: base
 #: model:res.country,name:base.az
@@ -5847,7 +5967,7 @@ msgstr "Banka Adı"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_extensions
 msgid "Bank Statement Extensions to Support e-banking"
-msgstr ""
+msgstr "Banka Hesap Uzantıları, e-bankacılık Destek"
 
 #. module: base
 #: field:res.partner.bank.type.field,bank_type_id:0
@@ -5895,7 +6015,7 @@ msgstr "Barbados"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_scanner
 msgid "Barcode Scanner Hardware Driver"
-msgstr ""
+msgstr "Barcode Scanner Donanım Sürücüsü"
 
 #. module: base
 #: view:ir.model:base.view_model_search
@@ -6716,7 +6836,7 @@ msgstr "Firma Banka Hesapları"
 #: model:ir.actions.act_window,name:base.action_inventory_form
 #: model:ir.ui.menu,name:base.menu_action_inventory_form
 msgid "Company Defaults"
-msgstr ""
+msgstr "Şirket Varsayılanları"
 
 #. module: base
 #: field:res.company,name:0
@@ -6727,7 +6847,7 @@ msgstr "Firma Adı"
 #: model:ir.actions.act_window,name:base.ir_property_form
 #: model:ir.ui.menu,name:base.menu_ir_property_form_all
 msgid "Company Properties"
-msgstr ""
+msgstr "Şirket Özellikleri"
 
 #. module: base
 #: field:res.company,company_registry:0
@@ -6840,7 +6960,7 @@ msgstr "Yapılandırma Sihirbazları"
 #. module: base
 #: view:base.module.upgrade:base.view_base_module_upgrade
 msgid "Confirm"
-msgstr ""
+msgstr "Doğrulama"
 
 #. module: base
 #: model:res.country,name:base.cg
@@ -6916,12 +7036,12 @@ msgstr "Kontak Oluşturma"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm
 msgid "Contact Form"
-msgstr ""
+msgstr "İletişim Formu"
 
 #. module: base
 #: field:res.partner,ref:0
 msgid "Contact Reference"
-msgstr ""
+msgstr "İletişim Referansı"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -7048,7 +7168,7 @@ msgstr "Ülke Kodu"
 #: view:res.country.group:base.view_country_group_form
 #: view:res.country.group:base.view_country_group_tree
 msgid "Country Group"
-msgstr ""
+msgstr "Ülke Grubu"
 
 #. module: base
 #: field:res.country,name:0
@@ -7081,7 +7201,7 @@ msgstr "Erişim Yetkisi Oluştur"
 #: field:res.partner,create_date:0
 #: field:res.users,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Oluşturma Tarihi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_project_issue
@@ -7236,7 +7356,7 @@ msgstr "Oluşturulan Görünümler"
 #: field:workflow.activity,create_uid:0
 #: field:workflow.transition,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: base
 #: field:base.language.export,create_date:0
@@ -7308,7 +7428,7 @@ msgstr ""
 #: field:workflow.activity,create_date:0
 #: field:workflow.transition,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturulma"
 
 #. module: base
 #: view:ir.attachment:base.view_attachment_form
@@ -7361,7 +7481,7 @@ msgstr "Curaçao"
 #: view:res.currency:base.view_currency_search
 #: view:res.currency:base.view_currency_tree
 msgid "Currencies"
-msgstr "ParaBirimleri"
+msgstr "Para Birimleri"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency
@@ -7378,12 +7498,12 @@ msgstr "Para Birimi"
 #. module: base
 #: help:res.currency,name:0
 msgid "Currency Code (ISO 4217)"
-msgstr "ParaNBirimi Kodu (ISO 4217)"
+msgstr "Para Birimi Kodu (ISO 4217)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency_rate
 msgid "Currency Rate"
-msgstr "ParabBirimi Oranı"
+msgstr "Para Birim Oranı"
 
 #. module: base
 #: help:res.currency,symbol:0
@@ -7404,12 +7524,12 @@ msgstr "Geçerli Pencere"
 #. module: base
 #: view:ir.sequence:base.sequence_view
 msgid "Current Year with Century: %(year)s"
-msgstr "Şimdiki Yıl Yüzyıl ile birlikte: %(yıl)s"
+msgstr "Şimdiki Yıl Yüzyıl ile birlikte: %(year)lar"
 
 #. module: base
 #: view:ir.sequence:base.sequence_view
 msgid "Current Year without Century: %(y)s"
-msgstr "Yüzyıl olmadan şimdiki Yıl: %(y)s"
+msgstr "Yüzyıl olmadan şimdiki Yıl: %(y)lar"
 
 #. module: base
 #: view:ir.model:base.view_model_search
@@ -7466,7 +7586,7 @@ msgstr "Müşteri Profilleme"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
 msgid "Customer References"
-msgstr ""
+msgstr "Müşteri Referansları"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_customer_relationship_management
@@ -7529,7 +7649,7 @@ msgstr ""
 #. module: base
 #: view:ir.logging:base.ir_logging_search_view
 msgid "Database"
-msgstr ""
+msgstr "Veritabanı"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_anonymization
@@ -7553,7 +7673,7 @@ msgstr ""
 #. module: base
 #: field:ir.logging,dbname:0
 msgid "Database Name"
-msgstr ""
+msgstr "Veritaban Adı"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_9
@@ -7576,7 +7696,7 @@ msgstr "Tarih"
 #. module: base
 #: field:ir.attachment,create_date:0
 msgid "Date Created"
-msgstr "Oluşturma Tarihi"
+msgstr "Oluşturulma Tarihi"
 
 #. module: base
 #: field:res.lang,date_format:0
@@ -7586,7 +7706,7 @@ msgstr "Tarih Biçimi"
 #. module: base
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
-msgstr ""
+msgstr "Değiştirme Tarihi"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -7601,7 +7721,7 @@ msgstr "Satış Siparişindeki Tarihler"
 #. module: base
 #: view:ir.logging:base.ir_logging_search_view
 msgid "Day"
-msgstr ""
+msgstr "Gün"
 
 #. module: base
 #: view:ir.sequence:base.sequence_view
@@ -7611,7 +7731,7 @@ msgstr "Haftanın Günü (0:Pazartesi): %(haftanıngün)leri"
 #. module: base
 #: view:ir.sequence:base.sequence_view
 msgid "Day of the Year: %(doy)s"
-msgstr "Yılın Günü: %(doy)s"
+msgstr "Yılın Günü: %(doy)leri"
 
 #. module: base
 #: view:ir.sequence:base.sequence_view
@@ -7906,7 +8026,7 @@ msgstr "Cibuti"
 #. module: base
 #: model:res.groups,name:base.group_mono_salesteams
 msgid "Do Not Use Sales Teams"
-msgstr ""
+msgstr "Satış Ekiplerini Kullanamazsınız"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
@@ -7928,12 +8048,12 @@ msgstr "Döküman modeli"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
 msgid "Documentation"
-msgstr ""
+msgstr "Belgeleme"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documentation_examples
 msgid "Documentation examples test"
-msgstr ""
+msgstr "Belgeleme örnekleri testi"
 
 #. module: base
 #: field:ir.filters,domain:0
@@ -7983,7 +8103,7 @@ msgstr "Dr."
 #: model:ir.module.module,shortdesc:base.module_stock_dropshipping
 #: model:ir.module.module,summary:base.module_stock_dropshipping
 msgid "Drop Shipping"
-msgstr ""
+msgstr "Stoksuz Stok"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -8335,7 +8455,7 @@ msgstr "Dışa Aktarım Adı"
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
 msgid "Export Settings"
-msgstr "Dışa aktarım Ayarları"
+msgstr "Dışa Aktarım Ayarları"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_wizard_lang_export
@@ -8400,7 +8520,7 @@ msgstr "Dış Tanımlayıcı"
 #: view:ir.model.data:base.view_model_data_search
 #: model:ir.ui.menu,name:base.ir_model_data_menu
 msgid "External Identifiers"
-msgstr "Dış  Tanımlayıcılar"
+msgstr "Dış Tanımlayıcılar"
 
 #. module: base
 #: help:ir.model.data,name:0
@@ -8476,12 +8596,12 @@ msgstr "Alan Etiketi"
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Field Mapping"
-msgstr "Alan Eşleşmeleri"
+msgstr "Alan Eşleştirme"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Field Mappings"
-msgstr "Alan Eşleşmeleri"
+msgstr "Alan Eşleştirmeleri"
 
 #. module: base
 #: field:ir.exports.line,name:0
@@ -8664,7 +8784,7 @@ msgstr ""
 #. module: base
 #: field:res.font,name:0
 msgid "Font Name"
-msgstr ""
+msgstr "Font Adı"
 
 #. module: base
 #: field:res.font,family:0
@@ -8988,17 +9108,17 @@ msgstr "Google Analitikleri"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google Takvim"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_drive
 msgid "Google Drive™ integration"
-msgstr ""
+msgstr "Google Drive ™ entegrasyonu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_spreadsheet
 msgid "Google Spreadsheet"
-msgstr ""
+msgstr "Google E-tablo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_account
@@ -9371,7 +9491,7 @@ msgstr "Saat 00->12: %(h12)ler"
 #. module: base
 #: view:ir.sequence:base.sequence_view
 msgid "Hour 00->24: %(h24)s"
-msgstr "Saat 00->24: %(h24)s"
+msgstr "Saat 00->24: %(h24)ler"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -9749,7 +9869,7 @@ msgstr "Resim"
 #. module: base
 #: view:base.module.upgrade:base.view_base_module_upgrade
 msgid "Impacted Modules"
-msgstr ""
+msgstr "Etkilenen Modüller"
 
 #. module: base
 #: field:ir.sequence,implementation:0
@@ -9759,7 +9879,7 @@ msgstr "Gerçekleştirme"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_import_crm
 msgid "Import & Synchronize"
-msgstr "İçe aktarım ve senkronize"
+msgstr "İçe Aktarım ve Senkronize"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
@@ -9847,7 +9967,7 @@ msgstr "Banka Hakkında Bilgi"
 #. module: base
 #: view:ir.ui.view:base.view_view_search
 msgid "Inherit"
-msgstr ""
+msgstr "Devralma"
 
 #. module: base
 #: field:ir.ui.view,inherit_children_ids:0
@@ -9921,7 +10041,7 @@ msgstr "Dil Yükleme"
 #. module: base
 #: view:res.config.installer:base.res_config_installer
 msgid "Install Modules"
-msgstr "Modülleri Kurma"
+msgstr "Modül Yüklemeleri"
 
 #. module: base
 #: view:ir.module.module:base.module_view_kanban
@@ -9933,12 +10053,12 @@ msgstr "Yüklendi"
 #. module: base
 #: view:ir.module.module:base.module_form
 msgid "Installed Features"
-msgstr ""
+msgstr "Yüklene Özellikler"
 
 #. module: base
 #: field:ir.module.module,latest_version:0
 msgid "Installed Version"
-msgstr "Kurulan Versiyon"
+msgstr "Yüklenen Versiyon"
 
 #. module: base
 #: field:workflow.workitem,inst_id:0
@@ -9954,7 +10074,7 @@ msgstr "Örnekler"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_chat
 msgid "Instant Messaging"
-msgstr ""
+msgstr "Anlık Mesajlaşma"
 
 #. module: base
 #: model:ir.module.module,description:base.module_bus
@@ -10073,12 +10193,12 @@ msgstr "Dizisi için geçersiz önek veya sonek '%s'"
 #. module: base
 #: constraint:ir.ui.view:0
 msgid "Invalid view definition"
-msgstr ""
+msgstr "Geçersiz görünüm tanımı"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules_inventory_control
 msgid "Inventory Control"
-msgstr ""
+msgstr "Envanter Kontrolu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock
@@ -10088,7 +10208,7 @@ msgstr "Envanter, Lojistik, Depolama"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr ""
+msgstr "Envanter, Lojistik, Değerleme, Muhasebe"
 
 #. module: base
 #: selection:res.partner,type:0
@@ -10103,7 +10223,7 @@ msgstr "Teslimatı Doğrudan Faturala"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_invoice
 msgid "Invoice on Timesheets"
-msgstr "ZamanÇizelgeleride Faturalama"
+msgstr "Zaman Çizelgeleride Faturalama"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_invoiced
@@ -10118,7 +10238,7 @@ msgstr "Faturalama & Ödemeler"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_journal
 msgid "Invoicing Journals"
-msgstr "Faturalama Günlükleri"
+msgstr "Faturalama Yevmiyeleri"
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -10144,7 +10264,7 @@ msgstr "Bu Bir Firmamı"
 #: view:res.partner:base.view_partner_form
 #: view:res.partner:base.view_partner_simple_form
 msgid "Is a Company?"
-msgstr "Bu bir Firmamı"
+msgstr "Bu bir Firmamı?"
 
 #. module: base
 #: model:res.country,name:base.im
@@ -10159,7 +10279,7 @@ msgstr "İsrail"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue
 msgid "Issue Tracking"
-msgstr ""
+msgstr "Sorun Takibi"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -10204,7 +10324,7 @@ msgstr "Jersey"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
 msgid "Job Descriptions And Application Forms"
-msgstr ""
+msgstr "İş Tanımları ve Başvuru Formları"
 
 #. module: base
 #: field:res.partner,function:0
@@ -10214,7 +10334,7 @@ msgstr "İş Pozisyonu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr_recruitment
 msgid "Jobs"
-msgstr ""
+msgstr "İşler"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_user_function
@@ -10229,7 +10349,7 @@ msgstr "İşler, Bölümler, Çalışan Bilgileri"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Jobs, Recruitment, Applications, Job Interviews, Surveys"
-msgstr ""
+msgstr "İşler, İşe Alım, Uygulamalar, İş Görüşmesi, Anketler"
 
 #. module: base
 #: field:workflow.activity,join_mode:0
@@ -10378,7 +10498,7 @@ msgstr "Diller"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Lao / ພາສາລາວ"
-msgstr ""
+msgstr "Lao / ພາສາລາວ"
 
 #. module: base
 #: model:res.country,name:base.la
@@ -10388,12 +10508,12 @@ msgstr "Laos"
 #. module: base
 #: field:ir.ui.view,write_date:0
 msgid "Last Modification Date"
-msgstr ""
+msgstr "Son Değişiklik Tarihi"
 
 #. module: base
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
-msgstr ""
+msgstr "Son Kullanıcı Değişikliği"
 
 #. module: base
 #: field:base.language.export,write_uid:0
@@ -10469,7 +10589,7 @@ msgstr ""
 #: field:workflow.activity,write_uid:0
 #: field:workflow.transition,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: base
 #: field:base.language.export,write_date:0
@@ -10544,7 +10664,7 @@ msgstr ""
 #: field:workflow.activity,write_date:0
 #: field:workflow.transition,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: base
 #: field:ir.module.module,installed_version:0
@@ -10601,7 +10721,7 @@ msgstr "Launchpad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_project_issue
 msgid "Lead to Issue"
-msgstr ""
+msgstr "Aday Sorunları"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
@@ -10675,7 +10795,7 @@ msgstr ""
 #: view:ir.logging:base.ir_logging_search_view
 #: field:ir.logging,level:0
 msgid "Level"
-msgstr ""
+msgstr "Düzey"
 
 #. module: base
 #: model:res.country,name:base.lr
@@ -10705,7 +10825,7 @@ msgstr "Sınır"
 #. module: base
 #: field:ir.logging,line:0
 msgid "Line"
-msgstr ""
+msgstr "Satır"
 
 #. module: base
 #: field:ir.actions.server,link_field_id:0
@@ -10748,12 +10868,12 @@ msgstr "Litvanyaca / Lietuvių kalba"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat
 msgid "Live Chat"
-msgstr ""
+msgstr "Canlı Sohbet"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_im_livechat
 msgid "Live Chat with Visitors/Customers"
-msgstr ""
+msgstr "Ziyaretçiler / Müşteriler ile Canlı Sohbet"
 
 #. module: base
 #: view:base.language.install:base.view_base_language_install
@@ -10771,7 +10891,7 @@ msgstr "Çeviri Yükleyin"
 #: model:ir.actions.act_window,name:base.open_module_tree
 #: model:ir.ui.menu,name:base.menu_module_tree
 msgid "Local Modules"
-msgstr ""
+msgstr "Yerel Modüller"
 
 #. module: base
 #: field:res.lang,code:0
@@ -11102,7 +11222,7 @@ msgstr "Martinique (Fransız)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Mass Mailing Campaigns"
-msgstr ""
+msgstr "Toplu Posta Kampanyalar"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -11191,7 +11311,7 @@ msgstr "Mesaj"
 #. module: base
 #: view:res.users:base.view_users_form
 msgid "Messaging and Social"
-msgstr ""
+msgstr "Mesajlaşma ve Sosyal"
 
 #. module: base
 #: field:ir.cron,function:0
@@ -11258,7 +11378,7 @@ msgstr "Mobil:"
 #. module: base
 #: field:res.font,mode:0
 msgid "Mode"
-msgstr ""
+msgstr "Model"
 
 #. module: base
 #: field:ir.actions.report.xml,model:0
@@ -11284,7 +11404,7 @@ msgstr "Model %s yok!"
 #: code:addons/base/ir/ir_model.py:176
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
-msgstr ""
+msgstr "Model '%s' modül verilerini içeren ve kaldırılamaz!"
 
 #. module: base
 #: field:ir.values,model_id:0
@@ -11302,7 +11422,7 @@ msgstr "Model Kısıtlamaları"
 #. module: base
 #: field:ir.ui.view,model_data_id:0
 msgid "Model Data"
-msgstr ""
+msgstr "Model Verileri"
 
 #. module: base
 #: view:ir.model:base.view_model_form
@@ -11330,6 +11450,8 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
+"Kayıt oluşturma / güncelleme Modeli. Baz model daha farklı bir model "
+"belirlemek için sadece bu alanı ayarlayın."
 
 #. module: base
 #: help:ir.actions.act_window,res_model:0
@@ -11500,12 +11622,12 @@ msgstr "Montserrat"
 #. module: base
 #: field:ir.actions.server,menu_ir_values_id:0
 msgid "More Menu entry"
-msgstr ""
+msgstr "Diğer Menü Girişi"
 
 #. module: base
 #: help:ir.actions.server,menu_ir_values_id:0
 msgid "More menu entry."
-msgstr ""
+msgstr "Diğer menü girişi."
 
 #. module: base
 #: model:res.country,name:base.ma
@@ -11520,12 +11642,12 @@ msgstr "Mozambik"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
 msgid "Mr."
-msgstr ""
+msgstr "Bay."
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Mrs."
-msgstr ""
+msgstr "Bayan."
 
 #. module: base
 #: model:res.groups,name:base.group_multi_company
@@ -11702,7 +11824,7 @@ msgstr "Yeni kolon adı özel br alan olduğu için  x_ ile başlamak zorunda!"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_blog
 msgid "News, Blogs, Announces, Discussions"
-msgstr ""
+msgstr "Haber, Bloglar, Duyurdu, Tartışmalar"
 
 #. module: base
 #: field:ir.cron,nextcall:0
@@ -11726,6 +11848,8 @@ msgid ""
 "Next number that will be used. This number can be incremented frequently so "
 "the displayed value might already be obsolete"
 msgstr ""
+"Kullanılacak sonraki sayı. Görüntülenen değer zaten eskimiş olabilir bu "
+"yüzden Bu sayı sık artırılır edilebilir"
 
 #. module: base
 #: help:ir.cron,nextcall:0
@@ -11756,7 +11880,7 @@ msgstr "Niue"
 #: code:addons/base/res/res_currency.py:59
 #, python-format
 msgid "No currency rate associated for currency '%s' for the given period"
-msgstr ""
+msgstr "Verilen süre için para '%s' için ilişkili yok kur"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -11828,7 +11952,7 @@ msgstr "Norveç"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no
 msgid "Norway - Chart of Accounts"
-msgstr ""
+msgstr "Norveç - Hesap Tablosu"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -11940,14 +12064,14 @@ msgstr "Nesne:"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Occitan (FR, post 1500) / Occitan"
-msgstr ""
+msgstr "Oksitanca (FR, sonrası 1500) / Oksitanca"
 
 #. module: base
 #. openerp-web
 #: code:addons/base/static/src/js/apps.js:105
 #, python-format
 msgid "Odoo Apps will be available soon"
-msgstr ""
+msgstr "Odoo Apps yakında hazır olacak"
 
 #. module: base
 #: help:ir.sequence,padding:0
@@ -11955,6 +12079,8 @@ msgid ""
 "Odoo will automatically adds some '0' on the left of the 'Next Number' to "
 "get the required padding size."
 msgstr ""
+"Odoo otomatik olarak gerekli dolgu boyutu almak için 'İleri sayısı' sol bazı "
+"'0' ekler olacaktır."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
@@ -11970,12 +12096,12 @@ msgstr "Sorumlusu"
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
-msgstr ""
+msgstr "Ogone Ödeme Alıcısı"
 
 #. module: base
 #: field:ir.translation,src:0
 msgid "Old source"
-msgstr ""
+msgstr "Eski kaynağı"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -12006,34 +12132,34 @@ msgstr "many2one alanlarda silinmede gerçekleştirilecek özellik"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "Online Billing"
-msgstr ""
+msgstr "Çevrimiçi Fatura"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
 msgid "Online Event's Tickets"
-msgstr ""
+msgstr "Çevrimiçi Etkinlik Biletleri"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event
 msgid "Online Events"
-msgstr ""
+msgstr "Çevrimiçi Etkinlik"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_quote
 msgid "Online Proposals"
-msgstr ""
+msgstr "Çevrimiçi Teklifler"
 
 #. module: base
 #: code:addons/base/res/res_config.py:539
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "adece yöneticiler ayarları değiştirebilirs"
 
 #. module: base
 #: code:addons/base/ir/ir_attachment.py:79
 #, python-format
 msgid "Only administrators can execute this action."
-msgstr ""
+msgstr "Sadece yöneticiler bu eylemi yürütebilirler."
 
 #. module: base
 #: help:ir.ui.view,mode:0
@@ -12090,7 +12216,7 @@ msgstr "Bir Pencere Aç"
 #. module: base
 #: model:ir.module.module,summary:base.module_im_chat
 msgid "OpenERP Chat"
-msgstr ""
+msgstr "OpenERP Sohbet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_api
@@ -12204,7 +12330,7 @@ msgstr "Diğer OSI Onaylı Lisans"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_other_form
 msgid "Other Partners"
-msgstr "Diğer Partner"
+msgstr "Diğer İş Oratağı"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -12246,7 +12372,7 @@ msgstr "Sahibi"
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "PDF"
-msgstr ""
+msgstr "PDF"
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -12361,7 +12487,7 @@ msgstr "Sağ Üst"
 #. module: base
 #: field:ir.actions.report.xml,parser:0
 msgid "Parser Class"
-msgstr ""
+msgstr "Ayrıştırıcı Sınıfı"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner
@@ -12370,27 +12496,27 @@ msgstr ""
 #: selection:res.partner.title,domain:0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
-msgstr "Partner"
+msgstr "İş Ortağı"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_partner_assign
 msgid "Partner Assignation & Geolocation"
-msgstr ""
+msgstr "İş Ortağı Atama ve Coğrafi Konum"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_mass_mail
 msgid "Partner Mass Mailing"
-msgstr ""
+msgstr "İş Ortağı Toplu Posta"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner Module for Website"
-msgstr ""
+msgstr "Web sitesi için İş Ortağı Modülü"
 
 #. module: base
 #: view:res.partner.category:base.view_partner_category_form
 msgid "Partner Tag"
-msgstr ""
+msgstr "İş Ortağı Etiketi"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_by_category
@@ -12411,7 +12537,7 @@ msgstr "Partner Ünvanları"
 #. module: base
 #: help:res.users,partner_id:0
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "Kullanıcının İş Ortağı ilgili veriler"
 
 #. module: base
 #: view:res.partner:base.view_partner_form
@@ -12445,23 +12571,23 @@ msgstr "Parola Şifreleme"
 #: field:ir.logging,path:0
 #: field:res.font,path:0
 msgid "Path"
-msgstr ""
+msgstr "Yol"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Ödeme Alıcı"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment
 #: model:ir.module.module,summary:base.module_payment
 msgid "Payment Acquirer Base Module"
-msgstr ""
+msgstr "Ödeme Alıcı Temel Modül"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_adyen
 msgid "Payment Acquirer: Adyen Implementation"
-msgstr ""
+msgstr "Ödeme Alıcı: Adyen Uygulanması"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_buckaroo
@@ -12648,7 +12774,7 @@ msgstr "Satış Noktası"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
-msgstr ""
+msgstr "POS İndirim"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -12685,7 +12811,7 @@ msgstr "Portal Şikayeti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_gamification
 msgid "Portal Gamification"
-msgstr ""
+msgstr "Portal Gamification"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_project_issue
@@ -12728,7 +12854,7 @@ msgstr "Portekiz Hesap Planı"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Portuguese (BR) / Português (BR)"
-msgstr ""
+msgstr "İngilizce (ABD) / Portekizce (BR)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -12738,22 +12864,22 @@ msgstr "Portekizce / Português"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
 msgid "PosBox Homepage"
-msgstr ""
+msgstr "PosBox Anasayfa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_upgrade
 msgid "PosBox Software Upgrader"
-msgstr ""
+msgstr "PosBox Yazılım Güncelleyicisi"
 
 #. module: base
 #: help:ir.model.constraint,name:0
 msgid "PostgreSQL constraint or foreign key name."
-msgstr ""
+msgstr "PostgreSQL kısıtlama veya yabancı anahtar adı."
 
 #. module: base
 #: help:ir.model.relation,name:0
 msgid "PostgreSQL table name implementing a many2many relation."
-msgstr ""
+msgstr "Bir many2many ilişki uygulanması PostgreSQL tablo adı."
 
 #. module: base
 #: view:res.users:base.view_users_form
@@ -12780,12 +12906,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr
 msgid "Present Your Team"
-msgstr ""
+msgstr "Sizin Takımınız Sunumu"
 
 #. module: base
 #: view:res.company:base.view_company_form
 msgid "Preview Header/Footer"
-msgstr "Önizleme Üstbilgi/Altbiligi"
+msgstr "Ön İzleme Üstbilgi/Altbiligi"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.preview_report
@@ -12817,12 +12943,12 @@ msgstr "Tedarikler"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_email_template
 msgid "Product Email Template"
-msgstr ""
+msgstr "Ürün E-posta Şablonu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_extended
 msgid "Product extension to track sales and purchases"
-msgstr ""
+msgstr "Ürün uzantısı satış ve satın alma izlemek için"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_product
@@ -12894,21 +13020,22 @@ msgid ""
 "Provide an expression that, applied on the current record, gives the field "
 "to update."
 msgstr ""
+"Mevcut kayıtlarında uygulanan, güncellemek alanını veren bir ifade sağlayın."
 
 #. module: base
 #: help:ir.actions.server,link_field_id:0
 msgid "Provide the field where the record id is stored after the operations."
-msgstr ""
+msgstr "Kayıt id operasyonlarından sonra saklanır alanını sağlayın."
 
 #. module: base
 #: model:res.groups,name:base.group_public
 msgid "Public"
-msgstr ""
+msgstr "Herkese Açık"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project
 msgid "Public Projects"
-msgstr ""
+msgstr "Herekese Açık Projeler"
 
 #. module: base
 #: model:res.groups,comment:base.group_public
@@ -12921,7 +13048,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_membership
 msgid "Publish Associations, Groups and Memberships"
-msgstr ""
+msgstr "Birlikleri, Gruplar ve Üyelikleri Yayınla"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
@@ -12931,12 +13058,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_customer
 msgid "Publish Your Customer References"
-msgstr ""
+msgstr "Müşteri Referansları Yayınla"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_project
 msgid "Publish Your Public Projects"
-msgstr ""
+msgstr "Sizin Herkese Açık Projeleri Yayınla"
 
 #. module: base
 #: field:ir.module.module,published_version:0
@@ -12951,7 +13078,7 @@ msgstr "Porto Riko"
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_73
 msgid "Purchase"
-msgstr "SatınAlma"
+msgstr "Satınalma"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_analytic_plans
@@ -12961,12 +13088,12 @@ msgstr "Satınalma Analitik Planları"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase
 msgid "Purchase Management"
-msgstr "SatınAlma Yönetimi"
+msgstr "Satınalma Yönetimi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase Orders, Receipts, Supplier Invoices"
-msgstr ""
+msgstr "Satınalma Siparişleri, Makbuzlar, Tedarikçi Faturalar"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
@@ -13004,7 +13131,7 @@ msgstr ""
 #: view:ir.ui.view:base.view_view_search
 #: selection:ir.ui.view,type:0
 msgid "QWeb"
-msgstr ""
+msgstr "QWeb"
 
 #. module: base
 #: model:res.country,name:base.qa
@@ -13034,7 +13161,7 @@ msgstr "RML (Onaylanmamış - Rapor kullan)"
 #. module: base
 #: view:ir.actions.report.xml:base.act_report_xml_view
 msgid "RML Configuration"
-msgstr ""
+msgstr "RML Yapılandırma"
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
@@ -13065,12 +13192,12 @@ msgstr "RML Raporu"
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "RML pdf (deprecated)"
-msgstr ""
+msgstr "RML pdf (kaldırıldı)"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "RML sxw (deprecated)"
-msgstr ""
+msgstr "RML sxw (kaldırıldı)"
 
 #. module: base
 #: field:res.currency.rate,rate:0
@@ -13099,12 +13226,12 @@ msgstr "Erişim Hakkı Okuma"
 #: field:ir.model.fields,readonly:0
 #: field:res.partner.bank.type.field,readonly:0
 msgid "Readonly"
-msgstr "SaltOkunur"
+msgstr "Salt Okunur"
 
 #. module: base
 #: field:ir.actions.server,id_object:0
 msgid "Record"
-msgstr ""
+msgstr "Kayıtl"
 
 #. module: base
 #: field:ir.actions.act_window,res_id:0
@@ -13163,7 +13290,7 @@ msgstr "Modül bağımlılılklarında özyineleme hatası !"
 #. module: base
 #: constraint:ir.actions.server:0
 msgid "Recursion found in child server actions"
-msgstr ""
+msgstr "Özyineleme alt sunucu eylemleri bulundu"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -13179,7 +13306,7 @@ msgstr "Referans Rehberi"
 #. module: base
 #: field:ir.actions.server,ref_object:0
 msgid "Reference record"
-msgstr ""
+msgstr "Referansı kaydı"
 
 #. module: base
 #: code:addons/base/res/res_company.py:168
@@ -13195,12 +13322,12 @@ msgstr "İlişkili Firma"
 #. module: base
 #: field:res.users,partner_id:0
 msgid "Related Partner"
-msgstr "İlişkili Partner"
+msgstr "İlişkili İş Ortağı"
 
 #. module: base
 #: field:ir.server.object.lines,server_id:0
 msgid "Related Server Action"
-msgstr ""
+msgstr "İlgili Sunucu Eylemi"
 
 #. module: base
 #: field:ir.actions.server,wkf_field_id:0
@@ -13221,12 +13348,12 @@ msgstr "Ekten yeniden yükle"
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Remove from the 'More' menu"
-msgstr ""
+msgstr "'Diğer' menüsünden kaldır"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Remove the contextual action related to this server action"
-msgstr ""
+msgstr "Bu sunucu eylemmine ilişkin bağlamsal eylemi kaldır"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:415
@@ -13237,7 +13364,7 @@ msgstr "\"%s\" boş alanının yeniden adlandırılmasına izin verilmez"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
 msgid "Repairs Management"
-msgstr "Tamir Yönetimi"
+msgstr "Onarım Yönetimi"
 
 #. module: base
 #: field:ir.cron,doall:0
@@ -13260,7 +13387,7 @@ msgstr "Rapor"
 #. module: base
 #: view:res.company:base.view_company_form
 msgid "Report Configuration"
-msgstr ""
+msgstr "Rapor Yapılandırma"
 
 #. module: base
 #: field:ir.actions.report.xml,report_file:0
@@ -13276,7 +13403,7 @@ msgstr "Rapor Altbiligisi"
 #. module: base
 #: view:ir.actions.report.xml:base.act_report_xml_search_view
 msgid "Report Model"
-msgstr ""
+msgstr "Rapor Modeli"
 
 #. module: base
 #: view:ir.actions.report.xml:base.act_report_xml_search_view
@@ -13322,7 +13449,7 @@ msgstr "Raporlar :"
 #: view:res.request.link:base.res_request_link_search_view
 #: view:res.request.link:base.res_request_link_tree-view
 msgid "Request Link"
-msgstr "Bağlantı İste"
+msgstr "İstek Linki"
 
 #. module: base
 #: view:ir.model.fields:base.view_model_fields_search
@@ -13334,7 +13461,7 @@ msgstr "Gerekli"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_partner_assign
 msgid "Resellers"
-msgstr ""
+msgstr "Bayiler"
 
 #. module: base
 #: field:ir.exports,resource:0
@@ -13370,22 +13497,22 @@ msgstr "Kayna Nesne"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant
 msgid "Restaurant"
-msgstr ""
+msgstr "Restoran"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr ""
+msgstr "Satış Noktası için Restoran uzantıları "
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Restrict"
-msgstr ""
+msgstr "Kısıtlama"
 
 #. module: base
 #: field:ir.actions.act_window,multi:0
 msgid "Restrict to lists"
-msgstr ""
+msgstr "Listelerine sınırla"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
@@ -13457,7 +13584,7 @@ msgstr "Kurallar Kayıt Kuralları model üzerinde uygulanamaz."
 #: code:addons/base/ir/ir_actions.py:821
 #, python-format
 msgid "Run %s"
-msgstr ""
+msgstr "Çalışan %s"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
@@ -13482,7 +13609,7 @@ msgstr "Ruanda"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_saas_worker
 msgid "SAAS Worker"
-msgstr ""
+msgstr "SAAS Worker"
 
 #. module: base
 #: field:ir.mail_server,smtp_port:0
@@ -13571,22 +13698,22 @@ msgstr "Saint Vincent ve Grenadinler"
 #. module: base
 #: model:ir.module.category,name:base.module_category_sale
 msgid "Sale"
-msgstr ""
+msgstr "Satış"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_layout
 msgid "Sale Layout"
-msgstr ""
+msgstr "Satış Düzeni"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_layout
 msgid "Sale Layout, page-break, subtotals, separators, report"
-msgstr ""
+msgstr "Satış Düzen, sayfa sonu, alt toplamlar, ayırıcılar, rapor"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sales_team
 msgid "Sale Team"
-msgstr ""
+msgstr "Satış Ekibi"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_management
@@ -13606,7 +13733,7 @@ msgstr "Satışlar ve Satınalmalar"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_analytic_plans
 msgid "Sales Analytic Distribution"
-msgstr "Satışların Analitik Dağılımı"
+msgstr "Satışların Analiz Dağılımı"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale
@@ -13616,7 +13743,7 @@ msgstr "Satış Yönetimi"
 #. module: base
 #: model:ir.module.module,summary:base.module_sales_team
 msgid "Sales Team"
-msgstr ""
+msgstr "Satış Ekibleri"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
@@ -13632,7 +13759,7 @@ msgstr "Satış ve Depo Yönetimi"
 #: view:res.partner:base.view_res_partner_filter
 #: field:res.partner,user_id:0
 msgid "Salesperson"
-msgstr "SatışElemanı"
+msgstr "Satış Temsilcisi"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -13657,17 +13784,17 @@ msgstr "Kaydet"
 #. module: base
 #: field:ir.actions.report.xml,attachment:0
 msgid "Save as Attachment Prefix"
-msgstr "Eki Önek olarak kaydet"
+msgstr "Eki Önek Olarak Kaydet"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Schedule, Promote and Sell Events"
-msgstr ""
+msgstr "Programlama, Teşvik ve Etkinlik Satışları"
 
 #. module: base
 #: view:ir.cron:base.ir_cron_view_search
 msgid "Scheduled Action"
-msgstr "Planlanmış İşlemler"
+msgstr "Planlanmış İşlem"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -13693,7 +13820,7 @@ msgstr "İşlemleri Arama"
 #. module: base
 #: view:res.partner:base.view_res_partner_filter
 msgid "Search Partner"
-msgstr "Partner Arama"
+msgstr "İş Ortağı Arama"
 
 #. module: base
 #: field:ir.actions.act_window,search_view:0
@@ -13708,7 +13835,7 @@ msgstr "Arama Görüntüsü Ref."
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_applicant_document
 msgid "Search job applications by Index content."
-msgstr ""
+msgstr "İndeks içeriğe göre arama iş uygulamaları."
 
 #. module: base
 #: view:ir.module.module:base.view_module_filter
@@ -13802,22 +13929,22 @@ msgstr "Seçim Opsiyonları"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_sale
 msgid "Sell Your Event's Tickets"
-msgstr ""
+msgstr "Etkinlik Biletleri Satma"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale
 msgid "Sell Your Products Online"
-msgstr ""
+msgstr "Ürünlerin Çevrimiçi Satışı"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_voucher
 msgid "Send Invoices and Track Payments"
-msgstr "Faturalar ve Parça Ödemeler gönder"
+msgstr "Fatura ve Ödeme İzlemeleri Gönder"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_quote
 msgid "Send Professional Quotations"
-msgstr ""
+msgstr "Profesyonel Teklif Gönderme"
 
 #. module: base
 #: model:res.country,name:base.sn
@@ -13827,7 +13954,7 @@ msgstr "Senegal"
 #. module: base
 #: field:res.lang,grouping:0
 msgid "Separator Format"
-msgstr "Ayırıcı Biçimi"
+msgstr "Ayraç Biçimi"
 
 #. module: base
 #: field:ir.actions.act_window.view,sequence:0
@@ -13903,7 +14030,7 @@ msgstr "Serileştirme Alanı"
 #. module: base
 #: selection:ir.logging,type:0
 msgid "Server"
-msgstr ""
+msgstr "Sunucu"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -13915,7 +14042,7 @@ msgstr "Sunucu İşlemi"
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
 msgid "Server Action value mapping"
-msgstr ""
+msgstr "Sunucu Eylem değeri eşleştirme"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
@@ -14010,7 +14137,7 @@ msgstr "Sinyal (subflow.*)"
 #. module: base
 #: field:ir.actions.server,wkf_transition_id:0
 msgid "Signal to Trigger"
-msgstr ""
+msgstr "Tetiklenecek Sinyal"
 
 #. module: base
 #: field:res.users,signature:0
@@ -14040,7 +14167,7 @@ msgstr "Singapur"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg
 msgid "Singapore - Accounting"
-msgstr ""
+msgstr "Singapur - Muhasebesi"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14072,7 +14199,7 @@ msgstr "Alan boyu 0'dan küçük olamaz!"
 #. module: base
 #: view:res.config.installer:base.res_config_installer
 msgid "Skip"
-msgstr "Atla"
+msgstr "Atlama"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14346,7 +14473,7 @@ msgstr ""
 #. module: base
 #: field:workflow.activity,split_mode:0
 msgid "Split Mode"
-msgstr "Bölük Kip"
+msgstr "Bölme Modu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track
@@ -14419,7 +14546,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_stock_management
 msgid "Stock Management"
-msgstr ""
+msgstr "Stok Yönetimi"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -14548,7 +14675,7 @@ msgstr "Anket"
 #. module: base
 #: model:res.groups,name:base.group_survey_manager
 msgid "Survey / Manager"
-msgstr ""
+msgstr "Anket / Yönetici"
 
 #. module: base
 #: model:res.groups,name:base.group_survey_user
@@ -14558,7 +14685,7 @@ msgstr "Anket / Kullanıcı"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
 msgid "Survey CRM"
-msgstr ""
+msgstr "Anket CRM"
 
 #. module: base
 #: model:res.country,name:base.sj
@@ -16276,7 +16403,7 @@ msgstr "Websitesi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website
 msgid "Website Builder"
-msgstr ""
+msgstr "Web Site Oluşturucusu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_report
@@ -16301,22 +16428,22 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_livechat
 msgid "Website Live Support"
-msgstr ""
+msgstr "Web Sitesi Canlı Destek"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail
 msgid "Website Mail"
-msgstr ""
+msgstr "Web Sitesi Mail"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail
 msgid "Website Module for Mail"
-msgstr ""
+msgstr "Web Sitesi Mail Modülü"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_partner
 msgid "Website Partner"
-msgstr ""
+msgstr "Web Sitesi İş Ortağı"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_report
@@ -16801,7 +16928,7 @@ msgstr "biten"
 #. module: base
 #: view:res.users:base.view_users_simple_form
 msgid "e.g. +32.479.19.28.37"
-msgstr ""
+msgstr "örn. +32.479.19.28.37"
 
 #. module: base
 #: view:res.partner:base.view_partner_form
@@ -16812,7 +16939,7 @@ msgstr "örn. +90.212.345.37.00"
 #. module: base
 #: view:res.users:base.view_users_simple_form
 msgid "e.g. +32.81.81.37.10"
-msgstr ""
+msgstr "örn. +32.81.81.37.10"
 
 #. module: base
 #: view:base.language.import:base.view_base_import_language
@@ -16844,17 +16971,17 @@ msgstr "örn. tr_TR"
 #: view:res.company:base.view_company_form
 #: view:res.partner:base.view_partner_form
 msgid "e.g. www.odoo.com"
-msgstr ""
+msgstr "örn. www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
 msgid "eCommerce"
-msgstr ""
+msgstr "e-Ticaret"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery
 msgid "eCommerce Delivery"
-msgstr ""
+msgstr "e-Ticaret Teslimat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_options

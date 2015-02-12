@@ -74,6 +74,5 @@ Izvori podataka:
     "demo": [],
     'test': [],
     "active": False,
-    "installable": True,
+    "installable": False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

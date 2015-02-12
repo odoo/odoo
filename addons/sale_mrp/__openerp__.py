@@ -33,7 +33,6 @@ from sales order. It adds sales name and sales Reference on production order.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/manufacturing',
-    'images': ['images/SO_to_MO.jpeg'],
     'depends': ['mrp', 'sale_stock'],
     'data': [
         'security/ir.model.access.csv',
@@ -47,4 +46,3 @@ from sales order. It adds sales name and sales Reference on production order.
     'installable': True,
     'auto_install': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

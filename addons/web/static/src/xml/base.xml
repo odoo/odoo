@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- vim:fdl=1:
--->
 <templates id="template" xml:space="preserve">
 <t t-name="EmptyComponent">
     <div></div>
@@ -31,7 +29,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 class="modal-title"><t t-raw="title"/></h3>
+                    <h3 class="modal-title"><t t-raw="title"/><span class="text-muted"><t t-esc="subtitle"/></span></h3>
                 </div>
                 <div class="modal-body">
                 </div>
@@ -84,7 +82,7 @@
                 </p>
                 <p class="oe_grey" style="margin: 10px">
                     By default, the master password is 'admin'. This password
-                    is required to created, delete dump or restore databases.
+                    is required to create, delete, dump or restore databases.
                 </p>
                 <table class="db_option_table" style="margin: 10px">
                     <tr>
@@ -215,6 +213,15 @@
                                 </t>
                             </select>
                             <input t-if="!widget.db_list" name="backup_db" class="required" type="text" autofocus="autofocus"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="backup_format">Backup format:</label></td>
+                        <td class="oe_form_field oe_form_field_selection">
+                            <select name="backup_format">
+                                <option value="zip">zip (includes filestore)</option>
+                                <option value="dump">pg_dump custom format (without filestore)</option>
+                            </select>
                         </td>
                     </tr>
                     <tr>
@@ -497,7 +504,7 @@
                     <t t-if="widget.multiple_views">
                         <div class="oe-view-manager-switch btn-group btn-group-sm">
                             <t t-foreach="widget.view_order" t-as="view">
-                                <button type="button" t-attf-class="btn btn-default fa oe-vm-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label" t-if="view.type!=='form'">
+                                <button type="button" t-attf-class="btn btn-default fa oe-vm-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label">
                                 </button>
                             </t>
                         </div>
@@ -508,7 +515,7 @@
     </div>
     <div class="oe-view-manager-content">
         <t t-foreach="widget.views" t-as="view">
-            <div t-attf-class="oe-view-manager-view-#{view}"/>
+            <div t-attf-class="oe-view-manager-view-#{view} fade"/>
         </t>
     </div>
 </div>
@@ -888,17 +895,18 @@
 </t>
 <t t-name="FormRenderingNotebook">
     <div class="oe_clear">
-        <ul t-attf-class="oe_notebook #{classnames}">
+        <ul t-attf-class="nav nav-tabs #{classnames}" role="tablist">
             <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
-                <a t-attf-href="##{page.id}" t-att-accesskey="page.accesskey">
+                <a role="tab" t-attf-href="##{page.id}" t-att-accesskey="page.accesskey" data-toggle="tab">
                     <t t-esc="page.string"/>
                 </a>
             </li>
         </ul>
-    </div>
-</t>
-<t t-name="FormRenderingNotebookPage">
-    <div t-attf-class="oe_notebook_page #{classnames}" t-att-id="id">
+        <div class="tab-content">
+            <div role="tabpanel" t-foreach="pages" t-as="page" t-attf-class="tab-pane #{classnames}" t-att-id="id">
+                <t t-raw="page.contents"/>
+            </div>
+        </div>
     </div>
 </t>
 <t t-name="FormRenderingSeparator">
@@ -913,24 +921,80 @@
     </label>
 </t>
 
-<div t-name="PivotView" class="oe_pivot"/>
+<t t-name="GraphView.buttons">
+    <div class="btn-group btn-group-sm">
+        <button class="btn btn-default fa fa-bar-chart-o oe-bar-mode" title="Bar Chart"></button>
+        <button class="btn btn-default fa fa-line-chart oe-line-mode" title="Line Chart"></button>
+        <button class="btn btn-default fa fa-pie-chart oe-pie-mode" title="Pie Chart"></button>
+    </div>
+    <div class="btn-group btn-group-sm"> 
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Measure <span class="caret"/>
+        </button>
+        <ul class="oe-measure-list dropdown-menu">
+            <li t-foreach="measures" t-as="measure" t-att-data-field="measure[0]">
+                <a><t t-esc="measure[1].string"/></a>
+            </li>
+            <li class="divider"></li>
+            <li data-field="__count__"><a>Quantity</a></li>
+        </ul>
+    </div>
+</t>
+
+<div t-name="GraphView.error" class="oe_view_nocontent" >
+    <div class="oe_empty_custom_dashboard">
+        <p><b><t t-esc="title"/></b></p>
+        <p><t t-esc="description"/></p>
+    </div>
+</div>
+
+
+<div t-name="PivotView" class="oe_pivot">
+    <div class="o-field-selection"/>
+    <div class="o-pivot-table"/>
+</div>
 
 <t t-name="PivotView.buttons">
     <div class="btn-group btn-group-sm">
-        <button class="btn btn-default fa fa-expand oe-pivot-flip"></button>
-        <button class="btn btn-default fa fa-arrows-alt oe-pivot-expand-all"></button>
-        <button class="btn btn-default fa fa-download oe-pivot-download"></button>
+        <button class="btn btn-default fa fa-expand oe-pivot-flip" title="Flip axis"></button>
+        <button class="btn btn-default fa fa-arrows-alt oe-pivot-expand-all" title="Expand all"></button>
     </div>
     <div class="btn-group btn-group-sm"> 
         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             Measures <span class="caret"/>
         </button>
         <ul class="oe-measure-list dropdown-menu">
-            <li t-foreach="measures" t-as="measure" t-att-data-field="measure">
-                <a><t t-esc="measures[measure].string"/></a>
+            <li t-foreach="measures" t-as="measure" t-att-data-field="measure[0]">
+                <a><t t-esc="measure[1].string"/></a>
             </li>
+            <li class="divider"></li>
+            <li data-field="__count__"><a>Quantity</a></li>
         </ul>
     </div>
+</t>
+
+<t t-name="PivotView.FieldSelection">
+    <ul class="dropdown-menu multi-level o-field-menu" role="menu">
+        <t t-foreach="fields" t-as="field">
+            <t t-if="(field[1].type === 'date') || (field[1].type === 'datetime')">
+                <li class="pivot-dropdown-submenu" t-att-data-field="field[0]">
+                    <a class="field-selection">
+                        <t t-esc="field[1].string"/>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li t-att-data-field="field[0]"><a t-att-data-interval="'day'">Day</a></li>
+                        <li t-att-data-field="field[0]"><a t-att-data-interval="'week'">Week</a></li>
+                        <li t-att-data-field="field[0]"><a t-att-data-interval="'month'">Month</a></li>
+                        <li t-att-data-field="field[0]"><a t-att-data-interval="'quarter'">Quarter</a></li>
+                        <li t-att-data-field="field[0]"><a t-att-data-interval="'year'">Year</a></li>
+                    </ul>
+                </li>
+            </t>
+            <t t-if="(field[1].type !== 'date') &amp;&amp; (field[1].type !== 'datetime')">
+                <li t-att-data-field="field[0]"><a><t t-esc="field[1].string"/></a></li>
+            </t>
+        </t>
+    </ul>
 </t>
 
 <div t-name="PivotView.nodata" class="oe_view_nocontent" >
@@ -1053,7 +1117,7 @@
         <t t-foreach="widget.priorities" t-as="rec" >
             <li t-att-data-value="rec.click_value" style="display: inline-block;">
                 <a href="#" t-att-title="rec.name">
-                    <span t-att-class="widget.get('value') gte rec.value and 'oe_e oe_star_on' or 'oe_e oe_star_off'">7</span>
+                    <i t-att-class="widget.get('value') gte rec.value and 'fa fa-star oe_star_on' or 'fa fa-star oe_star_off'"/>
                 </a>
             </li>
         </t>
@@ -1189,8 +1253,8 @@
             <span class="oe_form_m2o_follow"/>
         </t>
         <t t-if="!widget.get('effective_readonly')">
-            <a t-if="! widget.options.no_open" href="#" tabindex="-1"
-                class="oe_m2o_cm_button oe_e" draggable="false">/</a>
+            <i t-if="! widget.options.no_open" href="#" tabindex="-1"
+                class="oe_m2o_cm_button fa fa-external-link" draggable="false"/>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
@@ -1399,7 +1463,7 @@
                         <t t-raw="file.name || file.filename"/>
                     </a>
                     <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                        <a class="oe_right oe_delete oe_e" title="Delete this file" t-attf-data-id="#{file.id}">[</a>
+                        <i class="oe_right oe_delete fa fa-times-circle" title="Delete this file" t-attf-data-id="#{file.id}"/>
                     </t>
                 </div>
             </t>
@@ -1421,7 +1485,7 @@
         <div class="oe_placeholder_files"/>
         <div class="oe_add" t-if="!widget.get('effective_readonly')">
             <!-- uploader of file -->
-            <button class="oe_attach"><span class="oe_e">'</span></button> 
+            <button class="oe_attach"><i class="fa fa-paperclip"/></button> 
             <span class='oe_attach_label'><t t-esc="widget.string"/></span>
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
@@ -1484,6 +1548,7 @@
         <div class="o-modal-header">
             <div class="o-popup-search"/>
             <div class="o-search-options oe-search-options"/>
+            <div class="oe_popup_list_pager"/>
         </div>
         <div class="oe_popup_list"/>
         <div class="oe_popup_form"/>
@@ -1672,7 +1737,7 @@
             <span><input type="checkbox"/>Use by default</span>
         </li>
         <li class="oe-save-name">
-            <span><input type="checkbox"/>Share with all users</span>
+            <span class="oe-share-filter"><input type="checkbox"/>Share with all users</span>
         </li>
         <li class="oe-save-name"><button class="btn btn-default">Save</button></li>
     </ul>
@@ -1832,80 +1897,6 @@
     <button class="oe_button oe_export_button_export" id="delete_export_list" type="button">Delete</button>
 </t>
 
-<t t-name="ImportView">
-    <a id="importview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Import</a>
-</t>
-<t t-name="ImportDataView">
-<form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data"
-        class="oe_import oe_import_no_result">
-    <input type="hidden" name="session_id" t-att-value="widget.session.session_id" t-if="widget.session.override_session"/>
-    <h2 class="separator horizontal">1. Import a .CSV file</h2>
-    <p>Select a .CSV file to import. If you need a sample of file to import,
-       you should use the export tool with the "Import Compatible" option.
-    </p>
-    <p>
-        <label for="csvfile">CSV File:</label>
-        <input type="file" id="csvfile" size="50" name="csvfile"/>
-    </p>
-    <h2 class="separator horizontal oe_import_result">2. Check your file format</h2>
-    <div id="result" class="oe_import_result"></div>
-    <fieldset class="oe_closed oe_import_result">
-        <legend>Import Options</legend>
-        <table>
-            <tr>
-                <td colspan="4">
-                    <label for="file_has_headers">Does your file have titles?</label>
-                    <input type="checkbox" checked="checked"
-                           id="file_has_headers"/>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="csv_separator">Separator:</label></td>
-                <td><input type="text" name="csvsep" id="csv_separator" value=","/></td>
-                <td><label for="csv_delimiter">Delimiter:</label></td>
-                <td><input type="text" name="csvdel" id="csv_delimiter" value='"'/></td>
-            </tr>
-            <tr>
-                <td><label for="csv_encoding">Encoding:</label></td>
-                <td>
-                    <select name="csvcode" id="csv_encoding">
-                        <option value="utf-8">UTF-8</option>
-                        <option value="latin1">Latin 1</option>
-                    </select>
-                </td>
-                <td><label for="csv_skip" title="For use if CSV files have titles on multiple lines, skips more than a single line during import">
-                    Lines to skip<sup>?</sup>:</label></td>
-                <td><input type="number" id="csv_skip" value="0" min="0"/></td>
-            </tr>
-        </table>
-    </fieldset>
-</form>
-</t>
-<t t-name="ImportView.result">
-    <table class="oe_import_grid" width="100%" style="margin: 5px 0;">
-        <tr t-if="headers" class="oe_import_grid-header">
-            <td t-foreach="headers" t-as="header" class="oe_import_grid-cell">
-                <t t-esc="header"/></td>
-        </tr>
-        <tr>
-            <td t-foreach="records[0]" t-as="column">
-                <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe_m2o_drop_down_button">
-                        <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' draggable="false"/></span>
-            </td>
-        </tr>
-        <tr t-foreach="records" t-as="record" class="oe_import_grid-row">
-            <td t-foreach="record" t-as="cell" class="oe_import_grid-cell">
-                <t t-esc="cell"/></td>
-        </tr>
-    </table>
-</t>
-<t t-name="ImportView.error">
-    <p style="white-space:pre;">The import failed due to:<t t-esc="error.message"/></p>
-    <t t-if="error.preview">
-        <p>Here is a preview of the file we could not import:</p>
-        <pre><t t-esc="error.preview"/></pre>
-    </t>
-</t>
 <div t-name="Many2ManyKanban.quick_create" class="oe_kanban_quick_create">
     <input t-att-placeholder="_t('Type name to search')"/>
 </div>
@@ -1964,6 +1955,10 @@
     style="box-shadow: none; white-space:nowrap;">
     <img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
     t-att-alt="widget.string"/>
+</button>
+<button t-name="FieldToggleBoolean" type="button"
+    t-att-title="widget.string" class="oe_toggle_button">
+    <img t-attf-src="#{_s}/web/static/src/img/icons/#{widget.icon}" t-att-alt="widget.string"/>
 </button>
 
 </templates>

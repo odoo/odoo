@@ -19,8 +19,10 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -39,10 +41,12 @@ class stock_move(osv.osv):
             for move in self.browse(cr, uid, ids, context=context):
                 if move.purchase_line_id and move.purchase_line_id.order_id:
                     order_id = move.purchase_line_id.order_id.id
+                    # update linked purchase order as superuser as the warehouse
+                    # user may not have rights to access purchase.order
                     if self.pool.get('purchase.order').test_moves_done(cr, uid, [order_id], context=context):
-                        workflow.trg_validate(uid, 'purchase.order', order_id, 'picking_done', cr)
+                        workflow.trg_validate(SUPERUSER_ID, 'purchase.order', order_id, 'picking_done', cr)
                     if self.pool.get('purchase.order').test_moves_except(cr, uid, [order_id], context=context):
-                        workflow.trg_validate(uid, 'purchase.order', order_id, 'picking_cancel', cr)
+                        workflow.trg_validate(SUPERUSER_ID, 'purchase.order', order_id, 'picking_cancel', cr)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -158,6 +162,16 @@ class stock_picking(osv.osv):
                 invoice_line_obj.write(cr, uid, inv_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
 
+    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
+        inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
+        if move.purchase_line_id and move.purchase_line_id.order_id:
+            purchase = move.purchase_line_id.order_id
+            inv_vals.update({
+                'fiscal_position': purchase.fiscal_position.id,
+                'payment_term': purchase.payment_term_id.id,
+                })
+        return inv_vals
+
 
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
@@ -179,7 +193,7 @@ class stock_warehouse(osv.osv):
             buy_route_id = route_obj.search(cr, uid, [('name', 'like', _('Buy'))], context=context)
             buy_route_id = buy_route_id and buy_route_id[0] or False
         if not buy_route_id:
-            raise osv.except_osv(_('Error!'), _('Can\'t find any generic Buy route.'))
+            raise UserError(_('Can\'t find any generic Buy route.'))
 
         return {
             'name': self._format_routename(cr, uid, warehouse, _(' Buy'), context=context),
@@ -188,6 +202,7 @@ class stock_warehouse(osv.osv):
             'action': 'buy',
             'picking_type_id': warehouse.in_type_id.id,
             'warehouse_id': warehouse.id,
+            'group_propagation_option': 'none',
         }
 
     def create_routes(self, cr, uid, ids, warehouse, context=None):

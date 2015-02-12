@@ -14,8 +14,10 @@ except ImportError:
     import json     # noqa
 
 from openerp.release import serie
+
 from openerp import api, fields, models, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
+
 _logger = logging.getLogger(__name__)
 
 
@@ -58,9 +60,7 @@ class account_installer(models.TransientModel):
              "country.")
     date_start = fields.Date(string='Start Date', required=True, default=lambda *a: time.strftime('%Y-01-01'))
     date_stop = fields.Date(string='End Date', required=True, default=lambda *a: time.strftime('%Y-12-31'))
-    period = fields.Selection([('month', 'Monthly'), ('3months', '3 Monthly')], 
-        string='Periods', required=True, default='month')
-    company_id = fields.Many2one('res.company', string='Company', required=True, 
+    company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id or False)
     has_default_company = fields.Boolean(string='Has Default Company',
         readonly=True, default=lambda self: self._default_has_default_company())
@@ -83,7 +83,7 @@ class account_installer(models.TransientModel):
     def check_unconfigured_cmp(self):
         """ check if there are still unconfigured companies """
         if not self.get_unconfigured_cmp():
-            raise Warning(_("There is currently no company without chart of account. The wizard will therefore not be executed."))
+            raise UserError(_("There is currently no company without chart of account. The wizard will therefore not be executed."))
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -123,7 +123,7 @@ class account_installer(models.TransientModel):
                     name = code = res.date_start[:4]
                     if int(name) != int(res.date_stop[:4]):
                         name = res.date_start[:4] + '-' + res.date_stop[:4]
-                        code = resdate_start[2:4] + '-' + res.date_stop[2:4]
+                        code = res.date_start[2:4] + '-' + res.date_stop[2:4]
                     vals = {
                         'name': name,
                         'code': code,

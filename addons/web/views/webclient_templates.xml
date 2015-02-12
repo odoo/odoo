@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- vim:fdn=3:
--->
 <openerp>
     <data>
         <template id="web.assets_common">
@@ -8,9 +6,11 @@
             <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
             <script type="text/javascript" src="/web/static/lib/spinjs/spin.js"></script>
+            <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
 
             <!-- jQuery stuff -->
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.blockUI/jquery.blockUI.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.hotkeys/jquery.hotkeys.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
@@ -25,6 +25,7 @@
             <script type="text/javascript" src="/web/static/test/menu.js"></script>
 
             <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+            <link rel="stylesheet" href="/web/static/src/font/lato/stylesheet.css" />
         </template>
 
         <template id="jqueryui_conflict" name="jquery.ui.conflict">
@@ -44,7 +45,7 @@
             <!-- jQuery addons -->
             <script type="text/javascript" src="/web/static/lib/jquery.validate/jquery.validate.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.autosize/jquery.autosize.js"></script>
-            <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo-min.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
 
             <link rel="stylesheet" href="/web/static/lib/cleditor/jquery.cleditor.css"/>
             <script type="text/javascript" src="/web/static/lib/cleditor/jquery.cleditor.js"></script>
@@ -60,19 +61,22 @@
 
             <!-- Datetime Picker -->
             <link rel="stylesheet" href="/web/static/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
-            <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
             <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
 
             <!-- jQuery ui -->
-            <link rel="stylesheet" href="/web/static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.9.0.custom.css"/>
+            <link rel="stylesheet" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
 
             <t t-call="web.jqueryui_conflict">
-                <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+                <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
             </t>
 
             <link rel="stylesheet" href="/web/static/lib/jquery.ui.notify/css/ui.notify.css"/>
             <script type="text/javascript" src="/web/static/lib/jquery.ui.notify/js/jquery.notify.js"></script>
 
+            <!-- nv.d3 -->
+            <link rel="stylesheet" href="/web/static/lib/nvd3/nv.d3.css"/>
+            <script type="text/javascript" src="/web/static/lib/nvd3/d3.v3.js"></script>
+            <script type="text/javascript" src="/web/static/lib/nvd3/nv.d3.js"></script>
 
             <!-- Backbone -->
             <script type="text/javascript" src="/web/static/lib/backbone/backbone.js"></script>
@@ -90,6 +94,10 @@
             <script type="text/javascript" src="/web/static/src/js/testing.js"></script>
             <script type="text/javascript" src="/web/static/src/js/pyeval.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core.js"></script>
+
+            <!-- Special case: core.js declares $.browser needed by ba-bbq -->
+            <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+
             <script type="text/javascript" src="/web/static/src/js/formats.js"></script>
             <script type="text/javascript" src="/web/static/src/js/chrome.js"></script>
             <script type="text/javascript" src="/web/static/src/js/views.js"></script>
@@ -100,6 +108,7 @@
             <script type="text/javascript" src="/web/static/src/js/view_form.js"></script>
             <script type="text/javascript" src="/web/static/src/js/view_list_editable.js"></script>
             <script type="text/javascript" src="/web/static/src/js/view_pivot.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_graph.js"></script>
             <script type="text/javascript" src="/web/static/src/js/view_tree.js"></script>
             <script type="text/javascript" src="/base/static/src/js/apps.js"></script>
 
@@ -132,7 +141,7 @@
         </template>
 
         <template id="web.menu">
-            <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder">
+            <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder" style="display: none;">
                 <li t-foreach="menu_data['children']" t-as="menu">
                     <t t-call="web.menu_link"/>
                 </li>
@@ -163,7 +172,7 @@
                 </t>
             </div>
             <div class="oe_footer">
-                Powered by <a href="http://www.openerp.com" target="_blank"><span>Odoo</span></a>
+                Powered by <a href="http://www.odoo.com" target="_blank"><span>Odoo</span></a>
             </div>
         </template>
         <template id="web.menu_secondary_submenu">
@@ -213,7 +222,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
-                        </button>    
+                        </button>
                     </div>
                     <div class="navbar-collapse collapse" id="oe_main_menu_placeholder">
                         <t t-call="web.menu"/>

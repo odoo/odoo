@@ -33,7 +33,7 @@
 
         <!-- Demo newsletter template -->
        <!--Email template -->
-        <record id="newsletter_template" model="email.template">
+        <record id="newsletter_template" model="mail.template">
             <field name="name">Newsletter</field>
             <field name="subject">Newsletter</field>
             <field name="model_id" ref="mass_mailing.model_mail_mass_mailing_contact"/>
@@ -89,17 +89,17 @@
         </record>
 
         <!-- Create campaign and mailings -->
-        <record id="mass_mail_category_1" model="mail.mass_mailing.category">
+        <record id="mass_mail_tag_1" model="mail.mass_mailing.tag">
             <field name="name">Marketing</field>
         </record>
         <record id="mass_mail_campaign_1" model="mail.mass_mailing.campaign">
             <field name="name">Newsletter</field>
             <field name="stage_id" ref="mass_mailing.campaign_stage_1"/>
             <field name="user_id" eval="ref('base.user_root')"/>
-            <field name="category_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_category_1')])]"/>
             <field name="campaign_id" eval="ref('utm.utm_campaign_email_campaign_products')"/>
             <field name="medium_id" eval="ref('utm.utm_medium_email')"/>
             <field name="source_id" eval="ref('utm.utm_source_mailing')"/> 
+            <field name="tag_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_tag_1')])]"/>
         </record>
 
         <record id="mass_mail_1" model="mail.mass_mailing">
@@ -162,7 +162,7 @@
         </record>
         <record id="mass_mail_2" model="mail.mass_mailing">
             <field name="name">Second Newsletter</field>
-            <field name="state">test</field>
+            <field name="state">draft</field>
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
             <field name="mailing_model">res.partner</field>
             <field name="mailing_domain">[('customer', '=', True)]</field>

@@ -36,61 +36,61 @@ class TestTheoreticalAmount(TransactionCase):
         """Start"""
         date = datetime.strptime('2014-01-01 00:00:00', DEFAULT_SERVER_DATETIME_FORMAT)
         self.mock_datetime.now.return_value = date
-        self.assertEqual(self.line.theoritical_amount, 0)
+        self.assertAlmostEqual(self.line.theoritical_amount, 0)
 
     def test_02(self):
         """After 24 hours"""
         date = datetime.strptime('2014-01-02 00:00:00', DEFAULT_SERVER_DATETIME_FORMAT)
         self.mock_datetime.now.return_value = date
-        self.assertEqual(self.line.theoritical_amount, -1)
+        self.assertAlmostEqual(self.line.theoritical_amount, -1)
 
     def test_03(self):
         """After 36 hours"""
         date = datetime.strptime('2014-01-02 12:00:00', DEFAULT_SERVER_DATETIME_FORMAT)
         self.mock_datetime.now.return_value = date
-        self.assertEqual(self.line.theoritical_amount, -1.5)
+        self.assertAlmostEqual(self.line.theoritical_amount, -1.5)
 
     def test_04(self):
         """After 48 hours"""
         date = datetime.strptime('2014-01-03 00:00:00', DEFAULT_SERVER_DATETIME_FORMAT)
         self.mock_datetime.now.return_value = date
-        self.assertEqual(self.line.theoritical_amount, -2)
+        self.assertAlmostEqual(self.line.theoritical_amount, -2)
 
     def test_05(self):
         """After 10 days"""
         date = datetime.strptime('2014-01-11 00:00:00', DEFAULT_SERVER_DATETIME_FORMAT)
         self.mock_datetime.now.return_value = date
-        self.assertEqual(self.line.theoritical_amount, -10)
+        self.assertAlmostEqual(self.line.theoritical_amount, -10)
 
     def test_06(self):
         """After 50 days"""
         date = datetime.strptime('2014-02-20 00:00:00', DEFAULT_SERVER_DATETIME_FORMAT)
         self.mock_datetime.now.return_value = date
-        self.assertEqual(self.line.theoritical_amount, -50)
+        self.assertAlmostEqual(self.line.theoritical_amount, -50)
 
     def test_07(self):
         """After 182 days, exactly half of the budget line"""
         date = datetime.strptime('2014-07-02 00:00:00', DEFAULT_SERVER_DATETIME_FORMAT)
         self.mock_datetime.now.return_value = date
-        self.assertEqual(self.line.theoritical_amount, -182)
+        self.assertAlmostEqual(self.line.theoritical_amount, -182)
 
     def test_08(self):
         """After 308 days at noon"""
         date = datetime.strptime('2014-11-05 12:00:00', DEFAULT_SERVER_DATETIME_FORMAT)  # remember, remember
         self.mock_datetime.now.return_value = date
-        self.assertEqual(self.line.theoritical_amount, -308.5)
+        self.assertAlmostEqual(self.line.theoritical_amount, -308.5)
 
     def test_09(self):
         """One day before"""
         date = datetime.strptime('2014-12-30 00:00:00', DEFAULT_SERVER_DATETIME_FORMAT)
         self.mock_datetime.now.return_value = date
-        self.assertEqual(self.line.theoritical_amount, -363)
+        self.assertAlmostEqual(self.line.theoritical_amount, -363)
 
     def test_10(self):
         """At last"""
         date = datetime.strptime('2014-12-31 00:00:00', DEFAULT_SERVER_DATETIME_FORMAT)
         self.mock_datetime.now.return_value = date
-        self.assertEqual(self.line.theoritical_amount, -364)
+        self.assertAlmostEqual(self.line.theoritical_amount, -364)
 
     def tearDown(self):
         self.patcher.stop()

@@ -29,7 +29,8 @@ import openerp.tools.lru
 from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
-from openerp.tools import html_escape as escape, which
+from openerp.tools import html_escape as escape
+from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -418,6 +419,10 @@ class QWeb(orm.AbstractModel):
                     '%s_odd' % varname: False,
                 })
             ru.append(self.render_element(element, template_attributes, generated_attributes, copy_qwebcontext))
+
+        for k in qwebcontext.keys():
+            qwebcontext[k] = copy_qwebcontext[k]
+
         return "".join(ru)
 
     def render_tag_if(self, element, template_attributes, generated_attributes, qwebcontext):
@@ -427,6 +432,14 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_call(self, element, template_attributes, generated_attributes, qwebcontext):
         d = qwebcontext.copy()
+
+        if 'lang' in template_attributes:
+            init_lang = d.context.get('lang', 'en_US')
+            lang = template_attributes['lang']
+            d.context['lang'] = self.eval(lang, d) or lang
+            if not self.pool['res.lang'].search(d.cr, d.uid, [('code', '=', lang)], count=True, context=d.context):
+                _logger.info("'%s' is not a valid language code, is an empty field or is not installed, falling back to en_US", lang)
+
         d[0] = self.render_element(element, template_attributes, generated_attributes, d)
         cr = d.get('request') and d['request'].cr or None
         uid = d.get('request') and d['request'].uid or None
@@ -436,7 +449,14 @@ class QWeb(orm.AbstractModel):
             template = int(template)
         except ValueError:
             pass
-        return self.render(cr, uid, template, d)
+
+        res = self.render(cr, uid, template, d)
+
+        # we need to reset the lang after the rendering
+        if 'lang' in template_attributes:
+            d.context['lang'] = init_lang
+
+        return res
 
     def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
         """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
@@ -475,7 +495,9 @@ class QWeb(orm.AbstractModel):
         record = self.eval_object(record, qwebcontext)
 
         field = record._fields[field_name]
-        options = json.loads(template_attributes.get('field-options') or '{}')
+        foptions = self.eval_format(template_attributes.get('field-options') or '{}', qwebcontext)
+        options = json.loads(foptions)
+
         field_type = get_field_type(field, options)
 
         converter = self.get_converter_for(field_type)
@@ -546,19 +568,23 @@ class FieldConverter(osv.AbstractModel):
           ``type``, may not be any Field subclass name)
         * ``translate``, a boolean flag (``0`` or ``1``) denoting whether the
           field is translatable
+        * ``readonly``, has this attribute if the field is readonly
         * ``expression``, the original expression
 
         :returns: iterable of (attribute name, attribute value) pairs.
         """
         field = record._fields[field_name]
         field_type = get_field_type(field, options)
-        return [
+        data = [
             ('data-oe-model', record._name),
             ('data-oe-id', record.id),
             ('data-oe-field', field_name),
             ('data-oe-type', field_type),
             ('data-oe-expression', t_att['field']),
         ]
+        if record._all_columns[field_name].column.readonly:
+            data.append(('data-oe-readonly', 1))
+        return data
 
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
         """ value_to_html(cr, uid, value, field, options=None, context=None)
@@ -1522,18 +1548,22 @@ class SassStylesheetAsset(PreprocessedCSS):
         return "/*! %s */\n%s" % (self.id, content)
 
     def get_command(self):
-        defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
-        sass = which('sass', path=os.pathsep.join(defpath))
+        try:
+            sass = find_in_path('sass')
+        except IOError:
+            sass = 'sass'
         return [sass, '--stdin', '-t', 'compressed', '--unix-newlines', '--compass',
                 '-r', 'bootstrap-sass']
 
 class LessStylesheetAsset(PreprocessedCSS):
     def get_command(self):
-        defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
-        if os.name == 'nt':
-            lessc = which('lessc.cmd', path=os.pathsep.join(defpath))
-        else:
-            lessc = which('lessc', path=os.pathsep.join(defpath))
+        try:
+            if os.name == 'nt':
+                lessc = find_in_path('lessc.cmd')
+            else:
+                lessc = find_in_path('lessc')
+        except IOError:
+            lessc = 'lessc'
         webpath = openerp.http.addons_manifest['web']['addons_path']
         lesspath = os.path.join(webpath, 'web', 'static', 'lib', 'bootstrap', 'less')
         return [lessc, '-', '--clean-css', '--no-js', '--no-color', '--include-path=%s' % lesspath]
@@ -1581,5 +1611,3 @@ def rjsmin(script):
         r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
     ).strip()
     return result
-
-# vim:et:

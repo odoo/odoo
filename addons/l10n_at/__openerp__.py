@@ -34,8 +34,5 @@ Please keep in mind that you should review and adapt it with your Accountant, be
     'demo': [],
     'data': ['account_chart.xml', 'account_tax.xml', 'l10n_chart_at_wizard.xml'],
     'auto_install': False,
-    'installable': True
+    'installable': False
 }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

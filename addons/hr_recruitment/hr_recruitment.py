@@ -19,12 +19,14 @@
 #
 ##############################################################################
 
+import werkzeug
 from datetime import datetime
 
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 AVAILABLE_PRIORITIES = [
@@ -38,8 +40,54 @@ class hr_recruitment_source(osv.osv):
     """ Sources of HR Recruitment """
     _name = "hr.recruitment.source"
     _description = "Source of Applicants"
+    _inherits = {"utm.source": "source_id"}
+
+    def _get_url(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        imd = self.pool['ir.model.data']
+        for source in self.browse(cr, uid, ids, context=context):
+            if not source.alias_id.id:
+                result[source.id] = ''
+            else:
+                result[source.id] = werkzeug.url_encode({
+                    'utm_campaign': imd.xmlid_to_object(cr, SUPERUSER_ID, 'hr_recruitment.utm_campaign_job').name,
+                    'utm_medium': imd.xmlid_to_object(cr, SUPERUSER_ID, 'utm.utm_medium_website').name,
+                    'utm_source': source.source_id.name
+                })
+        return result
+
+    def create_alias(self, cr, uid, ids, context=None):
+        imd = self.pool['ir.model.data']
+        for source in self.browse(cr, uid, ids, context=context):
+            alias_context = dict(context or {}, alias_model_name='hr.applicant', alias_parent_model_name='hr.job')
+            vals = {
+                'alias_parent_thread_id': source.job_id.id,
+                'alias_name': "%s+%s" % (source.job_id.alias_name or source.job_id.name, source.name),
+                'alias_defaults': {
+                    'job_id': source.job_id.id,
+                    'campaign_id': imd.xmlid_to_res_id(cr, SUPERUSER_ID, 'hr_recruitment.utm_campaign_job'),
+                    'medium_id': imd.xmlid_to_res_id(cr, SUPERUSER_ID, 'utm.utm_medium_email'),
+                    'source_id': source.source_id.id,
+                },
+            }
+            new_alias_id = self.pool['mail.alias'].create(cr, uid, vals, alias_context)
+            source.write({'alias_id': new_alias_id, 'name': source.source_id.name})
+        return
+
+    def _get_source(self, cr, uid, ids, context=None):
+        if ids:
+            return self.pool['hr.recruitment.source'].search(cr, uid, [('source_id', 'in', ids)], context=context)
+        return []
+
     _columns = {
-        'name': fields.char('Source Name', required=True, translate=True),
+        'source_id': fields.many2one('utm.source', 'Source', ondelete='cascade', required=True),
+        'url': fields.function(_get_url, string='Url', type='char', store={
+            'hr.recruitment.source': (lambda self, cr, uid, ids, ctx: ids, ['source_id'], 20),
+            'utm.source': (_get_source, ['name'], 20),
+        }),
+        'email': fields.related('alias_id', 'alias_name', string='Email', readonly=True, type='char'),
+        'job_id': fields.many2one('hr.job', 'Job ID'),
+        'alias_id': fields.many2one('mail.alias', 'Alias ID'),
     }
 
 class hr_recruitment_stage(osv.osv):
@@ -52,7 +100,7 @@ class hr_recruitment_stage(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
         'requirements': fields.text('Requirements'),
-        'template_id': fields.many2one('email.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
+        'template_id': fields.many2one('mail.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
         'legend_priority': fields.text(
             'Priority Management Explanation', translate=True,
             help='Explanation text to help users using the star and priority mechanism on applicants that are in this stage.'),
@@ -83,7 +131,7 @@ class hr_applicant(osv.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
 
     _track = {
         'emp_id': {
@@ -129,7 +177,7 @@ class hr_applicant(osv.Model):
             company_id = department.company_id.id if department and department.company_id else False
         if not company_id:
             company_id = self.pool['res.company']._company_default_get(cr, uid, 'hr.applicant', context=context)
-        return company_id            
+        return company_id
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
@@ -223,7 +271,6 @@ class hr_applicant(osv.Model):
         'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey.survey', string='Survey'),
         'response_id': fields.many2one('survey.user_input', "Response", ondelete='set null', oldname="response"),
         'reference': fields.char('Referred By'),
-        'source_id': fields.many2one('hr.recruitment.source', 'Source'),
         'day_open': fields.function(_compute_day, string='Days to Open',
                                     multi='day_open', type="float",
                                     store={'hr.applicant': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
@@ -234,6 +281,7 @@ class hr_applicant(osv.Model):
         'emp_id': fields.many2one('hr.employee', string='Employee', track_visibility='onchange', help='Employee linked to the applicant.'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'attachment_number': fields.function(_get_attachment_number, string='Number of Attachments', type="integer"),
+        'employee_name': fields.related('emp_id', 'name', type='char', string='Employee Name'),
     }
 
     _defaults = {
@@ -251,6 +299,14 @@ class hr_applicant(osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
+    def action_get_created_employee(self, cr, uid, ids, context=None):
+        if isinstance(ids, (list, tuple)):
+            ids = ids and ids[0] or False
+        applicant = self.browse(cr, uid, ids, context=context)
+        action = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'hr', 'open_view_employee_list', context=context)
+        action['res_id'] = applicant and applicant.emp_id.id or False
+        return action
+
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         department_id = False
         user_id = False
@@ -261,9 +317,13 @@ class hr_applicant(osv.Model):
         return {'value': {'department_id': department_id, 'user_id': user_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
+        values = {}
         if not stage_id:
-            stage_id = self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
-        return {'value': {'stage_id': stage_id}}
+            values['stage_id'] = self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
+        if department_id:
+            department = self.pool['hr.department'].browse(cr, uid, department_id, context=context)
+            values['company_id'] = department.company_id.id
+        return {'value': values}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         data = {'partner_phone': False,
@@ -509,7 +569,7 @@ class hr_applicant(osv.Model):
                     body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
                     subtype="hr_recruitment.mt_job_applicant_hired", context=context)
             else:
-                raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
+                raise UserError(_('You must define an Applied Job and a Contact Name for this applicant.'))
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, [action_id], [])[0]

@@ -22,7 +22,7 @@
 {
     "name" : "Romania - Accounting",
     "version" : "1.0",
-    "author" : "TOTAL PC SYSTEMS",
+    "author" : "ERPsystems Solutions",
     "website": "http://www.erpsystems.ro",
     "category" : "Localization/Account Charts",
     "depends" : ['account','account_chart','base_vat'],
@@ -41,7 +41,5 @@ Romanian accounting chart and localization.
               'fiscal_position_template.xml',
               'l10n_chart_ro_wizard.xml',
               ],
-    "installable": True,
+    "installable": False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

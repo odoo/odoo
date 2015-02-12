@@ -47,8 +47,5 @@
     ],
     'license': 'GPL-3',
     'auto_install': False,
-    'installable': True,
-    'images': ['images/config_chart_l10n_cn.jpeg','images/l10n_cn_chart.jpeg'],
+    'installable': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

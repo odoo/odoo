@@ -19,11 +19,11 @@ class TestAccountCustomerInvoive(AccountTestUsers):
 
         # Test with that user which have rights to make Invoicing and payment and who is accountant.
         # Create a customer invoice
-        self.account_invice_obj = self.env['account.invoice']
+        self.account_invoice_obj = self.env['account.invoice']
         self.payment_term = self.env.ref('account.account_payment_term_advance')
         self.journalrec = self.env.ref('account.sales_journal')
         self.partner3 = self.env.ref('base.res_partner_3')
-        account_user_type = self.env.ref('account.data_account_type_cash')
+        account_user_type = self.env.ref('account.data_account_type_receivable')
 
         self.account_rec1_id = self.account_model.sudo(self.account_user.id).create(dict(
             code="cust_acc",
@@ -44,7 +44,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
              )
         ]
 
-        self.account_invoice_customer0 = self.account_invice_obj.sudo(self.account_user.id).create(dict(
+        self.account_invoice_customer0 = self.account_invoice_obj.sudo(self.account_user.id).create(dict(
             name="Test Customer Invoice",
             reference_type="none",
             # partner_bank_id=self.res_partner_bank_0.id,
@@ -87,14 +87,11 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         # I check that now there is a move attached to the invoice
         assert self.account_invoice_customer0.move_id, "Move not created for open invoice"
 
-        # I pay the Invoice
+        # I totally pay the Invoice
         pay = self.account_invoice_customer0.pay_and_reconcile(
-            9050.0, self.env.ref('account.cash').id,
+            10050.0, self.env.ref('account.cash').id,
             datetime.date.today(), self.env.ref('account.bank_journal').id,
-            self.env.ref('account.cash').id,
-            self.env.ref('account.bank_journal').id,
         )
-        assert pay, "Incorrect Payment"
 
         # I verify that invoice is now in Paid state
         assert (self.account_invoice_customer0.state == 'paid'), "Invoice is not in Paid state"

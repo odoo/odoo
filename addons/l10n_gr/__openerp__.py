@@ -40,9 +40,5 @@ Greek accounting chart and localization.
                'account_tax_vat.xml',
                'l10n_gr_wizard.xml'
     ],
-    'installable': True,
-    'images': ['images/config_chart_l10n_gr.jpeg','images/l10n_gr_chart.jpeg'],
+    'installable': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

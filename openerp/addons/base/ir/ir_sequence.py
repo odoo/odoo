@@ -23,7 +23,7 @@ import time
 
 from datetime import datetime, timedelta
 from openerp import _, api, fields, models
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -211,7 +211,10 @@ class ir_sequence(models.Model):
             return ''
 
         def _interpolation_dict():
-            t = time.localtime()  # Actually, the server is always in UTC.
+            if self.env.context.get('ir_sequence_date'):
+                t = time.strptime(self.env.context.get('ir_sequence_date'), '%Y-%m-%d')
+            else:
+                t = time.localtime()  # Actually, the server is always in UTC.
             return {
                 'year': time.strftime('%Y', t),
                 'month': time.strftime('%m', t),
@@ -231,7 +234,7 @@ class ir_sequence(models.Model):
             interpolated_prefix = _interpolate(self.prefix, d)
             interpolated_suffix = _interpolate(self.suffix, d)
         except ValueError:
-            raise Warning(_('Invalid prefix or suffix for sequence \'%s\'') % (self.get('name')))
+            raise UserError(_('Invalid prefix or suffix for sequence \'%s\'') % (self.get('name')))
         return interpolated_prefix + '%%0%sd' % self.padding % number_next + interpolated_suffix
 
     def _create_date_range_seq(self, date):
@@ -258,7 +261,9 @@ class ir_sequence(models.Model):
         if not self.use_date_range:
             return self._next_do()
         # date mode
-        dt = self.env.context.get('ir_sequence_date', fields.Date.today())
+        dt = fields.Date.today()
+        if self.env.context.get('ir_sequence_date'):
+            dt = self.env.context.get('ir_sequence_date')
         seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
         if not seq_date:
             seq_date = self._create_date_range_seq(dt)
@@ -387,5 +392,3 @@ class ir_sequence_date_range(models.Model):
             seq_to_alter = self.filtered(lambda seq: seq.sequence_id.implementation == 'standard')
             seq_to_alter._alter_sequence(number_next=values.get('number_next'))
         return super(ir_sequence_date_range, self).write(values)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

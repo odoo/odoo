@@ -22,12 +22,14 @@
 import datetime
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from operator import itemgetter
 
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class resource_calendar(osv.osv):
     """ Calendar model for a resource. It has
@@ -85,7 +87,7 @@ class resource_calendar(osv.osv):
             cleaned.append(tuple(working_interval))
         return cleaned
 
-    def interval_remove_leaves(self, interval, leave_intervals):
+    def interval_remove_leaves(self, cr, uid, interval, leave_intervals, context=None):
         """ Utility method that remove leave intervals from a base interval:
 
          - clean the leave intervals, to have an ordered list of not-overlapping
@@ -169,10 +171,17 @@ class resource_calendar(osv.osv):
     # Date and hours computation
     # --------------------------------------------------
 
-    def get_attendances_for_weekdays(self, cr, uid, id, weekdays, context=None):
+    def get_attendances_for_weekday(self, cr, uid, id, date, context=None):
         """ Given a list of weekdays, return matching resource.calendar.attendance"""
         calendar = self.browse(cr, uid, id, context=None)
-        return [att for att in calendar.attendance_ids if int(att.dayofweek) in weekdays]
+        weekday = date.weekday()
+        date = date.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        res = []
+        for att in calendar.attendance_ids:
+            if int(att.dayofweek) == weekday:
+                if not ((att.date_from and date < att.date_from) or (att.date_to and date > att.date_to)):
+                    res.append(att)
+        return res
 
     def get_weekdays(self, cr, uid, id, default_weekdays=None, context=None):
         """ Return the list of weekdays that contain at least one working interval.
@@ -329,25 +338,37 @@ class resource_calendar(osv.osv):
         # no calendar: try to use the default_interval, then return directly
         if id is None:
             if default_interval:
-                working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0), start_dt.replace(hour=default_interval[1], minute=0, second=0))
-            intervals = self.interval_remove_leaves(working_interval, work_limits)
+                working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0),
+                                    start_dt.replace(hour=default_interval[1], minute=0, second=0))
+            intervals = self.interval_remove_leaves(cr, uid, working_interval, work_limits, context=context)
             return intervals
 
         working_intervals = []
-        for calendar_working_day in self.get_attendances_for_weekdays(cr, uid, id, [start_dt.weekday()], context):
-            working_interval = (
-                work_dt.replace(hour=int(calendar_working_day.hour_from)),
-                work_dt.replace(hour=int(calendar_working_day.hour_to))
-            )
-            working_intervals += self.interval_remove_leaves(working_interval, work_limits)
+        for calendar_working_day in self.get_attendances_for_weekday(cr, uid, id, start_dt, context=context):
+            if context and context.get('no_round_hours'):
+                min_from = int((calendar_working_day.hour_from - int(calendar_working_day.hour_from)) * 60)
+                min_to = int((calendar_working_day.hour_to - int(calendar_working_day.hour_to)) * 60)
+                working_interval = (
+                    work_dt.replace(hour=int(calendar_working_day.hour_from), minute=min_from),
+                    work_dt.replace(hour=int(calendar_working_day.hour_to), minute=min_to),
+                    calendar_working_day.id,
+                )
+            else:
+                working_interval = (
+                    work_dt.replace(hour=int(calendar_working_day.hour_from)),
+                    work_dt.replace(hour=int(calendar_working_day.hour_to)),
+                    calendar_working_day.id,
+                )
+
+            working_intervals += self.interval_remove_leaves(cr, uid, working_interval, work_limits, context=context)
 
         # find leave intervals
         if leaves is None and compute_leaves:
-            leaves = self.get_leave_intervals(cr, uid, id, resource_id=resource_id, context=None)
+            leaves = self.get_leave_intervals(cr, uid, id, resource_id=resource_id, context=context)
 
         # filter according to leaves
         for interval in working_intervals:
-            work_intervals = self.interval_remove_leaves(interval, leaves)
+            work_intervals = self.interval_remove_leaves(cr, uid, interval, leaves, context=context)
             intervals += work_intervals
 
         return intervals
@@ -485,6 +506,7 @@ class resource_calendar(osv.osv):
         scheduling. """
         return self._schedule_hours(cr, uid, id, hours, day_dt, compute_leaves, resource_id, default_interval, context)
 
+
     # --------------------------------------------------
     # Days scheduling
     # --------------------------------------------------
@@ -528,12 +550,10 @@ class resource_calendar(osv.osv):
         intervals = []
         planned_days = 0
         iterations = 0
-        if backwards:
-            current_datetime = day_date.replace(hour=23, minute=59, second=59)
-        else:
-            current_datetime = day_date.replace(hour=0, minute=0, second=0)
 
-        while planned_days < days and iterations < 1000:
+        current_datetime = day_date.replace(hour=0, minute=0, second=0)
+
+        while planned_days < days and iterations < 100:
             working_intervals = self.get_working_intervals_of_day(
                 cr, uid, id, current_datetime,
                 compute_leaves=compute_leaves, resource_id=resource_id,
@@ -641,6 +661,7 @@ class resource_calendar_attendance(osv.osv):
         'name' : fields.char("Name", required=True),
         'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of Week', required=True, select=True),
         'date_from' : fields.date('Starting Date'),
+        'date_to': fields.date('End Date'),
         'hour_from' : fields.float('Work from', required=True, help="Start and End time of working.", select=True),
         'hour_to' : fields.float("Work to", required=True),
         'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
@@ -670,13 +691,13 @@ class resource_resource(osv.osv):
         'time_efficiency' : fields.float('Efficiency Factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficiency of 200%, then his load will only be 50%."),
         'calendar_id' : fields.many2one("resource.calendar", "Working Time", help="Define the schedule of resource"),
     }
+
     _defaults = {
         'resource_type' : 'user',
         'time_efficiency' : 1,
         'active' : True,
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', context=context)
     }
-
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -770,7 +791,7 @@ class resource_resource(osv.osv):
                 day = week_days[week['dayofweek']]
                 wk_days[week['dayofweek']] = week_days[week['dayofweek']]
             else:
-                raise osv.except_osv(_('Configuration Error!'),_('Make sure the Working time has been configured with proper week days!'))
+                raise UserError(_('Make sure the Working time has been configured with proper week days!'))
             hour_from_str = hours_time_string(week['hour_from'])
             hour_to_str = hours_time_string(week['hour_to'])
             res_str = hour_from_str + '-' + hour_to_str
@@ -829,5 +850,3 @@ def seconds(td):
     assert isinstance(td, datetime.timedelta)
 
     return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10.**6
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

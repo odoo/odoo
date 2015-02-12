@@ -2,7 +2,7 @@
 import time
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class account_invoice_refund(models.TransientModel):
 
@@ -44,9 +44,9 @@ class account_invoice_refund(models.TransientModel):
             company = self.env.user.company_id
             for inv in inv_obj.browse(context.get('active_ids')):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
-                    raise Warning(_('Cannot %s draft/proforma/cancel invoice.') % (mode))
+                    raise UserError(_('Cannot %s draft/proforma/cancel invoice.') % (mode))
                 if inv.reconciled and mode in ('cancel', 'modify'):
-                    raise Warning(_('Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.') % (mode))
+                    raise UserError(_('Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.') % (mode))
                 if form.date:
                     date = form.date
                 else:
@@ -64,7 +64,7 @@ class account_invoice_refund(models.TransientModel):
                     description = inv.name
 
                 if not date:
-                    raise Warning(_('No period date found on the invoice.'))
+                    raise UserError(_('No period date found on the invoice.'))
 
                 refund = inv.refund(date, date, description, journal_id)
                 refund.write({'date_due': date, 'check_total': inv.check_total})

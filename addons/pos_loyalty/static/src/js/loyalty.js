@@ -4,67 +4,65 @@ openerp.pos_loyalty = function(instance){
     var round_pr = instance.web.round_precision
     var QWeb     = instance.web.qweb;
 
-    var models = module.PosModel.prototype.models;
-    for (var i = 0; i < models.length; i++) {
-        var model = models[i];
-        if (model.model === 'res.partner') {
-            model.fields.push('loyalty_points');
-        } else if (model.model === 'product.product') {
-            // load loyalty after products
-            models.push(i+1,0,{
-                model: 'loyalty.program',
-                condition: function(self){ return !!self.config.loyalty_id[0]; },
-                fields: ['name','pp_currency','pp_product','pp_order','rounding'],
-                domain: function(self){ return [['id','=',self.config.loyalty_id[0]]]; },
-                loaded: function(self,loyalties){ self.loyalty = loyalties[0]; },
-            },{
-                model: 'loyalty.rule',
-                condition: function(self){ return !!self.loyalty; },
-                fields: ['name','type','product_id','category_id','cumulative','pp_product','pp_currency'],
-                domain: function(self){ return [['loyalty_program_id','=',self.loyalty.id]]; },
-                loaded: function(self,rules){ 
+    module.load_fields('res.partner','loyalty_points');
 
-                    self.loyalty.rules = rules; 
-                    self.loyalty.rules_by_product_id = {};
-                    self.loyalty.rules_by_category_id = {};
+    module.load_models([
+        {
+            model: 'loyalty.program',
+            condition: function(self){ return !!self.config.loyalty_id[0]; },
+            fields: ['name','pp_currency','pp_product','pp_order','rounding'],
+            domain: function(self){ return [['id','=',self.config.loyalty_id[0]]]; },
+            loaded: function(self,loyalties){ 
+                self.loyalty = loyalties[0]; 
+                console.log('loyalty',self.loyalty);
+            },
+        },{
+            model: 'loyalty.rule',
+            condition: function(self){ return !!self.loyalty; },
+            fields: ['name','type','product_id','category_id','cumulative','pp_product','pp_currency'],
+            domain: function(self){ return [['loyalty_program_id','=',self.loyalty.id]]; },
+            loaded: function(self,rules){ 
 
-                    for (var i = 0; i < rules.length; i++){
-                        var rule = rules[i];
-                        if (rule.type === 'product') {
-                            if (!self.loyalty.rules_by_product_id[rule.product_id[0]]) {
-                                self.loyalty.rules_by_product_id[rule.product_id[0]] = [rule];
-                            } else if (rule.cumulative) {
-                                self.loyalty.rules_by_product_id[rule.product_id[0]].unshift(rule);
-                            } else {
-                                self.loyalty.rules_by_product_id[rule.product_id[0]].push(rule);
-                            }
-                        } else if (rule.type === 'category') {
-                            var category = self.db.get_category_by_id(rule.category_id[0]);
-                            if (!self.loyalty.rules_by_category_id[category.id]) {
-                                self.loyalty.rules_by_category_id[category.id] = [rule];
-                            } else if (rule.cumulative) {
-                                self.loyalty.rules_by_category_id[category.id].unshift(rule);
-                            } else {
-                                self.loyalty.rules_by_category_id[category.id].push(rule);
-                            }
+                self.loyalty.rules = rules; 
+                self.loyalty.rules_by_product_id = {};
+                self.loyalty.rules_by_category_id = {};
+
+                for (var i = 0; i < rules.length; i++){
+                    var rule = rules[i];
+                    if (rule.type === 'product') {
+                        if (!self.loyalty.rules_by_product_id[rule.product_id[0]]) {
+                            self.loyalty.rules_by_product_id[rule.product_id[0]] = [rule];
+                        } else if (rule.cumulative) {
+                            self.loyalty.rules_by_product_id[rule.product_id[0]].unshift(rule);
+                        } else {
+                            self.loyalty.rules_by_product_id[rule.product_id[0]].push(rule);
+                        }
+                    } else if (rule.type === 'category') {
+                        var category = self.db.get_category_by_id(rule.category_id[0]);
+                        if (!self.loyalty.rules_by_category_id[category.id]) {
+                            self.loyalty.rules_by_category_id[category.id] = [rule];
+                        } else if (rule.cumulative) {
+                            self.loyalty.rules_by_category_id[category.id].unshift(rule);
+                        } else {
+                            self.loyalty.rules_by_category_id[category.id].push(rule);
                         }
                     }
-                },
-            },{
-                model: 'loyalty.reward',
-                condition: function(self){ return !!self.loyalty; },
-                fields: ['name','type','minimum_points','gift_product_id','point_cost','discount_product_id','discount','point_value','point_product_id'],
-                domain: function(self){ return [['loyalty_program_id','=',self.loyalty.id]]; },
-                loaded: function(self,rewards){
-                    self.loyalty.rewards = rewards; 
-                    self.loyalty.rewards_by_id = {};
-                    for (var i = 0; i < rewards.length;i++) {
-                        self.loyalty.rewards_by_id[rewards[i].id] = rewards[i];
-                    }
-                },
-            });
-        }
-    }
+                }
+            },
+        },{
+            model: 'loyalty.reward',
+            condition: function(self){ return !!self.loyalty; },
+            fields: ['name','type','minimum_points','gift_product_id','point_cost','discount_product_id','discount','point_value','point_product_id'],
+            domain: function(self){ return [['loyalty_program_id','=',self.loyalty.id]]; },
+            loaded: function(self,rewards){
+                self.loyalty.rewards = rewards; 
+                self.loyalty.rewards_by_id = {};
+                for (var i = 0; i < rewards.length;i++) {
+                    self.loyalty.rewards_by_id[rewards[i].id] = rewards[i];
+                }
+            },
+        },
+    ],{'after': 'product.product'});
 
     var _super_orderline = module.Orderline;
     module.Orderline = module.Orderline.extend({
@@ -243,14 +241,11 @@ openerp.pos_loyalty = function(instance){
                 return;
             } else if (reward.type === 'gift') {
                 var product = this.pos.db.get_product_by_id(reward.gift_product_id[0]);
+                
                 if (!product) {
-                    this.pos.pos_widget.screen_selector.show_popup('error',{
-                        'message':'Configuration Error',
-                        'comment':'The product associated with the reward "'+reward.name+'" could not be found. Make sure it is available for sale in the point of sale.',
-                    });
                     return;
                 }
-
+                
                 var line = this.add_product(product, { 
                     price: 0, 
                     quantity: 1, 
@@ -271,11 +266,8 @@ openerp.pos_loyalty = function(instance){
                 }
 
                 var product   = this.pos.db.get_product_by_id(reward.discount_product_id[0]);
-                if (!product) { //FIXME, move this as a server side constraint
-                    this.pos.pos_widget.screen_selector.show_popup('error',{
-                        'message':'Configuration Error',
-                        'comment':'The product associated with the reward "'+reward.name+'" could not be found. Make sure it is available for sale in the point of sale.',
-                    });
+
+                if (!product) {
                     return;
                 }
 
@@ -294,11 +286,7 @@ openerp.pos_loyalty = function(instance){
                 var order_total = this.get_total_with_tax();
                 var product = this.pos.db.get_product_by_id(reward.point_product_id[0]);
 
-                if (!product) { //FIXME, move this as a server side constraint
-                    this.pos.pos_widget.screen_selector.show_popup('error',{
-                        'message':'Configuration Error',
-                        'comment':'The product associated with the reward "'+reward.name+'" could not be found. Make sure it is available for sale in the point of sale.',
-                    });
+                if (!product) {
                     return;
                 }
 
@@ -309,6 +297,7 @@ openerp.pos_loyalty = function(instance){
                 if ( spendable < 0.00001 ) {
                     return;
                 }
+
                 var line = this.add_product(product, {
                     quantity: -spendable,
                     merge: false,
@@ -324,6 +313,7 @@ openerp.pos_loyalty = function(instance){
             }
             _super.prototype.validate.apply(this,arguments);
         },
+
         export_for_printing: function(){
             var json = _super.prototype.export_for_printing.apply(this,arguments);
             if (this.pos.loyalty && this.get_client()) {
@@ -338,6 +328,7 @@ openerp.pos_loyalty = function(instance){
             }
             return json;
         },
+
         export_as_JSON: function(){
             var json = _super.prototype.export_as_JSON.apply(this,arguments);
             json.loyalty_points = this.get_new_points();
@@ -345,21 +336,22 @@ openerp.pos_loyalty = function(instance){
         },
     });
 
-    module.PosWidget.include({
-        loyalty_reward_click: function(){
+    module.LoyaltyButton = module.ActionButtonWidget.extend({
+        template: 'LoyaltyButton',
+        button_click: function(){
             var self = this;
             var order  = this.pos.get_order();
             var client = order.get_client(); 
             if (!client) {
-                this.screen_selector.set_current_screen('clientlist');
+                this.gui.show_screen('clientlist');
                 return;
             }
 
             var rewards = order.get_available_rewards();
             if (rewards.length === 0) {
-                this.screen_selector.show_popup('error',{
-                    'message': 'No Rewards Available',
-                    'comment': 'There are no rewards available for this customer as part of the loyalty program',
+                this.gui.show_popup('error',{
+                    'title': 'No Rewards Available',
+                    'body':  'There are no rewards available for this customer as part of the loyalty program',
                 });
                 return;
             } else if (rewards.length === 1 && this.pos.loyalty.rewards.length === 1) {
@@ -373,8 +365,8 @@ openerp.pos_loyalty = function(instance){
                         item:  rewards[i],
                     });
                 }
-                this.screen_selector.show_popup('selection',{
-                    'message': 'Please select a reward',
+                this.gui.show_popup('selection',{
+                    'title': 'Please select a reward',
                     'list': list,
                     'confirm': function(reward){
                         order.apply_reward(reward);
@@ -382,21 +374,16 @@ openerp.pos_loyalty = function(instance){
                 });
             }
         },
-
-        build_widgets: function(){
-            var self = this;
-            this._super();
-            
-            if(this.pos.loyalty && this.pos.loyalty.rewards.length ){
-                var button = $(QWeb.render('LoyaltyButton'));
-                button.click(function(){ self.loyalty_reward_click(); });
-                button.appendTo(this.$('.control-buttons'));
-                this.$('.control-buttons').removeClass('oe_hidden');
-            }
-
-        },
     });
 
+    module.define_action_button({
+        'name': 'loyalty',
+        'widget': module.LoyaltyButton,
+        'condition': function(){
+            return this.pos.loyalty && this.pos.loyalty.rewards.length;
+        },
+    });
+    
     module.OrderWidget.include({
         update_summary: function(){
             this._super();

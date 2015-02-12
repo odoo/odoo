@@ -26,5 +26,4 @@ import report
 import res_users
 import res_partner
 import wizard
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import res_config

@@ -56,8 +56,6 @@ With this module you will have:
                     "data/account_tax.xml",
                     "data/l10n_chart_mx_wizard.xml"],
     "active": False,
-    "installable": True,
+    "installable": False,
     "certificate": False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

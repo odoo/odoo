@@ -42,6 +42,7 @@
                                 $('<li data-style="'+data[k]['id']+'" data-toggle_class="'+data[k]['html_class']+'"/>')
                                     .append( $('<a/>').text(data[k]['name']) ));
                         }
+                        self.set_active();
                     });
 
             this.bind_resize();

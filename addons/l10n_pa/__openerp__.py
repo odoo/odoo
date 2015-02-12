@@ -44,8 +44,6 @@ Con la Colaboración de
     "demo_xml": [
 			],
     "active": False,
-    "installable": True,
+    "installable": False,
     "certificate" : "",
-    'images': ['images/config_chart_l10n_cl.jpeg','images/l10n_cl_chart.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

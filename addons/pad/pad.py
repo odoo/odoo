@@ -9,6 +9,7 @@ from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 from py_etherpad import EtherpadLiteClient
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -37,7 +38,9 @@ class pad_common(osv.osv_memory):
         s = string.ascii_uppercase + string.digits
         salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(10)])
         #path
-        path = '%s-%s-%s' % (cr.dbname.replace('_','-'), self._name, salt)
+        # etherpad hardcodes pad id length limit to 50
+        path = '-%s-%s' % (self._name, salt)
+        path = '%s%s' % (cr.dbname.replace('_','-')[0:50 - len(path)], path)
         # contruct the url
         url = '%s/p/%s' % (pad["server"], path)
 
@@ -47,8 +50,7 @@ class pad_common(osv.osv_memory):
             try:
                 myPad.createPad(path)
             except urllib2.URLError:
-                raise osv.except_osv(_("Error"), _("Pad creation failed, \
-                either there is a problem with your pad server URL or with your connection."))
+                raise UserError(_("Pad creation failed, either there is a problem with your pad server URL or with your connection."))
 
             #get attr on the field model
             model = self.pool[context["model"]]
@@ -106,5 +108,3 @@ class pad_common(osv.osv_memory):
                 pad = self.pad_generate_url(cr, uid, context)
                 default[k] = pad.get('url')
         return super(pad_common, self).copy(cr, uid, id, default, context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

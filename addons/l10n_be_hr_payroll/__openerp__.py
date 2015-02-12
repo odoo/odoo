@@ -47,7 +47,5 @@ Belgian Payroll Rules.
         'l10n_be_hr_payroll_data.xml',
         'data/hr.salary.rule.csv',
     ],
-    'installable': True
+    'installable': False
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

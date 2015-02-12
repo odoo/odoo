@@ -57,5 +57,3 @@ allow_report_int_registration = True
 # Introduced around 2013.03 (actually they are deprecated since much longer
 # but no warning was dispayed in the logs).
 openerp_pooler = True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

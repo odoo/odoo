@@ -11,6 +11,7 @@ Odoo Technical Documentation
     :maxdepth: 2
 
     tutorials
+    setup
     reference
     api_integration
 

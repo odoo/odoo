@@ -2,29 +2,12 @@
 <openerp>
     <data noupdate="1">
 
-         <!-- Create a transporter -->
-
-        <record id="res_partner_23" model="res.partner">
-            <field name="name">The Poste</field>
-            <field name="is_company">1</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
+        <!-- Update a transporter -->
+        <record id="res_partner_delivery" model="res.partner">
             <field name="city">Manchester</field>
             <field name="zip">06040</field>
             <field model="res.country" name="country_id" search="[('code','ilike','us')]"/>
             <field name="street">3958 Maxwell Street</field>
-        </record>
-
-        <!-- Create a service product -->
-
-        <record id="product_product_delivery" model="product.product">
-            <field name="name">Delivery by Poste</field>
-            <field name="default_code">Delivery</field>
-            <field name="type">service</field>
-            <field name="categ_id" ref="product.product_category_3"/>
-            <field name="standard_price">10.0</field>
-            <field name="list_price">10.0</field>
-            <field name="image" type="base64" file="delivery/static/img/product_product_delivery-image.jpg"/>
         </record>
 
         <!-- Carrier -->
@@ -32,24 +15,15 @@
         <record id="delivery_carrier" model="delivery.carrier">
             <field name="name">The Poste</field>
             <field name="normal_price">20</field>
-            <field name="partner_id" ref="res_partner_23"/>
+            <field name="partner_id" ref="res_partner_delivery"/>
             <field name="product_id" ref="product_product_delivery"/>
             <field name="use_detailed_pricelist" eval="True"/>
-        </record>
-
-        <record id="free_delivery_carrier" model="delivery.carrier">
-            <field name="name">Free delivery charges</field>
-            <field name="normal_price">0</field>
-            <field name="free_if_more_than">True</field>
-            <field name="amount">1000</field>
-            <field name="partner_id" ref="res_partner_23"/>
-            <field name="product_id" ref="product_product_delivery"/>
         </record>
 
         <record id="normal_delivery_carrier" model="delivery.carrier">
             <field name="name">Normal Delivery Charges</field>
             <field name="normal_price">10</field>
-            <field name="partner_id" ref="res_partner_23"/>
+            <field name="partner_id" ref="res_partner_delivery"/>
             <field name="product_id" ref="product_product_delivery"/>
         </record>
 

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <record id="base.main_company" model="res.company">
+            <field name="bank_account_code_char">X1100</field>
+            <field name="accounts_code_digits">7</field>
+        </record>
 
         <!--
         Chart of Accounts
@@ -226,6 +230,13 @@
             <field name="type">general</field>
             <field name="analytic_journal_id" ref="analytic.sit"/>
         </record>
+        <record id="currency_diff_journal" model="account.journal">
+            <field name="name">Currency Difference Journal - (test)</field>
+            <field name="code">CUR</field>
+            <field name="type">general</field>
+            <field name="default_debit_account_id" ref="income_fx_income"/>
+            <field name="default_credit_account_id" ref="income_fx_expense"/>
+        </record>
         <record id="opening_journal" model="account.journal">
             <field name="name">Opening Entries Journal - (test)</field>
             <field name="code">TOEJ</field>
@@ -241,6 +252,9 @@
             <field name="default_debit_account_id" ref="usd_bnk"/>
             <field name="default_credit_account_id" ref="usd_bnk"/>
             <field name="currency" ref="base.USD"/>
+        </record>
+        <record id="base.main_company" model="res.company">
+            <field name="currency_exchange_journal_id" ref="currency_diff_journal"/>
         </record>
         <!--
         Product income and expense accounts, default parameters

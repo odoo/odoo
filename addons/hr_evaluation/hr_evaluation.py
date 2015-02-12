@@ -27,6 +27,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
+from openerp.exceptions import UserError
 
 
 class hr_evaluation_plan(osv.Model):
@@ -236,7 +237,7 @@ class hr_evaluation(osv.Model):
             if evaluation.employee_id and evaluation.employee_id.parent_id and evaluation.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [evaluation.id], user_ids=[evaluation.employee_id.parent_id.user_id.id], context=context)
             if len(evaluation.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id), ('state', 'in', ['done', 'cancel'])], context=context)):
-                raise osv.except_osv(_('Warning!'), _("You cannot change state, because some appraisal forms have not been completed."))
+                raise UserError(_("You cannot change state, because some appraisal forms have not been completed."))
         return True
 
     def button_done(self, cr, uid, ids, context=None):
@@ -336,7 +337,7 @@ class hr_evaluation_interview(osv.Model):
             flag = False
             wating_id = 0
             if not id.evaluation_id.id:
-                raise osv.except_osv(_('Warning!'), _("You cannot start evaluation without Appraisal."))
+                raise UserError(_("You cannot start evaluation without Appraisal."))
             records = id.evaluation_id.survey_request_ids
             for child in records:
                 if child.state == "draft":

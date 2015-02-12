@@ -478,6 +478,11 @@ openerp.PropertiesMixin = _.extend({}, openerp.EventDispatcherMixin, {
             var tmp = self.__getterSetterInternalMap[key];
             if (tmp === val)
                 return;
+            if (self.field && self.field.type === 'float' && tmp && val){
+                var precision = self.field.digits ? self.field.digits[1] : 2;
+                if (openerp.web.float_is_zero(tmp - val, precision))
+                return;
+            }
             changed = true;
             self.__getterSetterInternalMap[key] = val;
             if (! options.silent)
@@ -688,7 +693,12 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
         var $oldel = this.$el;
         this.setElement($el);
         if ($oldel && !$oldel.is(this.$el)) {
-            $oldel.replaceWith(this.$el);
+            if ($oldel.length > 1) {
+                $oldel.wrapAll('<div/>');
+                $oldel.parent().replaceWith(this.$el);
+            } else {
+                $oldel.replaceWith(this.$el);
+            }
         }
         return this;
     },

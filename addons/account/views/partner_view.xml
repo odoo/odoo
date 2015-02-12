@@ -109,7 +109,7 @@
         -->
 
         <record id="action_reconcile_partner" model="ir.actions.client">
-            <field name="name">Reconciliation on Partner</field>
+            <field name="name">Invoices &amp; Payments Matching of Partner</field>
             <field name="tag">manual_reconciliation_view</field>
             <field name="context">{'partner_id': active_id}</field>
         </record>
@@ -139,7 +139,7 @@
                             <field name="property_account_receivable" groups="account.group_account_invoice" />
                             <field name="property_account_payable" groups="account.group_account_invoice"/>
                             <field name="last_time_entries_checked"/>
-                            <button string="Reconcile" type="action" class="oe_highlight"
+                            <button string="Invoices &amp; Payments Matching" type="action" class="oe_highlight"
                                 name="%(action_reconcile_partner)d"
                                 attrs="{'invisible':[('is_company','=',False),('parent_id','=',False)]}"/>
                         </group>

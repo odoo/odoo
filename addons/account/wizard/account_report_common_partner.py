@@ -16,4 +16,3 @@ class account_common_partner_report(models.TransientModel):
     def pre_print_report(self, data):
         data['form'].update(self.read(['result_selection'])[0])
         return data
-

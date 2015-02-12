@@ -71,7 +71,7 @@ class account_invoice_report(models.Model):
 
     _depends = {
         'account.invoice': [
-            'account_id', 'amount_total', 'commercial_partner_id', 'company_id',
+            'account_id', 'amount_total_signed', 'commercial_partner_id', 'company_id',
             'currency_id', 'date_due', 'date_invoice', 'fiscal_position',
             'journal_id', 'partner_bank_id', 'partner_id', 'payment_term',
             'residual', 'state', 'type', 'user_id',
@@ -93,8 +93,8 @@ class account_invoice_report(models.Model):
                 sub.payment_term, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
-                sub.product_qty, sub.price_total / cr.rate as price_total, sub.price_average /cr.rate as price_average,
-                cr.rate as currency_rate, sub.residual / cr.rate as residual, sub.commercial_partner_id as commercial_partner_id
+                sub.product_qty, sub.price_total as price_total, sub.price_average as price_average,
+                cr.rate as currency_rate, sub.residual as residual, sub.commercial_partner_id as commercial_partner_id
         """
         return select_str
 
@@ -118,19 +118,11 @@ class account_invoice_report(models.Model):
                     ai.partner_bank_id,
                     SUM(CASE
                          WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                            THEN (- ail.quantity) / u.factor
-                            ELSE ail.quantity / u.factor
+                            THEN (- ail.quantity) / u.factor * u2.factor
+                            ELSE ail.quantity / u.factor * u2.factor
                         END) AS product_qty,
-                    SUM(CASE
-                         WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                            THEN - ail.price_subtotal
-                            ELSE ail.price_subtotal
-                        END) AS price_total,
-                    CASE
-                     WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                        THEN SUM(- ail.price_subtotal)
-                        ELSE SUM(ail.price_subtotal)
-                    END / CASE
+                    SUM(ail.price_subtotal_signed) AS price_total,
+                    SUM(ail.price_subtotal_signed) / CASE
                            WHEN SUM(ail.quantity / u.factor) <> 0::numeric
                                THEN CASE
                                      WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
@@ -139,11 +131,7 @@ class account_invoice_report(models.Model):
                                     END
                                ELSE 1::numeric
                           END AS price_average,
-                    CASE
-                     WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                        THEN - ai.residual
-                        ELSE ai.residual
-                    END / CASE
+                    ai.residual_signed / CASE
                            WHEN (( SELECT count(l.id) AS count
                                    FROM account_invoice_line l
                                    LEFT JOIN account_invoice a ON a.id = l.invoice_id
@@ -167,6 +155,7 @@ class account_invoice_report(models.Model):
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
                 LEFT JOIN product_uom u ON u.id = ail.uos_id
+                LEFT JOIN product_uom u2 ON u.id = pt.uom_id
         """
         return from_str
 
@@ -175,8 +164,8 @@ class account_invoice_report(models.Model):
                 GROUP BY ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
                     ai.partner_id, ai.payment_term, u.name, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
-                    ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,
-                    ai.amount_total, u.uom_type, u.category_id, ai.commercial_partner_id, partner.country_id
+                    ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual_signed,
+                    ai.amount_total_signed, u.uom_type, u.category_id, ai.commercial_partner_id, partner.country_id
         """
         return group_by_str
 
@@ -199,4 +188,3 @@ class account_invoice_report(models.Model):
         )""" % (
                     self._table,
                     self._select(), self._sub_select(), self._from(), self._group_by()))
-

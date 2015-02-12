@@ -22,6 +22,7 @@
 import hashlib
 import itertools
 import logging
+import mimetypes
 import os
 import re
 
@@ -30,45 +31,54 @@ from openerp.tools.translate import _
 from openerp.exceptions import AccessError
 from openerp.osv import fields,osv
 from openerp import SUPERUSER_ID
-from openerp.osv.orm import except_orm
+from openerp.exceptions import UserError
 from openerp.tools.translate import _
 from openerp.tools.misc import ustr
 
 _logger = logging.getLogger(__name__)
 
-
-# optional python-magic import (https://github.com/ahupp/python-magic)
 try:
     import magic
 except ImportError:
     magic = None
 
+# We define our own guess_mimetype implementation and if magic is available we
+# use it instead.
+
+# However there are 2 python libs named 'magic' with incompatible api.
+# magic from pypi https://pypi.python.org/pypi/python-magic/
+# magic from file(1) https://packages.debian.org/squeeze/python-magic
+
 def guess_mimetype(bin_data):
-    if magic:
-        # if binary not identified or error, will return 'application/octet-stream'
-        return magic.from_buffer(bin_data, mime=True)
-    else:
-        # else, guess the type using the magic number of file hex signature (like magic, but more limited)
-        # see http://www.filesignatures.net/ for file signatures
-        mapping = {
-            # pdf
-            'application/pdf' : ['%PDF'],
-             # jpg, jpeg, png, gif
-            'image/jpeg' : ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2', '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1'],
-            'image/png' : ['\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'],
-            'image/gif' : ['GIF87a', '\x47\x49\x46\x38\x37\x61', 'GIF89a', '\x47\x49\x46\x38\x39\x61'],
-            # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
-            'application/zip' : ['PK'],
-            # doc, xls
-            'application/msword' : ['\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00', '\xEC\xA5\xC1\x00', '\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x0D\x44\x4F\x43'],
-            'application/vnd.ms-excel' : ['\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1','\x09\x08\x10\x00\x00\x06\x05\x00','\xFD\xFF\xFF\xFF\x10','\xFD\xFF\xFF\xFF\x1F','\xFD\xFF\xFF\xFF\x23','\xFD\xFF\xFF\xFF\x28','\xFD\xFF\xFF\xFF\x29'],
-        }
-        for mimetype in mapping.keys():
-            for signature in mapping[mimetype]:
-                if bin_data.startswith(signature):
-                    return mimetype
+    # by default, guess the type using the magic number of file hex signature (like magic, but more limited)
+    # see http://www.filesignatures.net/ for file signatures
+    mapping = {
+        # pdf
+        'application/pdf' : ['%PDF'],
+         # jpg, jpeg, png, gif
+        'image/jpeg' : ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2', '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1'],
+        'image/png' : ['\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'],
+        'image/gif' : ['GIF87a', '\x47\x49\x46\x38\x37\x61', 'GIF89a', '\x47\x49\x46\x38\x39\x61'],
+        # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
+        'application/zip' : ['PK'],
+        # doc, xls
+        'application/msword' : ['\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00', '\xEC\xA5\xC1\x00', '\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x0D\x44\x4F\x43'],
+        'application/vnd.ms-excel' : ['\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1','\x09\x08\x10\x00\x00\x06\x05\x00','\xFD\xFF\xFF\xFF\x10','\xFD\xFF\xFF\xFF\x1F','\xFD\xFF\xFF\xFF\x23','\xFD\xFF\xFF\xFF\x28','\xFD\xFF\xFF\xFF\x29'],
+    }
+    for mimetype in mapping.keys():
+        for signature in mapping[mimetype]:
+            if bin_data.startswith(signature):
+                return mimetype
     return 'application/octet-stream'
 
+# if available adapt magic from pypi
+if hasattr(magic,'from_buffer'):
+    guess_mimetype = lambda bin_data: magic.from_buffer(bin_data, mime=True)
+# or if available adapt magic from file(1)
+elif hasattr(magic,'open'):
+    ms = magic.open(magic.MAGIC_MIME_TYPE)
+    ms.load()
+    guess_mimetype = ms.buffer
 
 
 class ir_attachment(osv.osv):
@@ -159,7 +169,7 @@ class ir_attachment(osv.osv):
             else:
                 r = open(full_path,'rb').read().encode('base64')
         except IOError:
-            _logger.exception("_read_file reading %s", full_path)
+            _logger.info("_read_file reading %s", full_path, exc_info=True)
         return r
 
     def _file_write(self, cr, uid, value, checksum):
@@ -170,7 +180,7 @@ class ir_attachment(osv.osv):
                 with open(full_path, 'wb') as fp:
                     fp.write(bin_value)
             except IOError:
-                _logger.exception("_file_write writing %s", full_path)
+                _logger.info("_file_write writing %s", full_path, exc_info=True)
         return fname
 
     def _file_delete(self, cr, uid, fname):
@@ -180,10 +190,10 @@ class ir_attachment(osv.osv):
             try:
                 os.unlink(full_path)
             except OSError:
-                _logger.exception("_file_delete could not unlink %s", full_path)
+                _logger.info("_file_delete could not unlink %s", full_path, exc_info=True)
             except IOError:
                 # Harmless and needed for race conditions
-                _logger.exception("_file_delete could not unlink %s", full_path)
+                _logger.info("_file_delete could not unlink %s", full_path, exc_info=True)
 
     def _data_get(self, cr, uid, ids, name, arg, context=None):
         if context is None:
@@ -198,10 +208,18 @@ class ir_attachment(osv.osv):
         return result
 
     def _data_set(self, cr, uid, id, name, value, arg, context=None):
+        # compute the field depending of datas, supporting the case of a empty/None datas
+        bin_data = value and value.decode('base64') or '' # empty string to compute its hash
+        checksum = self._compute_checksum(bin_data)
+        vals = {
+            'file_size': len(bin_data),
+            'checksum' : checksum,
+        }
         # We dont handle setting data to null
+        # datas is false, but file_size and checksum are not (computed as datas is an empty string)
         if not value:
             # reset computed fields
-            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'file_size' : 0, 'checksum' : None, 'mimetype' : None, 'index_content' : None}, context=context)
+            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], vals, context=context)
             return True
         if context is None:
             context = {}
@@ -209,16 +227,8 @@ class ir_attachment(osv.osv):
         attach = self.browse(cr, uid, id, context=context)
         fname_to_delete = attach.store_fname
         location = self._storage(cr, uid, context)
-        # compute the field depending of datas
-        bin_data = value.decode('base64')
-        mimetype = self._compute_mimetype(bin_data)
-        checksum = self._compute_checksum(bin_data)
-        vals = {
-            'file_size': len(bin_data),
-            'checksum' : checksum,
-            'mimetype' : mimetype,
-            'index_content' : self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, mimetype),
-        }
+        # compute the index_content field
+        vals['index_content'] = self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, attach.mimetype),
         if location != 'db':
             # create the file
             fname = self._file_write(cr, uid, value, checksum)
@@ -248,12 +258,17 @@ class ir_attachment(osv.osv):
             return hashlib.sha1(bin_data).hexdigest()
         return False
 
-    def _compute_mimetype(self, bin_data):
-        """ compute the mimetype of the given datas
-            :param bin_data : binary data
+    def _compute_mimetype(self, values):
+        """ compute the mimetype of the given values
+            :param values : dict of values to create or write an ir_attachment
             :return mime : string indicating the mimetype, or application/octet-stream by default
         """
-        return guess_mimetype(bin_data)
+        mimetype = 'application/octet-stream'
+        if values.get('datas_fname'):
+            mimetype = mimetypes.guess_type(values['datas_fname'])[0]
+        if values.get('datas'):
+            mimetype = guess_mimetype(values['datas'].decode('base64'))
+        return mimetype
 
     def _index(self, cr, uid, bin_data, datas_fname, file_type):
         """ compute the index content of the given filename, or binary data.
@@ -339,11 +354,16 @@ class ir_attachment(osv.osv):
             existing_ids = self.pool[model].exists(cr, uid, mids)
             if len(existing_ids) != len(mids):
                 require_employee = True
-            ima.check(cr, uid, model, mode)
+            # For related models, check if we can write to the model, as unlinking
+            # and creating attachments can be seen as an update to the model
+            if (mode in ['unlink','create']):
+                ima.check(cr, uid, model, 'write')
+            else:
+                ima.check(cr, uid, model, mode)
             self.pool[model].check_access_rule(cr, uid, existing_ids, mode, context=context)
         if require_employee:
-            if not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
-                raise except_orm(_('Access Denied'), _("Sorry, you are not allowed to access this document."))
+            if not uid == SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
+                raise AccessError(_("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         ids = super(ir_attachment, self)._search(cr, uid, args, offset=offset,
@@ -409,7 +429,7 @@ class ir_attachment(osv.osv):
             ids = [ids]
         self.check(cr, uid, ids, 'write', context=context, values=vals)
         # remove computed field depending of datas
-        for field in ['file_size', 'checksum', 'mimetype']:
+        for field in ['file_size', 'checksum']:
             vals.pop(field, False)
         return super(ir_attachment, self).write(cr, uid, ids, vals, context)
 
@@ -437,8 +457,11 @@ class ir_attachment(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         # remove computed field depending of datas
-        for field in ['file_size', 'checksum', 'mimetype']:
+        for field in ['file_size', 'checksum']:
             values.pop(field, False)
+        # if mimetype not given, compute it !
+        if 'mimetype' not in values:
+            values['mimetype'] = self._compute_mimetype(values)
         self.check(cr, uid, [], mode='write', context=context, values=values)
         return super(ir_attachment, self).create(cr, uid, values, context)
 
@@ -453,5 +476,3 @@ class ir_attachment(osv.osv):
         ids = self.search(cr, uid, domain, context=context)
         if ids:
             self.unlink(cr, uid, ids, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

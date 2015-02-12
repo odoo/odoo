@@ -42,7 +42,5 @@ This is the latest UK OpenERP localisation necessary to run OpenERP accounting f
         'l10n_uk_wizard.xml',
     ],
     'demo' : ['demo/demo.xml'],
-    'installable': 'True',
-    'images': ['images/config_chart_l10n_uk.jpeg','images/l10n_uk_chart.jpeg'],
+    'installable': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

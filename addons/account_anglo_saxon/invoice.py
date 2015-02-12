@@ -53,13 +53,13 @@ class account_invoice_line(osv.osv):
             return round(price, inv.currency_id.decimal_places)
 
     @api.v8
-    def get_invoice_line_account(self, product, fpos):
-        if self.company_id.anglo_saxon_accounting and self.invoice_id.type in ('in_invoice', 'in_refund'):
+    def get_invoice_line_account(self, type, product, fpos, company):
+        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund'):
             accounts = product.get_product_accounts(fpos)
-            if self.invoice_id.type == 'in_invoice':
+            if type == 'in_invoice':
                 return accounts['stock_input']
-            return accounts['stock_ouput']
-        return super(account_invoice_line, self).get_invoice_line_account(product, fpos)
+            return accounts['stock_output']
+        return super(account_invoice_line, self).get_invoice_line_account(type, product, fpos, company)
 
     def _anglo_saxon_sale_move_lines(self, cr, uid, i_line, res, context=None):
         """Return the additional move lines for sales invoices and refunds.
@@ -70,7 +70,7 @@ class account_invoice_line(osv.osv):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
 
-        if i_line.product_id and i_line.product_id.valuation == 'real_time':
+        if i_line.product_id.type != 'service' and i_line.product_id.valuation == 'real_time':
             # debit account dacc will be the output account
             # first check the product, if empty check the category
             dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
@@ -198,5 +198,3 @@ class account_invoice(osv.osv):
                                                                               fpos,
                                                                               counterpart_acct_id)
         return invoice_data
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

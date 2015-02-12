@@ -145,8 +145,5 @@ German accounting chart and localization.
         'account_tax_fiscal_position_skr04.xml',
         'l10n_de_wizard.xml',
     ],
-    'installable': True,
-    'images': ['images/config_chart_l10n_de.jpeg','images/l10n_de_chart.jpeg'],
+    'installable': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

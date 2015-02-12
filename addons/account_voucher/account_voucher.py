@@ -23,6 +23,7 @@
 from openerp import fields, models, api, _
 import openerp.addons.decimal_precision as dp
 from openerp.tools import float_compare
+from openerp.exceptions import UserError
 
 
 class account_voucher(models.Model):
@@ -94,6 +95,7 @@ class account_voucher(models.Model):
             ('pay_later', 'Pay Later or Group Funds'),
         ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_now')
     date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
+    audit = fields.Boolean('To Review', related="move_id.to_check", help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.')
 
     @api.multi
     def compute_tax(self):
@@ -217,14 +219,11 @@ class account_voucher(models.Model):
                 name = voucher.number
             elif voucher.journal_id.sequence_id:
                 if not voucher.journal_id.sequence_id.active:
-                    raise Warning(_('Please activate the sequence of selected journal !'))
-                name = voucher.journal_id.sequence_id.next_by_id()
+                    raise UserError(_('Please activate the sequence of selected journal !'))
+                name = voucher.journal_id.sequence_id.with_context(ir_sequence_date=voucher.date).next_by_id()
             else:
-                raise Warning(_('Please define a sequence on the journal.'))
-            if not voucher.reference:
-                ref = name.replace('/','')
-            else:
-                ref = voucher.reference
+                raise UserError(_('Please define a sequence on the journal.'))
+            ref = voucher.reference or name
 
             move = {
                 'name': name,
@@ -275,11 +274,11 @@ class account_voucher(models.Model):
             for line in voucher.line_ids:
                 #create one move line per voucher line where amount is not 0.0
                 # AND (second part of the clause) only if the original move line was not having debit = credit = 0 (which is a legal value)
-                if not line.amount and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_digits=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_digits=prec)):
+                if not line.price_subtotal and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_digits=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_digits=prec)):
                     continue
                 # convert the amount set on the voucher line into the currency of the voucher's company
                 # this calls res_curreny.compute() with the right context, so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
-                amount = voucher._convert_amount(line.untax_amount or line.amount)
+                amount = voucher._convert_amount(line.price_subtotal)
                 move_line = {
                     'journal_id': voucher.journal_id.id,
                     'name': line.name or '/',

@@ -54,15 +54,16 @@ So, that we can compare the theoretic delay and real delay.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/manufacturing',
-    'images': ['images/work_order_analysis.jpeg','images/work_order_planning.jpeg','images/work_order.jpeg'],
     'depends': ['mrp'],
     'data': [
+        'data/report_paperformat.xml',
         'security/ir.model.access.csv',
         'mrp_operation_data.xml',
         'mrp_operations_workflow.xml',
         'mrp_operations_view.xml',
         'mrp_operations_report.xml',
         'report/mrp_workorder_analysis_view.xml',
+        'views/report_wcbarcode.xml',
         'mrp_operations_workflow_instance.xml'
     ],
     'demo': [ 
@@ -74,4 +75,3 @@ So, that we can compare the theoretic delay and real delay.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

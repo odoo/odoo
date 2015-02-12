@@ -123,5 +123,3 @@ class report_analyticcostledgerquantity(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'analytic.report_analyticcostledgerquantity'
     _wrapped_report_class = account_analytic_quantity_cost_ledger
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

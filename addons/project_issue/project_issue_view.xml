@@ -80,7 +80,6 @@
                             </div>
                         </group>
                         <group>
-                            <field name="id"/>
                             <field name="version_id" groups="base.group_user"/>
                             <field name="priority" groups="base.group_user" widget="priority"/>
                             <label for="task_id" groups="base.group_user"/>
@@ -94,9 +93,10 @@
                         <page string="Description">
                             <field name="description" placeholder="Add an internal note..." groups="base.group_user"/>
                         </page>
-                        <page string="Extra Info" groups="project.group_project_manager,project.group_project_user">
+                        <page string="Extra Info" name="extra_info" groups="project.group_project_manager,project.group_project_user">
                             <group>
-                                <group string="Statistics">
+                                <group>
+                                    <field name="id"/>
                                     <field name="day_open"/>
                                     <field name="day_close"/>
                                     <field name="working_hours_open" widget="float_time"/>
@@ -104,7 +104,7 @@
                                     <field name="inactivity_days"/>
                                     <field name="days_since_creation"/>
                                 </group>
-                                <group string="Status" groups="base.group_no_one">
+                                <group groups="base.group_no_one">
                                     <field name="active"/>
                                 </group>
                             </group>
@@ -196,7 +196,6 @@
                 <kanban default_group_by="stage_id">
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
-                    <field name="priority"/>
                     <field name="user_email"/>
                     <field name="user_id"/>
                     <field name="date_deadline"/>
@@ -211,7 +210,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
-                                    <span class="oe_e">i</span>
+                                    <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Issue</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
@@ -242,6 +241,17 @@
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="project_issue_pivot_view">
+            <field name="name">Project Issue Tracker Pivot</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <pivot string="Project Issues">
+                    <field name="project_id" type="row"/>
+                    <field name="stage_id" type="col"/>
+                </pivot>
             </field>
         </record>
 
@@ -307,7 +317,9 @@
                     <div>
                         <field name="use_issues" class="oe_inline" string="Use Issues"
                                 on_change="on_change_use_tasks_or_issues(use_tasks, use_issues)"/>
-                        <label for="use_issues" class="oe_inline"/> as <field name="label_issues" class="oe_inline"/>
+                        <label for="use_issues" class="oe_inline"/>
+                        <span attrs="{'invisible':[('use_issues', '=', False)]}">as</span>
+                        <field name="label_issues" class="oe_inline oe_input_align" attrs="{'invisible': [('use_issues', '=', False)]}"/>
                     </div>
                 </xpath>
                 <xpath expr='//div[@name="buttons"]' position='inside'>
@@ -337,17 +349,19 @@
                     <field name="use_issues"/>
                     <field name="issue_ids" invisible="1"/>
                 </field>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/a" position="after">
-                    <a t-if="record.use_issues.raw_value" style="margin-right: 20px" class="pull-right"
-                        name="%(act_project_project_2_project_issue_all)d" type="action">
-                        <t t-raw="record.issue_ids.raw_value.length"/> <field name="label_issues"/>
-                        <field name="monthly_issues" widget="sparkline_bar" options="{'delayIn': '1000'}">
-                            Closed Issues
-                        </field>
-                    </a>
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/div" position="after">
+                    <div class="col-md-6">
+                        <a t-if="record.use_issues.raw_value" name="%(act_project_project_2_project_issue_all)d" type="action">
+                            <t t-raw="record.issue_ids.raw_value.length"/>
+                            <field name="label_issues"/>
+                            <field name="monthly_issues" widget="sparkline_bar" options="{'delayIn': '1000'}">
+                                Closed Issues
+                            </field>
+                        </a>
+                    </div>
                 </xpath>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/div" position="replace">
-                     <div t-if="!(record.use_tasks.raw_value and record.task_count.raw_value gt 0) and !(record.use_issues.raw_value and record.issue_ids.raw_value.length gt 0)" style="margin-top: 6px;margin-left:20px;">
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/div[contains(@class, 'col-md-12')]" position="replace">
+                     <div t-if="!(record.use_tasks.raw_value and record.task_count.raw_value gt 0) and !(record.use_issues.raw_value and record.issue_ids.raw_value.length gt 0)" class="col-md-12">
                          <img src="/project/static/src/img/top_left_arrow.png" style="margin-top: -8px; width: 22px;" />
                          <span>No activity yet, click to enter in the project.</span>
                      </div>

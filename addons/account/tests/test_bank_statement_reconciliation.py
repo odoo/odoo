@@ -28,16 +28,15 @@ class TestBankStatementReconciliation(TransactionCase):
         st_line = self.create_statement_line(100)
 
         # reconcile
-        st_line.process_reconciliation([{
-            'counterpart_move_line_id': rcv_mv_line.id,
-            'is_reconciled': False,
+        st_line.process_reconciliation(counterpart_aml_dicts=[{
+            'move_line': rcv_mv_line,
             'credit': 100,
             'debit': 0,
             'name': rcv_mv_line.name,
         }])
 
         # check everything went as expected
-        rec_move = st_line.journal_entry_id
+        rec_move = st_line.journal_entry_ids[0]
         self.assertTrue(rec_move)
         counterpart_mv_line = None
         for l in rec_move.line_id:
@@ -47,7 +46,7 @@ class TestBankStatementReconciliation(TransactionCase):
         self.assertIsNotNone(counterpart_mv_line)
         self.assertTrue(rcv_mv_line.reconciled)
         self.assertTrue(counterpart_mv_line.reconciled)
-        self.assertEqual(counterpart_mv_line.reconcile_partial_with_ids, rcv_mv_line.reconcile_partial_ids)
+        self.assertEqual(counterpart_mv_line.matched_credit_ids, rcv_mv_line.matched_debit_ids)
 
     def test_reconcile_with_write_off(self):
         pass

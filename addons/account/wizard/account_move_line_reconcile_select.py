@@ -24,4 +24,3 @@ class account_move_line_reconcile_select(models.TransientModel):
             'res_model': 'account.move.line',
             'type': 'ir.actions.act_window'
         }
-
