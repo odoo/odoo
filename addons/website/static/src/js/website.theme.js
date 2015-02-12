@@ -94,13 +94,13 @@
                 });
         },
         get_inputs: function (string) {
-            return this.$inputs.filter('#'+string.split(",").join(", #"));
+            return this.$inputs.filter('#'+string.split(/\s*,\s*/).join(", #"));
         },
         get_xml_ids: function ($inputs) {
             var xml_ids = [];
             $inputs.each(function () {
                 if ($(this).data('xmlid') && $(this).data('xmlid').length) {
-                    xml_ids = xml_ids.concat($(this).data('xmlid').split(","));
+                    xml_ids = xml_ids.concat($(this).data('xmlid').split(/\s*,\s*/));
                 }
             });
             return xml_ids;
