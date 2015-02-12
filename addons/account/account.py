@@ -1513,23 +1513,13 @@ class wizard_multi_charts_accounts(models.TransientModel):
         else:
             raise UserError(_('Cannot generate an unused account code.'))
 
-        # Get the id of the user types fr-or cash and bank
-        cash_type = self.env.ref('account.data_account_type_cash') or False
-        bank_type = self.env.ref('account.data_account_type_bank') or False
-        parent_id = False
-        if acc_template_ref:
-            parent_id = acc_template_ref[ref_acc_bank.id]
-        else:
-            tmp = self.env['account.account'].search([('code', '=', company.bank_account_code_char)], limit=1)
-            if tmp:
-                parent_id = tmp
-
+        liquidity_type_id = self.env.ref('account.data_account_type_liquidity') or False
         return {
                 'name': line['acc_name'],
                 'currency_id': line['currency_id'] or False,
                 'code': new_code,
                 'type': 'liquidity',
-                'user_type': line['account_type'] == 'cash' and cash_type.id or bank_type.id,
+                'user_type': liquidity_type_id,
                 'company_id': company.id,
         }
 
