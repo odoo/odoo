@@ -354,8 +354,6 @@ openerp.account = function (instance) {
             line.q_label = line.name;
             var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_move_line_details") ? this.template_prefix : "") + "reconciliation_move_line_details";
             line.q_popover = QWeb.render(template_name, {line: line});
-            if (line.has_no_partner)
-                line.q_label = line.partner_name + " : " + line.q_label;
             if (line.ref && line.ref !== line.name)
                 line.q_label = line.q_label + " : " + line.ref;
         },
@@ -1173,7 +1171,7 @@ openerp.account = function (instance) {
 
                     // Display the reconciliations
                     return self.model_bank_statement_line
-                        .call("get_data_for_reconciliations", [reconciliations_to_show])
+                        .call("get_data_for_reconciliation_widget", [reconciliations_to_show])
                         .then(function (data) {
                             var child_promises = [];
                             var datum = data.shift();
@@ -1376,7 +1374,7 @@ openerp.account = function (instance) {
             });
 
             return self.model_bank_statement_line
-                .call("get_data_for_reconciliations", [reconciliations_to_show, excluded_move_lines_ids])
+                .call("get_data_for_reconciliation_widget", [reconciliations_to_show, excluded_move_lines_ids])
                 .then(function (data) {
                     var child_promises = [];
                     var datum;
@@ -1428,6 +1426,8 @@ openerp.account = function (instance) {
         decorateMoveLine: function(line) {
             line['credit'] = [line['debit'], line['debit'] = line['credit']][0];
             this._super(line);
+            if (this.st_line.has_no_partner)
+                line.q_label = line.partner_name + " : " + line.q_label;
         },
 
         /* reloads the needaction badge */
@@ -1618,7 +1618,7 @@ openerp.account = function (instance) {
 
             // Load statement line
             return self.model_bank_statement_line
-                .call("get_data_for_reconciliations", [[self.line_id], excluded_move_lines_ids])
+                .call("get_data_for_reconciliation_widget", [[self.line_id], excluded_move_lines_ids])
                 .then(function (data) {
                     self.st_line = data[0].st_line;
                     self.decorateStatementLine(self.st_line);
@@ -1982,7 +1982,7 @@ openerp.account = function (instance) {
                 if (excluded_ids.indexOf(globally_excluded_ids[i]) === -1)
                     excluded_ids.push(globally_excluded_ids[i]);
             return self.model_bank_statement_line
-                .call("get_move_lines_for_bank_reconciliation", [self.st_line.id, excluded_ids, self.filter, offset, limit])
+                .call("get_move_lines_for_reconciliation_widget", [self.st_line.id, excluded_ids, self.filter, offset, limit])
                 .then(function (lines) {
                     _.each(lines, function(line) { self.decorateMoveLine(line) }, self);
                     return callback.call(self, lines);
