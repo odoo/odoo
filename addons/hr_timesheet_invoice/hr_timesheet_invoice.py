@@ -278,7 +278,8 @@ class account_analytic_line(osv.osv):
                                 details.append("%s" % (line['unit_amount'], ))
                         if data.get('name', False):
                             details.append(line['name'])
-                        note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
+                        if details:
+                            note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
                     if note:
                         curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
                     invoice_line_obj.create(cr, uid, curr_line, context=context)
