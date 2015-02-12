@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website_event.controllers.main import website_event
-from openerp.addons.website_sale.controllers.main import get_pricelist
-from openerp.tools.translate import _
+from odoo import http, _
+from odoo.addons.website_event.controllers.main import website_event
+from odoo.addons.website_sale.controllers.main import get_pricelist
+from odoo.http import request
 
 
 class website_event(website_event):
@@ -30,27 +28,26 @@ class website_event(website_event):
             if len(items) < 2:
                 continue
             ticket_post[int(items[1])] = int(value)
-        tickets = request.registry['event.event.ticket'].browse(request.cr, request.uid, ticket_post.keys(), request.context)
+        tickets = request.env['event.event.ticket'].browse(ticket_post.keys())
         return [{'id': ticket.id, 'name': ticket.name, 'quantity': ticket_post[ticket.id], 'price': ticket.price} for ticket in tickets if ticket_post[ticket.id]]
 
     @http.route(['/event/<model("event.event"):event>/registration/confirm'], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):
-        cr, uid, context = request.cr, request.uid, request.context
         order = request.website.sale_get_order(force_create=1)
         attendee_ids = set()
 
         registrations = self._process_registration_details(post)
         for registration in registrations:
-            ticket = request.registry['event.event.ticket'].browse(cr, SUPERUSER_ID, int(registration['ticket_id']), context=context)
+            ticket = request.env['event.event.ticket'].sudo().browse(int(registration['ticket_id']))
             cart_values = order.with_context(event_ticket_id=ticket.id)._cart_update(product_id=ticket.product_id.id, add_qty=1, registration_data=[registration])
             attendee_ids |= set(cart_values.get('attendee_ids', []))
 
         # free tickets -> order with amount = 0: auto-confirm, no checkout
         if not order.amount_total:
             order.action_confirm()  # tde notsure: email sending ?
-            attendees = request.registry['event.registration'].browse(cr, uid, list(attendee_ids), context=context)
+            attendees = request.env['event.registration'].browse(list(attendee_ids))
             # clean context and session, then redirect to the confirmation page
-            request.website.sale_reset(context=context)
+            request.website.sale_reset()
             return request.website.render("website_event.registration_complete", {
                 'attendees': attendees,
                 'event': event,

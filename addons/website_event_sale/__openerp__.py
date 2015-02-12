@@ -5,7 +5,6 @@
     'category': 'Website',
     'summary': "Sell Your Event's Tickets",
     'website': 'https://www.odoo.com/page/events',
-    'version': '1.0',
     'description': """
 Online Event's Tickets
 ======================
@@ -17,7 +16,5 @@ Online Event's Tickets
         'security/ir.model.access.csv',
         'security/website_event_sale_security.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
-    'installable': True,
     'auto_install': True
 }
