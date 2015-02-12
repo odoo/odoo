@@ -140,7 +140,7 @@ class sale_order(osv.osv):
         'template_id': fields.many2one('sale.quote.template', 'Quote Template', readonly=True,
             states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'website_description': fields.html('Description'),
-        'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
+        'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', copy=True),
         'validity_date': fields.date('Expiry Date'),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float",
             digits_compute=dp.get_precision('Account'))
