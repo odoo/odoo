@@ -376,6 +376,7 @@ class account_move_line(models.Model):
             :param target_date: date to use for the monetary conversion
         """
         context = dict(self._context or {})
+        # TODO : what about multicompany ? shouldn't it be sth like self and self[0].account_id.company_id.currency_id ?
         company_currency = self.env.user.company_id.currency_id
         rml_parser = report_sxw.rml_parse(self._cr, self._uid, 'reconciliation_widget_aml', context=self._context)
         ret = []

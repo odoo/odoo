@@ -388,11 +388,11 @@ openerp.account = function (instance) {
 
             if (context.initial_data_provided) {
                 // Process data
+                this.partner_id = context.line.partner_id;
                 _.each(context.reconciliation_proposition, function(line) {
                     self.decorateMoveLine(line);
                 }, this);
                 this.set("mv_lines_selected", context.reconciliation_proposition);
-                this.partner_id = context.line.partner_id;
             } else {
                 this.set("mv_lines_selected", []);
             }
@@ -1426,7 +1426,7 @@ openerp.account = function (instance) {
         decorateMoveLine: function(line) {
             line['credit'] = [line['debit'], line['debit'] = line['credit']][0];
             this._super(line);
-            if (this.st_line.has_no_partner)
+            if (! this.partner_id)
                 line.q_label = line.partner_name + " : " + line.q_label;
         },
 

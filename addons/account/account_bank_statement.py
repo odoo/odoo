@@ -351,7 +351,7 @@ class account_bank_statement_line(models.Model):
         st_line = self.browse(cr, uid, st_line_id, context)
         aml_recs = st_line.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit)
         target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
-        return move_lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=st_line.date)
+        return aml_recs.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=st_line.date)
 
     ####################################################
     # Reconciliation methods
@@ -401,11 +401,13 @@ class account_bank_statement_line(models.Model):
 
     def _get_domain_maker_move_line_amount(self):
         """ Returns a function that can create the appropriate domain to search on move.line amount based on statement.line currency/amount """
-        currency = self.currency_id or self.journal_id.currency
+        company_currency = self.journal_id.company_id.currency_id
+        st_line_currency = self.currency_id or self.journal_id.currency
+        currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency or False
         field = currency and 'amount_residual_currency' or 'amount_residual'
-        precision = currency and currency.decimal_places or self.journal_id.company_id.currency_id.decimal_places
+        precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
 
-        def ret(comparator, amount, p=precision, f=field, c=currency.id):
+        def ret(comparator, amount, p=precision, f=field, c=currency):
             if comparator == '<':
                 if amount < 0:
                     domain = [(f, '<', 0), (f, '>', amount)]
@@ -441,21 +443,20 @@ class account_bank_statement_line(models.Model):
             return match_recs
 
         if not self.partner_id:
-            return []
+            return self.env['account.move.line']
 
         # Look for a set of move line whose amount is <= to the line's amount
         domain = [('reconciled', '=', False)] # Make sure we can't mix reconciliation and 'rapprochement'
         domain += [('account_id.user_type.type', '=', amount > 0 and 'receivable' or 'payable')] # Make sure we can't mix receivable and payable
         domain += amount_domain_maker('<', amount) # Will also enforce > 0
         mv_lines = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, limit=5, additional_domain=domain)
-        currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
-        ret = []
+        st_line_currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
+        ret = self.env['account.move.line']
         total = 0
         for line in mv_lines:
-            # TODO : take into account diffenrence in currency rate between aml creation and bank statement line date ?
-            total += abs(line.debit - line.credit)
-            if float_compare(total, abs(amount), precision_digits=currency.rounding) != 1:
-                ret.append(line)
+            total += line.currency_id and line.amount_residual_currency or line.amount_residual
+            if float_compare(total, abs(amount), precision_digits=st_line_currency.rounding) != 1:
+                ret = (ret | line)
             else:
                 break
         return ret
@@ -644,6 +645,7 @@ class account_bank_statement_line(models.Model):
                 raise UserError(_('A selected move line was already reconciled.'))
             if isinstance(aml_dict['move_line'], (int, long)):
                 aml_dict['move_line'] = aml_obj.browse(aml_dict['move_line'])
+        for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
             if aml_dict.get('tax_ids') and aml_dict['tax_ids'] and isinstance(aml_dict['tax_ids'][0], (int, long)):
                 # Transform the value in the format required for One2many and Many2many fields
                 aml_dict['tax_ids'] = map(lambda id: (4, id, None), aml_dict['tax_ids'])

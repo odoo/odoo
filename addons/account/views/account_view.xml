@@ -477,10 +477,10 @@
                             <field name="line_ids" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines" colors="grey:journal_entry_ids">
                                     <field name="sequence" readonly="1" invisible="1"/>
-                                    <!--<field name="journal_entry_ids" invisible="1"/>
+                                    <field name="journal_entry_ids" invisible="1"/>
                                     <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="name" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>-->
+                                    <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="partner_id" domain="[
                                         '&amp;',
                                             '|',('parent_id','=',False),('is_company','=',True),
