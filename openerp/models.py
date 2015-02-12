@@ -3232,20 +3232,15 @@ class BaseModel(object):
         env = self.env
         cr, user, context = env.args
 
-        # FIXME: The query construction needs to be rewritten using the internal Query
-        # object, as in search(), to avoid ambiguous column references when
-        # reading/sorting on a table that is auto_joined to another table with
-        # common columns (e.g. the magical columns)
-
-        # Construct a clause for the security rules.
-        # 'tables' holds the list of tables necessary for the SELECT, including
-        # the ir.rule clauses, and contains at least self._table.
-        rule_clause, rule_params, tables = env['ir.rule'].domain_get(self._name, 'read')
+        # make a query object for selecting ids, and apply security rules to it
+        query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [])
+        self._apply_ir_rules(query, 'read')
+        order_str = self._generate_order_by(None, query)
 
         # determine the fields that are stored as columns in self._table
         fields_pre = [f for f in field_names if self._columns[f]._classic_write]
 
-        # we need fully-qualified column names in case len(tables) > 1
+        # the query may involve several tables: we need fully-qualified names
         def qualify(f):
             if isinstance(self._columns.get(f), fields.binary) and \
                     context.get('bin_size_%s' % f, context.get('bin_size')):
@@ -3255,20 +3250,20 @@ class BaseModel(object):
                 return '%s."%s"' % (self._table, f)
         qual_names = map(qualify, set(fields_pre + ['id']))
 
-        query = """ SELECT %(qual_names)s FROM %(tables)s
-                    WHERE %(table)s.id IN %%s AND (%(extra)s)
-                    ORDER BY %(order)s
-                """ % {
-                    'qual_names': ",".join(qual_names),
-                    'tables': ",".join(tables),
-                    'table': self._table,
-                    'extra': " OR ".join(rule_clause) if rule_clause else "TRUE",
-                    'order': self._parent_order or self._order,
-                }
+        # determine the actual query to execute
+        from_clause, where_clause, where_params = query.get_sql()
+        query_str = """ SELECT %(qual_names)s FROM %(from_clause)s
+                        WHERE %(where_clause)s %(order_str)s
+                    """ % {
+                        'qual_names': ",".join(qual_names),
+                        'from_clause': from_clause,
+                        'where_clause': where_clause,
+                        'order_str': order_str,
+                    }
 
         result = []
         for sub_ids in cr.split_for_in_conditions(self.ids):
-            cr.execute(query, [tuple(sub_ids)] + rule_params)
+            cr.execute(query_str, [tuple(sub_ids)] + where_params)
             result.extend(cr.dictfetchall())
 
         ids = [vals['id'] for vals in result]
