@@ -500,7 +500,7 @@ define(['summernote/summernote'], function () {
     function summernote_mousedown (event) {
         history.splitNext();
 
-        var $editable = $(event.target).closest(".o_editable");
+        var $editable = $(event.target).closest(".o_editable, .note-editor");
         
         if (!!document.documentMode) {
             summernote_ie_fix(event, function (node) { return node.tagName === "DIV" || node.tagName === "IMG" || (node.dataset && node.dataset.oeModel); });
@@ -517,8 +517,11 @@ define(['summernote/summernote'], function () {
 
         // remember_selection when click on non editable area
         var r = range.create();
-        if ($(r ? dom.node(r.sc) : event.srcElement || event.target).closest('#website-top-navbar, #oe_main_menu_navbar, .note-popover, .modal').length) {
-            if (remember_selection && !$(event.target).is('input, select, label, button, a')) {
+        if ($(r ? dom.node(r.sc) : event.srcElement || event.target).closest('#website-top-navbar, #oe_main_menu_navbar, .note-popover, .note-toolbar, .modal').length) {
+            if (!$(event.target).is('input, select, label, button, a')) {
+                if (!remember_selection) {
+                    remember_selection = range.create(dom.firstChild($editable[0]), 0);
+                }
                 try {
                     remember_selection.select();
                 } catch (e) {
@@ -606,7 +609,9 @@ define(['summernote/summernote'], function () {
         $(document).on('mouseup', summernote_mouseup);
         oLayoutInfo.editor.off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
         oLayoutInfo.editor.on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa', function (event) {
-            new website.editor.MediaDialog(oLayoutInfo.editor, event.target).appendTo(document.body);
+            if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
+                new website.editor.MediaDialog(oLayoutInfo.editor, event.target).appendTo(document.body);
+            }
         });
         $(document).on("keyup", reRangeSelectKey);
         
