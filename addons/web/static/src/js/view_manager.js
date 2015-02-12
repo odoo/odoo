@@ -139,6 +139,9 @@ var ViewManager = Widget.extend({
         this.searchview = searchview;
         this.search_view_loaded = search_view_loaded_def;
     },
+    get_search_view: function() {
+        return this.searchview;
+    },
     /**
      * Executed on event "search_data" thrown by the SearchView
      */

@@ -473,7 +473,6 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-6 oe-cp-title">
-                    <div t-if="widget.debug" class="oe_debug_view btn-group btn-group-sm"/>
                     <ol class="oe-view-title breadcrumb">
                     </ol>
                 </div>
@@ -515,34 +514,38 @@
         </t>
     </div>
 </div>
-<t t-name="ViewManagerDebug">
-    <button type="button" class="btn btn-default dropdown-toggle fa fa-bug oe-view-manager-debug" data-toggle="dropdown"> <span class="caret"/>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-        <t t-if="widget.active_view.type === 'form'">
-            <li><a data-action="get_metadata">View Metadata</a></li>
-            <li><a data-action="toggle_layout_outline">Toggle Form Layout Outline</a></li>
-            <li><a data-action="set_defaults">Set Defaults</a></li>
-        </t>
-        <li><a data-action="tests">JS Tests</a></li>
-        <li><a data-action="fields">View Fields</a></li>
-        <li><a data-action="fvg">Fields View Get</a></li>
-        <li><a data-action="manage_filters">Manage Filters</a></li>
-        <t t-if="uid === 1">
-            <li><a data-action="translate">Technical Translation</a></li>
-            <li><a data-action="manage_views">Manage Views</a></li>
-            <li><a data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/> View</a></li>
-            <li t-if="widget.searchview"><a data-action="edit" data-model="ir.ui.view" t-att-data-id="widget.searchview.view_id">Edit SearchView</a></li> 
-            <li t-if="widget.action"><a data-action="edit" t-att-data-model="widget.action.type" t-att-data-id="widget.action.id">Edit Action</a></li> 
-            <li><a data-action="edit_workflow">Edit Workflow</a></li>
-            <li><a data-action="print_workflow">Print Workflow</a></li>
-            <li class="divider"/>
-            <li><a data-action="leave_debug">Leave Debug Mode</a></li>
-        </t>
-    </ul>
+<t t-name="WebClient.DebugManager">
+    <li class="oe_debug_manager">
+        <a href="#" t-att-title='_t("Open Debug Menu")' class="dropdown-toggle oe_debug_button" data-toggle="dropdown">
+            <span class="fa fa-bug"/>
+            <b class="caret"/>
+        </a>
+        <ul class="dropdown-menu js_debug_dropdown" role="menu"/>
+    </li>
 </t>
-<t t-name="ViewManagerDebugViewLog">
-    <div class="oe_debug_view_log">
+<t t-name="WebClient.DebugDropdown">
+    <t t-if="active_view.type === 'form'">
+        <li class="oe_metadata"><a href="#" data-action="get_metadata">View Metadata</a></li>
+        <li class="oe_layout"><a href="#" data-action="toggle_layout_outline">Toggle Form Layout Outline</a></li>
+        <li class="oe_defaults"><a href="#" data-action="set_defaults">Set Defaults</a></li>
+    </t>
+    <li class="oe_defaults"><a href="#" data-action="perform_js_tests">JS Tests</a></li>
+    <li class="oe_fields"><a href="#" data-action="get_view_fields">View Fields</a></li>
+    <li class="oe_fvg"><a href="#" data-action="fvg">Fields View Get</a></li>
+    <li class="oe_filters"><a href="#" data-action="manage_filters">Manage Filters</a></li>
+    <t t-if="uid === 1">
+        <li class="oe_translate"><a href="#" data-action="translate">Technical Translation</a></li>
+        <li class="oe_edit_view"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="active_view.controller.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/> View</a></li>
+        <li class="oe_edit_searchview" t-if="searchview"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="searchview.view_id">Edit SearchView</a></li> 
+        <li class="oe_edit_action" t-if="action"><a href="#" data-action="edit" t-att-data-model="action.type" t-att-data-id="action.id">Edit Action</a></li> 
+        <li class="oe_edit_workflow"><a href="#" data-action="edit_workflow">Edit Workflow</a></li>
+        <li class="oe_print_workflow"><a href="#" data-action="print_workflow">Print Workflow</a></li>
+        <li class="divider"/>
+        <li class="oe_leave"><a href="#" data-action="leave_debug">Leave Debug Mode</a></li>
+    </t>
+</t>
+<t t-name="WebClient.DebugViewLog">
+    <div class="oe_debug_menu_log">
         <table class="table table-condensed table-striped">
             <tr>
                 <th>ID:</th>

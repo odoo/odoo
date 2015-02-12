@@ -63,4 +63,9 @@
 <t t-name="vieweditor_boolean">
     <input type="checkbox" t-att-id="widget.name"/>
 </t>
+<t t-extend="WebClient.DebugDropdown">
+    <t t-jquery="li.oe_edit_view" t-operation="before">
+       <li><a href="#" data-action="manage_views">Manage Views</a></li>
+    </t>
+</t>
 </template>

@@ -2,9 +2,9 @@ odoo.define('web_view_editor.view_editor', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
-var ControlPanel = require('web.ControlPanel');
 var core = require('web.core');
 var data = require('web.data');
+var DebugManager =  require('web.DebugManager');
 var Dialog = require('web.Dialog');
 var formats = require('web.formats');   
 var Registry = require('web.Registry');
@@ -15,23 +15,18 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
-ControlPanel.include({
-    on_debug_changed:function(evt){
-        var val = $(evt.target).data('action'),
-            current_view = this.active_view.controller;
-        if(val === "manage_views"){
-            if (current_view.fields_view && current_view.fields_view.arch) {
-                    var view_editor = new ViewEditor(current_view, current_view.$el, this.dataset, current_view.fields_view.arch);
-                    view_editor.start();
-                } else {
-                    this.do_warn(_t("Manage Views"),
-                            _t("Could not find current view declaration"));
-                }
-        }else{
-            return this._super.apply(this,arguments);
+if (core.debug) {
+    DebugManager.include({
+        manage_views: function() {
+            if (this.view.fields_view && this.view.fields_view.arch) {
+                var view_editor = new ViewEditor(this.view, this.view.$el, this.dataset, this.view.fields_view.arch);
+                view_editor.start();
+            } else {
+                this.do_warn(_t("Manage Views"), _t("Could not find current view declaration"));
+            }
         }
-    }
-});
+    });
+}
 
 var ViewEditor = Widget.extend({
     init: function(parent, element_id, dataset) {

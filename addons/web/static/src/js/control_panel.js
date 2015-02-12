@@ -2,20 +2,14 @@ odoo.define('web.ControlPanel', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Dialog = require('web.Dialog');
-var formats = require('web.formats');
-var framework = require('web.framework');
 var SearchView = require('web.SearchView');
-var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
-var _t = core._t;
 
 var ControlPanel = Widget.extend({
     template: 'ControlPanel',
     events: {
-        "click .oe_debug_view": "on_debug_changed",
         "click .oe-cp-switch-buttons button": "on_switch_buttons_click",
     },
     /**
@@ -38,8 +32,6 @@ var ControlPanel = Widget.extend({
         this.searchview = null;
 
         this.flags = null;
-        this.dataset = null;
-        this.active_view = null;
         this.title = null; // Needed for Favorites of searchview
     },
     start: function() {
@@ -71,8 +63,10 @@ var ControlPanel = Widget.extend({
     get_bus: function() {
         return this.bus;
     },
-    // Sets the state of the controlpanel (in the case of a viewmanager, set_state must be
-    // called before switch_mode for the controlpanel and the viewmanager to be synchronized)
+    /**
+     * Sets the state of the controlpanel (in the case of a viewmanager, set_state must be
+     * called before switch_mode for the controlpanel and the viewmanager to be synchronized)
+     */
     set_state: function(state, old_state) {
         // Detach control panel elements in which sub-elements are inserted by other widgets
         var old_content = {
@@ -93,8 +87,6 @@ var ControlPanel = Widget.extend({
         this.flags = state.get_flags();
 
         this.flags = state.widget.flags;
-        this.active_view = state.widget.active_view;
-        this.dataset = state.widget.dataset;
         this.title = state.widget.title; // needed for Favorites of searchview
 
         // Hide the ControlPanel in headless mode
@@ -153,12 +145,9 @@ var ControlPanel = Widget.extend({
      * @param {Array} [breadcrumbs] the breadcrumbs to display
      */
     update: function(active_view, search_view_hidden, breadcrumbs) {
-        this.active_view = active_view; // this.active_view only used for debug view
-
         this.update_switch_buttons(active_view);
         this.update_search_view(search_view_hidden);
         this.update_breadcrumbs(breadcrumbs);
-        this.render_debug_view();
     },
     /**
      * Removes active class on all switch-buttons and adds it to the one of the active view
@@ -242,165 +231,6 @@ var ControlPanel = Widget.extend({
             this.searchview.toggle_visibility(!is_hidden);
             this.$title_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
             this.$search_col.toggle(!is_hidden);
-        }
-    },
-    on_debug_changed: function (evt) {
-        var self = this,
-            params = $(evt.target).data(),
-            val = params.action,
-            current_view = this.active_view.controller;
-        switch (val) {
-            case 'fvg':
-                var dialog = new Dialog(this, { title: _t("Fields View Get") }).open();
-                $('<pre>').text(utils.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$el);
-                break;
-            case 'tests':
-                this.do_action({
-                    name: _t("JS Tests"),
-                    target: 'new',
-                    type : 'ir.actions.act_url',
-                    url: '/web/tests?mod=*'
-                });
-                break;
-            case 'get_metadata':
-                var ids = current_view.get_selected_ids();
-                if (ids.length === 1) {
-                    this.dataset.call('get_metadata', [ids]).done(function(result) {
-                        new Dialog(this, {
-                            title: _.str.sprintf(_t("Metadata (%s)"), self.dataset.model),
-                            size: 'medium',
-                            buttons: {
-                                Ok: function() { this.parents('.modal').modal('hide');}
-                            },
-                        }, QWeb.render('ViewManagerDebugViewLog', {
-                            perm : result[0],
-                            format : formats.format_value
-                        })).open();
-                    });
-                }
-                break;
-            case 'toggle_layout_outline':
-                current_view.rendering_engine.toggle_layout_debugging();
-                break;
-            case 'set_defaults':
-                current_view.open_defaults_dialog();
-                break;
-            case 'translate':
-                this.do_action({
-                    name: _t("Technical Translation"),
-                    res_model : 'ir.translation',
-                    domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
-                    views: [[false, 'list'], [false, 'form']],
-                    type : 'ir.actions.act_window',
-                    view_type : "list",
-                    view_mode : "list"
-                });
-                break;
-            case 'fields':
-                this.dataset.call('fields_get', [false, {}]).done(function (fields) {
-                    var $root = $('<dl>');
-                    _(fields).each(function (attributes, name) {
-                        $root.append($('<dt>').append($('<h4>').text(name)));
-                        var $attrs = $('<dl>').appendTo($('<dd>').appendTo($root));
-                        _(attributes).each(function (def, name) {
-                            if (def instanceof Object) {
-                                def = JSON.stringify(def);
-                            }
-                            $attrs
-                                .append($('<dt>').text(name))
-                                .append($('<dd style="white-space: pre-wrap;">').text(def));
-                        });
-                    });
-                    new Dialog(self, {
-                        title: _.str.sprintf(_t("Model %s fields"),
-                                             self.dataset.model),
-                        buttons: {
-                            Ok: function() { this.parents('.modal').modal('hide');}
-                        },
-                        }, $root).open();
-                });
-                break;
-            case 'edit_workflow':
-                return this.do_action({
-                    res_model : 'workflow',
-                    name: _t('Edit Workflow'),
-                    domain : [['osv', '=', this.dataset.model]],
-                    views: [[false, 'list'], [false, 'form'], [false, 'diagram']],
-                    type : 'ir.actions.act_window',
-                    view_type : 'list',
-                    view_mode : 'list'
-                });
-            case 'edit':
-                this.do_edit_resource(params.model, params.id, evt.target.text);
-                break;
-            case 'manage_filters':
-                this.do_action({
-                    res_model: 'ir.filters',
-                    name: _t('Manage Filters'),
-                    views: [[false, 'list'], [false, 'form']],
-                    type: 'ir.actions.act_window',
-                    context: {
-                        search_default_my_filters: true,
-                        search_default_model_id: this.dataset.model
-                    }
-                });
-                break;
-            case 'print_workflow':
-                if (current_view.get_selected_ids  && current_view.get_selected_ids().length == 1) {
-                    framework.blockUI();
-                    var action = {
-                        context: { active_ids: current_view.get_selected_ids() },
-                        report_name: "workflow.instance.graph",
-                        datas: {
-                            model: this.dataset.model,
-                            id: current_view.get_selected_ids()[0],
-                            nested: true,
-                        }
-                    };
-                    this.session.get_file({
-                        url: '/web/report',
-                        data: {action: JSON.stringify(action)},
-                        complete: framework.unblockUI
-                    });
-                } else {
-                    self.do_warn("Warning", "No record selected.");
-                }
-                break;
-            case 'leave_debug':
-                window.location.search="?";
-                break;
-            default:
-                if (val) {
-                    console.warn("No debug handler for ", val);
-                }
-        }
-    },
-    do_edit_resource: function(model, id, name) {
-        this.do_action({
-            res_model : model,
-            res_id : id,
-            name: name,
-            type : 'ir.actions.act_window',
-            view_type : 'form',
-            view_mode : 'form',
-            views : [[false, 'form']],
-            target : 'new',
-            flags : {
-                action_buttons : true,
-                headless: true,
-            }
-        });
-    },
-    /**
-     * Renders the debug dropdown according to the active_view
-     */
-    render_debug_view: function() {
-        var self = this;
-        if (self.session.debug) {
-            self.$('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
-                view: self.active_view.controller,
-                widget: self,
-            }));
         }
     },
 });

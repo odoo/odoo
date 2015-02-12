@@ -25,6 +25,8 @@ var State = core.Class.extend({
     get_flags: function() { return this.flags; },
     get_action: function() {},
     get_active_view: function() {},
+    get_dataset: function() {},
+    get_searchview: function() {},
 });
 
 var WidgetState = State.extend({
@@ -47,6 +49,8 @@ var WidgetState = State.extend({
     get_cp_content: function() { return this.cp_content; },
     get_action: function() { return this.widget.action; },
     get_active_view: function() { return this.widget.active_view; },
+    get_dataset: function() { return this.widget.dataset; },
+    get_searchview: function() { return this.widget.get_search_view(); },
     destroy: function() { 
         if (this.cp_content && this.cp_content.searchview) {
             this.cp_content.searchview.destroy();
@@ -557,7 +561,7 @@ var ActionManager = Widget.extend({
     },
     ir_actions_client: function (action, options) {
         var self = this;
-        var ClientWidget = core.action_registry.get_object(action.tag);
+        var ClientWidget = core.action_registry.get(action.tag);
         if (!ClientWidget) {
             return self.do_warn("Action Error", "Could not find client action '" + action.tag + "'.");
         }
