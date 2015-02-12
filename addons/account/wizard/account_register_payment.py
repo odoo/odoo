@@ -75,7 +75,7 @@ class account_register_payment(models.TransientModel):
             'journal_id': self.journal_id.id,
             'debit': debit,
             'credit': credit,
-            'partner_id': self.invoice_id.partner_id.id,
+            'partner_id': self.invoice_id.partner_id.commercial_partner_id.id,
             'currency_id': self.journal_id.currency.id,
             'amount_currency': amount_currency or False,
             'date': self.date_paid,
