@@ -791,7 +791,6 @@ class account_account_template(models.Model):
         :rtype: dict
         """
         company_name = self.env['res.company'].browse(company_id).name
-        template = self.env['account.chart.template'].browse(chart_template_id)
         acc_template = self.search([('nocreate', '!=', True), '|', ('chart_template_id', '=', chart_template_id), ('chart_template_id', '=', False)], order='id')
         for account_template in acc_template:
             tax_ids = []
@@ -800,9 +799,9 @@ class account_account_template(models.Model):
 
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
-            # if code_main > 0 and code_main <= code_digits:
-            #     code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
-            vals={
+            if code_main > 0 and code_main <= code_digits:
+                code_acc = str(code_acc) + (str('0' * (code_digits - code_main)))
+            vals = {
                 'name': company_name or account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
