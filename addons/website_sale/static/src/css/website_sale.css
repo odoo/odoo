@@ -250,6 +250,79 @@
     height: 760px;
   }
 }
+/* ---- Cart ---- */
+.oe_cart a span.visible-xs-inline, #modal_optional_products a span.visible-xs-inline {
+  display: none !important;
+}
+
+.oe_cart a span.hidden-xs, #modal_optional_products a span.hidden-xs {
+  display: inline !important;
+}
+
+.oe_cart table td:first-child {
+  min-width: 76px;
+}
+
+@media (max-width: 992px) {
+  #modal_optional_products table:last-child td:last-child {
+    overflow: hidden;
+  }
+  #modal_optional_products table:last-child td:nth-child(2) {
+    width: 50%;
+  }
+  #modal_optional_products table:last-child td:nth-child(3) {
+    width: 20%;
+  }
+  #modal_optional_products table:last-child td:last-child, #modal_optional_products table:last-child td:nth-last-child(2) {
+    width: 15%;
+  }
+}
+@media (max-width: 500px) {
+  .oe_website_sale .oe_website_spinner {
+    margin: auto;
+  }
+
+  .oe_cart table, #modal_optional_products table {
+    display: inline-block;
+  }
+  .oe_cart table thead, #modal_optional_products table thead {
+    display: none;
+  }
+  .oe_cart table tbody, .oe_cart table tr, .oe_cart table td, #modal_optional_products table tbody, #modal_optional_products table tr, #modal_optional_products table td {
+    float: left;
+    width: 100% !important;
+    display: inline-block;
+  }
+  .oe_cart table td:first-child, #modal_optional_products table td:first-child {
+    display: none;
+  }
+  .oe_cart table td:nth-child(2), #modal_optional_products table td:nth-child(2) {
+    border-top-style: double;
+    border-top-width: 6px;
+  }
+  .oe_cart table td:last-child, #modal_optional_products table td:last-child {
+    margin-bottom: 16px;
+  }
+  .oe_cart table:last-child tr:last-child td:last-child, #modal_optional_products table:last-child tr:last-child td:last-child {
+    margin-bottom: 0;
+  }
+  .oe_cart table td:last-child, .oe_cart table td:nth-last-child(2), #modal_optional_products table td:last-child, #modal_optional_products table td:nth-last-child(2) {
+    width: 50% !important;
+    height: 46px;
+    text-align: center;
+  }
+
+  #modal_optional_products table:last-child td:nth-child(3) > div {
+    float: none !important;
+  }
+
+  .oe_cart a span.hidden-xs, #modal_optional_products a span.hidden-xs {
+    display: none !important;
+  }
+  .oe_cart a span.visible-xs-inline, #modal_optional_products a span.visible-xs-inline {
+    display: inline !important;
+  }
+}
 /* ---- Product list style ---- */
 @media (min-width: 400px) {
   .oe_product.oe_list {
