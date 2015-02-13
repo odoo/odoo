@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="lunch.PreviousOrder">
+        <div>
+            <div class="previous_order_lines"></div>
+        </div>
+    </t>
+    <t t-name="lunch.no_preference_ids">
+        <div class="oe_inline oe_lunch_intro">
+            <h3>This is the first time you order a meal</h3>
+            <p class="oe_grey">Select a product and put your order comments on the note.</p>
+            <p class="oe_grey">Your favorite meals will be created based on your last orders.</p>
+            <p class="oe_grey">Don't forget the alerts displayed in the reddish area</p>
+        </div>
+    </t>
+    <t t-name="lunch.PreviousOrderLine">
+        <t t-foreach="categories" t-as="product_category">
+            <div class="oe_lunch_30pc">
+                <h2><t t-esc="product_category"/></h2>
+                <t t-foreach='categories[product_category]' t-as='product_id'>
+                    <div class="oe_lunch_vignette">
+                        <span class="pull-right add_button oe_edit_only" t-att-id="product_id.id">
+                            <button type="button" class="oe_button oe_link">
+                                <span><i class="fa fa-plus-square"></i></span>
+                                <span>Add</span>
+                            </button>
+                        </span>
+                        <div class="oe_group_text_button">
+                            <div class="oe_lunch_text">
+                                <t t-esc="product_id.product_id[1]"/>
+                                <span class="oe_tag">
+                                    <t t-esc="product_id.price"/> <t t-esc="currency"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="oe_grey"><t t-if="product_id.note != false" t-esc="product_id.note"/></div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+</templates>

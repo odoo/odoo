@@ -119,7 +119,7 @@ class lunch_order(osv.Model):
                     alert_msg.append(alert.message)
         return '\n'.join(alert_msg)
 
-    def _get_lunch_order_detail(self, cr, uid, ids, name, arg, context=None):
+    def get_lunch_order_detail(self, cr, uid, ids, name, arg, context=None):
         """
         get the previous lunch order details to display on the order form
         """
@@ -130,8 +130,9 @@ class lunch_order(osv.Model):
         return res
 
     def _default_get_lunch_order_detail(self, cr, uid, context=None):
-        pref_ids = self.pool.get("lunch.order.line").search(cr, uid, [('user_id', '=', uid)], order='id desc', context=context)
-        return pref_ids
+        cr.execute("select MAX(id) id from lunch_order_line where user_id=%s group by note,product_id order by id DESC;", [uid]);
+        pref_ids = cr.fetchall()
+        return list(pref[0] for pref in pref_ids)
 
     def onchange_price(self, cr, uid, ids, order_line_ids, context=None):
         """
@@ -166,7 +167,9 @@ class lunch_order(osv.Model):
                                     ('partially','Partially Confirmed')] \
                                 ,'Status', readonly=True, select=True, copy=False),
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
-        'previous_order_details': fields.function(_get_lunch_order_detail, string="Previous Orders", type='one2many', relation="lunch.order.line"),
+        'previous_order_details': fields.function(get_lunch_order_detail, string="Previous Orders", type="one2many", relation="lunch.order.line"),
+        'company_id': fields.related('user_id', 'company_id', type="many2one", relation="res.company"),
+        'currency_id': fields.related('company_id', 'currency_id', type="many2one", relation="res.currency", readonly=True),
     }
 
     _defaults = {
@@ -276,7 +279,9 @@ class lunch_order_line(osv.Model):
                                     ('cancelled', 'Cancelled')], \
                                 'Status', readonly=True, select=True),
         'cashmove': fields.one2many('lunch.cashmove', 'order_id', 'Cash Move', ondelete='cascade'),
-
+        'category_id': fields.related('product_id', 'category_id', type="many2one", relation="lunch.product.category"),
+        'currency_id': fields.related('order_id', 'currency_id', type="many2one", relation="res.currency"),
+        
     }
     _defaults = {
         'state': 'new',
