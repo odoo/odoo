@@ -240,7 +240,10 @@ class google_calendar(osv.AbstractModel):
                 'timeZone': 'UTC'
             },
             "attendees": attendee_list,
-            "reminders": {"overrides": reminders},
+            "reminders": {
+                "overrides": reminders,
+                "useDefault": "false"
+            },
             "location": event.location or '',
             "visibility": event['class'] or 'public',
         }
