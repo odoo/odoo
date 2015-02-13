@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
-from openerp.tools.translate import _
-from openerp.addons.website.models.website import slug
+from odoo import api, fields, models, _
+from odoo.addons.website.models.website import slug
 
 
 class event_event(models.Model):

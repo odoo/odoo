@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
-from openerp.tools.translate import _
-from openerp.addons.website.models.website import slug
+from odoo import api, fields, models, _
+from odoo.addons.website.models.website import slug
 
 
 class event_track_tag(models.Model):
@@ -89,7 +88,8 @@ class event_track(models.Model):
         res.update({(track.id, '/event/%s/track/%s' % (slug(track.event_id), slug(track))) for track in self})
         return res
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """ Override read_group to always display all states. """
         if groupby and groupby[0] == "state":
             # Default result structure
@@ -102,7 +102,7 @@ class event_track(models.Model):
                 'state_count': 0,
             } for state_value, state_name in states]
             # Get standard results
-            read_group_res = super(event_track, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+            read_group_res = super(event_track, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby)
             # Update standard results with default results
             result = []
             for state_value, state_name in states:
@@ -115,13 +115,14 @@ class event_track(models.Model):
                 result.append(res[0])
             return result
         else:
-            return super(event_track, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+            return super(event_track, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby)
 
-    def open_track_speakers_list(self, cr, uid, track_id, context=None):
-        track_id = self.browse(cr, uid, track_id, context=context)
+    @api.multi
+    def open_track_speakers_list(self):
+        self.ensure_one()
         return {
             'name': _('Speakers'),
-            'domain': [('id', 'in', [partner.id for partner in track_id.speaker_ids])],
+            'domain': [('id', 'in', self.speaker_ids.ids)],
             'view_type': 'form',
             'view_mode': 'kanban,form',
             'res_model': 'res.partner',
