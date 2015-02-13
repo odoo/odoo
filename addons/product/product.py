@@ -1103,6 +1103,9 @@ class product_product(osv.osv):
         if context is None:
             context={}
 
+        if default is None:
+            default = {}
+
         product = self.browse(cr, uid, id, context)
         if context.get('variant'):
             # if we copy a variant or create one, we keep the same template
