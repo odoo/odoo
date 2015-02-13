@@ -7,8 +7,8 @@ class TestAccountValidateAccount(TestMail):
 
     def test_account_validate_account(self):
         account_move_line = self.env['account.move.line']
-        account_cash = self.env.ref('account.cash')
-        journal = self.env.ref('account.bank_journal')
+        account_cash = self.env['account.account'].search([('user_type.type', '=', 'liquidity')], limit=1)
+        journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
         
         # create move
         move = self.env['account.move'].create({'name': '/',
