@@ -28,14 +28,14 @@ import calendar
 
 class FormulaLine(object):
     def __init__(self, obj, type='balance'):
-        fields = dict((fn, 0.0) for fn in ['balance', 'credit', 'debit'])
+        fields = dict((fn, 0.0) for fn in ['debit', 'credit', 'balance'])
         if type == 'balance':
             fields = obj.get_balance()[0]
         elif type == 'sum':
             if obj._name == 'account.financial.report.line':
                 fields = obj.get_sum()
             elif obj._name == 'account.move.line':
-                field_names = ['balance', 'credit', 'debit']
+                field_names = ['debit', 'credit', 'balance']
                 res = obj.compute_fields(field_names)
                 if res.get(obj.id):
                     for field in field_names:
@@ -92,7 +92,8 @@ class report_account_financial_report(models.Model):
     line_ids = fields.One2many('account.financial.report.line', 'financial_report_id', string='Lines')
     report_type = fields.Selection([('date_range', 'Based on date ranges'),
                                     ('date_range_extended', "Based on date ranges with 'older' and 'total' columns and last 3 months"),
-                                    ('no_date_range', 'Based on a single date')],
+                                    ('no_date_range', 'Based on a single date'),
+                                    ('date_range_cash', 'Bases on date ranges and cash basis method')],
                                    string='Not a date range report', default=False, required=True,
                                    help='For report like the balance sheet that do not work with date ranges')
 
@@ -108,7 +109,8 @@ class report_account_financial_report(models.Model):
             line_obj = line_obj.with_context(periods=context_id.get_cmp_periods())
         res = line_obj.with_context(
             target_move=context_id.all_entries and 'all' or 'posted',
-            cash_basis=context_id.cash_basis,
+            cash_basis=self.report_type == 'date_range_cash' or context_id.cash_basis,
+            strict_range=self.report_type == 'date_range_extended',
         ).get_lines(self, context_id)
         return res
 
@@ -143,6 +145,7 @@ class account_financial_report_line(models.Model):
     level = fields.Integer(required=True)
     special_date_changer = fields.Selection([('from_beginning', 'From the beginning'), ('to_beginning_of_fy', 'At the beginning of the Year'), ('normal', 'Use given dates')], default='normal')
     show_domain = fields.Selection([('always', 'Always'), ('never', 'Never'), ('foldable', 'Foldable')], default='foldable')
+    hide_if_zero = fields.Boolean('Hide if zero', default=False)
 
     @api.model
     def _ids_to_sql(self, ids):
@@ -155,7 +158,7 @@ class account_financial_report_line(models.Model):
     def get_sum(self, field_names=None):
         ''' Returns the sum of the amls in the domain '''
         if not field_names:
-            field_names = ['balance', 'credit', 'debit']
+            field_names = ['debit', 'credit', 'balance']
         res = dict((fn, 0.0) for fn in field_names)
         if self.domain:
             amls = self.env['account.move.line'].search(report_safe_eval(self.domain))
@@ -169,7 +172,7 @@ class account_financial_report_line(models.Model):
     @api.one
     def get_balance(self, field_names=None):
         if not field_names:
-            field_names = ['balance', 'credit', 'debit']
+            field_names = ['debit', 'credit', 'balance']
         res = dict((fn, 0.0) for fn in field_names)
         c = FormulaContext(self.env['account.financial.report.line'], self)
         if self.formulas:
@@ -244,14 +247,16 @@ class account_financial_report_line(models.Model):
             groupby = self.groupby or 'id'
             select = ',COALESCE(SUM(\"account_move_line\".debit-\"account_move_line\".credit), 0)'
             if financial_report.debit_credit and debit_credit:
-                select += ',SUM(\"account_move_line\".credit),SUM(\"account_move_line\".debit)'
+                select = ',SUM(\"account_move_line\".debit),SUM(\"account_move_line\".credit)' + select
+            if self.env.context.get('cash_basis'):
+                select = select.replace('debit', 'debit_cash_basis').replace('credit', 'credit_cash_basis')
             sql = "SELECT \"account_move_line\"." + groupby + "%s FROM \"account_move_line\" WHERE %s GROUP BY \"account_move_line\"." + groupby
             where_clause, where_params = aml_obj._query_get(domain=self.domain)
             query = sql % (select, where_clause)
             self.env.cr.execute(query, where_params)
             results = self.env.cr.fetchall()
             if financial_report.debit_credit and debit_credit:
-                results = dict([(k[0], {'balance': k[1], 'credit': k[2], 'debit': k[3]}) for k in results])
+                results = dict([(k[0], {'debit': k[1], 'credit': k[2], 'balance': k[3]}) for k in results])
             else:
                 results = dict([(k[0], {'balance': k[1]}) for k in results])
             c = FormulaContext(self.env['account.financial.report.line'])
@@ -265,6 +270,20 @@ class account_financial_report_line(models.Model):
         results.update({'line': vals})
 
         return results
+
+    def _put_columns_together(self, data, domain_ids):
+        res = dict((domain_id, []) for domain_id in domain_ids)
+        for period in data:
+            debit_credit = False
+            if 'debit' in period['line']:
+                debit_credit = True
+            for domain_id in domain_ids:
+                if debit_credit:
+                    res[domain_id].append(period.get(domain_id, {'debit': 0})['debit'])
+                    res[domain_id].append(period.get(domain_id, {'credit': 0})['credit'])
+                res[domain_id].append(period.get(domain_id, {'balance': 0})['balance'])
+        return res
+
 
     @api.multi
     def get_lines(self, financial_report, context):
@@ -289,6 +308,10 @@ class account_financial_report_line(models.Model):
                 res.append(r)
                 domain_ids.update(set(r.keys()))
 
+            res = self._put_columns_together(res, domain_ids)
+            if line.hide_if_zero and sum([k == 0 or [] for k in res['line']], []):
+                continue
+
             # Post-processing ; creating line dictionnary, building comparison, computing total for extended, formatting
             vals = {
                 'id': line.id,
@@ -296,14 +319,14 @@ class account_financial_report_line(models.Model):
                 'type': 'line',
                 'level': line.level,
                 'footnotes': line._get_footnotes('line', line.id, context),
-                'columns': sum([[j[1] for j in k['line'].items()] for k in res], []),
+                'columns': res['line'],
                 'unfoldable': len(domain_ids) > 1 and line.show_domain != 'always',
                 'unfolded': line in context.unfolded_lines or line.show_domain == 'always',
             }
             domain_ids.remove('line')
             lines = [vals]
             groupby = line.groupby or 'aml'
-            if line in context.unfolded_lines:# or line.show_domain == 'always':
+            if line in context.unfolded_lines or line.show_domain == 'always':
                 for domain_id in domain_ids:
                     vals = {
                         'id': domain_id,
@@ -311,7 +334,7 @@ class account_financial_report_line(models.Model):
                         'level': line.level + 2,
                         'type': groupby,
                         'footnotes': line._get_footnotes(groupby, domain_id, context),
-                        'columns': sum([[j[1] for j in k.get(domain_id, dict([(l, 0) for l in k['line'].keys()])).items()] for k in res], []),
+                        'columns': res[domain_id],
                     }
                     lines.append(vals)
 
@@ -324,6 +347,8 @@ class account_financial_report_line(models.Model):
                         vals['columns'][i] = line._format(vals['columns'][i])
                 else:
                     vals['columns'] = map(line._format, vals['columns'])
+                if not line.formulas:
+                    vals['columns'] = ['' for k in vals['columns']]
 
             new_lines = line.children_ids.get_lines(financial_report, context)
 

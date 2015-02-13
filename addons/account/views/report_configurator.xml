@@ -78,7 +78,7 @@
                             Show all entries
                         </label>
                     </div>
-                    <div class="checkbox">
+                    <div class="checkbox" t-if="o.get_report_type() != 'date_range_cash'">
                         <label> 
                             <input t-if="context.cash_basis == False" type="checkbox" name="cash_basis" value="True" />
                             <input t-if="context.cash_basis == True" type="checkbox" name="cash_basis" value="True" checked="checked" />

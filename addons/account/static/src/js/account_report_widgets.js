@@ -387,8 +387,8 @@
                     });
                 }
                 else {
-                    var num = $(e.target).parent().parent().text().split('.')[0];
-                    this.$("sup:contains('" + num + "')").remove();
+                    var num = $(e.target).parent().parent().text().split('.')[0].replace(/ /g,'').replace(/\r?\n/g,'');
+                    this.$("sup b a:contains('" + num + "')").remove();
                     $(e.target).parent().parent().remove();
                     var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
                     var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
