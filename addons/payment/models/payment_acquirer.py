@@ -371,8 +371,15 @@ class PaymentTransaction(osv.Model):
                                          help='Reference of the customer in the acquirer database'),
     }
 
-    _sql_constraints = [
-        ('reference_uniq', 'UNIQUE(reference)', 'The payment transaction reference must be unique!'),
+    def _check_reference(self, cr, uid, ids, context=None):
+        transaction = self.browse(cr, uid, ids[0], context=context)
+        if transaction.state not in ['cancel', 'error']:
+            if self.search(cr, uid, [('reference', '=', transaction.reference), ('id', '!=', transaction.id)], context=context, count=True):
+                return False
+        return True
+
+    _constraints = [
+        (_check_reference, 'The payment transaction reference must be unique!', ['reference', 'state']),
     ]
 
     _defaults = {
