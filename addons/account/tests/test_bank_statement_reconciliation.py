@@ -55,6 +55,7 @@ class TestBankStatementReconciliation(TransactionCase):
         vals = {'partner_id': self.partner_agrolait.id,
                 'type': 'out_invoice',
                 'name': '-',
+                'currency_id': self.env.user.company_id.currency_id.id,
                 }
         vals.update(res)
         invoice = self.i_model.create(vals)
@@ -62,7 +63,8 @@ class TestBankStatementReconciliation(TransactionCase):
             'quantity': 1,
             'price_unit': amount,
             'invoice_id': invoice.id,
-            'name': '.', })
+            'name': '.',
+        })
         invoice.signal_workflow('invoice_open')
 
 
