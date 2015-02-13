@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="web.tip" id="hr_tip_3">
+            <field name="title"></field>
+            <field name="description">Congratulations! Your employee has been created. In this form, you can modify his personal information or even add a picture.</field>
+            <field name="action_id" ref="hr_recruitment.crm_case_categ0_act_job"/>
+            <field name="model">hr.employee</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">ol.breadcrumb:visible,ol.breadcrumb:eq(1) > :gt(1),.oe_form_sheet:visible</field>
+            <field name="highlight_selector">.oe_form_sheet:visible</field>
+            <field name="placement">auto top</field>
+        </record>
+    </data>
+</openerp>

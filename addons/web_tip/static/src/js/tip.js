@@ -9,6 +9,7 @@
             self.tip_mutex = new $.Mutex();
             self.$overlay = null;
             self.$element = null;
+            self.action_id = null;
 
             var Tips = new instance.web.Model('web.tip');
             Tips.query(['title', 'description', 'action_id', 'model', 'type', 'mode', 'trigger_selector',
@@ -59,6 +60,7 @@
             var self = this;
             var fields_view = view.fields_view;
             var action_id = view.ViewManager.action ? view.ViewManager.action.id : null;
+            self.action_id = view.ViewManager.action ? view.ViewManager.action.id : self.action_id;
             var model = fields_view.model;
 
             // kanban
@@ -91,6 +93,7 @@
 
         on_form_view: function(formView) {
             var self = this;
+            //self.action_id = formView.ViewManager.action ? formView.ViewManager.action.id : self.action_id;
             var model = formView.model;
             var type = formView.datarecord.type ? formView.datarecord.type : null;
             var mode = 'form';
@@ -116,6 +119,7 @@
 
         eval_tip: function(action_id, model, mode, type) {
             var self = this;
+            action_id = self.action_id;
             var filter = {};
             var valid_tips = [];
             var tips = [];
