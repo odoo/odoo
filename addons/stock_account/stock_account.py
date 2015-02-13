@@ -164,19 +164,21 @@ class stock_quant(osv.osv):
         :raise: osv.except_osv() is any mandatory account or journal is not defined.
         """
         product_obj = self.pool.get('product.template')
-        accounts = product_obj.get_product_accounts(cr, uid, move.product_id.product_tmpl_id.id, context)
+        accounts = product_obj.browse(cr, uid, move.product_id.product_tmpl_id.id, context).get_product_accounts()
         if move.location_id.valuation_out_account_id:
             acc_src = move.location_id.valuation_out_account_id.id
         else:
-            acc_src = accounts['stock_account_input']
+            acc_src = accounts['stock_input'].id
 
         if move.location_dest_id.valuation_in_account_id:
             acc_dest = move.location_dest_id.valuation_in_account_id.id
         else:
-            acc_dest = accounts['stock_account_output']
+            acc_dest = accounts['stock_output'].id
 
-        acc_valuation = accounts.get('property_stock_valuation_account_id', False)
-        journal_id = accounts['stock_journal']
+        acc_valuation = accounts.get('stock_valuation', False)
+        if acc_valuation:
+            acc_valuation = acc_valuation.id
+        journal_id = accounts['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
 
     def _prepare_account_move_line(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):

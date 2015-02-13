@@ -104,9 +104,9 @@ class stock_landed_cost(osv.osv):
         cost_product = line.cost_line_id and line.cost_line_id.product_id
         if not cost_product:
             return False
-        accounts = product_obj.get_product_accounts(cr, uid, line.product_id.product_tmpl_id.id, context=context)
-        debit_account_id = accounts['property_stock_valuation_account_id']
-        already_out_account_id = accounts['stock_account_output']
+        accounts = product_obj.browse(cr, uid, line.product_id.product_tmpl_id.id, context=context).get_product_accounts()
+        debit_account_id = accounts.get('stock_valuation', False) and accounts['stock_valuation'].id or False
+        already_out_account_id = accounts['stock_output'].id
         credit_account_id = line.cost_line_id.account_id.id or cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
 
         if not credit_account_id:
