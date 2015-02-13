@@ -43,9 +43,9 @@ class TestTax(AccountTestUsers):
                 (4, self.percent_tax.id, 0)
             ]
         })
-        self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.user.company_id.id)])
-        self.bank_account = self.bank_journal.default_debit_account_id.id
-        self.expense_account = self.env['account.account'].search([('user_type.type','=','expense')])[0]
+        # self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.account_manager.company_id.id)])
+        # self.bank_account = self.bank_journal.default_debit_account_id.id
+        # self.expense_account = self.env['account.account'].search([('user_type.type','=','expense')])[0]
 
     def test_tax_group(self):
         res = self.group_tax.compute_all(200.0)
