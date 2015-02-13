@@ -126,10 +126,10 @@ class account_account_tag(models.Model):
 
     name = fields.Char()
 
-
 #----------------------------------------------------------
 # Accounts
 #----------------------------------------------------------
+
 class account_account(models.Model):
     _name = "account.account"
     _description = "Account"
@@ -155,7 +155,6 @@ class account_account(models.Model):
                 this_rec_children = rec.child_consol_ids._get_children_and_consol()
             children_ids |= set(this_rec_children)
         return list(children_ids)
-
 
     name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
@@ -370,10 +369,10 @@ class account_fiscalyear(models.Model):
         if self.date_stop < self.date_start:
             raise UserError(_('Error!\nThe start date of a fiscal year must precede its end date.'))
 
-
 #----------------------------------------------------------
 # Entries
 #----------------------------------------------------------
+
 class account_move(models.Model):
     _name = "account.move"
     _description = "Account Entry"
@@ -550,6 +549,7 @@ class account_move(models.Model):
             reversed_move._post_validate()
             reversed_move.post()
         return True
+
 #----------------------------------------------------------
 # Tax
 #----------------------------------------------------------
@@ -1002,21 +1002,19 @@ class account_chart_template(models.Model):
 
     @api.multi
     def _install_template(self, company, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None):
-        '''
-        This function recursively loads the template objects and create the real objects from them.
+        """ Recursively load the template objects and create the real objects from them.
 
-        :param template_id: id of the chart template to load
-        :param company_id: id of the company the wizard is running for
-        :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
-        :param obj_wizard: the current wizard for generating the COA from the templates
-        :param acc_ref: Mapping between ids of account templates and real accounts created from them
-        :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
-        :returns: return a tuple with a dictionary containing
-            * the mapping between the account template ids and the ids of the real accounts that have been generated
-              from them, as first item,
-            * a similar dictionary for mapping the tax templates and taxes, as second item,
-        :rtype: tuple(dict, dict, dict)
-        '''
+            :param company: company the wizard is running for
+            :param code_digits: number of digits the accounts code should have in the COA
+            :param obj_wizard: the current wizard for generating the COA from the templates
+            :param acc_ref: Mapping between ids of account templates and real accounts created from them
+            :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
+            :returns: tuple with a dictionary containing
+                * the mapping between the account template ids and the ids of the real accounts that have been generated
+                  from them, as first item,
+                * a similar dictionary for mapping the tax templates and taxes, as second item,
+            :rtype: tuple(dict, dict, dict)
+        """
         self.ensure_one()
         if acc_ref is None:
             acc_ref = {}
@@ -1033,20 +1031,18 @@ class account_chart_template(models.Model):
 
     @api.multi
     def _load_template(self, company, code_digits=None, account_ref=None, taxes_ref=None):
-        '''
-        This function generates all the objects from the templates
+        """ Generate all the objects from the templates
 
-        :param self: id of the chart template to load
-        :param company: id the company
-        :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
-        :param acc_ref: Mapping between ids of account templates and real accounts created from them
-        :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
-        :returns: return a tuple with a dictionary containing
-            * the mapping between the account template ids and the ids of the real accounts that have been generated
-              from them, as first item,
-            * a similar dictionary for mapping the tax templates and taxes, as second item,
-        :rtype: tuple(dict, dict, dict)
-        '''
+            :param company: company the wizard is running for
+            :param code_digits: number of digits the accounts code should have in the COA
+            :param acc_ref: Mapping between ids of account templates and real accounts created from them
+            :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
+            :returns: tuple with a dictionary containing
+                * the mapping between the account template ids and the ids of the real accounts that have been generated
+                  from them, as first item,
+                * a similar dictionary for mapping the tax templates and taxes, as second item,
+            :rtype: tuple(dict, dict, dict)
+        """
         self.ensure_one()
         if account_ref is None:
             account_ref = {}
@@ -1085,16 +1081,14 @@ class account_chart_template(models.Model):
 
     @api.multi
     def generate_account(self, tax_template_ref, acc_template_ref, code_digits, company):
-        """
-        This method for generating accounts from templates.
+        """ This method for generating accounts from templates.
 
-        :param self: the chart template chosen
-        :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
-        :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
-        :param code_digits: number of digits got from wizard.multi.charts.accounts, this is use for account code.
-        :param company_id: company_id selected from wizard.multi.charts.accounts.
-        :returns: return acc_template_ref for reference purpose.
-        :rtype: dict
+            :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
+            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
+            :param code_digits: number of digits got from wizard.multi.charts.accounts, this is use for account code.
+            :param company_id: company_id selected from wizard.multi.charts.accounts.
+            :returns: return acc_template_ref for reference purpose.
+            :rtype: dict
         """
         self.ensure_one()
         company_name = company.name
@@ -1125,14 +1119,13 @@ class account_chart_template(models.Model):
 
     @api.multi
     def generate_fiscal_position(self, tax_template_ref, acc_template_ref, company):
-        """
-        This method generate Fiscal Position, Fiscal Position Accounts and Fiscal Position Taxes from templates.
+        """ This method generate Fiscal Position, Fiscal Position Accounts and Fiscal Position Taxes from templates.
 
-        :param chart_temp_id: Chart Template Id.
-        :param taxes_ids: Taxes templates reference for generating account.fiscal.position.tax.
-        :param acc_template_ref: Account templates reference for generating account.fiscal.position.account.
-        :param company_id: company_id selected from wizard.multi.charts.accounts.
-        :returns: True
+            :param chart_temp_id: Chart Template Id.
+            :param taxes_ids: Taxes templates reference for generating account.fiscal.position.tax.
+            :param acc_template_ref: Account templates reference for generating account.fiscal.position.account.
+            :param company_id: company_id selected from wizard.multi.charts.accounts.
+            :returns: True
         """
         self.ensure_one()
         positions = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)])
@@ -1158,30 +1151,28 @@ class account_tax_template(models.Model):
     _order = 'id'
 
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
+
     name = fields.Char(string='Tax Name', required=True, translate=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'Only in Tax Group')], string='Tax Scope', required=True, default="sale",
-        help="Determines where the tax is selectable. Choose 'Only in Tax Group' if it shouldn't be used outside a group of tax.")
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
+        help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
-    active = fields.Boolean(default=True,
-        help="Set active to false to hide the tax without removing it.")
+    active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
-
     children_tax_ids = fields.Many2many('account.tax.template', 'account_tax_template_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
-
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
-    amount = fields.Float(required=True, digits=(16, 3), default=0.0)
-    account_id = fields.Many2one('account.account.template', domain=[('deprecated', '=', False)], string='Tax Account',
-        help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
-    refund_account_id = fields.Many2one('account.account.template', domain=[('deprecated', '=', False)], string='Tax Account on Refunds',
-        help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
+    amount = fields.Float(required=True, digits=(16, 3))
+    account_id = fields.Many2one('account.account.template', domain=[('deprecated', '=', False)], string='Tax Account', ondelete='restrict',
+        help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.")
+    refund_account_id = fields.Many2one('account.account.template', domain=[('deprecated', '=', False)], string='Tax Account on Refunds', ondelete='restrict',
+        help="Account that will be set on invoice tax lines for refunds. Leave empty to use the expense account.")
     description = fields.Char(string='Display on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
-    include_base_amount = fields.Boolean(string='Affect subsequent taxes', default=False,
+    include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
-    analytic = fields.Boolean(string="Analytic Cost")
+    analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
@@ -1198,33 +1189,29 @@ class account_tax_template(models.Model):
 
     @api.multi
     def _generate_tax(self, company):
-        """
-        This method generate taxes from templates.
+        """ This method generate taxes from templates.
 
-        :param self: diffent tax templates
-        :param company: the company the taxes should be created
-        :returns:
-            {
-            'tax_template_to_tax': mapping between tax template and the newly generated taxes corresponding,
-            'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
+            :param company: the company for which the taxes should be created from templates in self
+            :returns: {
+                'tax_template_to_tax': mapping between tax template and the newly generated taxes corresponding,
+                'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
             }
         """
-        res = {}
         todo_dict = {}
         tax_template_to_tax = {}
         for tax in self:
-            #Compute children tax ids
-            children = []
+            # Compute children tax ids
+            children_ids = []
             for child_tax in tax.children_tax_ids:
                 if tax_template_to_tax.get(child_tax.id):
-                    children.append(tax_template_to_tax[child_tax.id])
+                    children_ids.append(tax_template_to_tax[child_tax.id])
             vals_tax = {
                 'name': tax.name,
                 'type_tax_use': tax.type_tax_use,
                 'amount_type': tax.amount_type,
                 'active': tax.active,
                 'company_id': company.id,
-                'children_tax_ids': children and [(6, 0, children)] or [],
+                'children_tax_ids': children and [(6, 0, children_ids)] or [],
                 'sequence': tax.sequence,
                 'amount': tax.amount,
                 'description': tax.description,
@@ -1239,8 +1226,11 @@ class account_tax_template(models.Model):
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
             }
-        res.update({'tax_template_to_tax': tax_template_to_tax, 'account_dict': todo_dict})
-        return res
+
+        return {
+            'tax_template_to_tax': tax_template_to_tax,
+            'account_dict': todo_dict
+        }
 
 
 # Fiscal Position Templates
@@ -1275,10 +1265,10 @@ class account_fiscal_position_account_template(models.Model):
     account_src_id = fields.Many2one('account.account.template', string='Account Source', required=True)
     account_dest_id = fields.Many2one('account.account.template', string='Account Destination', required=True)
 
-
 # ---------------------------------------------------------
 # Account generation from template wizards
 # ---------------------------------------------------------
+
 class wizard_multi_charts_accounts(models.TransientModel):
     """
     Create a new account chart for a company.
