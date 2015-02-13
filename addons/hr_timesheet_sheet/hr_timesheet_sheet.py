@@ -358,8 +358,8 @@ class account_analytic_line(osv.osv):
     }
 
     def _check_sheet_state(self, cr, uid, ids, context=None):
-        if context and "hr_timesheet" in context:
-            for timesheet_line in self.browse(cr, uid, ids, context=context):
+        for timesheet_line in self.browse(cr, uid, ids, context=context):
+            if timesheet_line.is_timesheet:
                 if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
                     return False
         return True

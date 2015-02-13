@@ -184,7 +184,7 @@
                 </field>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
                     <page string="Timesheets">
-                    <field name="timesheet_ids" groups="project.group_tasks_work_on_tasks" context="{'default_account_id' : analytic_account_id, 'hr_timesheet' : 1}">
+                    <field name="timesheet_ids" groups="project.group_tasks_work_on_tasks" context="{'default_account_id' : analytic_account_id, 'default_is_timesheet' : 1}">
                         <tree editable="top" string="Timesheet Activities">
                             <field name="date"/>
                             <field name="user_id" required="1"/>

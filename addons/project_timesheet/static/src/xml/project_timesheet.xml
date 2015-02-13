@@ -6,23 +6,23 @@
         </div>
     </t>
     <!-- tac stuff : -->
-    <t t-name="welcome_screen">
+    <t t-name="test_screen">
+        <h1>Test screen</h1>
+    </t>
+    <t t-name="activities_screen">
     	<t t-call="header">
     	</t>
-    	<div class="pt_welcome_screen">
+    	<div class="pt_activities_screen">
     		<div class="row">
     			<!--"main" section-->
-    			<t t-if="true == true">
-
-		    		<div class="col-xs-6">
-			    		<!--Put time here-->
-			    		<a href="javascript:void(0)" class="btn btn-default btn-raised btn-material-cyan pt_test_btn">test</a>
-			    	</div>
-			    	<div class="col-xs-3">
-			    		<!--Start button / stop button-->
-			    		<a href="javascript:void(0)" class="btn btn-default btn-raised btn-material-cyan pt_btn_start_activity"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>  Start</a>
-					</div>
-				</t>
+	    		<div class="col-xs-6">
+		    		<!--Put time here-->
+		    		<a href="javascript:void(0)" class="btn btn-default btn-raised btn-material-cyan pt_test_btn">test</a>
+		    	</div>
+		    	<div class="col-xs-3">
+		    		<!--Start button / stop button-->
+		    		<a href="javascript:void(0)" class="btn btn-default btn-raised btn-material-cyan pt_btn_start_activity"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>  Start</a>
+				</div>
 			</div>
 			<!--Rows etc.-->
 			<t t-if="widget.account_analytic_lines">

@@ -291,8 +291,8 @@ class account_analytic_line(osv.osv):
                 invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
 
-    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, context=None):
-        if context and "hr_timesheet" in context:
+    def on_change_account_id(self, cr, uid, ids, account_id, is_timesheet=False, user_id=False, context=None):
+        if is_timesheet:
             res = {}
             if not account_id:
                 return res

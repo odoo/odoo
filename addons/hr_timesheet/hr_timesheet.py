@@ -47,6 +47,19 @@ class hr_employee(models.Model):
 class account_analytic_line(models.Model):
     _inherit = 'account.analytic.line'
 
+    def default_get(self,cr,uid,fields,context=None):
+        values = super(account_analytic_line, self).default_get(cr, uid, fields, context=context)
+        if values.get('is_timesheet'):
+            if 'product_uom_id' in fields:
+                values['product_uom_id'] = self._get_employee_unit(cr, uid, context=context)
+            if 'product_id' in fields:    
+                values['product_id'] = self._get_employee_product(cr, uid, context=context)
+            if 'general_account_id' in fields:    
+                values['general_account_id'] = self._get_general_account(cr, uid, context=context)
+            if 'journal_id' in fields:    
+                values['journal_id'] = self._get_analytic_journal(cr, uid, context=context)
+        return values
+
     #This method is used by some modules having dependencies on this one.
     def on_change_unit_amount_2(self, cr, uid, id, prod_id, unit_amount, company_id, unit=False, journal_id=False, context=None):
         res = {'value':{}}
@@ -77,15 +90,13 @@ class account_analytic_line(models.Model):
 
     @api.model
     def _get_employee_product(self, user_id=None):
-        if "hr_timesheet" in self.env.context:
-            emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id or user_id  or self.env.uid)])
-            if emp and emp[0].product_id.id:
-                return emp[0].product_id.id
-            else:
-                raise exceptions.ValidationError("This user or employee is not associated to a valid Product")
+        emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id or user_id  or self.env.uid)])
+        if emp and emp[0].product_id.id:
+            return emp[0].product_id.id
+        else:
+            raise exceptions.ValidationError("This user or employee is not associated to a valid Product")
     @api.model
     def _get_employee_unit(self, user_id=None):
-        if "hr_timesheet" in self.env.context:
             emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id or user_id or self.env.uid)])
             if emp and emp[0].product_id.uom_id.id:
                 return emp[0].product_id.uom_id.id
@@ -94,37 +105,25 @@ class account_analytic_line(models.Model):
 
     @api.model
     def _get_general_account(self, user_id=None):
-        if "hr_timesheet" in self.env.context:
-            emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id or user_id or self.env.uid)])
-            if emp and emp[0].product_id.categ_id.property_account_expense_categ.id:
-                return emp[0].product_id.categ_id.property_account_expense_categ.id
-            else:
-                raise exceptions.ValidationError("This user or employee is not associated to a valid Product Financial Account")
+        emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id or user_id or self.env.uid)])
+        if emp and emp[0].product_id.categ_id.property_account_expense_categ.id:
+            return emp[0].product_id.categ_id.property_account_expense_categ.id
+        else:
+            raise exceptions.ValidationError("This user or employee is not associated to a valid Product Financial Account")
 
     @api.model
     def _get_analytic_journal(self, user_id=None):
-        if "hr_timesheet" in self.env.context:
-            emp = self.env['hr.employee'].search([('user_id','=',self.user_id.id or user_id or self.env.uid)])
-            if emp and emp[0].journal_id.id:
-                return emp[0].journal_id.id
-            else:
-                raise exceptions.ValidationError("This user or employee is not associated to a valid Journal ID")
-    
-    def _get_is_timesheet(self):
-        print 'ctx = ' , self.env.context
-        return ("hr_timesheet" in self.env.context)
+        emp = self.env['hr.employee'].search([('user_id','=',self.user_id.id or user_id or self.env.uid)])
+        if emp and emp[0].journal_id.id:
+            return emp[0].journal_id.id
+        else:
+            raise exceptions.ValidationError("This user or employee is not associated to a valid Journal ID")
 
-    # Fields declaration and additions
-    is_timesheet = fields.Boolean(default=_get_is_timesheet)
-    product_uom_id = fields.Many2one(default=_get_employee_unit)
-    product_id = fields.Many2one(default=_get_employee_product)
-    general_account_id = fields.Many2one(default=_get_general_account)
-    journal_id = fields.Many2one(default=_get_analytic_journal)
-    date = fields.Date(default=fields.Date.today())
-    
+    is_timesheet = fields.Boolean()
+   
     @api.constrains('user_id')
     def check_user_id(self):
-        if "hr_timesheet" in self.env.context:
+        if self.is_timesheet:
             emp = self.env['hr.employee'].search([('user_id','=',self.user_id.id or self.env.uid)])
             if not emp:
                 raise exceptions.ValidationError("There is no employee defined for user " + self.user_id.name)
@@ -140,8 +139,8 @@ class account_analytic_line(models.Model):
 
     @api.onchange('user_id')
     def V8_on_change_user_id(self):
-        if "hr_timesheet" in self.env.context:
-            new_values = self.on_change_user_id(self.user_id.id)
+        if self.is_timesheet:
+            new_values = self.on_change_user_id(self.user_id.id, self.is_timesheet)
             self.journal_id = new_values["value"]['journal_id']
             self.product_id = new_values["value"]['product_id']
             self.product_uom_id = new_values["value"]['uom_id']
@@ -159,8 +158,8 @@ class account_analytic_line(models.Model):
             #         self.product_uom_id = self._get_employee_unit()
             #         self.general_account_id = self._get_general_account()
 
-    def on_change_user_id(self, cr, uid, ids, user_id, context):
-        if "hr_timesheet" in context:
+    def on_change_user_id(self, cr, uid, ids, user_id, is_timesheet=False, context=None):
+        if is_timesheet:
             if not user_id:
                 return {}
             else:
@@ -175,7 +174,7 @@ class account_analytic_line(models.Model):
 
     @api.onchange('date')
     def on_change_date(self):
-        if "hr_timesheet" in self.env.context:
+        if self.is_timesheet:
             if self._origin.date and (self._origin.date != self.date):
                 raise exceptions.Warning('Changing the date will let this entry appear in the timesheet of the new date.')
 
