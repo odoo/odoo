@@ -1479,6 +1479,10 @@ openerp.datetime_to_str = function(obj) {
     if (!obj) {
         return false;
     }
+
+    if(!(obj instanceof Date)){
+        throw new Error("Invalid Date Object: Received " + obj.constructor.name + ", must extend Date");
+    }
     return lpad(obj.getUTCFullYear(),4) + "-" + lpad(obj.getUTCMonth() + 1,2) + "-"
          + lpad(obj.getUTCDate(),2) + " " + lpad(obj.getUTCHours(),2) + ":"
          + lpad(obj.getUTCMinutes(),2) + ":" + lpad(obj.getUTCSeconds(),2);
@@ -1499,6 +1503,10 @@ openerp.date_to_str = function(obj) {
     if (!obj) {
         return false;
     }
+
+    if(!(obj instanceof Date)){
+        throw new Error("Invalid Date Object: Received " + obj.constructor.name + "; must extend Date");
+    }
     return lpad(obj.getFullYear(),4) + "-" + lpad(obj.getMonth() + 1,2) + "-"
          + lpad(obj.getDate(),2);
 };
@@ -1517,6 +1525,10 @@ openerp.date_to_str = function(obj) {
 openerp.time_to_str = function(obj) {
     if (!obj) {
         return false;
+    }
+
+    if(!(obj instanceof Date)){
+        throw new Error("Invalid Date Object: Received " + obj.constructor.name + ", must extend Date");
     }
     return lpad(obj.getHours(),2) + ":" + lpad(obj.getMinutes(),2) + ":"
          + lpad(obj.getSeconds(),2);
