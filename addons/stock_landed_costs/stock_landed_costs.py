@@ -127,7 +127,7 @@ class stock_landed_cost(osv.osv):
             'quantity': line.quantity,
             'debit': line.additional_landed_cost,
             'account_id': debit_account_id
-        }, context=context)
+        }, check=False, context=context)
         aml_obj.create(cr, uid, {
             'name': line.name,
             'move_id': move_id,
@@ -135,7 +135,7 @@ class stock_landed_cost(osv.osv):
             'quantity': line.quantity,
             'credit': line.additional_landed_cost,
             'account_id': credit_account_id
-        }, context=context)
+        }, check=False, context=context)
         
         #Create account move lines for quants already out of stock
         if qty_out > 0:
