@@ -1,14 +1,24 @@
-(function () {
+openerp.website = function(instance) {
     'use strict';
 
-var widgets = openerp.web.form.widgets;
-while(!widgets.map.html) {
-    widgets = widgets.parent;
-}
-widgets.map.html = "openerp.web.form.FieldTextHtml";
+instance.web.form.WidgetWebsiteButton = instance.web.form.AbstractField.extend({
+    template: 'WidgetWebsiteButton',
+    render_value: function() {
+        this._super();
+        this.$()
+            .toggleClass("success", this.get_value())
+            .toggleClass("danger", !this.get_value());
+        if (this.node.attrs.class) {
+            this.$el.addClass(this.node.attrs.class);
+        }
+    },
+});
+instance.web.form.widgets = instance.web.form.widgets.extend({
+    'website_button': 'instance.web.form.WidgetWebsiteButton',
+});
 
-var widget = openerp.web.form.AbstractField.extend(openerp.web.form.ReinitializeFieldMixin);
-openerp.web.form.FieldTextHtml = widget.extend({
+var widget = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin);
+instance.web.form.FieldTextHtml = widget.extend({
     template: 'FieldTextHtml',
     start: function () {
         var self = this;
@@ -150,4 +160,4 @@ openerp.web.form.FieldTextHtml = widget.extend({
     }
 });
 
-})();
+};
