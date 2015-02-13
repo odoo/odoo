@@ -677,10 +677,10 @@
                               <td t-if="line.product_id.product_tmpl_id">
                                   <div>
                                       <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
-                                          <strong t-esc="line.product_id.name_get()[0][1]"/>
+                                          <strong t-esc="line.product_id.display_name"/>
                                       </a>
                                   </div>
-                                  <div class="text-muted" t-field="line.name"/>
+                                  <div class="text-muted" t-esc="'\n'.join(line.name.splitlines()[1:])"/>
                               </td>
                               <td class="text-center" name="price">
                                 <t t-if="(compute_currency(line.product_id.lst_price) - line.price_unit) &gt; 1">
