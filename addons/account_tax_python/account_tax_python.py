@@ -5,12 +5,7 @@ from openerp import models, fields, api
 class account_tax_python(models.Model):
     _inherit = "account.tax"
 
-    def __init__(self, parent, cr):
-        super(account_tax_python, self).__init__(parent, cr)
-        option = ('code', 'Python Code')
-        type_selection = self._fields['amount_type'].selection
-        if option not in type_selection:
-            type_selection.append(option)
+    amount_type = fields.Selection(selection_add=[('code', 'Python Code')])
 
     python_compute = fields.Text(string='Python Code', default="result = price_unit * 0.10",
         help="Compute the amount of the tax by setting the variable 'result'.\n\n"
