@@ -1237,7 +1237,13 @@ openerp.account = function (instance) {
             var slice_start = self.get("pager_index") * self.max_move_lines_displayed;
             var slice_end = (self.get("pager_index")+1) * self.max_move_lines_displayed;
             _( _.filter(self.mv_lines_deselected, function(o){
-                    return o.name.indexOf(self.filter) !== -1 || o.ref.indexOf(self.filter) !== -1 })
+                    if (o.ref) {
+                        return o.name.indexOf(self.filter) !== -1 || o.ref.indexOf(self.filter) !== -1
+                        }
+                    else {
+                        return o.name.indexOf(self.filter) !== -1
+                        }
+                    })
                 .slice(slice_start, slice_end)).each(function(line){
                 var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: false}));
                 self.bindPopoverTo($line.find(".line_info_button"));
