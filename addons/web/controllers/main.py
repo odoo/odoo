@@ -405,17 +405,16 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
                 action = len(a)> 2 and a[2] or {}
                 if not action:
                     continue
-                if ctx:
-                    if action.get('context',False):
-                        ctx2 = action.get('context','')
-                        ctx2 = ctx2.find('{') >= 0 and ctx2[ctx2.find('{')+1:]
-                        if ctx2:
-                            ctx = str(ctx)
-                            ctx = ctx.rfind('}') > 0 and ctx[:ctx.rfind('}')]
-                            if ctx:
-                                a[2].update({'context':unicode(ctx + ', ' + ctx2)})
-                            continue
-                    a[2].update({'context':unicode(ctx)})
+                if action.get('context',False):
+                    ctx2 = action.get('context','')
+                    ctx2 = ctx2.find('{') >= 0 and ctx2[ctx2.find('{')+1:]
+                    if ctx2:
+                        ctx = str(ctx)
+                        ctx = ctx.rfind('}') > 0 and ctx[:ctx.rfind('}')]
+                        if ctx:
+                            a[2].update({'context':unicode(ctx + ', ' + ctx2)})
+                        continue
+                a[2].update({'context':unicode(ctx)})
 
     return [(id, name, clean_action(req, action))
             for id, name, action in actions]
