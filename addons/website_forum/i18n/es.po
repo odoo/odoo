@@ -45,11 +45,35 @@ msgid ""
 "${object.company_id.phone or ''}\n"
 "</pre>"
 msgstr ""
+"\n"
+"<p>\n"
+"    Hola ${object.name},\n"
+"</p>\n"
+"<p>\n"
+"    Usted ha sido invitado a validar su email para obtener acceso a "
+"\"${object.company_id.name}\" Q/A Foros.\n"
+"</p>\n"
+"<p>\n"
+"    Para validar su email, por favor de clic en el siguiente enlace:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${ctx.get('token_url')}\">Validar mi cuenta para "
+"\"${object.company_id.name}\" Q/A Foros</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"    Gracias,\n"
+"</p>\n"
+"<pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} Validación de foros"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -64,7 +88,7 @@ msgstr "(sólo se permite una respuesta por pregunta)"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- it really helps to select the best questions and answers!"
-msgstr "- ¡ayuda realmente a seleccionar las mejores preguntas y respuestas!"
+msgstr "- ayuda realmente a seleccionar las mejores preguntas y respuestas!"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -102,6 +126,7 @@ msgid ""
 "<p>This community is for professionals and enthusiasts of our products and "
 "services.</p>"
 msgstr ""
+"<p>Esta comunidad es para los profesionales y entusiastes de nuestros productos y servicios.</p>"
 
 #. module: website_forum
 #: view:website:website_forum.tag
@@ -111,8 +136,8 @@ msgid ""
 "            others to find and answer your question."
 msgstr ""
 "Una etiqueta sirve para categorizar su pregunta junto con otras preguntas "
-"similares. Usando las etiquetas adecuadas, hace más fácil a otros encontrar "
-"y responder su pregunta."
+"            similares. Usando las etiquetas adecuadas, hace más fácil a otros encontrar "
+"            y responder su pregunta."
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -122,17 +147,17 @@ msgstr "Sobre este foro"
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_own:0
 msgid "Accept an answer on its own questions"
-msgstr ""
+msgstr "Aceptar una respuesta a sus propias preguntas"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_all:0
 msgid "Accept an answer to all questions"
-msgstr ""
+msgstr "Aceptar una respuesta a todas las preguntas"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accept:0
 msgid "Accepting an answer"
-msgstr ""
+msgstr "Aceptar una respuesta"
 
 #. module: website_forum
 #: field:forum.post,active:0
@@ -166,27 +191,27 @@ msgstr "Respuesta editada"
 #. module: website_forum
 #: field:forum.forum,karma_answer:0
 msgid "Answer a question"
-msgstr ""
+msgstr "Responder una pregunta"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accepted:0
 msgid "Answer accepted"
-msgstr ""
+msgstr "Respuesta aceptada"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_downvote:0
 msgid "Answer downvoted"
-msgstr ""
+msgstr "Respuesta votada negativamente"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_flagged:0
 msgid "Answer flagged"
-msgstr ""
+msgstr "Respuesta marcada"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_upvote:0
 msgid "Answer upvoted"
-msgstr ""
+msgstr "Respuesta votada positivamente"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
@@ -209,12 +234,12 @@ msgstr "Realizar una pregunta"
 #. module: website_forum
 #: field:forum.forum,karma_ask:0
 msgid "Ask a question"
-msgstr ""
+msgstr "Hacer una pregunta"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Ask your Question"
-msgstr "Realice su pregunta"
+msgstr "Haga su pregunta"
 
 #. module: website_forum
 #: field:forum.post,create_date:0
@@ -230,7 +255,7 @@ msgstr "Preguntado:"
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_new:0
 msgid "Asking a question"
-msgstr ""
+msgstr "Hacer una pregunta"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -268,8 +293,8 @@ msgid ""
 "            appear on your profile page, and your posts."
 msgstr ""
 "Además de ganar reputación con sus preguntas y respuestas, recibirá "
-"insignias por ser especialmente útil. Las insignias aparecen en su página de "
-"perfil y sus mensajes."
+"            insignias por ser especialmente útil. Las insignias aparecen "
+"            en su página de perfil y sus mensajes."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -329,7 +354,7 @@ msgstr "Puede votar a favor"
 #. module: website_forum
 #: field:forum.forum,karma_retag:0
 msgid "Change question tags"
-msgstr ""
+msgstr "Cambiar etiquetas de pregunta"
 
 #. module: website_forum
 #: view:website:website_forum.user_badges
@@ -345,7 +370,7 @@ msgstr "Comentarista jefe"
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "City"
-msgstr "Población"
+msgstr "Ciudad"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -353,11 +378,13 @@ msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
 msgstr ""
+"Haga clic aquí para enviar un correo de verificación para permitir su participación en el "
+"foro."
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
 msgid "Clickable links (Editor)"
-msgstr ""
+msgstr "Enlaces seleccionable (Editor)"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -367,12 +394,12 @@ msgstr "Cerrar"
 #. module: website_forum
 #: field:forum.forum,karma_close_all:0
 msgid "Close all posts"
-msgstr ""
+msgstr "Cerrar todas las entradas"
 
 #. module: website_forum
 #: field:forum.forum,karma_close_own:0
 msgid "Close its own posts"
-msgstr ""
+msgstr "Cerrar sus propias entradas"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -398,12 +425,12 @@ msgstr "Comentario"
 #. module: website_forum
 #: field:forum.forum,karma_comment_all:0
 msgid "Comment all posts"
-msgstr ""
+msgstr "Comentar todas las entradas"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_own:0
 msgid "Comment its own posts"
-msgstr ""
+msgstr "Comentar sus propias entradas"
 
 #. module: website_forum
 #: view:website:website_forum.post_comment
@@ -443,6 +470,8 @@ msgid ""
 "Congratulations! Your email has just been validated. You may now participate "
 "to our forums."
 msgstr ""
+"Felicitaciones! Su dirección de correo ha sido validada. Ahora ya puede participar "
+"to our forums."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -453,12 +482,12 @@ msgstr "Contenido"
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_all:0
 msgid "Convert all answers to comments and vice versa"
-msgstr ""
+msgstr "Convertir todas las respuestas en comentarios y vice versa"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_own:0
 msgid "Convert its own answers to comments and vice versa"
-msgstr ""
+msgstr "Convertir sus propias respuestas a comentarios y vice versa"
 
 #. module: website_forum
 #: help:forum.post,is_correct:0
@@ -518,12 +547,12 @@ msgstr "Fecha del último mensaje publicado en el registro."
 #. module: website_forum
 #: field:forum.forum,karma_unlink_all:0
 msgid "Delete all posts"
-msgstr ""
+msgstr "Borrar todas las entradas"
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_own:0
 msgid "Delete its own posts"
-msgstr ""
+msgstr "Borrar sus propias entradas"
 
 #. module: website_forum
 #: field:forum.forum,description:0
@@ -540,7 +569,7 @@ msgstr "Disciplinado"
 #. module: website_forum
 #: field:forum.forum,karma_downvote:0
 msgid "Downvote"
-msgstr ""
+msgstr "Voto negativo"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -560,7 +589,7 @@ msgstr "Editar su respuesta previa"
 #. module: website_forum
 #: field:forum.forum,karma_edit_all:0
 msgid "Edit all posts"
-msgstr ""
+msgstr "Editar todas las entradas"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -570,7 +599,7 @@ msgstr "Editar respuesta"
 #. module: website_forum
 #: field:forum.forum,karma_edit_own:0
 msgid "Edit its own posts"
-msgstr ""
+msgstr "Editar sus propias entradas"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -656,7 +685,7 @@ msgstr "Filtrar en"
 #. module: website_forum
 #: field:forum.forum,karma_flag:0
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "Marcar esta entrada como ofensiva"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -847,7 +876,7 @@ msgstr "Es un seguidor"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr ""
+msgstr "Parece que su correo todavía no ha sido verificado"
 
 #. module: website_forum
 #: field:res.users,karma:0
@@ -858,12 +887,12 @@ msgstr "Karma"
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr ""
+msgstr "Ganancia de karma"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Requirements"
-msgstr ""
+msgstr "Requisitos de Karma"
 
 #. module: website_forum
 #: field:forum.post,karma_accept:0
@@ -950,7 +979,7 @@ msgstr "Última actualización:"
 #. module: website_forum
 #: field:forum.forum,karma_editor_link_files:0
 msgid "Linking files (Editor)"
-msgstr ""
+msgstr "Vincular archivos (Editor)"
 
 #. module: website_forum
 #: field:forum.forum,message_ids:0
@@ -1231,7 +1260,7 @@ msgstr "Pregunta editada"
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_downvote:0
 msgid "Question downvoted"
-msgstr ""
+msgstr "Pregunta votada negativamente"
 
 #. module: website_forum
 #: view:website:website_forum.404
@@ -1246,7 +1275,7 @@ msgstr "Herramientas de las preguntas"
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_upvote:0
 msgid "Question upvoted"
-msgstr ""
+msgstr "Pregunta votada positivamente"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -1449,12 +1478,12 @@ msgstr "Sin respuesta"
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_all:0
 msgid "Unlink all comments"
-msgstr ""
+msgstr "Desvincular todos los comentarios"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_own:0
 msgid "Unlink its own comments"
-msgstr ""
+msgstr "Desvincular sus propios comentarios"
 
 #. module: website_forum
 #: field:forum.forum,message_unread:0
@@ -1480,7 +1509,7 @@ msgstr "Actualizado por"
 #. module: website_forum
 #: field:forum.forum,karma_upvote:0
 msgid "Upvote"
-msgstr ""
+msgstr "Voto positivo"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_student
@@ -1641,7 +1670,7 @@ msgstr "bronce"
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "por"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1743,12 +1772,12 @@ msgstr "fuera del tema o no relevante"
 #: view:website:website_forum.post_comment
 #: view:website:website_forum.post_description_full
 msgid "on"
-msgstr ""
+msgstr "sobre"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "or"
-msgstr ""
+msgstr "o"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
