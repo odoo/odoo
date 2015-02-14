@@ -91,7 +91,7 @@
         $('.comment_delete').on('click', function (ev) {
             ev.preventDefault();
             var $link = $(ev.currentTarget);
-            openerp.jsonRpc($link.data('href'), 'call', {}).then(function (data) {
+            openerp.jsonRpc($link.parent('form').attr('action'), 'call', {}).then(function (data) {
                 $link.parents('.comment').first().remove();
             });
         });

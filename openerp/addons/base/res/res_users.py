@@ -729,6 +729,10 @@ class groups_view(osv.osv):
         # and introduces the reified group fields
         # we have to try-catch this, because at first init the view does not exist
         # but we are already creating some basic groups
+        if not context or context.get('install_mode'):
+            # use installation/admin language for translatable names in the view
+            context = dict(context or {})
+            context.update(self.pool['res.users'].context_get(cr, uid))
         view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=context)
         if view and view.exists() and view._name == 'ir.ui.view':
             xml1, xml2 = [], []

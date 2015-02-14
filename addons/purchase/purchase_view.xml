@@ -606,7 +606,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_purchase_line_product_tree">
-            <field name="context">{'search_default_product_id': active_id, 'default_product_id': active_id}</field>
+            <field name="context">{}</field><!-- force empty -->
             <field name="name">Purchases</field>
             <field name="res_model">purchase.order.line</field>
             <field name="view_id" ref="purchase_order_line_tree"/>
@@ -648,7 +648,7 @@
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
+                   <button class="oe_inline oe_stat_button" name="action_view_purchases" type="object"
                        icon="fa-shopping-cart">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>

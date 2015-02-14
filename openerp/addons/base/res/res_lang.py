@@ -127,6 +127,15 @@ class lang(osv.osv):
                     return False
         return True
 
+    def _check_grouping(self, cr, uid, ids, context=None):
+        for lang in self.browse(cr, uid, ids, context=context):
+            try:
+                if not all(isinstance(x, int) for x in eval(lang.grouping)):
+                    return False
+            except Exception:
+                return False
+        return True
+
     def _get_default_date_format(self, cursor, user, context=None):
         return '%m/%d/%Y'
 
@@ -162,7 +171,8 @@ class lang(osv.osv):
     ]
 
     _constraints = [
-        (_check_format, 'Invalid date/time format directive specified. Please refer to the list of allowed directives, displayed when you edit a language.', ['time_format', 'date_format'])
+        (_check_format, 'Invalid date/time format directive specified. Please refer to the list of allowed directives, displayed when you edit a language.', ['time_format', 'date_format']),
+        (_check_grouping, "The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case.", ['grouping'])
     ]
 
     @tools.ormcache(skiparg=3)

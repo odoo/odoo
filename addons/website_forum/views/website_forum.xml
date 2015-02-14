@@ -651,7 +651,10 @@
                                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                                 style="display: inline-block;"/>
                             <div t-field="answer.create_uid" t-field-options='{"widget": "contact", "badges": true, "fields": ["karma"]}'/>
-                            <span class="text-muted">Answered on <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></span>
+                            <span class="text-muted">
+                                <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}#answer_#{answer.id}">Answered on</a> 
+                                <span t-field="answer.create_date" t-field-options='{"format":"short"}'/>
+                            </span>
                         </div>
                         <div class="visible-xs text-center">
                             <t t-call="website_forum.vote">

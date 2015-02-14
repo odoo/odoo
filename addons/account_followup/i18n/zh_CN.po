@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-01-26 00:21+0000\n"
+"Last-Translator: Jason Yuan <jason@bericonsulting.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:56+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-01-26 07:06+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
@@ -53,6 +53,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>亲爱的 ${object.name},</p>\n"
+"    <p>\n"
+"\n"
+"    希望这封邮件是一个的误会,贵公司有一些款项看来依然未支付,请在8天内及时支付这些货款.\n"
+"    如果上述款项已经被支付,请您忽略这封邮件.并联系我们的会计部门.\n"
+"\n"
+"    </p>\n"
+"<br/>\n"
+"诚挚的问候,\n"
+"<br/>\n"
+"   <br/>\n"
+"${user.name}\n"
+"\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
@@ -308,7 +336,7 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "%(user_signature)s"
-msgstr "%(user_signature)s"
+msgstr "%(用户签名)s"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:234
@@ -376,7 +404,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_note:0
 msgid "Action To Do"
-msgstr "动作"
+msgstr "要做的事情"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -403,7 +431,7 @@ msgstr ""
 #. module: account_followup
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
-msgstr ""
+msgstr "逾期总金额"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:281
@@ -462,7 +490,7 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Click to mark the action as done."
-msgstr ""
+msgstr "通过点击标记此动作已完成"
 
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
@@ -582,7 +610,7 @@ msgstr "电子邮件正文"
 #. module: account_followup
 #: field:account_followup.print,email_subject:0
 msgid "Email Subject"
-msgstr "电子邮件主题"
+msgstr "邮件主题"
 
 #. module: account_followup
 #: field:account_followup.followup.line,email_template_id:0
@@ -896,7 +924,7 @@ msgstr "名称"
 #. module: account_followup
 #: field:account_followup.sending.results,needprinting:0
 msgid "Needs Printing"
-msgstr "需要印刷"
+msgstr "需要打印"
 
 #. module: account_followup
 #: field:res.partner,payment_next_action:0
@@ -906,7 +934,7 @@ msgstr "下个行动日期"
 #. module: account_followup
 #: field:res.partner,payment_next_action_date:0
 msgid "Next Action Date"
-msgstr "下次活动日期"
+msgstr "下次联系日期"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
@@ -1284,6 +1312,11 @@ msgstr "天过期，做下列动作："
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "e.g. Call the customer, check if it's paid, ..."
 msgstr ""
+
+#. module: account_followup
+#: view:account_followup.print:account_followup.view_account_followup_print
+msgid "or"
+msgstr "or"
 
 #. module: account_followup
 #: field:account_followup.print,company_id:0

@@ -199,17 +199,12 @@ class WebsiteBlog(http.Controller):
         tags = tag_obj.browse(cr, uid, tag_obj.search(cr, uid, [], context=context), context=context)
 
         # Find next Post
-        visited_blogs = request.httprequest.cookies.get('visited_blogs') or ''
-        visited_ids = filter(None, visited_blogs.split(','))
-        visited_ids = map(lambda x: int(x), visited_ids)
-        if blog_post.id not in visited_ids:
-            visited_ids.append(blog_post.id)
-        next_post_id = blog_post_obj.search(cr, uid, [
-            ('id', 'not in', visited_ids),
-        ], order='ranking desc', limit=1, context=context)
-        if not next_post_id:
-            next_post_id = blog_post_obj.search(cr, uid, [('id', '!=', blog.id)], order='ranking desc', limit=1, context=context)
-        next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id[0], context=context) or False
+        all_post_ids = blog_post_obj.search(cr, uid, [('blog_id', '=', blog.id)], context=context)
+        # should always return at least the current post
+        current_blog_post_index = all_post_ids.index(blog_post.id)
+        next_post_id = all_post_ids[0 if current_blog_post_index == len(all_post_ids) - 1 \
+                            else current_blog_post_index + 1]
+        next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id, context=context) or False
 
         values = {
             'tags': tags,
@@ -227,7 +222,6 @@ class WebsiteBlog(http.Controller):
             'comments': comments,
         }
         response = request.website.render("website_blog.blog_post_complete", values)
-        response.set_cookie('visited_blogs', ','.join(map(str, visited_ids)))
 
         request.session[request.session_id] = request.session.get(request.session_id, [])
         if not (blog_post.id in request.session[request.session_id]):
