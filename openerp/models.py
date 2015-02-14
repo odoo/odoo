@@ -2862,10 +2862,15 @@ class BaseModel(object):
         for parent_model, parent_field in cls._inherits.iteritems():
             parent = cls.pool[parent_model]
             for name, field in parent._fields.iteritems():
+                # inherited fields are implemented as related fields, with the
+                # following specific properties:
+                #  - reading inherited fields should not bypass access rights
+                #  - copy inherited fields iff their original field is copied
                 fields[name] = field.new(
                     inherited=True,
                     related=(parent_field, name),
                     related_sudo=False,
+                    copy=field.copy,
                 )
 
         # add inherited fields that are not redefined locally
@@ -3968,7 +3973,7 @@ class BaseModel(object):
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         # recompute new-style fields
-        if context.get('recompute', True):
+        if recs.env.recompute and context.get('recompute', True):
             recs.recompute()
 
         self.step_workflow(cr, user, ids, context=context)
@@ -4215,7 +4220,7 @@ class BaseModel(object):
         # check Python constraints
         recs._validate_fields(vals)
 
-        if context.get('recompute', True):
+        if recs.env.recompute and context.get('recompute', True):
             result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
@@ -4228,7 +4233,7 @@ class BaseModel(object):
             # recompute new-style fields
             recs.recompute()
 
-        if self._log_create and context.get('recompute', True):
+        if self._log_create and recs.env.recompute and context.get('recompute', True):
             message = self._description + \
                 " '" + \
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
@@ -5623,12 +5628,14 @@ class BaseModel(object):
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
-            for rec, rec1 in zip(recs, recs.with_context(recompute=False)):
+            names = [f.name for f in field.computed_fields if f.store]
+            for rec in recs:
                 try:
                     values = rec._convert_to_write({
-                        f.name: rec[f.name] for f in field.computed_fields
+                        name: rec[name] for name in names
                     })
-                    rec1._write(values)
+                    with rec.env.norecompute():
+                        rec._write(values)
                 except MissingError:
                     pass
             # mark the computed fields as done
@@ -5715,9 +5722,13 @@ class BaseModel(object):
             }
             params = eval("[%s]" % params, global_vars, field_vars)
 
-            # call onchange method
+            # call onchange method with context when possible
             args = (self._cr, self._uid, self._origin.ids) + tuple(params)
-            method_res = getattr(self._model, method)(*args)
+            try:
+                method_res = getattr(self._model, method)(*args, context=self._context)
+            except TypeError:
+                method_res = getattr(self._model, method)(*args)
+
             if not isinstance(method_res, dict):
                 return
             if 'value' in method_res:
@@ -5734,13 +5745,20 @@ class BaseModel(object):
 
             :param values: dictionary mapping field names to values, giving the
                 current state of modification
-            :param field_name: name of the modified field_name
+            :param field_name: name of the modified field, or list of field
+                names (in view order), or False
             :param field_onchange: dictionary mapping field names to their
                 on_change attribute
         """
         env = self.env
+        if isinstance(field_name, list):
+            names = field_name
+        elif field_name:
+            names = [field_name]
+        else:
+            names = []
 
-        if field_name and field_name not in self._fields:
+        if not all(name in self._fields for name in names):
             return {}
 
         # determine subfields for field.convert_to_write() below
@@ -5759,23 +5777,26 @@ class BaseModel(object):
             # attach `self` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
 
-        # determine which field should be triggered an onchange
-        todo = set([field_name]) if field_name else set(values)
+        # determine which field(s) should be triggered an onchange
+        todo = list(names) or list(values)
         done = set()
 
         # dummy assignment: trigger invalidations on the record
         for name in todo:
+            if name == 'id':
+                continue
             value = record[name]
             field = self._fields[name]
-            if not field_name and field.type == 'many2one' and field.delegate and not value:
+            if field.type == 'many2one' and field.delegate and not value:
                 # do not nullify all fields of parent record for new records
                 continue
             record[name] = value
 
         result = {'value': {}}
 
+        # process names in order (or the keys of values if no name given)
         while todo:
-            name = todo.pop()
+            name = todo.pop(0)
             if name in done:
                 continue
             done.add(name)
@@ -5799,7 +5820,7 @@ class BaseModel(object):
                             result['value'][name] = field.convert_to_write(
                                 newval, record._origin, subfields.get(name),
                             )
-                            todo.add(name)
+                            todo.append(name)
                         else:
                             # keep result: newval may have been dirty before
                             pass
@@ -5809,14 +5830,15 @@ class BaseModel(object):
                             result['value'][name] = field.convert_to_write(
                                 newval, record._origin, subfields.get(name),
                             )
-                            todo.add(name)
+                            todo.append(name)
                         else:
                             # clean up result to not return another value
                             result['value'].pop(name, None)
 
         # At the moment, the client does not support updates on a *2many field
         # while this one is modified by the user.
-        if field_name and self._fields[field_name].type in ('one2many', 'many2many'):
+        if field_name and not isinstance(field_name, list) and \
+                self._fields[field_name].type in ('one2many', 'many2many'):
             result['value'].pop(field_name, None)
 
         return result
