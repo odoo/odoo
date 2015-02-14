@@ -218,6 +218,36 @@ class account_fiscalyear_close(osv.osv_memory):
               AND t.close_method = %s''', (company_id, 'balance', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
 
+        period_ids = obj_acc_period.search(
+            cr, uid, [('fiscalyear_id', '=', old_fyear.id)], context=context)
+        states = ["'posted'", "'draft'"]
+
+        args = dict(
+            account_ids=', '.join([str(acc) for acc in account_ids]),
+            period_ids=', '.join([str(per) for per in period_ids]),
+            states=', '.join(states),
+        )
+
+        query = '''
+            SELECT
+                aml.account_id,
+                aml.currency_id,
+                SUM(aml.debit - aml.credit) AS balance,
+                SUM(amount_currency) AS amount_currency
+            FROM account_move_line AS aml
+            INNER JOIN account_period AS ap ON ap.id = aml.period_id
+            INNER JOIN account_move AS am ON am.id = aml.move_id
+            WHERE
+                aml.account_id IN (%(account_ids)s) AND
+                aml.currency_id IS NOT NULL AND
+                aml.state <> 'draft' AND
+                am.state IN (%(states)s) AND
+                ap.id IN (%(period_ids)s)
+            GROUP BY aml.account_id, aml.currency_id
+        ''' % args
+        cr.execute(query)
+        res = cr.dictfetchall()
+
         query_1st_part = """
                 INSERT INTO account_move_line (
                      debit, credit, name, date, move_id, journal_id, period_id,
@@ -225,22 +255,23 @@ class account_fiscalyear_close(osv.osv_memory):
         """
         query_2nd_part = ""
         query_2nd_part_args = []
-        for account in obj_acc_account.browse(cr, uid, account_ids, context={'fiscalyear': fy_id}):
-            company_currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
-            if not currency_obj.is_zero(cr, uid, company_currency_id, abs(account.balance)):
+        company_currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
+        for acc in res:
+            account = obj_acc_account.browse(cr, uid, acc['account_id'], context={'fiscalyear': fy_id})
+            if not currency_obj.is_zero(cr, uid, company_currency_id, abs(acc['balance'])):
                 if query_2nd_part:
                     query_2nd_part += ','
                 query_2nd_part += "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                query_2nd_part_args += (account.balance > 0 and account.balance or 0.0,
-                       account.balance < 0 and -account.balance or 0.0,
+                query_2nd_part_args += (acc['balance'] > 0 and acc['balance'] or 0.0,
+                       acc['balance'] < 0 and -acc['balance'] or 0.0,
                        data[0].report_name,
                        period.date_start,
                        move_id,
                        new_journal.id,
                        period.id,
                        account.id,
-                       account.currency_id and account.currency_id.id or None,
-                       account.foreign_balance if account.currency_id else 0.0,
+                       acc['currency_id'] or None,
+                       acc['amount_currency'],
                        account.company_id.id,
                        'draft')
         if query_2nd_part:
