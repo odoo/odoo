@@ -70,52 +70,73 @@
         </template>
 
         <!-- Page : Rating of a particular project -->
+        <template id="project_rating_data" name="Project Issue Rating Page">
+            <div class="oe_rate">
+                <img src='/rating/static/src/img/rating_10.png' alt="Happy Feedback" class="pull-left" style="width:24px"/>
+                <div class="progress mt4">
+                    <div t-attf-class="progress-bar" role="progressbar" t-attf-style="width: #{stats[duration][10]}%;">
+                        <t t-esc="stats[duration][10]"/>%%
+                    </div>
+                </div>
+            </div><div class="oe_rate mt16">
+                <img src='/rating/static/src/img/rating_5.png' alt="Happy Feedback" class="pull-left" style="width:24px"/>
+                <div class="progress mt4">
+                    <div t-attf-class="progress-bar" role="progressbar" t-attf-style="width: #{stats[duration][5]}%;">
+                        <t t-esc="stats[duration][5]"/>%%
+                    </div>
+                </div>
+            </div><div class="oe_rate mt16">
+                <img src='/rating/static/src/img/rating_0.png' alt="Happy Feedback" class="pull-left" style="width:24px"/>
+                <div class="progress mt4">
+                    <div t-attf-class="progress-bar" role="progressbar" t-attf-style="width: #{stats[duration][0]}%;">
+                        <t t-esc="stats[duration][0]"/>%%
+                    </div>
+                </div>
+            </div>
+        </template>
+
         <template id="project_rating_page" name="Project Issue Rating Page">
             <t t-call="website.layout">
                  <div id="wrap">
                     <div class="oe_structure"/>
                     <div class="container oe_website_rating_project">
-                        <div class="row text-center">
-                            <h2><t t-esc="project.name"/> <small>Customer Satisfaction</small></h2>
-                        </div>
+                        <h1 t-esc="project.name" class="text-center"/>
                         <div class="row mb32">
                             <div class="col-md-8">
-                                <h3>The statistics</h3>
+                                <h3 class="page-header">Customer Satisfaction</h3>
                                 <div class="row">
-                                    <div class="col-md-8 col-md-offset-2 well">
-                                    <t t-foreach="stats" t-as="grade">
-                                        <div class="progress">
-                                            <div t-attf-class="progress-bar progress-bar-#{grade}" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" t-att-style="'width: '+ str(stats[grade]) +'%;'">
-                                                <span class="sr-only"><t t-esc="stats[grade]"/>% Complete</span>
-                                            </div>
-                                            <span class="progress-type"><t t-esc="labels[grade]"/></span>
-                                            <span class="progress-completed"><t t-esc="stats[grade]"/>%</span>
-                                        </div>
-                                    </t>
+                                    <div class="col-sm-4">
+                                        <h4>Last 7 days</h4>
+                                        <t t-set="duration" t-value="7"/>
+                                        <t t-call="website_rating_project_issue.project_rating_data"/>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <h4>Last 30 days</h4>
+                                        <t t-set="duration" t-value="30"/>
+                                        <t t-call="website_rating_project_issue.project_rating_data"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <h4>Last 3 months</h4>
+                                        <t t-set="duration" t-value="90"/>
+                                        <t t-call="website_rating_project_issue.project_rating_data"/>
+                                    </div>
+
                                 </div>
-                                <h3>The <t t-esc="len(ratings)"/> last feedbacks</h3>
-                                <div class="text-center">
-                                    <t t-foreach="ratings" t-as="rating" class="media">
-                                        <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" t-att-title="rating.res_name"/>
-                                        <t t-if="(rating_index+1) % 10 == 0">
-                                            <br/>
-                                        </t>
-                                    </t>
-                                </div>
+                                <h3 class="page-header">Latest Feedbacks</h3>
+                                <t t-foreach="ratings" t-as="rating" class="media">
+                                    <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" t-att-title="rating.res_name"/>
+                                </t>
                             </div>
                             <div class="col-md-4">
-                                <h3>The Team</h3>
-                                <t t-foreach="team" t-as="user" class="media">
-                                    <div class="media">
-                                        <div class="pull-left">
-                                            <img t-att-src="'data:image/png;base64,' + user.image_small" class="img-rounded" t-att-alt="user.name"/>
-                                        </div>
-                                        <div class="media-body">
-                                            <h5><t t-esc="user.name"/></h5>
-                                        </div>
+                                <h3>Team</h3>
+                                <div class="media" t-foreach="team" t-as="user">
+                                    <div class="pull-left">
+                                        <img t-att-src="'data:image/png;base64,' + user.image_small" class="img-rounded" t-att-alt="user.name" style="width: 32px"/>
                                     </div>
-                                </t>
+                                    <div class="media-body">
+                                        <h5><t t-esc="user.name"/></h5>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
