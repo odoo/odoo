@@ -65,11 +65,6 @@ class Project(models.Model):
         activity = project_issue.rating_get_grades()
         self.percentage_satisfaction_issue = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
 
-    @api.one
-    @api.depends('use_tasks', 'use_issues')
-    def _display_happy_customer(self):
-        self.is_visible_happy_customer = self.use_tasks if self.use_tasks else self.use_issues
-
     percentage_satisfaction_issue = fields.Integer(compute='_compute_percentage_satisfaction_issue', string='% Happy', store=True, default=-1)
 
     @api.multi

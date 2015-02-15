@@ -13,7 +13,7 @@ class WebsiteRatingProject(http.Controller):
         values = {'projects' : projects}
         return request.website.render('website_rating_project_issue.index', values)
 
-    @http.route(['/project/rating/<model("project.project"):project>'], type='http', auth="public", website=True)
+    @http.route(['''/project/rating/<model("project.project", "[('is_visible_happy_customer','=',1)]"):project>'''], type='http', auth="public", website=True)
     def page(self, project=None, **kw):
         # create domain for rating
         domain = [('res_model', '=', 'project.task')]
