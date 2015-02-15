@@ -11,10 +11,10 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button name="action_view_task_rating"
                         attrs="{'invisible': ['|', ('use_tasks','=', False), ('percentage_satisfaction_task','=', -1)]}"
-                        class="oe_stat_button"
+                        class="oe_stat_button oe_percent"
                         type="object"
                         icon="fa-smile-o">
-                        <field string="% Happy on task" name="percentage_satisfaction_task" widget="statinfo"/>
+                        <field string="On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
                     </button>
                 </xpath>
             </field>
