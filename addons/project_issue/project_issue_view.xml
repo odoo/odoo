@@ -354,9 +354,6 @@
                         <a t-if="record.use_issues.raw_value" name="%(act_project_project_2_project_issue_all)d" type="action">
                             <t t-raw="record.issue_ids.raw_value.length"/>
                             <field name="label_issues"/>
-                            <field name="monthly_issues" widget="sparkline_bar" options="{'delayIn': '1000'}">
-                                Closed Issues
-                            </field>
                         </a>
                     </div>
                 </xpath>

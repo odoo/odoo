@@ -35,7 +35,6 @@
         'mail',
         'resource',
         'web_kanban',
-        'web_kanban_sparkline',
         'web_tip',
     ],
     'description': """

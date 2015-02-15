@@ -269,17 +269,6 @@ class project(osv.osv):
             section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
         return section_result
 
-    def _get_project_task_data(self, cr, uid, ids, field_name, arg, context=None):
-        obj = self.pool['project.task']
-        month_begin = date.today().replace(day=1)
-        date_begin = (month_begin - relativedelta.relativedelta(months=self._period_number - 1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        res = {}
-        for id in ids:
-            created_domain = [('project_id', '=', id), ('create_date', '>=', date_begin ), ('create_date', '<=', date_end ), ('stage_id.fold', '=', False)]
-            res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, [ 'create_date'], 'create_date_count', 'create_date', context=context))
-        return res
-
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
@@ -345,8 +334,6 @@ class project(osv.osv):
                                    ('pending','Pending'),
                                    ('close','Closed')],
                                   'Status', required=True, copy=False),
-        'monthly_tasks': fields.function(_get_project_task_data, type='char', readonly=True,
-                                             string='Project Task By Month'),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'
         )
