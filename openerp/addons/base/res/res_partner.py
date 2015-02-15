@@ -28,7 +28,7 @@ import re
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import pooler, tools
-from openerp.osv import osv, fields, orm
+from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
 from openerp.tools.yaml_import import is_comment
@@ -66,18 +66,12 @@ class format_address(object):
         for k,v in layouts.items():
             if fmt and (k in fmt):
                 doc = etree.fromstring(arch)
-                view_has_field_use_parent_address = (
-                    doc.find('.//field[@name="use_parent_address"]') is not None)
                 for node in doc.xpath("//div[@class='address_format']"):
                     tree = etree.fromstring(v)
-                    # needs to apply modifiers
-                    for childnode in tree.getchildren():
-                        if view_has_field_use_parent_address and childnode.tag == 'field':
-                            childnode.set(
-                                'attrs', "{'readonly': [('use_parent_address','=',True)]}")
-                        modifiers = {}
-                        orm.transfer_node_to_modifiers(childnode, modifiers)
-                        orm.transfer_modifiers_to_node(modifiers, childnode)
+                    for child in node.xpath("//field"):
+                        if child.attrib.get('modifiers'):
+                            for field in tree.xpath("//field[@name='%s']" % child.attrib.get('name')):
+                                field.attrib['modifiers'] = child.attrib.get('modifiers')
                     node.getparent().replace(node, tree)
                 arch = etree.tostring(doc)
                 break
@@ -91,29 +85,27 @@ def _tz_get(self,cr,uid, context=None):
 class res_partner_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
-        """ Return the categories' display name, including their direct
-            parent by default.
+        """Return the categories' display name, including their direct
+           parent by default.
 
-            If ``context['partner_category_display']`` is ``'short'``, the short
-            version of the category name (without the direct parent) is used.
-            The default is the long version.
-        """
-        if not isinstance(ids, list):
-            ids = [ids]
+        :param dict context: the ``partner_category_display`` key can be
+                             used to select the short version of the
+                             category name (without the direct parent),
+                             when set to ``'short'``. The default is
+                             the long version."""
         if context is None:
             context = {}
-
         if context.get('partner_category_display') == 'short':
             return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
-
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
         res = []
-        for category in self.browse(cr, uid, ids, context=context):
-            names = []
-            current = category
-            while current:
-                names.append(current.name)
-                current = current.parent_id
-            res.append((category.id, ' / '.join(reversed(names))))
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1] + ' / ' + name
+            res.append((record['id'], name))
         return res
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
@@ -733,7 +725,6 @@ class res_partner(osv.osv, format_address):
             adr_pref.add('default')
         result = {}
         visited = set()
-        partner = orm.browse_null()
         for partner in self.browse(cr, uid, filter(None, ids), context=context):
             current_partner = partner
             while current_partner:
