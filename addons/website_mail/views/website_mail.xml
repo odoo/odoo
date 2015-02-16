@@ -9,8 +9,9 @@
               t-att-data-unsubscribe="'unsubscribe' if 'unsubscribe' in request.params else None">
         <input
               type="email" name="email"
-              class="js_follow_email form-control" t-att-value="email or ''"
-              placeholder="your email..."/>
+              class="js_follow_email form-control"
+              placeholder="your email..."
+              groups="base.group_public"/>
         <span class="input-group-btn">
             <button href="#" t-attf-class="btn btn-default js_unfollow_btn">Unsubscribe</button>
             <button href="#" t-attf-class="btn btn-primary js_follow_btn">Subscribe</button>

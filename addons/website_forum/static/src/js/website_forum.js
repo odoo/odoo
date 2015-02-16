@@ -25,12 +25,12 @@ website.if_dom_contains('.website_forum', function () {
         }
     });
 
-    $('.tag_follow').hover(
+    $('.o_js_forum_tag_follow').hover(
         function(event) {
-            $(this).find('.follow_box').stop().fadeIn().css('display','block');
+            $(this).find('.o_forum_tag_follow_box').stop().fadeIn().css('display','block');
         },
         function(event) {
-            $(this).find('.follow_box').stop().fadeOut().css('display','none');
+            $(this).find('.o_forum_tag_follow_box').stop().fadeOut().css('display','none');
     });
 
     $('.vote_up,.vote_down').not('.karma_required').on('click', function (ev) {
