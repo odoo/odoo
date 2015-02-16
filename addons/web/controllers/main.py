@@ -1529,6 +1529,7 @@ class ExcelExport(ExportFormat, http.Controller):
                     cell_style = datetime_style
                 elif isinstance(cell_value, datetime.date):
                     cell_style = date_style
+                elif cell_value is False: cell_value = None
                 worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
 
         fp = StringIO()
