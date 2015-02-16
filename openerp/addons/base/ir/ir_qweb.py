@@ -244,10 +244,10 @@ class QWeb(orm.AbstractModel):
         stack.append(id_or_xml_id)
         qwebcontext['__stack__'] = stack
         qwebcontext['xmlid'] = str(stack[0]) # Temporary fix
-        return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
+        return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext,
+            generated_attributes=qwebcontext.pop('generated_attributes', ''))
 
-    def render_node(self, element, qwebcontext):
-        generated_attributes = ""
+    def render_node(self, element, qwebcontext, generated_attributes=''):
         t_render = None
         template_attributes = {}
 
@@ -305,19 +305,20 @@ class QWeb(orm.AbstractModel):
         # generated_attributes: generated attributes
         # qwebcontext: values
         # inner: optional innerXml
+        name = str(element.tag)
         if inner:
             g_inner = inner.encode('utf-8') if isinstance(inner, unicode) else inner
         else:
             g_inner = [] if element.text is None else [self.render_text(element.text, element, qwebcontext)]
             for current_node in element.iterchildren(tag=etree.Element):
                 try:
-                    g_inner.append(self.render_node(current_node, qwebcontext))
+                    g_inner.append(self.render_node(current_node, qwebcontext,
+                        generated_attributes= name == "t" and generated_attributes or ''))
                 except QWebException:
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
                     raise_qweb_exception(message="Could not render element %r" % element.tag, node=element, template=template)
-        name = str(element.tag)
         inner = "".join(g_inner)
         trim = template_attributes.get("trim", 0)
         if trim == 0:
@@ -450,6 +451,7 @@ class QWeb(orm.AbstractModel):
         except ValueError:
             pass
 
+        d['generated_attributes'] = generated_attributes
         res = self.render(cr, uid, template, d)
 
         # we need to reset the lang after the rendering
