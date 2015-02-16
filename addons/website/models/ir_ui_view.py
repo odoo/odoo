@@ -35,9 +35,18 @@ class view(osv.osv):
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
-            return self.pool['ir.model.data'].xmlid_to_object(
-                cr, uid, view_id, raise_if_not_found=True, context=context
-            )
+            try:
+                return self.pool['ir.model.data'].xmlid_to_object(
+                    cr, uid, view_id, raise_if_not_found=True, context=context
+                )
+            except:
+                # Try to fallback on key instead of xml_id
+                rec_id = self.search(cr, uid, [('key', '=', view_id)], context=context)
+                if rec_id:
+                    _logger.info("Could not find view with `xml_id´ '%s', fallback on `key´" % (view_id))
+                    return self.browse(cr, uid, rec_id, context=context)[0]
+                else:
+                    raise
         elif isinstance(view_id, (int, long)):
             return self.browse(cr, uid, view_id, context=context)
 
