@@ -896,7 +896,7 @@ class account_invoice(models.Model):
             line = inv.finalize_invoice_move_lines(line)
 
             move_vals = {
-                'ref': inv.reference or inv.name,
+                'ref': inv.reference or inv.supplier_invoice_number or inv.name,
                 'line_id': line,
                 'journal_id': journal.id,
                 'date': inv.date_invoice,
