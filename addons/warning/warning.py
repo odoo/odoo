@@ -304,10 +304,10 @@ class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
     def onchange_product_id(self,cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, notes=False, context=None):
+            name=False, price_unit=False, context=None):
         warning = {}
         if not product:
-            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'notes': notes or '', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
+            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         product_obj = self.pool.get('product.product')
         product_info = product_obj.browse(cr, uid, product)
         title = False
@@ -322,7 +322,7 @@ class purchase_order_line(osv.osv):
                 return {'value': {'product_id': False}, 'warning': warning}
 
         result =  super(purchase_order_line, self).onchange_product_id(cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order, fiscal_position_id)
+            partner_id, date_order, fiscal_position_id, date_planned, name, price_unit, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']

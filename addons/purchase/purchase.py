@@ -1008,10 +1008,12 @@ class purchase_order_line(osv.osv):
             context_partner.update( {'lang': lang, 'partner_id': partner_id} )
         product = product_product.browse(cr, uid, product_id, context=context_partner)
         #call name_get() with partner in the context to eventually match name and description in the seller_ids field
-        dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
-        if product.description_purchase:
-            name += '\n' + product.description_purchase
-        res['value'].update({'name': name})
+        if not name or not uom_id:
+            # The 'or not uom_id' part of the above condition can be removed in master. See commit message of the rev. introducing this line.
+            dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
+            if product.description_purchase:
+                name += '\n' + product.description_purchase
+            res['value'].update({'name': name})
 
         # - set a domain on product_uom
         res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
