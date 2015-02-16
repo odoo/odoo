@@ -174,10 +174,36 @@ class stock_transfer_details_items(models.TransientModel):
             result['product_uom_id'] = prod.uom_id and prod.uom_id.id
         return {'value': result, 'domain': {}, 'warning':{} }
 
-    @api.multi
-    def source_package_change(self, sourcepackage):
-        result = {}
-        if sourcepackage:
-            pack = self.env['stock.quant.package'].browse(sourcepackage)
-            result['sourceloc_id'] = pack.location_id and pack.location_id.id
-        return {'value': result, 'domain': {}, 'warning':{} }
+    @api.onchange('package_id', 'quantity', 'product_uom_id', 'sourceloc_id', 'lot_id')
+    def package_qty_uom_srcloc_lot_change(self):
+        if not self.product_id:
+            return {}
+        if self.sourceloc_id.usage == 'internal' and \
+                self.destinationloc_id.usage in ('internal', 'customer', 'transit') and \
+                (self.package_id or self.lot_id):
+            total_qty = 0.0
+            pack_name = ''
+            warn = False
+            qty = self.quantity
+            if self.product_uom_id != self.product_id.uom_id:
+                qty = self.env['product.uom']._compute_qty(self.product_uom_id.id, qty, self.product_id.uom_id.id)
+            quants = self.env['stock.quant'].quants_get(self.sourceloc_id, self.product_id, qty,
+                        domain=[('package_id', 'child_of', self.package_id.id)] if self.package_id else [],
+                        restrict_lot_id=self.lot_id.id, restrict_partner_id=self.owner_id.id)
+            for quant in quants:
+                if None in quant:
+                    warn = True
+                    if self.package_id:
+                        pack_name += _("\nPackage: %s") % self.package_id.name
+                    if self.lot_id:
+                        pack_name += _("\nLot: %s") % self.lot_id.name
+                else:
+                    total_qty += quant[1]
+            if warn:
+                return {
+                    'warning': {
+                        'title': _('Configuration Error!'),
+                        'message': _("Not enough stock ! : You can transfer upto %.2f %s from the,\nLocation: %s%s !") %
+                                    (total_qty, self.product_id.uom_id.name, self.sourceloc_id.name, pack_name)
+                    }
+                }
