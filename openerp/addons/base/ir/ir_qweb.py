@@ -1130,6 +1130,8 @@ class AssetsBundle(object):
 
     def parse(self):
         fragments = html.fragments_fromstring(self.html)
+        attachments = self.registry['ir.attachment'].search_read(self.cr, openerp.SUPERUSER_ID, [('url', '=like', '/custom/%')], ['url', 'name'], context=self.context)
+        customized_urls = {a['name']: a['url'] for a in attachments}
         for el in fragments:
             if isinstance(el, basestring):
                 self.remains.append(el)
@@ -1146,6 +1148,8 @@ class AssetsBundle(object):
                     else:
                         self.stylesheets.append(StylesheetAsset(self, inline=el.text, media=media))
                 elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.can_aggregate(href):
+                    if customized_urls.get(href):
+                        href = customized_urls.get(href)
                     if href.endswith('.sass') or atype == 'text/sass':
                         self.stylesheets.append(SassStylesheetAsset(self, url=href, media=media))
                     elif href.endswith('.less') or atype == 'text/less':
@@ -1322,6 +1326,9 @@ class AssetsBundle(object):
                 white-space: pre;
                 content: "%s";
             }
+            .reset_less_style{
+                display:inline-block !important;
+            }
         """ % message
 
     def preprocess_css(self):
@@ -1477,6 +1484,8 @@ class WebAsset(object):
     def with_header(self, content=None):
         if content is None:
             content = self.content
+        if isinstance(content, str):
+            content = content.decode('utf-8')
         return '\n/* %s */\n%s' % (self.name, content)
 
 class JavascriptAsset(WebAsset):

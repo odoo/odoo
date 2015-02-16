@@ -20,6 +20,16 @@ var Ace = Widget.extend({
     events: {
         'click a[data-action=ace]': 'launchAce',
     },
+    start:function(){
+        if(_.str.startsWith(window.location.hash, hash)){
+            if($('.reset_less_style').css('display') == 'none'){
+                this.launchAce();
+            }else{
+                $('.reset_less_style a').attr('href','/reset_style/'+window.location.hash);
+            }
+        }
+        return this._super();
+    },
     launchAce: function (e) {
         ace_call.load();
 
@@ -63,33 +73,26 @@ var XmlDocument = Class.extend({
     },
 });
 
-var ViewOption = Widget.extend({
-    template: 'website.ace_view_option',
-    init: function (parent, options) {
-        this.view_id = options.id;
-        this.view_name = options.name;
-
-        var indent = _.str.repeat("- ", options.level);
-        this.view_name = _.str.sprintf("%s%s", indent, options.name);
-        this._super(parent);
-    },
-});
-
 var ViewEditor = Widget.extend({
     resizing: false,
     refX: 0,
-    minWidth: 40,
+    minWidth: 100,
     template: 'website.ace_view_editor',
     events: {
-        'change #ace-view-list': 'displaySelectedView',
-        'click .js_include_bundles': 'loadTemplates',
+        'change #ace-view-list-html': 'displaySelectedView',
+        'change #ace-view-list-less': 'displaySelectedView',
+        'change #ace-view-list-css': 'displaySelectedView',
         'click button[data-action=save]': 'saveViews',
         'click button[data-action=format]': 'formatXml',
         'click button[data-action=close]': 'close',
+        'click button[data-action=reset]': 'reset',
+        'click li a.type_switcher': 'change_type'
     },
     init: function (parent) {
-        this.buffers = {};
+        this.buffers = {'css':{},'less':{},'html':{}};
         this.views = {};
+        this.active_list = '#ace-view-list-html';
+        this.editor_type = "html";
         this._super(parent);
     },
     start: function () {
@@ -114,7 +117,7 @@ var ViewEditor = Widget.extend({
         }
         function readEditorWidth() {
             var width = window.localStorage.getItem('ace_editor_width');
-            return parseInt(width || 720, 10);
+            return parseInt(width || 800, 10);
         }
         function startResizing (e) {
             self.refX = e.pageX;
@@ -132,7 +135,7 @@ var ViewEditor = Widget.extend({
                 storeEditorWidth();
             }
         }
-        document.body.addEventListener('mouseup', stopResizing, true);
+        window.addEventListener('mouseup', stopResizing, true);
         self.$('.ace_gutter').mouseup(stopResizing).mousedown(startResizing).click(stopResizing);
         $(document).mousemove(updateWidth);
         $('button[data-action=edit]').click(function () {
@@ -152,33 +155,60 @@ var ViewEditor = Widget.extend({
             bundles: !!$('script[src*=".assets_common"]').length
         };
         return ajax
-            .jsonRpc('/website/customize_template_get', 'call', args)
-            .then(function (views) {
-                self.loadViews.call(self, views);
-                self.open.call(self);
+            .jsonRpc('/website/get_editor_resources', 'call', args)
+            .then(function (res) {
                 var curentHash = window.location.hash;
-                var indexOfView = curentHash.indexOf("?view=");
-                if (indexOfView >= 0) {
-                    var viewId = parseInt(curentHash.substring(indexOfView + 6, curentHash.length), 10);
-                    self.$('#ace-view-list').val(viewId).change();
+                var indexOfView = curentHash.match(/.*\?view=(.*)/);
+                var viewId = false;
+                var views = res[self.editor_type]
+                if (indexOfView && indexOfView[1]) {
+                    viewId = indexOfView[1];
+                    var type = _.last(viewId.split('.'));
+                    if(type == 'css' || type == 'less'){
+                        self.editor_type = type;
+                        self.toggle_list();
+                        views = res[self.editor_type];
+                    }else{
+                        viewId = parseInt(viewId, 10);
+                    }
+                    self.$('#ace-view-list-html').val(viewId).change();
                 } else {
                     if (views.length >= 2) {
-                        var mainTemplate = views[1];
-                        self.$('#ace-view-list').val(mainTemplate.id).trigger('change');
+                        viewId = views[1].id;
                     }
-                    window.location.hash = hash;
                 }
+                self.res = res;
+                self.loadViews(views);
+                self.open();
+                self.$(self.active_list).val(viewId).trigger('change');
+                self.updateHash();
+                //Hide options from editor if server returns empty list
+                _.each(res, function(list, type){
+                    if(list.length == 0){
+                        self.$el.find('.type_switcher[data-edit-type="'+type+'"]').hide();
+                    }
+                });
             });
     },
     loadViews: function (views) {
-        var $viewList = this.$('#ace-view-list').empty();
-        _(this.buildViewGraph(views)).each(function (view) {
-            if (!view.id) { return; }
-
-            this.views[view.id] = view;
-            new ViewOption(this, view).appendTo($viewList);
-            this.loadView(view.id);
-        }.bind(this));
+        var self = this;
+        if(this.editor_type == 'html'){
+            var $viewList = this.$('#ace-view-list-html').empty();
+            _(this.buildViewGraph(views)).each(function (view) {
+                if (!view.id) { return; }
+                this.views[view.id] = view;
+                $viewList.append(_.str.sprintf('<option value="%s">%s%s</option>', view.id, _.str.repeat("- ", view.level), view.name));
+                this.loadView(view.id);
+            }.bind(this));
+        }
+        else{
+            var $viewList = this.$(self.active_list).empty();
+            _(views).each(function(url){
+                var path = url.split("/");
+                $viewList.append(_.str.sprintf('<option value="%s">%s</option>',url,path[path.length -1]));
+                self.loadFiles(url,path[path.length -1])
+            });
+        }
     },
     buildViewGraph: function (views) {
         var activeViews = _.uniq(_.filter(views, function (view) {
@@ -221,14 +251,14 @@ var ViewEditor = Widget.extend({
             method: 'read',
             args: [[viewId], ['arch'], _.extend(base.get_context(), {'lang': null})],
         }).then(function(result) {
-            var editingSession = self.buffers[viewId] = new ace.EditSession(result[0].arch);
+            var editingSession = self.buffers[self.editor_type][viewId] = new ace.EditSession(result[0].arch);
             editingSession.setMode("ace/mode/xml");
             editingSession.setUndoManager(new ace.UndoManager());
             editingSession.on("change", function () {
                 setTimeout(function () {
-                    var $option = self.$('#ace-view-list').find('[value='+viewId+']');
+                    var $option = self.$(self.active_list).find('[value='+viewId+']');
                     var bufferName = $option.text();
-                    var dirtyMarker = " (unsaved changes)";
+                    var dirtyMarker = _t(" (unsaved changes)");
                     var isDirty = editingSession.getUndoManager().hasUndo();
                     if (isDirty && bufferName.indexOf(dirtyMarker) < 0) {
                         $option.text(bufferName + dirtyMarker);
@@ -238,50 +268,102 @@ var ViewEditor = Widget.extend({
                 }, 1);
             });
             if (viewId === self.selectedViewId()) {
-                self.displayView.call(self, viewId);
+                self.displayView(viewId);
             }
         });
     },
+    loadFiles:function(url, name){
+            var self = this;
+            $.get(url, function(Content){
+                var editingSession = self.buffers[self.editor_type][url] = new ace.EditSession(Content);
+                editingSession.setMode("ace/mode/"+self.editor_type);
+                editingSession.setUndoManager(new ace.UndoManager());
+                editingSession.on("change", function () {
+                    setTimeout(function () {
+                        var $option = self.$(self.active_list).find('[value="'+url+'"]');
+                        var bufferName = $option.text();
+                        var dirtyMarker = _t(" (unsaved changes)");
+                        var isDirty = editingSession.getUndoManager().hasUndo();
+                        if (isDirty && bufferName.indexOf(dirtyMarker) < 0) {
+                            $option.text(bufferName + dirtyMarker);
+                        } else if (!isDirty && bufferName.indexOf(dirtyMarker) > 0) {
+                            $option.text(bufferName.substring(0, bufferName.indexOf(dirtyMarker)));
+                        }
+                    }, 1);
+                });
+                if (url === self.selectedViewId()) {
+                    self.displayView(url);
+                }
+            });
+        },
     selectedViewId: function () {
-        return parseInt(this.$('#ace-view-list').val(), 10);
+         var self = this;
+        if(this.editor_type == 'html')
+            return parseInt(this.$('#ace-view-list-html').val(), 10);
+        return this.$(self.active_list).val();
     },
-    displayView: function (id) {
-        var viewId = parseInt(id, 10);
-        var editingSession = this.buffers[viewId];
+    displayView: function (viewId) {
+        var editingSession = this.buffers[this.editor_type][viewId];
         if (editingSession) {
             this.aceEditor.setSession(editingSession);
-            this.$('#ace-view-id').text(_.str.sprintf(
-                _t("Template ID: %s"),
-                this.views[viewId].xml_id));
+            if(this.editor_type == 'html'){
+                this.$('#ace-view-id').text(_.str.sprintf(
+                    _t("Template ID: %s"),
+                    this.views[viewId].key));
+            }else{
+                this.$('#ace-view-id').text(_.str.sprintf(
+                    _t("%s URL: %s"),
+                    this.editor_type.toUpperCase(),viewId));
+            }
         }
     },
     displaySelectedView: function () {
         this.displayView(this.selectedViewId());
         this.updateHash();
+        this.check_customized();
     },
     formatXml: function () {
-        var xml = new XmlDocument(this.aceEditor.getValue());
-        this.aceEditor.setValue(xml.format());
+        if(this.editor_type == 'html'){
+            var xml = new website.ace.XmlDocument(this.aceEditor.getValue());
+            this.aceEditor.setValue(xml.format());
+        }else{
+            this.aceEditor.setValue(vkbeautify.css(this.aceEditor.getValue()));
+        }
     },
-    saveViews: function () {
-        var self = this;
-        var toSave = _.filter(_.map(self.buffers, function (editingSession, viewId) {
+    prepareSaveList:function(type){
+        var self =this;
+        return _.filter(_.map(self.buffers[type], function (editingSession, viewId) {
+            if (type == 'html'){
+                viewId = parseInt(viewId, 10);
+            }
             return {
-                id: parseInt(viewId, 10),
+                id: viewId,
                 isDirty: editingSession.getUndoManager().hasUndo(),
                 text: editingSession.getValue(),
+                doc_type:type
             };
         }), function (session) {
             return session.isDirty;
         });
+    },
+    saveViews: function () {
+        var self = this;
+        var toSave = [];
+        _.each(self.buffers, function(num, key){ 
+            toSave = toSave.concat(self.prepareSaveList(key));
+        })
         this.clearError();
         var requests = _.map(toSave, function (session) {
-            return self.saveView(session);
+            if(session.doc_type === 'html'){
+                return self.saveView(session);
+            }else{
+                return self.saveAssets(session);
+            }
         });
         $.when.apply($, requests).then(function () {
-            self.reloadPage.call(self);
+            self.reloadPage();
         }).fail(function (source, session, error) {
-            self.displayError.call(self, source, session, error);
+            self.displayError(source, session, error);
         });
     },
     saveView: function (session) {
@@ -303,11 +385,26 @@ var ViewEditor = Widget.extend({
         }
         return def;
     },
+    saveAssets: function (session) {
+        var self = this;
+        var def = $.Deferred();
+        ajax.jsonRpc('/website/save_asset', 'call', {
+            'css': session,
+        }).then(function (views) {
+            def.resolve();
+        }).fail(function (source, error) {
+            def.reject("server", session, error);
+        });
+        return def;
+    },
     updateHash: function () {
         window.location.hash = hash + "?view=" + this.selectedViewId();
     },
     reloadPage: function () {
-        this.updateHash();
+        if(this.editor_type == 'html')
+            this.updateHash();
+        else if(! _.str.startsWith(this.selectedViewId(), '/custom/'))
+            window.location.hash = hash + "?view=/custom" + this.selectedViewId();
         window.location.reload();
     },
     clearError: function () {
@@ -351,12 +448,12 @@ var ViewEditor = Widget.extend({
             gotoline();
         }
 
-        var $list = this.$("#ace-view-list");
+        var $list = this.$("#ace-view-list-html");
         if (+$list.val() == session.id) {
             if (line>-1) gotoline();
         } else {
             if (line) self.aceEditor.on('changeSession', onchangeSession);
-            this.$("#ace-view-list").val(session.id).change();
+            this.$("#ace-view-list-html").val(session.id).change();
         }
 
         var $dialog = $(qweb.render('website.error_dialog', {
@@ -366,12 +463,55 @@ var ViewEditor = Widget.extend({
         $dialog.appendTo("body");
         $dialog.modal('show');
     },
+    change_type:function(e){
+        e.preventDefault();
+        var self = this;
+        this.editor_type = $(e.currentTarget).attr('data-edit-type');
+        this.toggle_list();
+        if(_.isEmpty(this.buffers[this.editor_type])){
+            this.loadViews(this.res[this.editor_type]);
+        }else{
+            this.$(self.active_list).change();
+        }
+        this.updateHash();
+        this.check_customized();
+    },
+    toggle_list:function(){
+        var self = this;
+        self.active_list = '#ace-view-list-'+self.editor_type;
+        self.$el.find('.oe_view_list').addClass('hidden');
+        $(self.active_list).removeClass('hidden');
+        self.$el.find('.type_switcher_base').html($("[data-edit-type='"+self.editor_type+"']").html());
+    },
     open: function () {
         this.$el.removeClass('oe_ace_closed').addClass('oe_ace_open');
     },
     close: function () {
         window.location.hash = "";
         this.$el.removeClass('oe_ace_open').addClass('oe_ace_closed');
+    },
+    check_customized:function(){
+        var view = this.selectedViewId();
+        var is_custom = this.editor_type != 'html' && view && view.lastIndexOf('/custom/', 0) === 0;
+        $('.custom_ace_view').toggleClass('hidden', !is_custom);
+    },
+    reset: function () {
+        var self = this;
+        var $dialog = $(qweb.render('website.ace_editor.discard')).appendTo(document.body);
+            $dialog.on('click', '.btn-danger', function () {
+                ajax.jsonRpc('/website/remove_asset', 'call', {
+                    'file_path': self.selectedViewId(),
+                }).then(function (res) {
+                    $dialog.remove();
+                    self.reloadPage();
+                    self.updateHash();
+                    var selected_url = self.selectedViewId();
+                     window.location.hash = hash + "?view=" + selected_url.substring(7, selected_url.length);
+                });
+            }).on('hidden.bs.modal', function () {
+                $dialog.remove();
+            });
+            $dialog.modal('show');
     },
 });
 

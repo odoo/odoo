@@ -3,21 +3,60 @@
     <t t-name="website.ace_view_editor">
         <div class="oe_ace_view_editor oe_ace_closed">
             <div class="form-inline oe_ace_view_editor_title">
-                <select id="ace-view-list" class="form-control oe_view_list">
+                <div class="btn-group ace_editor_switcher">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                         <span class="type_switcher_base"><i class="fa fa-html5"/> HTML </span> <span class="caret"></span>
+                    </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" class="type_switcher" data-edit-type="html"><i class="fa fa-html5"/> HTML</a></li>
+                        <li><a href="#" class="type_switcher" data-edit-type="css"><i class="fa fa-css3"/> Css</a></li>
+                        <li><a href="#" class="type_switcher" data-edit-type="less"><strong>{</strong> less <strong>}</strong></a> </li>
+                      </ul>
+                </div>
+                <select id="ace-view-list-html" class="form-control oe_view_list">
                     <!-- filled in JS -->
                 </select>
-                <label class="oe_include_bundles">
-                    <input type="checkbox" class="js_include_bundles"/> Include Asset Bundles
-                </label>
+                <select id="ace-view-list-css" class="form-control oe_view_list hidden">
+                    <!-- filled in JS -->
+                </select>
+                <select id="ace-view-list-less" class="form-control oe_view_list hidden">
+                    <!-- filled in JS -->
+                </select>
                 <button data-action="save" type="submit" class="btn btn-success">Save</button>
                 <button data-action="format" type="button" class="btn btn-warning">Format</button>
                 <button data-action="close" type="button" class="btn btn-info">Close</button>
+                <span class="pull-right custom_ace_view hidden" style="margin-right: 20px;">
+                    <span class="badge" style="background:#3d3d3d"> <i class="fa fa-info-circle"></i> modified</span>
+                    <button data-action="reset" type="button" class="btn btn-danger" > <i class="fa fa-undo" style="margin:0px 5px;"></i> </button>
+                </span>
             </div>
             <div id="ace-view-id"/>
             <div id="ace-view-editor"/>
         </div>
     </t>
-    <t t-name="website.ace_view_option">
-        <option t-att-value="widget.view_id"><t t-esc="widget.view_name"/></option>
+
+    <t t-name="website.ace_editor.discard">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Reset file</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            If you reset this file, <em>all</em>
+                            of your changes will be lost and it will reverted to default file.
+                        </p>
+                        <p>You can cancel to return.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger">Reset</button>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </t>
 </templates>

@@ -6,6 +6,7 @@
 <xpath expr="//body/div['id=wrawrap']" position="before">
 <t t-if="website and menu_data">
     <nav id="oe_main_menu_navbar" class="navbar navbar-inverse hidden-xs" role="navigation">
+        <h4 class="reset_less_style" style="display:none;padding: 10px;background-color: #ccc;border: 2px solid;"><b><i class="fa fa-frown-o"></i> Messed up !!! Reset/Edit your less customization - </b> <a href="/reset_style#advanced-view-editor">Open editor with basic css</a></h4>
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe_applications">
                 <span class="icon-bar"></span>
@@ -92,7 +93,7 @@
                     Customize <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <li id="html_editor"><a href="#advanced-view-editor" data-action='ace'>HTML Editor</a></li>
+                    <li id="html_editor"><a href="#advanced-view-editor" data-action='ace'>Assets Editor</a></li>
                     <li id="theme_customize"><a href="#">Customize Theme</a></li>
                     <li id="install_apps"><a href="/web#return_label=Website&amp;action=website.action_module_website">Install Apps</a></li>
                     <li class="divider"></li>
