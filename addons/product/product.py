@@ -733,13 +733,6 @@ class product_template(osv.osv):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if 'uom_id' in vals:
-            new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_id'], context=context)
-            for product in self.browse(cr, uid, ids, context=context):
-                old_uom = product.uom_id
-                if old_uom != new_uom:
-                    if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', [x.id for x in product.product_variant_ids]), ('state', '!=', 'cancel')], context=context):
-                        raise UserError(_('Unit of Measure can not be changed anymore!') + " " + _("As there are existing stock moves of this product, you can not change the Unit of Measurement anymore. "))
         if 'standard_price' in vals:
             for prod_template_id in ids:
                 self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
