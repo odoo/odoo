@@ -452,8 +452,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return "";
         };
 
+        self._onchange_fields = [];
         self._onchange_specs = {};
         _.each(this.fields, function(field, name) {
+            self._onchange_fields.push(name);
             self._onchange_specs[name] = find(name, field.node);
             _.each(field.field.views, function(view) {
                 _.each(view.fields, function(_, subname) {
@@ -490,7 +492,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var change_spec = widget ? onchange_specs[widget.name] : null;
             if (!widget || (!_.isEmpty(change_spec) && change_spec !== "0")) {
                 var ids = [],
-                    trigger_field_name = widget ? widget.name : false,
+                    trigger_field_name = widget ? widget.name : self._onchange_fields,
                     values = self._get_onchange_values(),
                     context = new instance.web.CompoundContext(self.dataset.get_context());
 
@@ -1160,7 +1162,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     build_eval_context: function() {
         var a_dataset = this.dataset;
-        return new instance.web.CompoundContext(this._build_view_fields_values(), a_dataset.get_context());
+        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values());
     },
 });
 

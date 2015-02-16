@@ -356,7 +356,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         //Sort
         var default_order = this.fields_view.arch.attrs.default_order,
             unsorted = !this.dataset._sort.length;
-        if (unsorted && default_order) {
+        if (unsorted && default_order && !this.grouped) {
             this.dataset.set_sort(default_order.split(','));
         }
 

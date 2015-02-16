@@ -616,7 +616,8 @@
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="currency_id" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="bank_account_id" groups="base.group_no_one"/>
+                                    <field name="bank_account_id" groups="base.group_no_one" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"
+                                        domain="['|', ('partner_id', '=', partner_id), ('partner_id', '=', False)]"/>
                                 </tree>
                             </field>
                         </page>
