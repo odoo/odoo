@@ -1457,7 +1457,7 @@ instance.web.search.FilterMenu = instance.web.Widget.extend({
     },
     toggle_custom_filter_menu: function (is_open) {
         this.$add_filter
-            .toggleClass('closed-menu', !is_open)
+            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('open-menu', is_open);
         this.$add_filter_menu.toggle(is_open);
         if (this.$add_filter.hasClass('closed-menu') && (!this.propositions.length)) {
@@ -1557,7 +1557,7 @@ instance.web.search.GroupByMenu = instance.web.Widget.extend({
     },
     toggle_add_menu: function (is_open) {
         this.$add_group
-            .toggleClass('closed-menu', !is_open)
+            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('open-menu', is_open);
         this.$add_group_menu.toggle(is_open);
         if (this.$add_group.hasClass('open-menu')) {
@@ -1629,7 +1629,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
     },
     toggle_save_menu: function (is_open) {
         this.$save_search
-            .toggleClass('closed-menu', !is_open)
+            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('open-menu', is_open);
         this.$save_name.toggle(is_open);
         if (this.$save_search.hasClass('open-menu')) {
