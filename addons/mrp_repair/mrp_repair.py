@@ -69,12 +69,12 @@ class mrp_repair(osv.osv):
             cur = repair.pricelist_id.currency_id
             for line in repair.operations:
                 #manage prices with tax included use compute_all instead of compute
-                if line.to_invoice:
+                if line.to_invoice and line.tax_id:
                     tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, cur, line.product_uom_qty, line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             for line in repair.fees_lines:
-                if line.to_invoice:
+                if line.to_invoice and line.tax_id:
                     tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, cur, line.product_uom_qty, line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
