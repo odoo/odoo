@@ -21,7 +21,7 @@
                 wait:      250
             },
             {
-                snippet:   '#snippet_structure .oe_snippet.o_block_text_image',
+                snippet:   '#snippet_structure .oe_snippet:has(.s_text_image)',
                 title:     "Drag & Drop a Text-Image Block",
             },
             {
