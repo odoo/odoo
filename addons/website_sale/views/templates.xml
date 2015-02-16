@@ -677,7 +677,7 @@
                               <td t-if="line.product_id.product_tmpl_id">
                                   <div>
                                       <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
-                                          <strong t-esc="line.product_id.display_name"/>
+                                          <strong t-esc="line.product_id.with_context(display_default_code=False).display_name"/>
                                       </a>
                                   </div>
                                   <div class="text-muted" t-esc="'\n'.join(line.name.splitlines()[1:])"/>
@@ -1045,7 +1045,7 @@
                               </a>
                           </td>
                           <td t-if="line.product_id.product_tmpl_id">
-                             <strong t-field="line.product_id.name"/>
+                             <strong t-field="line.product_id.with_context(display_default_code=False).display_name"/>
                           </td>
                           <td class="text-center">
                              <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
