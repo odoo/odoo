@@ -1211,7 +1211,7 @@ class account_tax_template(models.Model):
                 'amount_type': tax.amount_type,
                 'active': tax.active,
                 'company_id': company.id,
-                'children_tax_ids': children and [(6, 0, children_ids)] or [],
+                'children_tax_ids': children_ids and [(6, 0, children_ids)] or [],
                 'sequence': tax.sequence,
                 'amount': tax.amount,
                 'description': tax.description,
