@@ -1694,6 +1694,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTagName) {
         var $editable = layoutInfo.editable();
         $editable.data('NoteHistory').recordUndo($editable);
+        event.preventDefault();
 
         var r = range.create();
         if (!r) {
