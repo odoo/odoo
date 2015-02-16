@@ -582,7 +582,7 @@ class FieldConverter(osv.AbstractModel):
             ('data-oe-type', field_type),
             ('data-oe-expression', t_att['field']),
         ]
-        if record._all_columns[field_name].column.readonly:
+        if record._fields[field_name].readonly:
             data.append(('data-oe-readonly', 1))
         return data
 
