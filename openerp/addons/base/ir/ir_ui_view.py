@@ -108,6 +108,7 @@ def _hasclass(context, *cls):
     return node_classes.issuperset(cls)
 
 def get_view_arch_from_file(filename, xmlid):
+
     doc = etree.parse(filename)
     node = None
     for n in doc.xpath('//*[@id="%s"] | //*[@id="%s"]' % (xmlid, xmlid.split('.')[1])):
@@ -175,7 +176,7 @@ class view(osv.osv):
                         # (it will be missing e.g. when importing data-only modules using base_import_module)
                         path_info = get_resource_from_path(imd['xml_file'])
                         if path_info:
-                            data['arch_fs'] = '/'.join(path_info)[0:2]
+                            data['arch_fs'] = '/'.join(path_info[0:2])
                 self.write(cr, uid, ids, data, context=context)
 
         return True
