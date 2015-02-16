@@ -1,53 +1,41 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api
-from openerp.osv import fields, osv
+from openerp import api, fields, models
 
-
-class sale_order(osv.osv):
+class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def action_button_confirm(self, cr, uid, ids, context=None):
-        # TDE note: This method works on a list of one id (see sale/sale.py) so working on ids[0] seems safe.
-        res = super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
-        redirect_to_event_registration = any(line.event_id for order in self.browse(cr, uid, ids, context=context) for line in order.order_line)
-        if redirect_to_event_registration:
-            event_ctx = dict(context, default_sale_order_id=ids[0])
-            return self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'event_sale', 'action_sale_order_event_registration', event_ctx)
-        else:
-            return res
+    @api.multi
+    def action_button_confirm(self):
+        self.ensure_one()
+        res = super(SaleOrder, self).action_button_confirm()
+        if self.mapped('order_line.event_id'):
+            return self.env['ir.actions.act_window'].with_context(default_sale_order_id=self.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
 
 
-class sale_order_line(osv.osv):
+class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
-    _columns = {
-        'event_id': fields.many2one(
-            'event.event', 'Event',
-            help="Choose an event and it will automatically create a registration for this event."),
-        'event_ticket_id': fields.many2one(
-            'event.event.ticket', 'Event Ticket',
-            help="Choose an event ticket and it will automatically create a registration for this event ticket."),
-        # those 2 fields are used for dynamic domains and filled by onchange
-        # TDE: really necessary ? ...
-        'event_type_id': fields.related('product_id', 'event_type_id', type='many2one', relation="event.type", string="Event Type"),
-        'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean'),
-    }
 
-    def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
-        res = super(sale_order_line, self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)
-        if line.event_id:
-            event = self.pool['event.event'].read(cr, uid, line.event_id.id, ['name'], context=context)
-            res['name'] = '%s: %s' % (res.get('name', ''), event['name'])
-        return res
+    event_id = fields.Many2one(
+        'event.event', string='Event',
+        help="Choose an event and it will automatically create a registration for this event.")
+    event_ticket_id = fields.Many2one(
+        'event.event.ticket', string='Event Ticket',
+        help="Choose an event ticket and it will automatically create a registration for this event ticket.")
+    # those 2 fields are used for dynamic domains and filled by onchange
+    # TDE: really necessary ? ...
+    event_type_id = fields.Many2one(related='product_id.event_type_id', string="Event Type")
+    event_ok = fields.Boolean(related='product_id.event_ok')
 
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
+    @api.multi
+    def product_id_change(self, pricelist, product, qty=0, uom=False,
                           qty_uos=0, uos=False, name='', partner_id=False, lang=False,
                           update_tax=True, date_order=False, packaging=False,
-                          fiscal_position=False, flag=False, context=None):
+                          fiscal_position=False, flag=False):
         """ check product if event type """
-        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id, lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+        res = super(SaleOrderLine, self).product_id_change(pricelist, product, qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id, lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag)
         if product:
-            product_res = self.pool.get('product.product').browse(cr, uid, product, context=context)
+            product_res = self.env['product.product'].browse(product)
             if product_res.event_ok:
                 res['value'].update(event_type_id=product_res.event_type_id.id,
                                     event_ok=product_res.event_ok)
@@ -55,6 +43,10 @@ class sale_order_line(osv.osv):
                 res['value'].update(event_type_id=False,
                                     event_ok=False)
         return res
+
+    @api.onchange('event_ticket_id')
+    def onchange_event_ticket_id(self):
+        self.price_unit = self.event_ticket_id.price
 
     @api.multi
     def _update_registrations(self, confirm=True, registration_data=None):
@@ -64,7 +56,7 @@ class sale_order_line(osv.osv):
         and create new one for missing one. """
         Registration = self.env['event.registration']
         registrations = Registration.search([('sale_order_line_id', 'in', self.ids)])
-        for so_line in [l for l in self if l.event_id]:
+        for so_line in self.filtered('event_id'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
                 existing_registrations.filtered(lambda self: self.state != 'open').confirm_registration()
@@ -77,20 +69,24 @@ class sale_order_line(osv.osv):
                     registration = registration_data.pop()
                 # TDE CHECK: auto confirmation
                 registration['sale_order_line_id'] = so_line
-                self.env['event.registration'].with_context(registration_force_draft=True).create(
+                Registration.with_context(registration_force_draft=True).create(
                     Registration._prepare_attendee_values(registration))
         return True
 
-    def button_confirm(self, cr, uid, ids, context=None):
+    @api.multi
+    def button_confirm(self):
         """ Override confirmation of the sale order line in order to create
         or update the possible event registrations linked to the sale. """
         '''
         create registration with sales order
         '''
-        res = super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
-        self._update_registrations(cr, uid, ids, confirm=True, context=context)
+        res = super(SaleOrderLine, self).button_confirm()
+        self._update_registrations(confirm=True)
         return res
 
-    def onchange_event_ticket_id(self, cr, uid, ids, event_ticket_id=False, context=None):
-        price = event_ticket_id and self.pool["event.event.ticket"].browse(cr, uid, event_ticket_id, context=context).price or False
-        return {'value': {'price_unit': price}}
+    @api.model
+    def _prepare_order_line_invoice_line(self, line, account_id=False):
+        res = super(SaleOrderLine, self)._prepare_order_line_invoice_line(line, account_id=account_id)
+        if line.event_id:
+            res['name'] = '%s: %s' % (res.get('name', ''), line.event_id.name)
+        return res
