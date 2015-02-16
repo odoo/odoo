@@ -20,8 +20,6 @@ class product_category(models.Model):
 #----------------------------------------------------------
 # Products
 #----------------------------------------------------------
-
-
 class product_template(models.Model):
     _inherit = "product.template"
 
@@ -46,7 +44,11 @@ class product_template(models.Model):
                 raise UserError(_('You can not change the unit of measure of a product that has been already used in an account journal item. If you need to change the unit of measure, you may deactivate this product.'))
         return super(product_template, self).write(vals)
 
-    @api.v8
+
+class product_product(models.Model):
+    _inherit = "product.product"
+
+    @api.multi
     def _get_product_accounts(self):
         return {
             'income': self.property_account_income or self.categ_id.property_account_income_categ,
