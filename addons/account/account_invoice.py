@@ -1235,7 +1235,7 @@ class account_invoice_line(models.Model):
 
     @api.v8
     def get_invoice_line_account(self, type, product, fpos, company):
-        accounts = product.get_product_accounts(fpos)
+        accounts = product.product_tmpl_id.get_product_accounts(fpos)
         if type in ('out_invoice', 'out_refund'):
             return accounts['income']
         return accounts['expense']
