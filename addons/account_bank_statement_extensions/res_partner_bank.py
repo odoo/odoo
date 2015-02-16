@@ -20,17 +20,17 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
+from openerp import models, api
 
-class res_partner_bank(osv.osv):
+
+class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
-        if not args:
-            args = []
-        ids = []
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
         if name:
-            ids = self.search(cr, user, [('acc_number', operator, name)] + args, limit=limit)
-        else:
-            ids = self.search(cr, user, args, context=context, limit=limit)
-        return self.name_get(cr, user, ids, context=context)
+            domain = [('acc_number', operator, name)]
+        partner_bank = self.search(domain+args, limit=limit)
+        return partner_bank.name_get()

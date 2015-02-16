@@ -36,14 +36,13 @@ This module adds:
     - traceability of changes to bank statement lines
     - bank statement line views
     - bank statements balances report
-    - performance improvements for digital import of bank statement (via 
+    - performance improvements for digital import of bank statement (via
       'ebanking_import' context flag)
-    - name_search on res.partner.bank enhanced to allow search on bank 
+    - name_search on res.partner.bank enhanced to allow search on bank
       and iban account numbers
     ''',
     'depends': ['account'],
-    'demo': [],
-    'data' : [
+    'data': [
         'security/ir.model.access.csv',
         'account_bank_statement_view.xml',
         'account_bank_statement_report.xml',
@@ -52,6 +51,5 @@ This module adds:
         'data/account_bank_statement_extensions_data.xml',
         'views/report_bankstatementbalance.xml',
     ],
-    'auto_install': False,
     'installable': True,
 }

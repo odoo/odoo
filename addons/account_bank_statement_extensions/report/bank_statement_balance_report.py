@@ -21,14 +21,14 @@
 ##############################################################################
 
 import time
-from openerp.osv import osv
+from openerp import models
 from openerp.report import report_sxw
 
 
 class bank_statement_balance_report(report_sxw.rml_parse):
 
     def set_context(self, objects, data, ids, report_type=None):
-        cr = self.cr
+        cr = self.env.cr
 
         cr.execute('SELECT s.name as s_name, s.date AS s_date, j.code as j_code, s.balance_end_real as s_balance ' \
                         'FROM account_bank_statement s ' \
@@ -45,17 +45,14 @@ class bank_statement_balance_report(report_sxw.rml_parse):
         })
         super(bank_statement_balance_report, self).set_context(objects, data, ids, report_type=report_type)
 
-    def __init__(self, cr, uid, name, context):
-        if context is None:
-            context = {}
-        super(bank_statement_balance_report, self).__init__(cr, uid, name, context=context)
+    def __init__(self, name):
+        super(bank_statement_balance_report, self).__init__(name)
         self.localcontext.update( {
             'time': time,
         })
-        self.context = context
 
 
-class report_bankstatementbalance(osv.AbstractModel):
+class report_bankstatementbalance(models.AbstractModel):
     _name = 'report.account_bank_statement_extensions.report_bankstatementbalance'
     _inherit = 'report.abstract_report'
     _template = 'account_bank_statement_extensions.report_bankstatementbalance'

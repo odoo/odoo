@@ -20,116 +20,83 @@
 #
 ##############################################################################
 
-import time
-from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
+from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 
-class account_bank_statement(osv.osv):
+
+class account_bank_statement(models.Model):
     _inherit = 'account.bank.statement'
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
+    @api.multi
+    def write(self, vals):
         # bypass obsolete statement line resequencing
-        if vals.get('line_ids', False) or context.get('ebanking_import', False):
-            res = super(osv.osv, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('line_ids') or self._context.get('ebanking_import'):
+            res = super(models.Model, self).write(vals)
         else:
-            res = super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
+            res = super(account_bank_statement, self).write(vals)
         return res
 
-    def button_confirm_bank(self, cr, uid, ids, context=None):
-        bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-        super(account_bank_statement, self).button_confirm_bank(cr, uid, ids, context=context)
-        for st in self.browse(cr, uid, ids, context=context):
-            if st.line_ids:
-                line_ids = [l.id for l in st.line_ids]
-                cr.execute("UPDATE account_bank_statement_line  \
-                    SET state='confirm' WHERE id in %s ",
-                    (tuple(line_ids),))
-                bank_statement_line_obj.invalidate_cache(cr, uid, ['state'], line_ids, context=context)
-        return True
+    @api.multi
+    def button_confirm_bank(self):
+        super(account_bank_statement, self).button_confirm_bank()
+        for st in self:
+            st.line_ids.write({'state': 'confirm'})
 
-    def button_cancel(self, cr, uid, ids, context=None):
-        bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-        super(account_bank_statement, self).button_cancel(cr, uid, ids, context=context)
-        for st in self.browse(cr, uid, ids, context=context):
-            if st.line_ids:
-                line_ids = [l.id for l in st.line_ids]
-                cr.execute("UPDATE account_bank_statement_line  \
-                    SET state='draft' WHERE id in %s ",
-                    (tuple(line_ids),))
-                bank_statement_line_obj.invalidate_cache(cr, uid, ['state'], line_ids, context=context)
-        return True
+    @api.multi
+    def button_cancel(self):
+        super(account_bank_statement, self).button_cancel()
+        for st in self:
+            st.line_ids.write({'state': 'draft'})
 
 
-class account_bank_statement_line_global(osv.osv):
+class AccountBankStatementLineGlobal(models.Model):
     _name = 'account.bank.statement.line.global'
     _description = 'Batch Payment Info'
-
-    _columns = {
-        'name': fields.char('OBI', required=True, help="Originator to Beneficiary Information"),
-        'code': fields.char('Code', size=64, required=True),
-        'parent_id': fields.many2one('account.bank.statement.line.global', 'Parent Code', ondelete='cascade'),
-        'child_ids': fields.one2many('account.bank.statement.line.global', 'parent_id', 'Child Codes', copy=True),
-        'type': fields.selection([
-            ('iso20022', 'ISO 20022'),
-            ('coda', 'CODA'),
-            ('manual', 'Manual'),
-            ], 'Type', required=True),
-        'amount': fields.float('Amount', digits=0),
-        'bank_statement_line_ids': fields.one2many('account.bank.statement.line', 'globalisation_id', 'Bank Statement Lines'),
-    }
     _rec_name = 'code'
-    _defaults = {
-        'code': lambda s,c,u,ctx={}: s.pool.get('ir.sequence').next_by_code(c, u, 'account.bank.statement.line.global'),
-        'name': '/',
-    }
+
+    name = fields.Char(string='OBI', required=True, default='/', help="Originator to Beneficiary Information")
+    code = fields.Char(size=64, required=True, default=lambda self: self.env['ir.sequence'].next_by_code('account.bank.statement.line.global'))
+    parent_id = fields.Many2one('account.bank.statement.line.global', string='Parent Code', ondelete='cascade')
+    child_ids = fields.One2many('account.bank.statement.line.global', 'parent_id', string='Child Codes', copy=True)
+    type = fields.Selection([('iso20022', 'ISO 20022'), ('coda', 'CODA'), ('manual', 'Manual')], required=True)
+    amount = fields.Float(digits=0)
+    bank_statement_line_ids = fields.One2many('account.bank.statement.line', 'globalisation_id', string='Bank Statement Lines')
+
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code must be unique !'),
     ]
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
-        if not args:
-            args = []
-        ids = []
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        statment_global_lines = []
         if name:
-            ids = self.search(cr, user, [('code', 'ilike', name)] + args, limit=limit)
-            if not ids:
-                ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit)
-            if not ids and len(name.split()) >= 2:
+            statment_global_lines = self.search([('code', 'ilike', name)] + args, limit=limit)
+            if not statment_global_lines:
+                statment_global_lines = self.search([('name', operator, name)] + args, limit=limit)
+            if not statment_global_lines and len(name.split()) >= 2:
                 #Separating code and name for searching
-                operand1, operand2 = name.split(' ', 1) #name can contain spaces
-                ids = self.search(cr, user, [('code', 'like', operand1), ('name', operator, operand2)] + args, limit=limit)
+                operand1, operand2 = name.split(' ', 1)  # name can contain spaces
+                statment_global_lines = self.search([('code', 'like', operand1), ('name', operator, operand2)] + args, limit=limit)
         else:
-            ids = self.search(cr, user, args, context=context, limit=limit)
-        return self.name_get(cr, user, ids, context=context)
+            statment_global_lines = self.search(args, limit=limit)
+        return statment_global_lines.name_get()
 
 
-class account_bank_statement_line(osv.osv):
+class account_bank_statement_line(models.Model):
     _inherit = 'account.bank.statement.line'
-    _columns = {
-        'val_date': fields.date('Value Date', states={'confirm': [('readonly', True)]}),
-        'globalisation_id': fields.many2one('account.bank.statement.line.global', 'Globalisation ID',
-            states={'confirm': [('readonly', True)]},
-            help="Code to identify transactions belonging to the same globalisation level within a batch payment"),
-        'globalisation_amount': fields.related('globalisation_id', 'amount', type='float',
-            relation='account.bank.statement.line.global', string='Glob. Amount', readonly=True),
-        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')],
-            'Status', required=True, readonly=True, copy=False),
-        'counterparty_name': fields.char('Counterparty Name', size=35),
-        'counterparty_bic': fields.char('Counterparty BIC', size=11),
-        'counterparty_number': fields.char('Counterparty Number', size=34),
-        'counterparty_currency': fields.char('Counterparty Currency', size=3),
-    }
-    _defaults = {
-        'state': 'draft',
-    }
 
-    def unlink(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        if context.get('block_statement_line_delete', False):
+    val_date = fields.Date(string='Value Date', states={'confirm': [('readonly', True)]})
+    globalisation_id = fields.Many2one('account.bank.statement.line.global', string='Globalisation ID', states={'confirm': [('readonly', True)]}, help="Code to identify transactions belonging to the same globalisation level within a batch payment")
+    globalisation_amount = fields.Float(related='globalisation_id.amount', string='Glob. Amount', readonly=True)
+    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed')], string='Status', required=True, readonly=True, copy=False, default='draft')
+    counterparty_name = fields.Char(size=35)
+    counterparty_bic = fields.Char(size=11)
+    counterparty_number = fields.Char(size=34)
+    counterparty_currency = fields.Char(size=3)
+
+    @api.multi
+    def unlink(self):
+        if self._context.get('block_statement_line_delete'):
             raise UserError(_('Delete operation not allowed. Please go to the associated bank statement in order to delete and/or modify bank statement line.'))
-        return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
+        return super(account_bank_statement_line, self).unlink()

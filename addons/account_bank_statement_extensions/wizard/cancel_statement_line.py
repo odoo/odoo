@@ -20,14 +20,15 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
+from openerp import api, models
 
-class cancel_statement_line(osv.osv_memory):
+
+class CancelStatementLine(models.TransientModel):
     _name = 'cancel.statement.line'
     _description = 'Cancel selected statement lines'
 
-    def cancel_lines(self, cr, uid, ids, context):
-        line_ids = context['active_ids']
-        line_obj = self.pool.get('account.bank.statement.line')
-        line_obj.write(cr, uid, line_ids, {'state': 'draft'}, context=context)
-        return {}
+    @api.multi
+    def cancel_lines(self):
+        line_ids = self._context['active_ids']
+        lines = self.env['account.bank.statement.line'].browse(line_ids)
+        lines.write({'state': 'draft'})
