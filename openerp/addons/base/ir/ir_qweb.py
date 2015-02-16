@@ -1114,6 +1114,9 @@ class AssetsBundle(object):
 
     def parse(self):
         fragments = html.fragments_fromstring(self.html)
+        customized_urls = {}
+        attachments = self.registry['ir.attachment'].search_read(self.cr, openerp.SUPERUSER_ID, [('url','=like','/custom/%')], ['url','name'], context=self.context)
+        [customized_urls.update({a['name']:a['url']}) for a in attachments]
         for el in fragments:
             if isinstance(el, basestring):
                 self.remains.append(el)
@@ -1130,6 +1133,8 @@ class AssetsBundle(object):
                     else:
                         self.stylesheets.append(StylesheetAsset(self, inline=el.text, media=media))
                 elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.can_aggregate(href):
+                    if customized_urls.get(href):
+                        href = customized_urls.get(href)
                     if href.endswith('.sass') or atype == 'text/sass':
                         self.stylesheets.append(SassStylesheetAsset(self, url=href, media=media))
                     elif href.endswith('.less') or atype == 'text/less':
@@ -1263,6 +1268,9 @@ class AssetsBundle(object):
                 white-space: pre;
                 content: "%s";
             }
+            .reset_style{
+                display:block !important;
+            }
         """ % message
 
     def preprocess_css(self):
@@ -1274,7 +1282,7 @@ class AssetsBundle(object):
             assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
             if assets:
                 cmd = assets[0].get_command()
-                source = '\n'.join([asset.get_source() for asset in assets])
+                source = '\n'.join([asset.get_source().decode('utf-8') for asset in assets])
                 compiled = self.compile_css(cmd, source)
 
                 fragments = self.rx_css_split.split(compiled)
@@ -1418,6 +1426,8 @@ class WebAsset(object):
     def with_header(self, content=None):
         if content is None:
             content = self.content
+        if isinstance(content, str):
+            content = content.decode('utf-8')
         return '\n/* %s */\n%s' % (self.name, content)
 
 class JavascriptAsset(WebAsset):
