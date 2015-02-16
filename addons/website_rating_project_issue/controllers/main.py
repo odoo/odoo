@@ -16,7 +16,7 @@ class WebsiteRatingProject(http.Controller):
     @http.route(['''/project/rating/<model("project.project", "[('is_visible_happy_customer','=',1)]"):project>'''], type='http', auth="public", website=True)
     def page(self, project=None, **kw):
         # create domain for rating
-        domain = [('res_model', '=', 'project.task')]
+        domain = [('res_model', '=', 'project.issue')]
         ratings = request.env['rating.rating'].search(domain, order="id desc", limit=100)
 
         yesterday = (datetime.date.today()-datetime.timedelta(days=-1)).strftime('%Y-%m-%d 23:59:59')
