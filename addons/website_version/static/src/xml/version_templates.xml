@@ -56,11 +56,12 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">Launch A/B tests</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                <h4 class="modal-title">Launch A/B Tests</h4>
               </div>
                 <div class="modal-body">
                     <t t-if="versions.length != 0 and config == 1">  
-                        <form id="productForm" class="form-horizontal" role="form">              
+                        <form id="productForm" class="form-horizontal" role="form">
                             <div class="form-group form-group">
                                 <label class="col-sm-3 control-label">Experiment Name</label>
                                 <div class="col-sm-8">
@@ -110,7 +111,54 @@
                     </t>
 
                     <t t-if= "config == 0">
-                        <form id="productForm" class="form-horizontal" role="form">              
+                        <div class="o_configure_ab">
+                            <p>Odoo uses Google Analytics to track the performances of an A/B testing experiment comparing several versions.</p>
+                        </div>
+                        <form id="productForm" class="form-horizontal" role="form"> 
+                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                              <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingOne">
+                                  <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                      To get your GA Key and your View ID
+                                      <span class="fa fa-info-circle" />
+                                    </a>
+                                  </h4>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" style="overflow: hidden">
+                                    <div class="panel-body">
+                                        <ul>
+                                            <li> Go to <a href='https://www.google.com/analytics/' target='_blank'>https://www.google.com/analytics/</a>
+                                            and connect you.
+                                                <br/><br/><img src=
+                                                '/website_version/static/src/img/GA/GA_login.png'
+                                                class='analytics_img_tuto'/>
+                                            </li>
+                                            <li>
+                                                Click on <b>"Admin"</b>.
+                                                <br/><br/><img src='/website_version/static/src/img/GA/GA_admin.png' class='analytics_img_tuto'/>
+                                            </li>
+                                            <li>
+                                                Click on <b>"Tracking Code"</b>.
+                                                <br/><br/><img src='/website_version/static/src/img/GA/GA_tracking_code.png' class='analytics_img_tuto'/>   
+                                            </li>
+                                            <li>
+                                                Copy the <b>"Tracking ID"</b> and paste it in the field Google Analytics key.
+                                                <br/><br/><img src='/website_version/static/src/img/GA/GA_tracking_id.png' class='analytics_img_tuto'/>   
+                                            </li>
+                                            <li>
+                                                Click on <b>"Admin"</b> and click on <b>"View Settings"</b>.
+                                                <br/><br/><img src='/website_version/static/src/img/GA/GA_view_settings.png' class='analytics_img_tuto'/>  
+                                            </li>
+                                            <li>
+                                                Copy the <b>"View ID"</b> and paste it in the field View ID.
+                                                <br/><br/><img src='/website_version/static/src/img/GA/GA_view_id.png' class='analytics_img_tuto'/>  
+                                            </li>
+                                        </ul> 
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
                             <div class="form-group form-group">
                                 <label class="col-sm-3 control-label">GA Key</label>
                                 <div class="col-sm-8">
@@ -122,6 +170,59 @@
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control form-field-label o_view_id o_required_field"/>
                                 </div>
+                            </div>
+                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                              <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingOne">
+                                  <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                      To get your Client ID and your Client Secret, follow these steps
+                                      <span class="fa fa-info-circle" />
+                                    </a>
+                                  </h4>
+                                </div>
+                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" style="overflow: hidden">
+                                    <div class="panel-body">
+                                        <ul>
+                                            <li> Connect on your google account and go to <a href='https://console.developers.google.com' target='_blank'>https://console.developers.google.com</a> </li>
+                                            <li>
+                                                Click on <b>"Create Project"</b> and enter a project name.
+                                                <br/><br/><img src='/website_version/static/src/img/GC/GC_create_project.png' 
+                                                class='analytics_img_tuto'/>
+                                                <br/><br/><img src='/website_version/static/src/img/GC/GC_new_project.png' 
+                                                class='analytics_img_tuto'/> 
+                                            </li>
+                                            <li> In the menu on left side, select the sub menu APIs (from menu APIs and auth) and activate <b>"Analytics API"</b> by clicking on button "OFF".
+                                                <br/> When it's done, check that the button of <b>"Calendar API"</b> is well in green and with text "ON"
+                                                <br/><br/><img src='/website_version/static/src/img/GC/GC_API.png' 
+                                                class='analytics_img_tuto'/>
+                                                <br/><br/><img src='/website_version/static/src/img/GC/GC_off_api.png' 
+                                                class='analytics_img_tuto'/>
+                                                <br/><br/><img src='/website_version/static/src/img/GC/GC_on_api.png' 
+                                                class='analytics_img_tuto'/>
+                                            </li> 
+                                            <li>
+                                                In the menu on left side, select the sub menu <b>'Credentials'</b> (from menu APIs and auth) and click on button <b>'Create New Client ID'</b>
+                                                <br/><br/><img src='/website_version/static/src/img/GC/GC_credentials.png' 
+                                                class='analytics_img_tuto'/>
+                                                <br/><br/><img src='/website_version/static/src/img/GC/GC_create_new_client_id.png' 
+                                                class='analytics_img_tuto'/>
+                                            </li>
+                                            <li> Fill in the Name of application and check that the platform is well on <b>'Web Application'</b>.<br/>
+                                                <br/> You should now configure the allowed pages on which you will be redirected. To do it, you need to complete the field <b>"Redirect RI"</b>
+                                                and set as value  (your own domain followed by <i>"/google_account/authentication"</i>) :
+                                                <br/> You can now click on <b>'Create Client ID'</b>
+                                                <br/><br/><img src='/website_version/static/src/img/GC/GC_client_id.png' 
+                                                class='analytics_img_tuto'/>
+                                            </li> 
+                                            <li>Once done, you will have the both informations (<b>Client ID</b> and <b>Client Secret</b>) that you need to insert in the 2 fields below !
+                                                <br/><br/><img src='/website_version/static/src/img/GC/GC_copy.png' 
+                                                class='analytics_img_tuto'/>
+                                            </li>
+                                        </ul>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                             <div class="form-group form-group">
                                 <label class="col-sm-3 control-label">Client ID</label>
@@ -136,13 +237,12 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="o_configure_ab">
-                            <p>You must configure your account.</p>
-                            <p>To configure your account, you must have a google analytics account.</p>
-                        </div>
                     </t>
 
                     <t t-if= "config == 2">
+                        <div class="o_configure_ab">
+                            <p>Odoo uses Google Analytics to track the performances of an A/B testing experiment comparing several versions.</p>
+                        </div>
                         <form id="productForm" class="form-horizontal" role="form">              
                             <div class="form-group form-group">
                                 <label class="col-sm-3 control-label">GA Key</label>
@@ -157,10 +257,6 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="o_configure_ab">
-                            <p>You must configure your account.</p>
-                            <p>To configure your account, you must have a google analytics account.</p>
-                        </div>
                     </t>
 
                 </div>
@@ -199,6 +295,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                 <h4 class="modal-title"><t t-esc="message"></t></h4>
               </div>  
               <div class="modal-footer">
@@ -213,6 +310,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                 <h4 class="modal-title"><t t-esc="message"></t></h4>
               </div>  
                 <div class="modal-body">
@@ -231,7 +329,8 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">Diff between Master and <t t-esc="version_name"></t></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                <h4 class="modal-title">Version: <t t-esc="version_name"></t></h4>
               </div>  
                 <div class="modal-body">
                     <t t-if="list.length != 0"> 
@@ -240,6 +339,9 @@
                                 <li><a t-att-href="item.url"> <b><t t-esc="item.name"></t></b> </a></li>
                             </t>
                         </ul>
+                        <p>List of pages that have been modified in version <t t-esc="version_name"></t> 
+                            compared to master. If you publish this version, all pages will be updated at once.
+                        </p>
                     </t>
                     <t t-if="list.length == 0"> 
                         <p>There is no difference with Master</p>
@@ -247,7 +349,7 @@
                 </div>
 
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary o_confirm" data-dismiss="modal">Ok</button>
+                <button type="button" class="btn btn-primary o_confirm" data-dismiss="modal">Close</button>
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
@@ -258,10 +360,29 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                 <h4 class="modal-title"><t t-esc="message"></t></h4>
               </div>  
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary o_confirm" data-dismiss="modal">Delete Version</button>
+                or
+                <a href="#" class="btn btn-link btn-xs cancel" data-dismiss="modal">Cancel</a>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </t>
+
+    <t t-name="website_version.publish">
+        <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                <h4 class="modal-title"><t t-esc="message"></t></h4>
+              </div>  
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary o_confirm" data-dismiss="modal">Publish</button>
                 or
                 <a href="#" class="btn btn-link btn-xs cancel" data-dismiss="modal">Cancel</a>
               </div>
@@ -274,14 +395,15 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                 <h4 class="modal-title"><t t-esc="message"></t></h4>
               </div>
               <div class="modal-body">
-                <p>When you publish a version, you erase some views in master. If you want to save the views that will be erased, you can save these views in a new version. Here is the list of master views which will be erased:</p>
+                <p>By publishing this version, you will overwrite the following master pages:</p>
                 <t t-if="list.length != 0"> 
                     <ul>
                         <t t-foreach="list" t-as="item">      
-                            <li><t t-esc="item"></t> </li>            
+                            <li><t t-esc="item.name"></t> </li>            
                         </t>
                     </ul>
                 </t>
@@ -293,13 +415,13 @@
                     <div class="radio">
                         <label>
                             <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="checked"/>
-                            Don't save Master
+                            Publish version
                         </label>
                     </div>              
                     <div class="radio">
                         <label>
                           <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" class="o_check"/>
-                          Save Master
+                          Publish and copy the current version
                           <input type="text" class="form-control o_name o_required_field" style="display: none;"/>
                         </label>
                     </div>
@@ -312,5 +434,36 @@
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-    </t> 
+    </t>
+    <t t-name="website_version.new_version">
+        <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                <h4 class="modal-title">New Version</h4>
+              </div>
+              <div class="modal-body">
+                <p class="text-muted">
+                    A version allows to modify several pages, without publishing the changes directly.
+                    You can also launch A/B tests to analyse the performance of different versions.
+                </p>
+                <form id="productForm" class="form-horizontal" role="form">
+                    <div class="form-group form-group">
+                        <label class="col-sm-3 control-label">New Version</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control form-field-label o_version_name o_required_field" t-attf-value="{{default_name}}"/>
+                        </div>
+                    </div>             
+
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary o_create">Create</button>
+                <a href="#" class="btn btn-link btn-xs" data-dismiss="modal">Cancel</a>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </t>
 </templates>
