@@ -419,7 +419,11 @@ class account_bank_statement(osv.osv):
         for statement in self.browse(cr, uid, ids, context=context):
             for st_line in statement.line_ids:
                 if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
-                    self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
+                    # Update the partner informations of the bank account, possibly overriding existing ones
+                    bank_obj = self.pool.get('res.partner.bank')
+                    bank_vals = bank_obj.onchange_partner_id(cr, uid, [st_line.bank_account_id.id], st_line.partner_id.id, context=context)['value']
+                    bank_vals.update({'partner_id': st_line.partner_id.id})
+                    bank_obj.write(cr, uid, [st_line.bank_account_id.id], bank_vals, context=context)
 
 class account_bank_statement_line(osv.osv):
 

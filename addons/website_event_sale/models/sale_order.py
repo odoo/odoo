@@ -42,6 +42,6 @@ class sale_order(osv.Model):
             values['event_id'] = ticket.event_id.id
             values['event_ticket_id'] = ticket.id
             values['price_unit'] = ticket.price
-            values['name'] = "%s: %s" % (ticket.event_id.name, ticket.name)
+            values['name'] = "%s\n%s" % (ticket.event_id.display_name, ticket.name)
 
         return values

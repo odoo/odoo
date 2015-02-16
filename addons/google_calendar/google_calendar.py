@@ -296,7 +296,7 @@ class google_calendar(osv.AbstractModel):
 
                 registry = openerp.modules.registry.RegistryManager.get(request.session.db)
                 with registry.cursor() as cur:
-                    self.pool['res.users'].write(cur, uid, [uid], {'google_calendar_token': False, 'google_calendar_token_validity': False}, context=context)
+                    self.pool['res.users'].write(cur, SUPERUSER_ID, [uid], {'google_calendar_token': False, 'google_calendar_token_validity': False}, context=context)
 
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
             raise
@@ -698,7 +698,7 @@ class google_calendar(osv.AbstractModel):
                     cr.rollback()
                     registry = openerp.modules.registry.RegistryManager.get(request.session.db)
                     with registry.cursor() as cur:
-                        self.pool['res.users'].write(cur, uid, [uid], {'google_calendar_last_sync_date': False}, context=context)
+                        self.pool['res.users'].write(cur, SUPERUSER_ID, [uid], {'google_calendar_last_sync_date': False}, context=context)
                 error_key = simplejson.loads(str(e))
                 error_key = error_key.get('error', {}).get('message', 'nc')
                 error_msg = "Google is lost... the next synchro will be a full synchro. \n\n %s" % error_key
