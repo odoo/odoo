@@ -8,9 +8,104 @@ openerp.project_timesheet = function(openerp) {
 			// Load session, if there is any :
 			this.session = new openerp.Session();
             this.session.session_reload().then(function(){
+            	// Set demo data in local storage. TO REMOVE LATER
+            	var test_data = [
+	                {
+	                    "session_user":"admin",
+	                    "session_uid":1,
+	                    "session_server":"http://localhost:8069",
+	                    "data":{
+	                    	"next_aal_id":4,
+	                    	"next_project_id":3,
+	                    	"next_task_id":4,
+	                        "settings":{
+	                            "default_project":{
+	                                "id":1,
+	                                "name":"Implementation"
+	                            },
+	                            "minimal_duration":15,
+	                            "time_unit":15
+	                        },
+	                        "projects":[
+	                            {
+	                                "id":1,
+	                                "name":"Implementation"
+	                            },
+	                            {
+	                                "id":2,
+	                                "name":"Testing"
+	                            }
+	                        ],
+	                        "tasks": [
+	                            {
+	                                "id":1,
+	                                "name":"C#",
+	                                "project_id" : 1
+
+	                            },
+	                            {
+	                                "id":2,
+	                                "name":"Python",
+	                                "project_id":1
+	                            },
+	                            {
+	                                "id":3,
+	                                "name":"Perl",
+	                                "project_id":1
+	                            }                       
+	                        ],
+	                        "account_analytic_lines":[
+	                            {
+	                                "server_id":undefined,
+	                                "id":1,
+	                                "desc":"/",
+	                                "unit_amount":1,
+	                                "project_id":1,
+	                                "task_id":1,
+	                                "date":"2015-02-09",
+	                                "write_date":"2015-02-10 16:03:21"
+	                            },
+	                            {
+	                                "server_id":undefined,
+	                                "id":2,
+	                                "desc":"Conversion from py 2.7 to 3.3",
+	                                "unit_amount":2,
+	                                "project_id":1,
+	                                "task_id":2,
+	                                "date":"2015-02-09",
+	                                "write_date":"2015-02-10 16:03:21"
+
+	                            },
+	                            {
+	                                "server_id":undefined,
+	                                "id":3,
+	                                "desc":"/",
+	                                "unit_amount":0.5,
+	                                "date":"2015-02-09",
+	                                "write_date":"2015-02-10 16:03:21"
+	                            }
+	                        ],
+	                        "day_plan":[
+	                            {"task_id" : 1},
+	                            {"task_id" : 2}
+	                        ]
+	                    }
+	                },
+	                {
+	                   "session_user":"demoUser",
+	                   "session_uid":1,
+	                    "session_server":"http://localhost:8069",
+	                    "data":{} 
+	                }
+	            ];
+
+            	localStorage.setItem("pt_data", JSON.stringify(test_data));
+
+
             	// Load (demo) data from local storage
             	self.stored_data = JSON.parse(localStorage.getItem("pt_data"));
              	self.user_local_data = _.findWhere(self.stored_data, {session_user : self.session.username})
+             	self.data = self.user_local_data.data;
 
              	//Load templates for widgets
             	self.load_template().then(function(){
@@ -31,10 +126,18 @@ openerp.project_timesheet = function(openerp) {
 
         	this.day_planner_screen = new openerp.project_timesheet.Day_planner_screen(this);
         	this.day_planner_screen.appendTo(this.$el);
+        	this.day_planner_screen.hide();
 
         	this.settings_screen = new openerp.project_timesheet.Settings_screen(this);
         	this.settings_screen.appendTo(this.$el);
-        	debugger
+        	this.settings_screen.hide();
+
+        	this.edit_activity_screen = new openerp.project_timesheet.Edit_activity_screen(this);
+        	this.edit_activity_screen.appendTo(this.$el);
+        	this.edit_activity_screen.hide();
+        },
+        update_localStorage: function(){
+        	localStorage.setItem("pt_data", JSON.stringify(this.stored_data));
         }
 	});
 
@@ -48,9 +151,7 @@ openerp.project_timesheet = function(openerp) {
         },
 		init: function(parent){
 			this._super(parent);
-		},
-		start: function(){
-			this.hide();
+			this.data = this.getParent().data;
 		},
 		show: function(){
             this.$el.show();
@@ -69,7 +170,106 @@ openerp.project_timesheet = function(openerp) {
         goto_activities: function(){
         	this.hide();
             this.getParent().activities_screen.show();
-        }
+        },
+        // Methods that might be moved later if necessary :
+        get_project_name: function(project_id){
+        	project = _.findWhere(self.data.projects, {id : project_id});
+        	return project.name;
+        },
+        get_task_name: function(task_id){
+        	task = _.findWhere(self.data.tasks, {id : task_id})
+        	return task.name;
+        },
+
+        //Utility methods to format and validate time
+        
+        // Takes a decimal hours and converts it to hh:mm string representation
+	    // e.g. 1.5 => "01:30"
+	    unit_amount_to_hours_minutes: function(unit_amount){
+	        if(_.isUndefined(unit_amount)){
+	            return ["00","00"];
+	        }
+
+	        var minutes = Math.round((unit_amount % 1) * 60);
+	        var hours = Math.floor(unit_amount);
+
+	        if(minutes < 10){
+	            minutes = "0" + minutes.toString();
+	        }
+	        else{
+	            minutes = minutes.toString();
+	        }
+	        if(hours < 10){
+	            hours = "0" + hours.toString();
+	        }
+	        else{
+	            hours = hours.toString();
+	        }
+
+	        return hours + ":" + minutes;
+	    },
+
+	    // Takes a string as input and tries to parse it as a hh:mm duration/ By default, strings without ":" are considered to be hh. 
+	    // We use % 1 to avoid accepting NaN as an integer.
+	    validate_duration: function(hh_mm){
+	        var time = hh_mm.split(":");
+	        if(time.length === 1){
+	            var hours = parseInt(time[0]);
+	            if(hours % 1 != 0){
+	                return undefined;
+	            }
+	            if (hours < 10){
+	                return "0" + hours.toString() + ":00";
+	            }
+	            else{
+	                return hours.toString() + ":00";
+	            }
+	        }
+	        else if(time.length === 2){
+	            var hours = parseInt(time[0]);
+	            var minutes = parseInt(time[1]);
+	            if((hours % 1 === 0) && (minutes % 1 === 0) && minutes < 61){
+	                if(minutes < 10){
+	                    minutes = "0" + minutes.toString();
+	                }
+	                else{
+	                    minutes = minutes.toString();
+	                }
+	                if(hours < 10){
+	                    hours = "0" + hours.toString();
+	                }
+	                else{
+	                    hours = hours.toString();
+	                }
+
+	                return hours + ":" + minutes;
+	            }
+	            else{
+	                return undefined;
+	            }
+	        }
+	        else{
+	            return undefined;
+	        }
+
+	    },
+
+	    hh_mm_to_unit_amount: function(hh_mm){
+	        var time = hh_mm.split(":");
+	        if(time.length === 1){
+	            return parseInt(time[0]);
+	        }
+	        else if(time.length === 2){
+	            var hours = parseInt(time[0]);
+	            var minutes = parseInt(time[1]);
+	            return Math.round((hours + (minutes / 60 )) * 100) / 100;
+	        }
+	        else{
+	            return undefined;
+	        }
+	            
+	    }
+
 	});
 
 	openerp.project_timesheet.Activities_screen = openerp.project_timesheet.BasicScreenWidget.extend({
@@ -87,19 +287,13 @@ openerp.project_timesheet = function(openerp) {
                     "click .pt_test_btn":"test_fct"
                 }
             );
-
-            // self.projects = self.project_timesheet_model.projects;
-            // self.tasks = self.project_timesheet_model.tasks;
-            // self.account_analytic_lines = self.project_timesheet_model.account_analytic_lines;
-
-            // _.each(self.account_analytic_lines, function(account_analytic_line){
-            //     account_analytic_line.hours_minutes = project_timesheet.unit_amount_to_hours_minutes(account_analytic_line.unit_amount);
-            // });
+            self.account_analytic_lines = self.data.account_analytic_lines;
         },
         //Go to the create / edit activity
         goto_edit_activity_screen: function(){
-            this.project_timesheet_widget.edit_activity_screen.reset_activity();
-            this.project_timesheet_widget.screen_selector.set_current_screen("edit_activity_screen");
+            this.getParent().edit_activity_screen.reset_activity();
+            this.hide()
+            this.getParent().edit_activity_screen.show()
         },
         // Go to the edit screen to edit a specific activity
         edit_activity: function(event){
@@ -110,8 +304,32 @@ openerp.project_timesheet = function(openerp) {
 
         },
         test_fct: function(){
-        	//this.getParent();
-            // this.project_timesheet_model.load_server_data();
+            debugger
+            //this.load_server_data();
+        },
+        load_server_data: function(){
+        	parent = this.getParent();
+            
+        	//aal : 
+            var account_analytic_line_model = new openerp.Model("account.analytic.line");
+            account_analytic_line_model.query(["id", "user_id", "task_id", "name", "unit_amount", "date", "account_id", '__last_update', 'is_timesheet'])
+            	.filter([["user_id", "=", parent.session.uid]
+            		,["is_timesheet","=",true]
+            		,["date",">", openerp.date_to_str(moment().subtract(30, 'days')._d)]])
+            	.all().then(function(aal){
+            		var task_model = new openerp.Model('project.task');
+            		task_model.query(["id","name", "project_id","user_id"])
+            			.filter([["user_id", "=", parent.session.uid]])
+            			.all().then(function(tasks){
+            				var project_model = new openerp.Model('project.project');
+            				project_model.query(["id", "name","tasks","user_id"])
+            					.filter([["members", '=', parent.session.uid]])
+            					.all().then(function(projects){
+            						// Sync check : keep most recent etc.
+            					});
+            			});
+            		// Do work on AALs
+            	});
         }
     });
 
@@ -125,7 +343,7 @@ openerp.project_timesheet = function(openerp) {
                     "click .pt_day_plan_select":"add_to_day_plan"
                 }
             );
-            this.tasks = this.getParent().user_local_data.data.tasks;
+            this.tasks = this.data.tasks;
         },
         add_to_day_plan: function(event){
             console.log(event.currentTarget.dataset.task_id);
@@ -135,13 +353,14 @@ openerp.project_timesheet = function(openerp) {
     openerp.project_timesheet.Settings_screen = openerp.project_timesheet.BasicScreenWidget.extend({
         template: "settings_screen",
         init: function(parent) {
+        	self = this;
             this._super(parent);
             this.screen_name = "Settings";
             _.extend(self.events,
                 {
                     "change input.pt_minimal_duration":"on_change_minimal_duration",
                     "change input.pt_time_unit":"on_change_time_unit",
-                    "click .pt_default_project":"on_change_default_project"
+                    "change input.pt_default_project_select2":"on_change_default_project"
                 }
             );
             // Demo Data :
@@ -153,117 +372,180 @@ openerp.project_timesheet = function(openerp) {
             	"minimal_duration":15,
             	"time_unit":15
             };
+
+        },
+        start: function(){
+        	this.initialize_select2();
+        },
+        initialize_select2: function(){
+        	// Initialization of select2 for projects
+        	function format(item) {return item.name}
+        	function formatRes(item){
+        		if(item.isNew){
+        			return "Create Project : " + item.name;
+        		}
+        		else{
+        			return item.name;
+        		}
+        	}
+        	this.$('.pt_default_project_select2').select2({
+        		placeholder: self.data.settings.default_project.name,
+        		data: {results : self.data.projects , text : 'name'},
+        		formatSelection: format,
+				formatResult: formatRes,
+				createSearchChoice: function(user_input, new_choice){
+					res = {
+						id : self.data.next_project_id,
+						name : user_input,
+						isNew: true
+					};
+					return res;
+				},
+        	});
         },
         on_change_minimal_duration: function(){
-            this.project_timesheet_model.set_minimal_duration(this.$("input.pt_minimal_duration").val());
+            //TODO Check that input is an int between 0 and 60
+            this.data.settings.minimal_duration = (this.$("input.pt_minimal_duration").val());
+            this.getParent().update_localStorage();
         },
         on_change_time_unit: function(){
-            this.project_timesheet_model.set_time_unit(this.$("input.pt_time_unit").val());
+        	//TODO Check that input is an int between 0 and 60
+            this.data.settings.time_unit = (this.$("input.pt_time_unit").val());
+            this.getParent().update_localStorage();
         },
         on_change_default_project: function(event){
-            this.project_timesheet_model.set_default_project(event.target.dataset.project_id);
-            this.renderElement();
-            this.goto_settings();
+        	var selected_project = {
+    			name : event.added.name,
+    			id : event.added.id
+        	};
+        	if(event.added.isNew){
+        		self.data.next_project_id++;
+        		self.data.projects.push(selected_project);
+    		}
+    		self.data.settings.default_project = selected_project;
+    		self.getParent().update_localStorage();
         }
     });
-
-    // openerp.project_timesheet.Edit_activity_screen = project_timesheet.BasicScreenWidget.extend({
-    //     template: "edit_activity_screen",
-    //     init: function(project_timesheet_widget, options) {
-    //         this._super.apply(this, arguments);
-    //         this.project_timesheet_widget = project_timesheet_widget;
-    //         this.screen_name = "Edit Activity";
-    //         this.project_timesheet_model = options.project_timesheet_model;
-
-    //         _.extend(self.events,
-    //             {
-    //                 "click .pt_activity_project":"select_project",
-    //                 "click .pt_activity_task":"select_task",
-    //                 "change input.pt_activity_duration":"on_change_duration",
-    //                 "change textarea.pt_description":"on_change_description",
-    //                 "click .pt_project_create_confirm":"create_project",
-    //                 "click .pt_discard_changes":"discard_changes",
-    //                 "click .pt_validate_edit_btn" : "save_changes"
-    //             }
-    //         );
-
-    //         this.tasks = {};
-    //         this.activity = {
-    //             project: undefined,
-    //             task: undefined,
-    //             desc:"/",
-    //             unit_amount: undefined,
-    //             date: (project_timesheet.date_to_str(new Date()))
-    //         };
-    //     },
-    //     select_project: function(event){
-    //         var project_id = parseInt(event.currentTarget.dataset.project_id);
-    //         this.activity.project = _.findWhere(this.project_timesheet_model.projects, {id : project_id});
-    //         this.activity.task = undefined;
-    //         this.tasks = _.where(this.project_timesheet_model.tasks, {project_id : project_id});
-    //         this.renderElement();
-    //     },
-    //     select_task: function(event){
-    //         var task_id = parseInt(event.currentTarget.dataset.task_id);
-    //         this.activity.task = _.findWhere(this.tasks, {id : task_id});
-    //         this.renderElement();
-    //     },
-    //     create_project: function(){
-    //         this.project_timesheet_model.create_project(this.$(".pt_new_project_name").val());
-    //         this.$("#pt_project_creator").modal('hide');
-    //     },
-    //     on_change_duration: function(event){
-    //         var duration = project_timesheet.validate_duration(this.$("input.pt_activity_duration").val());
-    //         if(_.isUndefined(duration)){
-    //             this.$("input.pt_activity_duration").val("00:00");
-    //             this.$("input.pt_activity_duration + p").text("Please entre a valid duration in the hh:mm format, such as 01:30");
-    //         }
-    //         else{
-    //             this.$("input.pt_activity_duration").val(duration);
-    //             this.$("input.pt_activity_duration + p").text("");
+	//TODO : clean up select2 inittialize method and re-rendering logic
+    openerp.project_timesheet.Edit_activity_screen = openerp.project_timesheet.BasicScreenWidget.extend({
+        template: "edit_activity_screen",
+        init: function(parent) {
+        	self = this;
+        	this._super(parent);
+            this.screen_name = "Edit Activity";
+            _.extend(self.events,
+                {
+                    "click .pt_activity_task":"select_task",
+                    "change input.pt_activity_duration":"on_change_duration",
+                    "change textarea.pt_description":"on_change_description",
+                    "change input.pt_activity_project":"on_change_project",
+                    "click .pt_discard_changes":"discard_changes",
+                    "click .pt_validate_edit_btn" : "save_changes"
+                }
+            );
+            this.activity = {
+                project: undefined,
+                task: undefined,
+                desc:"/",
+                unit_amount: undefined,
+                date: (openerp.date_to_str(new Date()))
+            };
+        },
+        start : function(){
+        	this.initialize_select2();
+        },
+        initialize_select2: function(){
+        	// Initialization of select2 for projects
+        	function format(item) {return item.name}
+        	function formatRes(item){
+        		if(item.isNew){
+        			return "Create Project : " + item.name;
+        		}
+        		else{
+        			return item.name;
+        		}
+        	}
+        	this.$('.pt_activity_project').select2({
+        		placeholder: "this is not a test",
+        		data: {results : self.data.projects , text : 'name'},
+        		formatSelection: format,
+				formatResult: formatRes,
+				createSearchChoice: function(user_input, new_choice){
+					res = {
+						id : self.data.next_project_id,
+						name : user_input,
+						isNew: true
+					};
+					return res;
+				},
+        	});
+        },
+        on_change_project: function(event){
+        	var selected_project = {
+    			name : event.added.name,
+    			id : event.added.id
+        	};
+        	if(event.added.isNew){
+        		self.data.next_project_id++;
+        		self.data.projects.push(selected_project);
+        		self.getParent().update_localStorage();
+    		}
+    		self.activity.project_id = selected_project.id;
+        },
+        on_change_duration: function(event){
+            var duration = project_timesheet.validate_duration(this.$("input.pt_activity_duration").val());
+            if(_.isUndefined(duration)){
+                this.$("input.pt_activity_duration").val("00:00");
+                this.$("input.pt_activity_duration + p").text("Please entre a valid duration in the hh:mm format, such as 01:30");
+            }
+            else{
+                this.$("input.pt_activity_duration").val(duration);
+                this.$("input.pt_activity_duration + p").text("");
                 
-    //             this.activity.unit_amount = project_timesheet.hh_mm_to_unit_amount(duration);
-    //         }
-    //     },
-    //     on_change_description: function(event){
-    //         this.activity.desc = this.$("textarea.pt_description").val();
-    //     },
-    //     // Function to re-render the screen with a new activity.
-    //     // we use clone to work on a temporary version of activity.
-    //     re_render: function(activity_id){
-    //         this.activity = _.clone(_.findWhere(project_timesheet.project_timesheet_model.account_analytic_lines,  {id:parseInt(activity_id)}));
+                this.activity.unit_amount = project_timesheet.hh_mm_to_unit_amount(duration);
+            }
+        },
+        on_change_description: function(event){
+            this.activity.desc = this.$("textarea.pt_description").val();
+        },
 
-    //         if(!_.isUndefined(this.activity.project)){
-    //             this.tasks = _.where(this.project_timesheet_model.tasks, {project_id : this.activity.project.id});
-    //         }
-    //         this.renderElement();
-    //     },
-    //     save_changes: function(){
-    //         //TODO Save here
+        // Function to re-render the screen with a new activity.
+        // we use clone to work on a temporary version of activity.
+        re_render: function(activity_id){
+            this.activity = _.clone(_.findWhere(project_timesheet.project_timesheet_model.account_analytic_lines,  {id:parseInt(activity_id)}));
 
-    //         //To empty screen data
-    //         this.reset_activity();
-    //         this.goto_welcome_screen();
-    //     },
-    //     discard_changes: function(){
-    //         this.reset_activity();
-    //         this.goto_welcome_screen();
-    //     },
-    //     reset_activity: function(){
-    //         this.activity = {
-    //             project: undefined,
-    //             task: undefined,
-    //             desc:"/",
-    //             unit_amount: undefined,
-    //             date: (project_timesheet.date_to_str(new Date()))
-    //         };
+            if(!_.isUndefined(this.activity.project)){
+                this.tasks = _.where(this.project_timesheet_model.tasks, {project_id : this.activity.project.id});
+            }
+            this.renderElement();
+            this.initialize_select2();
+        },
+        save_changes: function(){
+            //TODO Save here
 
-    //         if (!_.isUndefined(this.project_timesheet_model.settings.default_project)){
-    //             this.activity.project = this.project_timesheet_model.settings.default_project;
-    //             this.tasks = _.where(this.project_timesheet_model.tasks, {project_id : this.activity.project.id});
-    //         }
+            //To empty screen data
+            this.reset_activity();
+            this.goto_activities();
+        },
+        discard_changes: function(){
+            this.reset_activity();
+            this.goto_activities();
+        },
+        reset_activity: function(){
+            this.activity = {
+                project: undefined,
+                task: undefined,
+                desc:"/",
+                unit_amount: undefined,
+                date: (openerp.date_to_str(new Date()))
+            };
 
-    //         this.renderElement();
-    //     }
-    // });
+            if (!_.isUndefined(self.data.settings.default_project)){
+                this.activity.project = self.data.settings.default_project;
+            }
+
+            this.renderElement();
+            this.initialize_select2();
+        }
+    });
 };
