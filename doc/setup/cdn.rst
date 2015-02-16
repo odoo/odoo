@@ -24,7 +24,7 @@ When creating the zone, enable the CORS option in the
 .. image:: cdn/keycdn_enable_CORS.png
    :class: img-responsive
 
-Once done, you'll have to wait a bit while KeyCDN is crawling your website.
+Once done, you'll have to wait a bit while KeyCDN_ is crawling your website.
 
 .. image:: cdn/keycdn_progressbar.png
    :class: img-responsive
