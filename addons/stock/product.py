@@ -449,11 +449,20 @@ class product_template(osv.osv):
         return result
 
     def write(self, cr, uid, ids, vals, context=None):
-        if 'uom_po_id' in vals:
-            product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
-            if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', product_ids)], context=context, limit=1):
-                raise UserError(_("You can not change the unit of measure of a product that has already been used in a stock move. If you need to change the unit of measure, you may deactivate this product."))
-        return super(product_template, self).write(cr, uid, ids, vals, context=context)
+        check = ids and 'uom_po_id' in vals
+        if check:
+            cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(ids)])
+            uoms = dict(cr.fetchall())
+
+        result = super(product_template, self).write(cr, uid, ids, vals, context=context)
+
+        if check:
+            cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(ids)])
+            if dict(cr.fetchall()) != uoms:
+                product_ids = self.pool['product.product'].search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
+                if self.pool['stock.move'].search_count(cr, uid, [('product_id', 'in', product_ids)], context=context):
+                    raise UserError(_("You can not change the unit of measure of a product that has already been used in a stock move. If you need to change the unit of measure, you may deactivate this product."))
+        return result
 
 
 class product_removal_strategy(osv.osv):
