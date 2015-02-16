@@ -307,7 +307,7 @@ class purchase_order_line(osv.osv):
             name=False, price_unit=False, context=None):
         warning = {}
         if not product:
-            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'notes': notes or '', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
+            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         product_obj = self.pool.get('product.product')
         product_info = product_obj.browse(cr, uid, product)
         title = False
