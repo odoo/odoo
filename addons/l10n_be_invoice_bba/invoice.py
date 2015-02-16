@@ -201,10 +201,10 @@ class account_invoice(osv.osv):
                     bbacomm = inv.reference or ''
                 if self.check_bbacomm(bbacomm):
                     reference = re.sub('\D', '', bbacomm)
-                    vals['reference'] = '+++' + reference[0:3] + '/' + reference[3:7] + '/' + reference[7:] + '+++'
+                    comm = '+++' + reference[0:3] + '/' + reference[3:7] + '/' + reference[7:] + '+++'
                     same_ids = self.search(cr, uid,
                         [('id', '!=', inv.id), ('type', '=', 'out_invoice'),
-                         ('reference_type', '=', 'bba'), ('reference', '=', vals['reference'])])
+                         ('reference_type', '=', 'bba'), ('reference', '=', comm)])
                     if same_ids:
                         raise osv.except_osv(_('Warning!'),
                             _('The BBA Structured Communication has already been used!' \
