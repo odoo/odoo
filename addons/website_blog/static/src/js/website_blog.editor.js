@@ -5,17 +5,23 @@
     var _t = openerp._t;
 
     website.EditorBarContent.include({
-        new_blog_post: function() {
-            website.prompt({
-                id: "editor_new_blog",
-                window_title: _t("New Blog Post"),
-                select: "Select Blog",
-                init: function (field) {
-                    return website.session.model('blog.blog')
-                            .call('name_search', [], { context: website.get_context() });
-                },
-            }).then(function (cat_id) {
-                document.location = '/blog/' + cat_id + '/post/new';
+        new_blog_post: function () {
+            website.session.model('blog.blog').call('name_search', [], { context: website.get_context() })
+            .then(function (blog_ids) {
+                if (blog_ids.length == 1) {
+                    document.location = '/blog/' + blog_ids[0][0] + '/post/new';
+                } else if (blog_ids.length > 1) {
+                    website.prompt({
+                        id: "editor_new_blog",
+                        window_title: _t("New Blog Post"),
+                        select: "Select Blog",
+                        init: function (field) {
+                          return blog_ids;
+                        },
+                    }).then(function (blog_id) {
+                        document.location = '/blog/' + blog_id + '/post/new';
+                      });
+                }
             });
         },
     });
@@ -26,20 +32,32 @@
             edit: function () {
                 var self = this;
                 $('.popover').remove();
+                $('.cover_footer').off('click');
                 this._super();
-                var vHeight = $(window).height();
             },
-            save : function() {
-                var res = this._super();
-                if ($('.cover').length) {
+            save : function () {
+                var args = arguments;
+                var super_call = this._super;
+                var self = this;
+                if ($('#js_blogcover').length) {
+                    var properties = {
+                        "background-image": $('#js_blogcover').css("background-image").replace(/"/g, ''),
+                        "background-color": $('#js_blogcover').attr("class"),
+                        "opacity": $('#js_blogcover').css("opacity"),
+                        "resize_class": $('#title').attr('class'),
+                    };
                     openerp.jsonRpc("/blog/post_change_background", 'call', {
-                        'post_id' : $('#blog_post_name').attr('data-oe-id'),
-                        'image' : $('.cover').css('background-image').replace(/url\(|\)|"|'/g,''),
+                        'post_id' : $('h1[data-oe-expression="blog_post.name"]').attr('data-oe-id'),
+                        'cover_properties' : JSON.stringify(properties),
+                    }).always(function() {
+                        super_call.apply(self, args);
                     });
+                } else {
+                    super_call.apply(self, args);
                 }
-                return res;
             },
         });
+
         website.snippet.options.many2one.include({
             select_record: function (li) {
                 var self = this;
@@ -66,7 +84,8 @@
             clear : function(type, value, $li) {
                 if (type !== 'click') return;
                 this.src = null;
-                this.$target.css({"background-image": '', 'min-height': $(window).height()});
+                this.$target.find('#js_blogcover').css({"background-image": '', "opacity": "1.0"}).attr("class", "oe_none");
+                this.$target.attr("class", "");
                 this.$image.removeAttr("src");
             },
             change : function(type, value, $li) {
@@ -76,9 +95,33 @@
                 editor.appendTo('body');
                 editor.on('saved', self, function (event, img) {
                     var url = self.$image.attr('src');
-                    self.$target.css({"background-image": url ? 'url(' + url + ')' : "", 'min-height': $(window).height()});
+                    self.$target.find('#js_blogcover').css({"background-image": url ? 'url(' + url + ')' : ""});
+                    self.$target.attr("class","cover cover_full");
+                    this.$el.parent().find('.snippet-option-website_blog:not(li[data-change])').removeClass("hidden");
                 });
             },
+            cover_class : function(type, value, $li) {
+                this.$target.attr("class", (type === 'over' || type === 'click') ? value : this.class);
+            },
+            opacity : function(type, value, $li) {
+                this.$target.find('#js_blogcover').css("opacity", (type === 'over' || type === 'click') ? value : this.value);
+            },
+            bgcolor : function(type, value, $li) {
+                this.$target.find('#js_blogcover').attr("class", (type === 'over' || type === 'click') ? value : this.background);
+            },
+            set_active: function(){
+                this.background = this.$target.find('#js_blogcover').attr("class");
+                this.class = this.$target.attr('class');
+                this.value = this.$target.find('#js_blogcover').css('opacity');
+                if ( this.$target.hasClass("cover") ) {
+                    this.$el.parent().find('.snippet-option-website_blog:not(li[data-change])').removeClass("hidden");
+                } else {
+                    this.$el.parent().find('.snippet-option-website_blog:not(li[data-change])').addClass("hidden");
+                }
+                this.$el.find('li[data-bgcolor]').removeClass("active").siblings('[data-bgcolor="' + this.background + '"]').addClass("active");
+                this.$el.find('li[data-opacity]').removeClass("active").siblings('[data-opacity="' + parseFloat(this.value).toFixed(1) + '"]').addClass("active");
+                this.$el.find('li[data-cover_class]').removeClass("active").siblings('[data-cover_class="' + this.class + '"]').addClass("active");
+            }
         });
 
         openerp.define.active();

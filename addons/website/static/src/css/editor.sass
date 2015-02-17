@@ -78,6 +78,10 @@
     cursor: default
 
 // }}}
+/* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
+.o_editable[placeholder]:empty:not(:focus):before
+    content: attr(placeholder)
+    opacity: 0.3
 
 /* Prevent the text contents of draggable elements from being selectable. */
 [draggable]

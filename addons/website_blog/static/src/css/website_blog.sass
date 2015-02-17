@@ -15,6 +15,7 @@
     margin-right: auto
 
 .blog_content
+    min-height: 350px !important
     a.oe_mail_expand:after
         content: " →"
     a.oe_mail_expand
@@ -29,39 +30,53 @@ div#blog_angle_down
         text-decoration: none
 
 .cover
-    -webkit-background-size: cover
-    -moz-background-size: cover
-    -o-background-size: cover
-    background-size: cover
-    background-position: center
-    background-repeat: no-repeat
-    background-color: #546579
-    color: #fff
+    color: white
     position: relative
     .blog_title
         position: absolute
+
+.blog_title
         text-align: center
         top: 20%
+        margin-right: auto
+        margin-left: auto
         left: 0
         right: 0
         h1
             font-weight: bold
 
-.cover_footer
-    min-height : 350px
+.cover_full
+    height: 100vh
+
+.cover_narrow
+    height: 50vh
+
+.cover_footer_bg
+    min-height: 350px
     height: 65vh
-    cursor: pointer
 
 /* mobile preview: for blog h1,h2 font-size and cover-footer height of image overlapas */
 @media (max-width: 768px)
-    .cover
+    .blog_title
         h1
             font-size: 26px
+
+    .blog_title
         h2
             font-size: 20px
+
+    .cover_narrow
+        height: 65vh
+
+    #title
+        .blog_title
+            top: 10%
+
     .cover_footer
         min-height: 280px
         height: 50vh
+
+    .cover_footer
         .blog_title
             top: 2%
 
@@ -145,8 +160,24 @@ div#blog_angle_down
     overflow: auto
     font-weight: normal
 
-mark + .popover
+mark + .popover, .cover_footer
     cursor: pointer
 
 .discussion_scroll_post
     overflow-x: auto
+
+.blog_publish_btn
+    padding-top: 16px
+
+.cover_footer_bg[style*="background-image: none;"]
+  background-color: #B8B8B8
+
+#js_blogcover
+    background-blend-mode: multiply
+    -webkit-background-size: cover
+    -moz-background-size: cover
+    -o-background-size: cover
+    background-size: cover
+    background-position: center
+    background-repeat: no-repeat
+    height: 100%
