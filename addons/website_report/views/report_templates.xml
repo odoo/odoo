@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-
+<odoo>
 <template id="layout" inherit_id="website.layout" primary="True">
     <!-- Add report attributes -->
     <xpath expr="//html" position="attributes">
@@ -31,7 +29,6 @@
         <t t-call="website.language_selector"/>
     </xpath>
 </template>
-
 <template id="website_html_container" inherit_id="report.html_container">
     <xpath expr="//t[@t-call='report.layout']" position="replace">
         <t t-call="website_report.layout">
@@ -39,5 +36,4 @@
         </t>
     </xpath>
 </template>
-</data>
-</openerp>
+</odoo>

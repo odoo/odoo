@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.web.http import request
-from openerp.osv import osv
+from openerp import api, models
+from openerp.http import request
 
 
-class Report(osv.Model):
+class Report(models.Model):
     _inherit = 'report'
 
+    @api.v7
     def translate_doc(self, cr, uid, doc_id, model, lang_field, template, values, context=None):
         if request and hasattr(request, 'website'):
-            if request.website is not None:
+            if request.website:
                 v = request.website.get_template(template)
                 request.session['report_view_ids'].append({
                     'name': v.name,
@@ -22,8 +23,13 @@ class Report(osv.Model):
                 })
         return super(Report, self).translate_doc(cr, uid, doc_id, model, lang_field, template, values, context=context)
 
-    def render(self, cr, uid, ids, template, values=None, context=None):
+    @api.v8
+    def translate_doc(self, model, lang_field, template, values):
+        return self._model.translate_doc(self._cr, self._uid, self.ids, model, lang_field, template, values, context=self._context)
+
+    @api.multi
+    def render(self, template, values=None):
         if request and hasattr(request, 'website'):
-            if request.website is not None:
+            if request.website:
                 request.session['report_view_ids'] = []
-        return super(Report, self).render(cr, uid, ids, template, values=values, context=context)
+        return super(Report, self).render(template, values=values)
