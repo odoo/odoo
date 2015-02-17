@@ -18,40 +18,35 @@
 		    	</div>
 		    	<div class="col-xs-3">
 		    		<!--Start button / stop button-->
-		    		<a href="javascript:void(0)" class="btn btn-default btn-raised btn-material-cyan pt_btn_start_activity"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>  Start</a>
+		    		<a href="javascript:void(0)" class="btn btn-default btn-raised btn-material-cyan pt_btn_start_activity"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>  &amp;nbsp;Start</a>
 				</div>
 			</div>
 			<!--Rows etc.-->
 			<t t-if="widget.account_analytic_lines">
 				<t t-foreach="widget.account_analytic_lines" t-as="account_analytic_line">
-					<div class="panel">
-						<div class="panel-body">
-        					<div class="row">
-    							<div class="col-xs-7 pt_activity" t-att-data-activity_id="account_analytic_line.id">
-    								<t t-if="account_analytic_line.project_id">
-    									<t t-esc="widget.get_project_name(account_analytic_line.project_id)"/><br/>
-    									<t t-if="account_analytic_line.task_id">
-    							    		<t t-esc="widget.get_task_name(account_analytic_line.task_id)"/>
-    							    	</t>
-    								</t>
-                                    <t t-if="!account_analytic_line.project_id">
-                                        <p><small>Select a project</small></p>
-                                    </t>
-    							</div>
-    							<div class="col-xs-1">
-    								<div class="row">
-    								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-    								</div>
-    								<div class="row">
-    								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-    								</div>
-    							</div>
-    							<div class="col-xs-2">
-                                    <t t-if="account_analytic_line.unit_amount">
-        								<t t-esc="widget.unit_amount_to_hours_minutes(account_analytic_line.unit_amount)"/>
-                                    </t>
-    							</div>
-        					</div>
+					<div class="col-xs-12 pt_activity_box">
+    					<div class="row">
+							<div class="col-xs-7 pt_activity" t-att-data-activity_id="account_analytic_line.id">
+								<t t-if="account_analytic_line.project_id">
+									<t t-esc="widget.get_project_name(account_analytic_line.project_id)"/><br/>
+									<t t-if="account_analytic_line.task_id">
+							    		<t t-esc="widget.get_task_name(account_analytic_line.task_id)"/>
+							    	</t>
+								</t>
+							</div>
+							<div class="col-xs-1">
+								<div class="row">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								</div>
+								<div class="row">
+								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+								</div>
+							</div>
+							<div class="col-xs-2">
+                                <t t-if="account_analytic_line.unit_amount">
+    								<t t-esc="widget.unit_amount_to_hours_minutes(account_analytic_line.unit_amount)"/>
+                                </t>
+							</div>
     					</div>
 					</div>
 				</t>
@@ -102,7 +97,6 @@
 	    			<p>Default project</p>
 	    		</div>
 	    		<div class="panel-body">
-	    			<!--For some reason, the dropdown does not work without the following div-->
 	    			<div class="col-xs-12">
                         <input type="hidden" name="pt_default_project" class="form-control pt_default_project_select2"/>
 			    	</div>
@@ -176,7 +170,15 @@
                     <textarea class="pt_description"></textarea>
                 </t>
             </div>
-
+            <div class="col-xs-6">
+                <button type="button" class="btn btn-default btn-raised btn-material-cyan pt_validate_edit_btn">Save</button>
+            </div>
+            <div class="col-xs-6">
+                <button type="button" class="btn btn-default btn-raised btn-material-cyan pt_discard_changes">Discard</button>
+            </div>
+            <div class="row">
+                <div class="pt_save_msg well" style="display:none">Please select a project</div>
+            </div>    
         </div>
     </t>
     <t t-name="header">
@@ -206,9 +208,9 @@
     	    			<t t-if="widget.screen_name == 'Activities'">
     						<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus pt_button_plus_activity" aria-hidden="true"></span></a>
     					</t>
-                        <t t-if="widget.screen_name == 'Edit Activity'">
+                        <!-- <t t-if="widget.screen_name == 'Edit Activity'">
                             <a href="javascript:void(0)"><span class="glyphicon glyphicon-ok pt_validate_edit_btn" aria-hidden="true"></span></a>
-                        </t>
+                        </t> -->
     					<t t-if="widget.screen_name != 'Activities' and widget.screen_name != 'Edit Activity'">
     						<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
     					</t>

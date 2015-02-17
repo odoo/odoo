@@ -9,97 +9,94 @@ openerp.project_timesheet = function(openerp) {
 			this.session = new openerp.Session();
             this.session.session_reload().then(function(){
             	// Set demo data in local storage. TO REMOVE LATER
-            	// var test_data = [
-	            //     {
-	            //         "session_user":"admin",
-	            //         "session_uid":1,
-	            //         "session_server":"http://localhost:8069",
-	            //         "data":{
-	            //         	"next_aal_id":4,
-	            //         	"next_project_id":3,
-	            //         	"next_task_id":4,
-	            //             "settings":{
-	            //                 "default_project":{
-	            //                     "id":1,
-	            //                     "name":"Implementation"
-	            //                 },
-	            //                 "minimal_duration":15,
-	            //                 "time_unit":15
-	            //             },
-	            //             "projects":[
-	            //                 {
-	            //                     "id":1,
-	            //                     "name":"Implementation"
-	            //                 },
-	            //                 {
-	            //                     "id":2,
-	            //                     "name":"Testing"
-	            //                 }
-	            //             ],
-	            //             "tasks": [
-	            //                 {
-	            //                     "id":1,
-	            //                     "name":"C#",
-	            //                     "project_id" : 1
+            	var test_data = [
+	                {
+	                    "session_user":"admin",
+	                    "session_uid":1,
+	                    "session_server":"http://localhost:8069",
+	                    "data":{
+	                    	"next_aal_id":9,
+	                    	"next_project_id":3,
+	                    	"next_task_id":4,
+	                        "settings":{
+	                            "default_project_id":1,
+	                            "minimal_duration":15,
+	                            "time_unit":15
+	                        },
+	                        "projects":[
+	                            {
+	                                "id":1,
+	                                "name":"Implementation"
+	                            },
+	                            {
+	                                "id":2,
+	                                "name":"Testing"
+	                            }
+	                        ],
+	                        "tasks": [
+	                            {
+	                                "id":1,
+	                                "name":"C#",
+	                                "project_id" : 1
 
-	            //                 },
-	            //                 {
-	            //                     "id":2,
-	            //                     "name":"Python",
-	            //                     "project_id":1
-	            //                 },
-	            //                 {
-	            //                     "id":3,
-	            //                     "name":"Perl",
-	            //                     "project_id":1
-	            //                 }                       
-	            //             ],
-	            //             "account_analytic_lines":[
-	            //                 {
-	            //                     "server_id":undefined,
-	            //                     "id":1,
-	            //                     "desc":"/",
-	            //                     "unit_amount":1,
-	            //                     "project_id":1,
-	            //                     "task_id":1,
-	            //                     "date":"2015-02-09",
-	            //                     "write_date":"2015-02-10 16:03:21"
-	            //                 },
-	            //                 {
-	            //                     "server_id":undefined,
-	            //                     "id":2,
-	            //                     "desc":"Conversion from py 2.7 to 3.3",
-	            //                     "unit_amount":2,
-	            //                     "project_id":1,
-	            //                     "task_id":2,
-	            //                     "date":"2015-02-09",
-	            //                     "write_date":"2015-02-10 16:03:21"
+	                            },
+	                            {
+	                                "id":2,
+	                                "name":"Python",
+	                                "project_id":1
+	                            },
+	                            {
+	                                "id":3,
+	                                "name":"Perl",
+	                                "project_id":1
+	                            }                       
+	                        ],
+	                        "account_analytic_lines":[
+	                            {
+	                                "server_id":undefined,
+	                                "id":1,
+	                                "desc":"/",
+	                                "unit_amount":1,
+	                                "project_id":1,
+	                                "task_id":1,
+	                                "date":"2015-02-09",
+	                                "write_date":"2015-02-10 16:03:21"
+	                            },
+	                            {
+	                                "server_id":undefined,
+	                                "id":2,
+	                                "desc":"Conversion from py 2.7 to 3.3",
+	                                "unit_amount":2,
+	                                "project_id":1,
+	                                "task_id":2,
+	                                "date":"2015-02-09",
+	                                "write_date":"2015-02-10 16:03:21"
 
-	            //                 },
-	            //                 {
-	            //                     "server_id":undefined,
-	            //                     "id":3,
-	            //                     "desc":"/",
-	            //                     "unit_amount":0.5,
-	            //                     "date":"2015-02-09",
-	            //                     "write_date":"2015-02-10 16:03:21"
-	            //                 }
-	            //             ],
-	            //             "day_plan":[
-	            //                 {"task_id" : 1},
-	            //                 {"task_id" : 2}
-	            //             ]
-	            //         }
-	            //     },
-	            //     {
-	            //        "session_user":"demoUser",
-	            //        "session_uid":1,
-	            //         "session_server":"http://localhost:8069",
-	            //         "data":{} 
-	            //     }
-	            // ];
-
-            	// localStorage.setItem("pt_data", JSON.stringify(test_data));
+	                            },
+	                            {
+	                                "server_id":undefined,
+	                                "id":3,
+	                                "desc":"/",
+	                                "unit_amount":0.5,
+	                                "date":"2015-02-09",
+	                                "write_date":"2015-02-10 16:03:21"
+	                            },
+	                        ],
+	                        "day_plan":[
+	                            {"task_id" : 1},
+	                            {"task_id" : 2}
+	                        ]
+	                    }
+	                },
+	                {
+	                   "session_user":"demoUser",
+	                   "session_uid":1,
+	                    "session_server":"http://localhost:8069",
+	                    "data":{} 
+	                }
+	            ];
+                // Comment or uncomment following line to reset demo data
+            	//localStorage.setItem("pt_data", JSON.stringify(test_data));
 
 
             	// Load (demo) data from local storage
@@ -379,30 +376,55 @@ openerp.project_timesheet = function(openerp) {
             this.initialize_project_selector();
         },
         initialize_project_selector: function(){
-        	// Initialization of select2 for projects
-        	function format(item) {return item.name}
-        	function formatRes(item){
-        		if(item.isNew){
-        			return "Create Project : " + item.name;
-        		}
-        		else{
-        			return item.name;
-        		}
-        	}
-        	this.$('.pt_default_project_select2').select2({
-        		placeholder: self.data.settings.default_project.name,
-        		data: {results : self.data.projects , text : 'name'},
-        		formatSelection: format,
-				formatResult: formatRes,
-				createSearchChoice: function(user_input, new_choice){
-					res = {
-						id : self.data.next_project_id,
-						name : user_input,
-						isNew: true
-					};
-					return res;
-				},
-        	});
+            // Initialization of select2 for projects
+            function format(item) {return item.name}
+            function formatRes(item){
+                if(item.isNew){
+                    return "Create Project : " + item.name;
+                }
+                else{
+                    return item.name;
+                }
+            }
+            this.$('.pt_default_project_select2').select2({
+                // TODO might be made cleaner?
+                data: {results : _.union(self.data.projects , [{id : 0 , name : "No default project", no_default_project:true }]) , text : 'name'},
+                formatSelection: format,
+                formatResult: formatRes,
+                createSearchChoice: function(user_input, new_choice){
+                    res = {
+                        id : self.data.next_project_id,
+                        name : user_input,
+                        isNew: true
+                    };
+                    return res;
+                },
+                // Show the 'create item' option in second position, reducing the risk of duplicate entries
+                createSearchChoicePosition: function(list, item) {
+                    list.splice(1, 0, item);
+                },
+                initSelection : function(element, callback){
+                    var data = {id: self.data.settings.default_project_id, name : self.get_project_name(self.data.settings.default_project_id)};
+                    callback(data);
+                }
+            });
+        },
+        on_change_default_project: function(event){
+            if(event.added.no_default_project){
+                 self.data.settings.default_project_id = undefined;
+            }
+            else{
+                var selected_project = {
+                    name : event.added.name,
+                    id : event.added.id
+                };
+                if(event.added.isNew){
+                    self.data.next_project_id++;
+                    self.data.projects.push(selected_project);
+                }
+                self.data.settings.default_project_id = selected_project.id;
+            }
+            self.getParent().update_localStorage();   
         },
         on_change_minimal_duration: function(){
             //TODO Check that input is an int between 0 and 60
@@ -413,18 +435,6 @@ openerp.project_timesheet = function(openerp) {
         	//TODO Check that input is an int between 0 and 60
             this.data.settings.time_unit = (this.$("input.pt_time_unit").val());
             this.getParent().update_localStorage();
-        },
-        on_change_default_project: function(event){
-        	var selected_project = {
-    			name : event.added.name,
-    			id : event.added.id
-        	};
-        	if(event.added.isNew){
-        		self.data.next_project_id++;
-        		self.data.projects.push(selected_project);
-    		}
-    		self.data.settings.default_project = selected_project;
-    		self.getParent().update_localStorage();
         }
     });
 	//TODO : clean up select2 inittialize method and re-rendering logic
@@ -575,16 +585,22 @@ openerp.project_timesheet = function(openerp) {
         	if(!_.isUndefined(activity_id)){
 	            this.activity = _.clone(_.findWhere(this.data.account_analytic_lines,  {id:parseInt(activity_id)}));
 			}
-			// TODO Task list! + project? 
-	        // if(!_.isUndefined(this.activity.project)){
-	        //     this.tasks = _.where(this.project_timesheet_model.tasks, {project_id : this.activity.project.id});
-	        // }
+            else if(!_.isUndefined(self.data.settings.default_project_id)){
+                this.activity.project_id = self.data.settings.default_project_id;
+            }
+
             this.renderElement();
             this.initialize_project_selector();
             this.initialize_task_selector();
         },
         save_changes: function(){
-            //TODO Save here
+            // Validation step :  The only compulsory field is project.
+            if(_.isUndefined(this.activity.project_id)){
+                this.$('.pt_save_msg').show(0).delay(5000).hide(0);
+                return
+            } 
+
+            // For instance, don't allow creation of activities without a project. 
             var old_activity = _.findWhere(this.data.account_analytic_lines,  {id:parseInt(this.activity.id)})
             // If this condition is true, it means that the activity is a newly created one :
             if(_.isUndefined(old_activity)){
