@@ -54,7 +54,7 @@ class account_invoice_line(osv.osv):
 
     @api.v8
     def get_invoice_line_account(self, type, product, fpos, company):
-        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund'):
+        if type in ('in_invoice', 'in_refund'):
             accounts = product.product_tmpl_id.get_product_accounts(fpos)
             if type == 'in_invoice':
                 return accounts['stock_input']
