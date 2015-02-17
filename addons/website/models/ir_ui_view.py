@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
 import copy
 
 from lxml import etree, html
@@ -7,6 +8,7 @@ from openerp import SUPERUSER_ID, api
 from openerp.addons.website.models import website
 from openerp.http import request
 from openerp.osv import osv, fields
+from openerp.modules import module as module_funcs
 
 class view(osv.osv):
     _inherit = "ir.ui.view"
@@ -21,7 +23,6 @@ class view(osv.osv):
         'page': False,
         'customize_show': False,
     }
-
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
@@ -131,7 +132,7 @@ class view(osv.osv):
     @api.cr_uid_ids_context
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if request and getattr(request, 'website_enabled', False):
-            engine='website.qweb'
+            engine = 'website.qweb'
 
             if isinstance(id_or_xml_id, list):
                 id_or_xml_id = id_or_xml_id[0]
@@ -215,3 +216,51 @@ class view(osv.osv):
         if view.model_data_id:
             view.model_data_id.write({'noupdate': True})
 
+    def restore(self, cr, uid, ids, context=None):
+        restored = []
+        bymod = defaultdict(dict)
+        for view in self.browse(cr, uid, ids, context=context):
+            imd = view.model_data_id
+            if not imd or view.page:
+                continue
+            bymod[imd.module][imd.name] = view
+
+        xpath = '''//template[@id="{mod}.{name}"
+                           or @id="{name}"
+                           or @t-name="{mod}.{name}"
+                           or @t-name="{name}"]
+                | //record[@id="{mod}.{name}" or @id="{name}"]/field[@name="arch"]
+                '''
+        for mod, views in bymod.items():
+            info = module_funcs.load_information_from_description_file(mod)
+            for s in 'data init_xml update_xml'.split():
+                if not views:
+                    break       # everything has been found
+                for resource in info.get(s, []):
+                    if not views:
+                        break       # everything has been found
+                    if not resource.endswith('.xml'):
+                        continue
+                    xml = etree.parse(module_funcs.get_module_resource(mod, resource))
+
+                    for view_name in views.keys():
+                        data = xml.xpath(xpath.format(mod=mod, name=view_name))
+                        if not data:
+                            continue
+                        el = data[0]
+                        if el.name == 'template':
+                            if not el.get('inherit_id'):
+                                el.set('t-name', '%s.%s' % (mod, view_name))
+                                el.tag = 't'
+                            else:
+                                el.tag = 'data'
+                            el.attrib.pop('id', None)
+
+                        arch = '<?xml version="1.0"?>\n' + \
+                               ''.join(etree.tostring(n, encoding='utf-8') for n in el)
+
+                        view = views.pop(view_name)
+                        view.write({'arch': arch})
+                        view.model_data_id.write({'noupdate': False})
+                        restored.append(view.id)
+        return restored
