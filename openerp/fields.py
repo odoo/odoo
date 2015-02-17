@@ -297,6 +297,13 @@ class Field(object):
         self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
         self._free_attrs = []
 
+        # self._triggers is a set of pairs (field, path) that represents the
+        # computed fields that depend on `self`. When `self` is modified, it
+        # invalidates the cache of each `field`, and registers the records to
+        # recompute based on `path`. See method `modified` below for details.
+        self._triggers = set()
+        self.inverse_fields = []
+
     def new(self, **kwargs):
         """ Return a field of the same type as `self`, with its own parameters. """
         return type(self)(**kwargs)
@@ -395,16 +402,6 @@ class Field(object):
     #
     # Field setup
     #
-
-    def reset(self):
-        """ Prepare `self` for a new setup. """
-        self.setup_done = False
-        # self._triggers is a set of pairs (field, path) that represents the
-        # computed fields that depend on `self`. When `self` is modified, it
-        # invalidates the cache of each `field`, and registers the records to
-        # recompute based on `path`. See method `modified` below for details.
-        self._triggers = set()
-        self.inverse_fields = []
 
     def setup(self, env):
         """ Make sure that `self` is set up, except for recomputation triggers. """
