@@ -211,7 +211,12 @@ class ir_fields_converter(models.Model):
 
     @api.model
     def _str_to_datetime(self, model, field, value):
+        DATETIME_LENGTH = len(datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+        DATE_LENGTH = len(datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT))
         try:
+            date_value = value[:DATETIME_LENGTH]
+            if len(date_value) == DATE_LENGTH:
+                value += " 00:00:00"
             parsed_value = datetime.datetime.strptime(
                 value, DEFAULT_SERVER_DATETIME_FORMAT)
         except ValueError:

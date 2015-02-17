@@ -155,7 +155,13 @@ class ir_import(orm.TransientModel):
             keys.append([])
             for col_index in range(bk.ncols):
                 if bk.cell_type(row_index, col_index) == 3:
-                    keys[-1].append(datetime.datetime(* \
+                    date_decimal = str(bk.cell_value(row_index, col_index)-int(bk.cell_value(row_index, col_index)))[1:].split('.')[1]
+                    if date_decimal == '0':
+                        keys[-1].append(datetime.datetime(* \
+                        (xlrd.xldate_as_tuple(bk.cell_value(row_index, col_index), \
+                            book.datemode))).strftime('%Y-%m-%d'))
+                    else:
+                        keys[-1].append(datetime.datetime(* \
                         (xlrd.xldate_as_tuple(bk.cell_value(row_index, col_index), \
                             book.datemode))).strftime('%Y-%m-%d %H:%M:%S'))
                 elif bk.cell_type(row_index, col_index) == 2:
@@ -165,8 +171,6 @@ class ir_import(orm.TransientModel):
                         keys[-1].append('True')
                     elif bk.cell_value(row_index, col_index) == 0:
                         keys[-1].append('False')
-                elif bk.cell_type(row_index, col_index) == 6:
-                    keys[-1].append("")
                 else:
                     keys[-1].append(bk.cell_value(row_index, col_index))
         encoding = options.get('encoding', 'utf-8')
