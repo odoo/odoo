@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import json
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+
+from openerp import http
+from openerp.http import request
 
 
 class google_map(http.Controller):
@@ -25,8 +25,6 @@ class google_map(http.Controller):
 
     @http.route(['/google_map'], type='http', auth="public", website=True)
     def google_map(self, *arg, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        partner_obj = request.registry['res.partner']
 
         # filter real ints from query parameters and build a domain
         clean_ids = []
@@ -39,15 +37,15 @@ class google_map(http.Controller):
 
         # search for partners that can be displayed on a map
         domain = [("id", "in", clean_ids), ('website_published', '=', True), ('is_company', '=', True)]
-        partners_ids = partner_obj.search(cr, SUPERUSER_ID, domain, context=context)
+        partners = request.env['res.partner'].sudo().search(domain)
 
         # browse and format data
         partner_data = {
-        "counter": len(partners_ids),
+        "counter": len(partners),
         "partners": []
         }
-        request.context.update({'show_address': True})
-        for partner in partner_obj.browse(cr, SUPERUSER_ID, partners_ids, context=context):
+
+        for partner in partners.with_context(show_address=True):
             partner_data["partners"].append({
                 'id': partner.id,
                 'name': partner.name,
