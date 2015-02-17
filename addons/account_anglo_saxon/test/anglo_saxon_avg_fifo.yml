@@ -4,7 +4,7 @@
   !record {model: account.account, id: account_anglo_stock_valuation_fifo}:
     code: X3000f
     name: Stock Valuation Account- (test)
-    user_type: account.data_account_type_asset
+    user_type: account.data_account_type_current_assets
 -
   Configure Stock Interim account (Received).
 -
@@ -32,7 +32,7 @@
   !record {model: account.account, id: account_anglo_cash_fifo}:
     code: X5000f
     name: Cash/Bank Account 
-    user_type: account.data_account_type_asset
+    user_type: account.data_account_type_liquidity
     reconcile: True
 -
   Configure Creditor Account Payable. 
