@@ -126,10 +126,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         self.set({actual_mode: self.options.initial_mode});
         this.has_been_loaded.done(function() {
             self._build_onchange_specs();
-            self.on("change:actual_mode", self, self.check_actual_mode);
             self.check_actual_mode();
-            self.on("change:actual_mode", self, self.init_pager);
-            self.init_pager();
+            self.on("change:actual_mode", self, self.check_actual_mode);
+            self.on("change:actual_mode", self, self.toggle_buttons);
+            self.on("change:actual_mode", self, self.toggle_sidebar);
+            self.on("change:actual_mode", self, self.do_update_pager);
         });
         self.on("load_record", self, self.load_record);
         instance.web.bus.on('clear_uncommitted_changes', this, function(e) {
@@ -173,43 +174,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.__clicked_inside = true;
         });
 
-        this.$buttons = $(QWeb.render("FormView.buttons", {'widget':self}));
-        if (this.options.$buttons) {
-            this.$buttons.appendTo(this.options.$buttons);
-        } else {
-            this.$el.find('.oe_form_buttons').replaceWith(this.$buttons);
-        }
-        this.$buttons.on('click', '.oe_form_button_create',
-                         this.guard_active(this.on_button_create));
-        this.$buttons.on('click', '.oe_form_button_edit',
-                         this.guard_active(this.on_button_edit));
-        this.$buttons.on('click', '.oe_form_button_save',
-                         this.guard_active(this.on_button_save));
-        this.$buttons.on('click', '.oe_form_button_cancel',
-                         this.guard_active(this.on_button_cancel));
-        if (this.options.footer_to_buttons) {
-            this.$el.find('footer').appendTo(this.$buttons);
-        }
-
-        this.$sidebar = this.options.$sidebar || this.$el.find('.oe_form_sidebar');
-        if (!this.sidebar && this.options.$sidebar) {
-            this.sidebar = new instance.web.Sidebar(this);
-            this.sidebar.appendTo(this.$sidebar);
-            if (this.fields_view.toolbar) {
-                this.sidebar.add_toolbar(this.fields_view.toolbar);
-            }
-            this.sidebar.add_items('other', _.compact([
-                self.is_action_enabled('delete') && { label: _t('Delete'), callback: self.on_button_delete },
-                self.is_action_enabled('create') && { label: _t('Duplicate'), callback: self.on_button_duplicate }
-            ]));
-        }
-
         this.has_been_loaded.resolve();
 
         // Add bounce effect on button 'Edit' when click on readonly page view.
         this.$el.find(".oe_form_group_row,.oe_form_field,label,h1,.oe_title,.oe_notebook_page, .oe_list_content").on('click', function (e) {
             if(self.get("actual_mode") == "view") {
-                var $button = self.options.$buttons.find(".oe_form_button_edit");
+                var $button = self.$buttons.find(".oe_form_button_edit");
                 $button.openerpBounce();
                 e.stopPropagation();
                 instance.web.bus.trigger('click', e);
@@ -225,6 +195,121 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
          });
         this.trigger('form_view_loaded', data);
         return $.when();
+    },
+    /**
+     * Render the buttons according to the FormView.buttons template and add listeners on it.
+     * Set this.$buttons with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case the FormView inserts them into this.options.$buttons
+     * or into a div of its template
+     */
+    render_buttons: function($node) {
+        this.$buttons = $(QWeb.render("FormView.buttons", {'widget': this}));
+
+        // Show or hide the buttons according to the view mode
+        this.toggle_buttons();
+        this.$buttons.on('click', '.oe_form_button_create',
+                         this.guard_active(this.on_button_create));
+        this.$buttons.on('click', '.oe_form_button_edit',
+                         this.guard_active(this.on_button_edit));
+        this.$buttons.on('click', '.oe_form_button_save',
+                         this.guard_active(this.on_button_save));
+        this.$buttons.on('click', '.oe_form_button_cancel',
+                         this.guard_active(this.on_button_cancel));
+
+        if (this.options.footer_to_buttons) {
+            this.$el.find('footer').appendTo(this.$buttons);
+        }
+
+        $node = $node || this.options.$buttons;
+        if ($node) {
+            this.$buttons.appendTo($node);
+        } else {
+            this.$('.oe_form_buttons').replaceWith(this.$buttons);
+        }
+    },
+    /**
+     * Instantiate and render the sidebar if a sidebar is requested
+     * Sets this.sidebar
+     * @param {jQuery} [$node] a jQuery node where the sidebar should be inserted
+     * $node may be undefined, in which case the FormView inserts the sidebar in a
+     * div of its template
+     **/
+    render_sidebar: function($node) {
+        if (!this.sidebar && this.options.sidebar) {
+            this.sidebar = new instance.web.Sidebar(this);
+            if (this.fields_view.toolbar) {
+                this.sidebar.add_toolbar(this.fields_view.toolbar);
+            }
+            this.sidebar.add_items('other', _.compact([
+                this.is_action_enabled('delete') && { label: _t('Delete'), callback: this.on_button_delete },
+                this.is_action_enabled('create') && { label: _t('Duplicate'), callback: this.on_button_duplicate }
+            ]));
+
+            $node = $node || this.$('.oe_form_sidebar');
+            this.sidebar.appendTo($node);
+
+            // Show or hide the sidebar according to the view mode
+            this.toggle_sidebar();
+        }
+    },
+    /**
+     * Render the pager according to the FormView.pager template and add listeners on it.
+     * Set this.$pager with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered pager should be inserted
+     * $node may be undefined, in which case the FormView inserts the pager into this.options.$pager
+     * or into a div of its template
+     */
+    render_pager: function($node) {
+        if (this.options.pager) {
+            var self = this;
+            if (this.$pager) {
+                this.$pager.remove();
+            }
+            if (this.get("actual_mode") === "create") {
+                return;
+            }
+            this.$pager = $(QWeb.render("FormView.pager", {'widget': self}));
+            this.$pager.on('click','a[data-pager-action]',function() {
+                var $el = $(this);
+                if ($el.attr("disabled")) {
+                    return;
+                }
+                var action = $el.data('pager-action');
+                var def = $.when(self.execute_pager_action(action));
+                $el.attr("disabled");
+                def.always(function() {
+                    $el.removeAttr("disabled");
+                });
+            });
+            this.do_update_pager();
+
+            $node = $node || this.options.$pager;
+            if ($node) {
+                this.$pager.appendTo($node);
+            } else {
+                this.$('.oe_form_pager').replaceWith(this.$pager);
+            }
+        }
+    },
+    /**
+     * Show or hide the buttons according to the actual_mode
+     */
+    toggle_buttons: function() {
+        var view_mode = this.get("actual_mode") === "view";
+        if (this.$buttons) {
+            this.$buttons.find('.oe_form_buttons_view').toggle(view_mode);
+            this.$buttons.find('.oe_form_buttons_edit').toggle(!view_mode);
+        }
+    },
+    /**
+     * Show or hide the sidebar according to the actual_mode
+     */
+    toggle_sidebar: function() {
+        var view_mode = this.get("actual_mode") === "view";
+        if (this.sidebar) {
+            this.sidebar.$el.toggle(view_mode);
+        }
     },
     widgetFocused: function() {
         // Clear click flag if used to focus a widget
@@ -268,17 +353,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     do_show: function (options) {
         var self = this;
         options = options || {};
-        if (this.sidebar) {
-            this.sidebar.$el.show();
-        }
-        if (this.$buttons) {
-            this.$buttons.show();
-        }
         this.$el.show().css({
             opacity: '0',
             filter: 'alpha(opacity = 0)'
         });
-        this.$el.add(this.$buttons).removeClass('oe_form_dirty');
+        this.$el.removeClass('oe_form_dirty');
 
         var shown = this.has_been_loaded;
         if (options.reload !== false) {
@@ -304,15 +383,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             });
             instance.web.bus.trigger('form_view_shown', self);
         });
-    },
-    do_hide: function () {
-        if (this.sidebar) {
-            this.sidebar.$el.hide();
-        }
-        if (this.$pager) {
-            this.$pager.hide();
-        }
-        this._super();
     },
     load_record: function(record) {
         var self = this, set_values = [];
@@ -349,7 +419,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             } else {
                 self.do_push_state({});
             }
-            self.$el.add(self.$buttons).removeClass('oe_form_dirty');
+            self.$el.removeClass('oe_form_dirty');
             self.autofocus();
         });
     },
@@ -373,7 +443,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.trigger("view_content_has_changed");
     },
     do_notify_change: function() {
-        this.$el.add(this.$buttons).addClass('oe_form_dirty');
+        this.$el.addClass('oe_form_dirty');
     },
     execute_pager_action: function(action) {
         if (this.can_be_discarded()) {
@@ -397,37 +467,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         return $.when();
     },
-    init_pager: function() {
-        var self = this;
-        if (this.$pager)
-            this.$pager.remove();
-        if (this.get("actual_mode") === "create")
-            return;
-        this.$pager = $(QWeb.render("FormView.pager", {'widget':self}));
-        if (this.options.$pager) {
-            this.$pager.appendTo(this.options.$pager);
-        } else {
-            this.$el.find('.oe_form_pager').replaceWith(this.$pager);
-        }
-        this.$pager.on('click','a[data-pager-action]',function() {
-            var $el = $(this);
-            if ($el.attr("disabled"))
-                return;
-            var action = $el.data('pager-action');
-            var def = $.when(self.execute_pager_action(action));
-            $el.attr("disabled");
-            def.always(function() {
-                $el.removeAttr("disabled");
-            });
-        });
-        this.do_update_pager();
-    },
     do_update_pager: function(hide_index) {
-        this.$pager.toggle(this.dataset.ids.length > 1);
-        if (hide_index) {
-            $(".oe_form_pager_state", this.$pager).html("");
-        } else {
-            $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
+        if (this.$pager) {
+            // Hide the pager in create mode or when there is only one record
+            var pager_visible = (this.get("actual_mode") !== "create") && (this.dataset.ids.length > 1);
+            this.$pager.toggle(pager_visible);
+            if (hide_index === true) {
+                this.$pager.find(".oe_form_pager_state").html("");
+            } else {
+                this.$pager.find(".oe_form_pager_state").html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
+            }
         }
     },
 
@@ -687,14 +736,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         if(this.get("actual_mode") === "view") {
             self.$el.removeClass('oe_form_editable').addClass('oe_form_readonly');
-            self.$buttons.find('.oe_form_buttons_edit').hide();
-            self.$buttons.find('.oe_form_buttons_view').show();
-            self.$sidebar.show();
         } else {
             self.$el.removeClass('oe_form_readonly').addClass('oe_form_editable');
-            self.$buttons.find('.oe_form_buttons_edit').show();
-            self.$buttons.find('.oe_form_buttons_view').hide();
-            self.$sidebar.hide();
             this.autofocus();
         }
     },
@@ -4335,7 +4378,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
 instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
     init: function(parent, dataset, views, flags) {
         // Only display the ControlPanel when there are several views to display
-        var flags = _.extend({}, flags, {$sidebar: false, headless: (views.length <= 1)});
+        var flags = _.extend({}, flags, {
+            action_buttons: true,
+            $sidebar: false, 
+            headless: (views.length <= 1)
+        });
         this._super(parent, dataset, views, flags);  
         this.registry = instance.web.views.extend({
             list: 'instance.web.form.One2ManyListView',
@@ -5042,6 +5089,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         this.kanban_view.m2m = this;
         var loaded = $.Deferred();
         this.kanban_view.on("kanban_view_loaded",self,function() {
+            self.kanban_view.render_buttons();
             self.initial_is_loaded.resolve();
             loaded.resolve();
         });

@@ -42,7 +42,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 deletable: false,
                 views_switcher: false,
                 action_buttons: false,
-                search_view: false,
+                search_view: true,
                 headless: true,
                 pager: false,
                 radio: true,

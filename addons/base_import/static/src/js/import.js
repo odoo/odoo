@@ -38,13 +38,18 @@ openerp.base_import = function (instance) {
     // if true, the 'Import', 'Export', etc... buttons will be shown
     instance.web.ListView.prototype.defaults.import_enabled = true;
     instance.web.ListView.include({
-        load_list: function () {
+        /**
+         * Extend the render_buttons function of ListView by adding an event listener
+         * on the import button.
+         * @return {jQuery} the rendered buttons
+         */
+        render_buttons: function() {
             var self = this;
             var add_button = false;
-            if (!this.$buttons) {
+            if (!this.$buttons) { // Ensures that this is only done once
                 add_button = true;
             }
-            this._super.apply(this, arguments);
+            this._super.apply(this, arguments); // Sets this.$buttons
             if(add_button) {
                 this.$buttons.on('click', '.oe_list_button_import', function() {
                     self.do_action({
@@ -66,6 +71,7 @@ openerp.base_import = function (instance) {
                     return false;
                 });
             }
+            return this.$buttons;
         }
     });
 

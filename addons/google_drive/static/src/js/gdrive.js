@@ -3,7 +3,7 @@ openerp.google_drive = function (instance, m) {
         QWeb = instance.web.qweb;
 
     instance.web.Sidebar.include({
-        start: function () {
+        init: function () {
             var self = this;
             var ids
             this._super.apply(this, arguments);
