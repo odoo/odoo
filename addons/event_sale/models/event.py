@@ -175,3 +175,21 @@ class event_registration(models.Model):
                 'order': res.origin or res.sale_order_id.name})
             res.message_post(body=message)
         return res
+
+    @api.model
+    def _prepare_attendee_values(self, registration):
+        """ Override to add sale related stuff """
+        line_id = registration.get('sale_order_line_id')
+        if line_id:
+            registration.setdefault('partner_id', line_id.order_id.partner_id)
+        att_data = super(event_registration, self)._prepare_attendee_values(registration)
+        if line_id:
+            att_data.update({
+                'event_id': line_id.event_id.id,
+                'event_id': line_id.event_id.id,
+                'event_ticket_id': line_id.event_ticket_id.id,
+                'origin': line_id.order_id.name,
+                'sale_order_id': line_id.order_id.id,
+                'sale_order_line_id': line_id.id,
+            })
+        return att_data

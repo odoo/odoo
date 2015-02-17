@@ -303,6 +303,24 @@ class event_registration(models.Model):
             registration.sudo().confirm_registration()
         return registration
 
+    @api.model
+    def _prepare_attendee_values(self, registration):
+        """ Method preparing the values to create new attendees based on a
+        sale order line. It takes some registration data (dict-based) that are
+        optional values coming from an external input like a web page. This method
+        is meant to be inherited in various addons that sell events. """
+        partner_id = registration.pop('partner_id', self.env.user.partner_id)
+        event_id = registration.pop('event_id', False)
+        data = {
+            'name': registration.get('name', partner_id.name),
+            'phone': registration.get('phone', partner_id.phone),
+            'email': registration.get('email', partner_id.email),
+            'partner_id': partner_id.id,
+            'event_id': event_id and event_id.id or False,
+        }
+        data.update({key: registration[key] for key in registration.keys() if key in self._fields})
+        return data
+
     @api.one
     def do_draft(self):
         self.state = 'draft'
