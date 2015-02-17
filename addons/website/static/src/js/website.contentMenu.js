@@ -12,7 +12,10 @@
             self.$el.on('click', 'a[data-action]', function(ev) {
                 ev.preventDefault();
                 var $content_item = $(this);
-                self[$content_item.data('action')]();
+                var data_action = self[$content_item.data('action')];
+                if (data_action) {
+                    data_action();
+                }
             });
             return this._super();
         },

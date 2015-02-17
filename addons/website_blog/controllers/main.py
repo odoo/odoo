@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import json
 import urllib
 import werkzeug
 
@@ -225,10 +226,12 @@ class WebsiteBlog(http.Controller):
             'tag': tag,
             'blog': blog,
             'blog_post': blog_post,
+            'blog_post_cover_properties': json.loads(blog_post.cover_properties),
             'main_object': blog_post,
             'nav_list': self.nav_list(blog),
             'enable_editor': enable_editor,
             'next_post': next_post,
+            'next_post_cover_properties': json.loads(next_post.cover_properties) if next_post else {},
             'date': date_begin,
             'blog_url': blog_url,
             'pager': pager,
@@ -314,9 +317,6 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         new_blog_post_id = request.registry['blog.post'].create(cr, uid, {
             'blog_id': blog_id,
-            'name': _("Blog Post Title"),
-            'subtitle': _("Subtitle"),
-            'content': '',
             'website_published': False,
         }, context=context)
         new_blog_post = request.registry['blog.post'].browse(cr, uid, new_blog_post_id, context=context)
@@ -360,10 +360,10 @@ class WebsiteBlog(http.Controller):
         return ret
 
     @http.route('/blog/post_change_background', type='json', auth="public", website=True)
-    def change_bg(self, post_id=0, image=None, **post):
+    def change_bg(self, post_id=0, cover_properties={}, **post):
         if not post_id:
             return False
-        return request.registry['blog.post'].write(request.cr, request.uid, [int(post_id)], {'background_image': image}, request.context)
+        return request.registry['blog.post'].write(request.cr, request.uid, [int(post_id)], {'cover_properties': cover_properties}, request.context)
 
     @http.route('/blog/get_user/', type='json', auth="public", website=True)
     def get_user(self, **post):
