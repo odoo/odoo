@@ -20,7 +20,7 @@ var State = instance.web.Class.extend({
     destroy: function() {},
     get_widget: function() {},
     get_title: function() { return this.title; },
-    get_flags: function() { return this.flags; },
+    is_headless: function() { return this.flags.headless; },
     get_action: function() {},
     get_active_view: function() {},
     get_dataset: function() {},
@@ -146,17 +146,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
         // Sets the main ControlPanel state
         // AAB: temporary restrict the use of main control panel to act_window actions
         if (action.type === 'ir.actions.act_window') {
-            // if (old_state) old_state.disable();
-            // new_state.enable();
             this.main_control_panel.set_state(new_state, old_state);
-            // Expose the ControlPanel nodes to the inner_widget only if the ControlPanel is
-            // displayed so that the inner_widget don't insert stuff in hidden nodes
-            var new_state_flags = new_state.get_flags();
-            if (!new_state_flags.headless) {
-                this.inner_widget.set_external_nodes(this.main_control_panel.get_cp_nodes());
+            if (old_state) {
+                // Save the previous state control_panel content to restore it later
+                old_state.cp_content = this.main_control_panel.get_content();
             }
         }
 
+        // Append the inner_widget and hide the old one
         return $.when(this.inner_widget.appendTo(this.$el)).done(function () {
             if (old_widget) {
                 old_widget.$el.hide();
@@ -174,7 +171,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         title: view.controller.get('title') || state.get_title(),
                         index: index,
                         widget: state,
-                    }; 
+                    };
                 });
             } else {
                 return { title: state.get_title(), widget: state };
@@ -232,17 +229,17 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         // Set the control panel new state
         // Put in VMState?
-        // Inform the ControlPanel that the current state changed
-        self.main_control_panel.set_state(state, this.get_current_state());
+        // Inform the ControlPanel that the current state changed (mainly restore the searchview
+        // for the ViewManager to be able to do select_view, i.e. switch_mode)
+        // Storing in old_state is not necessary here
+        var old_state = this.get_current_state();
+        this.main_control_panel.set_state(state, old_state);
 
         var state_index = this.states.indexOf(state),
             def = $.when(state.widget.select_view && state.widget.select_view(index));
 
-        self.clear_states(self.states.splice(state_index + 1));
-        var last_state = _.last(self.states);
-        self.inner_widget = last_state.widget;
-        // AAB: preceeding two lines probably equal to
-        // self.inner_widget = state;
+        this.clear_states(this.states.splice(state_index + 1));
+        this.inner_widget = state.widget;
         return def.done(function () {
             if (self.inner_widget.do_show) {
                 self.inner_widget.do_show();
@@ -270,7 +267,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 // this action has been explicitly marked as not pushable
                 return;
             }
-            state.title = this.get_title(); 
+            state.title = this.get_title();
             if(this.inner_action.type == 'ir.actions.act_window') {
                 state.model = this.inner_action.res_model;
             }
@@ -403,7 +400,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_menu_id: null,
             additional_context: {},
         });
-
         if (action === false) {
             action = { type: 'ir.actions.act_window_close' };
         } else if (_.isString(action) && instance.web.client_actions.contains(action)) {
@@ -477,6 +473,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
             });
         }
+        // Do not permit popups to communicate with the main control panel
+        options.cp_bus = !popup && this.main_control_panel.get_bus();
 
         return this[type](action, options);
     },
@@ -553,8 +551,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_act_window: function (action, options) {
         var self = this;
         return this.ir_actions_common({
-            widget: function () { 
-                return new instance.web.ViewManager(self, null, null, null, action, self.main_control_panel.get_bus());
+            widget: function () {
+                return new instance.web.ViewManager(self, null, null, null, action, options.cp_bus);
             },
             action: action,
             klass: 'oe_act_window',
@@ -577,7 +575,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
 
         return this.ir_actions_common({
             widget: function () {
-                // AAB: temporary fix: Hide main control panel as client actions do not use it
+                // Hide main control panel as client actions do not use it
                 self.main_control_panel.do_hide();
                 return new ClientWidget(self, action);
             },
@@ -669,132 +667,155 @@ instance.web.ControlPanel = instance.web.Widget.extend({
 
         this.bus = new instance.web.Bus();
         this.bus.on("setup_search_view", this, this.setup_search_view);
+        this.bus.on("render_switch_buttons", this, this.render_switch_buttons);
         this.bus.on("update", this, this.update);
         this.bus.on("update_breadcrumbs", this, this.update_breadcrumbs);
-        this.bus.on("render_buttons", this, this.render_buttons);
-        this.bus.on("render_switch_buttons", this, this.render_switch_buttons);
 
+        this.state = null;
         this.searchview = null;
-
-        this.flags = null;
-        this.title = null; // Needed for Favorites of searchview
     },
     start: function() {
         // Retrieve ControlPanel jQuery nodes
-        this.$control_panel = this.$('.oe-control-panel-content');
+        this.$title_col = this.$('.oe-cp-title');
         this.$breadcrumbs = this.$('.oe-view-title');
-        this.$buttons = this.$('.oe-cp-buttons');
-        this.$switch_buttons = this.$('.oe-cp-switch-buttons');
-        this.$title_col = this.$control_panel.find('.oe-cp-title');
-        this.$search_col = this.$control_panel.find('.oe-cp-search-view');
-        this.$searchview = this.$(".oe-cp-search-view");
+        this.$searchview = this.$('.oe-cp-search-view');
         this.$searchview_buttons = this.$('.oe-search-options');
-        this.$pager = this.$('.oe-cp-pager');
+        this.$buttons = this.$('.oe-cp-buttons');
         this.$sidebar = this.$('.oe-cp-sidebar');
+        this.$pager = this.$('.oe-cp-pager');
+        this.$switch_buttons = this.$('.oe-cp-switch-buttons');
+
+        // By default, hide the ControlPanel and remove its contents from the DOM
+        this.$el.hide();
+        this.contents = this.$el.contents().detach();
 
         return this._super();
     },
     /**
-     * @return {Object} Dictionnary of ControlPanel nodes
+     * @return {Object} the Bus the ControlPanel is listening on
      */
-    get_cp_nodes: function() {
-        return {
-            $buttons: this.$buttons,
-            $switch_buttons: this.$switch_buttons,
-            $sidebar: this.$sidebar,
-            $pager: this.$pager
-        };
-    },
     get_bus: function() {
         return this.bus;
     },
     /**
-     * Sets the state of the controlpanel (in the case of a viewmanager, set_state must be
-     * called before switch_mode for the controlpanel and the viewmanager to be synchronized)
+     * @return {Object} the current State of the ControlPanel
      */
-    set_state: function(state, old_state) {
-        var self = this;
-
-        // Detach control panel elements in which sub-elements are inserted by other widgets
-        var old_content = {
-            '$buttons': this.$buttons.contents().detach(),
-            '$switch_buttons': this.$switch_buttons.contents().detach(),
-            '$pager': this.$pager.contents().detach(),
-            '$sidebar': this.$sidebar.contents().detach(),
-            'searchview': this.searchview, // AAB: do better with searchview
-            '$searchview': this.$searchview.contents().detach(),
-            '$searchview_buttons': this.$searchview_buttons.contents().detach(),
-        };
-        if (old_state) {
-            // Store them to re-attach them if we come back to that state (e.g. using breadcrumbs)
-            old_state.set_cp_content(old_content);
-        }
-
-        this.state = state;
-        this.flags = state.get_flags();
-
-        this.flags = state.widget.flags;
-        this.title = state.widget.title; // needed for Favorites of searchview
-
-        // Hide the ControlPanel in headless mode
-        this.$el.toggle(!this.flags.headless);
-
-        var content = state.get_cp_content();
-        if (content) {
-            // This state has already been rendered once
-            content.$buttons.appendTo(this.$buttons);
-            content.$switch_buttons.appendTo(this.$switch_buttons);
-            content.$pager.appendTo(this.$pager);
-            content.$sidebar.appendTo(this.$sidebar);
-            this.searchview = content.searchview;
-            content.$searchview.appendTo(this.$searchview);
-            content.$searchview_buttons.appendTo(this.$searchview_buttons);
-        }
-    },
     get_state: function() {
         return this.state;
     },
-    render_buttons: function(views) {
+    /**
+     * Sets the state of the controlpanel (in the case of a viewmanager, set_state must be
+     * called before switch_mode for the controlpanel and the viewmanager to be synchronized)
+     * @param {Object} [state] the new state
+     */
+    set_state: function(state) {
+        this.state = state;
+        // Set the new state searchview
+        this.searchview = state.get_searchview();
+    },
+    /**
+     * Returns the content of the ControlPanel without detaching anything from it
+     * @return {Object} dictionnary containing the detached jQuery elements
+     */
+    get_content: function() {
+        return {
+            '$buttons': this.$buttons.contents(),
+            '$switch_buttons': this.$switch_buttons.contents(),
+            '$pager': this.$pager.contents(),
+            '$sidebar': this.$sidebar.contents(),
+            '$searchview': this.$searchview.contents(),
+            '$searchview_buttons': this.$searchview_buttons.contents(),
+        };
+    },
+    /**
+     * Hides (or shows) the ControlPanel in headless (resp. non-headless) mode
+     * Also detaches or attaches its contents to clean the DOM
+     */
+    toggle_visibility: function(hidden) {
+        this.$el.toggle(!hidden);
+        if (hidden && !this.contents) {
+            this.contents = this.$el.contents().detach();
+        } else if (this.contents) {
+            this.contents.appendTo(this.$el);
+            this.contents = null;
+        }
+    },
+    /**
+     * Detaches the content of the ControlPanel
+     * @return {Object} dictionnary containing the detached jQuery elements
+     */
+    _detach_content: function() {
+        var cp_content = this.get_content();
+        _.each(cp_content, function($content) {
+            $content.detach();
+        });
+
+        return cp_content;
+    },
+    /**
+     * Attaches content to the ControlPanel
+     * @param {Object} [content] dictionnary of jQuery elements to attach, whose keys
+     * are jQuery nodes identifiers
+     */
+    _attach_content: function(content) {
         var self = this;
-
-        var buttons_divs = QWeb.render('ControlPanel.buttons', {views: views});
-        $(buttons_divs).appendTo(this.$buttons);
-
-        // Show each div as views will put their own buttons inside it and show/hide them
-        _.each(views, function(view) {
-            self.$('.oe-' + view.type + '-buttons').show();
+        _.each(content, function($nodeset, $element) {
+            if ($nodeset && self[$element]) {
+                $nodeset.appendTo(self[$element]);
+            }
         });
     },
-    render_switch_buttons: function(views) {
+    /**
+     * Updates the content and display of the ControlPanel
+     * @param {Object} [status.active_view] the current active view
+     * @param {Array} [status.breadcrumbs] the breadcrumbs to display
+     * @param {Object} [status.cp_content] dictionnary containing the new ControlPanel jQuery elements
+     * @param {Boolean} [status.hidden] true if the ControlPanel should be hidden
+     * @param {openerp.web.SearchView} [status.searchview] the searchview widget
+     * @param {Boolean} [status.search_view_hidden] true if the searchview is hidden, false otherwise
+     */
+    update: function(status) {
+        this.toggle_visibility(status.hidden);
+        if (!status.hidden) {
+            // Don't update the ControlPanel in headless mode as the views have
+            // inserted themselves the buttons where they want, so inserting them
+            // again in the ControlPanel will removed them from there they should be
+            this._detach_content();
+            this._attach_content(status.cp_content);
+            if (status.active_view) this.update_switch_buttons(status.active_view);
+            if (status.searchview) this.update_search_view(status.searchview, status.search_view_hidden);
+            if (status.breadcrumbs) this.update_breadcrumbs(status.breadcrumbs);
+        }
+    },
+    /**
+     * Renders the switch buttons and call set_switch_buttons on the src
+     * Does not append the switch buttons to the DOM
+     * @param {Object} [src] the source requesting the switch_buttons
+     * @param {Array} [views] the array of views
+     */
+    render_switch_buttons: function(src, views) {
         if (views.length > 1) {
             var self = this;
 
-            var switch_buttons = QWeb.render('ControlPanel.switch-buttons', {views: views});
-            $(switch_buttons).appendTo(this.$switch_buttons);
+            // Render switch buttons but do not append them to the DOM as this will
+            // be done later, simultaneously to all other ControlPanel elements
+            var $switch_buttons = $(QWeb.render('ControlPanel.switch-buttons', {views: views}));
 
-            // Create tooltips
+            // Create bootstrap tooltips
             _.each(views, function(view) {
                 self.$('.oe-cp-switch-' + view.type).tooltip();
             });
         }
+
+        // Set the buttons jQuery elements in the Widget which made the request
+        src.set_switch_buttons($switch_buttons);
     },
-     /**
+    /**
      * Triggers an event when switch-buttons are clicked on
      */
     on_switch_buttons_click: function(event) {
         var view_type = $(event.target).data('view-type');
         this.trigger('switch_view', view_type);
-    },
-    /**
-     * Updates its status according to the active_view
-     * @param {Object} [active_view] the current active view
-     * @param {Boolean} [search_view_hidden] true if the searchview is hidden, false otherwise
-     * @param {Array} [breadcrumbs] the breadcrumbs to display
-     */
-    update: function(active_view, search_view_hidden, breadcrumbs) {
-        this.update_switch_buttons(active_view);
-        this.update_search_view(search_view_hidden);
-        this.update_breadcrumbs(breadcrumbs);
     },
     /**
      * Removes active class on all switch-buttons and adds it to the one of the active view
@@ -843,7 +864,6 @@ instance.web.ControlPanel = instance.web.Widget.extend({
      * @param {Object} [flags] a dictionnary of Booleans
      */
     setup_search_view: function(src, action, dataset, flags) {
-        var self = this;
         var view_id = (action && action.search_view_id && action.search_view_id[0]) || false;
 
         var search_defaults = {};
@@ -859,27 +879,29 @@ instance.web.ControlPanel = instance.web.Widget.extend({
         var options = {
             hidden: flags.search_view === false,
             disable_custom_filters: flags.search_disable_custom_filters,
-            $buttons: this.$searchview_buttons,
+            $buttons: $("<div>"),
             action: action,
         };
 
-        // Instantiate the SearchView and append it to the DOM
-        var SearchView = instance.web.SearchView;
-        this.searchview = new SearchView(this, dataset, view_id, search_defaults, options);
-        var search_view_loaded = this.searchview.appendTo(this.$searchview);
-        // Sets the SearchView in the widget which made the request
-        src.set_search_view(self.searchview, search_view_loaded);
+        // Instantiate the SearchView, but do not append it nor its buttons to the DOM as this will
+        // be done later, simultaneously to all other ControlPanel elements
+        var searchview = new instance.web.SearchView(this, dataset, view_id, search_defaults, options);
+        searchview.appendTo($("<div>")).then(function() {
+            // Set the SearchView in the widget which made the request
+            src.set_search_view(searchview);
+        });
     },
     /**
      * Updates the SearchView's visibility and extend the breadcrumbs area if the SearchView is not visible
+     * @param {openerp.web.SearchView} [searchview] the searchview Widget
      * @param {Boolean} [is_hidden] visibility of the searchview
      **/
-    update_search_view: function(is_hidden) {
-        if (this.searchview) {
-            this.searchview.toggle_visibility(!is_hidden);
-            this.$title_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
-            this.$search_col.toggle(!is_hidden);
-        }
+    update_search_view: function(searchview, is_hidden) {
+        // Set the $buttons div (in the DOM) of the searchview as the $buttons
+        // have been appended to a jQuery node not in the DOM at SearchView initialization
+        searchview.$buttons = this.$searchview_buttons;
+        searchview.toggle_visibility(!is_hidden);
+        this.$title_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
     },
 });
 
@@ -1180,26 +1202,20 @@ instance.web.ViewManager = instance.web.Widget.extend({
         this.$el.addClass("oe_view_manager_" + ((this.action && this.action.target) || 'current'));
 
         if (this.cp_bus) {
-            // Tell the ControlPanel to setup its search view
-            this.search_view_loaded = $.Deferred();
-            this.cp_bus.trigger('setup_search_view', this, this.action, this.dataset, this.flags);
-            $.when(this.search_view_loaded).then(function() {
-                self.searchview.on('search_data', self, self.search);
-            });
-
-            // Tell the ControlPanel to render and append the (switch-)buttons to the DOM
-            this.cp_bus.trigger('render_buttons', this.views);
-            this.cp_bus.trigger('render_switch_buttons', this.view_order);
+            this.control_elements = {};
+            if (this.flags.search_view) {
+                // Ask the ControlPanel to setup the search view
+                this.search_view_loaded = $.Deferred();
+                this.cp_bus.trigger('setup_search_view', this, this.action, this.dataset, this.flags);
+                $.when(this.search_view_loaded).then(function() {
+                    self.searchview.on('search_data', self, self.search);
+                });
+            }
+            if (this.flags.views_switcher) {
+                // Ask the ControlPanel to render the switch-buttons
+                self.cp_bus.trigger('render_switch_buttons', self, self.view_order);
+            }
         }
-
-        _.each(this.views, function (view) {
-            // Expose buttons, sidebar and pager elements to the views so that they can insert stuff in them
-            view.options = _.extend(view.options, {
-                $buttons : self.$ext_buttons ? self.$ext_buttons.find('.oe-' + view.type + '-buttons') : undefined,
-                $sidebar : self.$ext_sidebar,
-                $pager : self.$ext_pager,
-            }, self.flags, self.flags[view.type], view.options);
-        });
 
         // Switch to the default_view to load it
         this.main_view_loaded = this.switch_mode(default_view, null, default_options);
@@ -1207,22 +1223,25 @@ instance.web.ViewManager = instance.web.Widget.extend({
         return $.when(self.main_view_loaded, this.search_view_loaded);
     },
     /**
-     * Sets the external nodes in which the ViewManager and its views should insert elements
-     * @param {Object} [nodes] a dictionnary of jQuery nodes
-     */
-    set_external_nodes: function(nodes) {
-        this.$ext_buttons = nodes.$buttons;
-        this.$ext_sidebar = nodes.$sidebar;
-        this.$ext_pager = nodes.$pager;
-    },
-    /**
      * Executed by the ControlPanel when the searchview requested by this ViewManager is loaded
      * @param {Widget} [searchview] the SearchView
-     * @param {Deferred} [search_view_loaded_def] will be resolved when the SearchView is loaded
      */
-    set_search_view: function(searchview, search_view_loaded_def) {
+    set_search_view: function(searchview) {
         this.searchview = searchview;
-        this.search_view_loaded = search_view_loaded_def;
+        _.extend(this.control_elements, {
+            $searchview: searchview.$el,
+            $searchview_buttons: searchview.$buttons.contents(),
+        });
+        this.search_view_loaded.resolve();
+    },
+    /**
+     * Executed by the ControlPanel when the switch_buttons requested by this ViewManager are rendered
+     * @param {jQuery} [$switch_buttons] the rendered switch_buttons
+     */
+    set_switch_buttons: function($switch_buttons) {
+        _.extend(this.control_elements, {
+            $switch_buttons: $switch_buttons,
+        });
     },
     get_search_view: function() {
         return this.searchview;
@@ -1232,7 +1251,7 @@ instance.web.ViewManager = instance.web.Widget.extend({
      */
     search: function(domains, contexts, groupbys) {
         var self = this,
-            controller = this.active_view.controller, // AAB: Correct view must be loaded here
+            controller = this.active_view.controller, // the correct view must be loaded here
             action_context = this.action.context || {},
             view_context = controller.get_context();
         instance.web.pyeval.eval_domains_and_contexts({
@@ -1290,7 +1309,7 @@ instance.web.ViewManager = instance.web.Widget.extend({
         }
 
         // Call do_search on the searchview to compute domains, contexts and groupbys
-        if (this.searchview &&
+        if (this.search_view_loaded &&
                 this.flags.auto_search &&
                 view.controller.searchable !== false) {
             this.active_search = $.Deferred();
@@ -1305,13 +1324,24 @@ instance.web.ViewManager = instance.web.Widget.extend({
     },
     _display_view: function (view_options) {
         var self = this;
+        var view_controller = this.active_view.controller;
+
+        // Show the view
         this.active_view.$container.show();
-        $.when(this.active_view.controller.do_show(view_options)).done(function () {
-            // Tell the ControlPanel to update its elemnts
+        $.when(view_controller.do_show(view_options)).done(function () {
             if (self.cp_bus) {
-                var search_view_hidden = self.active_view.controller.searchable === false;
-                var breadcrumbs = self.action_manager.get_breadcrumbs()
-                self.cp_bus.trigger("update", self.active_view, search_view_hidden, breadcrumbs);
+                // Render the control elements of the active view (buttons, sidebar, pager)
+                var view_elements = self.render_view_control_elements();
+                var status = {
+                    active_view: self.active_view,
+                    breadcrumbs: self.action_manager && self.action_manager.get_breadcrumbs(),
+                    cp_content: _.extend({}, self.control_elements, view_elements),
+                    hidden: self.flags.headless,
+                    searchview: self.searchview,
+                    search_view_hidden: view_controller.searchable === false,
+                };
+                // Tell the ControlPanel to update its elements
+                self.cp_bus.trigger('update', status);
             }
         });
     },
@@ -1340,7 +1370,7 @@ instance.web.ViewManager = instance.web.Widget.extend({
             if (self.action_manager) self.action_manager.trigger('history_back');
         });
         controller.on("change:title", this, function() {
-            if (self.cp_bus) {
+            if (self.cp_bus && self.action_manager) {
                 var breadcrumbs = self.action_manager.get_breadcrumbs();
                 self.cp_bus.trigger("update_breadcrumbs", breadcrumbs);
             }
@@ -1357,6 +1387,34 @@ instance.web.ViewManager = instance.web.Widget.extend({
         var view_type = this.view_stack[index].type;
         this.view_stack.splice(index);
         return this.switch_mode(view_type);
+    },
+    /**
+     * Renders the control elements (buttons, sidebar, pager) of the current view
+     * This must be done when active_search is resolved (for KanbanViews)
+     * Fills this.active_view.control_elements dictionnary with the rendered elements
+     */
+    render_view_control_elements: function() {
+        if (!this.active_view.control_elements) {
+            var view_controller = this.active_view.controller;
+            var elements = {};
+            if (!this.flags.headless) {
+                elements = {
+                    $buttons: !this.flags.footer_to_buttons ? $("<div>") : undefined,
+                    $sidebar: $("<div>"),
+                    $pager: $("<div>"),
+                }
+            }
+            view_controller.render_buttons(elements.$buttons);
+            view_controller.render_sidebar(elements.$sidebar);
+            view_controller.render_pager(elements.$pager);
+            // Remove the unnecessary outer div
+            elements = _.mapObject(elements, function($node) {
+                return $node && $node.contents();
+            });
+            // Store the rendered elements in the active_view to allow restoring them later
+            this.active_view.control_elements = elements;
+        }
+        return this.active_view.control_elements;
     },
     /**
      * @returns {Number|Boolean} the view id of the given type, false if not found
@@ -1596,7 +1654,6 @@ instance.web.View = instance.web.Widget.extend({
         this.ViewManager = parent;
         this.dataset = dataset;
         this.view_id = view_id;
-        this.$buttons = options && options.$buttons;
         this.set_default_options(options);
     },
     start: function () {
@@ -1739,9 +1796,6 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_show: function () {
         var self = this;
-        if (this.$buttons) {
-            this.$buttons.show();
-        }
         this.$el.show();
         setTimeout(function () {
             self.$el.parent().addClass('in');
@@ -1750,15 +1804,13 @@ instance.web.View = instance.web.Widget.extend({
         instance.web.bus.trigger('view_shown', this);
     },
     do_hide: function () {
-        if (this.$buttons) {
-            this.$buttons.hide();
-        }
         this.$el.parent().removeClass('in');
         this.$el.hide();
     },
     is_active: function () {
         return this.ViewManager.active_view.controller === this;
-    }, /**
+    },
+    /**
      * Wraps fn to only call it if the current view is the active one. If the
      * current view is not active, doesn't call fn.
      *
@@ -1782,6 +1834,33 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_load_state: function (state, warm) {
 
+    },
+    /**
+     * This function should render the buttons of the view, set this.$buttons to
+     * the produced jQuery element and define some listeners on it.
+     * This function should be called after start().
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case the View can insert the buttons somewhere else
+     */
+    render_buttons: function($node) {
+    },
+    /**
+     * This function should instantiate and render the sidebar of the view, set this.sidebar to
+     * the instantiated Sidebar Widget and possibly add custom items in it.
+     * This function should be called after start().
+     * @param {jQuery} [$node] a jQuery node where the sidebar should be inserted
+     * $node may be undefined, in which case the View can insert the sidebar somewhere else
+     */
+    render_sidebar: function($node) {
+    },
+    /**
+     * This function should render the pager of the view, set this.$pager to
+     * the produced jQuery element and define some listeners on it.
+     * This function should be called after start().
+     * @param {jQuery} [$node] a jQuery node where the pager should be inserted
+     * $node may be undefined, in which case the View can insert the pager somewhere else
+     */
+    render_pager: function($node) {
     },
     /**
      * Switches to a specific view type

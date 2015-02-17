@@ -30,7 +30,6 @@ instance.web.PivotView = instance.web.View.extend({
         this._super(parent, dataset, view_id, options);
         this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
 
-        this.$sidebar = options.$sidebar;
         this.fields = {};
         this.measures = {};
         this.groupable_fields = {};
@@ -57,6 +56,12 @@ instance.web.PivotView = instance.web.View.extend({
         this.last_header_selected = null;
         this.sorted_column = {};
     },
+    willStart: function () {
+        var self = this;
+        return openerp.session.rpc('/web/pivot/check_xlwt').then(function(result) {
+            self.xlwt_installed = result;
+        });
+    },
     start: function () {
         var self = this;
         this.$table_container = this.$('.o-pivot-table');
@@ -64,39 +69,56 @@ instance.web.PivotView = instance.web.View.extend({
         var load_fields = this.model.call('fields_get', [])
                 .then(this.prepare_fields.bind(this));
 
-        if (this.$sidebar) {
-            openerp.session.rpc('/web/pivot/check_xlwt').then(function (result) {
-                if (result) {
-                    self.sidebar = new instance.web.Sidebar(self);
-                    self.sidebar.appendTo(self.$sidebar);
-                    self.sidebar.add_items('other', [{
-                        label: _t("Download xls"),
-                        callback: self.download_table.bind(self)
-                    }]);
-                }
-            });
-        }
-        return $.when(this._super(), load_fields).then(this.render_buttons.bind(this));
+        return $.when(this._super(), load_fields).then(this.render_field_selection.bind(this));
     },
-    render_buttons: function () {
+    render_field_selection: function () {
         var self = this;
 
-        // Render buttons only in non-headless mode as buttons are in the header
-        if (!this.options.headless) {
+        var context = {fields: _.chain(this.groupable_fields).pairs().sortBy(function(f){return f[1].string;}).value()};
+        this.$field_selection = this.$('.o-field-selection');
+        this.$field_selection.html(QWeb.render('PivotView.FieldSelection', context));
+        openerp.web.bus.on('click', self, function () {
+            self.$field_selection.find('ul').first().hide();
+        });
+    },
+    /**
+     * Render the buttons according to the PivotView.buttons template and
+     * add listeners on it.
+     * Set this.$buttons with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case the PivotView does nothing
+     */
+    render_buttons: function ($node) {
+        if ($node) {
+            var self = this;
+
             var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
-            this.$buttons.html(QWeb.render('PivotView.buttons', context));
+            this.$buttons = $(QWeb.render('PivotView.buttons', context));
             this.$buttons.click(this.on_button_click.bind(this));
             this.active_measures.forEach(function (measure) {
                 self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
             });
             this.$buttons.find('button').tooltip();
+
+            this.$buttons.appendTo($node);
         }
-        var another_ctx = {fields: _.chain(this.groupable_fields).pairs().sortBy(function(f){return f[1].string;}).value()};
-        this.$field_selection = this.$('.o-field-selection');
-        this.$field_selection.html(QWeb.render('PivotView.FieldSelection', another_ctx));
-        openerp.web.bus.on('click', self, function () {
-            self.$field_selection.find('ul').first().hide();
-        });
+    },
+    /**
+     * Instantiate and render the sidebar.
+     * Sets this.sidebar
+     * @param {jQuery} [$node] a jQuery node where the sidebar should be inserted
+     * $node may be undefined, in which case the PivotView does nothing
+     **/
+    render_sidebar: function($node) {
+        if (this.xlwt_installed && $node && this.options.sidebar) {
+            this.sidebar = new instance.web.Sidebar(this);
+            this.sidebar.add_items('other', [{
+                label: _t("Download xls"),
+                callback: this.download_table.bind(this),
+            }]);
+
+            this.sidebar.appendTo($node);
+        }
     },
     view_loading: function (fvg) {
         var self = this;
@@ -167,21 +189,12 @@ instance.web.PivotView = instance.web.View.extend({
     },
     do_show: function () {
         var self = this;
-        if (this.sidebar) {
-            this.sidebar.$el.show();
-        }
         this.do_push_state({});
         this.data_loaded.done(function () {
             self.display_table(); 
             self.$el.show();
         });
         return this._super();
-    },
-    do_hide: function () {
-        if (this.sidebar) {
-            this.sidebar.$el.hide();
-        }
-        this._super();
     },
     get_context: function () {
         return !this.ready ? {} : {
