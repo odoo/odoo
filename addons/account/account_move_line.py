@@ -782,7 +782,7 @@ class account_move_line(osv.osv):
             ret_line = {
                 'id': line.id,
                 'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
-                'ref': line.move_id.ref,
+                'ref': line.move_id.ref or '',
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.type,
@@ -1374,6 +1374,8 @@ class account_move_line(osv.osv):
                     }
                     self.create(cr, uid, data, context)
                 #create the Tax movement
+                if not tax['amount']:
+                    continue
                 data = {
                     'move_id': vals['move_id'],
                     'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
