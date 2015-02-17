@@ -1139,7 +1139,7 @@ class pos_order(osv.osv):
 
                 for tax in computed_taxes:
                     tax_amount += cur_obj.round(cr, uid, cur, tax['amount'])
-                    group_key = (tax['tax_code_id'], tax['base_code_id'], tax['account_collected_id'], tax['id'])
+                    group_key = (tax['tax_code_id'], tax['base_code_id'], tax['id'])
 
                     group_tax.setdefault(group_key, 0)
                     group_tax[group_key] += cur_obj.round(cr, uid, cur, tax['amount'])

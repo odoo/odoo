@@ -8,8 +8,6 @@
     name: VAT 10 perc Incl
     amount_type: percent
     amount: 10.0
-    account_paid_id: account.iva
-    account_collected_id: account.iva
     price_include: 1
 -
   I assign this 10 percent tax on the [PCSC234] PC Assemble SC234 product as a sale tax
@@ -23,8 +21,6 @@
     name: VAT 05 perc Excl
     amount_type: percent
     amount: 5.0
-    account_paid_id: account.iva
-    account_collected_id: account.iva
     price_include: 0
 -
   I will create a second VAT tax of 5% but this time for a child company, to
@@ -35,8 +31,6 @@
     name: VAT 05 perc Excl (US)
     amount_type: percent
     amount: 5.0
-    account_paid_id: account.iva
-    account_collected_id: account.iva
     price_include: 0
     company_id: stock.res_company_1
 -
