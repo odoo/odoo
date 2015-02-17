@@ -1327,6 +1327,8 @@ class procurement_order(osv.osv):
 
         @return: dictionary giving for each procurement its related resolving PO line.
         """
+        if context is None:
+            context = {}
         res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
         po_obj = self.pool.get('purchase.order')
@@ -1336,7 +1338,13 @@ class procurement_order(osv.osv):
         linked_po_ids = []
         sum_po_line_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
-            partner = self._get_product_supplier(cr, uid, procurement, context=context)
+            # force the company via the context in order to read the good value
+            # for the property fields of the partner (the make_po() method can be
+            # called by the procurement scheduler, that is run by the admin user
+            # that may not be in the company of the procurement)
+            ctx_company = context.copy()
+            ctx_company['force_company'] = procurement.company_id.id
+            partner = self._get_product_supplier(cr, uid, procurement, context=ctx_company)
             if not partner:
                 self.message_post(cr, uid, [procurement.id], _('There is no supplier associated to product %s') % (procurement.product_id.name))
                 res[procurement.id] = False
