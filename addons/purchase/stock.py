@@ -59,6 +59,7 @@ class stock_move(osv.osv):
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         if move.purchase_line_id:
             invoice_line_vals['purchase_line_id'] = move.purchase_line_id.id
+            invoice_line_vals['account_analytic_id'] = move.purchase_line_id.account_analytic_id.id or False
         invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
         if move.purchase_line_id:
             purchase_line = move.purchase_line_id
