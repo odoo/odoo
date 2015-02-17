@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Payment: Website Integration',
     'category': 'Website',
     'summary': 'Payment: Website Integration',
     'version': '1.0',
     'description': """Bridge module for acquirers and website.""",
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': [
         'website',
         'payment',
@@ -14,7 +14,6 @@
     ],
     'data': [
         'views/website_payment_templates.xml',
-        'views/website_settings_payment.xml',
+        'views/website_views.xml',
     ],
-    'auto_install': False,
 }

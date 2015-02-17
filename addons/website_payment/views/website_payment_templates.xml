@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Methods">
-            <xpath expr="//div[@id='info']" position="inside">
-                <h4 class="payment_method_title">Payment Method</h4>
-                <ul class="payment_method_list list-inline">
-                    <t t-foreach="request.website.payment_acquirers()" t-as="acquirer">
-                        <li><img class="img-rounded" t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)"/></li>
-                    </t>
-                </ul>
-            </xpath>
-        </template>
+<odoo>
+    <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Methods">
+        <xpath expr="//div[@id='info']" position="inside">
+            <h4 class="payment_method_title">Payment Method</h4>
+            <ul class="payment_method_list list-inline">
+                <t t-foreach="request.website.payment_acquirers()" t-as="acquirer">
+                    <li><img class="img-rounded" t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)"/></li>
+                </t>
+            </ul>
+        </xpath>
+    </template>
 
-     <template id="assets_frontend" inherit_id="website.assets_frontend" name="Payment Frontend assets">
-       <xpath expr="." position="inside">
-
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Payment Frontend assets">
+      <xpath expr="." position="inside">
           <link rel='stylesheet' href='/website_payment/static/src/css/website_payment.css'/>
           <script type="text/javascript" src="/website_payment/static/src/js/payment_acquirer.js"></script>
           <script type="text/javascript" src="/website_payment/static/lib/jquery.payment/jquery.payment.js"></script>
@@ -81,6 +79,4 @@
             <a href="/my/payment_method">Manage your payment methods</a>
         </xpath>
     </template>
-
-    </data>
-</openerp>
+</odoo>
