@@ -949,6 +949,22 @@ class account_move_line(osv.osv):
         move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=reconcile_context)
         return r_id
 
+    def _prepare_writeoff_line_vals(self, cr, uid, ids, name, debit, credit,
+                                    account_id, date, analytic_account_id,
+                                    currency_id, amount_currency, partner_id,
+                                    context=None):
+        """This method is designed to be inherited in a custom module"""
+        return {'name': name,
+                'debit': debit,
+                'credit': credit,
+                'account_id': account_id,
+                'date': date,
+                'analytic_account_id': analytic_account_id,
+                'partner_id': partner_id,
+                'currency_id': currency_id,
+                'amount_currency': amount_currency
+                }
+
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
         account_obj = self.pool.get('account.account')
         move_obj = self.pool.get('account.move')
@@ -1040,29 +1056,33 @@ class account_move_line(osv.osv):
                         tmp_amount = cur_obj.compute(cr, uid, line.account_id.company_id.currency_id.id, context.get('currency_id',False), abs(line.debit-line.credit), context={'date': line.date})
                         amount_currency_writeoff += (line.debit > 0) and tmp_amount or -tmp_amount
 
+            analytic_account_id = context.get('analytic_id', False)
+            currency_id = cur_id or (account.currency_id.id or False)
+            amount_currency = amount_currency_writeoff and\
+                amount_currency_writeoff or\
+                (account.currency_id.id and -1 * currency or 0.0)
             writeoff_lines = [
-                (0, 0, {
-                    'name': libelle,
-                    'debit': self_debit,
-                    'credit': self_credit,
-                    'account_id': account_id,
-                    'date': date,
-                    'partner_id': partner_id,
-                    'currency_id': cur_id or (account.currency_id.id or False),
-                    'amount_currency': amount_currency_writeoff and -1 * amount_currency_writeoff or (account.currency_id.id and -1 * currency or 0.0)
-                }),
-                (0, 0, {
-                    'name': libelle,
-                    'debit': debit,
-                    'credit': credit,
-                    'account_id': writeoff_acc_id,
-                    'analytic_account_id': context.get('analytic_id', False),
-                    'date': date,
-                    'partner_id': partner_id,
-                    'currency_id': cur_id or (account.currency_id.id or False),
-                    'amount_currency': amount_currency_writeoff and amount_currency_writeoff or (account.currency_id.id and currency or 0.0)
-                })
+                (0, 0,
+                 self._prepare_writeoff_line_vals(cr, uid, ids, libelle, self_debit, self_credit,
+                                                  account_id, date, False, currency_id,
+                                                  amount_currency, partner_id,
+                                                  context=context))
             ]
+
+            amount_currency = amount_currency_writeoff and \
+                              amount_currency_writeoff or \
+                              (account.currency_id.id and currency or 0.0)
+            writeoff_lines.append(
+                (0, 0,
+                 self._prepare_writeoff_line_vals(cr, uid, ids, libelle, debit,
+                                                  credit,
+                                                  writeoff_acc_id, date,
+                                                  analytic_account_id,
+                                                  currency_id,
+                                                  amount_currency, partner_id,
+                                                  context=context)),
+            )
+
             # DO NOT FORWARD PORT
             # In some exceptional situations (partial payment from a bank statement in foreign
             # currency), a write-off can be introduced at the very last moment due to currency
