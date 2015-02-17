@@ -64,8 +64,6 @@ var DiagramView = View.extend({
             self.$el.find('.oe_diagram_header').append(html_label);
         });
 
-        this.init_pager();
-
         // New Node,Edge
         this.$el.find('#new_node.oe_diagram_button_new').click(function(){self.add_node();});
 
@@ -361,29 +359,29 @@ var DiagramView = View.extend({
        });
     },
     
-    do_hide: function () {
-        if (this.$pager) {
-            this.$pager.hide();
-        }
-        this._super();
-    },
-    
-    init_pager: function() {
+    /**
+     * Render the pager according to the DiagramView.pager template and add listeners on it.
+     * Set this.$pager with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered pager should be inserted
+     * $node may be undefined, in which case the DiagramView inserts the pager into this.options.$pager
+     * or into a div of its template
+     */
+    render_pager: function($node) {
         var self = this;
-        if (this.$pager)
-            this.$pager.remove();
-        
-        this.$pager = $(QWeb.render("DiagramView.pager", {'widget':self})).hide();
-        if (this.options.$pager) {
-            this.$pager.appendTo(this.options.$pager);
-        } else {
-            this.$el.find('.oe_diagram_pager').replaceWith(this.$pager);
-        }
-        this.$pager.on('click','a[data-pager-action]',function() {
+
+        this.$pager = $(QWeb.render("DiagramView.pager", {'widget': self}));
+        this.$pager.find('a[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
             self.execute_pager_action(action);
         });
-        this.do_update_pager();
+        this.execute_pager_action('reload');
+
+        $node = $node || this.options.$pager;
+        if ($node) {
+            this.$pager.appendTo($node);
+        } else {
+            this.$('.oe_diagram_pager').replaceWith(this.$pager);
+        }
     },
     
     pager_action_trigger: function(){
@@ -409,15 +407,16 @@ var DiagramView = View.extend({
 	            break;
 	    }
 	    this.trigger('pager_action_executed');
-
     },
 
     do_update_pager: function(hide_index) {
-        this.$pager.toggle(this.dataset.ids.length > 1);
-        if (hide_index) {
-            $(".oe_diagram_pager_state", this.$pager).html("");
-        } else {
-            $(".oe_diagram_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
+        if (this.$pager) {
+            this.$pager.toggle(this.dataset.ids.length > 1);
+            if (hide_index) {
+                this.$pager.find(".oe_diagram_pager_state").html("");
+            } else {
+                this.$pager.find(".oe_diagram_pager_state").html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
+            }
         }
     },
 

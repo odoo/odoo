@@ -22,7 +22,7 @@ var State = core.Class.extend({
     destroy: function() {},
     get_widget: function() {},
     get_title: function() { return this.title; },
-    get_flags: function() { return this.flags; },
+    is_headless: function() { return this.flags.headless; },
     get_action: function() {},
     get_active_view: function() {},
     get_dataset: function() {},
@@ -147,17 +147,14 @@ var ActionManager = Widget.extend({
         // Sets the main ControlPanel state
         // AAB: temporary restrict the use of main control panel to act_window actions
         if (action.type === 'ir.actions.act_window') {
-            // if (old_state) old_state.disable();
-            // new_state.enable();
             this.main_control_panel.set_state(new_state, old_state);
-            // Expose the ControlPanel nodes to the inner_widget only if the ControlPanel is
-            // displayed so that the inner_widget don't insert stuff in hidden nodes
-            var new_state_flags = new_state.get_flags();
-            if (!new_state_flags.headless) {
-                this.inner_widget.set_external_nodes(this.main_control_panel.get_cp_nodes());
+            if (old_state) {
+                // Save the previous state control_panel content to restore it later
+                old_state.cp_content = this.main_control_panel.get_content();
             }
         }
 
+        // Append the inner_widget and hide the old one
         return $.when(this.inner_widget.appendTo(this.$el)).done(function () {
             if (old_widget) {
                 old_widget.$el.hide();
@@ -175,7 +172,7 @@ var ActionManager = Widget.extend({
                         title: view.controller.get('title') || state.get_title(),
                         index: index,
                         widget: state,
-                    }; 
+                    };
                 });
             } else {
                 return { title: state.get_title(), widget: state };
@@ -233,17 +230,16 @@ var ActionManager = Widget.extend({
         }
         // Set the control panel new state
         // Put in VMState?
-        // Inform the ControlPanel that the current state changed
-        self.main_control_panel.set_state(state, this.get_current_state());
-
+        // Inform the ControlPanel that the current state changed (mainly restore the searchview
+        // for the ViewManager to be able to do select_view, i.e. switch_mode)
+        // Storing in old_state is not necessary here
+        var old_state = this.get_current_state();
+        this.main_control_panel.set_state(state, old_state);
         var state_index = this.states.indexOf(state),
             def = $.when(state.widget.select_view && state.widget.select_view(index));
 
-        self.clear_states(self.states.splice(state_index + 1));
-        var last_state = _.last(self.states);
-        self.inner_widget = last_state.widget;
-        // AAB: preceeding two lines probably equal to
-        // self.inner_widget = state;
+        this.clear_states(this.states.splice(state_index + 1));
+        this.inner_widget = state.widget;
         return def.done(function () {
             if (self.inner_widget.do_show) {
                 self.inner_widget.do_show();
@@ -269,7 +265,7 @@ var ActionManager = Widget.extend({
                 // this action has been explicitly marked as not pushable
                 return;
             }
-            state.title = this.get_title(); 
+            state.title = this.get_title();
             if(this.inner_action.type == 'ir.actions.act_window') {
                 state.model = this.inner_action.res_model;
             }
@@ -307,7 +303,7 @@ var ActionManager = Widget.extend({
         var self = this,
             action_loaded;
         if (state.action) {
-            if (_.isString(state.action) && core.action_regisry.contains(state.action)) {
+            if (_.isString(state.action) && core.action_registry.contains(state.action)) {
                 var action_client = {
                     type: "ir.actions.client",
                     tag: state.action,
@@ -402,10 +398,9 @@ var ActionManager = Widget.extend({
             action_menu_id: null,
             additional_context: {},
         });
-
         if (action === false) {
             action = { type: 'ir.actions.act_window_close' };
-        } else if (_.isString(action) && core.action_regisry.contains(action)) {
+        } else if (_.isString(action) && core.action_registry.contains(action)) {
             var action_client = { type: "ir.actions.client", tag: action, params: {} };
             return this.do_action(action_client, options);
         } else if (_.isNumber(action) || _.isString(action)) {
@@ -476,6 +471,8 @@ var ActionManager = Widget.extend({
                 search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
             });
         }
+        // Do not permit popups to communicate with the main control panel
+        options.cp_bus = !popup && this.main_control_panel.get_bus();
 
         return this[type](action, options);
     },
@@ -552,8 +549,8 @@ var ActionManager = Widget.extend({
     ir_actions_act_window: function (action, options) {
         var self = this;
         return this.ir_actions_common({
-            widget: function () { 
-                return new ViewManager(self, null, null, null, action, self.main_control_panel.get_bus());
+            widget: function () {
+                return new ViewManager(self, null, null, null, action, options.cp_bus);
             },
             action: action,
             klass: 'oe_act_window',
@@ -576,7 +573,7 @@ var ActionManager = Widget.extend({
 
         return this.ir_actions_common({
             widget: function () {
-                // AAB: temporary fix: Hide main control panel as client actions do not use it
+                // Hide main control panel as client actions do not use it
                 self.main_control_panel.do_hide();
                 return new ClientWidget(self, action);
             },

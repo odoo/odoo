@@ -495,12 +495,6 @@
     </div>
 </t>
 
-<t t-name="ControlPanel.buttons">
-    <t t-foreach="views" t-as="view">
-        <div t-attf-class="oe-#{view}-buttons"/>
-    </t>
-</t>
-
 <t t-name="ControlPanel.switch-buttons">
     <t t-foreach="views" t-as="view">
         <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label"/>
@@ -575,10 +569,10 @@
     </div>
 </t>
 <span t-name="ViewPager">
-    <div class="oe_pager_value">
+    <div class="oe_pager_value" style="display: inline-block">
         <t t-raw="0"/>
     </div>
-    <div class="btn-group btn-group-sm oe-pager-buttons">
+    <div class="btn-group btn-group-sm oe-pager-buttons" style="display: inline-block">
         <a class="fa fa-chevron-left btn btn-default oe-pager-button" type="button" data-pager-action="previous"></a>
         <a class="fa fa-chevron-right btn btn-default oe-pager-button" type="button" data-pager-action="next"></a>
     </div>

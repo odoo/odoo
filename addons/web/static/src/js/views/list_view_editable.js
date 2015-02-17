@@ -286,15 +286,6 @@ ListView.include(/** @lends instance.web.ListView# */{
 
         if (this.editable()) {
             this.$el.addClass('oe_list_editable');
-            // FIXME: any hook available to ensure this is only done once?
-            this.$buttons
-                .off('click', '.oe_list_save')
-                .on('click', '.oe_list_save', this.proxy('save_edition'))
-                .off('click', '.oe_list_discard')
-                .on('click', '.oe_list_discard', function (e) {
-                    e.preventDefault();
-                    self.cancel_edition();
-                });
             var editor_ready = this.editor.prependTo(this.$el)
                 .done(this.proxy('setup_events'));
 
@@ -304,6 +295,30 @@ ListView.include(/** @lends instance.web.ListView# */{
         }
 
         return result;
+    },
+    /**
+     * Extend the render_buttons function of ListView by adding event listeners
+     * in the case of an editable list.
+     * @return {jQuery} the rendered buttons
+     */
+    render_buttons: function() {
+        var self = this;
+        var add_button = false;
+        if (!this.$buttons) { // Ensures that this is only done once
+            add_button = true;
+        }
+        this._super.apply(this, arguments); // Sets this.$buttons
+        if (add_button && this.editable()) {
+            this.$buttons
+                .off('click', '.oe_list_save')
+                .on('click', '.oe_list_save', this.proxy('save_edition'))
+                .off('click', '.oe_list_discard')
+                .on('click', '.oe_list_discard', function (e) {
+                    e.preventDefault();
+                    self.cancel_edition();
+                });
+        }
+        return this.$buttons;
     },
     /**
      * Builds a new editor object

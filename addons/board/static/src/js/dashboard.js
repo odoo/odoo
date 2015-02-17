@@ -204,7 +204,7 @@ var DashBoard = form_common.FormWidget.extend({
         }
 
         action.flags = {
-            search_view : false,
+            search_view : true, // Required to get the records
             sidebar : false,
             views_switcher : false,
             action_buttons : false,

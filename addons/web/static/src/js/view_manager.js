@@ -95,26 +95,20 @@ var ViewManager = Widget.extend({
         this.$el.addClass("oe_view_manager_" + ((this.action && this.action.target) || 'current'));
 
         if (this.cp_bus) {
-            // Tell the ControlPanel to setup its search view
-            this.search_view_loaded = $.Deferred();
-            this.cp_bus.trigger('setup_search_view', this, this.action, this.dataset, this.flags);
-            $.when(this.search_view_loaded).then(function() {
-                self.searchview.on('search_data', self, self.search);
-            });
-
-            // Tell the ControlPanel to render and append the (switch-)buttons to the DOM
-            this.cp_bus.trigger('render_buttons', this.views);
-            this.cp_bus.trigger('render_switch_buttons', this.view_order);
+            this.control_elements = {};
+            if (this.flags.search_view) {
+                // Ask the ControlPanel to setup the search view
+                this.search_view_loaded = $.Deferred();
+                this.cp_bus.trigger('setup_search_view', this, this.action, this.dataset, this.flags);
+                $.when(this.search_view_loaded).then(function() {
+                    self.searchview.on('search_data', self, self.search);
+                });
+            }
+            if (this.flags.views_switcher) {
+                // Ask the ControlPanel to render the switch-buttons
+                self.cp_bus.trigger('render_switch_buttons', self, self.view_order);
+            }
         }
-
-        _.each(this.views, function (view) {
-            // Expose buttons, sidebar and pager elements to the views so that they can insert stuff in them
-            view.options = _.extend(view.options, {
-                $buttons : self.$ext_buttons ? self.$ext_buttons.find('.oe-' + view.type + '-buttons') : undefined,
-                $sidebar : self.$ext_sidebar,
-                $pager : self.$ext_pager,
-            }, self.flags, self.flags[view.type], view.options);
-        });
 
         // Switch to the default_view to load it
         this.main_view_loaded = this.switch_mode(default_view, null, default_options);
@@ -122,22 +116,25 @@ var ViewManager = Widget.extend({
         return $.when(self.main_view_loaded, this.search_view_loaded);
     },
     /**
-     * Sets the external nodes in which the ViewManager and its views should insert elements
-     * @param {Object} [nodes] a dictionnary of jQuery nodes
-     */
-    set_external_nodes: function(nodes) {
-        this.$ext_buttons = nodes.$buttons;
-        this.$ext_sidebar = nodes.$sidebar;
-        this.$ext_pager = nodes.$pager;
-    },
-    /**
      * Executed by the ControlPanel when the searchview requested by this ViewManager is loaded
      * @param {Widget} [searchview] the SearchView
-     * @param {Deferred} [search_view_loaded_def] will be resolved when the SearchView is loaded
      */
-    set_search_view: function(searchview, search_view_loaded_def) {
+    set_search_view: function(searchview) {
         this.searchview = searchview;
-        this.search_view_loaded = search_view_loaded_def;
+        _.extend(this.control_elements, {
+            $searchview: searchview.$el,
+            $searchview_buttons: searchview.$buttons.contents(),
+        });
+        this.search_view_loaded.resolve();
+    },
+    /**
+     * Executed by the ControlPanel when the switch_buttons requested by this ViewManager are rendered
+     * @param {jQuery} [$switch_buttons] the rendered switch_buttons
+     */
+    set_switch_buttons: function($switch_buttons) {
+        _.extend(this.control_elements, {
+            $switch_buttons: $switch_buttons,
+        });
     },
     get_search_view: function() {
         return this.searchview;
@@ -147,7 +144,7 @@ var ViewManager = Widget.extend({
      */
     search: function(domains, contexts, groupbys) {
         var self = this,
-            controller = this.active_view.controller, // AAB: Correct view must be loaded here
+            controller = this.active_view.controller, // the correct view must be loaded here
             action_context = this.action.context || {},
             view_context = controller.get_context();
         pyeval.eval_domains_and_contexts({
@@ -205,7 +202,7 @@ var ViewManager = Widget.extend({
         }
 
         // Call do_search on the searchview to compute domains, contexts and groupbys
-        if (this.searchview &&
+        if (this.search_view_loaded &&
                 this.flags.auto_search &&
                 view.controller.searchable !== false) {
             this.active_search = $.Deferred();
@@ -220,13 +217,24 @@ var ViewManager = Widget.extend({
     },
     _display_view: function (view_options) {
         var self = this;
+        var view_controller = this.active_view.controller;
+
+        // Show the view
         this.active_view.$container.show();
-        $.when(this.active_view.controller.do_show(view_options)).done(function () {
-            // Tell the ControlPanel to update its elemnts
+        $.when(view_controller.do_show(view_options)).done(function () {
             if (self.cp_bus) {
-                var search_view_hidden = self.active_view.controller.searchable === false;
-                var breadcrumbs = self.action_manager.get_breadcrumbs();
-                self.cp_bus.trigger("update", self.active_view, search_view_hidden, breadcrumbs);
+                // Render the control elements of the active view (buttons, sidebar, pager)
+                var view_elements = self.render_view_control_elements();
+                var status = {
+                    active_view: self.active_view,
+                    breadcrumbs: self.action_manager && self.action_manager.get_breadcrumbs(),
+                    cp_content: _.extend({}, self.control_elements, view_elements),
+                    hidden: self.flags.headless,
+                    searchview: self.searchview,
+                    search_view_hidden: view_controller.searchable === false,
+                };
+                // Tell the ControlPanel to update its elements
+                self.cp_bus.trigger('update', status);
             }
         });
     },
@@ -255,7 +263,7 @@ var ViewManager = Widget.extend({
             if (self.action_manager) self.action_manager.trigger('history_back');
         });
         controller.on("change:title", this, function() {
-            if (self.cp_bus) {
+            if (self.cp_bus && self.action_manager) {
                 var breadcrumbs = self.action_manager.get_breadcrumbs();
                 self.cp_bus.trigger("update_breadcrumbs", breadcrumbs);
             }
@@ -272,6 +280,34 @@ var ViewManager = Widget.extend({
         var view_type = this.view_stack[index].type;
         this.view_stack.splice(index);
         return this.switch_mode(view_type);
+    },
+    /**
+     * Renders the control elements (buttons, sidebar, pager) of the current view
+     * This must be done when active_search is resolved (for KanbanViews)
+     * Fills this.active_view.control_elements dictionnary with the rendered elements
+     */
+    render_view_control_elements: function() {
+        if (!this.active_view.control_elements) {
+            var view_controller = this.active_view.controller;
+            var elements = {};
+            if (!this.flags.headless) {
+                elements = {
+                    $buttons: !this.flags.footer_to_buttons ? $("<div>") : undefined,
+                    $sidebar: $("<div>"),
+                    $pager: $("<div>"),
+                };
+            }
+            view_controller.render_buttons(elements.$buttons);
+            view_controller.render_sidebar(elements.$sidebar);
+            view_controller.render_pager(elements.$pager);
+            // Remove the unnecessary outer div
+            elements = _.mapObject(elements, function($node) {
+                return $node && $node.contents();
+            });
+            // Store the rendered elements in the active_view to allow restoring them later
+            this.active_view.control_elements = elements;
+        }
+        return this.active_view.control_elements;
     },
     /**
      * @returns {Number|Boolean} the view id of the given type, false if not found

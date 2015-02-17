@@ -31,17 +31,25 @@ var GraphView = View.extend({
         var load_fields = this.model.call('fields_get', [])
                 .then(this.prepare_fields.bind(this));
 
-        return $.when(this._super(), load_fields).then(this.render_buttons.bind(this));
+        return $.when(this._super(), load_fields);
     },
-    render_buttons: function () {
-        // Render buttons only in non-headless mode as buttons are in the header
-        if (!this.options.headless) {
+    /**
+     * Render the buttons according to the GraphView.buttons and
+     * add listeners on it.
+     * Set this.$buttons with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case the GraphView does nothing
+     */
+    render_buttons: function ($node) {
+        if ($node) {
             var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
-            this.$buttons.html(QWeb.render('GraphView.buttons', context));
+            this.$buttons = $(QWeb.render('GraphView.buttons', context));
             this.$measure_list = this.$buttons.find('.oe-measure-list');
             this.update_measure();
             this.$buttons.find('button').tooltip();
             this.$buttons.click(this.on_button_click.bind(this));
+
+            this.$buttons.appendTo($node);
         }
     },
     update_measure: function () {

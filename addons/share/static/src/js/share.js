@@ -61,10 +61,9 @@ function has_share(yes, no) {
 
 /* Extend the Sidebar to add Share and Embed links in the 'More' menu */
 Sidebar.include({
-
-    start: function() {
+    init: function(parent) {
         var self = this;
-        this._super(this);
+        this._super(parent);
         has_share(function() {
             self.add_items('other', [
                 {   label: _t('Share'),

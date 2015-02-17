@@ -50,9 +50,6 @@ var KanbanView = View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new utils.Mutex();
-        if (!this.options.$buttons || !this.options.$buttons.length) {
-            this.options.$buttons = false;
-        }
     },
     view_loading: function(r) {
         return this.load_kanban(r);
@@ -83,21 +80,36 @@ var KanbanView = View.extend({
             this.dataset.set_sort(default_order.split(','));
         }
         this.$el.addClass(this.fields_view.arch.attrs['class']);
-        this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
-        if (this.options.$buttons) {
-            this.$buttons.appendTo(this.options.$buttons);
-        } else {
-            this.$('.oe_kanban_buttons').replaceWith(this.$buttons);
-        }
-        this.$buttons
-            .on('click', 'button.oe_kanban_button_new', this.do_add_record)
-            .on('click', '.oe_kanban_add_column', this.do_add_group);
         this.$groups = this.$el.find('.oe_kanban_groups tr');
         this.fields_keys = _.keys(this.fields_view.fields);
         this.add_qweb_template();
         this.has_been_loaded.resolve();
         this.trigger('kanban_view_loaded', data);
         return $.when();
+    },
+    /**
+     * Render the buttons according to the KanbanView.buttons template and
+     * add listeners on it.
+     * Set this.$buttons with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case the ListView inserts them into this.options.$buttons
+     * or into a div of its template
+     */
+    render_buttons: function($node) {
+        this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
+        this.$buttons
+            .on('click', 'button.oe_kanban_button_new', this.do_add_record)
+            .on('click', '.oe_kanban_add_column', this.do_add_group);
+        // Important: This should be done after do_search is finished so that
+        // this.grouped_by_m2o is set
+        this.$buttons.find('.oe_alternative').toggle(this.grouped_by_m2o);
+
+        $node = $node || this.options.$buttons;
+        if ($node) {
+            this.$buttons.appendTo($node);
+        } else {
+            this.$('.oe_kanban_buttons').replaceWith(this.$buttons);
+        }
     },
     _is_quick_create_enabled: function() {
         if (!this.options.quick_creatable || !this.is_action_enabled('create'))
@@ -206,7 +218,6 @@ var KanbanView = View.extend({
             self.group_by = group_by.length ? group_by[0] : self.fields_view.arch.attrs.default_group_by;
             self.group_by_field = self.fields_view.fields[self.group_by] || {};
             self.grouped_by_m2o = (self.group_by_field.type === 'many2one');
-            self.$buttons.find('.oe_alternative').toggle(self.grouped_by_m2o);
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
             var grouping_fields = self.group_by ? [self.group_by] : undefined;
             if (!_.isEmpty(grouping_fields)) {
