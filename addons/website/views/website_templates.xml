@@ -167,8 +167,8 @@
                 Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
                 <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
             </div>
-            <div class="pull-left text-muted">
-                Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+            <div class="pull-left text-muted" itemscope="itemscope" itemtype="http://schema.org/Organization">
+                Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
             </div>
         </div>
     </xpath>
@@ -363,7 +363,7 @@
                         <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
                         <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
                         <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
-                        <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
+                        <a t-att-href="website.social_googleplus" t-if="website.social_googleplus" rel="publisher"><i class="fa fa-google-plus-square"/></a>
                         <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
                     </h2>
                 </div>

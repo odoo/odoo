@@ -1297,6 +1297,11 @@ class procurement_order(osv.osv):
 
     def _get_product_supplier(self, cr, uid, procurement, context=None):
         ''' returns the main supplier of the procurement's product given as argument'''
+        supplierinfo = self.pool['product.supplierinfo']
+        company_supplier = supplierinfo.search(cr, uid,
+            [('product_tmpl_id', '=', procurement.product_id.product_tmpl_id.id), ('company_id', '=', procurement.company_id.id)], limit=1, context=context)
+        if company_supplier:
+            return supplierinfo.browse(cr, uid, company_supplier[0], context=context).name
         return procurement.product_id.seller_id
 
     def _get_po_line_values_from_procs(self, cr, uid, procurements, partner, schedule_date, context=None):

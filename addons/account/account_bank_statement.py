@@ -430,7 +430,11 @@ class account_bank_statement(osv.osv):
         for statement in self.browse(cr, uid, ids, context=context):
             for st_line in statement.line_ids:
                 if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
-                    self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
+                    # Update the partner informations of the bank account, possibly overriding existing ones
+                    bank_obj = self.pool.get('res.partner.bank')
+                    bank_vals = bank_obj.onchange_partner_id(cr, uid, [st_line.bank_account_id.id], st_line.partner_id.id, context=context)['value']
+                    bank_vals.update({'partner_id': st_line.partner_id.id})
+                    bank_obj.write(cr, uid, [st_line.bank_account_id.id], bank_vals, context=context)
 
 class account_bank_statement_line(osv.osv):
 
@@ -659,7 +663,8 @@ class account_bank_statement_line(osv.osv):
         mv_line_pool = self.pool.get('account.move.line')
         domain = self._domain_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, str=str, additional_domain=additional_domain, context=context)
 
-        # Get move lines ; in case of a partial reconciliation, only consider one line
+        # Get move lines ; in case of a partial reconciliation, only keep one line (the first whose amount is greater than
+        # the residual amount because it is presumably the invoice, which is the relevant item in this situation)
         filtered_lines = []
         reconcile_partial_ids = []
         actual_offset = offset
@@ -668,7 +673,9 @@ class account_bank_statement_line(osv.osv):
             lines = mv_line_pool.browse(cr, uid, line_ids, context=context)
             make_one_more_loop = False
             for line in lines:
-                if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
+                if line.reconcile_partial_id and \
+                        (line.reconcile_partial_id.id in reconcile_partial_ids or \
+                        abs(line.debit - line.credit) < abs(line.amount_residual)):
                     #if we filtered a line because it is partially reconciled with an already selected line, we must do one more loop
                     #in order to get the right number of items in the pager
                     make_one_more_loop = True

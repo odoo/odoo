@@ -783,7 +783,7 @@ class account_move_line(osv.osv):
             ret_line = {
                 'id': line.id,
                 'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
-                'ref': line.move_id.ref,
+                'ref': line.move_id.ref or '',
                 # For reconciliation between statement transactions and already registered payments (eg. checks)
                 'already_paid': line.account_id.type == 'liquidity',
                 'account_code': line.account_id.code,
@@ -1378,6 +1378,8 @@ class account_move_line(osv.osv):
                     }
                     self.create(cr, uid, data, context)
                 #create the Tax movement
+                if not tax['amount']:
+                    continue
                 data = {
                     'move_id': vals['move_id'],
                     'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
@@ -1395,7 +1397,8 @@ class account_move_line(osv.osv):
                 self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):
+        recompute = journal.env.recompute and context.get('recompute', True)
+        if check and not context.get('novalidate') and (recompute or journal.entry_posted):
             tmp = move_obj.validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 move_obj.button_validate(cr,uid, [vals['move_id']], context)
