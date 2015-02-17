@@ -121,11 +121,10 @@
     </tr>
 </template>
 <template id="report_financial">
-    <t t-if="mode == 'print'"><t t-raw="'&lt;base href=%s&gt;' % base_url"/></t>
     <t t-call="report.html_container">
         <span class="oe_account_report_widgets">
-            <h2 t-esc="o.get_title()"/>
-            <t t-if="mode != 'print' and o.get_report_type() != 'date_range_extended'"><t t-call="account.report_configurator"/></t>
+            <h2 t-esc="report.get_title()"/>
+            <t t-if="mode != 'print' and report.get_report_type() != 'date_range_extended'"><t t-call="account.report_configurator"/></t>
             <t t-call-assets="web.assets_common" t-css="false" />
             <t t-call-assets="web.assets_backend" t-css="false" />
             <script type="text/javascript" src="/account/static/src/js/account_report_widgets.js"></script>
@@ -133,7 +132,7 @@
             <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
             <link href="/website/static/src/css/website.css" rel="stylesheet"/>
             <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-            <div t-att-class="' '.join(['page', 'oe_account_report_widgets', str(o.get_name()), str(context.id)])">
+            <div t-att-class="' '.join(['page', 'oe_account_report_widgets', str(report.get_name()), str(context.id)])">
                 <div t-if="mode != 'print' and context.summary == ''" class="summary">
                     <div class="alert alert-info alert-dismissible addSummary" role="alert">
                         <span><input type='text' class="form-control" name='summary' placeholder='Click to add a summary' /></span>
@@ -205,6 +204,17 @@
                 </div>
             </div>
         </span>
+    </t>
+</template>
+<template id="report_financial_letter2" inherit_id="account.report_financial" primary="True">
+    <xpath expr="//t[@t-call='report.html_container']" position="attributes">
+        <attribute name="t-call">report.external_layout</attribute>
+    </xpath>
+</template>
+<template id="report_financial_letter">
+    <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
+    <t t-call="report.html_container">
+        <t t-call="account.report_financial_letter2" />
     </t>
 </template>
 </data>

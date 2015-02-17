@@ -48,7 +48,7 @@ class FinancialReportController(http.Controller):
         lines = report_obj.get_lines(context_id)
         rcontext = {
             'context': context_id,
-            'o': report_obj,
+            'report': report_obj,
             'lines': lines,
             'mode': 'display',
         }

@@ -478,9 +478,22 @@
             displayMoveLinesByAccount: function(e) {
                 e.stopPropagation();
                 var active_id = $(e.target).parents("div.dropdown").find("span.account_id").attr("class").split(/\s+/)[1];
-                var model = new openerp.Model('ir.model.data');
-                model.call('get_object_reference', ['account', 'action_move_line_select']).then(function (result) {
-                    window.open("/web?#page=0&limit=80&view_type=list&model=account.move.line&action=" + result[1] + "&active_id=" + active_id, "_self");
+                var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
+                var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
+                var commonContext = new openerp.Model('account.report.context.common');
+                commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+                    var contextObj = new openerp.Model(result);
+                    contextObj.query(['all_entries'])
+                    .filter([['id', '=', context_id]]).first().then(function (context) {
+                        var action = 'action_move_line_select'
+                        if (!context.all_entries) {
+                            action = 'action_move_line_select_posted'
+                        }
+                        var model = new openerp.Model('ir.model.data');
+                        model.call('get_object_reference', ['account', action]).then(function (result) {
+                            window.open("/web?#page=0&limit=80&view_type=list&model=account.move.line&action=" + result[1] + "&active_id=" + active_id, "_self");
+                        });
+                    });
                 });
             },
             displayMoveLinesByAccountGraph: function(e) {

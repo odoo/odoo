@@ -233,6 +233,13 @@
             src_model="account.account"/>
 
         <act_window
+            id="action_move_line_select_posted"
+            name="Journal Items"
+            context="{'search_default_account_id': [active_id], 'search_default_posted': 1}"
+            res_model="account.move.line"
+            src_model="account.account"/>
+
+        <act_window
             id="action_move_line_select_by_type"
             name="Journal Items"
             context="{'search_default_user_type': [active_id]}"
@@ -1113,6 +1120,8 @@
                 <search string="Search Journal Items">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
                     <field name="date"/>
+                    <field name="tax_line_id"/>
+                    <field name="tax_ids" />
                     <separator/>
                     <filter string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
                     <filter name="posted" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>

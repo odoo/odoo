@@ -336,13 +336,14 @@ class account_report_context_common(models.TransientModel):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         rcontext = {
             'context': self,
-            'o': report_obj,
+            'report': report_obj,
             'lines': lines,
             'mode': 'print',
             'base_url': base_url,
             'css': '',
+            'o': self.env.user,
         }
-        html = self.pool['ir.ui.view'].render(self._cr, self._uid, "account.report_financial", rcontext, context=self.env.context)
+        html = self.pool['ir.ui.view'].render(self._cr, self._uid, "account.report_financial_letter", rcontext, context=self.env.context)
 
         landscape = False
         if len(self.get_columns_names()) > 4:
