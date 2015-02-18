@@ -636,8 +636,8 @@ class BaseModel(object):
         attrs = {
             '_name': name,
             '_register': False,
-            '_columns': {},             # filled by _setup_fields()
-            '_defaults': {},            # filled by Field._determine_default()
+            '_columns': None,           # recomputed in _setup_fields()
+            '_defaults': None,          # recomputed in _setup_base()
             '_inherits': dict(cls._inherits),
             '_depends': dict(cls._depends),
             '_constraints': list(cls._constraints),
@@ -745,15 +745,40 @@ class BaseModel(object):
         for (key, _, msg) in cls._sql_constraints:
             cls.pool._sql_error[cls._table + '_' + key] = msg
 
-        # collect constraint and onchange methods
-        cls._constraint_methods = []
-        cls._onchange_methods = defaultdict(list)
-        for attr, func in getmembers(cls, callable):
-            if hasattr(func, '_constrains'):
-                cls._constraint_methods.append(func)
-            if hasattr(func, '_onchange'):
-                for name in func._onchange:
-                    cls._onchange_methods[name].append(func)
+    @property
+    def _constraint_methods(self):
+        """ Return a list of methods implementing Python constraints. """
+        def is_constraint(func):
+            return callable(func) and hasattr(func, '_constrains')
+
+        cls = type(self)
+        methods = []
+        for attr, func in getmembers(cls, is_constraint):
+            if not all(name in cls._fields for name in func._constrains):
+                _logger.warning("@constrains%r parameters must be field names", func._constrains)
+            methods.append(func)
+
+        # optimization: memoize result on cls, it will not be recomputed
+        cls._constraint_methods = methods
+        return methods
+
+    @property
+    def _onchange_methods(self):
+        """ Return a dictionary mapping field names to onchange methods. """
+        def is_onchange(func):
+            return callable(func) and hasattr(func, '_onchange')
+
+        cls = type(self)
+        methods = defaultdict(list)
+        for attr, func in getmembers(cls, is_onchange):
+            for name in func._onchange:
+                if name not in cls._fields:
+                    _logger.warning("@onchange%r parameters must be field names", func._onchange)
+                methods[name].append(func)
+
+        # optimization: memoize result on cls, it will not be recomputed
+        cls._onchange_methods = methods
+        return methods
 
     def __new__(cls):
         # In the past, this method was registering the model class in the server.
@@ -799,19 +824,6 @@ class BaseModel(object):
             assert cls._log_access, \
                 "TransientModels must have log_access turned on, " \
                 "in order to implement their access rights policy"
-
-        # retrieve new-style fields (from above registry class) and duplicate
-        # them (to avoid clashes with inheritance between different models)
-        cls._fields = {}
-        above = cls.__bases__[0]
-        for attr, field in getmembers(above, Field.__instancecheck__):
-            cls._add_field(attr, field.new())
-
-        # introduce magic fields
-        cls._add_magic_fields()
-
-        # register constraints and onchange methods
-        cls._init_constraints_onchanges()
 
         # prepare ormcache, which must be shared by all instances of the model
         cls._ormcache = {}
@@ -2941,25 +2953,27 @@ class BaseModel(object):
         if cls._setup_done:
             return
 
-        # first make sure that parent models determine all their fields
+        # 1. determine the proper fields of the model; duplicate them on cls to
+        # avoid clashes with inheritance between different models
+        for name in getattr(cls, '_fields', {}):
+            delattr(cls, name)
+
+        # retrieve fields from parent classes
+        cls._fields = {}
+        cls._defaults = {}
+        for attr, field in getmembers(cls, Field.__instancecheck__):
+            cls._add_field(attr, field.new())
+
+        # add magic and custom fields
+        cls._add_magic_fields()
+        cls._init_manual_fields(self._cr, partial)
+
+        # 2. make sure that parent models determine their own fields, then add
+        # inherited fields to cls
         cls._inherits_check()
         for parent in cls._inherits:
             self.env[parent]._setup_base(partial)
-
-        # remove inherited fields from cls._fields
-        for name, field in cls._fields.items():
-            if field.inherited:
-                del cls._fields[name]
-
-        # retrieve custom fields
-        cls._init_manual_fields(self._cr, partial)
-
-        # retrieve inherited fields
         cls._init_inherited_fields()
-
-        # prepare the setup of fields
-        for field in cls._fields.itervalues():
-            field.reset()
 
         cls._setup_done = True
 
@@ -2968,7 +2982,8 @@ class BaseModel(object):
         """ Setup the fields, except for recomputation triggers. """
         cls = type(self)
 
-        # set up fields, and update their corresponding columns
+        # set up fields, and determine their corresponding column
+        cls._columns = {}
         for name, field in cls._fields.iteritems():
             field.setup(self.env)
             if field.store or field.column:
@@ -3007,14 +3022,8 @@ class BaseModel(object):
         # register stuff about low-level function fields
         cls._init_function_fields(cls.pool, self._cr)
 
-        # check constraints
-        for func in cls._constraint_methods:
-            if not all(name in cls._fields for name in func._constrains):
-                _logger.warning("@constrains%r parameters must be field names", func._constrains)
-        for name in cls._onchange_methods:
-            if name not in cls._fields:
-                func = cls._onchange_methods[name]
-                _logger.warning("@onchange%r parameters must be field names", func._onchange)
+        # register constraints and onchange methods
+        cls._init_constraints_onchanges()
 
         # check defaults
         for name in cls._defaults:
