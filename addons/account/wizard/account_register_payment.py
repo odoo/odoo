@@ -64,11 +64,10 @@ class account_register_payment(models.TransientModel):
         amount = sign * self.payment_amount
         debit, credit, amount_currency = self.env['account.move.line'].compute_amount_fields(amount, self.journal_id.currency, self.company_id.currency_id)
 
-        invoice_account_aml_name = self.invoice_id.number
+        invoice_account_aml_name = self.invoice_id.number or '/'
         payment_account_aml_name = TYPE2PREFIX[self.invoice_id.type] + self.partner_id.name
 
         # Create move
-
         invoice_account_aml = {
             'name': invoice_account_aml_name,
             'account_id': self.invoice_id.account_id.id,

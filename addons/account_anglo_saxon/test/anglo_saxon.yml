@@ -11,7 +11,7 @@
   !record {model: account.account, id: account_anglo_stock_input}:
     code: X2800
     name: Stock Interim account (Received)
-    user_type: account.data_account_type_expense
+    user_type: account.data_account_type_expenses
 -
   Configure Stock Interim account (Delivered).
 -
@@ -25,7 +25,7 @@
   !record {model: account.account, id: account_anglo_price_difference}:
     code: X7095
     name: Price difference creditor Account
-    user_type: account.data_account_type_expense
+    user_type: account.data_account_type_expenses
 -
   Configure Cash Bank Account.
 -
@@ -56,7 +56,7 @@
   !record {model: account.account, id: account_anglo_cogs}:
     code: X7000
     name: Cost of goods sale account
-    user_type: account.data_account_type_expense
+    user_type: account.data_account_type_expenses
 -
   Configure Income Account.
 -
@@ -173,7 +173,7 @@
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
     import  time
     for invoice in invoice_ids:
-        invoice.pay_and_reconcile(invoice.amount_total, ref('account_anglo_cash'), time.strftime('%Y-%m-%d'), journal_ids[0], ref('account_anglo_cash'), journal_ids[0], name='test')
+        invoice.pay_and_reconcile(invoice.amount_total, ref('account_anglo_cash'), time.strftime('%Y-%m-%d'), journal_ids[0], ref('account_anglo_cash'))
 -
   I check Payable(Creditors) Account is Debited sucessfully after invoice paid.
 -
@@ -306,9 +306,7 @@
     import time
     pay = self.pay_and_reconcile(cr, uid, account_invoice,
                         20.0, ref('account_anglo_cash'), time.strftime('%Y-%m-%d'),
-                        journal_ids[0], ref('account_anglo_cash'),
-                        journal_ids[0], name='Payment for test customer invoice')
-    assert (pay == True), "Incorrect Payment."
+                        journal_ids[0], ref('account_anglo_cash'))
 -
   I check Receivable(Debtor) Account for credit.
 -
