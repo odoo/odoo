@@ -318,6 +318,8 @@
                 }
             });
             // end
+            
+            $html.find('.o_not_editable').attr("contentEditable", false);
 
             $left_bar.append($html);
 
