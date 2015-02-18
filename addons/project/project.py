@@ -19,11 +19,9 @@
 #
 ##############################################################################
 
-import calendar
 from datetime import datetime, date
 from dateutil import relativedelta
 from lxml import etree
-import json
 import time
 
 from openerp import SUPERUSER_ID
