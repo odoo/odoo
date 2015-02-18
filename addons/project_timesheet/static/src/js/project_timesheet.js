@@ -162,6 +162,8 @@ openerp.project_timesheet = function(openerp) {
         },
         goto_settings: function(){
         	this.hide();
+            this.getParent().settings_screen.renderElement();
+            this.getParent().settings_screen.initialize_project_selector();
             this.getParent().settings_screen.show();
         },
         goto_activities: function(){
@@ -312,7 +314,8 @@ openerp.project_timesheet = function(openerp) {
 
         },
         test_fct: function(){
-            debugger
+            $("#slide").animate({width:'toggle'},350);
+            //debugger
             //this.load_server_data();
         },
         load_server_data: function(){
@@ -354,6 +357,7 @@ openerp.project_timesheet = function(openerp) {
             this.tasks = this.data.tasks;
         },
         add_to_day_plan: function(event){
+            debugger
             console.log(event.currentTarget.dataset.task_id);
         }
     });
@@ -376,6 +380,7 @@ openerp.project_timesheet = function(openerp) {
             this.initialize_project_selector();
         },
         initialize_project_selector: function(){
+            self = this;
             // Initialization of select2 for projects
             function format(item) {return item.name}
             function formatRes(item){
@@ -387,32 +392,39 @@ openerp.project_timesheet = function(openerp) {
                 }
             }
             this.$('.pt_default_project_select2').select2({
-                // TODO might be made cleaner?
-                data: {results : _.union(self.data.projects , [{id : 0 , name : "No default project", no_default_project:true }]) , text : 'name'},
+                data: {results : self.data.projects , text : 'name'},
                 formatSelection: format,
                 formatResult: formatRes,
+                createSearchChoicePosition : 'bottom',
+                placeholder: "No default project",
+                allowClear: true,
                 createSearchChoice: function(user_input, new_choice){
-                    res = {
-                        id : self.data.next_project_id,
-                        name : user_input,
-                        isNew: true
-                    };
-                    return res;
-                },
-                // Show the 'create item' option in second position, reducing the risk of duplicate entries
-                createSearchChoicePosition: function(list, item) {
-                    list.splice(1, 0, item);
+                    //Avoid duplictate projects
+                    if(_.isUndefined(_.findWhere(self.data.projects , {name:user_input.trim()}))){
+                        res = {
+                            id : self.data.next_project_id,
+                            name : user_input,
+                            isNew: true
+                        };
+                        return res;
+                    }
+                    else{
+                        return undefined;
+                    }
                 },
                 initSelection : function(element, callback){
                     var data = {id: self.data.settings.default_project_id, name : self.get_project_name(self.data.settings.default_project_id)};
                     callback(data);
                 }
-            });
+            }).select2('val',[]);
         },
         on_change_default_project: function(event){
-            if(event.added.no_default_project){
-                 self.data.settings.default_project_id = undefined;
+            self = this;
+            // "cleared" case
+            if(_.isUndefined(event.added)){
+                self.data.settings.default_project_id = undefined;
             }
+            // "Select" case
             else{
                 var selected_project = {
                     name : event.added.name,
@@ -424,7 +436,8 @@ openerp.project_timesheet = function(openerp) {
                 }
                 self.data.settings.default_project_id = selected_project.id;
             }
-            self.getParent().update_localStorage();   
+            self.getParent().update_localStorage();
+            
         },
         on_change_minimal_duration: function(){
             //TODO Check that input is an int between 0 and 60
@@ -462,11 +475,8 @@ openerp.project_timesheet = function(openerp) {
                 date: (openerp.date_to_str(new Date()))
             };
         },
-        // start : function(){
-        // 	this.initialize_project_selector();
-        // 	this.initialize_task_selector();
-        // },
         initialize_project_selector: function(){
+            self = this;
         	// Initialization of select2 for projects
         	function format(item) {return item.name}
         	function formatRes(item){
@@ -481,17 +491,20 @@ openerp.project_timesheet = function(openerp) {
         		data: {results : self.data.projects , text : 'name'},
         		formatSelection: format,
 				formatResult: formatRes,
+                createSearchChoicePosition : 'bottom',
 				createSearchChoice: function(user_input, new_choice){
-					res = {
-						id : self.data.next_project_id,
-						name : user_input,
-						isNew: true
-					};
-					return res;
-				},
-                // Show the create item in second position, reducing risk of duplicate entries
-                createSearchChoicePosition: function(list, item) {
-                    list.splice(1, 0, item);
+                    //Avoid duplictate projects
+                    if(_.isUndefined(_.findWhere(self.data.projects , {name:user_input.trim()}))){
+                        res = {
+                            id : self.data.next_project_id,
+                            name : user_input,
+                            isNew: true
+                        };
+                        return res;
+                    }
+                    else{
+                        return undefined;
+                    }
                 },
 				initSelection : function(element, callback){
 					var data = {id: self.activity.project_id, name : self.get_project_name(self.activity.project_id)};
@@ -501,6 +514,7 @@ openerp.project_timesheet = function(openerp) {
         },
         // Initialization of select2 for tasks
         initialize_task_selector: function(){
+            self = this;
         	function format(item) {return item.name}
         	function formatRes(item){
         		if(item.isNew){
@@ -510,24 +524,27 @@ openerp.project_timesheet = function(openerp) {
         			return item.name;
         		}
         	}
-            var task_list = _.where(self.data.tasks, {project_id : self.activity.project_id});
+            self.task_list = _.where(self.data.tasks, {project_id : self.activity.project_id});
         	this.$('.pt_activity_task').select2({
-        		data: {results : task_list , text : 'name'},
+        		data: {results : self.task_list , text : 'name'},
         		formatSelection: format,
 				formatResult: formatRes,
+                createSearchChoicePosition : 'bottom',
 				createSearchChoice: function(user_input, new_choice){
-					res = {
-						id : self.data.next_task_id,
-						name : user_input,
-						isNew: true,
-                        project_id: self.activity.project_id
-					};
-					return res;
+                    //Avoid duplictate tasks in one project
+                    if(_.isUndefined(_.findWhere(self.task_list , {name:user_input.trim()}))){
+    					res = {
+    						id : self.data.next_task_id,
+    						name : user_input,
+    						isNew: true,
+                            project_id: self.activity.project_id
+    					};
+    					return res;
+                    }
+                    else{
+                        return undefined;
+                    }
 				},
-                // Show the create item in second position, reducing risk of duplicate entries
-                createSearchChoicePosition: function(list, item) {
-                    list.splice(1, 0, item);
-                },
                 initSelection : function(element, callback){
                     var data = {id: self.activity.task_id, name : self.get_task_name(self.activity.task_id)};
                     callback(data);
@@ -535,6 +552,7 @@ openerp.project_timesheet = function(openerp) {
         	});
         },
         on_change_task: function(event){
+            self = this;
         	var selected_task = {
     			name : event.added.name,
     			id : event.added.id,
@@ -543,6 +561,7 @@ openerp.project_timesheet = function(openerp) {
         	if(event.added.isNew){
         		self.data.next_task_id++;
         		self.data.tasks.push(selected_task);
+                self.task_list.push(selected_task);
         		self.getParent().update_localStorage();
     		}
     		self.activity.task_id = selected_task.id;

@@ -10,6 +10,7 @@
     	<t t-call="header">
     	</t>
     	<div class="pt_activities_screen">
+            <div id="slide">testing slide</div>
     		<div class="row">
     			<!--"main" section-->
 	    		<div class="col-xs-6">
@@ -27,12 +28,10 @@
 					<div class="col-xs-12 pt_activity_box">
     					<div class="row">
 							<div class="col-xs-7 pt_activity" t-att-data-activity_id="account_analytic_line.id">
-								<t t-if="account_analytic_line.project_id">
-									<t t-esc="widget.get_project_name(account_analytic_line.project_id)"/><br/>
-									<t t-if="account_analytic_line.task_id">
-							    		<t t-esc="widget.get_task_name(account_analytic_line.task_id)"/>
-							    	</t>
-								</t>
+								<t t-esc="widget.get_project_name(account_analytic_line.project_id)"/><br/>
+								<t t-if="account_analytic_line.task_id">
+						    		<t t-esc="widget.get_task_name(account_analytic_line.task_id)"/>
+						    	</t>
 							</div>
 							<div class="col-xs-1">
 								<div class="row">
