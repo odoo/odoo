@@ -1201,8 +1201,9 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
-        if procurement.purchase_line_id and procurement.purchase_line_id.order_id.shipped:  # TOCHECK: does it work for several deliveries?
-            return True
+        if procurement.purchase_line_id and procurement.purchase_line_id.move_ids:
+            if all([move.state == 'done' for move in procurement.purchase_line_id.move_ids]):
+                return True
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
     def _check_supplier_info(self, cr, uid, ids, context=None):
