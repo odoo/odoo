@@ -745,19 +745,40 @@ class BaseModel(object):
         for (key, _, msg) in cls._sql_constraints:
             cls.pool._sql_error[cls._table + '_' + key] = msg
 
-        # collect constraint and onchange methods
-        cls._constraint_methods = []
-        cls._onchange_methods = defaultdict(list)
-        for attr, func in getmembers(cls, callable):
-            if hasattr(func, '_constrains'):
-                if not all(name in cls._fields for name in func._constrains):
-                    _logger.warning("@constrains%r parameters must be field names", func._constrains)
-                cls._constraint_methods.append(func)
-            if hasattr(func, '_onchange'):
-                for name in func._onchange:
-                    if name not in cls._fields:
-                        _logger.warning("@onchange%r parameters must be field names", func._onchange)
-                    cls._onchange_methods[name].append(func)
+    @property
+    def _constraint_methods(self):
+        """ Return a list of methods implementing Python constraints. """
+        def is_constraint(func):
+            return callable(func) and hasattr(func, '_constrains')
+
+        cls = type(self)
+        methods = []
+        for attr, func in getmembers(cls, is_constraint):
+            if not all(name in cls._fields for name in func._constrains):
+                _logger.warning("@constrains%r parameters must be field names", func._constrains)
+            methods.append(func)
+
+        # optimization: memoize result on cls, it will not be recomputed
+        cls._constraint_methods = methods
+        return methods
+
+    @property
+    def _onchange_methods(self):
+        """ Return a dictionary mapping field names to onchange methods. """
+        def is_onchange(func):
+            return callable(func) and hasattr(func, '_onchange')
+
+        cls = type(self)
+        methods = defaultdict(list)
+        for attr, func in getmembers(cls, is_onchange):
+            for name in func._onchange:
+                if name not in cls._fields:
+                    _logger.warning("@onchange%r parameters must be field names", func._onchange)
+                methods[name].append(func)
+
+        # optimization: memoize result on cls, it will not be recomputed
+        cls._onchange_methods = methods
+        return methods
 
     def __new__(cls):
         # In the past, this method was registering the model class in the server.
