@@ -77,6 +77,7 @@ Wizards provided by this module:
         'security/ir.model.access.csv',
         'views/report_vatintraprint.xml',
         'views/report_vatpartnerlisting.xml',
+        'report_vat_statement.xml',
     ],
     'demo': ['../account/demo/account_invoice_demo.yml',
              'account_demo.xml',],

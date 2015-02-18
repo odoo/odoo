@@ -66,7 +66,7 @@
         </tr>
     </t>
     <t t-set="trclass" t-value="'defaultStyle'"/>
-    <t t-set="style" t-value="'margin-left: 40px'"/>
+    <t t-set="style" t-value="'margin-left: ' + str(40 + ((a.get('level', 3) - 3) * 10)) + 'px'"/>
     <t t-if="a.get('level') == 0"><t t-set="trclass" t-value="'level0'"/></t>
     <t t-if="a.get('level') == 1"><t t-set="trclass" t-value="'level1'"/></t>
     <t t-if="a.get('level') == 2"><t t-set="style" t-value="'font-weight: bold; margin-left: 20px;'"/><t t-set="trclass" t-value="'level2'"/></t>

@@ -267,6 +267,20 @@
             context="{'search_default_tax_line_id': [active_id]}"
             src_model="account.tax"/>
 
+        <act_window
+            id="act_account_tax_net_posted"
+            name="Net Tax Lines"
+            res_model="account.move.line"
+            context="{'search_default_tax_ids': [active_id], 'search_default_posted': 1}"
+            src_model="account.tax"/>
+
+        <act_window
+            id="act_account_tax_tax_posted"
+            name="Tax Lines"
+            res_model="account.move.line"
+            context="{'search_default_tax_line_id': [active_id], 'search_default_posted': 1}"
+            src_model="account.tax"/>
+
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>

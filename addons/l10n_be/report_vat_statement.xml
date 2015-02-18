@@ -18,18 +18,21 @@
             <field name="name">Total de contrôle</field>
             <field name="sequence" eval="1"/>
             <field name="financial_report_id" ref="account_financial_report_l10n_be_tva0"/>
+            <field name="level" eval="0" />
         </record>
 
         <record id="account_financial_report_l10n_be_tva_operations0" model="account.financial.report.line">
             <field name="name">Opérations</field>
             <field name="parent_id" ref='account_financial_report_l10n_be_tva_line0'/>
             <field name="sequence" eval="1"/>
+            <field name="level" eval="1" />
         </record>
 
         <record id="account_financial_report_l10n_be_tva_operations_sortie0" model="account.financial.report.line">
             <field name="name">II A la sortie</field>
             <field name="parent_id" ref='account_financial_report_l10n_be_tva_operations0'/>
             <field name="sequence" eval="1"/>
+            <field name="level" eval="2" />
         </record>
 
         <record id="account_financial_report_l10n_be_tva_00_0" model="account.financial.report.line">
@@ -40,6 +43,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-00-S', 'VAT-OUT-00-L']), ('credit', '>', 0)]" />
             <field name="sequence" eval="1"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_01_0" model="account.financial.report.line">
             <field name="name">01 - Opérations avec TVA à 6%</field>
@@ -49,6 +53,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-06-S', 'VAT-OUT-06-L']), ('credit', '>', 0)]" />
             <field name="sequence" eval="2"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_02_0" model="account.financial.report.line">
             <field name="name">02 - Opérations avec TVA à 12%</field>
@@ -58,6 +63,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-12-S', 'VAT-OUT-12-L']), ('credit', '>', 0)]" />
             <field name="sequence" eval="3"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_03_0" model="account.financial.report.line">
             <field name="name">03 - Opérations avec TVA à 21%</field>
@@ -67,6 +73,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-21-S', 'VAT-OUT-21-L']), ('credit', '>', 0)]" />
             <field name="sequence" eval="4"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_44_0" model="account.financial.report.line">
             <field name="name">44 - Services intra-communautaires</field>
@@ -76,6 +83,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-00-EU-S']), ('credit', '>', 0)]" />
             <field name="sequence" eval="5"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_45_0" model="account.financial.report.line">
             <field name="name">45 - Opérations avec TVA due par le cocontractant</field>
@@ -85,6 +93,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-00-CC']), ('credit', '>', 0)]" />
             <field name="sequence" eval="6"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_46_0" model="account.financial.report.line">
             <field name="name">46 - Livraisons intra-communautaire exemptées</field>
@@ -92,6 +101,7 @@
             <field name="formulas">balance = BETAX46L.balance + BETAX46T.balance</field>
             <field name="parent_id" ref='account_financial_report_l10n_be_tva_operations_sortie0'/>
             <field name="sequence" eval="7"/>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_46L_0" model="account.financial.report.line">
             <field name="name">46L - Livraisons biens intra-communautaire exemptées</field>
@@ -101,6 +111,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-00-EU-L']), ('credit', '>', 0)]" />
             <field name="sequence" eval="1"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="4" />
         </record>
         <record id="account_financial_report_l10n_be_tva_46T_0" model="account.financial.report.line">
             <field name="name">46T - Livraisons biens intra-communautaire exemptées</field>
@@ -110,6 +121,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-00-EU-T']), ('credit', '>', 0)]" />
             <field name="sequence" eval="2"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="4" />
         </record>
         <record id="account_financial_report_l10n_be_tva_47_0" model="account.financial.report.line">
             <field name="name">47 - Autres opérations exemptées</field>
@@ -119,6 +131,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-00-ROW']), ('credit', '>', 0)]" />
             <field name="sequence" eval="8"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_48_0" model="account.financial.report.line">
             <field name="name">48 - Notes de crédit aux opérations grilles [44] et [46]</field>
@@ -126,6 +139,7 @@
             <field name="formulas">balance = BETAX48s44.balance + BETAX48s46L.balance + BETAX48s46T.balance</field>
             <field name="parent_id" ref='account_financial_report_l10n_be_tva_operations_sortie0'/>
             <field name="sequence" eval="9"/>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_48s44_0" model="account.financial.report.line">
             <field name="name">48s44 - Notes de crédit aux opérations grilles [44]</field>
@@ -135,6 +149,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-00-EU-S']), ('debit', '>', 0)]" />
             <field name="sequence" eval="1"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="4" />
         </record>
         <record id="account_financial_report_l10n_be_tva_48s46L_0" model="account.financial.report.line">
             <field name="name">48s46L - Notes de crédit aux opérations grilles [46L]</field>
@@ -144,6 +159,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-00-EU-L']), ('debit', '>', 0)]" />
             <field name="sequence" eval="2"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="4" />
         </record>
         <record id="account_financial_report_l10n_be_tva_48s46T_0" model="account.financial.report.line">
             <field name="name">48s46T - Notes de crédit aux opérations grilles [46T]</field>
@@ -153,6 +169,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-00-EU-T']), ('debit', '>', 0)]" />
             <field name="sequence" eval="3"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="4" />
         </record>
         <record id="account_financial_report_l10n_be_tva_49_0" model="account.financial.report.line">
             <field name="name">49 - Notes de crédit aux opérations du point II</field>
@@ -162,12 +179,14 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-OUT-00-ROW', 'VAT-OUT-00-CC', 'VAT-OUT-00-S', 'VAT-OUT-00-L', 'VAT-OUT-21-S', 'VAT-OUT-21-L', 'VAT-OUT-12-S', 'VAT-OUT-12-L', 'VAT-OUT-06-S', 'VAT-OUT-06-L']), ('debit', '>', 0)]" />
             <field name="sequence" eval="10"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
 
         <record id="account_financial_report_l10n_be_tva_operations_entree0" model="account.financial.report.line">
             <field name="name">III A l'entrée</field>
             <field name="parent_id" ref='account_financial_report_l10n_be_tva_operations0'/>
             <field name="sequence" eval="2"/>
+            <field name="level" eval="2" />
         </record>
 
         <record id="account_financial_report_l10n_be_tva_81_0" model="account.financial.report.line">
@@ -178,6 +197,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-IN-V81-21-ROW-CC-C1', 'VAT-IN-V81-12-ROW-CC-C1', 'VAT-IN-V81-06-ROW-CC-C1', 'VAT-IN-V81-00-ROW-CC-C1', 'VAT-IN-V81-21-EU-C1', 'VAT-IN-V81-12-EU-C1', 'VAT-IN-V81-06-EU-C1', 'VAT-IN-V81-00-EU-C1', 'VAT-IN-V81-21', 'VAT-IN-V81-12', 'VAT-IN-V81-06', 'VAT-IN-V81-00', 'VAT-IN-V81-21-CC-C1', 'VAT-IN-V81-12-CC-C1', 'VAT-IN-V81-06-CC-C1', 'VAT-IN-V81-00-CC-C1'])]" />
             <field name="sequence" eval="1"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_82_0" model="account.financial.report.line">
             <field name="name">82 - Services et biens divers</field>
@@ -187,6 +207,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-IN-V82-21-ROW-CC-C1', 'VAT-IN-V82-12-ROW-CC-C1', 'VAT-IN-V82-06-ROW-CC-C1', 'VAT-IN-V82-00-ROW-CC-C1', 'VAT-IN-V82-21-EU-S-C1', 'VAT-IN-V82-12-EU-S-C1', 'VAT-IN-V82-06-EU-S-C1', 'VAT-IN-V82-00-EU-S-C1', 'VAT-IN-V82-21-EU-G-C1', 'VAT-IN-V82-12-EU-G-C1', 'VAT-IN-V82-06-EU-G-C1', 'VAT-IN-V82-00-EU-G-C1', 'VAT-IN-V82-CAR-EXC-C1', 'VAT-IN-V82-CAR-INC-C1', 'VAT-IN-V82-21-S', 'VAT-IN-V82-12-S', 'VAT-IN-V82-06-S', 'VAT-IN-V82-00-S', 'VAT-IN-V82-21-G', 'VAT-IN-V82-12-G', 'VAT-IN-V82-06-G', 'VAT-IN-V82-00-G', 'VAT-IN-V82-21-CC-C1', 'VAT-IN-V82-12-CC-C1', 'VAT-IN-V82-06-CC-C1', 'VAT-IN-V82-00-CC-C1'])]" />
             <field name="sequence" eval="2"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_82_bis_0" model="account.financial.report.line">
             <field name="name">82 bis</field>
@@ -195,6 +216,7 @@
             <field name="domain" eval="[('tax_line_id.description', 'in', ['VAT-IN-V82-CAR-EXC-C1']), ('debit', '>', 0)]" />
             <field name="sequence" eval="2"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_83_0" model="account.financial.report.line">
             <field name="name">83 - Biens d'investissement</field>
@@ -204,6 +226,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-IN-V83-21-ROW-CC-C1', 'VAT-IN-V83-12-ROW-CC-C1', 'VAT-IN-V83-06-ROW-CC-C1', 'VAT-IN-V83-00-ROW-CC-C1', 'VAT-IN-V83-21-EU-C1', 'VAT-IN-V83-12-EU-C1', 'VAT-IN-V83-06-EU-C1', 'VAT-IN-V83-00-EU-C1', 'VAT-IN-V83-21', 'VAT-IN-V83-12', 'VAT-IN-V83-06', 'VAT-IN-V83-00', 'VAT-IN-V83-21-CC-C1', 'VAT-IN-V83-12-CC-C1', 'VAT-IN-V83-06-CC-C1', 'VAT-IN-V83-00-CC-C1'])]" />
             <field name="sequence" eval="3"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_84_0" model="account.financial.report.line">
             <field name="name">84 - Notes de crédits sur opérations case [86] et [88]</field>
@@ -213,6 +236,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-IN-V83-21-EU-C1', 'VAT-IN-V83-12-EU-C1', 'VAT-IN-V83-06-EU-C1', 'VAT-IN-V83-00-EU-C1', 'VAT-IN-V82-21-EU-S-C1', 'VAT-IN-V82-12-EU-S-C1', 'VAT-IN-V82-06-EU-S-C1', 'VAT-IN-V82-00-EU-S-C1', 'VAT-IN-V82-21-EU-G-C1', 'VAT-IN-V82-12-EU-G-C1', 'VAT-IN-V82-06-EU-G-C1', 'VAT-IN-V82-00-EU-G-C1', 'VAT-IN-V81-21-EU-C1', 'VAT-IN-V81-12-EU-C1', 'VAT-IN-V81-06-EU-C1', 'VAT-IN-V81-00-EU-C1']), ('credit', '>', 0)]" />
             <field name="sequence" eval="4"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_85_0" model="account.financial.report.line">
             <field name="name">85 - Notes de crédits autres opérations</field>
@@ -222,6 +246,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-IN-V83-21-ROW-CC-C1', 'VAT-IN-V83-12-ROW-CC-C1', 'VAT-IN-V83-06-ROW-CC-C1', 'VAT-IN-V83-00-ROW-CC-C1', 'VAT-IN-V82-21-ROW-CC-C1', 'VAT-IN-V82-12-ROW-CC-C1', 'VAT-IN-V82-06-ROW-CC-C1', 'VAT-IN-V82-00-ROW-CC-C1', 'VAT-IN-V81-21-ROW-CC-C1', 'VAT-IN-V81-12-ROW-CC-C1', 'VAT-IN-V81-06-ROW-CC-C1', 'VAT-IN-V81-00-ROW-CC-C1',  'VAT-IN-V82-CAR-EXC-C1', 'VAT-IN-V82-CAR-INC-C1', 'VAT-IN-V83-21', 'VAT-IN-V83-12', 'VAT-IN-V83-06', 'VAT-IN-V83-00', 'VAT-IN-V81-21', 'VAT-IN-V81-12', 'VAT-IN-V81-06', 'VAT-IN-V81-00', 'VAT-IN-V82-21-S', 'VAT-IN-V82-12-S', 'VAT-IN-V82-06-S', 'VAT-IN-V82-00-S', 'VAT-IN-V82-21-G', 'VAT-IN-V82-12-G', 'VAT-IN-V82-06-G', 'VAT-IN-V82-00-G', 'VAT-IN-V81-21-CC-C1', 'VAT-IN-V81-12-CC-C1', 'VAT-IN-V81-06-CC-C1', 'VAT-IN-V81-00-CC-C1', 'VAT-IN-V82-21-CC-C1', 'VAT-IN-V82-12-CC-C1', 'VAT-IN-V82-06-CC-C1', 'VAT-IN-V82-00-CC-C1', 'VAT-IN-V83-21-CC-C1', 'VAT-IN-V83-12-CC-C1', 'VAT-IN-V83-06-CC-C1', 'VAT-IN-V83-00-CC-C1']), ('credit', '>', 0) ]" />
             <field name="sequence" eval="5"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_85_bis_0" model="account.financial.report.line">
             <field name="name">85 bis</field>
@@ -230,6 +255,7 @@
             <field name="domain" eval="[('tax_line_id.description', 'in', ['VAT-IN-V82-CAR-EXC-C1']), ('credit', '>', 0)]" />
             <field name="sequence" eval="2"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_86_0" model="account.financial.report.line">
             <field name="name">86 - Acquisition intra-communautaires et ventes ABC</field>
@@ -239,6 +265,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-IN-V83-21-EU-C1', 'VAT-IN-V83-12-EU-C1', 'VAT-IN-V83-06-EU-C1', 'VAT-IN-V83-00-EU-C1', 'VAT-IN-V82-21-EU-G-C1', 'VAT-IN-V82-12-EU-G-C1', 'VAT-IN-V82-06-EU-G-C1', 'VAT-IN-V82-00-EU-G-C1', 'VAT-IN-V81-21-EU-C1', 'VAT-IN-V81-12-EU-C1', 'VAT-IN-V81-06-EU-C1', 'VAT-IN-V81-00-EU-C1'])]" />
             <field name="sequence" eval="6"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_87_0" model="account.financial.report.line">
             <field name="name">87 - Autres opérations</field>
@@ -248,6 +275,7 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-IN-V83-21-ROW-CC-C1', 'VAT-IN-V83-12-ROW-CC-C1', 'VAT-IN-V83-06-ROW-CC-C1', 'VAT-IN-V83-00-ROW-CC-C1', 'VAT-IN-V82-21-ROW-CC-C1', 'VAT-IN-V82-12-ROW-CC-C1', 'VAT-IN-V82-06-ROW-CC-C1', 'VAT-IN-V82-00-ROW-CC-C1', 'VAT-IN-V81-21-ROW-CC-C1', 'VAT-IN-V81-12-ROW-CC-C1', 'VAT-IN-V81-06-ROW-CC-C1', 'VAT-IN-V81-00-ROW-CC-C1', 'VAT-IN-V81-21-CC-C1', 'VAT-IN-V81-12-CC-C1', 'VAT-IN-V81-06-CC-C1', 'VAT-IN-V81-00-CC-C1', 'VAT-IN-V82-21-CC-C1', 'VAT-IN-V82-12-CC-C1', 'VAT-IN-V82-06-CC-C1', 'VAT-IN-V82-00-CC-C1', 'VAT-IN-V83-21-CC-C1', 'VAT-IN-V83-12-CC-C1', 'VAT-IN-V83-06-CC-C1', 'VAT-IN-V83-00-CC-C1'])]" />
             <field name="sequence" eval="7"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_88_0" model="account.financial.report.line">
             <field name="name">88 - Acquisition services intra-communautaires</field>
@@ -257,18 +285,21 @@
             <field name="domain" eval="[('tax_ids.description', 'in', ['VAT-IN-V82-21-EU-S-C1', 'VAT-IN-V82-12-EU-S-C1', 'VAT-IN-V82-06-EU-S-C1', 'VAT-IN-V82-00-EU-S-C1'])]" />
             <field name="sequence" eval="8"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         
         <record id="account_financial_report_l10n_be_tva_taxes0" model="account.financial.report.line">
             <field name="name">Taxes</field>
             <field name="parent_id" ref='account_financial_report_l10n_be_tva_line0'/>
             <field name="sequence" eval="2"/>
+            <field name="level" eval="1" />
         </record>
 
         <record id="account_financial_report_l10n_be_tva_taxes_dues0" model="account.financial.report.line">
             <field name="name">IV Dues</field>
             <field name="parent_id" ref='account_financial_report_l10n_be_tva_taxes0'/>
             <field name="sequence" eval="3"/>
+            <field name="level" eval="2" />
         </record>
 
         <record id="account_financial_report_l10n_be_tva_54_0" model="account.financial.report.line">
@@ -279,6 +310,7 @@
             <field name="domain" eval="[('tax_line_id.description', 'in', ['VAT-OUT-21-S', 'VAT-OUT-21-L', 'VAT-OUT-12-S', 'VAT-OUT-12-L', 'VAT-OUT-06-S', 'VAT-OUT-06-L']), ('credit', '>', 0)]" />
             <field name="sequence" eval="1"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_55_0" model="account.financial.report.line">
             <field name="name">55 - TVA sur opérations des grilles [86] et [88]</field>
@@ -288,6 +320,7 @@
             <field name="domain" eval="[('tax_line_id.description', 'in', ['VAT-IN-V83-21-EU-C1', 'VAT-IN-V83-12-EU-C1', 'VAT-IN-V83-06-EU-C1', 'VAT-IN-V82-21-EU-S-C1', 'VAT-IN-V82-12-EU-S-C1', 'VAT-IN-V82-06-EU-S-C1', 'VAT-IN-V82-21-EU-G-C1', 'VAT-IN-V82-12-EU-G-C1', 'VAT-IN-V82-06-EU-G-C1', 'VAT-IN-V81-21-EU-C1', 'VAT-IN-V81-12-EU-C1', 'VAT-IN-V81-06-EU-C1']), ('debit', '>', 0)]" />
             <field name="sequence" eval="2"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_56_0" model="account.financial.report.line">
             <field name="name">56 - TVA sur opérations de la grille [87]</field>
@@ -297,6 +330,7 @@
             <field name="domain" eval="[('tax_line_id.description', 'in', ['VAT-IN-V81-21-CC-C1', 'VAT-IN-V81-12-CC-C1', 'VAT-IN-V81-06-CC-C1', 'VAT-IN-V82-21-CC-C1', 'VAT-IN-V82-12-CC-C1', 'VAT-IN-V82-06-CC-C1', 'VAT-IN-V83-21-CC-C1', 'VAT-IN-V83-12-CC-C1', 'VAT-IN-V83-06-CC-C1', 'VAT-IN-V83-00-CC-C1']), ('debit', '>', 0)]" />
             <field name="sequence" eval="3"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_57_0" model="account.financial.report.line">
             <field name="name">57 - TVA relatives aux importations</field>
@@ -306,6 +340,7 @@
             <field name="domain" eval="[('tax_line_id.description', 'in', ['VAT-IN-V83-21-ROW-CC-C1', 'VAT-IN-V83-12-ROW-CC-C1', 'VAT-IN-V83-06-ROW-CC-C1', 'VAT-IN-V82-21-ROW-CC-C1', 'VAT-IN-V82-12-ROW-CC-C1', 'VAT-IN-V82-06-ROW-CC-C1', 'VAT-IN-V81-21-ROW-CC-C1', 'VAT-IN-V81-12-ROW-CC-C1', 'VAT-IN-V81-06-ROW-CC-C1']), ('debit', '>', 0)]" />
             <field name="sequence" eval="4"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_61_0" model="account.financial.report.line">
             <field name="name">61 - Diverses régularisations en faveur de l'Etat</field>
@@ -314,6 +349,7 @@
             <field name="parent_id" ref='account_financial_report_l10n_be_tva_taxes_dues0'/>
             <field name="sequence" eval="5"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_63_0" model="account.financial.report.line">
             <field name="name">63 - TVA à reverser sur notes de crédit recues</field>
@@ -323,12 +359,14 @@
             <field name="domain" eval="[('tax_line_id.description', 'in', ['VAT-IN-V82-CAR-EXC-C1', 'VAT-IN-V82-CAR-INC-C1', 'VAT-IN-V83-21-C1', 'VAT-IN-V83-12-C1', 'VAT-IN-V83-06-C1', 'VAT-IN-V81-21-C1', 'VAT-IN-V81-12-C1', 'VAT-IN-V81-06-C1', 'VAT-IN-V82-21-S-C1', 'VAT-IN-V82-12-S-C1', 'VAT-IN-V82-06-S-C1', 'VAT-IN-V82-21-G-C1', 'VAT-IN-V82-12-G-C1', 'VAT-IN-V82-06-G-C1']), ('credit', '>', 0)]" />
             <field name="sequence" eval="6"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
 
         <record id="account_financial_report_l10n_be_tva_taxes_deductibles0" model="account.financial.report.line">
             <field name="name">V Déductibles</field>
             <field name="parent_id" ref='account_financial_report_l10n_be_tva_taxes0'/>
             <field name="sequence" eval="3"/>
+            <field name="level" eval="2" />
         </record>
 
         <record id="account_financial_report_l10n_be_tva_59_0" model="account.financial.report.line">
@@ -339,6 +377,7 @@
             <field name="domain" eval="[('tax_line_id.description', 'in', ['VAT-IN-V83-21-ROW-CC-C1', 'VAT-IN-V83-12-ROW-CC-C1', 'VAT-IN-V83-06-ROW-CC-C1', 'VAT-IN-V82-21-ROW-CC-C1', 'VAT-IN-V82-12-ROW-CC-C1', 'VAT-IN-V82-06-ROW-CC-C1', 'VAT-IN-V81-21-ROW-CC-C1', 'VAT-IN-V81-12-ROW-CC-C1', 'VAT-IN-V81-06-ROW-CC-C1', 'VAT-IN-V83-21-EU-C1', 'VAT-IN-V83-12-EU-C1', 'VAT-IN-V83-06-EU-C1', 'VAT-IN-V82-21-EU-S-C1', 'VAT-IN-V82-12-EU-S-C1', 'VAT-IN-V82-06-EU-S-C1', 'VAT-IN-V82-21-EU-G-C1', 'VAT-IN-V82-12-EU-G-C1', 'VAT-IN-V82-06-EU-G-C1', 'VAT-IN-V81-21-EU-C1', 'VAT-IN-V81-12-EU-C1', 'VAT-IN-V81-06-EU-C1', 'VAT-IN-V82-CAR-EXC-C1', 'VAT-IN-V82-CAR-INC-C1', 'VAT-IN-V81-21-C1', 'VAT-IN-V81-12-C1', 'VAT-IN-V81-06-C1', 'VAT-IN-V82-21-S-C1', 'VAT-IN-V82-12-S-C1', 'VAT-IN-V82-06-S-C1', 'VAT-IN-V83-21-C1', 'VAT-IN-V83-12-C1', 'VAT-IN-V83-06-C1', 'VAT-IN-V82-21-G-C1', 'VAT-IN-V82-12-G-C1', 'VAT-IN-V82-06-G-C1', 'VAT-IN-V81-21-CC-C1', 'VAT-IN-V81-12-CC-C1', 'VAT-IN-V81-06-CC-C1', 'VAT-IN-V82-21-CC-C1', 'VAT-IN-V82-12-CC-C1', 'VAT-IN-V82-06-CC-C1', 'VAT-IN-V83-21-CC-C1', 'VAT-IN-V83-12-CC-C1', 'VAT-IN-V83-06-CC-C1']), ('debit', '>', 0)]" />
             <field name="sequence" eval="1"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
         <record id="account_financial_report_l10n_be_tva_64_0" model="account.financial.report.line">
             <field name="name">64 - TVA à recuperer sur notes de crédit delivrées</field>
@@ -348,6 +387,7 @@
             <field name="domain" eval="[('tax_line_id.description', 'in', ['VAT-OUT-21-S', 'VAT-OUT-21-L', 'VAT-OUT-12-S', 'VAT-OUT-12-L', 'VAT-OUT-06-S', 'VAT-OUT-06-L']), ('debit', '>', 0)]" />
             <field name="sequence" eval="3"/>
             <field name="show_domain">never</field>
+            <field name="level" eval="3" />
         </record>
     </data>
 </openerp>
