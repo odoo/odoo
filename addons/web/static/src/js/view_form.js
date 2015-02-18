@@ -3475,7 +3475,7 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
         var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), self.name);
         this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
-        this.$("input").val(this.getParent().last_query);
+        this.$("input").val(this.getParent().$input.val());
         this.$buttons.find(".oe_form_m2o_qc_button").click(function(e){
             if (self.$("input").val() != ''){
                 self.getParent()._quick_create(self.$("input").val());
@@ -3657,13 +3657,13 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                         self.display_value_backup = {};
                         self.display_value["" + self.last_search[0][0]] = self.last_search[0][1];
                         self.reinit_value(self.last_search[0][0]);
+                        self.last_search = []
                     } else {
                         used = true;
                         self.render_value();
                     }
                 } else {
                     used = true;
-                    self.reinit_value(false);
                 }
                 self.floating = false;
             }
@@ -3737,7 +3737,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             // disabled to solve a bug, but may cause others
             //close: anyoneLoosesFocus,
             minLength: 0,
-            delay: 250,
+            delay: 200,
         });
         var appendTo = this.$el.parents('.oe_view_manager_body, .modal-dialog').last();
         if (appendTo.length === 0){
