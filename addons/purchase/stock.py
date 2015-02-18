@@ -89,7 +89,13 @@ class stock_move(osv.osv):
         if move.purchase_line_id:
             purchase_order = move.purchase_line_id.order_id
             return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
-        else:
+        elif move.picking_id:
+            # In case of an extra move, it is better to use the data from the original moves
+            for purchase_move in move.picking_id.move_lines:
+                if purchase_move.purchase_line_id:
+                    purchase_order = purchase_move.purchase_line_id.order_id
+                    return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
+
             partner = move.picking_id and move.picking_id.partner_id or False
             code = self.get_code_from_locs(cr, uid, move, context=context)
             if partner and partner.property_product_pricelist_purchase and code == 'incoming':
