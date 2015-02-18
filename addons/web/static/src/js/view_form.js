@@ -3565,6 +3565,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var self = this;
 
         var modes = this.node.attrs.mode;
+        try {
+             var list_options = JSON.parse(this.node.attrs.list_options);
+        } catch(e) {
+             var list_options = {};
+        }
         modes = !!modes ? modes.split(",") : ["tree"];
         var views = [];
         _.each(modes, function(mode) {
@@ -3587,6 +3592,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     import_enabled: false,
                     deletable: true
                 });
+                _.extend(view.options, list_options || {});
                 if (self.get("effective_readonly")) {
                     _.extend(view.options, {
                         deletable: null,
