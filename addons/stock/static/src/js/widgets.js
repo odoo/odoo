@@ -206,6 +206,7 @@ function openerp_picking_widgets(instance){
                 }
             });
             this.$('.js_create_lot').click(function(){
+            	self._op_id = $(this).parents("[data-id]:first").data('id');
                 self.$('.js_lot_scan').val('');
                 var $lot_modal = self.$el.siblings('#js_LotChooseModal');
                 //disconnect scanner to prevent scanning a product in the back while dialog is open
@@ -227,7 +228,6 @@ function openerp_picking_widgets(instance){
             //button action
             this.$('.js_validate_lot').click(function(){
             	//get content of input
-            	var op_id = $("[data-id]:first").data('id');
             	var name = self.$('.js_lot_scan').val();
             	var lot_name = false;
             	if (name.length !== 0){
@@ -241,7 +241,7 @@ function openerp_picking_widgets(instance){
             	self.getParent().barcode_scanner.connect(function(ean){
             		self.getParent().scan(ean);
             	});
-            	self.getParent().create_lot(op_id, lot_name);
+            	self.getParent().create_lot(self._op_id, lot_name);
             });
             this.$('.js_delete_pack').click(function(){
                 var pack_id = $(this).parents("[data-id]:first").data('id');
