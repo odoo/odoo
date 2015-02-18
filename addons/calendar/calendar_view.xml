@@ -21,6 +21,27 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_calendar_event_type_tree"/>
     </record>
+
+    <!-- Calendar Alarm -->
+    <record id="view_calendar_alarm_tree" model="ir.ui.view">
+        <field name="name">Calendar Alarm Tree</field>
+        <field name="model">calendar.alarm</field>
+        <field name="arch" type="xml">
+            <tree string="Calendar Alarm" editable="bottom">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="duration"/>
+                <field name="interval"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_calendar_alarm" model="ir.actions.act_window">
+        <field name="name">Calendar Alarm</field>
+        <field name="res_model">calendar.alarm</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_calendar_alarm_tree"/>
+    </record>
     
     <!-- Calendar Events Form View -->
 
@@ -226,7 +247,6 @@
             <calendar string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday" 
                          display="[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
                          use_contacts="True" event_open_popup="%(calendar.view_calendar_event_form_popup)s">
-            
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="color_partner_id"/>
@@ -311,10 +331,13 @@
         <field name="view_id" ref="view_calendar_event_gantt"/>
     </record>
 
+
+
     <menuitem name="Calendar" id="mail_menu_calendar" parent="mail.mail_my_stuff" sequence="10" action="action_calendar_event"/>
     <menuitem id="menu_calendar_configuration" name="Calendar" parent="base.menu_custom" groups="base.group_no_one"/>
     <menuitem id="menu_calendar_event_type" parent="menu_calendar_configuration" action="action_calendar_event_type" groups="base.group_no_one"/>
-        
+    <menuitem id="menu_calendar_alarm" parent="menu_calendar_configuration" action="action_calendar_alarm" groups="base.group_no_one"/>
+
     <!-- called in js from '/js/base_calendar.js' -->
     <record id="action_calendar_event_notify" model="ir.actions.act_window">
         <field name="name">Meetings</field>

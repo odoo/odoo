@@ -226,6 +226,7 @@
             var item = false;
             if (record) {
                 item = record.attributes;
+                this.dataset.select_id(record.get('id'));
             } else {
                 record = this.make_empty_record(false);
                 this.records.add(record, {

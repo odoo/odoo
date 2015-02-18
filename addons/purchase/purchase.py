@@ -1095,10 +1095,12 @@ class purchase_order_line(osv.osv):
             context_partner.update( {'lang': lang, 'partner_id': partner_id} )
         product = product_product.browse(cr, uid, product_id, context=context_partner)
         #call name_get() with partner in the context to eventually match name and description in the seller_ids field
-        dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
-        if product.description_purchase:
-            name += '\n' + product.description_purchase
-        res['value'].update({'name': name})
+        if not name or not uom_id:
+            # The 'or not uom_id' part of the above condition can be removed in master. See commit message of the rev. introducing this line.
+            dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
+            if product.description_purchase:
+                name += '\n' + product.description_purchase
+            res['value'].update({'name': name})
 
         # - set a domain on product_uom
         res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
@@ -1276,6 +1278,11 @@ class procurement_order(osv.osv):
 
     def _get_product_supplier(self, cr, uid, procurement, context=None):
         ''' returns the main supplier of the procurement's product given as argument'''
+        supplierinfo = self.pool['product.supplierinfo']
+        company_supplier = supplierinfo.search(cr, uid,
+            [('product_tmpl_id', '=', procurement.product_id.product_tmpl_id.id), ('company_id', '=', procurement.company_id.id)], limit=1, context=context)
+        if company_supplier:
+            return supplierinfo.browse(cr, uid, company_supplier[0], context=context).name
         return procurement.product_id.seller_id
 
     def _get_po_line_values_from_proc(self, cr, uid, procurement, partner, company, schedule_date, context=None):

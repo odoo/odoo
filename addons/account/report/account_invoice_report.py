@@ -36,8 +36,15 @@ class account_invoice_report(osv.osv):
             context={}
         currency_obj = self.pool.get('res.currency')
         currency_rate_obj = self.pool.get('res.currency.rate')
-        user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-        currency_rate_id = currency_rate_obj.search(cr, uid, [('rate', '=', 1)], limit=1, context=context)[0]
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        user_currency_id = user.company_id.currency_id.id
+        currency_rate_id = currency_rate_obj.search(
+            cr, uid, [
+                ('rate', '=', 1),
+                '|',
+                    ('currency_id.company_id', '=', user.company_id.id),
+                    ('currency_id.company_id', '=', False)
+                ], limit=1, context=context)[0]
         base_currency_id = currency_rate_obj.browse(cr, uid, currency_rate_id, context=context).currency_id.id
         res = {}
         ctx = context.copy()
@@ -164,17 +171,8 @@ class account_invoice_report(osv.osv):
                      WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
                         THEN - ai.residual
                         ELSE ai.residual
-                    END / CASE
-                           WHEN (( SELECT count(l.id) AS count
-                                   FROM account_invoice_line l
-                                   LEFT JOIN account_invoice a ON a.id = l.invoice_id
-                                   WHERE a.id = ai.id)) <> 0
-                               THEN ( SELECT count(l.id) AS count
-                                      FROM account_invoice_line l
-                                      LEFT JOIN account_invoice a ON a.id = l.invoice_id
-                                      WHERE a.id = ai.id)
-                               ELSE 1::bigint
-                          END::numeric AS residual,
+                    END / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
+                    count(*) AS residual,
                     ai.commercial_partner_id as commercial_partner_id,
                     partner.country_id
         """

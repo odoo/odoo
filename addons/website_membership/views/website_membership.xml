@@ -31,10 +31,10 @@
             <div class="col-md-3 mb32" id="left_column">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <li class="nav-header"><h3>Associations</h3></li>
-                    <li t-att-class="'' if membership else 'active'"><a href="/members">All</a></li>
-                    <t t-foreach="memberships" t-as="membership_id">
-                        <li t-att-class="membership and membership_id.id == membership.id and 'active' or ''">
-                            <a t-attf-href="/members/association/#{ membership_id.id }#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"><t t-esc="membership_id.name"/></a>
+                    <li t-att-class="'' if membership_id else 'active'"><a href="/members">All</a></li>
+                    <t t-foreach="memberships_data" t-as="membership_data">
+                        <li t-att-class="membership_id and membership_data['id'] == membership_id and 'active' or ''">
+                            <a t-attf-href="/members/association/#{ membership_data['id'] }#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"><t t-esc="membership_data['name']"/></a>
                         </li>
                     </t>
                 </ul>
@@ -51,27 +51,28 @@
                     </form>
                 </div>
                 <div>
-                    <t t-if="not membership_lines">
+                    <t t-if="not memberships_partner_ids">
                         <p>No result found.</p>
                     </t>
-                    <t t-foreach="membership_lines" t-as="membership_line_id">
-                        <t t-if="current_membership_id != membership_line_id.membership_id.id">
-                            <t t-set="current_membership_id" t-value="membership_line_id.membership_id.id"/>
-                            <h3 class="text-center"><span t-field="membership_line_id.membership_id"/></h3>
+                    <t t-foreach="memberships_data" t-as="membership_data">
+                        <t t-if="memberships_partner_ids.get(membership_data['id'])">
+                            <h3 class="text-center"><span t-esc="membership_data['name']"/></h3>
+                            <t t-foreach="memberships_partner_ids[membership_data['id']]" t-as="partner_id">
+                                <t t-set="partner" t-value="partners[partner_id]"/>
+                                <div class="media">
+                                    <a class="pull-left" t-attf-href="/members/#{slug(partner)}"
+                                       t-field="partner.image_small"
+                                       t-field-options='{"widget": "image", "class": "media-object"}'
+                                    ></a>
+                                    <div class="media-body" style="min-height: 64px;">
+                                        <a class="media-heading" t-attf-href="/members/#{slug(partner)}">
+                                            <span t-field="partner.display_name"/>
+                                        </a>
+                                        <div t-field="partner.website_short_description"/>
+                                    </div>
+                                </div>
+                            </t>
                         </t>
-                        <t t-set="partner" t-value="partners[membership_line_id.partner.id]"/>
-                        <div class="media">
-                            <a class="pull-left" t-attf-href="/members/#{slug(partner)}"
-                               t-field="partner.image_small"
-                               t-field-options='{"widget": "image", "class": "media-object"}'
-                            ></a>
-                            <div class="media-body" style="min-height: 64px;">
-                                <a class="media-heading" t-attf-href="/members/#{slug(partner)}">
-                                    <span t-field="partner.display_name"/>
-                                </a>
-                                <div t-field="partner.website_short_description"/>
-                            </div>
-                        </div>
                     </t>
                 </div>
             </div>

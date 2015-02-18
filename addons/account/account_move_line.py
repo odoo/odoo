@@ -782,7 +782,7 @@ class account_move_line(osv.osv):
             ret_line = {
                 'id': line.id,
                 'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
-                'ref': line.move_id.ref,
+                'ref': line.move_id.ref or '',
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.type,
@@ -1151,9 +1151,10 @@ class account_move_line(osv.osv):
         move_ids = set()
         for line in self.browse(cr, uid, ids, context=context):
             move_ids.add(line.move_id.id)
-            context['journal_id'] = line.journal_id.id
-            context['period_id'] = line.period_id.id
-            result = super(account_move_line, self).unlink(cr, uid, [line.id], context=context)
+            localcontext = dict(context)
+            localcontext['journal_id'] = line.journal_id.id
+            localcontext['period_id'] = line.period_id.id
+            result = super(account_move_line, self).unlink(cr, uid, [line.id], context=localcontext)
         move_ids = list(move_ids)
         if check and move_ids:
             move_obj.validate(cr, uid, move_ids, context=context)
@@ -1373,6 +1374,8 @@ class account_move_line(osv.osv):
                     }
                     self.create(cr, uid, data, context)
                 #create the Tax movement
+                if not tax['amount']:
+                    continue
                 data = {
                     'move_id': vals['move_id'],
                     'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
@@ -1390,7 +1393,8 @@ class account_move_line(osv.osv):
                 self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):
+        recompute = journal.env.recompute and context.get('recompute', True)
+        if check and not context.get('novalidate') and (recompute or journal.entry_posted):
             tmp = move_obj.validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 move_obj.button_validate(cr,uid, [vals['move_id']], context)
