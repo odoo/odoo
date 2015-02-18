@@ -85,12 +85,15 @@ class hr_payslip(osv.osv):
         return super(hr_payslip, self).cancel_sheet(cr, uid, ids, context=context)
 
     def process_sheet(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
         move_pool = self.pool.get('account.move')
         period_pool = self.pool.get('account.period')
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Payroll')
         timenow = time.strftime('%Y-%m-%d')
 
         for slip in self.browse(cr, uid, ids, context=context):
+            context['company_id'] = slip.company_id.id
             line_ids = []
             debit_sum = 0.0
             credit_sum = 0.0
