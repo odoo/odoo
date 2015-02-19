@@ -1134,15 +1134,18 @@ class pos_order(osv.osv):
                 taxes = []
                 for t in line.product_id.taxes_id:
                     if t.company_id.id == current_company.id:
-                        taxes.append(t)
-                computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, cur, line.qty)['taxes']
+                        taxes.append(t.id)
+
+                computed_taxes = []
+                if taxes:
+                    computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, cur.id, line.qty)['taxes']
 
                 for tax in computed_taxes:
                     tax_amount += cur_obj.round(cr, uid, cur, tax['amount'])
-                    group_key = (tax['tax_code_id'], tax['base_code_id'], tax['id'])
+                    # group_key = (tax['tax_code_id'], tax['base_code_id'], tax['id'])
 
-                    group_tax.setdefault(group_key, 0)
-                    group_tax[group_key] += cur_obj.round(cr, uid, cur, tax['amount'])
+                    # group_tax.setdefault(group_key, 0)
+                    # group_tax[group_key] += cur_obj.round(cr, uid, cur, tax['amount'])
 
                 amount = line.price_subtotal
 
@@ -1283,43 +1286,49 @@ class pos_order_line(osv.osv):
         account_tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids, context=context):
             cur = line.order_id.pricelist_id.currency_id
-            taxes_ids = [ tax for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
+            taxes_ids = [ tax.id for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = account_tax_obj.compute_all(cr, uid, taxes_ids, price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
-            res[line.id]['price_subtotal'] = taxes['total_excluded']
-            res[line.id]['price_subtotal_incl'] = taxes['total_included']
+            res[line.id]['price_subtotal'] = res[line.id]['price_subtotal_incl'] = price * line.qty
+            if taxes_ids:
+                taxes = account_tax_obj.browse(cr, uid, taxes_ids, context).compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+                res[line.id]['price_subtotal'] = taxes['total_excluded']
+                res[line.id]['price_subtotal_incl'] = taxes['total_included']
         return res
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
-       context = context or {}
-       if not product_id:
-            return {}
-       if not pricelist:
+        context = context or {}
+        if not product_id:
+           return {}
+        if not pricelist:
            raise UserError(
                _('You have to select a pricelist in the sale form !\n' \
                'Please set one before choosing a product.'))
 
-       price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+        price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                product_id, qty or 1.0, partner_id)[pricelist]
 
-       result = self.onchange_qty(cr, uid, ids, product_id, 0.0, qty, price, context=context)
-       result['value']['price_unit'] = price
-       return result
+        result = self.onchange_qty(cr, uid, ids, pricelist, product_id, 0.0, qty, price, context=context)
+        result['value']['price_unit'] = price
+        return result
 
-    def onchange_qty(self, cr, uid, ids, product, discount, qty, price_unit, context=None):
+    def onchange_qty(self, cr, uid, ids, pricelist, product, discount, qty, price_unit, context=None):
         result = {}
         if not product:
             return result
+        if not pricelist:
+           raise UserError(_('You have to select a pricelist in the sale form !'))
+
         account_tax_obj = self.pool.get('account.tax')
 
         prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
 
         price = price_unit * (1 - (discount or 0.0) / 100.0)
-        cur = self.browse(cr, uid, ids[0], context=context).order_id.pricelist_id.currency_id
-        taxes = account_tax_obj.compute_all(cr, uid, prod.taxes_id, price, cur, qty, product=prod, partner=False)
-
-        result['price_subtotal'] = taxes['total']
-        result['price_subtotal_incl'] = taxes['total_included']
+        result['price_subtotal'] = result['price_subtotal_incl'] = price * qty
+        cur = self.pool.get('product.pricelist').browse(cr, uid, [pricelist], context=context).currency_id
+        if (prod.taxes_id):
+            taxes = prod.taxes_id.compute_all(price, cur, qty, product=prod, partner=False)
+            result['price_subtotal'] = taxes['total_excluded']
+            result['price_subtotal_incl'] = taxes['total_included']
         return {'value': result}
 
     _columns = {

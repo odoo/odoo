@@ -140,6 +140,20 @@ class account_bank_statement(models.Model):
             'context': context,
         }
 
+    @api.multi
+    def button_open(self):
+        """ Changes statement state to Running."""
+        for statement in self:
+            if not statement.name or statement.name == '/':
+                context = {'ir_sequence_date', statement.date}
+                if statement.journal_id.sequence_id:
+                    st_number = statement.journal_id.sequence_id.with_context(context).next_by_id()
+                else:
+                    SequenceObj = self.env['ir.sequence']
+                    st_number = SequenceObj.with_context(context).next_by_code('account.bank.statement')
+                statement.name = st_number
+            statement.state = 'open'
+
     @api.v7
     def reconciliation_widget_preprocess(self, cr, uid, statement_ids, context=None):
         """ To replace by api.v8 method once the rpc layer supports it """
