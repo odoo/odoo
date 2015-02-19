@@ -812,7 +812,6 @@ class account_add_tmpl_wizard(models.TransientModel):
             'name': account_template.name,
             'currency_id': account_template.currency_id and account_template.currency_id.id or False,
             'code': account_template.code,
-            'type': account_template.type,
             'user_type': account_template.user_type and account_template.user_type.id or False,
             'reconcile': account_template.reconcile,
             'note': account_template.note,

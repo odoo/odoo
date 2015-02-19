@@ -64,7 +64,6 @@ class bank(models.Model):
                 acc = {
                     'name': name,
                     'code': new_code,
-                    'type': 'liquidity',
                     'user_type': ref_acc_bank.user_type.id,
                     'reconcile': False,
                     'company_id': bank.company_id.id,
