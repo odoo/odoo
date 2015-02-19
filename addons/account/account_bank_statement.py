@@ -52,8 +52,7 @@ class account_bank_statement(models.Model):
     balance_end_real = fields.Float('Ending Balance', digits=0, states={'confirm': [('readonly', True)]})
     state = fields.Selection([('open', 'New'), ('confirm', 'Closed')], string='Status', required=True, readonly=True, copy=False, default='open')
     currency = fields.Many2one('res.currency', compute='_currency', string='Currency')
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True,
-                                 states={'confirm':[('readonly',True)]}, default=_default_journal)
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm':[('readonly',True)]}, default=_default_journal)
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env['res.company']._company_default_get('account.bank.statement'))
 

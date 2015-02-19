@@ -183,7 +183,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             },
         },{
             model:  'account.tax',
-            fields: ['name','amount', 'price_include', 'include_base_amount', 'type'],
+            fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type'],
             domain: null,
             loaded: function(self,taxes){ 
                 self.taxes = taxes; 
@@ -1102,12 +1102,12 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             _.each(taxes, function(tax) {
                 if (tax.price_include) {
                     var tmp;
-                    if (tax.type === "percent") {
-                        tmp =  base - round_pr(base / (1 + tax.amount),currency_rounding); 
-                    } else if (tax.type === "fixed") {
+                    if (tax.amount_type === "percent") {
+                        tmp =  base - round_pr(base / (1 + tax.amount/100),currency_rounding); 
+                    } else if (tax.amount_type === "fixed") {
                         tmp = round_pr(tax.amount * self.get_quantity(),currency_rounding);
                     } else {
-                        throw "This type of tax is not supported by the point of sale: " + tax.type;
+                        throw "This type of tax is not supported by the point of sale: " + tax.amount_type;
                     }
                     tmp = round_pr(tmp,currency_rounding);
                     taxtotal += tmp;
@@ -1115,12 +1115,12 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     taxdetail[tax.id] = tmp;
                 } else {
                     var tmp;
-                    if (tax.type === "percent") {
-                        tmp = tax.amount * base;
-                    } else if (tax.type === "fixed") {
+                    if (tax.amount_type === "percent") {
+                        tmp = tax.amount/100 * base;
+                    } else if (tax.amount_type === "fixed") {
                         tmp = tax.amount * self.get_quantity();
                     } else {
-                        throw "This type of tax is not supported by the point of sale: " + tax.type;
+                        throw "This type of tax is not supported by the point of sale: " + tax.amount_type;
                     }
 
                     tmp = round_pr(tmp,currency_rounding);
