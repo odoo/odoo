@@ -309,9 +309,6 @@ class pos_session(osv.osv):
                                              type='many2one', relation='account.bank.statement',
                                              string='Cash Register', store=True),
 
-        'opening_details_ids' : fields.related('cash_register_id', 'opening_details_ids', 
-                type='one2many', relation='account.cashbox.line',
-                string='Opening Cash Control'),
         'details_ids' : fields.related('cash_register_id', 'details_ids', 
                 type='one2many', relation='account.cashbox.line',
                 string='Cash Control'),
