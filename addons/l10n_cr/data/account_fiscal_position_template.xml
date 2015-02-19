@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <!--
+        Resource: account.tax.template
+        Account tax templates for Costa Rica
+        -->	
+        <record id="account_fiscal_position_template_IV_VentaExenta_GEN_" model="account.fiscal.position.template">
+            <field name="name">IV - Venta Exenta</field>
+            <field name="chart_template_id" ref="account_chart_template_GEN" />
+        </record>
+        <record id="afptt_IV_VentaExenta_GEN__IV_Ventas13%" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="account_fiscal_position_template_IV_VentaExenta_GEN_" />
+            <field name="tax_src_id" ref="account_tax_template_IV_Ventas13%_GEN_" />
+            <field name="tax_dest_id" ref="account_tax_template_IV_VentasNacExe_GEN_" />
+        </record>
+        <record id="afptt_IV_VentaExenta_GEN__IV_Ventas10%" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="account_fiscal_position_template_IV_VentaExenta_GEN_" />
+            <field name="tax_src_id" ref="account_tax_template_IV_Ventas10%_GEN_" />
+            <field name="tax_dest_id" ref="account_tax_template_IV_VentasNacExe_GEN_" />
+        </record>
+        <record id="account_fiscal_position_template_IV_VentaEsp5%_GEN_" model="account.fiscal.position.template">
+            <field name="name">IV - Venta Esp 5%</field>
+            <field name="chart_template_id" ref="account_chart_template_GEN" />
+        </record>
+        <record id="afptt_IV_VentaEsp5%_GEN__IV_Ventas13%" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="account_fiscal_position_template_IV_VentaEsp5%_GEN_" />
+            <field name="tax_src_id" ref="account_tax_template_IV_Ventas13%_GEN_" />
+            <field name="tax_dest_id" ref="account_tax_template_IV_VentaNacEsp5%_GEN_" />
+        </record>
+        <record id="account_fiscal_position_template_ISC_VentaExenta_GEN_" model="account.fiscal.position.template">
+            <field name="name">ISC - Venta Exenta</field>
+            <field name="chart_template_id" ref="account_chart_template_GEN" />
+        </record>
+        <record id="afptt_ISC_VentaExenta_GEN__ISC_Sel_deConsumo10%" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="account_fiscal_position_template_ISC_VentaExenta_GEN_" />
+            <field name="tax_src_id" ref="account_tax_template_ISC_Sel_deConsumo10%_GEN_" />
+            <field name="tax_dest_id" ref="account_tax_template_IS_Sel_deConsumoExe_GEN_" />
+        </record>	
+
+
+	
+
+
+	
+
+
+	
+
+
+	
+
+
+	
+
+
+	
+
+
+	
+
+
+	
+
+
+	
+
+
+	
+
+
+	
+
+
+	
+
+    </data>
+</openerp>

@@ -12,36 +12,356 @@
             <field name="sign" eval="1"/>
             <field name="notprintable" eval="False"/>
         </record>
-        <record id="account_tax_code_template_Tax" model="account.tax.code.template">
-            <field name="code">Tax</field>
-            <field name="name">Taxes</field>
-            <field name="info">Costa Rica Taxes</field>
+        <record id="account_tax_code_template_I" model="account.tax.code.template">
+            <field name="code">I</field>
+            <field name="name">Impuestos</field>
+            <field name="info">Impuestos</field>
             <field name="sign" eval="1"/>
             <field name="parent_id" eval="account_tax_code_template_CR"/>
             <field name="notprintable" eval="False"/>
         </record>
-        <record id="account_tax_code_template_Prin" model="account.tax.code.template">
-            <field name="code">Prin</field>
-            <field name="name">Principal</field>
-            <field name="info">Costa Rica Tax Principal</field>
+        <record id="account_tax_code_template_I_IV" model="account.tax.code.template">
+            <field name="code">I/IV</field>
+            <field name="name">Impuesto de Venta</field>
+            <field name="info">Impuesto de Venta</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_V" model="account.tax.code.template">
+            <field name="code">I/IV/V</field>
+            <field name="name">IV: Venta</field>
+            <field name="info">IV: Venta</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_V_G" model="account.tax.code.template">
+            <field name="code">I/IV/V/G</field>
+            <field name="name">IV: Venta Gravada</field>
+            <field name="info">IV: Venta Gravada</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_V"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_V_G_13" model="account.tax.code.template">
+            <field name="code">I/IV/V/G/13</field>
+            <field name="name">IV: Venta Gravada 13%</field>
+            <field name="info">IV: Venta Gravada 13%</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_V_G"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_V_G_10" model="account.tax.code.template">
+            <field name="code">I/IV/V/G/10</field>
+            <field name="name">IV: Venta Gravada 10%</field>
+            <field name="info">IV: Venta Gravada 10%</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_V_G"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_V_Exe" model="account.tax.code.template">
+            <field name="code">I/IV/V/Exe</field>
+            <field name="name">IV: Venta Exenta</field>
+            <field name="info">IV: Venta Exenta</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_V"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_V_Exe_Nac" model="account.tax.code.template">
+            <field name="code">I/IV/V/Exe/Nac</field>
+            <field name="name">IV: Venta Nacional Exenta</field>
+            <field name="info">IV: Venta Nacional Exenta</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_V_Exe"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_V_Exe_Exp" model="account.tax.code.template">
+            <field name="code">I/IV/V/Exe/Exp</field>
+            <field name="name">IV: Venta Exportación Exenta</field>
+            <field name="info">IV: Venta Exportación Exenta</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_V_Exe"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_V_Esp" model="account.tax.code.template">
+            <field name="code">I/IV/V/Esp</field>
+            <field name="name">IV: Venta Especial</field>
+            <field name="info">IV: Venta Especial</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_V"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_C" model="account.tax.code.template">
+            <field name="code">I/IV/C</field>
+            <field name="name">IV: Compra</field>
+            <field name="info">IV: Compra</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_C_Nac" model="account.tax.code.template">
+            <field name="code">I/IV/C/Nac</field>
+            <field name="name">IV: Compra Nacional</field>
+            <field name="info">IV: Compra Nacional</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_C"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_C_Nac_G" model="account.tax.code.template">
+            <field name="code">I/IV/C/Nac/G</field>
+            <field name="name">IV: Compra Nacional Gravada</field>
+            <field name="info">IV: Compra Nacional Gravada</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_C_Nac"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_C_Nac_Exe" model="account.tax.code.template">
+            <field name="code">I/IV/C/Nac/Exe</field>
+            <field name="name">IV: Compra Nacional Exenta</field>
+            <field name="info">IV: Compra Nacional Exenta</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_C_Nac"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_C_Nac_Esp" model="account.tax.code.template">
+            <field name="code">I/IV/C/Nac/Esp</field>
+            <field name="name">IV: Compra Nacional Especial</field>
+            <field name="info">IV: Compra Nacional Especial</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_C_Nac"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_C_Imp" model="account.tax.code.template">
+            <field name="code">I/IV/C/Imp</field>
+            <field name="name">IV: Compra Importada</field>
+            <field name="info">IV: Compra Importada</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_C"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_C_Imp_G" model="account.tax.code.template">
+            <field name="code">I/IV/C/Imp/G</field>
+            <field name="name">IV: Compra Importada Gravada</field>
+            <field name="info">IV: Compra Importada Gravada</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_C_Imp"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_C_Imp_Exe" model="account.tax.code.template">
+            <field name="code">I/IV/C/Imp/Exe</field>
+            <field name="name">IV: Compra Importada Exenta</field>
+            <field name="info">IV: Compra Importada Exenta</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_C_Imp"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_IV_C_Imp_Esp" model="account.tax.code.template">
+            <field name="code">I/IV/C/Imp/Esp</field>
+            <field name="name">IV: Compra Importada Especial</field>
+            <field name="info">IV: Compra Importada Especial</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_IV_C_Imp"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_ISC" model="account.tax.code.template">
+            <field name="code">I/ISC</field>
+            <field name="name">Impuesto Selectivo de Consumo</field>
+            <field name="info">Impuesto Selectivo de Consumo</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_ISC_G" model="account.tax.code.template">
+            <field name="code">I/ISC/G</field>
+            <field name="name">ISC: Venta Gravada</field>
+            <field name="info">ISC: Venta Gravada</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_ISC"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_I_ISC_Exe" model="account.tax.code.template">
+            <field name="code">I/ISC/Exe</field>
+            <field name="name">ISC: Venta Exenta</field>
+            <field name="info">ISC: Venta Exenta</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_I_ISC"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B" model="account.tax.code.template">
+            <field name="code">B</field>
+            <field name="name">Bases</field>
+            <field name="info">Bases</field>
             <field name="sign" eval="1"/>
             <field name="parent_id" eval="account_tax_code_template_CR"/>
             <field name="notprintable" eval="False"/>
         </record>
-        <record id="account_tax_code_template_IVTax" model="account.tax.code.template">
-            <field name="code">IVTax</field>
-            <field name="name">IV Tax</field>
-            <field name="info">Sales Tax – Tax</field>
+        <record id="account_tax_code_template_B_IV" model="account.tax.code.template">
+            <field name="code">B/IV</field>
+            <field name="name">Base Impuesto de Venta</field>
+            <field name="info">Base Impuesto de Venta</field>
             <field name="sign" eval="1"/>
-            <field name="parent_id" eval="account_tax_code_template_Tax"/>
+            <field name="parent_id" eval="account_tax_code_template_B"/>
             <field name="notprintable" eval="False"/>
         </record>
-        <record id="account_tax_code_template_IVPrin" model="account.tax.code.template">
-            <field name="code">IVPrin</field>
-            <field name="name">IV Principal</field>
-            <field name="info">Sales Tax – Principal</field>
+        <record id="account_tax_code_template_B_IV_V" model="account.tax.code.template">
+            <field name="code">B/IV/V</field>
+            <field name="name">Base IV: Venta</field>
+            <field name="info">Base IV: Venta</field>
             <field name="sign" eval="1"/>
-            <field name="parent_id" eval="account_tax_code_template_Prin"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_V_G" model="account.tax.code.template">
+            <field name="code">B/IV/V/G</field>
+            <field name="name">Base IV: Venta Gravada</field>
+            <field name="info">Base IV: Venta Gravada</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_V"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_V_G_13" model="account.tax.code.template">
+            <field name="code">B/IV/V/G/13</field>
+            <field name="name">Base IV: Venta Gravada 13%</field>
+            <field name="info">Base IV: Venta Gravada 13%</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_V_G"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_V_G_10" model="account.tax.code.template">
+            <field name="code">B/IV/V/G/10</field>
+            <field name="name">Base IV: Venta Gravada 10%</field>
+            <field name="info">Base IV: Venta Gravada 10%</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_V_G"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_V_Exe" model="account.tax.code.template">
+            <field name="code">B/IV/V/Exe</field>
+            <field name="name">Base IV: Venta Exenta</field>
+            <field name="info">Base IV: Venta Exenta</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_V"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_V_Exe_Nac" model="account.tax.code.template">
+            <field name="code">B/IV/V/Exe/Nac</field>
+            <field name="name">Base IV: Venta Nacional Exenta</field>
+            <field name="info">Base IV: Venta Nacional Exenta</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_V_Exe"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_V_Exe_Exp" model="account.tax.code.template">
+            <field name="code">B/IV/V/Exe/Exp</field>
+            <field name="name">Base IV: Venta Exportación Exenta</field>
+            <field name="info">Base IV: Venta Exportación Exenta</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_V_Exe"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_V_Esp" model="account.tax.code.template">
+            <field name="code">B/IV/V/Esp</field>
+            <field name="name">Base IV: Venta Especial</field>
+            <field name="info">Base IV: Venta Especial</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_V"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_C" model="account.tax.code.template">
+            <field name="code">B/IV/C</field>
+            <field name="name">Base IV: Compra</field>
+            <field name="info">Base IV: Compra</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_C_Nac" model="account.tax.code.template">
+            <field name="code">B/IV/C/Nac</field>
+            <field name="name">Base IV: Compra Nacional</field>
+            <field name="info">Base IV: Compra Nacional</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_C"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_C_Nac_G" model="account.tax.code.template">
+            <field name="code">B/IV/C/Nac/G</field>
+            <field name="name">Base IV: Compra Nacional Gravada</field>
+            <field name="info">Base IV: Compra Nacional Gravada</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_C_Nac"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_C_Nac_Exe" model="account.tax.code.template">
+            <field name="code">B/IV/C/Nac/Exe</field>
+            <field name="name">Base IV: Compra Nacional Exenta</field>
+            <field name="info">Base IV: Compra Nacional Exenta</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_C_Nac"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_C_Nac_Esp" model="account.tax.code.template">
+            <field name="code">B/IV/C/Nac/Esp</field>
+            <field name="name">Base IV: Compra Nacional Especial</field>
+            <field name="info">Base IV: Compra Nacional Especial</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_C_Nac"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_C_Imp" model="account.tax.code.template">
+            <field name="code">B/IV/C/Imp</field>
+            <field name="name">Base IV: Compra Importada</field>
+            <field name="info">Base IV: Compra Importada</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_C"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_C_Imp_G" model="account.tax.code.template">
+            <field name="code">B/IV/C/Imp/G</field>
+            <field name="name">Base IV: Compra Importada Gravada</field>
+            <field name="info">Base IV: Compra Importada Gravada</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_C_Imp"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_C_Imp_Exe" model="account.tax.code.template">
+            <field name="code">B/IV/C/Imp/Exe</field>
+            <field name="name">Base IV: Compra Importada Exenta</field>
+            <field name="info">Base IV: Compra Importada Exenta</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_C_Imp"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_IV_C_Imp_Esp" model="account.tax.code.template">
+            <field name="code">B/IV/C/Imp/Esp</field>
+            <field name="name">Base IV: Compra Importada Especial</field>
+            <field name="info">Base IV: Compra Importada Especial</field>
+            <field name="sign" eval="-1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_IV_C_Imp"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_ISC" model="account.tax.code.template">
+            <field name="code">B/ISC</field>
+            <field name="name">Base Impuesto Selectivo de Consumo</field>
+            <field name="info">Base Impuesto Selectivo de Consumo</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_B"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_ISC_G" model="account.tax.code.template">
+            <field name="code">B/ISC/G</field>
+            <field name="name">Base ISC: Venta Gravada</field>
+            <field name="info">Base ISC: Venta Gravada</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_ISC"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+        <record id="account_tax_code_template_B_ISC_Exe" model="account.tax.code.template">
+            <field name="code">B/ISC/Exe</field>
+            <field name="name">Base ISC: Venta Exenta</field>
+            <field name="info">Base ISC: Venta Exenta</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_B_ISC"/>
             <field name="notprintable" eval="False"/>
         </record>
     </data>

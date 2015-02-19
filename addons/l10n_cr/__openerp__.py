@@ -1,43 +1,31 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    __openerp__.py
-#    l10n_cr_account
-#    First author: Carlos Vásquez <carlos.vasquez@clearcorp.co.cr> (ClearCorp S.A.)
-#    Copyright (c) 2010-TODAY ClearCorp S.A. (http://clearcorp.co.cr). All rights reserved.
+#    Odoo Business Applications
+#    Addons modules by ClearCorp S.A.
+#    Copyright (C) 2009-TODAY ClearCorp S.A. (<http://clearcorp.co.cr>).
 #
-#    Redistribution and use in source and binary forms, with or without modification, are
-#    permitted provided that the following conditions are met:
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
-#        1. Redistributions of source code must retain the above copyright notice, this list of
-#          conditions and the following disclaimer.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
 #
-#        2. Redistributions in binary form must reproduce the above copyright notice, this list
-#          of conditions and the following disclaimer in the documentation and/or other materials
-#          provided with the distribution.
-#
-#    THIS SOFTWARE IS PROVIDED BY <COPYRIGHT HOLDER> ``AS IS'' AND ANY EXPRESS OR IMPLIED
-#    WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-#    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> OR
-#    CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-#    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-#    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-#    ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-#    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-#    ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-#    The views and conclusions contained in the software and documentation are those of the
-#    authors and should not be interpreted as representing official policies, either expressed
-#    or implied, of ClearCorp S.A..
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
     'name': 'Costa Rica - Accounting',
-    'version': '0.1',
-    'url': 'http://launchpad.net/openerp-costa-rica',
-    'author': 'ClearCorp S.A.',
-    'website': 'http://clearcorp.co.cr',
+    'version': '1.0',
+    'url': 'https://github.com/OCA/l10n-costa-rica',
+    'author': 'ClearCorp',
+    'website': 'http://clearcorp.cr',
     'category': 'Localization/Account Charts',
     'description': """
 Chart of accounts for Costa Rica.
@@ -45,14 +33,14 @@ Chart of accounts for Costa Rica.
 
 Includes:
 ---------
-    * account.type
-    * account.account.template
-    * account.tax.template
-    * account.tax.code.template
-    * account.chart.template
+    * Account types: based on default ones.
+    * Account chart template: 1 generic chart of accounts for now, more to come.
+    * Tax templates: including 13% IV, 10% IV, 10% IS and ISC.
+    * Tax codes templates: ready for the D-104 tax declaration.
+    * An example of fiscal position.
 
 Everything is in English with Spanish translation. Further translations are welcome,
-please go to http://translations.launchpad.net/openerp-costa-rica.
+please go to https://github.com/OCA/l10n-costa-rica.
     """,
     'depends': ['account', 'account_chart', 'base'],
     'demo': [],
@@ -63,9 +51,10 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
         'data/account_tax_code_template.xml',
         'data/account_chart_template.xml',
         'data/account_tax_template.xml',
+        'data/account_fiscal_position_template.xml',
         'l10n_wizard.xml',
     ],
-    'license': 'Other OSI approved licence',
+    'license': 'AGPL-3',
     'installable': True,
     'auto_install': False,
 }
