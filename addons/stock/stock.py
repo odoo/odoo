@@ -2069,7 +2069,9 @@ class stock_move(osv.osv):
         return {'value': result}
 
     def _prepare_picking_assign(self, cr, uid, move, context=None):
-        """This method is designed to be inherited"""
+        """ Prepares a new picking for this move as it could not be assigned to
+        another picking. This method is designed to be inherited.
+        """
         values = {
             'origin': move.origin,
             'company_id': move.company_id and move.company_id.id or False,
