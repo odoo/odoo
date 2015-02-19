@@ -1293,9 +1293,14 @@ class function(_column):
                 self._symbol_set = type_class._symbol_set
 
     def new(self, **args):
-        # HACK: function fields are tricky to recreate, simply return a copy
-        import copy
-        return copy.copy(self)
+        if args.get('compute'):
+            # field is computed, we need an instance of the given type
+            type_class = globals()[self._type]
+            return type_class(**args)
+        else:
+            # HACK: function fields are tricky to recreate, simply return a copy
+            import copy
+            return copy.copy(self)
 
     def to_field_args(self):
         args = super(function, self).to_field_args()
