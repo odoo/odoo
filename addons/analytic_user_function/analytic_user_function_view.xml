@@ -78,8 +78,10 @@
             <field name="priority" eval="19"/>
             <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='timesheet_ids']/form/field[@name='account_id']" position="replace">
-                    <field name="account_id" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount)" context="{'default_use_timesheets': 1}"/>
+                <xpath expr="//field[@name='timesheet_ids']/form/field[@name='account_id']" position="attributes">
+                    <attribute name="domain">[('type','=','normal'),('state', '&lt;&gt;', 'close')]</attribute> 
+                    <attribute name="on_change">on_change_account_id(account_id, user_id, unit_amount)</attribute>
+                    <attribute name="context">{'default_use_timesheets': 1}</attribute> 
                 </xpath>
             </field>
         </record>
@@ -90,8 +92,9 @@
             <field name="model">hr.analytic.timesheet</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='account_id']" position="replace">
-                    <field name="account_id" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount)" />
+                <xpath expr="//field[@name='account_id']" position="attributes">
+                    <attribute name="domain">[('type','=','normal'),('state', '&lt;&gt;', 'close')]</attribute>
+                    <attribute name="on_change">on_change_account_id(account_id, user_id, unit_amount)</attribute>
                 </xpath>
             </field>
         </record>
@@ -112,8 +115,9 @@
             <field name="model">hr.analytic.timesheet</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="/tree/field[@name='account_id']" position="replace">
-                    <field name="account_id" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount)" />
+                <xpath expr="/tree/field[@name='account_id']" position="attributes">
+                    <attribute name="domain">[('type','=','normal'),('state', '&lt;&gt;', 'close')]</attribute>
+                    <attribute name="on_change">on_change_account_id(account_id, user_id, unit_amount)</attribute>
                 </xpath>
             </field>
         </record>

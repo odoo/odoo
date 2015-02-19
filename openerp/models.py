@@ -2986,8 +2986,9 @@ class BaseModel(object):
         cls._columns = {}
         for name, field in cls._fields.iteritems():
             field.setup(self.env)
-            if field.store or field.column:
-                cls._columns[name] = field.to_column()
+            column = field.to_column()
+            if column:
+                cls._columns[name] = column
 
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)
