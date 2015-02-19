@@ -476,6 +476,7 @@ ALL_LANGUAGES = {
         'id_ID': u'Indonesian / Bahasa Indonesia',
         'it_IT': u'Italian / Italiano',
         'ja_JP': u'Japanese / 日本語',
+        'ka_GE': u'Georgian / ქართული ენა',
         'ko_KP': u'Korean (KP) / 한국어 (KP)',
         'ko_KR': u'Korean (KR) / 한국어 (KR)',
         'lo_LA': u'Lao / ພາສາລາວ',
