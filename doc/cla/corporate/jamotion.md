@@ -1,4 +1,4 @@
-Switzerland, 2015-02-19
+Switzerland, 19.02.2015
 
 Jamotion GmbH agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
@@ -8,7 +8,7 @@ declaration.
 
 Signed,
 
-Renzo Meister, rm@jamotion.ch https://github.com/rm-jamotion
+Renzo Meister, rm@jamotion.ch https://github.com/jamotion
 
 List of contributors:
 
