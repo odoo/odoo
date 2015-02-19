@@ -288,7 +288,16 @@ def build_exe(o):
 # Stage: testing
 #----------------------------------------------------------
 def _prepare_testing(o):
-    if not o.no_tarball or not o.no_debian:
+    if not o.no_tarball:
+        subprocess.call(["mkdir", "docker_src"], cwd=o.build_dir)
+        subprocess.call(["cp", "package.dfsrc", os.path.join(o.build_dir, "docker_src", "Dockerfile")],
+                        cwd=os.path.join(o.odoo_dir, "setup"))
+        # Use rsync to copy requirements.txt in order to keep original permissions
+        subprocess.call(["rsync", "-a", "requirements.txt", os.path.join(o.build_dir, "docker_src")],
+                        cwd=os.path.join(o.odoo_dir))
+        subprocess.call(["docker", "build", "-t", "odoo-%s-src-nightly-tests" % version, "."],
+                        cwd=os.path.join(o.build_dir, "docker_src"))
+    if not o.no_debian:
         subprocess.call(["mkdir", "docker_debian"], cwd=o.build_dir)
         subprocess.call(["cp", "package.dfdebian", os.path.join(o.build_dir, "docker_debian", "Dockerfile")],
                         cwd=os.path.join(o.odoo_dir, "setup"))
@@ -305,7 +314,7 @@ def _prepare_testing(o):
                         cwd=os.path.join(o.build_dir, "docker_centos"))
 
 def test_tgz(o):
-    with docker('odoo-%s-debian-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
+    with docker('odoo-%s-src-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.tar.gz'
         wheezy.system("service postgresql start")
         wheezy.system('/usr/local/bin/pip install /opt/release/%s' % wheezy.release)
