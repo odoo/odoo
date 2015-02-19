@@ -1078,7 +1078,7 @@ class pos_order(osv.osv):
                     'ref': order.name,
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
                     'journal_id' : sale_journal_id,
-                    'date' : fields.date.context_today,
+                    'date' : fields.date.context_today(self, cr, uid, context=context),
                     'move_id' : move_id,
                     'company_id': current_company.id,
                 })
