@@ -106,36 +106,32 @@ class hr_payslip(osv.osv):
                 credit_account_id = line.salary_rule_id.account_credit.id
 
                 if debit_account_id:
-
                     debit_line = (0, 0, {
-                    'name': line.name,
-                    'partner_id': (line.salary_rule_id.register_id.partner_id or line.salary_rule_id.account_debit.type in ('receivable', 'payable')) and partner_id or False,
-                    'account_id': debit_account_id,
-                    'journal_id': slip.journal_id.id,
-                    'date': date,
-                    'debit': amt > 0.0 and amt or 0.0,
-                    'credit': amt < 0.0 and -amt or 0.0,
-                    'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
-                    'tax_code_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
-                    'tax_amount': line.salary_rule_id.account_tax_id and amt or 0.0,
-                })
+                        'name': line.name,
+                        'partner_id': (line.salary_rule_id.register_id.partner_id or line.salary_rule_id.account_debit.type in ('receivable', 'payable')) and partner_id or False,
+                        'account_id': debit_account_id,
+                        'journal_id': slip.journal_id.id,
+                        'date': date,
+                        'debit': amt > 0.0 and amt or 0.0,
+                        'credit': amt < 0.0 and -amt or 0.0,
+                        'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
+                        'tax_line_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
+                    })
                     line_ids.append(debit_line)
                     debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
 
                 if credit_account_id:
-
                     credit_line = (0, 0, {
-                    'name': line.name,
-                    'partner_id': (line.salary_rule_id.register_id.partner_id or line.salary_rule_id.account_credit.type in ('receivable', 'payable')) and partner_id or False,
-                    'account_id': credit_account_id,
-                    'journal_id': slip.journal_id.id,
-                    'date': date,
-                    'debit': amt < 0.0 and -amt or 0.0,
-                    'credit': amt > 0.0 and amt or 0.0,
-                    'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
-                    'tax_code_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
-                    'tax_amount': line.salary_rule_id.account_tax_id and amt or 0.0,
-                })
+                        'name': line.name,
+                        'partner_id': (line.salary_rule_id.register_id.partner_id or line.salary_rule_id.account_credit.type in ('receivable', 'payable')) and partner_id or False,
+                        'account_id': credit_account_id,
+                        'journal_id': slip.journal_id.id,
+                        'date': date,
+                        'debit': amt < 0.0 and -amt or 0.0,
+                        'credit': amt > 0.0 and amt or 0.0,
+                        'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
+                        'tax_line_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
+                    })
                     line_ids.append(credit_line)
                     credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
 

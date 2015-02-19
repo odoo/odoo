@@ -613,14 +613,13 @@ class account_invoice(models.Model):
                         'amount': tax['amount'],
                         'manual': False,
                         'sequence': tax['sequence'],
-                        'account_analytic_id': line.account_analytic_id.id,
+                        'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
                         'account_id': self.type in ('out_invoice','in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
                     }
 
-                    # If the taxes generate moves on the same financial account as the invoice line
-                    # and no default analytic account is defined at the tax level, propagate the
-                    # analytic account from the invoice line to the tax line. This is necessary
-                    # in situations were (part of) the taxes cannot be reclaimed,
+                    # If the taxes generate moves on the same financial account as the invoice line,
+                    # propagate the analytic account from the invoice line to the tax line.
+                    # This is necessary in situations were (part of) the taxes cannot be reclaimed,
                     # to ensure the tax move is allocated to the proper analytic account.
                     if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
                         val['account_analytic_id'] = line.account_analytic_id.id
@@ -736,8 +735,7 @@ class account_invoice(models.Model):
                 'quantity': 1,
                 'price': tax_line.amount,
                 'account_id': tax_line.account_id.id,
-                # TODO : find right analytic account to use
-                #'account_analytic_id': tax_line.account_analytic_id.id,
+                'account_analytic_id': tax_line.account_analytic_id.id,
             })
         return res
 
@@ -748,7 +746,7 @@ class account_invoice(models.Model):
         or not."""
         return "%s-%s-%s-%s-%s" % (
             invoice_line['account_id'],
-            invoice_line.get('tax_code_id', 'False'),
+            invoice_line.get('tax_line_id', 'False'),
             invoice_line.get('product_id', 'False'),
             invoice_line.get('analytic_account_id', 'False'),
             invoice_line.get('date_maturity', 'False'),
@@ -764,7 +762,6 @@ class account_invoice(models.Model):
                     am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
                     line2[tmp]['debit'] = (am > 0) and am or 0.0
                     line2[tmp]['credit'] = (am < 0) and -am or 0.0
-                    line2[tmp]['tax_amount'] += l['tax_amount']
                     line2[tmp]['analytic_lines'] += l['analytic_lines']
                 else:
                     line2[tmp] = l

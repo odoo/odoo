@@ -193,8 +193,7 @@ class hr_expense_expense(osv.osv):
             'analytic_lines': x.get('analytic_lines', False),
             'amount_currency': x['price']>0 and abs(x.get('amount_currency', False)) or -abs(x.get('amount_currency', False)),
             'currency_id': x.get('currency_id', False),
-            'tax_code_id': x.get('tax_code_id', False),
-            'tax_amount': x.get('tax_amount', False),
+            'tax_line_id': x.get('tax_line_id', False),
             'ref': x.get('ref', False),
             'quantity': x.get('quantity',1.00),
             'product_id': x.get('product_id', False),
@@ -290,62 +289,38 @@ class hr_expense_expense(osv.osv):
                 continue
             res.append(mres)
             
-            #Calculate tax according to default tax on product
+            # Use the default tax on product or account
             taxes = []
-            #Taken from product_id_onchange in account.invoice
             if line.product_id:
                 fposition_id = False
                 fpos_obj = self.pool.get('account.fiscal.position')
                 fpos = fposition_id and fpos_obj.browse(cr, uid, fposition_id, context=context) or False
                 product = line.product_id
                 taxes = product.supplier_taxes_id
-                #If taxes are not related to the product, maybe they are in the account
+                # If taxes are not related to the product, maybe they are in the account
                 if not taxes:
-                    a = product.property_account_expense.id #Why is not there a check here?
-                    if not a:
-                        a = product.categ_id.property_account_expense_categ.id
+                    a = product.property_account_expense.id or product.categ_id.property_account_expense_categ.id
                     a = fpos_obj.map_account(cr, uid, fpos, a)
                     taxes = a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False
             if not taxes:
                 continue
-            tax_l = []
-            base_tax_amount = line.total_amount
-            #Calculating tax on the line and creating move?
-            for tax in tax_obj.compute_all(cr, uid, [tax.id for tax in taxes],
-                    line.unit_amount ,
-                    exp.currency_id.id,
-                    line.unit_quantity, line.product_id.id,
-                    exp.user_id.partner_id.id)['taxes']:
-                pass
-# TODO: Need to adapt changes according to new tax design.
-#                 tax_code_id = tax['base_code_id']
-#                 if not tax_code_id:
-#                     continue
-#                 res[-1]['tax_code_id'] = tax_code_id
-#                 ## 
-#                 is_price_include = tax_obj.read(cr,uid,tax['id'],['price_include'],context)['price_include']
-#                 if is_price_include:
-#                     ## We need to deduce the price for the tax
-#                     res[-1]['price'] = res[-1]['price']  - (tax['amount'] * tax['base_sign'] or 0.0)
-#                     # tax amount countains base amount without the tax
-#                     base_tax_amount = (base_tax_amount - tax['amount']) * tax['base_sign']
-#                 else:
-#                     base_tax_amount = base_tax_amount * tax['base_sign']
-# 
-#                 assoc_tax = {
-#                              'type':'tax',
-#                              'name':tax['name'],
-#                              'price_unit': tax['price_unit'],
-#                              'quantity': 1,
-#                              'price':  tax['amount'] * tax['base_sign'] or 0.0,
-#                              'account_id': tax['account_collected_id'] or mres['account_id'],
-#                              'tax_code_id': tax['tax_code_id'],
-#                              'tax_amount': tax['amount'] * tax['base_sign'],
-#                              }
-#                 tax_l.append(assoc_tax)
-# 
-#             res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, base_tax_amount, context={'date': exp.date_confirm})
-#             res += tax_l
+
+            # Calculate tax lines and adjust base line
+            tax_ids = [tax.id for tax in taxes]
+            tax_res = tax_obj.compute_all(cr, uid, tax_ids, line.unit_amount, exp.currency_id.id, line.unit_quantity, line.product_id.id, exp.user_id.partner_id.id)
+            res[-1]['price'] = tax_res['total_excluded']
+            res[-1]['tax_ids'] = tax_ids
+            for tax in tax_res['taxes']:
+                res.append({
+                    'type': 'tax',
+                    'name': tax['name'],
+                    'price_unit': tax['price_unit'],
+                    'quantity': 1,
+                    'price': tax['amount'],
+                    'account_id': tax['account_id'] or mres['account_id'],
+                    'tax_line_id': tax['id'],
+                })
+
         return res
 
     def move_line_get_item(self, cr, uid, line, context=None):

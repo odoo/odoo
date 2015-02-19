@@ -1044,16 +1044,6 @@ class pos_order(osv.osv):
         grouped_data = {}
         have_to_group_by = session and session.config_id.group_by or False
 
-        def compute_tax(amount, tax, line):
-            if amount > 0:
-                tax_code_id = tax['base_code_id']
-                tax_amount = line.price_subtotal * tax['base_sign']
-            else:
-                tax_code_id = tax['ref_base_code_id']
-                tax_amount = line.price_subtotal * tax['ref_base_sign']
-
-            return (tax_code_id, tax_amount,)
-
         for order in self.browse(cr, uid, ids, context=context):
             if order.account_move:
                 continue
@@ -1096,7 +1086,7 @@ class pos_order(osv.osv):
                 if data_type == 'product':
                     key = ('product', values['partner_id'], (values['product_id'], values['name']), values['analytic_account_id'], values['debit'] > 0)
                 elif data_type == 'tax':
-                    key = ('tax', values['partner_id'], values['tax_code_id'], values['debit'] > 0)
+                    key = ('tax', values['partner_id'], values['tax_line_id'], values['debit'] > 0)
                 elif data_type == 'counter_part':
                     key = ('counter_part', values['partner_id'], values['account_id'], values['debit'] > 0)
                 else:
@@ -1117,7 +1107,6 @@ class pos_order(osv.osv):
                         current_value['quantity'] = current_value.get('quantity', 0.0) +  values.get('quantity', 0.0)
                         current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
                         current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
-                        current_value['tax_amount'] = current_value.get('tax_amount', 0.0) + values.get('tax_amount', 0.0)
                 else:
                     grouped_data[key].append(values)
 
@@ -1130,23 +1119,6 @@ class pos_order(osv.osv):
 
             cur = order.pricelist_id.currency_id
             for line in order.lines:
-                tax_amount = 0
-                taxes = []
-                for t in line.product_id.taxes_id:
-                    if t.company_id.id == current_company.id:
-                        taxes.append(t.id)
-
-                computed_taxes = []
-                if taxes:
-                    computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, cur.id, line.qty)['taxes']
-
-                for tax in computed_taxes:
-                    tax_amount += cur_obj.round(cr, uid, cur, tax['amount'])
-                    # group_key = (tax['tax_code_id'], tax['base_code_id'], tax['id'])
-
-                    # group_tax.setdefault(group_key, 0)
-                    # group_tax[group_key] += cur_obj.round(cr, uid, cur, tax['amount'])
-
                 amount = line.price_subtotal
 
                 # Search for the income account
@@ -1159,23 +1131,12 @@ class pos_order(osv.osv):
                         'account for this product: "%s" (id:%d).') \
                         % (line.product_id.name, line.product_id.id))
 
-                # Empty the tax list as long as there is no tax code:
-                tax_code_id = False
-                tax_amount = 0
-                while computed_taxes:
-                    tax = computed_taxes.pop(0)
-                    tax_code_id, tax_amount = compute_tax(amount, tax, line)
-
-                    # If there is one we stop
-                    if tax_code_id:
-                        break
-
                 name = line.product_id.name
                 if line.notice:
                     # add discount reason in move
                     name = name + ' (' + line.notice + ')'
 
-                # Create a move for the line
+                # Create a move for the line for the order line
                 insert_data('product', {
                     'name': name,
                     'quantity': line.qty,
@@ -1184,45 +1145,28 @@ class pos_order(osv.osv):
                     'analytic_account_id': self._prepare_analytic_account(cr, uid, line, context=context),
                     'credit': ((amount>0) and amount) or 0.0,
                     'debit': ((amount<0) and -amount) or 0.0,
-                    'tax_code_id': tax_code_id,
-                    'tax_amount': tax_amount,
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                 })
 
-                # For each remaining tax with a code, whe create a move line
-                for tax in computed_taxes:
-                    tax_code_id, tax_amount = compute_tax(amount, tax, line)
-                    if not tax_code_id:
-                        continue
+                # Create the tax lines
+                taxes = []
+                for t in line.product_id.taxes_id:
+                    if t.company_id.id == current_company.id:
+                        taxes.append(t.id)
+                if not taxes:
+                    continue
 
+                for tax in account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, cur.id, line.qty)['taxes']:
                     insert_data('tax', {
-                        'name': _('Tax'),
-                        'product_id':line.product_id.id,
+                        'name': _('Tax') + ' ' + tax['name'],
+                        'product_id': line.product_id.id,
                         'quantity': line.qty,
-                        'account_id': income_account,
-                        'credit': 0.0,
-                        'debit': 0.0,
-                        'tax_code_id': tax_code_id,
-                        'tax_amount': tax_amount,
+                        'account_id': tax['account_id'] or income_account,
+                        'credit': ((tax['amount']>0) and tax['amount']) or 0.0,
+                        'debit': ((tax['amount']<0) and -tax['amount']) or 0.0,
+                        'tax_line_id': tax['id'],
                         'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                     })
-
-            # Create a move for each tax group
-            (tax_code_pos, base_code_pos, account_pos, tax_id)= (0, 1, 2, 3)
-
-            for key, tax_amount in group_tax.items():
-                tax = self.pool.get('account.tax').browse(cr, uid, key[tax_id], context=context)
-                insert_data('tax', {
-                    'name': _('Tax') + ' ' + tax.name,
-                    'quantity': line.qty,
-                    'product_id': line.product_id.id,
-                    'account_id': key[account_pos] or income_account,
-                    'credit': ((tax_amount>0) and tax_amount) or 0.0,
-                    'debit': ((tax_amount<0) and -tax_amount) or 0.0,
-                    'tax_code_id': key[tax_code_pos],
-                    'tax_amount': tax_amount,
-                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
-                })
 
             # counterpart
             insert_data('counter_part', {

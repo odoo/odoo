@@ -774,8 +774,7 @@ openerp.testing.section('eval.contexts', {
                             debit: 0,
                             name: "dscsd",
                             partner_id: false,
-                            tax_amount: 0,
-                            tax_code_id: false,
+                            tax_line_id: false,
                         }]
                     ],
                     name: '/',
@@ -802,8 +801,7 @@ openerp.testing.section('eval.contexts', {
                 debit: 0,
                 name: "dscsd",
                 partner_id: false,
-                tax_amount: 0,
-                tax_code_id: false,
+                tax_line_id: false,
             }]],
         });
     });
