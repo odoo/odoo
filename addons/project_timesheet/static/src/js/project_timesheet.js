@@ -24,63 +24,63 @@ openerp.project_timesheet = function(openerp) {
 	                            "time_unit":15
 	                        },
 	                        "projects":[
-	                            {
-	                                "id":1,
-	                                "name":"Implementation"
-	                            },
-	                            {
-	                                "id":2,
-	                                "name":"Testing"
-	                            }
+	                            // {
+	                            //     "id":1,
+	                            //     "name":"Implementation"
+	                            // },
+	                            // {
+	                            //     "id":2,
+	                            //     "name":"Testing"
+	                            // }
 	                        ],
 	                        "tasks": [
-	                            {
-	                                "id":1,
-	                                "name":"C#",
-	                                "project_id" : 1
+	                            // {
+	                            //     "id":1,
+	                            //     "name":"C#",
+	                            //     "project_id" : 1
 
-	                            },
-	                            {
-	                                "id":2,
-	                                "name":"Python",
-	                                "project_id":1
-	                            },
-	                            {
-	                                "id":3,
-	                                "name":"Perl",
-	                                "project_id":1
-	                            }                       
+	                            // },
+	                            // {
+	                            //     "id":2,
+	                            //     "name":"Python",
+	                            //     "project_id":1
+	                            // },
+	                            // {
+	                            //     "id":3,
+	                            //     "name":"Perl",
+	                            //     "project_id":1
+	                            // }                       
 	                        ],
 	                        "account_analytic_lines":[
-	                            {
-	                                "server_id":undefined,
-	                                "id":1,
-	                                "desc":"/",
-	                                "unit_amount":1,
-	                                "project_id":1,
-	                                "task_id":1,
-	                                "date":"2015-02-09",
-	                                "write_date":"2015-02-10 16:03:21"
-	                            },
-	                            {
-	                                "server_id":undefined,
-	                                "id":2,
-	                                "desc":"Conversion from py 2.7 to 3.3",
-	                                "unit_amount":2,
-	                                "project_id":1,
-	                                "task_id":2,
-	                                "date":"2015-02-09",
-	                                "write_date":"2015-02-10 16:03:21"
+	                            // {
+	                            //     "server_id":undefined,
+	                            //     "id":1,
+	                            //     "desc":"/",
+	                            //     "unit_amount":1,
+	                            //     "project_id":1,
+	                            //     "task_id":1,
+	                            //     "date":"2015-02-09",
+	                            //     "write_date":"2015-02-19 12:45:29"
+	                            // },
+	                            // {
+	                            //     "server_id":undefined,
+	                            //     "id":2,
+	                            //     "desc":"Conversion from py 2.7 to 3.3",
+	                            //     "unit_amount":2,
+	                            //     "project_id":1,
+	                            //     "task_id":2,
+	                            //     "date":"2015-02-09",
+	                            //     "write_date":"2015-02-19 12:45:26"
 
-	                            },
-	                            {
-	                                "server_id":undefined,
-	                                "id":3,
-	                                "desc":"/",
-	                                "unit_amount":0.5,
-	                                "date":"2015-02-09",
-	                                "write_date":"2015-02-10 16:03:21"
-	                            },
+	                            // },
+	                            // {
+	                            //     "server_id":undefined,
+	                            //     "id":3,
+	                            //     "desc":"/",
+	                            //     "unit_amount":0.5,
+	                            //     "date":"2015-02-09",
+	                            //     "write_date":"2015-02-10 16:03:21"
+	                            // },
 	                        ],
 	                        "day_plan":[
 	                            {"task_id" : 1},
@@ -96,7 +96,7 @@ openerp.project_timesheet = function(openerp) {
 	                }
 	            ];
                 // Comment or uncomment following line to reset demo data
-            	//localStorage.setItem("pt_data", JSON.stringify(test_data));
+            	localStorage.setItem("pt_data", JSON.stringify(test_data));
 
 
             	// Load (demo) data from local storage
@@ -158,6 +158,7 @@ openerp.project_timesheet = function(openerp) {
         },
 		goto_day_planner: function(){
             this.hide();
+            this.getParent().day_planner_screen.renderElement();
             this.getParent().day_planner_screen.show();
         },
         goto_settings: function(){
@@ -314,32 +315,188 @@ openerp.project_timesheet = function(openerp) {
 
         },
         test_fct: function(){
-            $("#slide").animate({width:'toggle'},350);
             //debugger
-            //this.load_server_data();
+            this.load_server_data();
+            this.renderElement();    
+            //this.renderElement();
         },
         load_server_data: function(){
-        	parent = this.getParent();
-            
+            self = this;
+        	var parent = this.getParent();
+            console.log("Down sync starting")
         	//aal : 
             var account_analytic_line_model = new openerp.Model("account.analytic.line");
             account_analytic_line_model.query(["id", "user_id", "task_id", "name", "unit_amount", "date", "account_id", '__last_update', 'is_timesheet'])
             	.filter([["user_id", "=", parent.session.uid]
             		,["is_timesheet","=",true]
             		,["date",">", openerp.date_to_str(moment().subtract(30, 'days')._d)]])
-            	.all().then(function(aal){
+            	.all()
+                .then(function(aals){
+                    // aals available
+                    // list of task ids referenced in aals:
+                    var aals_with_task = _.filter(aals, function(aal){
+                        return aal.task_id;
+                    });
+                    var task_ids_list = _.map(aals_with_task , function(aal){return aal.task_id[0]});
+
+                    // In theory, all aals should have an account_id, but we still make a check
+                    var aals_with_account = _.filter(aals, function(aal){
+                        return aal.account_id;
+                    });
+                    var account_ids_list = _.map(aals_with_account , function(aal){return aal.account_id[0]});
+
             		var task_model = new openerp.Model('project.task');
             		task_model.query(["id","name", "project_id","user_id"])
-            			.filter([["user_id", "=", parent.session.uid]])
-            			.all().then(function(tasks){
+            			.filter(['|' , ["user_id", "=", parent.session.uid] , ["id","=",task_ids_list]])
+            			.all()
+                        .then(function(tasks){
+                            //tasks available
+                            var tasks_with_project = _.filter(tasks, function(task){
+                                return task.project_id;
+                            });
+                            var project_ids_list = _.map(tasks_with_project , function(task){return task.project_id[0]});
+
+
             				var project_model = new openerp.Model('project.project');
-            				project_model.query(["id", "name","tasks","user_id"])
-            					.filter([["members", '=', parent.session.uid]])
+            				project_model.query(["id", "name","tasks","members", "analytic_account_id"])
+            					.filter([ '|' 
+                                    , '|'
+                                    , ["id", "=" , project_ids_list] 
+                                    , ["members", '=', parent.session.uid]
+                                    , ["analytic_account_id" , "=" , account_ids_list] ])
             					.all().then(function(projects){
-            						// Sync check : keep most recent etc.
-            					});
+                                    // Projects available
+                                    
+                                    // Write new projects to localstorage: 
+                                    _.each(projects, function(project){
+                                        //Small preprocessing, used later:
+                                        project.analytic_account_id = project.analytic_account_id[0];
+                                        //
+                                        local_project = _.findWhere(parent.data.projects, {server_id : project.id});
+                                        if(_.isUndefined(local_project)){
+                                            parent.data.projects.push({
+                                                id : parent.data.next_project_id,
+                                                server_id : project.id,
+                                                name : project.name
+                                            });
+                                            parent.data.next_project_id++;
+                                            parent.update_localStorage();
+                                        }
+                                    });
+
+                                    // Write new tasks to localstorage:
+                                    _.each(tasks, function(task){
+                                        local_task = _.findWhere(parent.data.tasks, {server_id : task.id});
+                                        if(_.isUndefined(local_task)){
+                                            // Find local project_id :
+                                            local_project = _.findWhere(parent.data.projects, {server_id : task.project_id[0]});
+                                            parent.data.tasks.push({
+                                                id : parent.data.next_task_id,
+                                                server_id : task.id,
+                                                name : task.name,
+                                                project_id : local_project.id
+                                            });
+                                            parent.data.next_task_id++;
+                                            parent.update_localStorage();
+                                        }
+                                    });
+
+                                    // Write new aals to localStorage
+                                    _.each(aals, function(aal){
+                                        local_aal = _.findWhere(parent.data.account_analytic_lines, {server_id : aal.id});
+                                        if(_.isUndefined(local_aal)){
+                                            project = _.findWhere(projects, {analytic_account_id : aal.account_id[0]});
+                                            if(project){
+                                                local_project = _.findWhere(parent.data.projects, {server_id : project.id});
+                                                project_id = local_project.id;
+                                            }
+                                            else{
+                                                project_id = undefined;
+                                            }
+
+                                            if(aal.task_id){
+                                                task = _.findWhere(parent.data.tasks, {server_id : aal.task_id[0]});
+                                                task_id = task.id;
+                                            }
+                                            else{
+                                                task_id = undefined;
+                                            }
+                                            parent.data.account_analytic_lines.push({
+                                                id : parent.data.next_aal_id,
+                                                server_id : aal.id,
+                                                name : aal.name,
+                                                unit_amount : aal.unit_amount,
+                                                task_id : task_id,
+                                                project_id : local_project.id,
+                                                write_date : aal.__last_update,
+                                                date : aal.date
+                                            });
+                                            parent.data.next_aal_id++;
+                                            parent.update_localStorage();
+                                        }
+                                        else{
+                                            // TODO update case
+                                            // Check if local or remote aal is the most recent
+                                        }
+                                    });
+                                    // Sorting to have most recent aals on top of screen.
+                                    parent.data.account_analytic_lines.sort(function(a,b){
+                                        return openerp.str_to_datetime(b.write_date) - openerp.str_to_datetime(a.write_date);
+                                    });
+                                    parent.update_localStorage();
+                                    parent.activities_screen.renderElement();
+            					}).then(function(){
+                                    // Sync to server
+                                    console.log("Up sync starting");
+                                    self.project_defs = [];
+                                    // Projects sync
+                                    _.each(parent.data.projects, function(project){
+                                        if(_.isUndefined(project.server_id)){
+                                            // Create project on server
+                                            var project_model = new openerp.Model('project.project');
+                                            self.project_defs.push(project_model.call('create', [{name : project.name , use_tasks : true , invoice_on_timesheets : true }]).then(function(project_server_id){
+                                                project.server_id = project_server_id;
+                                                parent.update_localStorage();
+                                            }));
+                                        }
+                                    });
+
+                                    $.when.apply($, self.project_defs).then(function() {
+                                        console.log("projects synced");
+                                        //Tasks sync:
+                                        self.task_defs = [];
+                                        _.each(parent.data.tasks, function(task){
+                                            if(_.isUndefined(task.server_id)){
+                                                // Find the server_id of this task :
+                                                var project_server_id = _.findWhere(parent.data.projects, {id : task.project_id}).server_id;
+                                                var task_model = new openerp.Model('project.task');
+                                                self.task_defs.push(task_model.call('create', [{name : task.name, project_id : project_server_id}]).then(function(task_server_id){
+                                                    task.server_id = task_server_id;
+                                                    parent.update_localStorage();
+                                                }));
+                                            }
+                                        });
+                                        $.when.apply($, self.task_defs).then(function() {
+                                            console.log("Tasks synced");
+                                            // AALS sync:
+                                            self.aals_defs = [];
+                                            _.each(parent.data.account_analytic_lines, function(aal){
+                                                if(_.isUndefined(aal.server_id)){
+                                                    //Find the server_did of the task and project of the aal
+                                                    
+                                                    //
+                                                    var aal_model = new openerp.Model('account.analytic.line');
+                                                    self.aals_defs.push(aal_model.call('create', [{name : aal.desc}]).then(function(aal_server_id){
+                                                        aal.server_id = aal_server_id;
+                                                        parent.update_localStorage();
+                                                    }));
+                                                }
+                                            });
+
+                                        });
+                                    });
+                                });
             			});
-            		// Do work on AALs
             	});
         }
     });
@@ -357,7 +514,6 @@ openerp.project_timesheet = function(openerp) {
             this.tasks = this.data.tasks;
         },
         add_to_day_plan: function(event){
-            debugger
             console.log(event.currentTarget.dataset.task_id);
         }
     });
@@ -400,17 +556,18 @@ openerp.project_timesheet = function(openerp) {
                 allowClear: true,
                 createSearchChoice: function(user_input, new_choice){
                     //Avoid duplictate projects
-                    if(_.isUndefined(_.findWhere(self.data.projects , {name:user_input.trim()}))){
-                        res = {
-                            id : self.data.next_project_id,
-                            name : user_input,
-                            isNew: true
-                        };
-                        return res;
-                    }
-                    else{
+                    var duplicate = _.find(self.data.projects, function(project){
+                        return (project.name.toUpperCase() === user_input.trim().toUpperCase());
+                    });
+                    if (duplicate){
                         return undefined;
                     }
+                    res = {
+                        id : self.data.next_project_id,
+                        name : user_input.trim(),
+                        isNew: true,
+                    };
+                    return res;
                 },
                 initSelection : function(element, callback){
                     var data = {id: self.data.settings.default_project_id, name : self.get_project_name(self.data.settings.default_project_id)};
@@ -493,18 +650,19 @@ openerp.project_timesheet = function(openerp) {
 				formatResult: formatRes,
                 createSearchChoicePosition : 'bottom',
 				createSearchChoice: function(user_input, new_choice){
-                    //Avoid duplictate projects
-                    if(_.isUndefined(_.findWhere(self.data.projects , {name:user_input.trim()}))){
-                        res = {
-                            id : self.data.next_project_id,
-                            name : user_input,
-                            isNew: true
-                        };
-                        return res;
-                    }
-                    else{
+                    //Avoid duplictate projects in one project
+                    var duplicate = _.find(self.data.projects, function(project){
+                        return (project.name.toUpperCase() === user_input.trim().toUpperCase());
+                    });
+                    if (duplicate){
                         return undefined;
                     }
+                    res = {
+                        id : self.data.next_project_id,
+                        name : user_input.trim(),
+                        isNew: true,
+                    };
+                    return res;
                 },
 				initSelection : function(element, callback){
 					var data = {id: self.activity.project_id, name : self.get_project_name(self.activity.project_id)};
@@ -532,18 +690,19 @@ openerp.project_timesheet = function(openerp) {
                 createSearchChoicePosition : 'bottom',
 				createSearchChoice: function(user_input, new_choice){
                     //Avoid duplictate tasks in one project
-                    if(_.isUndefined(_.findWhere(self.task_list , {name:user_input.trim()}))){
-    					res = {
-    						id : self.data.next_task_id,
-    						name : user_input,
-    						isNew: true,
-                            project_id: self.activity.project_id
-    					};
-    					return res;
-                    }
-                    else{
+                    var duplicate = _.find(self.task_list, function(task){
+                        return (task.name.toUpperCase() === user_input.trim().toUpperCase());
+                    });
+                    if (duplicate){
                         return undefined;
                     }
+					res = {
+						id : self.data.next_task_id,
+						name : user_input.trim(),
+						isNew: true,
+                        project_id: self.activity.project_id
+					};
+					return res;
 				},
                 initSelection : function(element, callback){
                     var data = {id: self.activity.task_id, name : self.get_task_name(self.activity.task_id)};
@@ -619,20 +778,23 @@ openerp.project_timesheet = function(openerp) {
                 return
             } 
 
-            // For instance, don't allow creation of activities without a project. 
             var old_activity = _.findWhere(this.data.account_analytic_lines,  {id:parseInt(this.activity.id)})
             // If this condition is true, it means that the activity is a newly created one :
             if(_.isUndefined(old_activity)){
-                new_length = this.data.account_analytic_lines.push({id : self.data.next_aal_id});
-                old_activity = this.data.account_analytic_lines[new_length - 1];
+                this.data.account_analytic_lines.unshift({id : self.data.next_aal_id});
+                old_activity = this.data.account_analytic_lines[0];
                 self.data.next_aal_id++;
             }
-            old_activity.project_id = this.activity.project_id
-            old_activity.task_id = this.activity.task_id
-            old_activity.desc = this.activity.desc
-            old_activity.unit_amount = this.activity.unit_amount
-            old_activity.date = this.activity.date
+            old_activity.project_id = this.activity.project_id;
+            old_activity.task_id = this.activity.task_id;
+            old_activity.desc = this.activity.desc;
+            old_activity.unit_amount = this.activity.unit_amount;
+            old_activity.date = this.activity.date;
+            old_activity.write_date = openerp.datetime_to_str(new Date());
             
+            this.data.account_analytic_lines.sort(function(a,b){
+                return openerp.str_to_datetime(b.write_date) - openerp.str_to_datetime(a.write_date);
+            });
             this.getParent().update_localStorage();            
 
             //To empty screen data
