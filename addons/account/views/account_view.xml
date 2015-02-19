@@ -1186,6 +1186,14 @@
             <field name="res_model">account.move.line</field>
         </record>
 
+        <record id="action_move_line_graph_posted" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="account_move_line_graph_date"/>
+            <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
+            <field name="res_model">account.move.line</field>
+        </record>
+
         <!-- Account.Entry Edition -->
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">account.move.tree</field>
