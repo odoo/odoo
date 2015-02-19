@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp.osv import osv
+from openerp import models
 
 
-class base_gengo_translations(osv.TransientModel):
+class BaseGengoTranslations(models.TransientModel):
     _inherit = 'base.gengo.translations'
     # update GROUPS, that are the groups allowing to access the gengo key.
     # this is done here because in the base_gengo module, the various website
