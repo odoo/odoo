@@ -306,7 +306,7 @@ class pos_session(osv.osv):
                                             string='Cash Journal', store=True),
         'cash_register_id' : fields.function(_compute_cash_all,
                                              multi='cash',
-                                             type='many2one', relation='account.bank.statement',
+                                             type='many2one', relation='account.cash.statement',
                                              string='Cash Register', store=True),
 
         'details_ids' : fields.related('cash_register_id', 'details_ids', 
