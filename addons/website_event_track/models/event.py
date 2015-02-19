@@ -70,10 +70,11 @@ class event_track(models.Model):
 
     @api.multi
     @api.depends('name')
-    def _website_url(self, field_name, arg):
-        res = super(event_track, self)._website_url(field_name, arg)
-        res.update({(track.id, '/event/%s/track/%s' % (slug(track.event_id), slug(track))) for track in self})
-        return res
+    def _website_url(self):
+        super(event_track, self)._website_url()
+        if self.ids:
+            for track in self:
+                track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         """ Override read_group to always display all states. """

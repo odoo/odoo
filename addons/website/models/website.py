@@ -23,8 +23,7 @@ except ImportError:
     slugify_lib = None
 
 import openerp
-from openerp.tools.translate import _
-from openerp.osv import orm, osv, fields
+from openerp import models, fields, api, _
 from openerp.tools import html_escape as escape, ustr, image_resize_and_sharpen, image_save_for_web
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
@@ -45,7 +44,7 @@ def url_for(path_or_uri, lang=None):
     if request and not url.netloc and not url.scheme and (url.path or force_lang):
         location = urlparse.urljoin(current_path, location)
 
-        lang = lang or request.context.get('lang')
+        lang = lang or request.env.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
 
         if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
@@ -110,7 +109,7 @@ def slugify(s, max_length=None):
     return slug[:max_length]
 
 def slug(value):
-    if isinstance(value, orm.browse_record):
+    if isinstance(value, models.BaseModel):
         # [(id, name)] = value.name_get()
         id, name = value.id, value.display_name
     else:
@@ -143,60 +142,49 @@ def unslug(s):
 def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
 
-class website(osv.osv):
-    def _get_menu(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        menu_obj = self.pool.get('website.menu')
-        for id in ids:
-            menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False), ('website_id', '=', id)], order='id', context=context)
-            res[id] = menu_ids and menu_ids[0] or False
-        return res
+class website(models.Model):
+    @api.multi
+    def _get_menu(self):
+        Menu = self.env['website.menu']
+        for res in self:
+            menu_ids = Menu.search([('parent_id', '=', False), ('website_id', '=', res.id)], order='id').ids
+            res.menu_id = menu_ids and menu_ids[0] or False
 
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
-    _description = "Website"
-    _columns = {
-        'name': fields.char('Website Name'),
-        'domain': fields.char('Website Domain'),
-        'company_id': fields.many2one('res.company', string="Company"),
-        'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
-        'default_lang_id': fields.many2one('res.lang', string="Default language"),
-        'default_lang_code': fields.related('default_lang_id', 'code', type="char", string="Default language code", store=True),
-        'social_twitter': fields.char('Twitter Account'),
-        'social_facebook': fields.char('Facebook Account'),
-        'social_github': fields.char('GitHub Account'),
-        'social_linkedin': fields.char('LinkedIn Account'),
-        'social_youtube': fields.char('Youtube Account'),
-        'social_googleplus': fields.char('Google+ Account'),
-        'google_analytics_key': fields.char('Google Analytics Key'),
-        'user_id': fields.many2one('res.users', string='Public User'),
-        'compress_html': fields.boolean('Compress HTML'),
-        'cdn_activated': fields.boolean('Activate CDN for assets'),
-        'cdn_url': fields.char('CDN Base URL'),
-        'cdn_filters': fields.text('CDN Filters', help="URL matching those filters will be rewritten using the CDN Base URL"),
-        'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
-        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu')
-    }
-    _defaults = {
-        'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
-        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
-        'compress_html': False,
-        'cdn_activated': False,
-        'cdn_url': '//localhost:8069/',
-        'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
-    }
+
+    name = fields.Char('Website Name')
+    domain = fields.Char('Website Domain')
+    company_id = fields.Many2one('res.company', string="Company", default=lambda self:self.env['ir.model.data'].sudo().xmlid_to_res_id('base.main_company'))
+    language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages')
+    default_lang_id = fields.Many2one('res.lang', string="Default language")
+    default_lang_code = fields.Char(related='default_lang_id.code', string="Default language code", store=True)
+    social_twitter = fields.Char('Twitter Account')
+    social_facebook = fields.Char('Facebook Account')
+    social_github = fields.Char('GitHub Account')
+    social_linkedin = fields.Char('LinkedIn Account')
+    social_youtube = fields.Char('Youtube Account')
+    social_googleplus = fields.Char('Google+ Account')
+    google_analytics_key = fields.Char('Google Analytics Key')
+    user_id = fields.Many2one('res.users', string='Public User', default=lambda self:self.env['ir.model.data'].sudo().xmlid_to_res_id('base.public_user'))
+    compress_html = fields.Boolean('Compress HTML', default=False)
+    cdn_activated = fields.Boolean('Activate CDN for assets', Default=False)
+    cdn_url = fields.Char('CDN Base URL', default='//localhost:8069/')
+    cdn_filters = fields.Text('CDN Filters', help="URL matching those filters will be rewritten using the CDN Base URL", default='\n'.join(DEFAULT_CDN_FILTERS))
+    partner_id = fields.Many2one('res.partner', related='user_id.partner_id', string='Public Partner')
+    menu_id = fields.Many2one('website.menu', compute='_get_menu', string='Main Menu')
 
     # cf. Wizard hack in website_views.xml
     def noop(self, *args, **kwargs):
         pass
 
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         self._get_languages.clear_cache(self)
-        return super(website, self).write(cr, uid, ids, vals, context)
+        return super(website, self).write(vals)
 
-    def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
-        context = context or {}
-        imd = self.pool.get('ir.model.data')
-        view = self.pool.get('ir.ui.view')
+    @api.model
+    def new_page(self, name, template='website.default_page', ispage=True):
+        Imd = self.env['ir.model.data']
         template_module, template_name = template.split('.')
 
         # completely arbitrary max_length
@@ -205,18 +193,17 @@ class website(osv.osv):
 
         # find a free xmlid
         inc = 0
-        dom = [('key', '=', page_xmlid), '|', ('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
-        while view.search(cr, openerp.SUPERUSER_ID, dom, context=dict(context or {}, active_test=False)):
+        dom = [('key', '=', page_xmlid), '|', ('website_id', '=', False), ('website_id', '=', self.env.context.get('website_id'))]
+        while self.env['ir.ui.view'].sudo().with_context(active_test=False).search(dom):
             inc += 1
             page_xmlid = "%s.%s" % (template_module, page_name + (inc and "-%s" % inc or ""))
         page_name += (inc and "-%s" % inc or "")
 
         # new page
-        _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
-        website_id = context.get('website_id')
+        template_id = Imd.xmlid_to_object(template)
+        website_id = self.env.context.get('website_id')
         key = template_module+'.'+page_name
-        page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
-        page = view.browse(cr, uid, page_id, context=context)
+        page = template_id.copy({'website_id': website_id, 'key': key})
         page.write({
             'arch': page.arch.replace(template, page_xmlid),
             'name': page_name,
@@ -224,20 +211,19 @@ class website(osv.osv):
         })
         return page_xmlid
 
-    def delete_page(self, cr, uid, view_id, context=None):
-        if context is None:
-            context = {}
-        View = self.pool.get('ir.ui.view')
-        view_find = View.search(cr, uid, [
+    @api.model
+    def delete_page(self, view_id):
+        view_find = self.env['ir.ui.view'].search([
             ('id', '=', view_id),
-            "|", ('website_id', '=', context.get('website_id')), ('website_id', '=', False),
+            "|", ('website_id', '=', self.env.context.get('website_id')), ('website_id', '=', False),
             ('page', '=', True),
             ('type', '=', 'qweb')
-        ], context=context)
+        ])
         if view_find:
-            View.unlink(cr, uid, view_find, context=context)
+            view_find.unlink()
 
-    def page_search_dependencies(self, cr, uid, view_id=False, context=None):
+    @api.model
+    def page_search_dependencies(self, view_id=False):
         dep = {}
         if not view_id:
             return dep
@@ -245,13 +231,10 @@ class website(osv.osv):
         # search dependencies just for information.
         # It will not catch 100% of dependencies and False positive is more than possible
         # Each module could add dependences in this dict
-        if context is None:
-            context = {}
-        View = self.pool.get('ir.ui.view')
-        Menu = self.pool.get('website.menu')
+        View = self.env['ir.ui.view']
 
-        view = View.browse(cr, uid, view_id, context=context)
-        website_id = context.get('website_id')
+        view = View.browse(view_id)
+        website_id = self.env.context.get('website_id')
         name = view.key.replace("website.", "")
         fullname = "website.%s" % name
 
@@ -261,11 +244,11 @@ class website(osv.osv):
                 '|', ('website_id', '=', website_id), ('website_id', '=', False),
                 '|', ('arch_db', 'ilike', '/page/%s' % name), ('arch_db', 'ilike', '/page/%s' % fullname)
             ]
-            pages = View.search(cr, uid, page_search_dom, context=context)
+            pages = View.search(page_search_dom)
             if pages:
                 page_key = _('Page')
                 dep[page_key] = []
-            for page in View.browse(cr, uid, pages, context=context):
+            for page in pages:
                 if page.page:
                     dep[page_key].append({
                         'text': _('Page <b>%s</b> seems to have a link to this page !' % page.key),
@@ -283,11 +266,11 @@ class website(osv.osv):
                 '|', ('url', 'ilike', '/page/%s' % name), ('url', 'ilike', '/page/%s' % fullname)
             ]
 
-            menus = Menu.search(cr, uid, menu_search_dom, context=context)
+            menus = self.env['website.menu'].search(menu_search_dom)
             if menus:
                 menu_key = _('Menu')
                 dep[menu_key] = []
-            for menu in Menu.browse(cr, uid, menus, context=context):
+            for menu in menus:
                 dep[menu_key].append({
                     'text': _('Menu <b>%s</b> seems to have a link to this page !' % menu.name),
                     'link': False
@@ -295,25 +278,28 @@ class website(osv.osv):
 
         return dep
 
-    def page_for_name(self, cr, uid, ids, name, module='website', context=None):
+    @api.multi
+    def page_for_name(self, name, module='website'):
         # whatever
         return '%s.%s' % (module, slugify(name, max_length=50))
 
-    def page_exists(self, cr, uid, ids, name, module='website', context=None):
+    @api.multi
+    def page_exists(self, name, module='website'):
         try:
             name = (name or "").replace("/page/website.", "").replace("/page/", "")
             if not name:
                 return False
-            return self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
+            return self.env["ir.model.data"].xmlid_to_res_model_res_id(module+'.'+name)
         except:
             return False
 
     @openerp.tools.ormcache(skiparg=3)
-    def _get_languages(self, cr, uid, id, context=None):
-        website = self.browse(cr, uid, id)
-        return [(lg.code, lg.name) for lg in website.language_ids]
+    @api.multi
+    def _get_languages(self):
+        return [(lg.code, lg.name) for lg in self.language_ids]
 
-    def get_cdn_url(self, cr, uid, uri, context=None):
+    @api.model
+    def get_cdn_url(self, uri):
         # Currently only usable in a website_enable request context
         if request and request.website and not request.debug:
             cdn_url = request.website.cdn_url
@@ -323,19 +309,21 @@ class website(osv.osv):
                     return urlparse.urljoin(cdn_url, uri)
         return uri
 
-    def get_languages(self, cr, uid, ids, context=None):
-        return self._get_languages(cr, uid, ids[0], context=context)
+    @api.multi
+    def get_languages(self):
+        return self._get_languages()
 
-    def get_alternate_languages(self, cr, uid, ids, req=None, context=None):
+    @api.multi
+    def get_alternate_languages(self, req=None):
         langs = []
         if req is None:
             req = request.httprequest
-        default = self.get_current_website(cr, uid, context=context).default_lang_code
+        default = self.get_current_website().default_lang_code
         uri = req.path
         if req.query_string:
             uri += '?' + req.query_string
         shorts = []
-        for code, name in self.get_languages(cr, uid, ids, context=context):
+        for code, name in self.get_languages():
             lg_path = ('/' + code) if code != default else ''
             lg = code.split('_')
             shorts.append(lg[0])
@@ -350,37 +338,40 @@ class website(osv.osv):
                 lang['hreflang'] = lang['short']
         return langs
 
+    @api.model
     @openerp.tools.ormcache(skiparg=4)
-    def _get_current_website_id(self, cr, uid, domain_name, context=None):
-        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
-        if ids:
-            return ids[0]
+    def _get_current_website_id(self, domain_name):
+        id = self.search([('name', '=', domain_name)], limit=1).id
+        if id:
+            return id
         else:
-            return self.search(cr, uid, [], limit=1, context=context)[0]
+            return self.search([], limit=1).id
 
-    def get_current_website(self, cr, uid, context=None):
+    @api.model
+    def get_current_website(self):
         domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
-        website_id = self._get_current_website_id(cr, uid, domain_name, context=context)
+        website_id = self._get_current_website_id(domain_name)
         request.context['website_id'] = website_id
-        return self.browse(cr, uid, website_id, context=context)
+        return self.browse(website_id)
 
-    def is_publisher(self, cr, uid, ids, context=None):
-        Access = self.pool['ir.model.access']
-        is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context=context)
+    @api.multi
+    def is_publisher(self):
+        is_website_publisher = self.env['ir.model.access'].check('ir.ui.view', 'write', False)
         return is_website_publisher
 
-    def is_user(self, cr, uid, ids, context=None):
-        Access = self.pool['ir.model.access']
-        return Access.check(cr, uid, 'ir.ui.menu', 'read', False, context=context)
+    @api.multi
+    def is_user(self):
+        return self.env['ir.model.access'].check('ir.ui.menu', 'read', False)
 
-    def get_template(self, cr, uid, ids, template, context=None):
+    @api.multi
+    def get_template(self, template):
         if not isinstance(template, (int, long)) and '.' not in template:
             template = 'website.%s' % template
-        View = self.pool['ir.ui.view']
-        view_id = View.get_view_id(cr, uid, template, context=context)
+        View = self.env['ir.ui.view']
+        view_id = View.get_view_id(template)
         if not view_id:
             raise NotFound
-        return View.browse(cr, uid, view_id, context=context)
+        return View.browse(view_id)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)
@@ -390,7 +381,8 @@ class website(osv.osv):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)
         return request.render(template, values, uid=uid)
 
-    def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
+    @api.multi
+    def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
         # Compute Pager
         page_count = int(math.ceil(float(total) / step))
 
@@ -438,6 +430,7 @@ class website(osv.osv):
             ]
         }
 
+    @api.model
     def rule_is_enumerable(self, rule):
         """ Checks that it is possible to generate sensible GET queries for
         a given rule (if the endpoint matches its own requirements)
@@ -466,7 +459,8 @@ class website(osv.osv):
         # check that all args have a converter
         return all( (arg in rule._converters) for arg in args)
 
-    def enumerate_pages(self, cr, uid, ids, query_string=None, context=None):
+    @api.multi
+    def enumerate_pages(self, query_string=None):
         """ Available pages in the website/CMS. This is mostly used for links
         generation and can be overridden by modules setting up new HTML
         controllers for dynamic pages (e.g. blog).
@@ -499,7 +493,7 @@ class website(osv.osv):
                 newval = []
                 for val in values:
                     query = i==(len(convitems)-1) and query_string
-                    for v in converter.generate(request.cr, uid, query=query, args=val, context=context):
+                    for v in converter.generate(query=query, args=val):
                         newval.append( val.copy() )
                         v[name] = v['loc']
                         del v['loc']
@@ -520,25 +514,27 @@ class website(osv.osv):
 
                 yield page
 
-    def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
+    @api.multi
+    def search_pages(self, needle=None, limit=None):
         name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
         res = []
-        for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
+        for page in self.enumerate_pages(query_string=name):
             if needle in page['loc']:
                 res.append(page)
                 if len(res) == limit:
                     break
         return res
 
-    def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
+    @api.multi
+    def kanban(self, model, domain, column, template, step=None, scope=None, orderby=None):
         step = step and int(step) or 10
         scope = scope and int(scope) or 5
         orderby = orderby or "name"
 
         get_args = dict(request.httprequest.args or {})
-        model_obj = self.pool[model]
+        model_obj = self.env[model]
         relation = model_obj._columns.get(column)._obj
-        relation_obj = self.pool[relation]
+        relation_obj = self.env[relation]
 
         get_args.setdefault('kanban', "")
         kanban = get_args.pop('kanban')
@@ -551,12 +547,12 @@ class website(osv.osv):
                 pages[int(col[0])] = int(col[1])
 
         objects = []
-        for group in model_obj.read_group(cr, uid, domain, ["id", column], groupby=column):
+        for group in model_obj.read_group(domain, ["id", column], groupby=column):
             obj = {}
 
             # browse column
             relation_id = group[column][0]
-            obj['column_id'] = relation_obj.browse(cr, uid, relation_id)
+            obj['column_id'] = relation_obj.browse(relation_id)
 
             obj['kanban_url'] = kanban_url
             for k, v in pages.items():
@@ -564,7 +560,7 @@ class website(osv.osv):
                     obj['kanban_url'] += "%s-%s" % (k, v)
 
             # pager
-            number = model_obj.search(cr, uid, group['__domain'], count=True)
+            number = model_obj.search_count(group['__domain'])
             obj['page_count'] = int(math.ceil(float(number) / step))
             obj['page'] = pages.get(relation_id) or 1
             if obj['page'] > obj['page_count']:
@@ -580,8 +576,7 @@ class website(osv.osv):
             obj['orderby'] = orderby
 
             # browse objects
-            object_ids = model_obj.search(cr, uid, group['__domain'], limit=step, offset=offset, order=orderby)
-            obj['object_ids'] = model_obj.browse(cr, uid, object_ids)
+            obj['object_ids'] = model_obj.search(group['__domain'], limit=step, offset=offset, order=orderby)
 
             objects.append(obj)
 
@@ -592,15 +587,15 @@ class website(osv.osv):
         }
         return request.website._render("website.kanban_contain", values)
 
-    def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby, context=None):
+    @api.multi
+    def kanban_col(self, model, domain, page, template, step, orderby):
         html = ""
-        model_obj = self.pool[model]
+        model_obj = self.env[model]
         domain = safe_eval(domain)
         step = int(step)
         offset = (int(page)-1) * step
-        object_ids = model_obj.search(cr, uid, domain, limit=step, offset=offset, order=orderby)
-        object_ids = model_obj.browse(cr, uid, object_ids)
-        for object_id in object_ids:
+        objects = model_obj.search(domain, limit=step, offset=offset, order=orderby)
+        for object_id in objects:
             html += request.website._render(template, {'object_id': object_id})
         return html
 
@@ -613,7 +608,8 @@ class website(osv.osv):
             response.data = f.read()
             return response.make_conditional(request.httprequest)
 
-    def _image(self, cr, uid, model, id, field, response, max_width=maxint, max_height=maxint, cache=None, context=None):
+    @api.model
+    def _image(self, model, id, field, response, max_width=maxint, max_height=maxint, cache=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
 
@@ -631,22 +627,18 @@ class website(osv.osv):
         The requested field is assumed to be base64-encoded image data in
         all cases.
         """
-        Model = self.pool[model]
+        Model = self.env[model]
         id = int(id)
 
-        ids = Model.search(cr, uid,
-                           [('id', '=', id)], context=context)
+        ids = Model.search([('id', '=', id)])
         if not ids and 'website_published' in Model._fields:
-            ids = Model.search(cr, openerp.SUPERUSER_ID,
-                               [('id', '=', id), ('website_published', '=', True)], context=context)
+            ids = Model.sudo().search(
+                               [('id', '=', id), ('website_published', '=', True)])
         if not ids:
             return self._image_placeholder(response)
 
         concurrency = '__last_update'
-        [record] = Model.read(cr, openerp.SUPERUSER_ID, [id],
-                              [concurrency, field],
-                              context=context)
-
+        [record] = Model.sudo().browse([id]).read([concurrency, field])
         if concurrency in record:
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
             try:
@@ -715,7 +707,8 @@ class website(osv.osv):
 
         return response
 
-    def image_url(self, cr, uid, record, field, size=None, context=None):
+    @api.model
+    def image_url(self, record, field, size=None):
         """Returns a local url that points to the image field of a given browse record."""
         model = record._name
         sudo_record = record.sudo()
@@ -723,37 +716,32 @@ class website(osv.osv):
         size = '' if size is None else '/%s' % size
         return '/website/image/%s/%s/%s%s' % (model, id, field, size)
 
-class website_menu(osv.osv):
+class WebsiteMenu(models.Model):
     _name = "website.menu"
     _description = "Website Menu"
-    _columns = {
-        'name': fields.char('Menu', required=True, translate=True),
-        'url': fields.char('Url'),
-        'new_window': fields.boolean('New Window'),
-        'sequence': fields.integer('Sequence'),
-        # TODO: support multiwebsite once done for ir.ui.views
-        'website_id': fields.many2one('website', 'Website'),
-        'parent_id': fields.many2one('website.menu', 'Parent Menu', select=True, ondelete="cascade"),
-        'child_id': fields.one2many('website.menu', 'parent_id', string='Child Menus'),
-        'parent_left': fields.integer('Parent Left', select=True),
-        'parent_right': fields.integer('Parent Right', select=True),
-    }
 
-    def __defaults_sequence(self, cr, uid, context):
-        menu = self.search_read(cr, uid, [(1,"=",1)], ["sequence"], limit=1, order="sequence DESC", context=context)
+    def __defaults_sequence(self):
+        menu = self.search_read([(1,"=",1)], ["sequence"], limit=1, order="sequence DESC")
         return menu and menu[0]["sequence"] or 0
 
-    _defaults = {
-        'url': '',
-        'sequence': __defaults_sequence,
-        'new_window': False,
-    }
+    name = fields.Char('Menu', required=True, translate=True)
+    url = fields.Char(default='')
+    new_window = fields.Boolean('New Window', default=False)
+    sequence = fields.Integer(default=__defaults_sequence)
+    # TODO: support multiwebsite once done for ir.ui.views
+    website_id = fields.Many2one('website', 'Website')
+    parent_id = fields.Many2one('website.menu', 'Parent Menu', select=True, ondelete="cascade")
+    child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
+    parent_left = fields.Integer('Parent Left', select=True)
+    parent_right = fields.Integer('Parent Right', select=True)
+
     _parent_store = True
     _parent_order = 'sequence'
     _order = "sequence"
 
     # would be better to take a menu_id as argument
-    def get_tree(self, cr, uid, website_id, menu_id=None, context=None):
+    @api.model
+    def get_tree(self, website_id, menu_id=None):
         def make_tree(node):
             menu_node = dict(
                 id=node.id,
@@ -768,12 +756,13 @@ class website_menu(osv.osv):
                 menu_node['children'].append(make_tree(child))
             return menu_node
         if menu_id:
-            menu = self.browse(cr, uid, menu_id, context=context)
+            menu = self.browse(menu_id)
         else:
-            menu = self.pool.get('website').browse(cr, uid, website_id, context=context).menu_id
+            menu = self.env['website'].browse(website_id).menu_id
         return make_tree(menu)
 
-    def save(self, cr, uid, website_id, data, context=None):
+    @api.model
+    def save(self, website_id, data):
         def replace_id(old_id, new_id):
             for menu in data['data']:
                 if menu['id'] == old_id:
@@ -782,171 +771,160 @@ class website_menu(osv.osv):
                     menu['parent_id'] = new_id
         to_delete = data['to_delete']
         if to_delete:
-            self.unlink(cr, uid, to_delete, context=context)
+            self.browse(to_delete).unlink()
         for menu in data['data']:
             mid = menu['id']
             if isinstance(mid, str):
-                new_id = self.create(cr, uid, {'name': menu['name']}, context=context)
+                new_id = self.create({'name': menu['name']}).id
                 replace_id(mid, new_id)
         for menu in data['data']:
-            self.write(cr, uid, [menu['id']], menu, context=context)
+            self.browse([menu['id']]).write(menu)
         return True
 
 
-class ir_attachment(osv.osv):
+class IrAttachment(models.Model):
 
     _inherit = "ir.attachment"
 
-    def _website_url_get(self, cr, uid, ids, name, arg, context=None):
-        result = {}
-        for attach in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _website_url_get(self):
+        for attach in self:
             if attach.url:
-                result[attach.id] = attach.url
+                attach.website_url = attach.url
             else:
-                result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
-        return result
+                attach.website_url = self.env['website'].image_url(attach, 'datas')
 
-    def _datas_big(self, cr, uid, ids, name, arg, context=None):
-        result = dict.fromkeys(ids, False)
-        if context and context.get('bin_size'):
-            return result
+    @api.multi
+    def _datas_big(self):
+        if self.env.context and self.env.context.get('bin_size'):
+            return False
 
-        for record in self.browse(cr, uid, ids, context=context):
+        for record in self:
             if record.res_model != 'ir.ui.view' or not record.datas: continue
             try:
-                result[record.id] = openerp.tools.image_resize_image_big(record.datas)
+                record.datas_big = openerp.tools.image_resize_image_big(record.datas)
             except IOError: # apparently the error PIL.Image.open raises
                 pass
 
-        return result
+    website_url = fields.Char(compute='_website_url_get', string="Attachment URL")
+    datas_big = fields.Binary (compute='_datas_big', store=True, string="Resized file content")
 
-    _columns = {
-        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char'),
-        'datas_big': fields.function (_datas_big, type='binary', store=True,
-                                      string="Resized file content"),
-    }
-
-    def try_remove(self, cr, uid, ids, context=None):
+    @api.multi
+    def try_remove(self):
         """ Removes a web-based image attachment if it is used by no view
         (template)
 
         Returns a dict mapping attachments which would not be removed (if any)
         mapped to the views preventing their removal
         """
-        Views = self.pool['ir.ui.view']
+        Views = self.env['ir.ui.view']
         attachments_to_remove = []
         # views blocking removal of the attachment
         removal_blocked_by = {}
 
-        for attachment in self.browse(cr, uid, ids, context=context):
+        for attachment in self:
             # in-document URLs are html-escaped, a straight search will not
             # find them
             url = escape(attachment.website_url)
-            ids = Views.search(cr, uid, ["|", ('arch_db', 'like', '"%s"' % url), ('arch_db', 'like', "'%s'" % url)], context=context)
+            view_exist = Views.search(["|", ('arch_db', 'like', '"%s"' % url), ('arch_db', 'like', "'%s'" % url)])
 
-            if ids:
-                removal_blocked_by[attachment.id] = Views.read(
-                    cr, uid, ids, ['name'], context=context)
+            if view_exist:
+                 removal_blocked_by[attachment.id] = [{'id': view_exist.id, 'name':view_exist.name }]
             else:
                 attachments_to_remove.append(attachment.id)
         if attachments_to_remove:
-            self.unlink(cr, uid, attachments_to_remove, context=context)
+            self.browse(attachments_to_remove).unlink()
         return removal_blocked_by
 
-class res_partner(osv.osv):
+class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
-        partner = self.browse(cr, uid, ids[0], context=context)
+    @api.multi
+    def google_map_img(self, zoom=8, width=298, height=298):
         params = {
-            'center': '%s, %s %s, %s' % (partner.street or '', partner.city or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'center': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.name_get()[0][1] or ''),
             'size': "%sx%s" % (height, width),
             'zoom': zoom,
             'sensor': 'false',
         }
         return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
-    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
-        partner = self.browse(cr, uid, ids[0], context=context)
+    @api.multi
+    def google_map_link(self, zoom=8):
         params = {
-            'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'q': '%s, %s %s, %s' % (self.street or '', self.city  or '', self.zip or '', self.country_id and self.country_id.name_get()[0][1] or ''),
             'z': 10
         }
         return urlplus('https://maps.google.com/maps' , params)
 
-class res_company(osv.osv):
+class ResCompany(models.Model):
     _inherit = "res.company"
-    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
-        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
-        return partner and partner.google_map_img(zoom, width, height, context=context) or None
-    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
-        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
-        return partner and partner.google_map_link(zoom, context=context) or None
+    @api.multi
+    def google_map_img(self, zoom=8, width=298, height=298):
+        partner = self.sudo().partner_id
+        return partner and partner.google_map_img(zoom, width, height) or None
+    @api.multi
+    def google_map_link(self, zoom=8):
+        partner = self.sudo().partner_id
+        return partner and partner.google_map_link(zoom) or None
 
-class base_language_install(osv.osv_memory):
+class BaseLanguageInstall(models.TransientModel):
     _inherit = "base.language.install"
-    _columns = {
-        'website_ids': fields.many2many('website', string='Websites to translate'),
-    }
 
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        defaults = super(base_language_install, self).default_get(cr, uid, fields, context)
-        website_id = context.get('params', {}).get('website_id')
+    website_ids = fields.Many2many('website', string='Websites to translate')
+
+    @api.model
+    def default_get(self, fields):
+        defaults = super(BaseLanguageInstall, self).default_get(fields)
+        website_id = self.env.context.get('params', {}).get('website_id')
         if website_id:
             if 'website_ids' not in defaults:
                 defaults['website_ids'] = []
             defaults['website_ids'].append(website_id)
         return defaults
 
-    def lang_install(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        action = super(base_language_install, self).lang_install(cr, uid, ids, context)
-        language_obj = self.browse(cr, uid, ids)[0]
-        website_ids = [website.id for website in language_obj['website_ids']]
-        lang_id = self.pool['res.lang'].search(cr, uid, [('code', '=', language_obj['lang'])])
+    @api.multi
+    def lang_install(self):
+        action = super(BaseLanguageInstall, self).lang_install()
+        website_ids = [website.id for website in self.website_ids]
+        lang_id = self.env['res.lang'].search([('code', '=', self.lang)]).id
         if website_ids and lang_id:
-            data = {'language_ids': [(4, lang_id[0])]}
-            self.pool['website'].write(cr, uid, website_ids, data)
-        params = context.get('params', {})
+            data = {'language_ids': [(4, lang_id)]}
+            self.env['website'].browse(website_ids).write(data)
+        params = self.env.context.get('params', {})
         if 'url_return' in params:
             return {
-                'url': params['url_return'].replace('[lang]', language_obj['lang']),
+                'url': params['url_return'].replace('[lang]', self.lang),
                 'type': 'ir.actions.act_url',
                 'target': 'self'
             }
         return action
 
-class website_seo_metadata(osv.Model):
+class WebsiteSeoMetadata(models.Model):
     _name = 'website.seo.metadata'
     _description = 'SEO metadata'
 
-    _columns = {
-        'website_meta_title': fields.char("Website meta title", translate=True),
-        'website_meta_description': fields.text("Website meta description", translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
-    }
+    website_meta_title = fields.Char("Website meta title", translate=True)
+    website_meta_description = fields.Text("Website meta description", translate=True)
+    website_meta_keywords = fields.Char("Website meta keywords", translate=True)
 
 
-class website_published_mixin(osv.AbstractModel):
+class WebsitePublishedMixin(models.AbstractModel):
     _name = "website.published.mixin"
 
-    _website_url_proxy = lambda self, *a, **kw: self._website_url(*a, **kw)
+    website_published = fields.Boolean('Visible in Website', copy=False)
+    website_url = fields.Char(compute='_website_url', string='Website URL',
+                                    help='The full URL to access the document through the website.')
 
-    _columns = {
-        'website_published': fields.boolean('Visible in Website', copy=False),
-        'website_url': fields.function(_website_url_proxy, type='char', string='Website URL',
-                                       help='The full URL to access the document through the website.'),
-    }
+    @api.multi
+    def _website_url(self):
+        for res in self:
+            res.website_url = '#'
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        return dict.fromkeys(ids, '#')
-
-    def open_website_url(self, cr, uid, ids, context=None):
+    @api.multi
+    def open_website_url(self):
         return {
             'type': 'ir.actions.act_url',
-            'url': self.browse(cr, uid, ids[0]).website_url,
+            'url': self.website_url,
             'target': 'self',
         }

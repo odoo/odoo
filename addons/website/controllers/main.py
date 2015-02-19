@@ -34,7 +34,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def index(self, **kw):
         page = 'homepage'
         try:
-            main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
+            main_menu = request.env.ref('website.main_menu')
         except Exception:
             pass
         else:
@@ -43,7 +43,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
                     return request.redirect(first_menu.url)
                 if first_menu.url.startswith('/page/'):
-                    return request.registry['ir.http'].reroute(first_menu.url)
+                    return request.env['ir.http'].reroute(first_menu.url)
         return self.page(page)
 
     #------------------------------------------------------
@@ -54,7 +54,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def web_login(self, redirect=None, *args, **kw):
         r = super(Website, self).web_login(redirect=redirect, *args, **kw)
         if request.params['login_success'] and not redirect:
-            if request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_user'):
+            if request.env['res.users'].has_group('base.group_user'):
                 redirect = '/web?' + request.httprequest.query_string
             else:
                 redirect = '/'
@@ -81,7 +81,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 values.pop('deletable')
                 page = 'website.page_404'
             else:
-                return request.registry['ir.http']._handle_exception(e, 404)
+                return request.env['ir.http']._handle_exception(e, 404)
 
         return request.render(page, values)
 
@@ -91,22 +91,21 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml_index(self):
-        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        ira = request.registry['ir.attachment']
-        iuv = request.registry['ir.ui.view']
+        Ira = request.env['ir.attachment'].sudo()
+        Iuv = request.env['ir.ui.view'].sudo()
         mimetype ='application/xml;charset=utf-8'
         content = None
 
         def create_sitemap(url, content):
-            ira.create(cr, uid, dict(
+            Ira.create(dict(
                 datas=content.encode('base64'),
                 mimetype=mimetype,
                 type='binary',
                 name=url,
                 url=url,
-            ), context=context)
+            ))
 
-        sitemap = ira.search_read(cr, uid, [('url', '=' , '/sitemap.xml'), ('type', '=', 'binary')], ('datas', 'create_date'), context=context)
+        sitemap = Ira.search_read([('url', '=', '/sitemap.xml'), ('type', '=', 'binary')], ('datas', 'create_date'))
         if sitemap:
             # Check if stored version is still valid
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
@@ -117,9 +116,9 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
-            sitemap_ids = ira.search(cr, uid, [('url', '=like' , '/sitemap%.xml'), ('type', '=', 'binary')], context=context)
-            if sitemap_ids:
-                ira.unlink(cr, uid, sitemap_ids, context=context)
+            sitemaps = Ira.search([('url', '=like', '/sitemap%.xml'), ('type', '=', 'binary')])
+            if sitemaps:
+                sitemaps.unlink()
 
             pages = 0
             first_page = None
@@ -130,9 +129,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'locs': islice(locs, start, start + LOC_PER_SITEMAP),
                     'url_root': request.httprequest.url_root[:-1],
                 }
-                urls = iuv.render(cr, uid, 'website.sitemap_locs', values, context=context)
+                urls = Iuv.render('website.sitemap_locs', values)
                 if urls.strip():
-                    page = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
+                    page = Iuv.render('website.sitemap_xml', dict(content=urls))
                     if not first_page:
                         first_page = page
                     pages += 1
@@ -145,10 +144,10 @@ class Website(openerp.addons.web.controllers.main.Home):
                 content = first_page
             else:
                 # Sitemaps must be split in several smaller files with a sitemap index
-                content = iuv.render(cr, uid, 'website.sitemap_index_xml', dict(
+                content = Iuv.render('website.sitemap_index_xml', dict(
                     pages=range(1, pages + 1),
                     url_root=request.httprequest.url_root,
-                ), context=context)
+                ))
             create_sitemap('/sitemap.xml', content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
@@ -158,10 +157,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         try:
             request.website.get_template('website.info').name
         except Exception, e:
-            return request.registry['ir.http']._handle_exception(e, 404)
-        irm = request.env()['ir.module.module'].sudo()
-        apps = irm.search([('state','=','installed'),('application','=',True)])
-        modules = irm.search([('state','=','installed'),('application','=',False)])
+            return request.env['ir.http']._handle_exception(e, 404)
+        Irm = request.env['ir.module.module'].sudo()
+        apps = Irm.search([('state', '=', 'installed'),('application', '=', True)])
+        modules = Irm.search([('state', '=', 'installed'),('application', '=', False)])
         values = {
             'apps': apps,
             'modules': modules,
@@ -174,15 +173,14 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     @http.route('/website/add/<path:path>', type='http', auth="user", website=True)
     def pagenew(self, path, noredirect=False, add_menu=None):
-        xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
+        xml_id = request.env['website'].new_page(path)
         if add_menu:
-            request.registry['website.menu'].create(
-                request.cr, request.uid, {
+            request.env['website.menu'].create({
                     'name': path,
                     'url': "/page/" + xml_id,
                     'parent_id': request.website.menu_id.id,
                     'website_id': request.website.id,
-                }, context=request.context)
+                })
         # Reverse action in order to allow shortcut for /page/<website_xml_id>
         url = "/page/" + re.sub(r"^website\.", '', xml_id)
 
@@ -199,7 +197,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         templates = request.httprequest.form.getlist('templates')
         modules_to_update = []
         for temp_id in templates:
-            view = request.registry['ir.ui.view'].browse(request.cr, request.uid, int(temp_id), context=request.context)
+            view = request.env['ir.ui.view'].browse(int(temp_id))
             if view.page:
                 continue
             view.model_data_id.write({
@@ -209,10 +207,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                 modules_to_update.append(view.model_data_id.module)
 
         if modules_to_update:
-            module_obj = request.registry['ir.module.module']
-            module_ids = module_obj.search(request.cr, request.uid, [('name', 'in', modules_to_update)], context=request.context)
-            if module_ids:
-                module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
+            modules = request.env['ir.module.module'].search([('name', 'in', modules_to_update)])
+            if modules:
+                modules.button_immediate_upgrade()
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
@@ -222,19 +219,18 @@ class Website(openerp.addons.web.controllers.main.Home):
         ``full=True`` returns inherit view's informations of the template ``key``.
         ``bundles=True`` returns also the asset bundles
         """
-        return request.registry["ir.ui.view"].customize_template_get(
-            request.cr, request.uid, key, full=full, bundles=bundles,
-            context=request.context)
+        return request.env["ir.ui.view"].customize_template_get(
+            key, full=full, bundles=bundles)
 
     @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
-        return request.registry["ir.ui.view"].get_view_translations(
-            request.cr, request.uid, xml_id, lang=lang, context=request.context)
+        return request.env["ir.ui.view"].get_view_translations(
+            xml_id, lang=lang)
 
     @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
-        irt = request.registry.get('ir.translation')
+        Irt = request.env['ir.translation']
         for view_id, trans in data.items():
             view_id = int(view_id)
             for t in trans:
@@ -242,8 +238,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 new_content = t['new_content'].strip()
                 tid = t['translation_id']
                 if not tid:
-                    old_trans = irt.search_read(
-                        request.cr, request.uid,
+                    old_trans = Irt.search_read(
                         [
                             ('type', '=', 'view'),
                             ('res_id', '=', view_id),
@@ -254,7 +249,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                         tid = old_trans[0]['id']
                 if tid:
                     vals = {'value': new_content}
-                    irt.write(request.cr, request.uid, [tid], vals)
+                    Irt.browse([tid]).write(vals)
                 else:
                     new_trans = {
                         'name': 'website',
@@ -267,7 +262,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     if t.get('gengo_translation'):
                         new_trans['gengo_translation'] = t.get('gengo_translation')
                         new_trans['gengo_comment'] = t.get('gengo_comment')
-                    irt.create(request.cr, request.uid, new_trans)
+                    Irt.create(new_trans)
         return True
 
     @http.route('/website/translations', type='json', auth="public", website=True)
@@ -282,22 +277,22 @@ class Website(openerp.addons.web.controllers.main.Home):
         # the upload argument doesn't allow us to access the files if more than
         # one file is uploaded, as upload references the first file
         # therefore we have to recover the files from the request object
-        Attachments = request.registry['ir.attachment']  # registry for the attachment table
+        IrAttachment = request.env['ir.attachment']  # registry for the attachment table
 
         uploads = []
         message = None
         if not upload: # no image provided, storing the link and the image name
             uploads.append({'website_url': url})
             name = url.split("/").pop()                       # recover filename
-            attachment_id = Attachments.create(request.cr, request.uid, {
+            attachment = IrAttachment.create({
                 'name':name,
                 'type': 'url',
                 'url': url,
                 'res_model': 'ir.ui.view',
-            }, request.context)
+            })
         else:                                                  # images provided
             try:
-                attachment_ids = []
+                attachments = []
                 for c_file in request.httprequest.files.getlist('upload'):
                     image_data = c_file.read()
                     image = Image.open(cStringIO.StringIO(image_data))
@@ -310,17 +305,14 @@ class Website(openerp.addons.web.controllers.main.Home):
                     if not disable_optimization and image.format in ('PNG', 'JPEG'):
                         image_data = image_save_for_web(image)
 
-                    attachment_id = Attachments.create(request.cr, request.uid, {
+                    attachments.append(IrAttachment.create({
                         'name': c_file.filename,
                         'datas': image_data.encode('base64'),
                         'datas_fname': c_file.filename,
                         'res_model': 'ir.ui.view',
-                    }, request.context)
-                    attachment_ids.append(attachment_id)
+                    }))
 
-                uploads = Attachments.read(
-                    request.cr, request.uid, attachment_ids, ['website_url'],
-                    context=request.context)
+                uploads = [{'id':attachment.id, 'website_url':attachment.website_url} for attachment in attachments]
             except Exception, e:
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)
@@ -332,16 +324,12 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
         _id = int(id)
-        _object = request.registry[object]
-        obj = _object.browse(request.cr, request.uid, _id)
+        _object = request.env[object]
+        obj = _object.browse(_id)
 
-        values = {}
         if 'website_published' in _object._fields:
-            values['website_published'] = not obj.website_published
-        _object.write(request.cr, request.uid, [_id],
-                      values, context=request.context)
+            obj.website_published = not obj.website_published
 
-        obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
 
     @http.route(['/website/seo_suggest/<keywords>'], type='http', auth="public", website=True)
@@ -362,11 +350,9 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     def get_view_ids(self, xml_ids):
         ids = []
-        imd = request.registry['ir.model.data']
         for xml_id in xml_ids:
             if "." in xml_id:
-                xml = xml_id.split(".")
-                view_model, id = imd.get_object_reference(request.cr, request.uid, xml[0], xml[1])
+                id = request.env.ref(xml_id).id
             else:
                 id = int(xml_id)
             ids.append(id)
@@ -374,12 +360,11 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route(['/website/theme_customize_get'], type='json', auth="public", website=True)
     def theme_customize_get(self, xml_ids):
-        view = request.registry["ir.ui.view"]
+        IrView = request.env["ir.ui.view"]
         enable = []
         disable = []
         ids = self.get_view_ids(xml_ids)
-        context = dict(request.context or {}, active_test=True)
-        for v in view.browse(request.cr, request.uid, ids, context=context):
+        for v in IrView.with_context(active_test=True).browse(ids):
             if v.active:
                 enable.append(v.xml_id)
             else:
@@ -390,13 +375,10 @@ class Website(openerp.addons.web.controllers.main.Home):
     def theme_customize(self, enable, disable):
         """ enable or Disable lists of ``xml_id`` of the inherit templates
         """
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        view = pool["ir.ui.view"]
-        context = dict(request.context or {}, active_test=True)
 
         def set_active(ids, active):
             if ids:
-                view.write(cr, uid, self.get_view_ids(ids), {'active': active}, context=context)
+                request.env["ir.ui.view"].with_context(active_test=True).browse(self.get_view_ids(ids)).write({'active': active})
 
         set_active(disable, False)
         set_active(enable, True)
@@ -423,7 +405,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.website.kanban_col(**post)
 
     def placeholder(self, response):
-        return request.registry['website']._image_placeholder(response)
+        return request.env['website']._image_placeholder(response)
 
     @http.route([
         '/website/image',
@@ -468,8 +450,8 @@ class Website(openerp.addons.web.controllers.main.Home):
             idsha = str(id).split('_')
             id = idsha[0]
             response = werkzeug.wrappers.Response()
-            return request.registry['website']._image(
-                request.cr, request.uid, model, id, field, response, max_width, max_height,
+            return request.env['website']._image(
+                model, id, field, response, max_width, max_height,
                 cache=STATIC_CACHE if len(idsha) > 1 else None)
         except Exception:
             logger.exception("Cannot render image field %r of record %s[%s] at size(%s,%s)",
@@ -482,15 +464,14 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     @http.route('/website/action/<path_or_xml_id_or_id>', type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
-        cr, uid, context = request.cr, request.uid, request.context
         res, action_id, action = None, None, None
-        ServerActions = request.registry['ir.actions.server']
+        ServerActions = request.env['ir.actions.server']
 
         # find the action_id: either an xml_id, the path, or an ID
         if isinstance(path_or_xml_id_or_id, basestring) and '.' in path_or_xml_id_or_id:
-            action_id = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, request.uid, path_or_xml_id_or_id, raise_if_not_found=False)
+            action_id = request.env['ir.model.data'].xmlid_to_res_id(path_or_xml_id_or_id, raise_if_not_found=False)
         if not action_id:
-            action_ids = ServerActions.search(cr, uid, [('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], context=context)
+            action_ids = ServerActions.search([('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)]).ids
             action_id = action_ids and action_ids[0] or None
         if not action_id:
             try:
@@ -500,13 +481,11 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         # check it effectively exists
         if action_id:
-            action_ids = ServerActions.exists(cr, uid, [action_id], context=context)
-            action_id = action_ids and action_ids[0] or None
+            action = ServerActions.browse([action_id]).exists()
         # run it, return only if we got a Response object
-        if action_id:
-            action = ServerActions.browse(cr, uid, action_id, context=context)
+        if action:
             if action.state == 'code' and action.website_published:
-                action_res = ServerActions.run(cr, uid, [action_id], context=context)
+                action_res = action.run()
                 if isinstance(action_res, werkzeug.wrappers.Response):
                     res = action_res
         if res:
@@ -521,7 +500,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         record = None
         if model and res_id:
             res_id = int(res_id)
-            record = request.registry[model].browse(request.cr, request.uid, res_id, request.context)
+            record = request.env[model].browse(res_id)
 
         datarecord = json.loads(kwargs['datarecord'])
         kwargs.update({

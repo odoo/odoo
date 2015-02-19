@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record model="ir.ui.view" id="view_server_action_form_website">
             <field name="name">ir.actions.server.form.website</field>
@@ -15,7 +14,6 @@
                     <xpath expr="//field[@name='sequence']" position="after">
                         <field name="xml_id" invisible="1"/>
                         <field name="website_path"
-                            on_change="on_change_website_path(website_path, xml_id, context)"
                             attrs="{'invisible': ['|', ('website_published', '!=', True), ('state', '!=', 'code')]}"/>
                         <field name="website_url" readonly="1" widget="url"
                             attrs="{'invisible': ['|', ('website_published', '!=', True), ('state', '!=', 'code')]}"/>
@@ -47,5 +45,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

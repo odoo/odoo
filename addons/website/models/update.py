@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from openerp.models import AbstractModel
+from openerp import models, api
 
-class publisher_warranty_contract(AbstractModel):
+class PublisherWarrantyContract(models.AbstractModel):
     _inherit = "publisher_warranty.contract"
 
-    def _get_message(self, cr, uid):
-        msg = super(publisher_warranty_contract, self)._get_message(cr, uid)
+    @api.model
+    def _get_message(self):
+        msg = super(PublisherWarrantyContract, self)._get_message()
         msg['website'] = True
         return msg

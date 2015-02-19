@@ -25,10 +25,11 @@ class event(models.Model):
 
     @api.multi
     @api.depends('name')
-    def _website_url(self, name, arg):
-        res = super(event, self)._website_url(name, arg)
-        res.update({(e.id, '/event/%s' % slug(e)) for e in self})
-        return res
+    def _website_url(self):
+        super(event, self)._website_url()
+        if self.ids:
+            for events in self:
+                events.website_url = '/event/%s' % slug(events)
 
     def _default_hashtag(self):
         return re.sub("[- \\.\\(\\)\\@\\#\\&]+", "", self.env.user.company_id.name).lower()
