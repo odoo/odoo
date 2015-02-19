@@ -203,6 +203,7 @@
 
         $('textarea.load_editor').each(function () {
             var $textarea = $(this);
+            var editor_karma = $textarea.data('karma') || 30;  // default value for backward compatibility
             if (!$textarea.val().match(/\S/)) {
                 $textarea.val("<p><br/></p>");
             }
@@ -213,7 +214,7 @@
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['table', ['table']]
                 ];
-            if (parseInt($("#karma").val()) > 30) {
+            if (parseInt($("#karma").val()) >= editor_karma) {
                 toolbar.push(['insert', ['link', 'picture']]);
             }
             $textarea.summernote({
