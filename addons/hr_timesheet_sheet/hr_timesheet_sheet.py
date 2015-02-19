@@ -531,15 +531,15 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
             FROM
                 ((
                     SELECT
-                        MAX(id) as id,
-                        name,
+                        MAX(foo.id) as id,
+                        foo.name,
                         sheet_id,
                         SUM(total_timesheet) as total_timesheet,
                         CASE WHEN SUM(total_attendance) < 0
                             THEN (SUM(total_attendance) +
-                                CASE WHEN current_date <> name
+                                CASE WHEN current_date <> foo.name
                                     THEN 1440
-                                    ELSE (EXTRACT(hour FROM current_time AT TIME ZONE 'UTC') * 60) + EXTRACT(minute FROM current_time AT TIME ZONE 'UTC')
+                                    ELSE (EXTRACT(hour FROM current_time AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC')) * 60) + EXTRACT(minute FROM current_time AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))
                                 END
                                 )
                             ELSE SUM(total_attendance)
@@ -579,7 +579,18 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                             WHERE action in ('sign_in', 'sign_out')
                             group by (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date, s.id
                         )) AS foo
-                        GROUP BY name, sheet_id
+                                LEFT JOIN hr_timesheet_sheet_sheet s
+                                ON s.id = foo.sheet_id
+                                JOIN hr_employee e
+                                ON s.employee_id = e.id
+                                JOIN resource_resource r
+                                ON e.resource_id = r.id
+                                LEFT JOIN res_users u
+                                ON r.user_id = u.id
+                                LEFT JOIN res_partner p
+                                ON u.partner_id = p.id
+
+                        GROUP BY foo.name, foo.sheet_id, p.tz
                 )) AS bar""")
 
 hr_timesheet_sheet_sheet_day()
