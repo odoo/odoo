@@ -59,7 +59,7 @@ class account_bank_statement(models.Model):
 
     total_entry_encoding = fields.Float('Transactions Subtotal', compute='_end_balance', store=True, help="Total of transaction lines.")
     balance_end = fields.Float('Computed Balance', compute='_end_balance', store=True, help='Balance as calculated based on Opening Balance and transaction lines')
-    difference = fields.Float(compute='_end_balance', help="Difference between the computed ending balance and the specified ending balance.")
+    difference = fields.Float(compute='_end_balance', store=True, help="Difference between the computed ending balance and the specified ending balance.")
 
     line_ids = fields.One2many('account.bank.statement.line', 'statement_id', string='Statement lines', states={'confirm': [('readonly', True)]}, copy=True)
     move_line_ids = fields.One2many('account.move.line', 'statement_id', string='Entry lines', states={'confirm': [('readonly', True)]})
