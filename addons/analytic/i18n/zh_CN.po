@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-03-30 03:47+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-31 06:39+0000\n"
-"X-Generator: Launchpad (build 16967)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:40+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -45,7 +45,6 @@ msgstr "模版"
 
 #. module: analytic
 #: view:account.analytic.account:0
-#: field:account.analytic.account,date:0
 msgid "End Date"
 msgstr "截止日期"
 
@@ -92,6 +91,17 @@ msgstr "科目管理员"
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
 msgstr "关注者"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really useful for consolidation "
+"purposes of several companies charts with different currencies, for example."
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -182,20 +192,6 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really usefull for "
-"consolidation purposes of several companies charts with different "
-"currencies, for example."
-msgstr ""
-"如果选择公司，请注意保持成本科目货币与公司货币一致。\n"
-"针对视图类型的成本科目，你可以把公司字段留空，并修改币种。这样你就可以把多个公司不同货币的成本科目合并起来。"
-
-#. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
 msgstr "是一个关注者"
@@ -224,6 +220,11 @@ msgstr "完成的合约"
 #: view:account.analytic.account:0
 msgid "Terms and Conditions"
 msgstr "条款和条件"
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Expiration Date"
+msgstr ""
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
@@ -402,3 +403,15 @@ msgstr "辅助核算条目"
 
 #~ msgid "Full Account Name"
 #~ msgstr "所有项名称"
+
+#, python-format
+#~ msgid ""
+#~ "If you set a company, the currency selected has to be the same as it's "
+#~ "currency. \n"
+#~ "You can remove the company belonging, and thus change the currency, only on "
+#~ "analytic account of type 'view'. This can be really usefull for "
+#~ "consolidation purposes of several companies charts with different "
+#~ "currencies, for example."
+#~ msgstr ""
+#~ "如果选择公司，请注意保持成本科目货币与公司货币一致。\n"
+#~ "针对视图类型的成本科目，你可以把公司字段留空，并修改币种。这样你就可以把多个公司不同货币的成本科目合并起来。"

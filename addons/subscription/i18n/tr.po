@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
 "PO-Revision-Date: 2013-08-10 18:33+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:29+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -27,6 +27,12 @@ msgstr "Kaynak Belge"
 #: field:subscription.document,model:0
 msgid "Object"
 msgstr "Nesne"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:147
+#, python-format
+msgid "You cannot delete an active subscription!"
+msgstr ""
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -81,6 +87,11 @@ msgstr "Tekrarlanan Etkinlikler"
 #: view:subscription.subscription:0
 msgid "Subscriptions"
 msgstr "Abonelik"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Subsription Data"
+msgstr "Abonelik Verisi"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
@@ -143,12 +154,6 @@ msgid "Name"
 msgstr "Adı"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "You cannot delete an active subscription !"
-msgstr "Etkin bir aboneliği silemezsiniz !"
-
-#. module: subscription
 #: field:subscription.document,field_ids:0
 msgid "Fields"
 msgstr "Alanlar"
@@ -200,9 +205,18 @@ msgid "Scheduler which runs on subscription"
 msgstr ""
 
 #. module: subscription
-#: view:subscription.subscription:0
-msgid "Subsription Data"
-msgstr "Abonelik Verisi"
+#: code:addons/subscription/subscription.py:120
+#, python-format
+msgid "Wrong Source Document!"
+msgstr ""
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:120
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist!"
+msgstr ""
 
 #. module: subscription
 #: help:subscription.subscription,note:0
@@ -257,12 +271,6 @@ msgid "Document Types"
 msgstr "doküman Tipleri"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid "Wrong Source Document !"
-msgstr "Yanlış Kaynak Doküman!"
-
-#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
@@ -272,14 +280,6 @@ msgstr "Abonelik Doküman Alanları"
 #: selection:subscription.subscription,state:0
 msgid "Done"
 msgstr "Biten"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
 
 #. module: subscription
 #: field:subscription.document.fields,value:0
@@ -297,3 +297,11 @@ msgstr "Dokümanlar oluşturuldu"
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Etkin"
+
+#, python-format
+#~ msgid "You cannot delete an active subscription !"
+#~ msgstr "Etkin bir aboneliği silemezsiniz !"
+
+#, python-format
+#~ msgid "Wrong Source Document !"
+#~ msgstr "Yanlış Kaynak Doküman!"

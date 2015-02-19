@@ -153,10 +153,10 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
                 dates_query += ' BETWEEN %s AND %s)'
                 args_list += (form[str(i)]['start'], form[str(i)]['stop'])
             elif form[str(i)]['start']:
-                dates_query += ' > %s)'
+                dates_query += ' >= %s)'
                 args_list += (form[str(i)]['start'],)
             else:
-                dates_query += ' < %s)'
+                dates_query += ' <= %s)'
                 args_list += (form[str(i)]['stop'],)
             args_list += (self.date_from,)
             self.cr.execute('''SELECT l.partner_id, SUM(l.debit-l.credit), l.reconcile_partial_id
@@ -179,11 +179,21 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
                     # in case of partial reconciliation, we want to keep the left amount in the oldest period
                     self.cr.execute('''SELECT MIN(COALESCE(date_maturity,date)) FROM account_move_line WHERE reconcile_partial_id = %s''', (partner_info[2],))
                     date = self.cr.fetchall()
-                    if date and args_list[-3] <= date[0][0] <= args_list[-2]:
+                    partial = False
+                    if 'BETWEEN' in dates_query:
+                        partial = date and args_list[-3] <= date[0][0] <= args_list[-2]
+                    elif '>=' in dates_query:
+                        partial = date and date[0][0] >= form[str(i)]['start']
+                    else:
+                        partial = date and date[0][0] <= form[str(i)]['stop']
+                    if partial:
                         # partial reconcilation
+                        limit_date = 'COALESCE(l.date_maturity,l.date) %s %%s' % '<=' if self.direction_selection == 'past' else '>='
                         self.cr.execute('''SELECT SUM(l.debit-l.credit)
-                                           FROM account_move_line AS l
-                                           WHERE l.reconcile_partial_id = %s''', (partner_info[2],))
+                                           FROM account_move_line AS l, account_move AS am
+                                           WHERE l.move_id = am.id AND am.state in %s
+                                           AND l.reconcile_partial_id = %s
+                                           AND ''' + limit_date, (tuple(move_state), partner_info[2], self.date_from))
                         unreconciled_amount = self.cr.fetchall()
                         partners_amount[partner_info[0]] += unreconciled_amount[0][0]
                 else:

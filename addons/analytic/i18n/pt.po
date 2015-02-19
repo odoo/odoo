@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-01-18 11:06+0000\n"
 "Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:00+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:40+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -45,7 +45,6 @@ msgstr "Template"
 
 #. module: analytic
 #: view:account.analytic.account:0
-#: field:account.analytic.account,date:0
 msgid "End Date"
 msgstr "Data de fecho"
 
@@ -92,6 +91,17 @@ msgstr "Gestor de conta"
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
 msgstr "Seguidores"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really useful for consolidation "
+"purposes of several companies charts with different currencies, for example."
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -182,24 +192,6 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really usefull for "
-"consolidation purposes of several companies charts with different "
-"currencies, for example."
-msgstr ""
-"Se definir uma empresa, a moeda selecionada tem que ser a mesma que a "
-"moeda.\n"
-"Pode remover a empresa a que pertença, e assim, alterar a moeda, apenas por "
-"conta analítica do tipo 'vista'. Isto pode ser realmente útil para fins de "
-"consolidação de vários planos de contas de empresas com diferentes moedas, "
-"por exemplo."
-
-#. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
 msgstr "É um seguidor"
@@ -228,6 +220,11 @@ msgstr ""
 #: view:account.analytic.account:0
 msgid "Terms and Conditions"
 msgstr "Termos e condições"
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Expiration Date"
+msgstr ""
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
@@ -408,6 +405,22 @@ msgstr "Movimentos Analíticos"
 
 #~ msgid "Date End"
 #~ msgstr "Data Final"
+
+#, python-format
+#~ msgid ""
+#~ "If you set a company, the currency selected has to be the same as it's "
+#~ "currency. \n"
+#~ "You can remove the company belonging, and thus change the currency, only on "
+#~ "analytic account of type 'view'. This can be really usefull for "
+#~ "consolidation purposes of several companies charts with different "
+#~ "currencies, for example."
+#~ msgstr ""
+#~ "Se definir uma empresa, a moeda selecionada tem que ser a mesma que a "
+#~ "moeda.\n"
+#~ "Pode remover a empresa a que pertença, e assim, alterar a moeda, apenas por "
+#~ "conta analítica do tipo 'vista'. Isto pode ser realmente útil para fins de "
+#~ "consolidação de vários planos de contas de empresas com diferentes moedas, "
+#~ "por exemplo."
 
 #~ msgid "Contract <b>closed</b>"
 #~ msgstr "Contrato <b>fechado</b>"

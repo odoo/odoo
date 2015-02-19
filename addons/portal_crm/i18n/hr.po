@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-09-26 12:53+0000\n"
 "Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:11+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
@@ -63,9 +63,9 @@ msgid "Company"
 msgstr "Tvrtka"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,user_id:0
-msgid "Salesperson"
-msgstr "Prodavač"
+#: field:portal_crm.crm_contact_us,day_open:0
+msgid "Days to Open"
+msgstr "Dana za otvaranje"
 
 #. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
@@ -96,6 +96,11 @@ msgstr "Poruke"
 #: field:portal_crm.crm_contact_us,color:0
 msgid "Color Index"
 msgstr "Indeks boje"
+
+#. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_latitude:0
+msgid "Geo Latitude"
+msgstr "Geo Latitude"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,partner_name:0
@@ -209,6 +214,11 @@ msgid "Channel"
 msgstr "Kanal"
 
 #. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Name"
+msgstr "Naziv"
+
+#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,priority:0
 msgid "Lowest"
 msgstr "Najniži"
@@ -234,6 +244,16 @@ msgstr ""
 "primiti e-poštu za masovno slanje i marketinšku kampanju. Filtar "
 "\"raspoloživi za masovno slanje' omogućuje korisnicima da filtriraju takve "
 "kontakte."
+
+#. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Close"
+msgstr "Zatvori"
+
+#. module: portal_crm
+#: selection:portal_crm.crm_contact_us,state:0
+msgid "Pending"
+msgstr "U tijeku"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,type:0
@@ -370,9 +390,9 @@ msgid "Closed"
 msgstr "Zatvoreno"
 
 #. module: portal_crm
-#: selection:portal_crm.crm_contact_us,state:0
-msgid "Pending"
-msgstr "U tijeku"
+#: field:portal_crm.crm_contact_us,date_assign:0
+msgid "Assignation Date"
+msgstr ""
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,state:0
@@ -415,9 +435,9 @@ msgid "Active"
 msgstr "Aktivan"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,day_open:0
-msgid "Days to Open"
-msgstr "Dana za otvaranje"
+#: field:portal_crm.crm_contact_us,user_id:0
+msgid "Salesperson"
+msgstr "Prodavač"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,day_close:0
@@ -452,14 +472,19 @@ msgid "Partner Contact Name"
 msgstr "Naziv kontakta partnera"
 
 #. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_longitude:0
+msgid "Geo Longitude"
+msgstr ""
+
+#. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
 msgid "Your phone number..."
 msgstr "Vaš telefonski broj ..."
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Close"
-msgstr "Zatvori"
+#: help:portal_crm.crm_contact_us,date_assign:0
+msgid "Last date this case was forwarded/assigned to a partner"
+msgstr ""
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,email_from:0
@@ -487,14 +512,19 @@ msgid "Referred By"
 msgstr "Upućen od strane"
 
 #. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_assigned_id:0
+msgid "Assigned Partner"
+msgstr ""
+
+#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
 msgid "Opportunity"
 msgstr "Prilika"
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Name"
-msgstr "Naziv"
+#: help:portal_crm.crm_contact_us,partner_assigned_id:0
+msgid "Partner this case has been forwarded/assigned to."
+msgstr ""
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,country_id:0
@@ -556,6 +586,3 @@ msgstr "Posljednja akcija"
 #: model:ir.model,name:portal_crm.model_portal_crm_crm_contact_us
 msgid "Contact form for the portal"
 msgstr "Kontakt obrazac za portal"
-
-#~ msgid "Geo Latitude"
-#~ msgstr "Geo Latitude"

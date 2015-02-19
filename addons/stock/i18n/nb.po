@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-02-06 15:56+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-07 07:12+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:26+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -127,8 +127,8 @@ msgid "Product Moves"
 msgstr "Produktbevegelser"
 
 #. module: stock
-#: code:addons/stock/stock.py:2568
-#: code:addons/stock/stock.py:2629
+#: code:addons/stock/stock.py:2563
+#: code:addons/stock/stock.py:2624
 #, python-format
 msgid "Please provide proper quantity."
 msgstr ""
@@ -153,7 +153,7 @@ msgid "You cannot perform this operation on more than one Stock Inventories."
 msgstr "Du kan ikke utføre denne operasjonen på mer enn en lagertelling"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:95
+#: code:addons/stock/wizard/stock_change_product_qty.py:101
 #, python-format
 msgid "Quantity cannot be negative."
 msgstr "Kvantum kan ikke være negativt"
@@ -208,11 +208,6 @@ msgid "Physical Inventories"
 msgstr "Fysisk lagertelling"
 
 #. module: stock
-#: selection:stock.location.product,type:0
-msgid "Analyse a Period"
-msgstr ""
-
-#. module: stock
 #: view:report.stock.move:0
 #: field:stock.change.standard.price,stock_journal:0
 msgid "Stock journal"
@@ -238,9 +233,9 @@ msgstr ""
 "Valgfri adresse der varene skal leveres, spesielt brukt for tildeling"
 
 #. module: stock
-#: model:ir.actions.server,name:stock.action_partial_move_server
-msgid "Deliver/Receive Products"
-msgstr "Utlever/motta produkter"
+#: field:stock.location.product,type:0
+msgid "Analysis Type"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -320,7 +315,7 @@ msgid "Reference"
 msgstr "Referanse"
 
 #. module: stock
-#: code:addons/stock/stock.py:1565
+#: code:addons/stock/stock.py:1559
 #, python-format
 msgid "Products to Process"
 msgstr "Produkter som skal behandles"
@@ -359,19 +354,19 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:782
-#: code:addons/stock/stock.py:2517
-#: code:addons/stock/stock.py:2568
-#: code:addons/stock/stock.py:2629
-#: code:addons/stock/wizard/stock_change_product_qty.py:95
-#: code:addons/stock/wizard/stock_fill_inventory.py:128
+#: code:addons/stock/stock.py:777
+#: code:addons/stock/stock.py:2512
+#: code:addons/stock/stock.py:2563
+#: code:addons/stock/stock.py:2624
+#: code:addons/stock/wizard/stock_change_product_qty.py:101
+#: code:addons/stock/wizard/stock_fill_inventory.py:129
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
 #: code:addons/stock/wizard/stock_inventory_merge.py:63
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:96
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:98
-#: code:addons/stock/wizard/stock_partial_picking.py:174
-#: code:addons/stock/wizard/stock_partial_picking.py:181
-#: code:addons/stock/wizard/stock_partial_picking.py:192
+#: code:addons/stock/wizard/stock_partial_picking.py:176
+#: code:addons/stock/wizard/stock_partial_picking.py:183
+#: code:addons/stock/wizard/stock_partial_picking.py:194
 #: code:addons/stock/wizard/stock_return_picking.py:102
 #: code:addons/stock/wizard/stock_return_picking.py:109
 #: code:addons/stock/wizard/stock_return_picking.py:212
@@ -482,7 +477,7 @@ msgid "Ready to Deliver"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2525
+#: code:addons/stock/stock.py:2520
 #, python-format
 msgid ""
 "Forbidden operation: it is not allowed to scrap products from a virtual "
@@ -577,7 +572,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:195
+#: code:addons/stock/product.py:197
 #, python-format
 msgid "Products: "
 msgstr "Produkter: "
@@ -594,7 +589,7 @@ msgid "Draft Physical Inventories"
 msgstr "Utkast fysisk telling"
 
 #. module: stock
-#: code:addons/stock/stock.py:1806
+#: code:addons/stock/stock.py:1800
 #, python-format
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
@@ -630,7 +625,7 @@ msgid "Item Labels"
 msgstr "Produktetiketter"
 
 #. module: stock
-#: code:addons/stock/stock.py:1373
+#: code:addons/stock/stock.py:1367
 #, python-format
 msgid "Back order <em>%s</em> has been <b>created</b>."
 msgstr ""
@@ -825,9 +820,11 @@ msgid "Packs"
 msgstr "Kolli"
 
 #. module: stock
-#: selection:stock.location.product,type:0
-msgid "Analyse Current Inventory"
-msgstr ""
+#: selection:report.stock.inventory,location_type:0
+#: field:res.partner,property_stock_supplier:0
+#: selection:stock.location,usage:0
+msgid "Supplier Location"
+msgstr "Leverandørlokasjon"
 
 #. module: stock
 #: view:stock.move:0
@@ -892,7 +889,7 @@ msgstr ""
 "oppføringene vil bli automatisk lagt når aksjekursene trekk er behandlet."
 
 #. module: stock
-#: code:addons/stock/stock.py:2296
+#: code:addons/stock/stock.py:2289
 #, python-format
 msgid ""
 "Please define stock output account for this product or its category: \"%s\" "
@@ -919,7 +916,7 @@ msgid "Reference must be unique per Company!"
 msgstr "Referanse må være unik pr firma!"
 
 #. module: stock
-#: code:addons/stock/product.py:448
+#: code:addons/stock/product.py:450
 #, python-format
 msgid "Future Receptions"
 msgstr "Framtidige mottak"
@@ -928,11 +925,6 @@ msgstr "Framtidige mottak"
 #: selection:stock.move,priority:0
 msgid "Urgent"
 msgstr "Haster"
-
-#. module: stock
-#: selection:stock.picking.out,state:0
-msgid "Delivered"
-msgstr ""
 
 #. module: stock
 #: field:stock.move,move_dest_id:0
@@ -1003,7 +995,7 @@ msgid "December"
 msgstr "Desember"
 
 #. module: stock
-#: code:addons/stock/stock.py:1204
+#: code:addons/stock/stock.py:1198
 #, python-format
 msgid ""
 "You cannot cancel the picking as some moves have been done. You should "
@@ -1026,7 +1018,7 @@ msgid "Change Product Quantity"
 msgstr "Endre produkt kvanum"
 
 #. module: stock
-#: code:addons/stock/product.py:464
+#: code:addons/stock/product.py:466
 #, python-format
 msgid "Future P&L"
 msgstr "Framtidig resulatregnskap"
@@ -1063,7 +1055,7 @@ msgid "You must assign a serial number for this product."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2299
+#: code:addons/stock/stock.py:2292
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)"
 msgstr ""
@@ -1189,6 +1181,13 @@ msgid ""
 msgstr "Velg flere fysiske lager å slå sammen i listevisningen."
 
 #. module: stock
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of Serial Number, internal reference, Product and Company "
+"must be unique !"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:109
 #, python-format
 msgid ""
@@ -1197,10 +1196,9 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
-#: view:stock.picking.in:0
-msgid "Back Orders"
-msgstr "Tilbake ordnene"
+#: model:ir.actions.server,name:stock.action_partial_move_server
+msgid "Deliver/Receive Products"
+msgstr "Utlever/motta produkter"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -1244,7 +1242,7 @@ msgid "Production Location"
 msgstr "Produksjonslokasjon"
 
 #. module: stock
-#: code:addons/stock/product.py:121
+#: code:addons/stock/product.py:123
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)."
 msgstr ""
@@ -1317,7 +1315,7 @@ msgid "Author"
 msgstr "Forfatter"
 
 #. module: stock
-#: code:addons/stock/stock.py:1851
+#: code:addons/stock/stock.py:1848
 #, python-format
 msgid ""
 "You are moving %.2f %s but only %.2f %s available for this serial number."
@@ -1354,7 +1352,7 @@ msgid "Supplier"
 msgstr "Leverandør"
 
 #. module: stock
-#: code:addons/stock/stock.py:2908
+#: code:addons/stock/stock.py:2903
 #, python-format
 msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
@@ -1364,7 +1362,7 @@ msgstr ""
 "loggoppføringer."
 
 #. module: stock
-#: code:addons/stock/product.py:113
+#: code:addons/stock/product.py:115
 #, python-format
 msgid "Please specify company in Location."
 msgstr ""
@@ -1520,9 +1518,11 @@ msgid "Waiting Another Move"
 msgstr "Venter på en annen flytting"
 
 #. module: stock
-#: selection:stock.picking,state:0
-msgid "Transferred"
+#: help:stock.move,product_packaging:0
+msgid ""
+"It specifies attributes of packaging like type, quantity of packaging,etc."
 msgstr ""
+"Den angir attributter for emballasje som type, mengde emballasje, etc."
 
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
@@ -1541,14 +1541,11 @@ msgstr ""
 "metoden brukes)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1919
-#, python-format
-msgid "Warning: No Back Order"
-msgstr ""
-
-#. module: stock
 #: model:ir.model,name:stock.model_stock_move
 #: view:stock.partial.move:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
+#: view:stock.picking.out:0
 msgid "Stock Move"
 msgstr "Lagerbevegelse"
 
@@ -1563,13 +1560,13 @@ msgid "To be refunded/invoiced"
 msgstr "Skal få refundert/faktura"
 
 #. module: stock
-#: code:addons/stock/stock.py:2492
+#: code:addons/stock/stock.py:2487
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Du kan bare slette forslag til bevegelser"
 
 #. module: stock
-#: code:addons/stock/stock.py:1682
+#: code:addons/stock/stock.py:1676
 #, python-format
 msgid "You cannot move product %s to a location of type view %s."
 msgstr ""
@@ -1606,7 +1603,7 @@ msgid "Additional Info"
 msgstr "Tilleggsinformasjon"
 
 #. module: stock
-#: code:addons/stock/stock.py:2697
+#: code:addons/stock/stock.py:2692
 #, python-format
 msgid "Missing partial picking data for move #%s."
 msgstr ""
@@ -1784,7 +1781,7 @@ msgid "Order Date"
 msgstr "Ordredato"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:96
+#: code:addons/stock/wizard/stock_change_product_qty.py:102
 #, python-format
 msgid "INV: %s"
 msgstr "INV: %s"
@@ -1796,7 +1793,7 @@ msgid "Parent Location"
 msgstr "Hovedlokasjon"
 
 #. module: stock
-#: code:addons/stock/product.py:168
+#: code:addons/stock/product.py:170
 #, python-format
 msgid "Please define stock output account for this product: \"%s\" (id: %d)."
 msgstr ""
@@ -1822,7 +1819,7 @@ msgid "Stock Invoice Onshipping"
 msgstr "lager faktura på Shipping"
 
 #. module: stock
-#: code:addons/stock/stock.py:2517
+#: code:addons/stock/stock.py:2512
 #, python-format
 msgid "Please provide a positive quantity to scrap."
 msgstr ""
@@ -1898,7 +1895,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Lagervurderingskonto (utgående)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1805
+#: code:addons/stock/stock.py:1799
 #, python-format
 msgid "Operation Forbidden!"
 msgstr ""
@@ -1980,11 +1977,10 @@ msgid "You cannot remove a lot line."
 msgstr ""
 
 #. module: stock
-#: help:stock.location,posx:0
-#: help:stock.location,posy:0
-#: help:stock.location,posz:0
-msgid "Optional localization details, for information purpose only"
-msgstr "Valgfrie lokalisering detaljer, for informasjonens hensikt bare"
+#: view:stock.picking:0
+#: view:stock.picking.in:0
+msgid "Back Orders"
+msgstr "Tilbake ordnene"
 
 #. module: stock
 #: view:product.product:0
@@ -1998,7 +1994,7 @@ msgid "Localization"
 msgstr "Lokalisering"
 
 #. module: stock
-#: code:addons/stock/product.py:460
+#: code:addons/stock/product.py:462
 #, python-format
 msgid "Delivered Qty"
 msgstr "Levert kvantum"
@@ -2228,12 +2224,6 @@ msgstr ""
 "lokasjon for varer du mottar fra gjeldende klient"
 
 #. module: stock
-#: sql_constraint:stock.production.lot:0
-msgid ""
-"The combination of Serial Number and internal reference must be unique !"
-msgstr ""
-
-#. module: stock
 #: field:stock.warehouse,partner_id:0
 msgid "Owner Address"
 msgstr "Eieradresse"
@@ -2280,7 +2270,7 @@ msgid "Generate accounting entries per stock movement"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:450
+#: code:addons/stock/product.py:452
 #, python-format
 msgid "Received Qty"
 msgstr "Mottatt kvantum"
@@ -2356,8 +2346,8 @@ msgid "Customer Locations"
 msgstr "Kundelokasjon"
 
 #. module: stock
-#: code:addons/stock/stock.py:2492
-#: code:addons/stock/stock.py:2907
+#: code:addons/stock/stock.py:2487
+#: code:addons/stock/stock.py:2902
 #, python-format
 msgid "User Error!"
 msgstr ""
@@ -2393,13 +2383,6 @@ msgid ""
 msgstr ""
 "Inventar Journal der lenket trekk vil bli skrevet, hvis Sammenkjeding Type "
 "er ikke Transparent (ingen journal brukes hvis venstre tom)"
-
-#. module: stock
-#: selection:report.stock.inventory,location_type:0
-#: field:res.partner,property_stock_supplier:0
-#: selection:stock.location,usage:0
-msgid "Supplier Location"
-msgstr "Leverandørlokasjon"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2444,6 +2427,12 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
 msgstr "Lagerledelse"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:224
+#, python-format
+msgid "Partial Delivery"
+msgstr "Delvis levering"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -2579,7 +2568,7 @@ msgid "Warehouse board"
 msgstr "varehus styret"
 
 #. module: stock
-#: code:addons/stock/product.py:470
+#: code:addons/stock/product.py:472
 #, python-format
 msgid "Future Qty"
 msgstr "fremtidig Antall"
@@ -2598,7 +2587,7 @@ msgid "Notes"
 msgstr "Notater"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:181
+#: code:addons/stock/wizard/stock_partial_picking.py:183
 #, python-format
 msgid ""
 "The unit of measure rounding does not allow you to ship \"%s %s\", only "
@@ -2644,7 +2633,7 @@ msgid "Products"
 msgstr "Produkter"
 
 #. module: stock
-#: code:addons/stock/stock.py:2287
+#: code:addons/stock/stock.py:2280
 #, python-format
 msgid ""
 "Cannot create Journal Entry, Output Account of this product and Valuation "
@@ -2684,7 +2673,7 @@ msgid "Outgoing Products"
 msgstr "Utgående produkter"
 
 #. module: stock
-#: code:addons/stock/stock.py:2293
+#: code:addons/stock/stock.py:2286
 #, python-format
 msgid ""
 "Please define stock input account for this product or its category: \"%s\" "
@@ -2704,7 +2693,7 @@ msgid "Move"
 msgstr "Bevegelse"
 
 #. module: stock
-#: code:addons/stock/product.py:466
+#: code:addons/stock/product.py:468
 #, python-format
 msgid "P&L Qty"
 msgstr "P & L Antall"
@@ -2772,6 +2761,11 @@ msgid "New Quantity on Hand"
 msgstr ""
 
 #. module: stock
+#: selection:stock.location.product,type:0
+msgid "Analyze current inventory"
+msgstr ""
+
+#. module: stock
 #: field:stock.move,priority:0
 msgid "Priority"
 msgstr "Prioritet"
@@ -2824,7 +2818,7 @@ msgid "Cancel Move"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2290
+#: code:addons/stock/stock.py:2283
 #, python-format
 msgid ""
 "Cannot create Journal Entry, Input Account of this product and Valuation "
@@ -2845,14 +2839,6 @@ msgstr "Fast lokasjon"
 #. module: stock
 #: field:report.stock.inventory,scrap_location:0
 msgid "scrap"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/stock.py:1920
-#, python-format
-msgid ""
-"By changing the quantity here, you accept the new quantity as complete: "
-"OpenERP will not automatically generate a Back Order."
 msgstr ""
 
 #. module: stock
@@ -2918,7 +2904,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:174
+#: code:addons/stock/wizard/stock_partial_picking.py:176
 #, python-format
 msgid "Please provide proper Quantity."
 msgstr ""
@@ -2947,7 +2933,7 @@ msgid "%s-%s-return"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:86
+#: code:addons/stock/wizard/stock_change_product_qty.py:92
 #, python-format
 msgid "Active ID is not set in Context"
 msgstr "Aktiv ID er ikke satt i sammenheng."
@@ -3015,7 +3001,7 @@ msgid "Date of Completion"
 msgstr "Dato for ferdigstillelse"
 
 #. module: stock
-#: code:addons/stock/stock.py:1680
+#: code:addons/stock/stock.py:1674
 #, python-format
 msgid "You cannot move product %s from a location of type view %s."
 msgstr ""
@@ -3289,7 +3275,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2545
+#: code:addons/stock/stock.py:2540
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
 msgstr ""
@@ -3339,7 +3325,7 @@ msgid "Date done"
 msgstr "Dato utført"
 
 #. module: stock
-#: code:addons/stock/stock.py:1135
+#: code:addons/stock/stock.py:1129
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
@@ -3481,7 +3467,7 @@ msgid "Assigned Internal Moves"
 msgstr "Tildelte Intern trekk"
 
 #. module: stock
-#: code:addons/stock/stock.py:804
+#: code:addons/stock/stock.py:799
 #, python-format
 msgid "You cannot process picking without stock moves."
 msgstr ""
@@ -3575,6 +3561,11 @@ msgid "Products by Location"
 msgstr "Produkter per lokasjon"
 
 #. module: stock
+#: selection:stock.picking,state:0
+msgid "Transferred"
+msgstr ""
+
+#. module: stock
 #: view:stock.config.settings:0
 msgid "Logistic"
 msgstr ""
@@ -3643,7 +3634,7 @@ msgid "Manager"
 msgstr "Manager"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:192
+#: code:addons/stock/wizard/stock_partial_picking.py:194
 #, python-format
 msgid ""
 "The rounding of the initial uom does not allow you to ship \"%s %s\", as it "
@@ -3660,11 +3651,6 @@ msgstr "Intern frakt"
 #: field:stock.change.standard.price,enable_stock_in_out_acc:0
 msgid "Enable Related Account"
 msgstr "Aktiver relatert konto"
-
-#. module: stock
-#: field:stock.location.product,type:0
-msgid "Analyse Type"
-msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree4
@@ -3699,7 +3685,7 @@ msgid "Inventory Move"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:476
+#: code:addons/stock/product.py:478
 #, python-format
 msgid "Future Productions"
 msgstr "Fremtidige produkter"
@@ -3891,25 +3877,25 @@ msgstr "Kunder som ikke er fra Europa"
 
 #. module: stock
 #: code:addons/stock/product.py:100
-#: code:addons/stock/product.py:110
-#: code:addons/stock/product.py:113
-#: code:addons/stock/product.py:120
-#: code:addons/stock/product.py:141
-#: code:addons/stock/product.py:167
+#: code:addons/stock/product.py:112
+#: code:addons/stock/product.py:115
+#: code:addons/stock/product.py:122
+#: code:addons/stock/product.py:143
+#: code:addons/stock/product.py:169
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:134
 #: code:addons/stock/stock.py:543
-#: code:addons/stock/stock.py:804
-#: code:addons/stock/stock.py:1204
-#: code:addons/stock/stock.py:1213
-#: code:addons/stock/stock.py:2287
-#: code:addons/stock/stock.py:2290
-#: code:addons/stock/stock.py:2293
-#: code:addons/stock/stock.py:2296
-#: code:addons/stock/stock.py:2299
-#: code:addons/stock/stock.py:2302
-#: code:addons/stock/stock.py:2525
-#: code:addons/stock/stock.py:2634
+#: code:addons/stock/stock.py:799
+#: code:addons/stock/stock.py:1198
+#: code:addons/stock/stock.py:1207
+#: code:addons/stock/stock.py:2280
+#: code:addons/stock/stock.py:2283
+#: code:addons/stock/stock.py:2286
+#: code:addons/stock/stock.py:2289
+#: code:addons/stock/stock.py:2292
+#: code:addons/stock/stock.py:2295
+#: code:addons/stock/stock.py:2520
+#: code:addons/stock/stock.py:2629
 #: code:addons/stock/wizard/stock_fill_inventory.py:63
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -4004,7 +3990,7 @@ msgstr ""
 "Lenket Plassering hvis den er fikset."
 
 #. module: stock
-#: code:addons/stock/stock.py:1882
+#: code:addons/stock/stock.py:1879
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
@@ -4017,7 +4003,7 @@ msgid "Serial Number Revisions"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1134
+#: code:addons/stock/stock.py:1128
 #, python-format
 msgid "Error, no partner!"
 msgstr ""
@@ -4076,7 +4062,7 @@ msgid "Followers"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2634
+#: code:addons/stock/stock.py:2629
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
@@ -4132,6 +4118,13 @@ msgid "Create invoice"
 msgstr "Lag faktura"
 
 #. module: stock
+#: help:stock.config.settings,group_stock_multiple_locations:0
+msgid ""
+"This allows to configure and use multiple stock locations and warehouses,\n"
+"                instead of having a single default one."
+msgstr ""
+
+#. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Internal Moves"
 msgstr "Bekreftet Intern trekk"
@@ -4162,7 +4155,7 @@ msgstr ""
 "innspill konto vil bli belastet."
 
 #. module: stock
-#: code:addons/stock/stock.py:2860
+#: code:addons/stock/stock.py:2855
 #, python-format
 msgid "INV:"
 msgstr ""
@@ -4181,7 +4174,7 @@ msgid "Chaining Journal"
 msgstr "Kjeding Journal"
 
 #. module: stock
-#: code:addons/stock/stock.py:782
+#: code:addons/stock/stock.py:777
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
 msgstr "Ikke nok lager, ute av stand til å reservere produktene."
@@ -4218,7 +4211,7 @@ msgstr ""
 "effekt for interne steder."
 
 #. module: stock
-#: code:addons/stock/product.py:458
+#: code:addons/stock/product.py:460
 #, python-format
 msgid "Future Deliveries"
 msgstr "Fremtidige leveranser"
@@ -4241,7 +4234,7 @@ msgid "Auto Validate"
 msgstr "Automatisk Valider"
 
 #. module: stock
-#: code:addons/stock/stock.py:1850
+#: code:addons/stock/stock.py:1847
 #, python-format
 msgid "Insufficient Stock for Serial Number !"
 msgstr ""
@@ -4295,7 +4288,7 @@ msgid "Unique Serial Number, will be displayed as: PREFIX/SERIAL [INT_REF]"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:142
+#: code:addons/stock/product.py:144
 #, python-format
 msgid "Please define stock input account for this product: \"%s\" (id: %d)."
 msgstr ""
@@ -4338,14 +4331,14 @@ msgid "Invoiced"
 msgstr "Fakturert"
 
 #. module: stock
-#: code:addons/stock/stock.py:1881
+#: code:addons/stock/stock.py:1878
 #: view:product.template:0
 #, python-format
 msgid "Information"
 msgstr "Informasjon"
 
 #. module: stock
-#: code:addons/stock/stock.py:1213
+#: code:addons/stock/stock.py:1207
 #, python-format
 msgid "You cannot remove the picking which is in %s state!"
 msgstr ""
@@ -4448,7 +4441,7 @@ msgid "Shelves (Y)"
 msgstr "Hyller (Y)"
 
 #. module: stock
-#: code:addons/stock/stock.py:2302
+#: code:addons/stock/stock.py:2295
 #, python-format
 msgid ""
 "Please define inventory valuation account on the product category: \"%s\" "
@@ -4507,7 +4500,7 @@ msgid "November"
 msgstr "November"
 
 #. module: stock
-#: code:addons/stock/product.py:472
+#: code:addons/stock/product.py:474
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Uplanlagt kvantum"
@@ -4542,7 +4535,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_fill_inventory.py:128
+#: code:addons/stock/wizard/stock_fill_inventory.py:129
 #, python-format
 msgid ""
 "No product in this location. Please select a location in the product form."
@@ -4559,14 +4552,14 @@ msgid "Move History (parent moves)"
 msgstr "Flytte Historie (foreldre trekk)"
 
 #. module: stock
-#: code:addons/stock/product.py:454
+#: code:addons/stock/product.py:456
 #, python-format
 msgid "Future Stock"
 msgstr "Fremtidig lager"
 
 #. module: stock
-#: code:addons/stock/stock.py:1680
-#: code:addons/stock/stock.py:1682
+#: code:addons/stock/stock.py:1674
+#: code:addons/stock/stock.py:1676
 #, python-format
 msgid "Error"
 msgstr "Feil"
@@ -4672,11 +4665,9 @@ msgid "Picking Slip"
 msgstr ""
 
 #. module: stock
-#: help:stock.move,product_packaging:0
-msgid ""
-"It specifies attributes of packaging like type, quantity of packaging,etc."
+#: selection:stock.picking.out,state:0
+msgid "Delivered"
 msgstr ""
-"Den angir attributter for emballasje som type, mengde emballasje, etc."
 
 #. module: stock
 #: view:product.product:0
@@ -4738,7 +4729,7 @@ msgid "May"
 msgstr "Mai"
 
 #. module: stock
-#: code:addons/stock/product.py:110
+#: code:addons/stock/product.py:112
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr ""
@@ -4771,7 +4762,7 @@ msgid "Location Content"
 msgstr "Plassering innhold"
 
 #. module: stock
-#: code:addons/stock/product.py:478
+#: code:addons/stock/product.py:480
 #, python-format
 msgid "Produced Qty"
 msgstr "Produsert antall"
@@ -4841,10 +4832,8 @@ msgid "Date of Reception"
 msgstr ""
 
 #. module: stock
-#: help:stock.config.settings,group_stock_multiple_locations:0
-msgid ""
-"This allows to configure and use multiple stock locations and warehouses,\n"
-"                instead of having a single default one."
+#: selection:stock.location.product,type:0
+msgid "Analyze period"
 msgstr ""
 
 #. module: stock
@@ -4973,6 +4962,13 @@ msgstr "Klar til å behandle"
 #: report:stock.picking.list.out:0
 msgid "Warehouse Address :"
 msgstr ""
+
+#. module: stock
+#: help:stock.location,posx:0
+#: help:stock.location,posy:0
+#: help:stock.location,posz:0
+msgid "Optional localization details, for information purpose only"
+msgstr "Valgfrie lokalisering detaljer, for informasjonens hensikt bare"
 
 #~ msgid "_Cancel"
 #~ msgstr "_Avbryt"

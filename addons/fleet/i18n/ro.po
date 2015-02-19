@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
 "PO-Revision-Date: 2013-04-10 06:57+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:09+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:53+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -83,7 +83,9 @@ msgstr "Inlocuire Rotoare"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:0
+#: view:fleet.vehicle.log.fuel:0
 #: view:fleet.vehicle.model:0
+#: view:fleet.vehicle.odometer:0
 msgid "Group By..."
 msgstr "Grupează după..."
 
@@ -488,6 +490,7 @@ msgid "Vehicles Services Logs"
 msgstr "Servicii Vehicule"
 
 #. module: fleet
+#: view:fleet.vehicle.log.fuel:0
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
 msgid "Vehicles Fuel Logs"
@@ -615,9 +618,9 @@ msgid "Driver of the vehicle"
 msgstr "Soferul vehiculului"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-msgid "other(s)"
-msgstr "altele"
+#: view:fleet.vehicle.odometer:0
+msgid "Vehicles odometers"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_refueling
@@ -1771,6 +1774,8 @@ msgstr "Valoarea kilometrajului"
 #: view:fleet.vehicle:0
 #: view:fleet.vehicle.cost:0
 #: field:fleet.vehicle.cost,vehicle_id:0
+#: view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.odometer:0
 #: field:fleet.vehicle.odometer,vehicle_id:0
 msgid "Vehicle"
 msgstr "Vehicul"
@@ -1951,6 +1956,11 @@ msgstr "Emisiile CO2 ale vehiculului"
 #: model:fleet.service.type,name:fleet.type_service_53
 msgid "Windshield Wiper(s) Replacement"
 msgstr "Inlocuirea Stergatoarelor de Parbriz"
+
+#. module: fleet
+#: view:fleet.vehicle:0
+msgid "other(s)"
+msgstr "altele"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0

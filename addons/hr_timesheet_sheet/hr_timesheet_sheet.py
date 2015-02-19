@@ -298,7 +298,8 @@ class hr_timesheet_line(osv.osv):
         for ts_line in self.browse(cursor, user, ids, context=context):
             sheet_ids = sheet_obj.search(cursor, user,
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
-                 ('employee_id.user_id', '=', ts_line.user_id.id)],
+                 ('employee_id.user_id', '=', ts_line.user_id.id),
+                 ('state', 'in', ['draft', 'new'])],
                 context=context)
             if sheet_ids:
             # [0] because only one sheet possible for an employee between 2 dates
@@ -559,16 +560,24 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                         ) union (
                             select
                                 -min(a.id) as id,
-                                a.name::date as name,
+                                (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date as name,
                                 s.id as sheet_id,
                                 0.0 as total_timesheet,
-                                SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
+                                SUM(((EXTRACT(hour FROM (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))) * 60) + EXTRACT(minute FROM (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC')))) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
                             from
                                 hr_attendance a
                                 LEFT JOIN hr_timesheet_sheet_sheet s
                                 ON s.id = a.sheet_id
+                                JOIN hr_employee e
+                                ON a.employee_id = e.id
+                                JOIN resource_resource r
+                                ON e.resource_id = r.id
+                                LEFT JOIN res_users u
+                                ON r.user_id = u.id
+                                LEFT JOIN res_partner p
+                                ON u.partner_id = p.id
                             WHERE action in ('sign_in', 'sign_out')
-                            group by a.name::date, s.id
+                            group by (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date, s.id
                         )) AS foo
                         GROUP BY name, sheet_id
                 )) AS bar""")

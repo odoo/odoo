@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-01-07 16:56+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-08-16 14:19+0000\n"
 "Last-Translator: Ricardo Santa Ana <ricardosantana@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-08 05:39+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:45+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -95,7 +95,7 @@ msgstr ""
 #: view:crm.case.stage:0
 #: field:crm.case.stage,name:0
 msgid "Stage Name"
-msgstr "Nome do Estágio"
+msgstr "Nome da Etapa"
 
 #. module: crm
 #: view:crm.lead:0
@@ -154,7 +154,7 @@ msgid "Rule Name"
 msgstr "Nome da Regra"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr "Só é possível converter uma chamada telefónica de cada vez."
@@ -191,7 +191,7 @@ msgstr ""
 #. module: crm
 #: code:addons/crm/crm_lead.py:637
 #: code:addons/crm/crm_lead.py:758
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
@@ -219,7 +219,7 @@ msgid "Schedule Other Call"
 msgstr "Agendar outra chamada"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:211
+#: code:addons/crm/crm_phonecall.py:212
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -254,6 +254,11 @@ msgstr "Critérios"
 #: view:crm.lead:0
 msgid "Assigned to My Team(s)"
 msgstr "Atribuiídas à(s) Minha(s) Equipa(s)"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Excluded Answers :"
+msgstr "Respostas excluídas :"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -297,7 +302,7 @@ msgid "Prospect Partner"
 msgstr "Parceiro potencial"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1018
+#: code:addons/crm/crm_lead.py:1021
 #, python-format
 msgid "No Subject"
 msgstr "Sem assunto"
@@ -353,6 +358,7 @@ msgstr "Contato"
 msgid ""
 "When escalating to this team override the salesman with the team leader."
 msgstr ""
+"Ao escalar para esta equipa, colocar o chefe de equipa como vendedor."
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_opportunitymeeting0
@@ -420,6 +426,7 @@ msgid "Unread Messages"
 msgstr "Mensagens por ler"
 
 #. module: crm
+#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -537,7 +544,7 @@ msgstr "Mailings"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Estado alterado"
+msgstr "Etapa mudou"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -557,7 +564,7 @@ msgid "Planned Revenue"
 msgstr "Receita planificada"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1004
+#: code:addons/crm/crm_lead.py:1007
 #, python-format
 msgid "Customer Email"
 msgstr "E-mail do cliente"
@@ -575,9 +582,9 @@ msgid "October"
 msgstr "Outubro"
 
 #. module: crm
-#: view:crm.phonecall:0
-msgid "Reset to Todo"
-msgstr "Redefinir para Todo"
+#: view:crm.segmentation:0
+msgid "Included Answers :"
+msgstr "Incluir respostas:"
 
 #. module: crm
 #: help:crm.phonecall,state:0
@@ -631,6 +638,11 @@ msgid ""
 "No customer name defined. Please fill one of the following fields: Company "
 "Name, Contact Name or Email (\"Name <email@address>\")"
 msgstr ""
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling Options"
+msgstr "Opções da definição do perfil"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -718,7 +730,7 @@ msgid "Partner Segmentation"
 msgstr "Segmentação do parceiro"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1064
+#: code:addons/crm/crm_lead.py:1067
 #, python-format
 msgid "Logged a call for %(date)s. %(description)s"
 msgstr ""
@@ -871,6 +883,8 @@ msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
 msgstr ""
+"Ligação entre as etapas e as equipas de vendas. Ao definir, a etapa atual só "
+"se aplica à equipa de vendas selecionada."
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -1130,7 +1144,7 @@ msgstr "Prospectos em Aberto"
 #: view:crm.lead.report:0
 #: field:crm.lead.report,stage_id:0
 msgid "Stage"
-msgstr "Estágio"
+msgstr "Etapa"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1160,7 +1174,7 @@ msgstr "As chamadas telefônicas que estão em estado pendente"
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
 msgid "Stages"
-msgstr "Estágios"
+msgstr "Etapas"
 
 #. module: crm
 #: help:sale.config.settings,module_crm_helpdesk:0
@@ -1225,8 +1239,8 @@ msgid ""
 "Setting this stage will change the probability automatically on the "
 "opportunity."
 msgstr ""
-"A definição dessa fase vai mudar a probabilidade da oportunidade "
-"automaticamente."
+"Passar para esta Etapa irá vai mudar automaticamente a probabilidade da "
+"oportunidade."
 
 #. module: crm
 #: view:crm.lead:0
@@ -1283,9 +1297,8 @@ msgid ""
 "This field is used to distinguish stages related to Leads from stages "
 "related to Opportunities, or to specify stages available for both types."
 msgstr ""
-"Este campo é usado para distinguir estágios dos Prospectos dos estágios das "
-"Oportunidades, ou para especificar estágios disponíveis simultaneamente para "
-"Prospecto e Oportunidades."
+"Este campo é usado para distinguir as etapas dos Prospectos das etapas das "
+"Oportunidades, e as etapas que podem ser comuns a ambos."
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -1318,7 +1331,7 @@ msgid "Days to Close"
 msgstr "Dias para fechar"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1075
+#: code:addons/crm/crm_lead.py:1078
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1400,6 +1413,11 @@ msgid ""
 msgstr ""
 "Chamadas Telefónicas Atribuídas ao utilizador actual ou com uma equipa em "
 "que o utilizador actual é o líder da equipa"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Segmentation Description"
+msgstr "Descrição da Segmentação"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:578
@@ -1499,7 +1517,7 @@ msgstr "Fundir prospectos/oportunidades"
 #. module: crm
 #: help:crm.case.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "Usado para ordenar etapas. Menor surge primeiro."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
@@ -1520,7 +1538,7 @@ msgstr ""
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr "Estágio Alterado"
+msgstr "Etapa mudou"
 
 #. module: crm
 #: field:crm.case.stage,section_ids:0
@@ -1674,10 +1692,9 @@ msgid ""
 "stage. For example, if a stage is related to the status 'Close', when your "
 "document reaches this stage, it is automatically closed."
 msgstr ""
-"O estado do seu documento irá mudar automaticamente em função do estágio "
-"seleccionado. Por exemplo, se um estágio está relacionado com o estado "
-"'Fechado', quando o seu documento alcançar este estágio, o mesmo será "
-"automaticamente fechado."
+"O estado do seu documento irá mudar automaticamente em função da etapda "
+"selecionada. Por exemplo, se a uma Etapa corresponde o Estado 'Fechado', "
+"quando o seu documento alcançar essa Etapa será automaticamente fechado."
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
@@ -1700,7 +1717,7 @@ msgid "Describe the lead..."
 msgstr "Descreva o prospecto..."
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:292
+#: code:addons/crm/crm_phonecall.py:293
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr "O parceiro foi <b>criado</b>."
@@ -1760,12 +1777,12 @@ msgstr "Responder Para"
 #. module: crm
 #: view:crm.lead:0
 msgid "Display"
-msgstr ""
+msgstr "Mostrar"
 
 #. module: crm
 #: view:board.board:0
 msgid "Opportunities by Stage"
-msgstr "Oportunidades por estágio"
+msgstr "Oportunidades por Etapa"
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadpartner0
@@ -1811,7 +1828,7 @@ msgstr "Google Adwords"
 #. module: crm
 #: view:crm.case.section:0
 msgid "Select Stages for this Sales Team"
-msgstr "Seleccionar estágios desta Equipa de Vendas"
+msgstr "Selecionar etapas da Equipa de Vendas"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1920,7 +1937,7 @@ msgid "Support Department"
 msgstr "Departamento de apoio"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1078
+#: code:addons/crm/crm_lead.py:1081
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
@@ -1940,7 +1957,7 @@ msgstr "Equipas de vendas"
 #. module: crm
 #: field:crm.case.stage,case_default:0
 msgid "Default to New Sales Team"
-msgstr ""
+msgstr "Predefinido para novas equipas"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2318,8 +2335,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
-"Este estágio não é visível, por exemplo na barra de estado ou na vista "
-"kanban, quando não existirem registos a exibir naquele estado."
+"Esta Etapa não é visível, por exemplo na barra de estado ou na vista kanban, "
+"quando não existirem registos a exibir nessa Etapa."
 
 #. module: crm
 #: field:crm.lead.report,nbr:0
@@ -2385,7 +2402,7 @@ msgstr "Chamadas telefónicas atribuídas a mim ou minha(s) equipa(s)"
 #. module: crm
 #: view:crm.lead:0
 msgid "Reset"
-msgstr ""
+msgstr "Reiniciar"
 
 #. module: crm
 #: view:sale.config.settings:0
@@ -2446,7 +2463,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.stage,fold:0
 msgid "Fold by Default"
-msgstr ""
+msgstr "Ver pregado"
 
 #. module: crm
 #: field:crm.case.stage,state:0
@@ -2492,7 +2509,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_oppor_stage_user
 msgid "Planned Revenue By User and Stage"
-msgstr "Rendimento planeado pelo utilizador e fase"
+msgstr "Vendas previstas por utilizador e etapa"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -2774,7 +2791,7 @@ msgstr "Chamadas Registadas"
 #: model:mail.message.subtype,name:crm.mt_lead_won
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
 msgid "Opportunity Won"
-msgstr ""
+msgstr "Oportunidade ganha"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
@@ -2797,7 +2814,7 @@ msgstr "Categoria do caso"
 #. module: crm
 #: view:board.board:0
 msgid "Planned Revenue by Stage and User"
-msgstr "Rendimento planeado por utilizador e estágio"
+msgstr "Vendas previstas por utilizador e etapa"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -2839,7 +2856,7 @@ msgstr "Novembro"
 #: view:crm.lead.report:0
 #: model:ir.actions.act_window,name:crm.act_opportunity_stage
 msgid "Opportunities By Stage"
-msgstr "Oportunidade por estágio"
+msgstr "Oportunidades por etapa"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -2881,7 +2898,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
-msgstr "Estágio do caso"
+msgstr "Etapa do caso"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:582
@@ -2929,7 +2946,7 @@ msgstr "Telefonemas atribuídos a uma das minhas equipas de vendas"
 #. module: crm
 #: view:crm.lead:0
 msgid "at"
-msgstr ""
+msgstr "em"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead1
@@ -2948,7 +2965,6 @@ msgstr "Função"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
-#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Descrição"
@@ -3022,7 +3038,12 @@ msgid "Referred By"
 msgstr "Indicado por"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1066
+#: view:crm.phonecall:0
+msgid "Reset to Todo"
+msgstr "Redefinir para Todo"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1069
 #, python-format
 msgid "Scheduled a call for %(date)s. %(description)s"
 msgstr ""
@@ -3033,7 +3054,7 @@ msgid "Working Hours"
 msgstr "Horário de trabalho"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1005
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3101,6 +3122,11 @@ msgid "Campaign Name"
 msgstr "Nome da campanha"
 
 #. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling"
+msgstr "Definição de perfil"
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
 msgid "Phone calls by user and section"
 msgstr "Telefonemas por utilizador e secção"
@@ -3151,7 +3177,7 @@ msgstr "Notícias"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr ""
+msgstr "Etapa da oportunidade mudou"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
@@ -3165,25 +3191,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Clique para definir uma nova etapa no seu funil de vendas.\n"
+"</p><p>\n"
+"As etapas permitem os comerciais perceber em que ponto do ciclo de venda "
+"está cada oportunidade.\n"
+"</p>\n"
+"            "
 
 #, python-format
 #~ msgid "Warning !"
 #~ msgstr "Aviso!"
-
-#~ msgid "Segmentation Description"
-#~ msgstr "Descrição da Segmentação"
-
-#~ msgid "Excluded Answers :"
-#~ msgstr "Respostas excluídas :"
-
-#~ msgid "Profiling"
-#~ msgstr "Definição de perfil"
-
-#~ msgid "Profiling Options"
-#~ msgstr "Opções da definição do perfil"
-
-#~ msgid "Included Answers :"
-#~ msgstr "Incluir respostas:"
 
 #~ msgid "Send Mail"
 #~ msgstr "Enviar Correio"
@@ -3210,6 +3228,9 @@ msgstr ""
 #~ msgid "Unassigned Leads"
 #~ msgstr "Prospectos não atribuídos"
 
+#~ msgid "Lead Description"
+#~ msgstr "Descrição do Prospecto"
+
 #~ msgid ""
 #~ "Opportunities that are assigned to either me or one of the sale teams I "
 #~ "manage"
@@ -3219,3 +3240,15 @@ msgstr ""
 
 #~ msgid "Users"
 #~ msgstr "Utilizadores"
+
+#, python-format
+#~ msgid "<b>%s a call</b> for the <em>%s</em>."
+#~ msgstr ""
+#~ "Copy text \t\r\n"
+#~ "<b>%s uma chamada</b> para <em>%s</em>"
+
+#~ msgid "Opportunities Assigned to Me or My Team(s)"
+#~ msgstr "Oportunidades atribuídas a mim ou à minha equipa"
+
+#~ msgid "Leads Assigned to Me or My Team(s)"
+#~ msgstr "Prospectos atribuídos a mim ou à minha equipa"

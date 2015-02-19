@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-01-28 16:23+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-29 06:03+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -31,13 +31,6 @@ msgstr "Groepeer op..."
 #: view:mrp.repair:0
 msgid "Recreate Invoice"
 msgstr "Maak factuur opnieuw"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form !"
-msgstr ""
-"U moet een partner factuur adres van het reparatie formulier selecteren !"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
@@ -72,7 +65,7 @@ msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:435
+#: code:addons/mrp_repair/mrp_repair.py:441
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Geen producten bij vergoedingen gedefineerd"
@@ -147,9 +140,9 @@ msgid "Taxes"
 msgstr "Belastingen"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: code:addons/mrp_repair/mrp_repair.py:391
+#: code:addons/mrp_repair/mrp_repair.py:419
+#: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -267,9 +260,9 @@ msgid "Extra Info"
 msgstr "Extra info"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:349
-#: code:addons/mrp_repair/mrp_repair.py:435
+#: code:addons/mrp_repair/mrp_repair.py:341
+#: code:addons/mrp_repair/mrp_repair.py:354
+#: code:addons/mrp_repair/mrp_repair.py:441
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -287,7 +280,7 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
+#: code:addons/mrp_repair/mrp_repair.py:391
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "Geen rekening voor voor partner \"%s\" gedefinieerd."
@@ -332,7 +325,7 @@ msgid "Repairs order"
 msgstr "Reparatie order"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
+#: code:addons/mrp_repair/mrp_repair.py:341
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "Partijnummer is verplicht voor de regel met product '%s'."
@@ -594,6 +587,12 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:377
+#, python-format
+msgid "No partner!"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
 msgstr "Kosten reperatie regel"
@@ -624,8 +623,8 @@ msgid "End Repair"
 msgstr "Stop reparatie"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: code:addons/mrp_repair/mrp_repair.py:419
+#: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Geen rekening gedefinieerd voor product \"%s\"."
@@ -649,9 +648,7 @@ msgid "Product Information"
 msgstr "Product Informatie"
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
-#: view:mrp.repair:0
 msgid "Make Invoice"
 msgstr "Maak factuur"
 
@@ -659,6 +656,12 @@ msgstr "Maak factuur"
 #: view:mrp.repair:0
 msgid "Start Repair"
 msgstr "Start reparatie"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:377
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
@@ -733,6 +736,8 @@ msgstr ""
 "achteraf aanpassen."
 
 #. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: view:mrp.repair:0
 #: view:mrp.repair.make_invoice:0
 msgid "Create Invoice"
 msgstr "Maak factuur"
@@ -792,7 +797,7 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr "Wilt u echt de facturen aanmaken?"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:354
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr "Reparatieorder is al ngefactureerd"
@@ -870,8 +875,11 @@ msgstr "Totaal"
 msgid "Ready to Repair"
 msgstr "Gereed voor reparatie"
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
-msgid "No partner !"
-msgstr "Geen relatie !"
+#~ msgid "No partner !"
+#~ msgstr "Geen relatie !"
+
+#, python-format
+#~ msgid "You have to select a Partner Invoice Address in the repair form !"
+#~ msgstr ""
+#~ "U moet een partner factuur adres van het reparatie formulier selecteren !"

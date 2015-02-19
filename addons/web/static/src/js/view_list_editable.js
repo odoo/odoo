@@ -223,13 +223,15 @@ openerp.web.list_editable = function (instance) {
             var item = false;
             if (record) {
                 item = record.attributes;
+                this.dataset.select_id(record.get('id'));
             } else {
                 record = this.make_empty_record(false);
                 this.records.add(record, {
                     at: this.prepends_on_create() ? 0 : null});
             }
-
-            return this.ensure_saved().then(function () {
+            return this.ensure_saved().then(function(){
+                return $.when.apply(null, self.editor.form.render_value_defs);
+            }).then(function () {
                 var $recordRow = self.groups.get_row_for(record);
                 var cells = self.get_cells_for($recordRow);
                 var fields = {};
@@ -649,7 +651,7 @@ openerp.web.list_editable = function (instance) {
             var form = this.editor.form;
             var last_field = _(form.fields_order).chain()
                 .map(function (name) { return form.fields[name]; })
-                .filter(function (field) { return field.$el.is(':visible'); })
+                .filter(function (field) { return field.$el.is(':visible') && !field.get('effective_readonly'); })
                 .last()
                 .value();
             // tabbed from last field in form

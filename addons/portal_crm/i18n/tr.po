@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-06-23 14:47+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:11+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
@@ -63,9 +63,9 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,user_id:0
-msgid "Salesperson"
-msgstr "Satış Temsilcisi"
+#: field:portal_crm.crm_contact_us,day_open:0
+msgid "Days to Open"
+msgstr "Açılış Günleri"
 
 #. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
@@ -96,6 +96,11 @@ msgstr "İletiler"
 #: field:portal_crm.crm_contact_us,color:0
 msgid "Color Index"
 msgstr "Renk Endeksi"
+
+#. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_latitude:0
+msgid "Geo Latitude"
+msgstr "Coğrafi Enlem"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,partner_name:0
@@ -210,6 +215,11 @@ msgid "Channel"
 msgstr "Kanal"
 
 #. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Name"
+msgstr "Adı"
+
+#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,priority:0
 msgid "Lowest"
 msgstr "En düşük"
@@ -234,6 +244,16 @@ msgstr ""
 "Eğer çekildi işaretliyse, bu kişi toplu postalama ve pazarlama kampanyası "
 "epostaları almayı reddetmiştir. 'Toplu Postalama için Uygun' süzgeci, "
 "kullanıcıların toplu postalama uygularken adayları süzmelerini sağlar."
+
+#. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Close"
+msgstr "Kapat"
+
+#. module: portal_crm
+#: selection:portal_crm.crm_contact_us,state:0
+msgid "Pending"
+msgstr "Bekliyor"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,type:0
@@ -371,9 +391,9 @@ msgid "Closed"
 msgstr "Kapalı"
 
 #. module: portal_crm
-#: selection:portal_crm.crm_contact_us,state:0
-msgid "Pending"
-msgstr "Bekliyor"
+#: field:portal_crm.crm_contact_us,date_assign:0
+msgid "Assignation Date"
+msgstr "Atama Tarihi"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,state:0
@@ -416,9 +436,9 @@ msgid "Active"
 msgstr "Etkin"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,day_open:0
-msgid "Days to Open"
-msgstr "Açılış Günleri"
+#: field:portal_crm.crm_contact_us,user_id:0
+msgid "Salesperson"
+msgstr "Satış Temsilcisi"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,day_close:0
@@ -453,14 +473,19 @@ msgid "Partner Contact Name"
 msgstr "İş Ortağı İlgilisi Adı"
 
 #. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_longitude:0
+msgid "Geo Longitude"
+msgstr "Coğ Boylam"
+
+#. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
 msgid "Your phone number..."
 msgstr "Telefon numaranız..."
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Close"
-msgstr "Kapat"
+#: help:portal_crm.crm_contact_us,date_assign:0
+msgid "Last date this case was forwarded/assigned to a partner"
+msgstr "Bu durumun bir paydaşa iletildiği/atandığı son tarihtir."
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,email_from:0
@@ -488,14 +513,19 @@ msgid "Referred By"
 msgstr "Öneren"
 
 #. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_assigned_id:0
+msgid "Assigned Partner"
+msgstr "Atanmış İş Ortağı"
+
+#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
 msgid "Opportunity"
 msgstr "Fırsat"
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Name"
-msgstr "Adı"
+#: help:portal_crm.crm_contact_us,partner_assigned_id:0
+msgid "Partner this case has been forwarded/assigned to."
+msgstr "Bu durumun iletildiği/ atandığı İş Ortağı"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,country_id:0
@@ -559,27 +589,9 @@ msgstr "Son İşlem"
 msgid "Contact form for the portal"
 msgstr "Portal için iletişim formu"
 
-#~ msgid "Geo Latitude"
-#~ msgstr "Coğrafi Enlem"
-
 #~ msgid ""
 #~ "If opt-out is checked, this contact has refused to receive emails or "
 #~ "unsubscribed to a campaign."
 #~ msgstr ""
 #~ "Eğer çekildi işaretlendiyse, bu kişi eposta almayı reddediyor ya da kampanya "
 #~ "üyeliğini iptal etmiş."
-
-#~ msgid "Assignation Date"
-#~ msgstr "Atama Tarihi"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Coğ Boylam"
-
-#~ msgid "Last date this case was forwarded/assigned to a partner"
-#~ msgstr "Bu durumun bir paydaşa iletildiği/atandığı son tarihtir."
-
-#~ msgid "Assigned Partner"
-#~ msgstr "Atanmış İş Ortağı"
-
-#~ msgid "Partner this case has been forwarded/assigned to."
-#~ msgstr "Bu durumun iletildiği/ atandığı İş Ortağı"

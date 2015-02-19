@@ -884,7 +884,13 @@ class stock_picking(osv.osv):
         This method is called at the end of the workflow by the activity "done".
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for picking in self.browse(cr, uid, ids, context=context):
+            values = {
+                'state': 'done'
+            }
+            if not picking.date_done:
+                values['date_done'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            picking.write(values)
         return True
 
     def action_move(self, cr, uid, ids, context=None):
@@ -1233,8 +1239,6 @@ class stock_picking(osv.osv):
             context = dict(context)
         res = {}
         move_obj = self.pool.get('stock.move')
-        product_obj = self.pool.get('product.product')
-        currency_obj = self.pool.get('res.currency')
         uom_obj = self.pool.get('product.uom')
         sequence_obj = self.pool.get('ir.sequence')
         wf_service = netsvc.LocalService("workflow")
@@ -1263,40 +1267,12 @@ class stock_picking(osv.osv):
                 else:
                     too_many.append(move)
 
-                # Average price computation
                 if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
-                    product = product_obj.browse(cr, uid, move.product_id.id)
-                    move_currency_id = move.company_id.currency_id.id
-                    context['currency_id'] = move_currency_id
-                    qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
-
-                    if product.id not in product_avail:
-                        # keep track of stock on hand including processed lines not yet marked as done
-                        product_avail[product.id] = product.qty_available
-
-                    if qty > 0:
-                        new_price = currency_obj.compute(cr, uid, product_currency,
-                                move_currency_id, product_price, round=False)
-                        new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
-                                product.uom_id.id)
-                        if product_avail[product.id] <= 0:
-                            product_avail[product.id] = 0
-                            new_std_price = new_price
-                        else:
-                            # Get the standard price
-                            amount_unit = product.price_get('standard_price', context=context)[product.id]
-                            new_std_price = ((amount_unit * product_avail[product.id])\
-                                + (new_price * qty))/(product_avail[product.id] + qty)
-                        # Write the field according to price type field
-                        product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price})
-
-                        # Record the values that were chosen in the wizard, so they can be
-                        # used for inventory valuation if real-time valuation is enabled.
-                        move_obj.write(cr, uid, [move.id],
-                                {'price_unit': product_price,
-                                 'price_currency_id': product_currency})
-
-                        product_avail[product.id] += qty
+                    # Record the values that were chosen in the wizard, so they can be
+                    # used for average price computation and inventory valuation
+                    move_obj.write(cr, uid, [move.id],
+                            {'price_unit': product_price,
+                             'price_currency_id': product_currency})
 
             # every line of the picking is empty, do not generate anything
             empty_picking = not any(q for q in move_product_qty.values() if q > 0)
@@ -1641,7 +1617,7 @@ class stock_move(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True,states={'done': [('readonly', True)]}, select=True, help="Location where the system will stock the finished products."),
         'partner_id': fields.many2one('res.partner', 'Destination Address ', states={'done': [('readonly', True)]}, help="Optional address where goods are to be delivered, specifically used for allotment"),
 
-        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', states={'done': [('readonly', True)]}, help="Serial number is used to put a serial number on the production", select=True),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', help="Serial number is used to put a serial number on the production", select=True, ondelete='restrict'),
         'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, states={'done': [('readonly', True)]}, help="Logistical shipping unit: pallet, box, pack ..."),
 
         'auto_validate': fields.boolean('Auto Validate'),
@@ -2343,6 +2319,44 @@ class stock_move(osv.osv):
 
         return reference_amount, reference_currency_id
 
+    def _update_average_price(self, cr, uid, move, context=None):
+        product_obj = self.pool.get('product.product')
+        currency_obj = self.pool.get('res.currency')
+        uom_obj = self.pool.get('product.uom')
+        product_avail = {}
+
+        if (move.picking_id.type == 'in') and (move.product_id.cost_method == 'average'):
+            product = product_obj.browse(cr, uid, move.product_id.id)
+            move_currency_id = move.company_id.currency_id.id
+            context['currency_id'] = move_currency_id
+
+            product_qty = move.product_qty
+            product_uom = move.product_uom.id
+            product_price = move.price_unit
+            product_currency = move.price_currency_id.id
+
+            if product.id not in product_avail:
+                # keep track of stock on hand including processed lines not yet marked as done
+                product_avail[product.id] = product.qty_available
+
+            qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
+            if qty > 0:
+                new_price = currency_obj.compute(cr, uid, product_currency,
+                        move_currency_id, product_price, round=False)
+                new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
+                        product.uom_id.id)
+                if product_avail[product.id] <= 0:
+                    product_avail[product.id] = 0
+                    new_std_price = new_price
+                else:
+                    # Get the standard price
+                    amount_unit = product.price_get('standard_price', context=context)[product.id]
+                    new_std_price = ((amount_unit * product_avail[product.id])\
+                        + (new_price * qty))/(product_avail[product.id] + qty)
+
+                product_obj.write(cr, uid, [product.id],{'standard_price': new_std_price})
+
+                product_avail[product.id] += qty
 
     def _create_product_valuation_moves(self, cr, uid, move, context=None):
         """
@@ -2355,6 +2369,9 @@ class stock_move(osv.osv):
                 context = {}
             src_company_ctx = dict(context,force_company=move.location_id.company_id.id)
             dest_company_ctx = dict(context,force_company=move.location_dest_id.company_id.id)
+            # do not take the company of the one of the user
+            # used to select the correct period
+            company_ctx = dict(context, company_id=move.company_id.id)
             account_moves = []
             # Outgoing moves (or cross-company output part)
             if move.location_id.company_id \
@@ -2386,7 +2403,8 @@ class stock_move(osv.osv):
                         {
                          'journal_id': j_id,
                          'line_id': move_lines,
-                         'ref': move.picking_id and move.picking_id.name}, context=context)
+                         'company_id': move.company_id.id,
+                         'ref': move.picking_id and move.picking_id.name}, context=company_ctx)
 
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
@@ -2426,6 +2444,7 @@ class stock_move(osv.osv):
                         if move.move_dest_id.auto_validate:
                             self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
+            self._update_average_price(cr, uid, move, context=context)
             self._create_product_valuation_moves(cr, uid, move, context=context)
             if move.state not in ('confirmed','done','assigned'):
                 todo.append(move.id)
@@ -2688,9 +2707,6 @@ class stock_move(osv.osv):
         """
         res = {}
         picking_obj = self.pool.get('stock.picking')
-        product_obj = self.pool.get('product.product')
-        currency_obj = self.pool.get('res.currency')
-        uom_obj = self.pool.get('product.uom')
         wf_service = netsvc.LocalService("workflow")
 
         if context is None:
@@ -2717,33 +2733,13 @@ class stock_move(osv.osv):
             else:
                 too_many.append(move)
 
-            # Average price computation
             if (move.picking_id.type == 'in') and (move.product_id.cost_method == 'average'):
-                product = product_obj.browse(cr, uid, move.product_id.id)
-                move_currency_id = move.company_id.currency_id.id
-                context['currency_id'] = move_currency_id
-                qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
-                if qty > 0:
-                    new_price = currency_obj.compute(cr, uid, product_currency,
-                            move_currency_id, product_price, round=False)
-                    new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
-                            product.uom_id.id)
-                    if product.qty_available <= 0:
-                        new_std_price = new_price
-                    else:
-                        # Get the standard price
-                        amount_unit = product.price_get('standard_price', context=context)[product.id]
-                        new_std_price = ((amount_unit * product.qty_available)\
-                            + (new_price * qty))/(product.qty_available + qty)
-
-                    product_obj.write(cr, uid, [product.id],{'standard_price': new_std_price})
-
-                    # Record the values that were chosen in the wizard, so they can be
-                    # used for inventory valuation if real-time valuation is enabled.
-                    self.write(cr, uid, [move.id],
-                                {'price_unit': product_price,
-                                 'price_currency_id': product_currency,
-                                })
+                # Record the values that were chosen in the wizard, so they can be
+                # used for average price computation and inventory valuation
+                self.write(cr, uid, [move.id],
+                            {'price_unit': product_price,
+                             'price_currency_id': product_currency,
+                            })
 
         for move in too_few:
             product_qty = move_product_qty[move.id]
@@ -3066,6 +3062,10 @@ class stock_picking_in(osv.osv):
         defaults.update(in_defaults)
         return defaults
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        return self.pool['stock.picking'].copy(cr, uid, id, default=default, context=context)
+
+
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'state': fields.selection(
@@ -3138,6 +3138,10 @@ class stock_picking_out(osv.osv):
         out_defaults = super(stock_picking_out, self).default_get(cr, uid, fields_list, context=context)
         defaults.update(out_defaults)
         return defaults
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        return self.pool['stock.picking'].copy(cr, uid, id, default=default, context=context)
+
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:07+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -31,6 +31,11 @@ msgstr "Entrega por correio"
 #: view:delivery.grid.line:0
 msgid " in Function of "
 msgstr " em Função de "
+
+#. module: delivery
+#: view:delivery.carrier:0
+msgid "Zip"
+msgstr "CEP"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -51,6 +56,8 @@ msgstr "Itens da Grade de Entrega"
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
+#: field:stock.picking.in,weight_uom_id:0
+#: field:stock.picking.out,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "Unidade de Medida"
 
@@ -64,14 +71,16 @@ msgstr "Grades de Entregas"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.in,volume:0
 #: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Volume"
 
 #. module: delivery
-#: view:delivery.carrier:0
-msgid "Zip"
-msgstr "CEP"
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No grid matching for this carrier!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -89,7 +98,7 @@ msgid "Delivery order"
 msgstr "Ordem de Entrega"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
@@ -182,7 +191,7 @@ msgid "Delivery Method"
 msgstr "Método de Entrega"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No price available!"
 msgstr "Sem preço disponível!"
@@ -194,6 +203,7 @@ msgstr "Mov. de Estoque"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.in,carrier_tracking_ref:0
 #: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "Ref Rastreamento de Carga"
@@ -341,6 +351,7 @@ msgstr "Nome da Grade"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.in,number_of_packages:0
 #: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Número de Pacotes"
@@ -376,21 +387,9 @@ msgstr ""
 "destinação da mercadoria."
 
 #. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid available !"
-msgstr "Sem grade disponível!"
-
-#. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
 msgstr ">="
-
-#. module: delivery
-#: code:addons/delivery/sale.py:57
-#, python-format
-msgid "Order not in draft state !"
-msgstr "O Pedido não está como Provisório!"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -422,6 +421,12 @@ msgstr "Condição"
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
 msgstr "Preço de Custo"
+
+#. module: delivery
+#: code:addons/delivery/sale.py:57
+#, python-format
+msgid "Order not in Draft State!"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -494,6 +499,12 @@ msgstr ""
 "Complete este campo se você pretende faturar o frete baseado em separações."
 
 #. module: delivery
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No Grid Available!"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
@@ -511,6 +522,8 @@ msgstr "<="
 
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
+#: help:stock.picking.in,weight_uom_id:0
+#: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
 msgstr "Unidade de medida de peso"
 
@@ -540,12 +553,6 @@ msgstr "Lista de preços de entrega"
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Preço"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid matching for this carrier !"
-msgstr "Sem grade correspondentes para esta transportadora!"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -580,6 +587,7 @@ msgstr "Preço avançado, baseado no destino"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.in,carrier_id:0
 #: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Transportadora"
@@ -634,3 +642,15 @@ msgstr "Unidade de Medida é a unidade de medida para o Peso"
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Tipo de Preço"
+
+#, python-format
+#~ msgid "No grid matching for this carrier !"
+#~ msgstr "Sem grade correspondentes para esta transportadora!"
+
+#, python-format
+#~ msgid "No grid available !"
+#~ msgstr "Sem grade disponível!"
+
+#, python-format
+#~ msgid "Order not in draft state !"
+#~ msgstr "O Pedido não está como Provisório!"

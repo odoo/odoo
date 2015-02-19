@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-01-07 16:56+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-08-21 13:44+0000\n"
 "Last-Translator: Eimis <eimislap@gmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-08 05:39+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:45+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -152,7 +152,7 @@ msgid "Rule Name"
 msgstr "Taisyklės pavadinimas"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr "Konvertuoti įmanoma tik vieną telefono skambutį vienu metu."
@@ -191,7 +191,7 @@ msgstr ""
 #. module: crm
 #: code:addons/crm/crm_lead.py:637
 #: code:addons/crm/crm_lead.py:758
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
@@ -219,7 +219,7 @@ msgid "Schedule Other Call"
 msgstr "Suplanuoti kitą skambutį"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:211
+#: code:addons/crm/crm_phonecall.py:212
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -254,6 +254,11 @@ msgstr "Kriterijus"
 #: view:crm.lead:0
 msgid "Assigned to My Team(s)"
 msgstr "Priskirta mano komandai (-oms)"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Excluded Answers :"
+msgstr "Neįeinantys atsakymai:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -297,7 +302,7 @@ msgid "Prospect Partner"
 msgstr "Galimas kontaktas"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1018
+#: code:addons/crm/crm_lead.py:1021
 #, python-format
 msgid "No Subject"
 msgstr "Nėra temos"
@@ -408,6 +413,7 @@ msgid "Unread Messages"
 msgstr "Neperžiūrėtos žinutės"
 
 #. module: crm
+#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -545,7 +551,7 @@ msgid "Planned Revenue"
 msgstr "Planuojamos pajamos"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1004
+#: code:addons/crm/crm_lead.py:1007
 #, python-format
 msgid "Customer Email"
 msgstr "Kliento el. pašto adresas"
@@ -563,9 +569,9 @@ msgid "October"
 msgstr "Spalis"
 
 #. module: crm
-#: view:crm.phonecall:0
-msgid "Reset to Todo"
-msgstr "Atkurti"
+#: view:crm.segmentation:0
+msgid "Included Answers :"
+msgstr "Įeinantys atsakymai:"
 
 #. module: crm
 #: help:crm.phonecall,state:0
@@ -613,6 +619,11 @@ msgid ""
 "No customer name defined. Please fill one of the following fields: Company "
 "Name, Contact Name or Email (\"Name <email@address>\")"
 msgstr ""
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling Options"
+msgstr "Profiliavimo parinktys"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -700,7 +711,7 @@ msgid "Partner Segmentation"
 msgstr "Partnerio segmentavimas"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1064
+#: code:addons/crm/crm_lead.py:1067
 #, python-format
 msgid "Logged a call for %(date)s. %(description)s"
 msgstr ""
@@ -1305,7 +1316,7 @@ msgid "Days to Close"
 msgstr "Dienų skaičius iki užvėrimo"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1075
+#: code:addons/crm/crm_lead.py:1078
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1387,6 +1398,11 @@ msgid ""
 msgstr ""
 "Skambučiai priskirti esamam naudotojui arba susieti su komanda, kurios "
 "vadovas yra esamasis naudotojas"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Segmentation Description"
+msgstr "Segmentacijos aprašymas"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:578
@@ -1687,7 +1703,7 @@ msgid "Describe the lead..."
 msgstr "Iniciatyvos aprašymas..."
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:292
+#: code:addons/crm/crm_phonecall.py:293
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr ""
@@ -1907,7 +1923,7 @@ msgid "Support Department"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1078
+#: code:addons/crm/crm_lead.py:1081
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
@@ -2983,7 +2999,6 @@ msgstr "Pareigos"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
-#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Aprašymas"
@@ -3071,7 +3086,12 @@ msgid "Referred By"
 msgstr "Remiamasi"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1066
+#: view:crm.phonecall:0
+msgid "Reset to Todo"
+msgstr "Atkurti"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1069
 #, python-format
 msgid "Scheduled a call for %(date)s. %(description)s"
 msgstr ""
@@ -3082,7 +3102,7 @@ msgid "Working Hours"
 msgstr "Darbo valandos"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1005
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3147,6 +3167,11 @@ msgstr "Balandis"
 #: field:crm.case.resource.type,name:0
 msgid "Campaign Name"
 msgstr "Kampanijos pavadinimas"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling"
+msgstr "Profiliavimas"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
@@ -3221,21 +3246,6 @@ msgstr ""
 "                tikra iniciatyva ar pardavimo galimybė.\n"
 "              </p>\n"
 "            "
-
-#~ msgid "Segmentation Description"
-#~ msgstr "Segmentacijos aprašymas"
-
-#~ msgid "Excluded Answers :"
-#~ msgstr "Neįeinantys atsakymai:"
-
-#~ msgid "Profiling"
-#~ msgstr "Profiliavimas"
-
-#~ msgid "Profiling Options"
-#~ msgstr "Profiliavimo parinktys"
-
-#~ msgid "Included Answers :"
-#~ msgstr "Įeinantys atsakymai:"
 
 #, python-format
 #~ msgid "Warning !"
