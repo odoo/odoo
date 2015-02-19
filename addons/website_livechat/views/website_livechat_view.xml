@@ -7,8 +7,11 @@
             <field name="model">im_livechat.channel</field>
             <field name="inherit_id" ref="im_livechat.support_channel_form"/>
             <field name="arch" type="xml">
-                <xpath  expr="//group[@string='Options']" position="inside">
-                    <field name="website_published" widget="website_button"/>
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button class="oe_inline oe_stat_button" name="open_website_url"
+                        type="object" icon="fa-globe">
+                        <field name="website_published" widget="website_button"/>
+                    </button>
                 </xpath>
             </field>
         </record>

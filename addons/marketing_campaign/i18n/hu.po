@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-10-31 12:54+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-10-31 12:58+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,42 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-11-01 07:14+0000\n"
 "X-Generator: Launchpad (build 17211)\n"
+
+#. module: marketing_crm
+#: help:marketing.config.settings,module_crm_profiling:0
+msgid ""
+"Allows users to perform segmentation within partners.\n"
+"-This installs the module crm_profiling."
+msgstr ""
+"Lehetővé teszi a felhasználó részére az ügyfeleken belüli részekre osztást.\n"
+"-Ez a crm_profiling modult telepíti."
+
+#. module: marketing_crm
+#: field:marketing.config.settings,module_marketing_campaign_crm_demo:0
+msgid "Demo data for marketing campaigns"
+msgstr "Demo adatok a merketing kampányhoz"
+
+#. module: marketing_crm
+#: help:marketing.config.settings,module_marketing_campaign_crm_demo:0
+msgid ""
+"Installs demo data like leads, campaigns and segments for Marketing "
+"Campaigns.\n"
+"-This installs the module marketing_campaign_crm_demo."
+msgstr ""
+"Feltelepíti a demo adatokat, mint érdeklődések, kampányok és marketing "
+"kampány részeket.\n"
+"-Ez a marketing_campaign_crm_demo modult telepíti."
+
+#. module: marketing_crm
+#: view:crm.lead:marketing_crm.view_crm_lead_form
+#: view:crm.lead:marketing_crm.view_crm_opportunity_form
+msgid "Marketing"
+msgstr "Marketing"
+
+#. module: marketing_crm
+#: field:marketing.config.settings,module_crm_profiling:0
+msgid "Track customer profile to focus your campaigns"
+msgstr "Ügyfél profilok nyomon követése a kampányai részleteire vonatkozóan"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -220,8 +256,7 @@ msgid "Cancel Workitem"
 msgstr "Munkaelem visszavonása"
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: selection:marketing.campaign,state:0
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
@@ -516,8 +551,7 @@ msgid "How is the destination workitem triggered"
 msgstr "Ahogy a végső feladatelem kapcsolva lesz"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,id:0
-#: field:marketing.campaign,id:0
+#: field:campaign.analysis,id:0 field:marketing.campaign,id:0
 #: field:marketing.campaign.activity,id:0
 #: field:marketing.campaign.segment,id:0
 #: field:marketing.campaign.transition,id:0
@@ -694,8 +728,7 @@ msgid "Month(s)"
 msgstr "Hónap(ok)"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,name:0
-#: field:marketing.campaign.activity,name:0
+#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
 #: field:marketing.campaign.segment,name:0
 #: field:marketing.campaign.transition,name:0
 msgid "Name"

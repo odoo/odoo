@@ -41,5 +41,4 @@ This module is the base module for other multi-company modules.
     'demo': ['multi_company_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/companies.jpeg','images/default_company_per_object_form.jpeg', 'images/default_company_per_object_list.jpeg'],
 }

@@ -43,7 +43,6 @@ Notes can be found in the 'Home' menu.
         'mail',
     ],
     'data': [
-        'security/note_security.xml',
         'security/ir.rule.xml',
         'security/ir.model.access.csv',
         'note_data.xml',
@@ -54,11 +53,6 @@ Notes can be found in the 'Home' menu.
         'note_demo.xml',
     ],
     'test': [
-    ],
-    'images': [
-        'images/note_kanban.jpeg',
-        'images/note.jpeg',
-        'images/categories_tree.jpeg'
     ],
     'installable': True,
     'application': True,

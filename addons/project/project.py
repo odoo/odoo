@@ -31,6 +31,7 @@ from openerp import tools
 from openerp.addons.resource.faces import task as Task
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class project_task_type(osv.osv):
@@ -39,12 +40,12 @@ class project_task_type(osv.osv):
     _order = 'sequence'
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
-        'description': fields.text('Description'),
+        'description': fields.text('Description', translate=True),
         'sequence': fields.integer('Sequence'),
         'case_default': fields.boolean('Default for New Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
-        'legend_priority': fields.text(
+        'legend_priority': fields.char(
             'Priority Management Explanation', translate=True,
             help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.'),
         'legend_blocked': fields.char(
@@ -185,8 +186,7 @@ class project(osv.osv):
         analytic_account_to_delete = set()
         for proj in self.browse(cr, uid, ids, context=context):
             if proj.tasks:
-                raise osv.except_osv(_('Invalid Action!'),
-                                     _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
+                raise UserError(_('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
             elif proj.alias_id:
                 alias_ids.append(proj.alias_id.id)
             if proj.analytic_account_id and not proj.analytic_account_id.line_ids:
@@ -504,7 +504,7 @@ class project(osv.osv):
 
         for project in projects:
             if (not project.members) and force_members:
-                raise osv.except_osv(_('Warning!'),_("You must assign members on the project '%s'!") % (project.name,))
+                raise UserError(_("You must assign members on the project '%s'!") % (project.name,))
 
         resource_pool = self.pool.get('resource.resource')
 
@@ -994,7 +994,7 @@ class task(osv.osv):
             if task.child_ids:
                 for child in task.child_ids:
                     if child.stage_id and not child.stage_id.fold:
-                        raise osv.except_osv(_("Warning!"), _("Child task still open.\nPlease cancel or complete child task first."))
+                        raise UserError(_("Child task still open.\nPlease cancel or complete child task first."))
         return True
 
     def _delegate_task_attachments(self, cr, uid, task_id, delegated_task_id, context=None):
@@ -1245,7 +1245,7 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_tasks': fields.boolean('Tasks', help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
+        'use_tasks': fields.boolean('Tasks', help="Check this box to manage internal activities through this project"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', string="Company UOM", type='many2one', relation='product.uom'),
     }
 
@@ -1303,7 +1303,7 @@ class account_analytic_account(osv.osv):
         proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
         has_tasks = self.pool['project.task'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
         if has_tasks:
-            raise osv.except_osv(_('Warning!'), _('Please remove existing tasks in the project linked to the accounts you want to delete.'))
+            raise UserError(_('Please remove existing tasks in the project linked to the accounts you want to delete.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):

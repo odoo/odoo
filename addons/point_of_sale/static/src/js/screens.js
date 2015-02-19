@@ -400,14 +400,17 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
 
             this.line_click_handler = function(event){
-                self.pos.get_order().select_orderline(this.orderline);
-                self.numpad_state.reset();
+                self.click_line(this.orderline, event);
             };
 
             if (this.pos.get_order()) {
                 this.bind_order_events();
             }
 
+        },
+        click_line: function(orderline, event) {
+            this.pos.get_order().select_orderline(orderline);
+            this.numpad_state.reset();
         },
         set_value: function(val) {
         	var order = this.pos.get_order();
@@ -519,6 +522,10 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         },
         update_summary: function(){
             var order = this.pos.get_order();
+            if (!order.get_orderlines().length) {
+                return;
+            }
+
             var total     = order ? order.get_total_with_tax() : 0;
             var taxes     = order ? total - order.get_total_without_tax() : 0;
 
@@ -548,7 +555,8 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.subcategories = [];
             this.product_list_widget = options.product_list_widget || null;
             this.category_cache = new module.DomCache();
-            this.set_category();
+            this.start_categ_id = this.pos.config.iface_start_categ_id ? this.pos.config.iface_start_categ_id[0] : 0;
+            this.set_category(this.pos.db.get_category_by_id(this.start_categ_id));
             
             this.switch_category_handler = function(event){
                 self.set_category(self.pos.db.get_category_by_id(Number(this.dataset['categoryId'])));
@@ -645,12 +653,14 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.el = el_node;
 
             var hasimages = false;  //if none of the subcategories have images, we don't display buttons with icons
+            /*
             for(var i = 0; i < this.subcategories.length; i++){
                 if(this.subcategories[i].image){
                     hasimages = true;
                     break;
                 }
             }
+            */
 
             var list_container = el_node.querySelector('.category-list');
             if (list_container) { 
@@ -683,7 +693,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         
         // resets the current category to the root category
         reset_category: function(){
-            this.set_category();
+            this.set_category(this.pos.db.get_category_by_id(this.start_categ_id));
             this.renderElement();
         },
 
@@ -833,6 +843,9 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             });
         },
         button_click: function(){},
+        highlight: function(highlight){
+            this.$el.toggleClass('highlight',!!highlight);
+        },
     });
 
     /* -------- The Product Screen -------- */
@@ -1397,6 +1410,17 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
             this.inputbuffer = "";
             this.firstinput  = true;
+            
+            // This is a keydown handler that prevents backspace from
+            // doing a back navigation
+            this.keyboard_no_backnav = function(event){
+                if (event.keyCode === 8) {  // Backspace
+                    event.preventDefault();
+                }
+            };
+            
+            // This keyboard handler is on keyup to prevent keypress repeats
+            // but it thus cannot prevent the back navigation
             this.keyboard_handler = function(event){
                 var key = '';
                 if ( event.keyCode === 13 ) {         // Enter
@@ -1407,7 +1431,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                     key = 'CLEAR';
                 } else if ( event.keyCode === 8 ) {   // Backspace 
                     key = 'BACKSPACE';
-                    event.preventDefault(); // Prevents history back nav
                 } else if ( event.keyCode >= 48 && event.keyCode <= 57 ){       // Numbers
                     key = '' + (event.keyCode - 48);
                 } else if ( event.keyCode >= 96 && event.keyCode <= 105 ){      // Numpad Numbers
@@ -1419,7 +1442,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 }
 
                 self.payment_input(key);
-
+                event.preventDefault();
             };
         },
         // resets the current input buffer
@@ -1439,6 +1462,11 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             var newbuf = this.gui.numpad_input(this.inputbuffer, input, {'firstinput': this.firstinput});
 
             this.firstinput = (newbuf.length === 0);
+
+            // popup block inputs to prevent sneak editing. 
+            if (this.gui.has_popup()) {
+                return;
+            }
             
             if (newbuf !== this.inputbuffer) {
                 this.inputbuffer = newbuf;
@@ -1492,12 +1520,19 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             }
 
             var lines = order.get_paymentlines();
+            var due   = order.get_due();
+            var extradue = 0;
+            if (due && lines.length  && due !== order.get_due(lines[lines.length-1])) {
+                extradue = due;
+            }
+
 
             this.$('.paymentlines-container').empty();
             var lines = $(QWeb.render('PaymentScreen-Paymentlines', { 
                 widget: this, 
                 order: order,
                 paymentlines: lines,
+                extradue: extradue,
             }));
 
             lines.on('click','.delete-button',function(){
@@ -1539,6 +1574,27 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 this.$('.js_invoice').removeClass('highlight');
             }
         },
+        click_tip: function(){
+            var self   = this;
+            var order  = this.pos.get_order();
+            var tip    = order.get_tip();
+            var change = order.get_change();
+            var value  = tip;
+
+            if (tip === 0 && change > 0  ) {
+                value = change;
+            }
+
+            this.gui.show_popup('number',{
+                'title': tip ? _t('Change Tip') : _t('Add Tip'),
+                'value': value,
+                'confirm': function(value) {
+                    order.set_tip(Number(value));
+                    self.order_changes();
+                    self.render_paymentlines();
+                }
+            });
+        },
         click_set_customer: function(){
             this.gui.show_screen('clientlist');
         },
@@ -1568,8 +1624,16 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.$('.js_set_customer').click(function(){
                 self.click_set_customer();
             });
+
+            this.$('.js_tip').click(function(){
+                self.click_tip();
+            });
             this.$('.js_invoice').click(function(){
                 self.click_invoice();
+            });
+
+            this.$('.js_cashdrawer').click(function(){
+                self.pos.proxy.open_cashbox();
             });
 
         },
@@ -1578,11 +1642,13 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.reset_input();
             this.render_paymentlines();
             this.order_changes();
-            window.document.body.addEventListener('keydown',this.keyboard_handler);
+            window.document.body.addEventListener('keyup',this.keyboard_handler);
+            window.document.body.addEventListener('keydown',this.keyboard_no_backnav);
             this._super();
         },
         hide: function(){
-            window.document.body.removeEventListener('keydown',this.keyboard_handler);
+            window.document.body.removeEventListener('keyup',this.keyboard_handler);
+            window.document.body.removeEventListener('keydown',this.keyboard_no_backnav);
             this._super();
         },
         // sets up listeners to watch for order changes
@@ -1626,7 +1692,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
         // Check if the order is paid, then sends it to the backend,
         // and complete the sale process
-        validate_order: function() {
+        validate_order: function(force_validation) {
             var self = this;
 
             var order = this.pos.get_order();
@@ -1641,7 +1707,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 return;
             }
 
-            var plines = currentOrder.get('paymentLines').models;
+            var plines = order.get_paymentlines();
             for (var i = 0; i < plines.length; i++) {
                 if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
                     this.pos_widget.screen_selector.show_popup('error',{
@@ -1669,6 +1735,26 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                     });
                     return;
                 }
+            }
+
+            // if the change is too large, it's probably an input error, make the user confirm.
+            if (!force_validation && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
+                this.gui.show_popup('confirm',{
+                    title: _t('Please Confirm Large Amount'),
+                    body:  _t('Are you sure that the customer wants to  pay') + 
+                           ' ' + 
+                           this.format_currency(order.get_total_paid()) +
+                           ' ' +
+                           _t('for an order of') +
+                           ' ' +
+                           this.format_currency(order.get_total_with_tax()) +
+                           ' ' +
+                           _t('? Clicking "Confirm" will validate the payment.'),
+                    confirm: function() {
+                        self.validate_order('confirm');
+                    },
+                });
+                return;
             }
 
             if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 

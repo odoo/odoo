@@ -125,6 +125,9 @@ openerp.pos_restaurant.load_splitbill = function(instance, module){
                     neworder.saveChanges();
                 }
 
+                neworder.set_customer_count(1);
+                order.set_customer_count(order.get_customer_count() - 1);
+
                 this.pos.get('orders').add(neworder);
                 this.pos.set('selectedOrder',neworder);
             }
@@ -167,7 +170,7 @@ openerp.pos_restaurant.load_splitbill = function(instance, module){
         template: 'SplitbillButton',
         button_click: function(){
             if(this.pos.get_order().get_orderlines().length > 0){
-                self.gui.show_screen('splitbill');
+                this.gui.show_screen('splitbill');
             }
         },
     });

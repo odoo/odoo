@@ -21,6 +21,7 @@
 
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
+from openerp.exceptions import UserError
 
 
 class account_check_write(osv.osv_memory):
@@ -56,7 +57,7 @@ class account_check_write(osv.osv_memory):
         for check in voucher_obj.browse(cr, uid, voucher_ids, context=context):
             new_value += increment
             if check.number:
-                raise osv.except_osv(_('Error!'),_("One of the printed check already got a number."))
+                raise UserError(_("One of the printed check already got a number."))
         voucher_obj.proforma_voucher(cr, uid, voucher_ids, context=context)
 
         #update the sequence again (because the assignation using next_val was made during the same transaction of

@@ -30,7 +30,7 @@ with the structure:
         |-- pages.xml
         `-- snippets.xml
 
-``static/styles`` contains your stylesheet(s), ``views`` contains the various
+``static/style`` contains your stylesheet(s), ``views`` contains the various
 XML files describing the theme and theme features to Odoo.
 
 Static Page
@@ -51,7 +51,12 @@ copy paste the lines::
       </t>
   </template>
 
-Refresh the page and feel the hit.
+Comment the lines about ``options.xml`` and ``pages.xml`` in ``__openerp__.py``.
+
+Run the server and update the theme (``./odoo.py -u dummy_theme``), then
+install the theme in the settings menu.
+
+Go to ``http://localhost:8069/page/hello`` feel the hit.
 
 Editing content on a page
 '''''''''''''''''''''''''
@@ -104,13 +109,24 @@ modify these lines as below:
 
 .. code-block:: css
 
-   .h1 {
+   h1 {
        color: #215487;
    }
-   .span {
+   span {
        border: 2px solid black;
        background-color: #eee;
    }
+
+Compile your file (http://lesscss.org/usage/#command-line-usage) to get the
+``custom.css`` file.
+
+Add this asset to your template in ``page.xml``::
+
+  <template id="dummy_theme_asset" name="website assete for Dummy theme" inherit_id="website.theme">
+      <xpath expr="." position="inside">
+          <link rel="stylesheet" href="/dummy_theme/static/style/custom.css"/>
+      </xpath>
+  </template>
 
 Refresh the page and feel the hit.
 
@@ -267,9 +283,9 @@ Adding images to your snippet
 You can easely add images in your snippets simply by setting up css
 backgrounds images.
 
-In ``odoo/addons/theme_dummy/static/`` create a new folder and name it
-``img``. Put your images there, in sub-folders if needed.  Open
-:file:`odoo/addons/theme_dummy/static/style/custom.less`, add these lines
+Put your images in ``odoo/addons/theme_dummy/static/img``, or in sub-folders
+if needed. Open :file:`odoo/addons/theme_dummy/static/style/custom.less`, add
+these lines
 
 .. code-block:: css
 
@@ -279,28 +295,20 @@ In ``odoo/addons/theme_dummy/static/`` create a new folder and name it
    @img-02: url("../img/img-girl.png");
    .dummy-girl { background-image: @img-02; }
 
+Add also the ``width`` and the ``height`` css attributes to theses new classes.
+
 In :file:`odoo/addons/theme_dummy/views/pages.xml` change the correspondant
 lines as below::
 
-    <section>
-        <div class="container">
-            <div class="row dummy-bg">
-                <div class="alert alert-primary" role="alert">
-                <a href="#" class="alert-link">...</a>
-                </div>
-                <div class="col-md-6">
-                <h2>BLUE it!</h2>
-                    <div class="dummy-boy">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                <h2>GREEN THAT!</h2>
-                    <div class="dummy-girl">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="row">
+      <div class="col-md-12 text-center mt32 mb32">
+          <h2 class="options_simple_snippet">A great Title, prmize</h2>
+          <h3 class="text-muted">And a great subtilte too</h3>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </p>
+          <div class="dummy-boy"></div>
+          <div class="dummy-girl"></div>
+      </div>
+  </div>
 
 Your new snippet is now ready to use. Just drag and drop it on your page to
 see it in action.
@@ -329,9 +337,12 @@ Explain xpath
 
 .. TODO:: syntax not correct (see website examples) 
 
-Your option menu is now correctly set in the database, you can create an new dropdown menu.
+Your option menu is now correctly set in the database, you can create an new
+dropdown menu.
 
-Let's say yout want three options which will change the text color and the background.
+Let's say yout want three options which will change the text color and the
+background.
+
 In option.xml, add these lines inside the xpath::
 
       <li data-check_class="text-purple"><a>YOUR OPTION 1</a></li>

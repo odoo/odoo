@@ -384,7 +384,7 @@ define([
           event: 'imageShape',
           value: 'img-rounded'
         });
-        var circleButton = tplIconButton('fa fa-circle-o', {
+        var circleButton = tplIconButton('fa fa-circle', {
           title: lang.image.shapeCircle,
           event: 'imageShape',
           value: 'img-circle'

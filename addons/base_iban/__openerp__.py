@@ -35,5 +35,4 @@ with a single statement.
     'data': ['base_iban_data.xml' , 'base_iban_view.xml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/base_iban1.jpeg'],
 }

@@ -47,5 +47,4 @@ Con la Colaboración de
     "active": False,
     "installable": True,
     "certificate" : "",
-    'images': ['images/config_chart_l10n_cl.jpeg','images/l10n_cl_chart.jpeg'],
 }

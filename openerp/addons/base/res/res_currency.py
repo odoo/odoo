@@ -28,6 +28,7 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools import float_round, float_is_zero, float_compare
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
@@ -56,7 +57,7 @@ class res_currency(osv.osv):
                 res[id] = 0
             else:
                 currency = self.browse(cr, uid, id, context=context)
-                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency '%s' for the given period" % (currency.name)))
+                raise UserError(_("No currency rate associated for currency '%s' for the given period: %s") % (currency.name, date))
         return res
 
     _name = "res.currency"
@@ -227,7 +228,7 @@ class res_currency(osv.osv):
                 currency_symbol = from_currency.symbol
             else:
                 currency_symbol = to_currency.symbol
-            raise osv.except_osv(_('Error'), _('No rate found \n' \
+            raise UserError(_('No rate found \n' \
                     'for the currency: %s \n' \
                     'at the date: %s') % (currency_symbol, date))
         return to_currency.rate/from_currency.rate
@@ -300,3 +301,22 @@ class res_currency_rate(osv.osv):
         'name': lambda *a: time.strftime('%Y-%m-%d 00:00:00'),
     }
     _order = "name desc"
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if operator in ['=', '!=']:
+            try:
+                date_format = '%Y-%m-%d'
+                if context.get('lang'):
+                    lang_obj = self.pool['res.lang']
+                    lang_ids = lang_obj.search(cr, user, [('code', '=', context['lang'])], context=context)
+                    if lang_ids:
+                        date_format = lang_obj.browse(cr, user, lang_ids[0], context=context).date_format
+                name = time.strftime('%Y-%m-%d', time.strptime(name, date_format))
+            except ValueError:
+                try:
+                    args.append(('rate', operator, float(name)))
+                except ValueError:
+                    return []
+                name = ''
+                operator = 'ilike'
+        return super(res_currency_rate, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)

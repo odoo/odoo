@@ -34,6 +34,7 @@ from openerp import SUPERUSER_ID, api, models
 import openerp.addons.decimal_precision as dp
 from openerp.addons.procurement import procurement
 import logging
+from openerp.exceptions import UserError
 
 
 _logger = logging.getLogger(__name__)
@@ -323,6 +324,11 @@ class stock_quant(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.quant', context=c),
     }
 
+    def init(self, cr):
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_quant_product_location_index',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX stock_quant_product_location_index ON stock_quant (product_id, location_id, company_id, qty, in_date, reservation_id)')
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         ''' Overwrite the read_group in order to sum the function field 'inventory_value' in group by'''
         res = super(stock_quant, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
@@ -368,7 +374,7 @@ class stock_quant(osv.osv):
         #split quants if needed
         for quant, qty in quants:
             if qty <= 0.0 or (quant and quant.qty <= 0.0):
-                raise osv.except_osv(_('Error!'), _('You can not reserve a negative quantity or a negative quant.'))
+                raise UserError(_('You can not reserve a negative quantity or a negative quant.'))
             if not quant:
                 continue
             self._quant_split(cr, uid, quant, qty, context=context)
@@ -414,15 +420,22 @@ class stock_quant(osv.osv):
             self.move_quants_write(cr, uid, to_move_quants, move, location_to, dest_package_id, context=context)
             self.pool.get('stock.move').recalculate_move_state(cr, uid, to_recompute_move_ids, context=context)
         if location_to.usage == 'internal':
-            if self.search(cr, uid, [('product_id', '=', move.product_id.id), ('qty','<', 0)], limit=1, context=context):
+            # Do manual search for quant to avoid full table scan (order by id)
+            cr.execute("""
+                SELECT 0 FROM stock_quant, stock_location WHERE product_id = %s AND stock_location.id = stock_quant.location_id AND
+                ((stock_location.parent_left >= %s AND stock_location.parent_left < %s) OR stock_location.id = %s) AND qty < 0.0 LIMIT 1
+            """, (move.product_id.id, location_to.parent_left, location_to.parent_right, location_to.id))
+            if cr.fetchone():
                 for quant in quants_reconcile:
                     self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
+        context=context or {}
         vals = {'location_id': location_dest_id.id,
                 'history_ids': [(4, move.id)],
-                'package_id': dest_package_id,
                 'reservation_id': False}
+        if not context.get('entire_pack'):
+            vals.update({'package_id': dest_package_id})
         self.write(cr, SUPERUSER_ID, [q.id for q in quants], vals, context=context)
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain_list=[], restrict_lot_id=False, restrict_partner_id=False, context=None):
@@ -479,7 +492,7 @@ class stock_quant(osv.osv):
         elif removal_strategy == 'lifo':
             order = 'in_date desc, id desc'
             return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
-        raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
+        raise UserError(_('Removal strategy %s not implemented.' % (removal_strategy,)))
 
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False,
                       force_location_from=False, force_location_to=False, context=None):
@@ -526,7 +539,10 @@ class stock_quant(osv.osv):
             return False
         qty_round = float_round(qty, precision_rounding=rounding)
         new_qty_round = float_round(quant.qty - qty, precision_rounding=rounding)
-        new_quant = self.copy(cr, SUPERUSER_ID, quant.id, default={'qty': new_qty_round, 'history_ids': [(4, x.id) for x in quant.history_ids]}, context=context)
+        # Fetch the history_ids manually as it will not do a join with the stock moves then (=> a lot faster)
+        cr.execute("""SELECT move_id FROM stock_quant_move_rel WHERE quant_id = %s""", (quant.id,))
+        res = cr.fetchall()
+        new_quant = self.copy(cr, SUPERUSER_ID, quant.id, default={'qty': new_qty_round, 'history_ids': [(4, x[0]) for x in res]}, context=context)
         self.write(cr, SUPERUSER_ID, quant.id, {'qty': qty_round}, context=context)
         return self.browse(cr, uid, new_quant, context=context)
 
@@ -581,7 +597,7 @@ class stock_quant(osv.osv):
                 if remaining_to_solve_quant_ids:
                     self.write(cr, SUPERUSER_ID, remaining_to_solve_quant_ids, {'propagated_from_id': remaining_neg_quant.id}, context=context)
             if solving_quant.propagated_from_id and solved_quant_ids:
-                self.write(cr, uid, solved_quant_ids, {'propagated_from_id': solving_quant.propagated_from_id.id}, context=context)
+                self.write(cr, SUPERUSER_ID, solved_quant_ids, {'propagated_from_id': solving_quant.propagated_from_id.id}, context=context)
             #delete the reconciled quants, as it is replaced by the solved quants
             self.unlink(cr, SUPERUSER_ID, [quant_neg.id], context=context)
             if solved_quant_ids:
@@ -638,7 +654,7 @@ class stock_quant(osv.osv):
 
     def _check_location(self, cr, uid, location, context=None):
         if location.usage == 'view':
-            raise osv.except_osv(_('Error'), _('You cannot move to a location of type view %s.') % (location.name))
+            raise UserError(_('You cannot move to a location of type view %s.') % (location.name))
         return True
 
 #----------------------------------------------------------
@@ -880,7 +896,7 @@ class stock_picking(osv.osv):
             #skip the moves that don't need to be checked
             move_ids = [x.id for x in pick.move_lines if x.state not in ('draft', 'cancel', 'done')]
             if not move_ids:
-                raise osv.except_osv(_('Warning!'), _('Nothing to check the availability for.'))
+                raise UserError(_('Nothing to check the availability for.'))
             self.pool.get('stock.move').action_assign(cr, uid, move_ids, context=context)
         return True
 
@@ -1060,6 +1076,7 @@ class stock_picking(osv.osv):
                     'product_qty': 1.0,
                     'location_id': pack.location_id.id,
                     'location_dest_id': quants_suggested_locations[pack_quants[0]],
+                    'owner_id': pack.owner_id.id,
                 })
             #remove the quants inside the package so that they are excluded from the rest of the computation
             for quant in pack_quants:
@@ -1078,7 +1095,7 @@ class stock_picking(osv.osv):
             if qty <= 0:
                 continue
             suggested_location_id = _picking_putaway_apply(product)
-            key = (product.id, False, False, False, picking.location_id.id, suggested_location_id)
+            key = (product.id, False, False, picking.owner_id.id, picking.location_id.id, suggested_location_id)
             if qtys_grouped.get(key):
                 qtys_grouped[key] += qty
             else:
@@ -1086,6 +1103,7 @@ class stock_picking(osv.osv):
 
         # Create the necessary operations for the grouped quants and remaining qtys
         uom_obj = self.pool.get('product.uom')
+        prevals = {}
         for key, qty in qtys_grouped.items():
             product = self.pool.get("product.product").browse(cr, uid, key[0], context=context)
             uom_id = product.uom_id.id
@@ -1093,7 +1111,7 @@ class stock_picking(osv.osv):
             if product_uom.get(key[0]):
                 uom_id = product_uom[key[0]].id
                 qty_uom = uom_obj._compute_qty(cr, uid, product.uom_id.id, qty, uom_id)
-            vals.append({
+            val_dict = {
                 'picking_id': picking.id,
                 'product_qty': qty_uom,
                 'product_id': key[0],
@@ -1103,7 +1121,17 @@ class stock_picking(osv.osv):
                 'location_id': key[4],
                 'location_dest_id': key[5],
                 'product_uom_id': uom_id,
-            })
+            }
+            if key[0] in prevals:
+                prevals[key[0]].append(val_dict)
+            else:
+                prevals[key[0]] = [val_dict]
+        # prevals var holds the operations in order to create them in the same order than the picking stock moves if possible
+        processed_products = set()
+        for move in picking.move_lines:
+            if move.product_id.id not in processed_products:
+                vals += prevals.get(move.product_id.id, [])
+                processed_products.add(move.product_id.id)
         return vals
 
     @api.cr_uid_ids_context
@@ -1588,7 +1616,7 @@ class stock_production_lot(osv.osv):
 class stock_move(osv.osv):
     _name = "stock.move"
     _description = "Stock Move"
-    _order = 'date_expected desc, id'
+    _order = 'picking_id, sequence, id'
     _log_create = False
 
     def get_price_unit(self, cr, uid, move, context=None):
@@ -1706,9 +1734,10 @@ class stock_move(osv.osv):
             for `product_qty`, where the same write should set the `product_uom_qty` field instead, in order to
             detect errors.
         """
-        raise osv.except_osv(_('Programming Error!'), _('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
+        raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
     _columns = {
+        'sequence': fields.integer('Sequence'),
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection(procurement.PROCUREMENT_PRIORITIES, 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
@@ -1733,6 +1762,7 @@ class stock_move(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, states={'done': [('readonly', True)]}),
         'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),
         'product_uos': fields.many2one('product.uom', 'Product UOS', states={'done': [('readonly', True)]}),
+        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template'),
 
         'product_packaging': fields.many2one('product.packaging', 'Prefered Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
@@ -1811,8 +1841,7 @@ class stock_move(osv.osv):
         return False
 
     def _default_destination_address(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.company_id.partner_id.id
+        return False
 
     _defaults = {
         'location_id': _default_location_source,
@@ -1821,6 +1850,7 @@ class stock_move(osv.osv):
         'state': 'draft',
         'priority': '1',
         'product_uom_qty': 1.0,
+        'sequence': 10,
         'scrapped': False,
         'date': fields.datetime.now,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
@@ -1841,13 +1871,17 @@ class stock_move(osv.osv):
             'You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.',
             ['product_uom']),
     ]
+    def init(self, cr):
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_move_product_location_index',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX stock_move_product_location_index ON stock_move (product_id, location_id, location_dest_id, company_id, state)')
 
     @api.cr_uid_ids_context
     def do_unreserve(self, cr, uid, move_ids, context=None):
         quant_obj = self.pool.get("stock.quant")
         for move in self.browse(cr, uid, move_ids, context=context):
             if move.state in ('done', 'cancel'):
-                raise osv.except_osv(_('Operation Forbidden!'), _('Cannot unreserve a done move'))
+                raise UserError(_('Cannot unreserve a done move'))
             quant_obj.quants_unreserve(cr, uid, move, context=context)
             if self.find_move_ancestors(cr, uid, move, context=context):
                 self.write(cr, uid, [move.id], {'state': 'waiting'}, context=context)
@@ -1922,8 +1956,7 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
                 if frozen_fields.intersection(vals):
-                    raise osv.except_osv(_('Operation Forbidden!'),
-                        _('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
+                    raise UserError(_('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
         propagated_changes_dict = {}
         #propagation of quantity change
         if vals.get('product_uom_qty'):
@@ -2166,7 +2199,7 @@ class stock_move(osv.osv):
         elif product.track_outgoing and location_dest.usage in ('customer', 'transit') and location.usage == 'internal':
             check = True
         if check and not lot_id:
-            raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (product.name))
+            raise UserError(_('You must assign a serial number for the product %s') % (product.name))
 
 
     def check_tracking(self, cr, uid, move, lot_id, context=None):
@@ -2250,8 +2283,7 @@ class stock_move(osv.osv):
         procs_to_check = []
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
-                raise osv.except_osv(_('Operation Forbidden!'),
-                        _('You cannot cancel a stock move that has been set to \'Done\'.'))
+                raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
             if move.reserved_quant_ids:
                 self.pool.get("stock.quant").quants_unreserve(cr, uid, move, context=context)
             if context.get('cancel_procurement'):
@@ -2346,21 +2378,22 @@ class stock_move(osv.osv):
                 dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain_list=prefered_domain_list,
                                                           restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                if ops.result_package_id.id:
-                    #if a result package is given, all quants go there
-                    quant_dest_package_id = ops.result_package_id.id
-                elif ops.product_id and ops.package_id:
-                    #if a package and a product is given, we will remove quants from the pack.
-                    quant_dest_package_id = False
+                if ops.product_id:
+                    #If a product is given, the result is always put immediately in the result package (if it is False, they are without package)
+                    quant_dest_package_id  = ops.result_package_id.id
+                    ctx = context
                 else:
-                    #otherwise we keep the current pack of the quant, which may mean None
-                    quant_dest_package_id = ops.package_id.id
-                quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, location_from=ops.location_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=context)
+                    # When a pack is moved entirely, the quants should not be written anything for the destination package
+                    quant_dest_package_id = False
+                    ctx = context.copy()
+                    ctx['entire_pack'] = True
+                quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, location_from=ops.location_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=ctx)
+
                 # Handle pack in pack
                 if not ops.product_id and ops.package_id and ops.result_package_id.id != ops.package_id.parent_id.id:
                     self.pool.get('stock.quant.package').write(cr, SUPERUSER_ID, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
                 if not move_qty.get(move.id):
-                    raise osv.except_osv(_("Error"), _("The roundings of your Unit of Measures %s on the move vs. %s on the product don't allow to do these operations or you are not transferring the picking at once. ") % (move.product_uom.name, move.product_id.uom_id.name))
+                    raise UserError(_("The roundings of your Unit of Measures %s on the move vs. %s on the product don't allow to do these operations or you are not transferring the picking at once. ") % (move.product_uom.name, move.product_id.uom_id.name))
                 move_qty[move.id] -= record.qty
         #Check for remaining qtys and unreserve/check move_dest_id in
         move_dest_ids = set()
@@ -2407,7 +2440,7 @@ class stock_move(osv.osv):
         context = context or {}
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('draft', 'cancel'):
-                raise osv.except_osv(_('User Error!'), _('You can only delete draft moves.'))
+                raise UserError(_('You can only delete draft moves.'))
         return super(stock_move, self).unlink(cr, uid, ids, context=context)
 
     def action_scrap(self, cr, uid, ids, quantity, location_id, restrict_lot_id=False, restrict_partner_id=False, context=None):
@@ -2422,7 +2455,7 @@ class stock_move(osv.osv):
         """
         #quantity should be given in MOVE UOM
         if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap.'))
+            raise UserError(_('Please provide a positive quantity to scrap.'))
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             source_location = move.location_id
@@ -2431,7 +2464,7 @@ class stock_move(osv.osv):
             #Previously used to prevent scraping from virtual location but not necessary anymore
             #if source_location.usage != 'internal':
                 #restrict to scrap from a virtual location because it's meaningless and it may introduce errors in stock ('creating' new products from nowhere)
-                #raise osv.except_osv(_('Error!'), _('Forbidden operation: it is not allowed to scrap products from a virtual location.'))
+                #raise UserError(_('Forbidden operation: it is not allowed to scrap products from a virtual location.'))
             move_qty = move.product_qty
             uos_qty = quantity / move_qty * move.product_uos_qty
             default_val = {
@@ -2468,11 +2501,11 @@ class stock_move(osv.osv):
         returns the ID of the backorder move created
         """
         if move.state in ('done', 'cancel'):
-            raise osv.except_osv(_('Error'), _('You cannot split a move done'))
+            raise UserError(_('You cannot split a move done'))
         if move.state == 'draft':
             #we restrict the split of a draft move because if not confirmed yet, it may be replaced by several other moves in
             #case of phantom bom (with mrp module). And we don't want to deal with this complexity by copying the product that will explode.
-            raise osv.except_osv(_('Error'), _('You cannot split a draft move. It needs to be confirmed first.'))
+            raise UserError(_('You cannot split a draft move. It needs to be confirmed first.'))
 
         if move.product_qty <= qty or qty == 0:
             return move.id
@@ -2632,7 +2665,7 @@ class stock_inventory(osv.osv):
         for inv in self.browse(cr, uid, ids, context=context):
             for inventory_line in inv.line_ids:
                 if inventory_line.product_qty < 0 and inventory_line.product_qty != inventory_line.theoretical_qty:
-                    raise osv.except_osv(_('Warning'), _('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s' % (inventory_line.product_id.name, inventory_line.product_qty)))
+                    raise UserError(_('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s' % (inventory_line.product_id.name, inventory_line.product_qty)))
             self.action_check(cr, uid, [inv.id], context=context)
             self.write(cr, uid, [inv.id], {'state': 'done'}, context=context)
             self.post_inventory(cr, uid, inv, context=context)
@@ -2974,7 +3007,7 @@ class stock_warehouse(osv.osv):
                 inter_wh_route_vals = self._get_inter_wh_route(cr, uid, warehouse, wh, context=context)
                 inter_wh_route_id = route_obj.create(cr, uid, vals=inter_wh_route_vals, context=context)
                 values = [(output_loc, transit_location, wh.out_type_id.id, wh), (transit_location, input_loc, warehouse.in_type_id.id, warehouse)]
-                pull_rules_list = self._get_supply_pull_rules(cr, uid, warehouse, values, inter_wh_route_id, context=context)
+                pull_rules_list = self._get_supply_pull_rules(cr, uid, wh.id, values, inter_wh_route_id, context=context)
                 for pull_rule in pull_rules_list:
                     pull_obj.create(cr, uid, vals=pull_rule, context=context)
                 #if the warehouse is also set as default resupply method, assign this route automatically to the warehouse
@@ -3004,7 +3037,7 @@ class stock_warehouse(osv.osv):
             supplier_loc = location_obj.search(cr, uid, [('usage', '=', 'supplier')], context=context)
             supplier_loc = supplier_loc and supplier_loc[0] or False
         if not (customer_loc and supplier_loc):
-            raise osv.except_osv(_('Error!'), _('Can\'t find any customer or supplier location.'))
+            raise UserError(_('Can\'t find any customer or supplier location.'))
         return location_obj.browse(cr, uid, [customer_loc, supplier_loc], context=context)
 
     def switch_location(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
@@ -3035,7 +3068,7 @@ class stock_warehouse(osv.osv):
             'sequence': 10,
         }
 
-    def _get_supply_pull_rules(self, cr, uid, supplied_warehouse, values, new_route_id, context=None):
+    def _get_supply_pull_rules(self, cr, uid, supply_warehouse, values, new_route_id, context=None):
         pull_rules_list = []
         for from_loc, dest_loc, pick_type_id, warehouse in values:
             pull_rules_list.append({
@@ -3046,8 +3079,8 @@ class stock_warehouse(osv.osv):
                 'action': 'move',
                 'picking_type_id': pick_type_id,
                 'procure_method': warehouse.lot_stock_id.id != from_loc.id and 'make_to_order' or 'make_to_stock', # first part of the resuply route is MTS
-                'warehouse_id': supplied_warehouse.id,
-                'propagate_warehouse_id': warehouse.id,
+                'warehouse_id': warehouse.id,
+                'propagate_warehouse_id': supply_warehouse,
             })
         return pull_rules_list
 
@@ -3089,7 +3122,7 @@ class stock_warehouse(osv.osv):
             mto_route_id = route_obj.search(cr, uid, [('name', 'like', _('Make To Order'))], context=context)
             mto_route_id = mto_route_id and mto_route_id[0] or False
         if not mto_route_id:
-            raise osv.except_osv(_('Error!'), _('Can\'t find any generic Make To Order route.'))
+            raise UserError(_('Can\'t find any generic Make To Order route.'))
         return mto_route_id
 
     def _check_remove_mto_resupply_rules(self, cr, uid, warehouse, context=None):
@@ -3537,7 +3570,7 @@ class stock_warehouse(osv.osv):
                     pass
         if 'default_resupply_wh_id' in vals:
             if vals.get('default_resupply_wh_id') == warehouse.id:
-                raise osv.except_osv(_('Warning'),_('The default resupply warehouse should be different than the warehouse itself!'))
+                raise UserError(_('The default resupply warehouse should be different than the warehouse itself!'))
             if warehouse.default_resupply_wh_id:
                 #remove the existing resupplying route on the warehouse
                 to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', warehouse.default_resupply_wh_id.id)], context=context)
@@ -3698,9 +3731,28 @@ class stock_package(osv.osv):
         """Returns packages from quants for store"""
         res = set()
         for quant in self.browse(cr, uid, ids, context=context):
-            if quant.package_id:
-                res.add(quant.package_id.id)
+            pack = quant.package_id
+            while pack:
+                res.add(pack.id)
+                pack = pack.parent_id
         return list(res)
+
+    def _get_package_info(self, cr, uid, ids, name, args, context=None):
+        quant_obj = self.pool.get("stock.quant")
+        default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        res = dict((res_id, {'location_id': False, 'company_id': default_company_id, 'owner_id': False}) for res_id in ids)
+        for pack in self.browse(cr, uid, ids, context=context):
+            quants = quant_obj.search(cr, uid, [('package_id', 'child_of', pack.id)], context=context)
+            if quants:
+                quant = quant_obj.browse(cr, uid, quants[0], context=context)
+                res[pack.id]['location_id'] = quant.location_id.id
+                res[pack.id]['owner_id'] = quant.owner_id.id
+                res[pack.id]['company_id'] = quant.company_id.id
+            else:
+                res[pack.id]['location_id'] = False
+                res[pack.id]['owner_id'] = False
+                res[pack.id]['company_id'] = False
+        return res
 
     def _get_packages_to_relocate(self, cr, uid, ids, context=None):
         res = set()
@@ -3709,20 +3761,6 @@ class stock_package(osv.osv):
             if pack.parent_id:
                 res.add(pack.parent_id.id)
         return list(res)
-
-    def _get_package_info(self, cr, uid, ids, name, args, context=None):
-        default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        res = dict((res_id, {'location_id': False, 'company_id': default_company_id, 'owner_id': False}) for res_id in ids)
-        for pack in self.browse(cr, uid, ids, context=context):
-            if pack.quant_ids:
-                res[pack.id]['location_id'] = pack.quant_ids[0].location_id.id
-                res[pack.id]['owner_id'] = pack.quant_ids[0].owner_id and pack.quant_ids[0].owner_id.id or False
-                res[pack.id]['company_id'] = pack.quant_ids[0].company_id.id
-            elif pack.children_ids:
-                res[pack.id]['location_id'] = pack.children_ids[0].location_id and pack.children_ids[0].location_id.id or False
-                res[pack.id]['owner_id'] = pack.children_ids[0].owner_id and pack.children_ids[0].owner_id.id or False
-                res[pack.id]['company_id'] = pack.children_ids[0].company_id and pack.children_ids[0].company_id.id or False
-        return res
 
     _columns = {
         'name': fields.char('Package Reference', select=True, copy=False),
@@ -3768,7 +3806,7 @@ class stock_package(osv.osv):
             quants = [x for x in quant_obj.browse(cr, uid, quant_ids, context=context) if x.qty > 0]
             location_id = quants and quants[0].location_id.id or False
             if not [quant.location_id.id == location_id for quant in quants]:
-                raise osv.except_osv(_('Error'), _('Everything inside a package should be in the same location'))
+                raise UserError(_('Everything inside a package should be in the same location'))
         return True
 
     def action_print(self, cr, uid, ids, context=None):

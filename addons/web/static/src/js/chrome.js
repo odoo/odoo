@@ -7,7 +7,8 @@ var instance = openerp;
 openerp.web.chrome = {};
 
 var QWeb = instance.web.qweb,
-    _t = instance.web._t;
+    _t = instance.web._t,
+    _lt = instance.web._lt;
 
 instance.web.Notification =  instance.web.Widget.extend({
     template: 'Notification',
@@ -232,7 +233,7 @@ instance.web.Dialog = instance.web.Widget.extend({
                 if (opened_modal.length > 0){
                     //we still have other opened modal so we should focus it
                     opened_modal[opened_modal.length-1].focus();
-                    //keep class modal-open (deleted by bootstrap hide fnct) on body 
+                    //keep class modal-open (deleted by bootstrap hide fnct) on body
                     //to allow scrolling inside the modal
                     $('body').addClass('modal-open');
                 }
@@ -260,8 +261,52 @@ instance.web.CrashManager = instance.web.Class.extend({
             this.show_warning({type: "Session Expired", data: { message: _t("Your Odoo session expired. Please refresh the current web page.") }});
             return;
         }
-        if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning" || error.data.exception_type === "access_error") {
+        var map_title ={
+            user_error: _lt('Warning'),
+            warning: _lt('Warning'),
+            access_error: _lt('Access Error'),
+            missing_error: _lt('Missing Record'),
+            validation_error: _lt('Validation Error'),
+            except_orm: _lt('Global Business Error'),
+            access_denied: _lt('Access Denied'),
+        };
+        if (_.has(map_title, error.data.exception_type)) {
+            if(error.data.exception_type == 'except_orm'){
+                if(error.data.arguments[1]) {
+                    error = _.extend({}, error,
+                                {
+                                    data: _.extend({}, error.data,
+                                        {
+                                            message: error.data.arguments[1],
+                                            title: error.data.arguments[0] !== 'Warning' ? (" - " + error.data.arguments[0]) : '',
+                                        })
+                                });
+                }
+                else {
+                    error = _.extend({}, error,
+                                {
+                                    data: _.extend({}, error.data,
+                                        {
+                                            message: error.data.arguments[0],
+                                            title:  '',
+                                        })
+                                });
+                }
+            }
+            else {
+                error = _.extend({}, error,
+                            {
+                                data: _.extend({}, error.data,
+                                    {
+                                        message: error.data.arguments[0],
+                                        title: map_title[error.data.exception_type] !== 'Warning' ? (" - " + map_title[error.data.exception_type]) : '',
+                                    })
+                            });
+            }
+
             this.show_warning(error);
+        //InternalError
+
         } else {
             this.show_error(error);
         }
@@ -270,12 +315,10 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
-        if (error.data.exception_type === "except_osv") {
-            error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
-        }
         new instance.web.Dialog(this, {
             size: 'medium',
-            title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
+            title: "Odoo " + (_.str.capitalize(error.type) || _t("Warning")),
+            subtitle: error.data.title,
             buttons: [
                 {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
             ],
@@ -344,7 +387,7 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
             size: 'medium',
             title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
-                {text: error.data.arguments[2], 
+                {text: error.data.arguments[2],
                     oe_link_class : 'oe_highlight',
                     post_text : _t("or"),
                     click: function() {
@@ -557,12 +600,9 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.do_notify(_t("Backed"), _t("Database backed up successfully"));
             },
             error: function(error){
-               if(error){
-                  self.display_error({
-                        title: _t("Backup Database"),
-                        error: 'AccessDenied'
-                  });
-               }
+                if (error && error[1]) {
+                    self.display_error(error[1][0]);
+                }
             },
             complete: function() {
                 self.unblockUI();
@@ -706,9 +746,9 @@ instance.web.client_actions.add("reload_context", "instance.web.ReloadContext");
  * If can't go back in history stack, will go back to home.
  */
 instance.web.HistoryBack = function(parent) {
-    if (!parent.history_back()) {
+    parent.history_back().fail(function() {
         instance.web.Home(parent);
-    }
+    });
 };
 instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
 
@@ -865,7 +905,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         var $systray = this.$el.parents().find('.oe_systray');
 
         $more.children('li').insertBefore($more_container);  // Pull all the items out of the more menu
-        
+
         // 'all_outside' beahavior should display all the items, so hide the more menu and exit
         if (behavior === 'all_outside') {
             // Show list of menu items
@@ -1210,7 +1250,7 @@ instance.web.Client = instance.web.Widget.extend({
         this.crashmanager =  new instance.web.CrashManager();
         instance.session.on('error', this.crashmanager, this.crashmanager.rpc_error);
         self.notification = new instance.web.Notification(this);
-        self.notification.appendTo(self.$el);
+        self.notification.appendTo(self.$el.find('.openerp'));
         self.loading = new instance.web.Loading(self);
         self.loading.appendTo(self.$('.openerp_webclient_container'));
         self.action_manager = new instance.web.ActionManager(self);
@@ -1259,7 +1299,7 @@ instance.web.WebClient = instance.web.Client.extend({
         $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
         if ($.blockUI) {
             var imgkit = Math.floor(Math.random() * 2 + 1);
-            $.blockUI.defaults.message = '<img src="http://www.amigrave.com/loading-kitten/' + imgkit + '.gif" class="loading-kitten">';
+            $.blockUI.defaults.message = '<img src="/web/static/src/img/k-waiting' + imgkit + '.gif" class="loading-kitten">';
         }
     },
     /**
@@ -1308,28 +1348,32 @@ instance.web.WebClient = instance.web.Client.extend({
         this.$('.oe_logo_edit_admin').click(function(ev) {
             self.logo_edit(ev);
         });
-
         this.$('.oe_logo img').click(function(ev) {
 	        self.on_logo_click(ev);
 	    });
+
+        // Menu is rendered server-side thus we don't want the widget to create any dom
+        self.menu = new instance.web.Menu(self);
+        self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
+        self.menu.on('menu_click', this, this.on_menu_action);
+
         // Create the user menu (rendered client-side)
         self.user_menu = new instance.web.UserMenu(self);
         var user_menu_loaded = self.user_menu.appendTo(this.$el.parents().find('.oe_user_menu_placeholder'));
         self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
+
         // Create the systray menu (rendered server-side)
         self.systray_menu = new instance.web.SystrayMenu(self);
         self.systray_menu.setElement(this.$el.parents().find('.oe_systray'));
         var systray_menu_loaded = self.systray_menu.start();
-        // Create and render the menu once both systray and user menus are rendered
+
+        // Start the menu once both systray and user menus are rendered
         // to prevent overflows while loading
-        // Menu is rendered server-side thus we don't want the widget to create any dom
-        self.menu = new instance.web.Menu(self);
-        self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
-        self.menu.on('menu_click', this, this.on_menu_action);
         $.when(systray_menu_loaded, user_menu_loaded).done(function() {
             self.menu.start();
         });
+
         self.bind_hashchange();
         self.set_title();
         self.check_timezone();

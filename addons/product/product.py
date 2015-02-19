@@ -33,6 +33,8 @@ import psycopg2
 
 import openerp.addons.decimal_precision as dp
 from openerp.tools.float_utils import float_round, float_compare
+from openerp.exceptions import UserError
+from openerp.exceptions import except_orm
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
@@ -120,7 +122,7 @@ class product_uom(osv.osv):
     _order = "name"
     _columns = {
         'name': fields.char('Unit of Measure', required=True, translate=True),
-        'category_id': fields.many2one('product.uom.categ', 'Product Category', required=True, ondelete='cascade',
+        'category_id': fields.many2one('product.uom.categ', 'Unit of Measure Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
         'factor': fields.float('Ratio', required=True, digits=0, # force NUMERIC with unlimited precision
             help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
@@ -166,7 +168,7 @@ class product_uom(osv.osv):
             context = {}
         if from_unit.category_id.id != to_unit.category_id.id:
             if context.get('raise-exception', True):
-                raise osv.except_osv(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
+                raise UserError(_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name))
             else:
                 return qty
         amount = qty/from_unit.factor
@@ -199,7 +201,7 @@ class product_uom(osv.osv):
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
                 if uom.category_id.id != vals['category_id']:
-                    raise osv.except_osv(_('Warning!'),_("Cannot change the category of existing Unit of Measure '%s'.") % (uom.name,))
+                    raise UserError(_("Cannot change the category of existing Unit of Measure '%s'.") % (uom.name,))
         return super(product_uom, self).write(cr, uid, ids, vals, context=context)
 
 
@@ -384,7 +386,7 @@ class product_attribute_value(osv.osv):
         ctx = dict(context or {}, active_test=False)
         product_ids = self.pool['product.product'].search(cr, uid, [('attribute_value_ids', 'in', ids)], context=ctx)
         if product_ids:
-            raise osv.except_osv(_('Integrity Error!'), _('The operation cannot be completed:\nYou trying to delete an attribute value with a reference on a product variant.'))
+            raise UserError(_('The operation cannot be completed:\nYou trying to delete an attribute value with a reference on a product variant.'))
         return super(product_attribute_value, self).unlink(cr, uid, ids, context=context)
 
 class product_attribute_price(osv.osv):
@@ -401,7 +403,7 @@ class product_attribute_line(osv.osv):
     _columns = {
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
         'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True, ondelete='restrict'),
-        'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Product Attribute Value'),
+        'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Product Attribute Value(s)'),
     }
 
 
@@ -453,6 +455,17 @@ class product_template(osv.osv):
             res.setdefault(id, 0.0)
         return res
 
+    def _set_product_template_price(self, cr, uid, id, name, value, args, context=None):
+        product_uom_obj = self.pool.get('product.uom')
+
+        product = self.browse(cr, uid, id, context=context)
+        if 'uom' in context:
+            uom = product.uos_id or product.uom_id
+            value = product_uom_obj._compute_price(cr, uid,
+                    context['uom'], value, uom.id)
+
+        return product.write({'list_price': value})
+
     def get_history_price(self, cr, uid, product_tmpl, company_id, date=None, context=None):
         if context is None:
             context = {}
@@ -479,7 +492,7 @@ class product_template(osv.osv):
 
     def _get_product_variant_count(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for product in self.browse(cr, uid, ids):
+        for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = len(product.product_variant_ids)
         return res
 
@@ -498,11 +511,12 @@ class product_template(osv.osv):
         'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
-        'price': fields.function(_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
+        'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'), 
-                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders.", 
+                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
+                                               "Expressed in the default unit of measure of the product.",
                                           groups="base.group_user", string="Cost Price"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
@@ -690,7 +704,8 @@ class product_template(osv.osv):
                 try:
                     with cr.savepoint():
                         product_obj.unlink(cr, uid, [variant_id], context=ctx)
-                except (psycopg2.Error, osv.except_osv):
+                #We catch all kind of exception to be sure that the operation doesn't fail.
+                except (psycopg2.Error, except_orm):
                     product_obj.write(cr, uid, [variant_id], {'active': False}, context=ctx)
                     pass
         return True
@@ -724,7 +739,7 @@ class product_template(osv.osv):
                 old_uom = product.uom_id
                 if old_uom != new_uom:
                     if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', [x.id for x in product.product_variant_ids]), ('state', '!=', 'cancel')], context=context):
-                        raise osv.except_osv(_('Unit of Measure can not be changed anymore!'), _("As there are existing stock moves of this product, you can not change the Unit of Measurement anymore. "))
+                        raise UserError(_('Unit of Measure can not be changed anymore!') + " " + _("As there are existing stock moves of this product, you can not change the Unit of Measurement anymore. "))
         if 'standard_price' in vals:
             for prod_template_id in ids:
                 self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
@@ -921,7 +936,7 @@ class product_product(osv.osv):
         return result
 
     _columns = {
-        'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
+        'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
         'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
@@ -1024,7 +1039,9 @@ class product_product(osv.osv):
                 sellers = filter(lambda x: x.name.id in partner_ids, product.seller_ids)
             if sellers:
                 for s in sellers:
-                    seller_variant = s.product_name and "%s (%s)" % (s.product_name, variant) or False
+                    seller_variant = s.product_name and (
+                        variant and "%s (%s)" % (s.product_name, variant) or s.product_name
+                        ) or False
                     mydict = {
                               'id': product.id,
                               'name': seller_variant or name,

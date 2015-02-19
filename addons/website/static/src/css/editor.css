@@ -68,10 +68,22 @@
   display: none;
 }
 
-.o_editable[data-oe-model][data-oe-type]:hover {
-  -moz-box-shadow: 0 0 10px 3px rgba(94, 255, 0, 0.8);
-  -webkit-box-shadow: 0 0 10px 3px rgba(94, 255, 0, 0.8);
-  box-shadow: 0 0 10px 3px rgba(94, 255, 0, 0.8);
+.o_editable:not(:empty):not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover, .o_editable[data-oe-type]:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover {
+  /* to do change into primary color in less */
+  -moz-box-shadow: #3071a9 0 0 5px 2px inset;
+  -webkit-box-shadow: #3071a9 0 0 5px 2px inset;
+  box-shadow: #3071a9 0 0 5px 2px inset;
+}
+.o_editable:focus, .o_editable[data-oe-type] {
+  min-height: 0.8em;
+  min-width: 8px;
+}
+.o_editable.o_is_inline_editable {
+  display: inline-block;
+}
+
+.editor_enable [data-oe-readonly]:hover {
+  cursor: default;
 }
 
 /* Prevent the text contents of draggable elements from being selectable. */
@@ -151,11 +163,11 @@
   display: none !important;
 }
 
-.o_editable .css_editable_mode_hidden {
+.editor_enable .css_editable_mode_hidden {
   display: none;
 }
 
-.o_editable .css_non_editable_mode_hidden {
+.editor_enable .css_non_editable_mode_hidden {
   display: block !important;
 }
 
@@ -166,9 +178,35 @@
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
   background-image: url("/website/static/src/img/edit_here.png") !important;
 }
-
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
   content: "Press The Top-Left Edit Button" !important;
+}
+
+.o_editable.oe_structure.oe_empty > p:empty:only-child, .o_editable[data-oe-type=html] > p:empty:only-child {
+  color: #aaa;
+}
+.o_editable.oe_structure.oe_empty:empty, .o_editable[data-oe-type=html]:empty, .o_editable.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, .o_editable[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child, .o_editable.oe_structure.oe_empty > p:empty:only-child, .o_editable[data-oe-type=html] > p:empty:only-child {
+  background-image: none !important;
+}
+.o_editable.oe_structure.oe_empty:empty:before, .o_editable[data-oe-type=html]:empty:before, .o_editable.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, .o_editable[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before, .o_editable.oe_structure.oe_empty > p:empty:only-child:before, .o_editable[data-oe-type=html] > p:empty:only-child:before {
+  content: "Write your text here" !important;
+}
+.o_editable.oe_structure.oe_empty:empty:focus:before, .o_editable[data-oe-type=html]:empty:focus:before, .o_editable.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:focus:before, .o_editable[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:focus:before, .o_editable.oe_structure.oe_empty > p:empty:only-child:focus:before, .o_editable[data-oe-type=html] > p:empty:only-child:focus:before {
+  display: none;
+}
+
+#oe_snippets ~ #wrapwrap .oe_structure.oe_empty:empty, #oe_snippets ~ #wrapwrap [data-oe-type=html]:empty, #oe_snippets ~ #wrapwrap .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, #oe_snippets ~ #wrapwrap [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
+  background-image: url("/website/static/src/img/drag_here.png") !important;
+}
+#oe_snippets ~ #wrapwrap .oe_structure.oe_empty:empty:before, #oe_snippets ~ #wrapwrap [data-oe-type=html]:empty:before, #oe_snippets ~ #wrapwrap .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, #oe_snippets ~ #wrapwrap [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Drag Building Blocks Here" !important;
+}
+
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
+  background-image: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 220px !important;
 }
 
 [data-oe-type=html].oe_no_empty:empty:before {
@@ -357,14 +395,7 @@ ul.oe_menu_editor .disclose {
 .modal #icon-search {
   padding-left: 2.5em;
 }
-.modal #fa-preview {
-  text-align: center;
-}
-.modal #fa-preview span {
-  cursor: pointer;
-  padding: 0 15px;
-}
-.modal #fa-preview .font-icons-selected {
+.modal .font-icons-selected {
   background-color: #ddd;
 }
 

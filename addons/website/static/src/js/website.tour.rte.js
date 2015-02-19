@@ -21,10 +21,6 @@
                 wait:      250
             },
             {
-                element:   'button[data-action=snippet]',
-                title:     "Insert building blocks",
-            },
-            {
                 snippet:   '#snippet_structure .oe_snippet.o_block_text_image',
                 title:     "Drag & Drop a Text-Image Block",
             },
@@ -47,7 +43,7 @@
                     var $el = $(this.element);
                     var html = '<h1 id="text_title_id">Batnae municipium in Anthemusia</h1>     '+
                         '\n     <p>Batnae municipium in Anthemusia conditum Macedonum manu priscorum ab Euphrate flumine brevi spatio disparatur, refertum mercatoribus opulentis, ubi annua sollemnitate prope Septembris initium mensis ad.</p>'+
-                        '\n     <p>    Quam <img class="img-responsive-25" src="/website/static/src/img/text_image.png"/> quidem <span class="fa fa-flag fa-2x"></span> partem accusationis admiratus sum et moleste tuli potissimum esse Atratino datam. Neque enim decebat neque aetas.</p>'+
+                        '\n     <p>    Quam <img style="width: 25%" src="/website/static/src/img/text_image.png"/> quidem <span class="fa fa-flag fa-2x"></span> partem accusationis admiratus sum et moleste tuli potissimum esse Atratino datam. Neque enim decebat neque aetas.</p>'+
                         '\n     <p>Et hanc quidem praeter oppida multa duae civitates exornant Seleucia opus Seleuci regis, et Claudiopolis quam deduxit coloniam Claudius Caesar. Isaura enim antehac nimium potens, olim subversa ut rebellatrix.</p>'+
                         '<p>Harum trium sententiarum nulli prorsus assentior.</p>';
                     $el.html(html);
@@ -65,12 +61,12 @@
             },
             {
                 waitFor:   '#wrapwrap > main > div > section .row > div:first',
-                element:   '.note-popover button[data-event="color"]',
+                element:   '.note-popover button[data-event="color"]:visible',
                 title:     "change text bg-color after triple click",
             },
             {
                 waitFor:   '#wrapwrap > main > div > section .row > div:first:not(:has(p font)) h1 font',
-                element:   '.note-color button.dropdown-toggle',
+                element:   '.note-color button.dropdown-toggle:visible',
                 title:     "change selection to change text color",
                 onload: function () {
                     var $el = $('#wrapwrap > main > div > section .row > div:first:not(:has(p font)) h1 font');
@@ -79,12 +75,12 @@
                 }
             },
             {
-                element:   'div[data-target-event="foreColor"] .note-color-row:eq(1) button[data-event="foreColor"]:first',
+                element:   'div[data-target-event="foreColor"]:visible .note-color-row:eq(1) button[data-event="foreColor"]:first',
                 title:     "change text color",
             },
             {
                 waitFor:   '#wrapwrap > main > div > section .row > div:first h1 font:eq(2)',
-                element:   '.note-color button.dropdown-toggle',
+                element:   '.note-color button.dropdown-toggle:visible',
                 title:     "change selection to change text bg-color again",
                 onload: function () {
                     var $el = $('#wrapwrap > main > div > section .row > div:first h1 font:eq(2)');
@@ -98,7 +94,7 @@
             },
             {
                 waitFor:   '#wrapwrap > main > div > section .row > div:first h1 font:eq(4)',
-                element:   '.note-color button.dropdown-toggle',
+                element:   '.note-color button.dropdown-toggle:visible',
                 title:     "change selection (h1 and p) to change text color with class",
                 onload: function () {
                     var $el = $('#wrapwrap > main > div > section .row > div:first h1 font:eq(4)');
@@ -107,7 +103,7 @@
                 }
             },
             {
-                element:   'div[data-target-event="foreColor"] button[data-event="foreColor"][data-value^="text-"]:first',
+                element:   'div[data-target-event="foreColor"]:visible button[data-event="foreColor"][data-value^="text-"]:first',
                 title:     "change text foreColor again",
             },
             {
@@ -157,7 +153,7 @@
             },
             {
                 waitFor:   '#wrapwrap > main > div > section .row > div:first:has( font:last:containsExact(i) ):has( p:first:containsRegex(/^uam/) )',
-                element:   '#wrapwrap > main > div > section .row > div:first img.img-responsive-25',
+                element:   '#wrapwrap > main > div > section .row > div:first img[style*="25%"]',
                 title:     "click on image",
             },
             {
@@ -165,7 +161,7 @@
                 title:     "Click on resize half",
             },
             {
-                waitFor:   '#wrapwrap > main > div > section .row > div:first img.img-responsive-50',
+                waitFor:   '#wrapwrap > main > div > section .row > div:first img[style*="50%"]',
                 element:   '.note-image-popover:visible button[data-event="showImageDialog"]',
                 title:     "Click on edit picture",
             },
@@ -179,16 +175,16 @@
                 title:     "select a pictogram",
             },
             {
-                waitFor:   '#editor-media-icon.active #fa-icon[value]',
-                element:   '#editor-media-icon.active #fa-preview span[data-size="fa-3x"]',
-                title:     "select a size for the pictogram",
-            },
-            {
-                waitFor:   '#editor-media-icon.active #fa-preview span[data-size="fa-3x"].font-icons-selected',
+                waitFor:   '#editor-media-icon.active span.font-icons-selected',
                 element:   '.modal button.save',
                 title:     "save pictogram",
             },
             {
+                element:   '.note-image-popover button[data-event="resizefa"][data-value="3"]',
+                title:     "select a size for the pictogram",
+            },
+            {
+                waitFor:   '#wrapwrap span.fa-3x',
                 element:   '.note-image-popover:visible button[data-event="floatMe"][data-value="right"]',
                 title:     "click on float right",
             },

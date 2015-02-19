@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class Bank(osv.osv):
     _description='Bank'
@@ -128,7 +129,7 @@ class res_partner_bank(osv.osv):
             change_default=True, domain="[('country_id','=',country_id)]"),
         'company_id': fields.many2one('res.company', 'Company',
             ondelete='cascade', help="Only if this bank account belong to your company"),
-        'partner_id': fields.many2one('res.partner', 'Account Owner', ondelete='cascade', select=True, domain=['|',('is_company','=',True),('parent_id','=',False)]),
+        'partner_id': fields.many2one('res.partner', 'Account Holder', ondelete='cascade', select=True, domain=['|',('is_company','=',True),('parent_id','=',False)]),
         'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),
@@ -186,7 +187,7 @@ class res_partner_bank(osv.osv):
                     data = dict((k, v or '') for (k, v) in data.iteritems())
                     name = bank_code_format[data['state']] % data
                 except Exception:
-                    raise osv.except_osv(_("Formating Error"), _("Invalid Bank Account Type Name format."))
+                    raise UserError(_("Formating Error") + ':' + _("Invalid Bank Account Type Name format."))
             res.append((data.get('id', False), name))
         return res
 
@@ -216,10 +217,11 @@ class res_partner_bank(osv.osv):
         return {'value': result}
 
 
-    def onchange_partner_id(self, cr, uid, id, partner_id, context=None):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         result = {}
-        if partner_id:
-            part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+        if partner_id is not False:
+            # be careful: partner_id may be a NewId
+            part = self.pool['res.partner'].browse(cr, uid, [partner_id], context=context)
             result['owner_name'] = part.name
             result['street'] = part.street or False
             result['city'] = part.city or False

@@ -3,6 +3,7 @@ $mainTableBordersPadding: 3px;
 $lightBorder: 1px solid #bbb;
 $accountingBorder: 1px solid #000;
 $initialLineBackground: #f0f0f0;
+$infoColor: #44c;
 // Warning, this value is also specified in the instance.web.account.abstractReconciliation widget
 $aestetic_animation_speed: 300ms;
 
@@ -88,6 +89,34 @@ $aestetic_animation_speed: 300ms;
                 1px -1px 0 #f5f5f5,
                 -1px 1px 0 #f5f5f5,
                  1px 1px 0 #f5f5f5;
+        }
+    }
+
+    .show_more_container {
+        text-align: center;
+        
+        .show_more {
+            display: none;
+        }
+    }
+    .notification_area {
+        margin: 0 $actionColWidth;
+        .fa {
+            font-size: 20px;
+            margin-left: 7px;
+            line-height: 14px;
+            position: relative;
+            top: 3px;
+        }
+    }
+
+    .interface_options {
+        margin-bottom: 25px;
+        padding-left: $actionColWidth;
+
+        .oe_radio_input {
+            border: none;
+            display: inline;
         }
     }
 
@@ -259,14 +288,26 @@ $aestetic_animation_speed: 300ms;
                 padding-right: 10px;
                 font-weight: bold;
             }
+
+            tr.one_line_info {
+                td {
+                    padding-top: 10px;
+                    text-align: center;
+                    color: $infoColor;
+                }
+            }
         }
 
         /* arrays of move lines */
         .accounting_view, .match table {
             width: 100%;
 
-            tr {
+            tbody tr {
                 cursor: pointer;
+            }
+
+            tr.already_reconciled {
+                color: $infoColor;
             }
 
             td {
@@ -320,7 +361,7 @@ $aestetic_animation_speed: 300ms;
                 color: #555;
             }
 
-            tr:hover .glyphicon, tr.active .glyphicon {
+            tr:hover .glyphicon, tr:focus .glyphicon, tr.active .glyphicon {
                 visibility: visible;
             }
 
@@ -437,6 +478,7 @@ $aestetic_animation_speed: 300ms;
             border: 1px solid #d5d5d5;
             border-radius: 5px;
             padding: 10px;
+            overflow: auto;
 
             .quick_add {
                 margin-bottom: 10px;

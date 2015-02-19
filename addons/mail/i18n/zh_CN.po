@@ -7,15 +7,619 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-10-28 05:22+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-29 07:49+0000\n"
-"X-Generator: Launchpad (build 17203)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:07+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (副本)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Add"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "添加签名"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,model_id:0 field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr "应用于"
+
+#. module: email_template
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "附件"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "自动删除"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr "用于大批量邮件"
+
+#. module: email_template
+#: field:email.template,body_html:0 field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "内容"
+
+#. module: email_template
+#: help:email.template,email_cc:0 help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "抄送收件人（可以在这里使用占位符）"
+
+#. module: email_template
+#: field:email.template,email_cc:0 field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "抄送"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,partner_to:0 help:email_template.preview,partner_to:0
+msgid ""
+"Comma-separated ids of recipient partners (placeholders may be used here)"
+msgstr "客户容器（请使用逗号分隔客户ids,可以使用占位符）"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,email_to:0 help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr "逗号分隔的收件人地址（可以在这里使用占位符）"
+
+#. module: mail
+#: view:mail.message:mail.view_message_search
+msgid "Content"
+msgstr "内容"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr ""
+
+#. module: mail
+#: field:mail.alias,create_uid:0 field:mail.compose.message,create_uid:0
+#: field:mail.group,create_uid:0 field:mail.mail,create_uid:0
+#: field:mail.message,create_uid:0 field:mail.message.subtype,create_uid:0
+#: field:mail.wizard.invite,create_uid:0
+msgid "Created by"
+msgstr "创建者"
+
+#. module: mail
+#: field:mail.alias,create_date:0 field:mail.compose.message,create_date:0
+#: field:mail.group,create_date:0 field:mail.mail,create_date:0
+#: field:mail.message,create_date:0 field:mail.message.subtype,create_date:0
+#: field:mail.wizard.invite,create_date:0
+msgid "Created on"
+msgstr "创建在"
+
+#. module: email_template
+#: field:email.template,null_value:0 field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr "默认值"
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "删除动作记录失败"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr "显示一个关联单据的选项 ，用该模版打开撰写向导"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr ""
+
+#. module: mail
+#: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
+#: selection:mail.message,type:0
+msgid "Email"
+msgstr "Email"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "邮件预览"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr "电子邮件模板"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "邮件模板预览"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "电子邮件模板"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "邮件向导"
+
+#. module: email_template
+#: field:email.template,model_object_field:0
+#: field:email_template.preview,model_object_field:0
+msgid "Field"
+msgstr "字段"
+
+#. module: email_template
+#: help:email.template,copyvalue:0 help:email_template.preview,copyvalue:0
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
+msgstr "生成的占位符表达式，可以复制粘贴到目标模版字段"
+
+#. module: email_template
+#: field:email.template,email_from:0 field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "发件人"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "分组"
+
+#. module: email_template
+#: field:email.template,id:0 field:email_template.preview,id:0
+msgid "ID"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,user_signature:0
+#: help:email_template.preview,user_signature:0
+msgid ""
+"If checked, the user's signature will be appended to the text version of the "
+"message"
+msgstr "如果勾选了这里，用户的签名会附加到消息的文本版本"
+
+#. module: email_template
+#: help:res.partner,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
+msgstr ""
+
+#. module: email_template
+#: field:email.template,lang:0 field:email_template.preview,lang:0
+msgid "Language"
+msgstr "语言"
+
+#. module: email_template
+#: field:email.template,write_uid:0 field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,write_date:0 field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "模型"
+
+#. module: email_template
+#: field:email.template,name:0 field:email_template.preview,name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: email_template
+#: help:email.template,report_name:0 help:email_template.preview,report_name:0
+msgid ""
+"Name to use for the generated report file (may contain placeholders)\n"
+"The extension can be omitted and will then come from the report type."
+msgstr ""
+"用于生成报表文件的名称（可以包含占位符）\n"
+"不需要指定扩展名，会按照报表类型指定扩展名"
+
+#. module: email_template
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr "Opt-Out"
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr "可选的推荐发送邮件服务器。如果没有设置，优先级最高的一个会被选中。"
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "可选的用于打印和附件的报表"
+
+#. module: email_template
+#: help:email.template,lang:0 help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
+
+#. module: email_template
+#: help:email.template,null_value:0 help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr "如果目标字段为空则使用这个值"
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "发送邮件服务器"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr ""
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,auto_delete:0 help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr "发送后永久删除这个邮件，以节省空间。"
+
+#. module: email_template
+#: field:email.template,copyvalue:0 field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr "占位符表达式"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,reply_to:0 help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "推荐的回复地址（可以在这里用占位符）"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr "预览"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr "的预览"
+
+#. module: mail
+#: view:mail.compose.message:mail.email_compose_message_wizard_form
+#: field:mail.message,partner_ids:0 field:mail.wizard.invite,partner_ids:0
+msgid "Recipients"
+msgstr "收件人"
+
+#. module: email_template
+#: field:email.template,model:0 field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr "相关单据模型"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove the contextual action to use this template on related documents"
+msgstr "移除上下文内容，以将模板用于相关的文档。"
+
+#. module: email_template
+#: field:email.template,reply_to:0 field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "回复:"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "报告文件名"
+
+#. module: email_template
+#: help:email.template,body_html:0 help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr "消息的富文本/HTML版本（这里可以使用占位符）"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "SMTP 服务器"
+
+#. module: email_template
+#: field:email_template.preview,res_id:0
+msgid "Sample Document"
+msgstr "示例文档"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "保存新的模版"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "保存为新的模版"
+
+#. module: email_template
+#: help:email.template,model_object_field:0
+#: help:email_template.preview,model_object_field:0
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at "
+"the destination of the relationship."
+msgstr ""
+"从相关单据模型中选择目标字段。\n"
+"如果这是个关系型字段，你可以选择关系型字段的目标字段。"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "发送邮件（ %s）"
+
+#. module: email_template
+#: help:email.template,email_from:0 help:email_template.preview,email_from:0
+msgid ""
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,ref_ir_value:0
+#: field:email_template.preview,ref_ir_value:0
+msgid "Sidebar Button"
+msgstr "边栏按钮"
+
+#. module: email_template
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "边栏动作"
+
+#. module: email_template
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
+msgid ""
+"Sidebar action to make this template available on records of the related "
+"document model"
+msgstr "用于在相关单据上调用此模版的边栏按钮"
+
+#. module: email_template
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "用于打开边栏动作的边栏按钮"
+
+#. module: email_template
+#: field:email.template,sub_model_object_field:0
+#: field:email_template.preview,sub_model_object_field:0
+msgid "Sub-field"
+msgstr "子字段"
+
+#. module: email_template
+#: field:email.template,sub_object:0 field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "子模型"
+
+#. module: email_template
+#: field:email.template,subject:0 field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "主题"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0 help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "主题（可以在这里使用占位符）"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr "供应商"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "模板预览"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "模板"
+
+#. module: email_template
+#: help:email.template,model_id:0 help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "使用该模版的这种类型的文档都是可选的"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
+"                                will be taken from the email template."
+msgstr ""
+
+#. module: email_template
+#: field:email.template,email_to:0 field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "发送给(Email)"
+
+#. module: email_template
+#: field:email.template,partner_to:0 field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "到（合作伙伴）"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "使用模版"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "警告"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,sub_model_object_field:0
+#: help:email_template.preview,sub_model_object_field:0
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr ""
+"如果首先选择了一个关系型字段，这个字段可用于选择目标单据类型的目标字段。"
+
+#. module: email_template
+#: help:email.template,sub_object:0 help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr "如果关系型字段被选为第一个字段，这个字段显示这个关系指向的单据类型。"
+
+#. module: email_template
+#: help:email.template,attachment_ids:0
+#: help:email_template.preview,attachment_ids:0
+msgid ""
+"You may attach files to this template, to be added to all emails created "
+"from this template"
+msgstr "你可以对这个模版附加文件，可以附加到所有基于此模版生成的邮件中"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:384
@@ -46,15 +650,13 @@ msgstr "（没有电子邮件地址）"
 #. module: mail
 #: code:addons/mail/wizard/invite.py:44
 #, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
+msgid "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
 msgstr "<div><p>你好，</p><p>%s 邀请你关注 %s 文档: %s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
 #, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
+msgid "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr "<div><p>你好，</p><p>%s 邀请你关注新文档。</p></div>"
 
 #. module: mail
@@ -72,8 +674,8 @@ msgstr ""
 #: code:addons/mail/mail_thread.py:145
 #, python-format
 msgid ""
-"<p class='oe_view_nocontent_create'>Click here to add new "
-"%(document)s</p>%(static_help)s"
+"<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>"
+"%(static_help)s"
 msgstr ""
 
 #. module: mail
@@ -93,7 +695,8 @@ msgstr ""
 "<p>\n"
 "                    <b>你的收件箱是空的。</b>\n"
 "                </p><p>\n"
-"                    你的收件箱包含了你的私人消息或者发给你的邮件 ，包括你关注的单据或者个人的信息。\n"
+"                    你的收件箱包含了你的私人消息或者发给你的邮件 ，包括你关注"
+"的单据或者个人的信息。\n"
 "                </p>\n"
 "            "
 
@@ -131,7 +734,8 @@ msgstr ""
 "<p>\n"
 "                    <b>没有待办事项</b>\n"
 "                </p><p>\n"
-"                    当你处理收件箱里的消息时，你能标记一些消息作为<i>待办事项</i>. \n"
+"                    当你处理收件箱里的消息时，你能标记一些消息作为<i>待办事项"
+"</i>. \n"
 "                    从这个菜单，你能处理你所有的待办事项。\n"
 "                </p>\n"
 "            "
@@ -239,8 +843,7 @@ msgstr "高级"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
-#: view:mail.alias:mail.view_mail_alias_tree
-#: field:mail.group,alias_id:0
+#: view:mail.alias:mail.view_mail_alias_tree field:mail.group,alias_id:0
 #: field:res.users,alias_id:0
 msgid "Alias"
 msgstr "别名"
@@ -335,31 +938,24 @@ msgid "Attach a file"
 msgstr "附加文件"
 
 #. module: mail
-#: field:mail.compose.message,attachment_ids:0
-#: view:mail.mail:mail.view_mail_form
-#: field:mail.message,attachment_ids:0
-msgid "Attachments"
-msgstr "附件"
-
-#. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
 msgstr ""
 
 #. module: mail
-#: field:mail.compose.message,author_id:0
-#: view:mail.mail:mail.view_mail_search
+#: field:mail.compose.message,author_id:0 view:mail.mail:mail.view_mail_search
 #: field:mail.message,author_id:0
 msgid "Author"
 msgstr "作者"
 
 #. module: mail
-#: help:mail.compose.message,author_id:0
-#: help:mail.message,author_id:0
+#: help:mail.compose.message,author_id:0 help:mail.message,author_id:0
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
-msgstr "消息的作者。如果没设置，email_from 可能保存一个不匹配任何合作伙伴的 email地址，"
+msgstr ""
+"消息的作者。如果没设置，email_from 可能保存一个不匹配任何合作伙伴的 email地"
+"址，"
 
 #. module: mail
 #: field:mail.compose.message,author_avatar:0
@@ -373,11 +969,6 @@ msgid "Authorized Group"
 msgstr "经授权的群组"
 
 #. module: mail
-#: field:mail.mail,auto_delete:0
-msgid "Auto Delete"
-msgstr "自动删除"
-
-#. module: mail
 #: field:mail.group,group_ids:0
 msgid "Auto Subscription"
 msgstr "自动订阅"
@@ -388,8 +979,7 @@ msgid "Auto subscription"
 msgstr ""
 
 #. module: mail
-#: help:mail.compose.message,body:0
-#: help:mail.message,body:0
+#: help:mail.compose.message,body:0 help:mail.message,body:0
 msgid "Automatically sanitized HTML contents"
 msgstr "自动整理HTML内容"
 
@@ -402,11 +992,6 @@ msgstr "最佳销售实践"
 #: model:mail.group,name:mail.group_board
 msgid "Board meetings"
 msgstr "董事会议"
-
-#. module: mail
-#: view:mail.mail:mail.view_mail_form
-msgid "Body"
-msgstr "正文"
 
 #. module: mail
 #. openerp-web
@@ -434,19 +1019,12 @@ msgid "Carbon copy message recipients"
 msgstr "抄送"
 
 #. module: mail
-#: field:mail.mail,email_cc:0
-msgid "Cc"
-msgstr "抄送"
-
-#. module: mail
-#: field:mail.compose.message,child_ids:0
-#: field:mail.message,child_ids:0
+#: field:mail.compose.message,child_ids:0 field:mail.message,child_ids:0
 msgid "Child Messages"
 msgstr "子信息"
 
 #. module: mail
-#: selection:mail.compose.message,type:0
-#: view:mail.mail:mail.view_mail_search
+#: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
 #: selection:mail.message,type:0
 msgid "Comment"
 msgstr "评论"
@@ -471,42 +1049,14 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: mail
-#: view:mail.message:mail.view_message_search
-msgid "Content"
-msgstr "内容"
-
-#. module: mail
 #: field:ir.attachment,file_type:0
 msgid "Content Type"
 msgstr "内容类型"
 
 #. module: mail
-#: field:mail.compose.message,body:0
-#: field:mail.message,body:0
+#: field:mail.compose.message,body:0 field:mail.message,body:0
 msgid "Contents"
 msgstr "内容"
-
-#. module: mail
-#: field:mail.alias,create_uid:0
-#: field:mail.compose.message,create_uid:0
-#: field:mail.group,create_uid:0
-#: field:mail.mail,create_uid:0
-#: field:mail.message,create_uid:0
-#: field:mail.message.subtype,create_uid:0
-#: field:mail.wizard.invite,create_uid:0
-msgid "Created by"
-msgstr "创建者"
-
-#. module: mail
-#: field:mail.alias,create_date:0
-#: field:mail.compose.message,create_date:0
-#: field:mail.group,create_date:0
-#: field:mail.mail,create_date:0
-#: field:mail.message,create_date:0
-#: field:mail.message.subtype,create_date:0
-#: field:mail.wizard.invite,create_date:0
-msgid "Created on"
-msgstr "创建在"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -514,14 +1064,12 @@ msgid "Creation Month"
 msgstr "创建月份"
 
 #. module: mail
-#: help:mail.compose.message,starred:0
-#: help:mail.message,starred:0
+#: help:mail.compose.message,starred:0 help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
 msgstr "当前用户用 星号 提醒关联到这条消息"
 
 #. module: mail
-#: help:mail.compose.message,to_read:0
-#: help:mail.message,to_read:0
+#: help:mail.compose.message,to_read:0 help:mail.message,to_read:0
 msgid "Current user has an unread notification linked to this message"
 msgstr "当前用户有关联到这条消息的未读的提醒"
 
@@ -532,14 +1080,12 @@ msgid "Customers"
 msgstr "客户"
 
 #. module: mail
-#: field:mail.compose.message,date:0
-#: field:mail.message,date:0
+#: field:mail.compose.message,date:0 field:mail.message,date:0
 msgid "Date"
 msgstr "日期"
 
 #. module: mail
-#: help:mail.group,message_last_post:0
-#: help:mail.thread,message_last_post:0
+#: help:mail.group,message_last_post:0 help:mail.thread,message_last_post:0
 #: help:res.partner,message_last_post:0
 msgid "Date of the last message posted on the record."
 msgstr ""
@@ -635,13 +1181,6 @@ msgid "Edit subscription"
 msgstr ""
 
 #. module: mail
-#: selection:mail.compose.message,type:0
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.message,type:0
-msgid "Email"
-msgstr "Email"
-
-#. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Email Alias"
 msgstr ""
@@ -669,8 +1208,7 @@ msgid ""
 msgstr "关联这个用户的Email 地址，收到的email被显示在用户的通知中。"
 
 #. module: mail
-#: help:mail.compose.message,email_from:0
-#: help:mail.message,email_from:0
+#: help:mail.compose.message,email_from:0 help:mail.message,email_from:0
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
@@ -680,11 +1218,6 @@ msgstr "发送者的Email地址。当收取的email没有对应的合作伙伴�
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
 msgstr ""
-
-#. module: mail
-#: model:ir.model,name:mail.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "电子邮件撰写向导"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -743,7 +1276,8 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
-"使用自动注册相关文档时用来关联模型和子模型的域。该域用来计算 getattr(related_document.relation_field)."
+"使用自动注册相关文档时用来关联模型和子模型的域。该域用来计算 "
+"getattr(related_document.relation_field)."
 
 #. module: mail
 #: field:ir.attachment,file_type_icon:0
@@ -807,12 +1341,6 @@ msgid "Following"
 msgstr "正在关注"
 
 #. module: mail
-#: field:mail.compose.message,email_from:0
-#: field:mail.message,email_from:0
-msgid "From"
-msgstr "发件人"
-
-#. module: mail
 #: code:addons/mail/res_users.py:75
 #, python-format
 msgid "Go to the configuration panel"
@@ -836,8 +1364,7 @@ msgid "Group Form"
 msgstr "群组表单"
 
 #. module: mail
-#: view:mail.group:mail.view_group_form
-#: view:mail.group:mail.view_group_tree
+#: view:mail.group:mail.view_group_form view:mail.group:mail.view_group_tree
 msgid "Group Name"
 msgstr "群组名称"
 
@@ -857,8 +1384,7 @@ msgid "Has attachments"
 msgstr "有附件"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: field:mail.mail,headers:0
+#: view:mail.mail:mail.view_mail_form field:mail.mail,headers:0
 msgid "Headers"
 msgstr ""
 
@@ -873,28 +1399,13 @@ msgid "Hide the subtype in the follower options"
 msgstr ""
 
 #. module: mail
-#: help:mail.group,message_summary:0
-#: help:mail.thread,message_summary:0
+#: help:mail.group,message_summary:0 help:mail.thread,message_summary:0
 #: help:res.partner,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
-
-#. module: mail
-#: field:mail.alias,id:0
-#: field:mail.compose.message,id:0
-#: field:mail.followers,id:0
-#: field:mail.group,id:0
-#: field:mail.mail,id:0
-#: field:mail.message,id:0
-#: field:mail.message.subtype,id:0
-#: field:mail.notification,id:0
-#: field:mail.thread,id:0
-#: field:mail.wizard.invite,id:0
-#: field:publisher_warranty.contract,id:0
-msgid "ID"
 msgstr ""
+"保留复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: mail
 #: help:mail.alias,alias_parent_thread_id:0
@@ -904,14 +1415,12 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: help:mail.followers,res_id:0
-#: help:mail.wizard.invite,res_id:0
+#: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
 msgid "Id of the followed resource"
 msgstr "被关注资源的ID"
 
 #. module: mail
-#: help:mail.group,message_unread:0
-#: help:mail.thread,message_unread:0
+#: help:mail.group,message_unread:0 help:mail.thread,message_unread:0
 #: help:res.partner,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "如果要求你关注新消息，勾选此项"
@@ -950,8 +1459,7 @@ msgid "Inbox"
 msgstr "收件箱"
 
 #. module: mail
-#: help:mail.compose.message,parent_id:0
-#: help:mail.message,parent_id:0
+#: help:mail.compose.message,parent_id:0 help:mail.message,parent_id:0
 msgid "Initial thread message."
 msgstr "初始化线索消息"
 
@@ -1006,32 +1514,9 @@ msgid "Join a group"
 msgstr "加入群组"
 
 #. module: mail
-#: field:mail.group,message_last_post:0
-#: field:mail.thread,message_last_post:0
+#: field:mail.group,message_last_post:0 field:mail.thread,message_last_post:0
 #: field:res.partner,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
-
-#. module: mail
-#: field:mail.alias,write_uid:0
-#: field:mail.compose.message,write_uid:0
-#: field:mail.group,write_uid:0
-#: field:mail.mail,write_uid:0
-#: field:mail.message,write_uid:0
-#: field:mail.message.subtype,write_uid:0
-#: field:mail.wizard.invite,write_uid:0
-msgid "Last Updated by"
-msgstr ""
-
-#. module: mail
-#: field:mail.alias,write_date:0
-#: field:mail.compose.message,write_date:0
-#: field:mail.group,write_date:0
-#: field:mail.mail,write_date:0
-#: field:mail.message,write_date:0
-#: field:mail.message.subtype,write_date:0
-#: field:mail.wizard.invite,write_date:0
-msgid "Last Updated on"
 msgstr ""
 
 #. module: mail
@@ -1099,27 +1584,28 @@ msgid ""
 "Medium-sized photo of the group. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr "群组的中等尺寸照片。它们被缩放为128x128px，纵横比保留。表单视图或者一些看板视图使用这个字段。"
+msgstr ""
+"群组的中等尺寸照片。它们被缩放为128x128px，纵横比保留。表单视图或者一些看板视"
+"图使用这个字段。"
 
 #. module: mail
 #: help:mail.group,group_ids:0
 msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
-msgstr "这些群组的成员将自动添加为关注者。注意, 如果有必要，他们能手工管理他们的订阅。"
+msgstr ""
+"这些群组的成员将自动添加为关注者。注意, 如果有必要，他们能手工管理他们的订"
+"阅。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
-#: field:mail.mail,mail_message_id:0
-#: view:mail.message:mail.view_message_form
-#: field:mail.notification,message_id:0
-#: field:mail.wizard.invite,message:0
+#: field:mail.mail,mail_message_id:0 view:mail.message:mail.view_message_form
+#: field:mail.notification,message_id:0 field:mail.wizard.invite,message:0
 msgid "Message"
 msgstr "消息"
 
 #. module: mail
-#: field:mail.compose.message,record_name:0
-#: field:mail.message,record_name:0
+#: field:mail.compose.message,record_name:0 field:mail.message,record_name:0
 msgid "Message Record Name"
 msgstr "消息记录名称"
 
@@ -1147,7 +1633,8 @@ msgid ""
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
-"消息子类型给了消息更精确的类型，特别是系统通知。例如：关于新记录建立的通知，或者流程中阶段被改变。消息子类型允许你精确地调整用户想要收到的消息。"
+"消息子类型给了消息更精确的类型，特别是系统通知。例如：关于新记录建立的通知，"
+"或者流程中阶段被改变。消息子类型允许你精确地调整用户想要收到的消息。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -1162,31 +1649,28 @@ msgid ""
 msgstr "子类型消息被关注，意味着子类型将被推送进用户的墙内。"
 
 #. module: mail
-#: help:mail.compose.message,type:0
-#: help:mail.message,type:0
+#: help:mail.compose.message,type:0 help:mail.message,type:0
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr "消息类型：Email 用于 邮件消息， 通知用户系统消息，评论用于其他消息，例如用户回复。"
+msgstr ""
+"消息类型：Email 用于 邮件消息， 通知用户系统消息，评论用于其他消息，例如用户"
+"回复。"
 
 #. module: mail
-#: help:mail.compose.message,message_id:0
-#: help:mail.message,message_id:0
+#: help:mail.compose.message,message_id:0 help:mail.message,message_id:0
 msgid "Message unique identifier"
 msgstr "消息唯一编号"
 
 #. module: mail
-#: field:mail.compose.message,message_id:0
-#: field:mail.message,message_id:0
+#: field:mail.compose.message,message_id:0 field:mail.message,message_id:0
 msgid "Message-Id"
 msgstr "Message-Id"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
-#: model:ir.ui.menu,name:mail.menu_mail_message
-#: field:mail.group,message_ids:0
-#: view:mail.message:mail.view_message_tree
-#: field:mail.thread,message_ids:0
+#: model:ir.ui.menu,name:mail.menu_mail_message field:mail.group,message_ids:0
+#: view:mail.message:mail.view_message_tree field:mail.thread,message_ids:0
 #: field:res.partner,message_ids:0
 msgid "Messages"
 msgstr "消息"
@@ -1197,8 +1681,7 @@ msgid "Messages Search"
 msgstr "消息搜索"
 
 #. module: mail
-#: help:mail.group,message_ids:0
-#: help:mail.thread,message_ids:0
+#: help:mail.group,message_ids:0 help:mail.thread,message_ids:0
 #: help:res.partner,message_ids:0
 msgid "Messages and communication history"
 msgstr "消息和通信历史"
@@ -1215,14 +1698,7 @@ msgid "Messaging Alias"
 msgstr ""
 
 #. module: mail
-#: view:mail.alias:mail.view_mail_alias_search
-#: field:mail.message.subtype,res_model:0
-msgid "Model"
-msgstr "模型"
-
-#. module: mail
-#: help:mail.followers,res_model:0
-#: help:mail.wizard.invite,res_model:0
+#: help:mail.followers,res_model:0 help:mail.wizard.invite,res_model:0
 msgid "Model of the followed resource"
 msgstr "关注资源的模型"
 
@@ -1257,13 +1733,7 @@ msgid "My Groups"
 msgstr "我的群组"
 
 #. module: mail
-#: field:mail.group,name:0
-msgid "Name"
-msgstr "姓名"
-
-#. module: mail
-#: help:mail.compose.message,record_name:0
-#: help:mail.message,record_name:0
+#: help:mail.compose.message,record_name:0 help:mail.message,record_name:0
 msgid "Name get of the related document."
 msgstr "获得相关文档的名称"
 
@@ -1371,7 +1841,9 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "所有的来邮都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
+msgstr ""
+"所有的来邮都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置"
+"了，这个将完全阻止新记录的创建。"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_my_stuff
@@ -1379,8 +1851,7 @@ msgid "Organizer"
 msgstr "个人助理"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.mail,state:0
+#: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
 msgid "Outgoing"
 msgstr "发件箱"
 
@@ -1406,8 +1877,7 @@ msgid "Parent"
 msgstr "上级"
 
 #. module: mail
-#: field:mail.compose.message,parent_id:0
-#: field:mail.message,parent_id:0
+#: field:mail.compose.message,parent_id:0 field:mail.message,parent_id:0
 msgid "Parent Message"
 msgstr "父消息"
 
@@ -1435,11 +1905,6 @@ msgid "Parent subtype, used for automatic subscription."
 msgstr "上级子类型，用来自动订阅"
 
 #. module: mail
-#: model:ir.model,name:mail.model_res_partner
-msgid "Partner"
-msgstr "业务伙伴"
-
-#. module: mail
 #: code:addons/mail/res_partner.py:51
 #, python-format
 msgid "Partner Profile"
@@ -1451,11 +1916,6 @@ msgstr "合作伙伴简介"
 msgid ""
 "Partners that have a notification pushing this message in their mailboxes"
 msgstr "推送通知消息进他们邮箱的合作伙伴"
-
-#. module: mail
-#: help:mail.mail,auto_delete:0
-msgid "Permanently delete this email after sending it, to save space"
-msgstr "发送后永久删除这个邮件，以节省空间。"
 
 #. module: mail
 #: field:mail.group,image:0
@@ -1537,17 +1997,9 @@ msgid "Receive Inbox Notifications by Email"
 msgstr ""
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.mail,state:0
+#: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
 msgid "Received"
 msgstr "已接收"
-
-#. module: mail
-#: view:mail.compose.message:mail.email_compose_message_wizard_form
-#: field:mail.message,partner_ids:0
-#: field:mail.wizard.invite,partner_ids:0
-msgid "Recipients"
-msgstr "收件人"
 
 #. module: mail
 #: field:mail.alias,alias_force_thread_id:0
@@ -1560,20 +2012,10 @@ msgid "References"
 msgstr "引用"
 
 #. module: mail
-#: field:mail.compose.message,res_id:0
-#: field:mail.followers,res_id:0
-#: field:mail.message,res_id:0
-#: field:mail.wizard.invite,res_id:0
+#: field:mail.compose.message,res_id:0 field:mail.followers,res_id:0
+#: field:mail.message,res_id:0 field:mail.wizard.invite,res_id:0
 msgid "Related Document ID"
 msgstr "相关单据编号"
-
-#. module: mail
-#: field:mail.compose.message,model:0
-#: field:mail.followers,res_model:0
-#: field:mail.message,model:0
-#: field:mail.wizard.invite,res_model:0
-msgid "Related Document Model"
-msgstr "相关单据模型"
 
 #. module: mail
 #: field:mail.group,menu_id:0
@@ -1606,22 +2048,14 @@ msgid "Reply"
 msgstr "回复"
 
 #. module: mail
-#: help:mail.compose.message,reply_to:0
-#: help:mail.message,reply_to:0
+#: help:mail.compose.message,reply_to:0 help:mail.message,reply_to:0
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
 
 #. module: mail
-#: field:mail.compose.message,reply_to:0
-#: field:mail.message,reply_to:0
-msgid "Reply-To"
-msgstr "回复到"
-
-#. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
 msgid "Retry"
 msgstr "重试"
 
@@ -1664,8 +2098,7 @@ msgid "Send Email"
 msgstr ""
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
 msgid "Send Now"
 msgstr "现在发送"
 
@@ -1689,8 +2122,7 @@ msgid "Send a message to the group"
 msgstr "发送信息到该组"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.mail,state:0
+#: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
 msgid "Sent"
 msgstr "已发送"
 
@@ -1735,11 +2167,12 @@ msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
-msgstr "群组的小尺寸照片. 被自动缩放到64x64px，保持纵横比。这个字段用于任何需要小图片的地方"
+msgstr ""
+"群组的小尺寸照片. 被自动缩放到64x64px，保持纵横比。这个字段用于任何需要小图片"
+"的地方"
 
 #. module: mail
-#: field:mail.compose.message,starred:0
-#: field:mail.message,starred:0
+#: field:mail.compose.message,starred:0 field:mail.message,starred:0
 #: field:mail.notification,starred:0
 msgid "Starred"
 msgstr "加星的邮件"
@@ -1750,17 +2183,10 @@ msgid "Starred message that goes into the todo mailbox"
 msgstr "加星号的消息进入到 待办事项 邮箱"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_search
+#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_search
 #: field:mail.mail,state:0
 msgid "Status"
 msgstr "状态"
-
-#. module: mail
-#: field:mail.compose.message,subject:0
-#: field:mail.message,subject:0
-msgid "Subject"
-msgstr "主题"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -1768,8 +2194,7 @@ msgid "Subject..."
 msgstr "主题..."
 
 #. module: mail
-#: field:mail.compose.message,subtype_id:0
-#: field:mail.followers,subtype_ids:0
+#: field:mail.compose.message,subtype_id:0 field:mail.followers,subtype_ids:0
 #: field:mail.message,subtype_id:0
 #: view:mail.message.subtype:mail.view_message_subtype_tree
 msgid "Subtype"
@@ -1789,8 +2214,7 @@ msgid "Suggested Groups"
 msgstr ""
 
 #. module: mail
-#: field:mail.group,message_summary:0
-#: field:mail.thread,message_summary:0
+#: field:mail.group,message_summary:0 field:mail.thread,message_summary:0
 #: field:res.partner,message_summary:0
 msgid "Summary"
 msgstr "摘要"
@@ -1801,8 +2225,7 @@ msgid "Support"
 msgstr "支持"
 
 #. module: mail
-#: selection:mail.compose.message,type:0
-#: selection:mail.message,type:0
+#: selection:mail.compose.message,type:0 selection:mail.message,type:0
 msgid "System notification"
 msgstr "系统通知"
 
@@ -1812,7 +2235,8 @@ msgstr "系统通知"
 msgid ""
 "Technical field holding the message notifications. Use notified_partner_ids "
 "to access notified partners."
-msgstr "技术字段支持消息提醒，使用notified_partner_ids 来访问被提醒的合作伙伴。"
+msgstr ""
+"技术字段支持消息提醒，使用notified_partner_ids 来访问被提醒的合作伙伴。"
 
 #. module: mail
 #: help:mail.group,alias_id:0
@@ -1845,7 +2269,8 @@ msgid ""
 "system user is found for that address."
 msgstr ""
 "记录所有者是根据在此别名上接受邮件来创立的。\r\n"
-"若此字段无设置，系统将依据收发地址来寻找正确的所有者，如果在那个地址上没有系统使用者可以找到的话，将使用admin账户。"
+"若此字段无设置，系统将依据收发地址来寻找正确的所有者，如果在那个地址上没有系"
+"统使用者可以找到的话，将使用admin账户。"
 
 #. module: mail
 #: code:addons/mail/mail_message.py:764
@@ -1893,18 +2318,12 @@ msgid "To"
 msgstr "收件人"
 
 #. module: mail
-#: field:mail.mail,recipient_ids:0
-msgid "To (Partners)"
-msgstr ""
-
-#. module: mail
 #: view:mail.message:mail.view_message_search
 msgid "To Read"
 msgstr "阅读"
 
 #. module: mail
-#: field:mail.compose.message,to_read:0
-#: field:mail.message,to_read:0
+#: field:mail.compose.message,to_read:0 field:mail.message,to_read:0
 msgid "To read"
 msgstr "阅读"
 
@@ -1934,8 +2353,7 @@ msgstr "在该群组中的主题讨论 ..."
 
 #. module: mail
 #: field:mail.compose.message,type:0
-#: view:mail.message:mail.view_message_search
-#: field:mail.message,type:0
+#: view:mail.message:mail.view_message_search field:mail.message,type:0
 msgid "Type"
 msgstr "类别"
 
@@ -1961,8 +2379,7 @@ msgid ""
 msgstr "可惜 这个 email 别名已经被使用，请选择一个不一样的"
 
 #. module: mail
-#: field:mail.group,message_unread:0
-#: field:mail.thread,message_unread:0
+#: field:mail.group,message_unread:0 field:mail.thread,message_unread:0
 #: field:res.partner,message_unread:0
 msgid "Unread Messages"
 msgstr "未读信息"
@@ -1986,8 +2403,7 @@ msgstr ""
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
 msgid "User"
 msgstr "用户"
 
@@ -2004,8 +2420,7 @@ msgid "Users"
 msgstr "用户"
 
 #. module: mail
-#: help:mail.compose.message,vote_user_ids:0
-#: help:mail.message,vote_user_ids:0
+#: help:mail.compose.message,vote_user_ids:0 help:mail.message,vote_user_ids:0
 msgid "Users that voted for this message"
 msgstr "投票给这条消息的用户"
 
@@ -2014,12 +2429,6 @@ msgstr "投票给这条消息的用户"
 #: field:mail.message,vote_user_ids:0
 msgid "Votes"
 msgstr "投票"
-
-#. module: mail
-#: code:addons/mail/mail_group.py:174
-#, python-format
-msgid "Warning!"
-msgstr ""
 
 #. module: mail
 #. openerp-web

@@ -214,7 +214,7 @@
                             <span t-field="event.name"/>
                         </li>
                     </ol>
-                    <ol class="breadcrumb mb0" id="event_menu" t-if="event.menu_id">
+                    <ol name="Event Menu" class="breadcrumb mb0" id="event_menu" t-if="event.menu_id" t-att-data-content_menu_id="editable and event.menu_id.id">
                         <t t-foreach="event.menu_id.child_id" t-as="submenu">
                             <t t-call="website.submenu"/>
                         </t>
@@ -398,18 +398,18 @@
                     <td>Free</td>
                     <td></td>
                     <td>
-                        <select t-if="event.seats_available" name="nb_register-0" class="form-control">
-                            <t t-foreach="range(0, event.seats_available > 9 and 10 or event.seats_available+1)" t-as="nb">
+                        <select t-if="event.seats_available or event.seats_availability == 'unlimited'" name="nb_register-0" class="form-control">
+                            <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available > 9) and 10 or event.seats_available+1)" t-as="nb">
                                 <option t-esc="nb"/>
                             </t>
                         </select>
-                        <span t-if="not event.seats_available">Sold Out</span>
+                        <span t-if="event.seats_availability == 'limited' and not event.seats_available">Sold Out</span>
                     </td>
                  </tr>
             </tbody>
         </table>
-        <t t-if="event.seats_available">
-            <button type="submit" t-if="event.seats_available" class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
+        <t t-if="event.seats_availability == 'unlimited' or event.seats_available">
+            <button type="submit" class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
         </t>
     </form>
 </template>
@@ -455,7 +455,6 @@
                                         <hr style="width:50%"/>
                                     </div>
                                 </t>
-                                <t t-set="counter" t-value="counter + ticket['quantity']"/>
                                 <t t-set="counter_type" t-value="counter_type + 1"/>
                             </t>
                         </div>
@@ -520,7 +519,7 @@
 
 <!-- Snippets -->
 <template id="country_events" name="Country Events" inherit_id="website.snippets">
-    <xpath expr="//div[@id='snippet_content']" position="inside">
+    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
         <div>
             <div class="oe_snippet_thumbnail">
                 <div style="background: white;box-shadow:none;-webkit-box-shadow:none;" class="oe_snippet_thumbnail_img" >

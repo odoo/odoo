@@ -157,13 +157,10 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             'print_receipt',
             'scale_read',
         ],
-        minimized: false,
         init: function(parent,options){
             this._super(parent,options);
             var self = this;
             
-            this.minimized = false;
-
             // for dragging the debug widget around
             this.dragging  = false;
             this.dragpos = {x:0, y:0};
@@ -202,8 +199,24 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                 event.stopPropagation();
             };
         },
+        show: function() {
+            var self = this;
+            this.$el.css({opacity:0});
+            this.$el.removeClass('oe_hidden');
+            this.$el.animate({opacity:1},250,'swing');
+        },
+        hide: function() {
+            var self = this;
+            this.$el.animate({opacity:0,},250,'swing',function(){
+                self.$el.addClass('oe_hidden');
+            });
+        },
         start: function(){
             var self = this;
+            
+            if (this.pos.debug) {
+                this.show();
+            }
 
             this.el.addEventListener('mouseleave', this.dragend_handler);
             this.el.addEventListener('mouseup',    this.dragend_handler);
@@ -215,14 +228,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             this.el.addEventListener('touchmove',  this.dragmove_handler);
 
             this.$('.toggle').click(function(){
-                var content = self.$('.content');
-                var bg      = self.$el;
-                if(!self.minimized){
-                    content.animate({'height':'0'},200);
-                }else{
-                    content.css({'height':'auto'});
-                }
-                self.minimized = !self.minimized;
+                self.hide();
             });
             this.$('.button.set_weight').click(function(){
                 var kg = Number(self.$('input.weight').val());
@@ -235,11 +241,11 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                 self.pos.proxy.debug_reset_weight();
             });
             this.$('.button.custom_ean').click(function(){
-                var ean = self.pos.barcode_reader.sanitize_ean(self.$('input.ean').val() || '0');
+                var ean = self.pos.barcode_reader.barcode_parser.sanitize_ean(self.$('input.ean').val() || '0');
                 self.$('input.ean').val(ean);
                 self.pos.barcode_reader.scan(ean);
             });
-            this.$('.button.reference').click(function(){
+            this.$('.button.barcode').click(function(){
                 self.pos.barcode_reader.scan(self.$('input.ean').val());
             });
             this.$('.button.show_orders').click(function(){
@@ -266,12 +272,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                         self.pos.db.remove_all_unpaid_orders();
                         window.location = '/';
                     },
-                });
-            });
-            _.each(this.eans, function(ean, name){
-                self.$('.button.'+name).click(function(){
-                    self.$('input.ean').val(ean);
-                    self.pos.barcode_reader.scan(ean);
                 });
             });
             _.each(this.events, function(name){
@@ -415,7 +415,12 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             this.chrome = this; // So that chrome's childs have chrome set automatically
             this.pos.gui = this.gui;
 
+            this.logo_click_time  = 0;
+            this.logo_click_count = 0;
+
             this.widget = {};   // contains references to subwidgets instances
+
+            this.cleanup_dom();
 
             this.pos.ready.done(function(){
                 self.build_chrome();
@@ -428,7 +433,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             });
         },
 
-        build_chrome: function() { 
+        cleanup_dom:  function() {
             // remove default webclient handlers that induce click delay
             $(document).off();
             $(window).off();
@@ -438,15 +443,45 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             $('document').off();
             $('.oe_web_client').off();
             $('.openerp_webclient_container').off();
+        },
 
+        build_chrome: function() { 
+            var self = this;
             FastClick.attach(document.body);
 
             instance.webclient.set_content_full_screen(true);
 
             this.renderElement();
 
+            this.$('.pos-logo').click(function(){
+                self.click_logo();
+            });
+
             if(this.pos.config.iface_big_scrollbars){
                 this.$el.addClass('big-scrollbars');
+            }
+        },
+
+        click_logo: function() {
+            if (this.pos.debug) {
+                this.widget.debug.show();
+            } else {
+                var self  = this;
+                var time  = (new Date()).getTime();
+                var delay = 500;
+                if (this.logo_click_time + 500 < time) {
+                    this.logo_click_time  = time;
+                    this.logo_click_count = 1;
+                } else {
+                    this.logo_click_time  = time;
+                    this.logo_click_count += 1;
+                    if (this.logo_click_count >= 6) {
+                        this.logo_click_count = 0;
+                        this.gui.sudo().then(function(){
+                            self.widget.debug.show();
+                        });
+                    }
+                }
             }
         },
 
@@ -483,7 +518,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             }
 
             var popup = $(QWeb.render('ErrorTracebackPopupWidget',{
-                widget: { title: title , body: body },
+                widget: { options: {title: title , body: body }},
             }));
 
             popup.find('.button').click(function(){
@@ -523,7 +558,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
         loading_show: function(){
             this.$('.loader').removeClass('oe_hidden').animate({opacity:1},150,'swing');
         },
-
         widgets: [
             {
                 'name':   'order_selector',
@@ -572,7 +606,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                 'name':  'debug',
                 'widget': module.DebugWidget,
                 'append': '.pos-content',
-                'condition': function(){ return this.pos.debug },
             },
         ],
 

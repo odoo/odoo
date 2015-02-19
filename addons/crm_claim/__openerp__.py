@@ -51,9 +51,4 @@ automatically new claims based on incoming emails.
     ],
     'installable': True,
     'auto_install': False,
-    'images': [
-        'images/claim_categories.jpeg',
-        'images/claim_stages.jpeg',
-        'images/claims.jpeg'
-    ],
 }

@@ -21,6 +21,7 @@
 
 """ High-level objects for fields. """
 
+from collections import OrderedDict
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
@@ -145,6 +146,9 @@ class Field(object):
 
         :param store: whether the field is stored in database (boolean, by
             default ``False`` on computed fields)
+
+        :param compute_sudo: whether the field should be recomputed as superuser
+            to bypass access rights (boolean, by default ``False``)
 
         The methods given for `compute`, `inverse` and `search` are model
         methods. Their signature is shown in the following example::
@@ -271,6 +275,7 @@ class Field(object):
     depends = ()                # collection of field dependencies
     recursive = False           # whether self depends on itself
     compute = None              # compute(recs) computes field on recs
+    compute_sudo = False        # whether field should be recomputed as admin
     inverse = None              # inverse(recs) inverses field on recs
     search = None               # search(recs, operator, value) searches on self
     related = None              # sequence of field names, for related fields
@@ -317,8 +322,9 @@ class Field(object):
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         if attrs.get('related'):
-            # by default, related fields are not stored
+            # by default, related fields are not stored and not copied
             attrs['store'] = attrs.get('store', False)
+            attrs['copy'] = attrs.get('copy', False)
 
         # fix for function fields overridden by regular columns
         if not isinstance(attrs.get('column'), (NoneType, fields.function)):
@@ -335,8 +341,6 @@ class Field(object):
 
         # determine self.default and cls._defaults in a consistent way
         self._determine_default(cls, name)
-
-        self.reset()
 
     def _determine_default(self, cls, name):
         """ Retrieve the default value for `self` in the hierarchy of `cls`, and
@@ -403,33 +407,40 @@ class Field(object):
         self.inverse_fields = []
 
     def setup(self, env):
-        """ Complete the setup of `self` (dependencies, recomputation triggers,
-            and other properties). This method is idempotent: it has no effect
-            if `self` has already been set up.
-        """
+        """ Make sure that `self` is set up, except for recomputation triggers. """
         if not self.setup_done:
-            self._setup(env)
+            if self.related:
+                self._setup_related(env)
+            else:
+                self._setup_regular(env)
             self.setup_done = True
 
-    def _setup(self, env):
-        """ Do the actual setup of `self`. """
-        if self.related:
-            self._setup_related(env)
+    #
+    # Setup of non-related fields
+    #
+
+    def _setup_regular(self, env):
+        """ Setup the attributes of a non-related field. """
+        recs = env[self.model_name]
+
+        def make_depends(deps):
+            return tuple(deps(recs) if callable(deps) else deps)
+
+        # convert compute into a callable and determine depends
+        if isinstance(self.compute, basestring):
+            # if the compute method has been overridden, concatenate all their _depends
+            self.depends = ()
+            for method in resolve_all_mro(type(recs), self.compute, reverse=True):
+                self.depends += make_depends(getattr(method, '_depends', ()))
+            self.compute = getattr(type(recs), self.compute)
         else:
-            self._setup_regular(env)
+            self.depends = make_depends(getattr(self.compute, '_depends', ()))
 
-        # put invalidation/recomputation triggers on field dependencies
-        model = env[self.model_name]
-        for path in self.depends:
-            self._setup_dependency([], model, path.split('.'))
-
-        # put invalidation triggers on model dependencies
-        for dep_model_name, field_names in model._depends.iteritems():
-            dep_model = env[dep_model_name]
-            dep_model._setup_fields()
-            for field_name in field_names:
-                field = dep_model._fields[field_name]
-                field._triggers.add((self, None))
+        # convert inverse and search into callables
+        if isinstance(self.inverse, basestring):
+            self.inverse = getattr(type(recs), self.inverse)
+        if isinstance(self.search, basestring):
+            self.search = getattr(type(recs), self.search)
 
     #
     # Setup of related fields
@@ -445,7 +456,6 @@ class Field(object):
         recs = env[self.model_name]
         fields = []
         for name in self.related:
-            recs._setup_fields()
             field = recs._fields[name]
             field.setup(env)
             recs = recs[name]
@@ -455,12 +465,13 @@ class Field(object):
 
         # check type consistency
         if self.type != field.type:
-            raise Warning("Type of related field %s is inconsistent with %s" % (self, field))
+            raise UserError(_("Type of related field %s is inconsistent with %s") % (self, field))
 
         # determine dependencies, compute, inverse, and search
         self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
-        self.inverse = self._inverse_related
+        if not (self.readonly or field.readonly):
+            self.inverse = self._inverse_related
         if field._description_searchable:
             # allow searching on self only if the related field is searchable
             self.search = self._search_related
@@ -523,31 +534,14 @@ class Field(object):
         return self.related_field if self.inherited else self
 
     #
-    # Setup of non-related fields
+    # Setup of field triggers
     #
 
-    def _setup_regular(self, env):
-        """ Setup the attributes of a non-related field. """
-        recs = env[self.model_name]
-
-        def make_depends(deps):
-            return tuple(deps(recs) if callable(deps) else deps)
-
-        # convert compute into a callable and determine depends
-        if isinstance(self.compute, basestring):
-            # if the compute method has been overridden, concatenate all their _depends
-            self.depends = ()
-            for method in resolve_all_mro(type(recs), self.compute, reverse=True):
-                self.depends += make_depends(getattr(method, '_depends', ()))
-            self.compute = getattr(type(recs), self.compute)
-        else:
-            self.depends = make_depends(getattr(self.compute, '_depends', ()))
-
-        # convert inverse and search into callables
-        if isinstance(self.inverse, basestring):
-            self.inverse = getattr(type(recs), self.inverse)
-        if isinstance(self.search, basestring):
-            self.search = getattr(type(recs), self.search)
+    def setup_triggers(self, env):
+        """ Add the necessary triggers to invalidate/recompute `self`. """
+        model = env[self.model_name]
+        for path in self.depends:
+            self._setup_dependency([], model, path.split('.'))
 
     def _setup_dependency(self, path0, model, path1):
         """ Make `self` depend on `model`; `path0 + path1` is a dependency of
@@ -557,7 +551,6 @@ class Field(object):
         env = model.env
         head, tail = path1[0], path1[1:]
 
-        model._setup_fields()
         if head == '*':
             # special case: add triggers on all fields of model (except self)
             fields = set(model._fields.itervalues()) - set([self])
@@ -569,8 +562,6 @@ class Field(object):
                 _logger.debug("Field %s is recursively defined", self)
                 self.recursive = True
                 continue
-
-            field.setup(env)
 
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
             field._triggers.add((self, '.'.join(path0 or ['id'])))
@@ -653,7 +644,7 @@ class Field(object):
         assert self.store or self.column
 
         # determine column parameters
-        _logger.debug("Create fields._column for Field %s", self)
+        #_logger.debug("Create fields._column for Field %s", self)
         args = {}
         for attr, prop in self.column_attrs:
             args[attr] = getattr(self, prop)
@@ -917,7 +908,13 @@ class Field(object):
                 target = env[field.model_name].search([(path, 'in', records.ids)])
                 if target:
                     spec.append((field, target._ids))
-                    target.with_env(records.env)._recompute_todo(field)
+                    # recompute field on target in the environment of records,
+                    # and as user admin if required
+                    if field.compute_sudo:
+                        target = target.with_env(records.env(user=SUPERUSER_ID))
+                    else:
+                        target = target.with_env(records.env)
+                    target._recompute_todo(field)
             else:
                 spec.append((field, None))
 
@@ -1049,8 +1046,8 @@ class Char(_String):
     type = 'char'
     size = None
 
-    def _setup(self, env):
-        super(Char, self)._setup(env)
+    def _setup_regular(self, env):
+        super(Char, self)._setup_regular(env)
         assert isinstance(self.size, (NoneType, int)), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
@@ -1252,8 +1249,8 @@ class Selection(Field):
             selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
-    def _setup(self, env):
-        super(Selection, self)._setup(env)
+    def _setup_regular(self, env):
+        super(Selection, self)._setup_regular(env)
         assert self.selection is not None, "Field %s without selection" % self
 
     def _setup_related(self, env):
@@ -1273,7 +1270,9 @@ class Selection(Field):
                 if 'selection' in field._attrs:
                     selection = field._attrs['selection']
                 if 'selection_add' in field._attrs:
-                    selection = selection + field._attrs['selection_add']
+                    # use an OrderedDict to update existing values
+                    selection_add = field._attrs['selection_add']
+                    selection = OrderedDict(selection + selection_add).items()
             else:
                 selection = None
         self.selection = selection
@@ -1340,8 +1339,8 @@ class Reference(Selection):
     def __init__(self, selection=None, string=None, **kwargs):
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
 
-    def _setup(self, env):
-        super(Reference, self)._setup(env)
+    def _setup_regular(self, env):
+        super(Reference, self)._setup_regular(env)
         assert isinstance(self.size, (NoneType, int)), \
             "Reference field %s with non-integer size %r" % (self, self.size)
 
@@ -1377,8 +1376,8 @@ class _Relational(Field):
     domain = None                       # domain for searching values
     context = None                      # context for searching values
 
-    def _setup(self, env):
-        super(_Relational, self)._setup(env)
+    def _setup_regular(self, env):
+        super(_Relational, self)._setup_regular(env)
         if self.comodel_name not in env.registry:
             _logger.warning("Field %s with unknown comodel_name %r"
                             % (self, self.comodel_name))
@@ -1663,7 +1662,6 @@ class One2many(_RelationalMulti):
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             comodel = env[self.comodel_name]
-            comodel._setup_fields()
             invf = comodel._fields[self.inverse_name]
             # In some rare cases, a `One2many` field can link to `Int` field
             # (res_model/res_id pattern). Only inverse the field if this is
@@ -1729,10 +1727,12 @@ class Many2many(_RelationalMulti):
     def _setup_regular(self, env):
         super(Many2many, self)._setup_regular(env)
 
-        if not self.relation:
-            if isinstance(self.column, fields.many2many):
+        if not self.relation and self.store:
+            # retrieve self.relation from the corresponding column
+            column = self.to_column()
+            if isinstance(column, fields.many2many):
                 self.relation, self.column1, self.column2 = \
-                    self.column._sql_names(env[self.model_name])
+                    column._sql_names(env[self.model_name])
 
         if self.relation:
             m2m = env.registry._m2m
@@ -1749,6 +1749,14 @@ class Many2many(_RelationalMulti):
     _column_id1 = property(attrgetter('column1'))
     _column_id2 = property(attrgetter('column2'))
     _column_limit = property(attrgetter('limit'))
+
+
+class Serialized(Field):
+    """ Minimal support for existing sparse and serialized fields. """
+    type = 'serialized'
+
+    def convert_to_cache(self, value, record, validate=True):
+        return value or {}
 
 
 class Id(Field):
@@ -1773,7 +1781,6 @@ class Id(Field):
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
-
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID

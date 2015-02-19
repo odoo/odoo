@@ -47,7 +47,6 @@ Main Features
 * Refund previous sales
     """,
     'author': 'OpenERP SA',
-    'images': ['images/pos_touch_screen.jpeg', 'images/pos_session.jpeg', 'images/pos_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
     'depends': ['sale_stock', 'barcodes'],
     'data': [
         'data/report_paperformat.xml',
@@ -80,6 +79,7 @@ Main Features
         'views/report_detailsofsales.xml',
         'views/report_payment.xml',
         'views/report_sessionsummary.xml',
+        'views/report_userlabel.xml',
         'views/point_of_sale.xml',
     ],
     'demo': [

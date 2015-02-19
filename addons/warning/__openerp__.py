@@ -37,5 +37,4 @@ picking and invoice. The message is triggered by the form's onchange event.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'images': ['images/customers_warnings.jpeg','images/sale_order_warning.jpeg'],
 }

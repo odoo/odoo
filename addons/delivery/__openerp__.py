@@ -44,5 +44,4 @@ invoices from picking, OpenERP is able to add and compute the shipping line.
     'test': ['test/delivery_cost.yml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/1_delivery_method.jpeg','images/2_delivery_pricelist.jpeg'],
 }

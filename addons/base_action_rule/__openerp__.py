@@ -44,5 +44,4 @@ trigger an automatic reminder email.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'images': ['images/base_action_rule1.jpeg','images/base_action_rule2.jpeg','images/base_action_rule3.jpeg'],
 }

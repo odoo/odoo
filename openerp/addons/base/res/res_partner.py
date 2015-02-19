@@ -30,6 +30,7 @@ from openerp import tools, api
 from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 ADDRESS_FORMAT_LAYOUTS = {
     '%(city)s %(state_code)s\n%(zip)s': """
@@ -537,7 +538,7 @@ class res_partner(osv.Model, format_address):
                 if partner.user_ids:
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
-                        raise osv.except_osv(_("Warning"),_("You can not change the company as the partner/user has multiple user linked with different companies."))
+                        raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
 
         result = super(res_partner, self).write(vals)
         for partner in self:
@@ -560,7 +561,7 @@ class res_partner(osv.Model, format_address):
                 'res_model': 'res.partner',
                 'view_mode': 'form',
                 'res_id': partner.commercial_partner_id.id,
-                'target': 'new',
+                'target': 'current',
                 'flags': {'form': {'action_buttons': True}}}
 
     def open_parent(self, cr, uid, ids, context=None):
@@ -617,7 +618,7 @@ class res_partner(osv.Model, format_address):
             context = {}
         name, email = self._parse_partner_name(name, context=context)
         if context.get('force_email') and not email:
-            raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address!"))
+            raise UserError(_("Couldn't create contact without email address!"))
         if not name and email:
             name = email
         rec_id = self.create(cr, uid, {self._rec_name: name or email, 'email': email or False}, context=context)
@@ -656,14 +657,19 @@ class res_partner(osv.Model, format_address):
             query = """SELECT id
                          FROM res_partner
                       {where} ({email} {operator} {percent}
-                           OR {display_name} {operator} {percent})
-                     ORDER BY {display_name}
-                    """.format(where=where_str, operator=operator,
+                           OR {display_name} {operator} {percent}
+                           OR {reference} {operator} {percent})
+                           -- don't panic, trust postgres bitmap
+                     ORDER BY {display_name} {operator} {percent} desc,
+                              {display_name}
+                    """.format(where=where_str,
+                               operator=operator,
                                email=unaccent('email'),
                                display_name=unaccent('display_name'),
+                               reference=unaccent('ref'),
                                percent=unaccent('%s'))
 
-            where_clause_params += [search_name, search_name]
+            where_clause_params += [search_name]*4
             if limit:
                 query += ' limit %s'
                 where_clause_params.append(limit)

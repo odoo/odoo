@@ -413,7 +413,7 @@ openerp.EventDispatcherMixin = _.extend({}, openerp.ParentedMixin, {
     },
     on: function(events, dest, func) {
         var self = this;
-        if (!(func instanceof Function)) {
+        if (typeof func !== "function") {
             throw new Error("Event handler must be a function.");
         }
         events = events.split(/\s+/);
@@ -478,6 +478,11 @@ openerp.PropertiesMixin = _.extend({}, openerp.EventDispatcherMixin, {
             var tmp = self.__getterSetterInternalMap[key];
             if (tmp === val)
                 return;
+            if (key === 'value' && self.field && self.field.type === 'float' && tmp && val){
+                var precision = self.field.digits ? self.field.digits[1] : 2;
+                if (openerp.web.float_is_zero(tmp - val, precision))
+                return;
+            }
             changed = true;
             self.__getterSetterInternalMap[key] = val;
             if (! options.silent)

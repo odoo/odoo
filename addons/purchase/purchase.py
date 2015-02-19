@@ -31,6 +31,7 @@ import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record_list, browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 from openerp.tools.float_utils import float_compare
+from openerp.exceptions import UserError
 
 class purchase_order(osv.osv):
 
@@ -60,15 +61,13 @@ class purchase_order(osv.osv):
         if not value: return False
         if type(ids)!=type([]):
             ids=[ids]
+        pol_obj = self.pool.get('purchase.order.line')
         for po in self.browse(cr, uid, ids, context=context):
             if po.order_line:
-                cr.execute("""update purchase_order_line set
-                        date_planned=%s
-                    where
-                        order_id=%s and
-                        (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
-            cr.execute("""update purchase_order set
-                    minimum_planned_date=%s where id=%s""", (value, po.id))
+                pol_ids = pol_obj.search(cr, uid, [
+                    ('order_id', '=', po.id), '|', ('date_planned', '=', po.minimum_planned_date), ('date_planned', '<', value)
+                ], context=context)
+                pol_obj.write(cr, uid, pol_ids, {'date_planned': value}, context=context)
         self.invalidate_cache(cr, uid, context=context)
         return True
 
@@ -159,7 +158,7 @@ class purchase_order(osv.osv):
         if not types:
             types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id', '=', False)], context=context)
             if not types:
-                raise osv.except_osv(_('Error!'), _("Make sure you have at least an incoming picking type defined"))
+                raise UserError(_("Make sure you have at least an incoming picking type defined"))
         return types[0]
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
@@ -338,7 +337,7 @@ class purchase_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a purchase order, you must cancel it first.'))
+                raise UserError(_('In order to delete a purchase order, you must cancel it first.'))
 
         # automatically sending subflow.delete upon deletion
         self.signal_workflow(cr, uid, unlink_ids, 'purchase_cancel')
@@ -414,9 +413,8 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             inv_ids+= [invoice.id for invoice in po.invoice_ids]
         if not inv_ids:
-            raise osv.except_osv(_('Error!'), _('Please create Invoices.'))
+            raise UserError(_('Please create Invoices.'))
         result['domain'] = [('id', 'in', inv_ids)]
-        return result
 
     def view_invoice(self, cr, uid, ids, context=None):
         '''
@@ -533,7 +531,7 @@ class purchase_order(osv.osv):
         todo = []
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
-                raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
+                raise UserError(_('You cannot confirm a purchase order without any purchase order line.'))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)        
@@ -550,7 +548,7 @@ class purchase_order(osv.osv):
             if not acc_id:
                 acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
             if not acc_id:
-                raise osv.except_osv(_('Error!'), _('Define an expense account for this product: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
+                raise UserError(_('Define an expense account for this product: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
         else:
             acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
         fpos = po_line.order_id.fiscal_position or False
@@ -592,10 +590,7 @@ class purchase_order(osv.osv):
                                       ('company_id', '=', order.company_id.id)],
                             limit=1)
         if not journal_ids:
-            raise osv.except_osv(
-                _('Error!'),
-                _('Define purchase journal for this company: "%s" (id:%d).') % \
-                    (order.company_id.name, order.company_id.id))
+            raise UserError(_('Define purchase journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
         return {
             'name': order.partner_ref or order.name,
             'reference': order.partner_ref or order.name,
@@ -688,15 +683,11 @@ class purchase_order(osv.osv):
             for pick in purchase.picking_ids:
                 for move in pick.move_lines:
                     if pick.state == 'done':
-                        raise osv.except_osv(
-                            _('Unable to cancel the purchase order %s.') % (purchase.name),
-                            _('You have already received some goods for it.  '))
+                        raise UserError(_('Unable to cancel the purchase order %s.') % (purchase.name) + _('You have already received some goods for it.  '))
             self.pool.get('stock.picking').action_cancel(cr, uid, [x.id for x in purchase.picking_ids if x.state != 'cancel'], context=context)
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
-                    raise osv.except_osv(
-                        _('Unable to cancel this purchase order.'),
-                        _('You must first cancel all invoices related to this purchase order.'))
+                    raise UserError(_("Unable to cancel this purchase order.") + " " + _("You must first cancel all invoices related to this purchase order."))
             self.pool.get('account.invoice') \
                 .signal_workflow(cr, uid, map(attrgetter('id'), purchase.invoice_ids), 'invoice_cancel')
         self.signal_workflow(cr, uid, ids, 'purchase_cancel')
@@ -722,7 +713,7 @@ class purchase_order(osv.osv):
             'location_id': order.partner_id.property_stock_supplier.id,
             'location_dest_id': order.location_id.id,
             'picking_id': picking_id,
-            'partner_id': order.dest_address_id.id or order.partner_id.id,
+            'partner_id': order.dest_address_id.id,
             'move_dest_id': False,
             'state': 'draft',
             'purchase_line_id': order_line.id,
@@ -830,7 +821,7 @@ class purchase_order(osv.osv):
         for order in self.browse(cr, uid, ids):
             picking_vals = {
                 'picking_type_id': order.picking_type_id.id,
-                'partner_id': order.dest_address_id.id or order.partner_id.id,
+                'partner_id': order.partner_id.id,
                 'date': max([l.date_planned for l in order.order_line]),
                 'origin': order.name
             }
@@ -1014,7 +1005,7 @@ class purchase_order_line(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.state not in ['draft', 'cancel']:
-                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
+                raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
         procurement_obj = self.pool.get('procurement.order')
         procurement_ids_to_cancel = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
         if procurement_ids_to_cancel:
@@ -1034,7 +1025,7 @@ class purchase_order_line(osv.osv):
         context = dict(context, purchase_uom_check=True)
         return self.onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
-            name=name, price_unit=price_unit, state=state, context=context)
+            name=name, price_unit=price_unit, state=state, replace=False, context=context)
 
     def _get_date_planned(self, cr, uid, supplier_info, date_order_str, context=None):
         """Return the datetime value to use as Schedule Date (``date_planned``) for
@@ -1066,7 +1057,7 @@ class purchase_order_line(osv.osv):
 
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, state='draft', context=None):
+            name=False, price_unit=False, state='draft', replace=True, context=None):
         """
         onchange handler of product_id.
         """
@@ -1086,9 +1077,9 @@ class purchase_order_line(osv.osv):
 
         # - check for the presence of partner_id and pricelist_id
         #if not partner_id:
-        #    raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
+        #    raise UserError(_('Select a partner in purchase order to choose a product.'))
         #if not pricelist_id:
-        #    raise osv.except_osv(_('No Pricelist !'), _('Select a price list in the purchase order form before choosing a product.'))
+        #    raise UserError(_('Select a price list in the purchase order form before choosing a product.'))
 
         # - determine name and notes based on product in partner lang.
         context_partner = context.copy()
@@ -1096,11 +1087,12 @@ class purchase_order_line(osv.osv):
             lang = res_partner.browse(cr, uid, partner_id).lang
             context_partner.update( {'lang': lang, 'partner_id': partner_id} )
         product = product_product.browse(cr, uid, product_id, context=context_partner)
-        #call name_get() with partner in the context to eventually match name and description in the seller_ids field
-        dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
-        if product.description_purchase:
-            name += '\n' + product.description_purchase
-        res['value'].update({'name': name})
+        if replace:
+            #call name_get() with partner in the context to eventually match name and description in the seller_ids field
+            dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
+            if product.description_purchase:
+                name += '\n' + product.description_purchase
+            res['value'].update({'name': name})
 
         # - set a domain on product_uom
         res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
@@ -1188,7 +1180,7 @@ class procurement_order(osv.osv):
                 uom = procurement.purchase_line_id.product_uom
                 product_qty = uom_obj._compute_qty_obj(cr, uid, procurement.product_uom, procurement.product_qty, uom, context=context)
                 if procurement.purchase_line_id.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(_('Error!'),
+                    raise UserError(
                         _('Can not cancel this procurement like this as the related purchase order has been confirmed already.  Please cancel the purchase order first. '))
                 if float_compare(procurement.purchase_line_id.product_qty, product_qty, 0, precision_rounding=uom.rounding) > 0:
                     purchase_line_obj.write(cr, uid, [procurement.purchase_line_id.id], {'product_qty': procurement.purchase_line_id.product_qty - product_qty}, context=context)
@@ -1256,7 +1248,7 @@ class procurement_order(osv.osv):
 
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
-                    raise osv.except_osv(_('Configuration Error!'), _('The product "%s" has been defined with your company as reseller which seems to be a configuration error!' % procurement.product_id.name))
+                    raise UserError(_('The product "%s" has been defined with your company as reseller which seems to be a configuration error!' % procurement.product_id.name))
 
         return True
 
@@ -1572,6 +1564,13 @@ class product_product(osv.Model):
             product_id: Purchase.search_count(cr,uid, [('order_line.product_id', '=', product_id)], context=context) 
             for product_id in ids
         }
+
+    def action_view_purchases(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        result = self.pool['product.template']._get_act_window_dict(cr, uid, 'purchase.action_purchase_line_product_tree', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, ids)) + "])]"
+        return result
 
     _columns = {
         'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),

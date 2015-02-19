@@ -7,8 +7,10 @@
             <field name="inherit_id" ref="website_partner.view_partners_form_website" />
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//group[@name='website']" position="inside">
-                        <field name="tag_ids" widget="many2many_tags"/>
+                    <xpath expr="//group[@name='mailing']" position="after">
+                        <group name="website" string="Website">
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </group>
                     </xpath>
                 </data>
             </field>

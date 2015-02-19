@@ -6,7 +6,6 @@ import hashlib
 import inspect
 import logging
 import math
-import mimetypes
 import unicodedata
 import os
 import re
@@ -24,6 +23,7 @@ except ImportError:
     slugify_lib = None
 
 import openerp
+from openerp.tools.translate import _
 from openerp.osv import orm, osv, fields
 from openerp.tools import html_escape as escape, ustr, image_resize_and_sharpen, image_save_for_web
 from openerp.tools.safe_eval import safe_eval
@@ -78,7 +78,8 @@ def is_multilang_url(local_url, langs=None):
         path = url[0]
         query_string = url[1] if len(url) > 1 else None
         router = request.httprequest.app.get_db_router(request.db).bind('')
-        func = router.match(path, query_args=query_string)[0]
+        # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
+        func = router.match(path, method='POST', query_args=query_string)[0]
         return func.routing.get('website', False) and func.routing.get('multilang', True)
     except Exception:
         return False
@@ -204,7 +205,8 @@ class website(osv.osv):
 
         # find a free xmlid
         inc = 0
-        while view.search(cr, openerp.SUPERUSER_ID, [('key', '=', page_xmlid)], context=dict(context or {}, active_test=False)):
+        dom = [('key', '=', page_xmlid), '|', ('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
+        while view.search(cr, openerp.SUPERUSER_ID, dom, context=dict(context or {}, active_test=False)):
             inc += 1
             page_xmlid = "%s.%s" % (template_module, page_name + (inc and "-%s" % inc or ""))
         page_name += (inc and "-%s" % inc or "")
@@ -221,6 +223,77 @@ class website(osv.osv):
             'page': ispage,
         })
         return page_xmlid
+
+    def delete_page(self, cr, uid, view_id, context=None):
+        if context is None:
+            context = {}
+        View = self.pool.get('ir.ui.view')
+        view_find = View.search(cr, uid, [
+            ('id', '=', view_id),
+            "|", ('website_id', '=', context.get('website_id')), ('website_id', '=', False),
+            ('page', '=', True),
+            ('type', '=', 'qweb')
+        ], context=context)
+        if view_find:
+            View.unlink(cr, uid, view_find, context=context)
+
+    def page_search_dependencies(self, cr, uid, view_id=False, context=None):
+        dep = {}
+        if not view_id:
+            return dep
+
+        # search dependencies just for information.
+        # It will not catch 100% of dependencies and False positive is more than possible
+        # Each module could add dependences in this dict
+        if context is None:
+            context = {}
+        View = self.pool.get('ir.ui.view')
+        Menu = self.pool.get('website.menu')
+
+        view = View.browse(cr, uid, view_id, context=context)
+        website_id = context.get('website_id')
+        name = view.key.replace("website.", "")
+        fullname = "website.%s" % name
+
+        if view.page:
+            # search for page with link
+            page_search_dom = [
+                '|', ('website_id', '=', website_id), ('website_id', '=', False),
+                '|', ('arch_db', 'ilike', '/page/%s' % name), ('arch_db', 'ilike', '/page/%s' % fullname)
+            ]
+            pages = View.search(cr, uid, page_search_dom, context=context)
+            if pages:
+                page_key = _('Page')
+                dep[page_key] = []
+            for page in View.browse(cr, uid, pages, context=context):
+                if page.page:
+                    dep[page_key].append({
+                        'text': _('Page <b>%s</b> seems to have a link to this page !' % page.key),
+                        'link': '/page/%s' % page.key
+                    })
+                else:
+                    dep[page_key].append({
+                        'text': _('Template <b>%s (id:%s)</b> seems to have a link to this page !' % (page.key, page.id)),
+                        'link': '#'
+                    })
+
+            # search for menu with link
+            menu_search_dom = [
+                '|', ('website_id', '=', website_id), ('website_id', '=', False),
+                '|', ('url', 'ilike', '/page/%s' % name), ('url', 'ilike', '/page/%s' % fullname)
+            ]
+
+            menus = Menu.search(cr, uid, menu_search_dom, context=context)
+            if menus:
+                menu_key = _('Menu')
+                dep[menu_key] = []
+            for menu in Menu.browse(cr, uid, menus, context=context):
+                dep[menu_key].append({
+                    'text': _('Menu <b>%s</b> seems to have a link to this page !' % menu.name),
+                    'link': False
+                })
+
+        return dep
 
     def page_for_name(self, cr, uid, ids, name, module='website', context=None):
         # whatever
@@ -279,16 +352,16 @@ class website(osv.osv):
 
     @openerp.tools.ormcache(skiparg=4)
     def _get_current_website_id(self, cr, uid, domain_name, context=None):
-        website_id = 1
-        if request:
-            ids = self.search(cr, uid, [('domain', '=', domain_name)], context=context)
-            if ids:
-                website_id = ids[0]
-        return website_id
+        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
+        if ids:
+            return ids[0]
+        else:
+            return self.search(cr, uid, [], limit=1, context=context)[0]
 
     def get_current_website(self, cr, uid, context=None):
         domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
         website_id = self._get_current_website_id(cr, uid, domain_name, context=context)
+        request.context['website_id'] = website_id
         return self.browse(cr, uid, website_id, context=context)
 
     def is_publisher(self, cr, uid, ids, context=None):
@@ -600,7 +673,22 @@ class website(osv.osv):
         if response.status_code == 304:
             return response
 
-        data = record[field].decode('base64')
+        if model == 'ir.attachment' and field == 'url' and field in record:
+            path = record[field].strip('/')
+
+            # Check that we serve a file from within the module
+            if os.path.normpath(path).startswith('..'):
+                return self._image_placeholder(response)
+
+            # Check that the file actually exists
+            path = path.split('/')
+            resource = openerp.modules.get_module_resource(*path)
+            if not resource:
+                return self._image_placeholder(response)
+
+            data = open(resource, 'rb').read()
+        else:
+            data = record[field].decode('base64')
         image = Image.open(cStringIO.StringIO(data))
         response.mimetype = Image.MIME[image.format]
 
@@ -635,7 +723,6 @@ class website(osv.osv):
         size = '' if size is None else '/%s' % size
         return '/website/image/%s/%s/%s%s' % (model, id, field, size)
 
-
 class website_menu(osv.osv):
     _name = "website.menu"
     _description = "Website Menu"
@@ -666,7 +753,7 @@ class website_menu(osv.osv):
     _order = "sequence"
 
     # would be better to take a menu_id as argument
-    def get_tree(self, cr, uid, website_id, context=None):
+    def get_tree(self, cr, uid, website_id, menu_id=None, context=None):
         def make_tree(node):
             menu_node = dict(
                 id=node.id,
@@ -680,7 +767,10 @@ class website_menu(osv.osv):
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
             return menu_node
-        menu = self.pool.get('website').browse(cr, uid, website_id, context=context).menu_id
+        if menu_id:
+            menu = self.browse(cr, uid, menu_id, context=context)
+        else:
+            menu = self.pool.get('website').browse(cr, uid, website_id, context=context).menu_id
         return make_tree(menu)
 
     def save(self, cr, uid, website_id, data, context=None):
@@ -838,3 +928,25 @@ class website_seo_metadata(osv.Model):
         'website_meta_description': fields.text("Website meta description", translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
+
+
+class website_published_mixin(osv.AbstractModel):
+    _name = "website.published.mixin"
+
+    _website_url_proxy = lambda self, *a, **kw: self._website_url(*a, **kw)
+
+    _columns = {
+        'website_published': fields.boolean('Visible in Website', copy=False),
+        'website_url': fields.function(_website_url_proxy, type='char', string='Website URL',
+                                       help='The full URL to access the document through the website.'),
+    }
+
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        return dict.fromkeys(ids, '#')
+
+    def open_website_url(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.browse(cr, uid, ids[0]).website_url,
+            'target': 'self',
+        }

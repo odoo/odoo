@@ -23,6 +23,7 @@ from openerp.osv import osv,fields
 from openerp.tools.translate import _
 from openerp.tools.amount_to_text_en import amount_to_text
 from lxml import etree
+from openerp.exceptions import UserError
 
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
@@ -74,7 +75,7 @@ class account_voucher(osv.osv):
 
     def print_check(self, cr, uid, ids, context=None):
         if not ids:
-            raise osv.except_osv(_('Printing error'), _('No check selected '))
+            raise UserError(_('No check selected '))
 
         data = {
             'id': ids and ids[0],

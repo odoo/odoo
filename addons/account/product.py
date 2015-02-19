@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class product_category(osv.osv):
     _inherit = "product.category"
@@ -66,5 +67,6 @@ class product_template(osv.osv):
         if 'uom_po_id' in vals:
             product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
             if self.pool.get('account.move.line').search(cr, uid, [('product_id', 'in', product_ids)], context=context, limit=1):
-                raise osv.except_osv(_('Error!'), _("You can not change the unit of measure of a product that has been already used in an account journal item. If you need to change the unit of measure, you may deactivate this product.") % ())
+                raise UserError(_("You can not change the unit of measure of a product that has been already used in an \
+                                    account journal item. If you need to change the unit of measure, you may deactivate this product."))
         return super(product_template, self).write(cr, uid, ids, vals, context=context)

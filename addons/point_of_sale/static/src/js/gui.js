@@ -169,6 +169,11 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
             }
         },
 
+        // is there an active popup ?
+        has_popup: function() {
+            return !!this.current_popup;
+        },
+
         /* ---- Gui: ACCESS CONTROL ---- */
 
         // A Generic UI that allow to select a user from a list.
@@ -280,6 +285,21 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
             });
         },
 
+        /* ---- Gui: SOUND ---- */
+
+        play_sound: function(sound) {
+            var src = '';
+            if (sound === 'error') {
+                src = "/point_of_sale/static/src/sounds/error.wav";
+            } else if (sound === 'bell') {
+                src = "/point_of_sale/static/src/sounds/bell.wav";
+            } else {
+                console.error('Unknown sound: ',sound);
+                return;
+            }
+            $('body').append('<audio src="'+src+'" autoplay="true"></audio>');
+        },
+
         /* ---- Gui: KEYBOARD INPUT ---- */
 
         // This is a helper to handle numpad keyboard input. 
@@ -323,6 +343,12 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
                 } else {
                     newbuf += input;
                 }
+            }
+
+            // End of input buffer at 12 characters.
+            if (newbuf.length > buffer.length && newbuf.length > 12) {
+                this.play_sound('bell');
+                return buffer.slice(0);
             }
 
             return newbuf;

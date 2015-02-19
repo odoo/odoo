@@ -24,6 +24,7 @@ from datetime import datetime
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class hr_action_reason(osv.osv):
@@ -149,10 +150,7 @@ class hr_employee(osv.osv):
 
     def _attendance_access(self, cr, uid, ids, name, args, context=None):
         # this function field use to hide attendance button to singin/singout from menu
-        group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_hr_attendance')
-        visible = False
-        if uid in [user.id for user in group.users]:
-            visible = True
+        visible = self.pool.get("res.users").has_group(cr, uid, "base.group_hr_attendance")
         return dict([(x, visible) for x in ids])
 
     _columns = {
@@ -179,7 +177,7 @@ class hr_employee(osv.osv):
                 if employee.state == 'absent': action = 'sign_in'
 
             if not self._action_check(cr, uid, employee.id, action_date, context):
-                raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the HR Manager to correct attendances.')%(warning_sign[action],))
+                raise UserError(_('You tried to %s with a date anterior to another event !\nTry to contact the HR Manager to correct attendances.') % (warning_sign[action],))
 
             vals = {'action': action, 'employee_id': employee.id}
             if action_date:

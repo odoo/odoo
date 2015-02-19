@@ -24,6 +24,7 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.safe_eval import safe_eval
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 import logging
 import time
@@ -145,7 +146,7 @@ class gamification_goal_definition(osv.Model):
                 obj.search(cr, uid, domain, context=context, count=True)
             except (ValueError, SyntaxError), e:
                 msg = e.message or (e.msg + '\n' + e.text)
-                raise osv.except_osv(_('Error!'),_("The domain for the definition %s seems incorrect, please check it.\n\n%s" % (definition.name, msg)))
+                raise UserError(_("The domain for the definition %s seems incorrect, please check it.\n\n%s" % (definition.name, msg)))
         return True
 
     def create(self, cr, uid, vals, context=None):
@@ -256,17 +257,38 @@ class gamification_goal(osv.Model):
 
         :return: data to write on the goal object
         """
+        temp_obj = self.pool['mail.template']
         if goal.remind_update_delay and goal.last_update:
             delta_max = timedelta(days=goal.remind_update_delay)
             last_update = datetime.strptime(goal.last_update, DF).date()
             if date.today() - last_update > delta_max:
                 # generate a remind report
                 temp_obj = self.pool.get('mail.template')
-                template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_reminder', context)
-                body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.goal', goal.id, context=context)
+                template_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'gamification', 'email_template_goal_reminder')[0]
+                template = temp_obj.get_email_template(cr, uid, template_id, goal.id, context=context)
+                body_html = temp_obj.render_template(cr, uid, template.body_html, 'gamification.goal', goal.id, context=template._context)
                 self.pool['mail.thread'].message_post(cr, uid, 0, body=body_html, partner_ids=[goal.user_id.partner_id.id], context=context, subtype='mail.mt_comment')
                 return {'to_update': True}
         return {}
+
+    def _get_write_values(self, cr, uid, goal, new_value, context=None):
+        """Generate values to write after recomputation of a goal score"""
+        if new_value == goal.current:
+            # avoid useless write if the new value is the same as the old one
+            return {}
+
+        result = {goal.id: {'current': new_value}}
+        if (goal.definition_id.condition == 'higher' and new_value >= goal.target_goal) \
+          or (goal.definition_id.condition == 'lower' and new_value <= goal.target_goal):
+            # success, do no set closed as can still change
+            result[goal.id]['state'] = 'reached'
+
+        elif goal.end_date and fields.date.today() > goal.end_date:
+            # check goal failure
+            result[goal.id]['state'] = 'failed'
+            result[goal.id]['closed'] = True
+
+        return result
 
     def update(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
@@ -281,14 +303,8 @@ class gamification_goal(osv.Model):
         commit = context.get('commit_gamification', False)
 
         goals_by_definition = {}
-        all_goals = {}
         for goal in self.browse(cr, uid, ids, context=context):
-            if goal.state in ('draft', 'canceled'):
-                # draft or canceled goals should not be recomputed
-                continue
-
             goals_by_definition.setdefault(goal.definition_id, []).append(goal)
-            all_goals[goal.id] = goal
 
         for definition, goals in goals_by_definition.items():
             goals_to_write = dict((goal.id, {}) for goal in goals)
@@ -313,10 +329,12 @@ class gamification_goal(osv.Model):
                     # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
                     result = cxt.get('result')
                     if result is not None and type(result) in (float, int, long):
-                        if result != goal.current:
-                            goals_to_write[goal.id]['current'] = result
+                        goals_to_write.update(
+                            self._get_write_values(cr, uid, goal, result, context=context)
+                        )
+
                     else:
-                        _logger.exception(_('Invalid return content from the evaluation of code for definition %s' % definition.name))
+                        _logger.exception(_('Invalid return content from the evaluation of code for definition %s') % definition.name)
 
             else:  # count or sum
 
@@ -356,8 +374,9 @@ class gamification_goal(osv.Model):
                                     queried_value = queried_value[0]
                                 if queried_value == query_goals[goal.id]:
                                     new_value = user_value.get(field_name+'_count', goal.current)
-                                    if new_value != goal.current:
-                                        goals_to_write[goal.id]['current'] = new_value
+                                    goals_to_write.update(
+                                        self._get_write_values(cr, uid, goal, new_value, context=context)
+                                    )
 
                 else:
                     for goal in goals:
@@ -379,26 +398,14 @@ class gamification_goal(osv.Model):
                         else:  # computation mode = count
                             new_value = obj.search(cr, uid, domain, context=context, count=True)
 
-                        # avoid useless write if the new value is the same as the old one
-                        if new_value != goal.current:
-                            goals_to_write[goal.id]['current'] = new_value
+                        goals_to_write.update(
+                            self._get_write_values(cr, uid, goal, new_value, context=context)
+                        )
 
             for goal_id, value in goals_to_write.items():
                 if not value:
                     continue
-                goal = all_goals[goal_id]
-
-                # check goal target reached
-                if (goal.definition_id.condition == 'higher' and value.get('current', goal.current) >= goal.target_goal) \
-                  or (goal.definition_id.condition == 'lower' and value.get('current', goal.current) <= goal.target_goal):
-                    value['state'] = 'reached'
-
-                # check goal failure
-                elif goal.end_date and fields.date.today() > goal.end_date:
-                    value['state'] = 'failed'
-                    value['closed'] = True
-                if value:
-                    self.write(cr, uid, [goal.id], value, context=context)
+                self.write(cr, uid, [goal_id], value, context=context)
             if commit:
                 cr.commit()
         return True
@@ -450,7 +457,7 @@ class gamification_goal(osv.Model):
         for goal in self.browse(cr, uid, ids, context=context):
             if goal.state != "draft" and ('definition_id' in vals or 'user_id' in vals):
                 # avoid drag&drop in kanban view
-                raise osv.except_osv(_('Error!'), _('Can not modify the configuration of a started goal'))
+                raise UserError(_('Can not modify the configuration of a started goal'))
 
             if vals.get('current'):
                 if 'no_remind_goal' in context:

@@ -55,6 +55,25 @@
       top: 2px;
       z-index: 10;
       text-shadow: -1px -1px 0 #f5f5f5, 1px -1px 0 #f5f5f5, -1px 1px 0 #f5f5f5, 1px 1px 0 #f5f5f5; }
+  .openerp .oe_bank_statement_reconciliation .show_more_container {
+    text-align: center; }
+    .openerp .oe_bank_statement_reconciliation .show_more_container .show_more {
+      display: none; }
+  .openerp .oe_bank_statement_reconciliation .notification_area {
+    margin: 0 15px; }
+  .openerp .oe_bank_statement_reconciliation .notification_area .fa {
+    font-size: 20px;
+    margin-left: 7px;
+    line-height: 14px;
+    position: relative;
+    top: 3px;
+  }
+  .openerp .oe_bank_statement_reconciliation .interface_options {
+    margin-bottom: 25px;
+    padding-left: 15px; }
+    .openerp .oe_bank_statement_reconciliation .interface_options .oe_radio_input {
+      border: none;
+      display: inline; }
   .openerp .oe_bank_statement_reconciliation .protip {
     margin: 0;
     position: absolute;
@@ -159,10 +178,20 @@
     .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line table.details td:first-child {
       padding-right: 10px;
       font-weight: bold; }
+    .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line table.details tr.one_line_info td {
+      padding-top: 10px;
+      text-align: center;
+      color: #44c; }
     .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table {
       width: 100%; }
-      .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tr {
+      .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tbody tr, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tbody tr {
         cursor: pointer; }
+        .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tbody tr.created_line, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tbody tr.created_line {
+          cursor: default !important; }
+          .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tbody tr.created_line .line_remove_button, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tbody tr.created_line .line_remove_button {
+            cursor: pointer; }
+      .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr.already_reconciled, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tr.already_reconciled {
+        color: #44c; }
       .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view td, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table td {
         padding: 1px 8px;
         vertical-align: middle; }
@@ -190,7 +219,7 @@
       .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr .glyphicon:not(.line_info_button), .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tr .glyphicon:not(.line_info_button) {
         visibility: hidden;
         color: #555; }
-      .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr:hover .glyphicon, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr.active .glyphicon, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tr:hover .glyphicon, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tr.active .glyphicon {
+      .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr:hover .glyphicon, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr:focus .glyphicon, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr.active .glyphicon, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tr:hover .glyphicon, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tr:focus .glyphicon, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tr.active .glyphicon {
         visibility: visible; }
       .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr .do_partial_reconcile_button, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match table tr .do_partial_reconcile_button {
         color: #f0ad4e;
@@ -261,7 +290,8 @@
       margin: 0 15px;
       border: 1px solid #d5d5d5;
       border-radius: 5px;
-      padding: 10px; }
+      padding: 10px;
+      overflow: auto; }
       .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .create .quick_add {
         margin-bottom: 10px;
         clear: both; }

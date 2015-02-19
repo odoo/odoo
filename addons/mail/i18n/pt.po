@@ -7,15 +7,659 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-09-27 20:51+0000\n"
-"Last-Translator: Daniel Reis <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-22 09:55+0000\n"
+"Last-Translator: Opencloud - PT <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-28 07:21+0000\n"
+"X-Launchpad-Export-Date: 2014-09-23 07:25+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (cópia)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Add"
+msgstr "Adicionar"
+
+#. module: email_template
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "Adicionar Assinatura"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr "Configurações Avançadas"
+
+#. module: email_template
+#: field:email.template,model_id:0 field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr "Aplica-se a"
+
+#. module: email_template
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "Anexos"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr "Assinatura do Autor (E-mails em massa apenas)"
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "Eliminar Automático"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr "Disponível para Emails em Massa"
+
+#. module: email_template
+#: field:email.template,body_html:0 field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "Corpo"
+
+#. module: email_template
+#: help:email.template,email_cc:0 help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr ""
+"Destinatários com conhecimento (espaços reservados podem ser usados ​​aqui)"
+
+#. module: email_template
+#: field:email.template,email_cc:0 field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "Cc"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr "Escolher um template para mostrar os seus valores."
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr "Escolher um exemplo"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr "Cópia de endereços de recipientes separados por vírgula"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr "Ids de parceiros recipientes separados por vírgula"
+
+#. module: email_template
+#: help:email.template,partner_to:0 help:email_template.preview,partner_to:0
+msgid ""
+"Comma-separated ids of recipient partners (placeholders may be used here)"
+msgstr "Ids de parceiros separados por vírgula (podem usar contentores aqui)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr "Endereços separados por vírgula"
+
+#. module: email_template
+#: help:email.template,email_to:0 help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr ""
+"Endereços dos destinatários separados por vírgula (espaços reservados podem "
+"ser usados ​​aqui)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr "Conteúdo"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr "Acção contextual"
+
+#. module: email_template
+#: field:email.template,create_uid:0 field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: email_template
+#: field:email.template,null_value:0 field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr "Valor por omissão"
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr "Recipientes Por Defeito"
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr ""
+"Destinatários padrão do registo: \n"
+"- Parceiro (usando id em um parceiro ou o campo partner_id) OU \n"
+"- E-mail (usando email_from ou campo de e-mail)"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "Exclusão do registo da ação falhou."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr ""
+"Mostrar uma opção sobre documentos relacionados para abrir um assistente de "
+"composição com este modelo"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr "Gereador dinâmico de Conteúdo"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr "E-mail"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr "Configuração do correio eletrónico"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "Previsualização da mensagem"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr "Modelo de mensagem"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "Pre visualização do Template do Email"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "Email Templates"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Assistente de Composição de Email"
+
+#. module: email_template
+#: field:email.template,model_object_field:0
+#: field:email_template.preview,model_object_field:0
+msgid "Field"
+msgstr "Campo"
+
+#. module: email_template
+#: help:email.template,copyvalue:0 help:email_template.preview,copyvalue:0
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
+msgstr ""
+"Expressão espaço reservado final, a cópia colada no campo do template "
+"desejado."
+
+#. module: email_template
+#: field:email.template,email_from:0 field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "De"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "Agrupar por..."
+
+#. module: email_template
+#: field:email.template,id:0 field:email_template.preview,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: email_template
+#: help:email.template,user_signature:0
+#: help:email_template.preview,user_signature:0
+msgid ""
+"If checked, the user's signature will be appended to the text version of the "
+"message"
+msgstr ""
+"Se marcada, a assinatura do utilizador será anexada à versão de texto da "
+"mensagem"
+
+#. module: email_template
+#: help:res.partner,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
+msgstr ""
+"Se opt-out tem o visto, este contato tem se recusou receber e-mails para "
+"envio em massa e campanhas de marketing. Filtro \"Disponível para Mass "
+"Mailing ' permite ao utilizador filtrar os parceiros na realização envio em "
+"massa."
+
+#. module: email_template
+#: field:email.template,lang:0 field:email_template.preview,lang:0
+msgid "Language"
+msgstr "Língua"
+
+#. module: email_template
+#: field:email.template,write_uid:0 field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr "Última Actualização por"
+
+#. module: email_template
+#: field:email.template,write_date:0 field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr "Última Actualização em"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "Modelo"
+
+#. module: email_template
+#: field:email.template,name:0 field:email_template.preview,name:0
+msgid "Name"
+msgstr "Nome"
+
+#. module: email_template
+#: help:email.template,report_name:0 help:email_template.preview,report_name:0
+msgid ""
+"Name to use for the generated report file (may contain placeholders)\n"
+"The extension can be omitted and will then come from the report type."
+msgstr ""
+"Nome para usar para o ficheiro do relatório gerado (pode conter espaços "
+"reservados)\n"
+"A extensão pode ser omitida e, então, vir a partir do tipo de relatório."
+
+#. module: email_template
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr "Opção saída"
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr ""
+"Servidor preferencial opcional de mensagens a enviar. Se não for definido "
+"será usado o de prioridade mais alta."
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "Relatório opcional para imprimir e anexar"
+
+#. module: email_template
+#: help:email.template,lang:0 help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
+"Língua de tradução Opcional (código ISO) para selecionar quando o envio de "
+"um e-mail. Se não for definido, a versão Inglesa será usada. Isso geralmente "
+"deve ser uma expressão de espaço reservado que fornecer a linguagem "
+"apropriada, por exemplo, $ {} object.partner_id.lang."
+
+#. module: email_template
+#: help:email.template,null_value:0 help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr "Valor opcional para usar se o campo do destino estiver vazio"
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "Servidor de Mail Outgoing"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr "Reescrever e-mail do autor"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "Parceiro"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
+"Parceiros que não pediram para ser incluídos em campanhas de envio em massa"
+
+#. module: email_template
+#: help:email.template,auto_delete:0 help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr ""
+"Apagar permanentemente este email depois de enviado, para guardar espaço"
+
+#. module: email_template
+#: field:email.template,copyvalue:0 field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr "Expressão de Conteúdo"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr ""
+"Por favor, defina o modelo de base antes de definir os detalhes da ação."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr "Email de resposta preferido"
+
+#. module: email_template
+#: help:email.template,reply_to:0 help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr ""
+"Endereço de resposta preferido (espaços reservados podem ser usados ​​aqui)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr "Antevisão"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr "Antevisão de"
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr "Destinatários"
+
+#. module: email_template
+#: field:email.template,model:0 field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr "Modelo de documento relacionado"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr "Remover"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove the contextual action to use this template on related documents"
+msgstr ""
+"Remover a ação contextual para usar este modelo em documentos relacionados"
+
+#. module: email_template
+#: field:email.template,reply_to:0 field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "Responder a"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "Relatório nome do ficheiro"
+
+#. module: email_template
+#: help:email.template,body_html:0 help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr ""
+"Versão da mensagem Rich-text/ HTML (espaços reservados podem ser usados ​​aqui)"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "Servidor SMTP"
+
+#. module: email_template
+#: field:email_template.preview,res_id:0
+msgid "Sample Document"
+msgstr "Amostra de Documento"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "Salve como um novo Template"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "Gravar como novo modelo"
+
+#. module: email_template
+#: help:email.template,model_object_field:0
+#: help:email_template.preview,model_object_field:0
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at "
+"the destination of the relationship."
+msgstr ""
+"Selecione o campo de destino a partir do modelo do documento relacionado.\n"
+"Se for um campo de relação será capaz de selecionar um campo de destino no "
+"destino do relacionamento."
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "Enviar o correio (%s)"
+
+#. module: email_template
+#: help:email.template,email_from:0 help:email_template.preview,email_from:0
+msgid ""
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
+msgstr ""
+"Endereço do remetente (espaços reservados podem ser usados ​​aqui). Se não for "
+"definido, o valor padrão será de alias de e-mail do autor, se configurado, "
+"ou o endereço de e-mail."
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr ""
+"Remetente de e-mail não existe ou está vazio após renderização de templates. "
+"Especifique um para entregar a sua mensagem"
+
+#. module: email_template
+#: field:email.template,ref_ir_value:0
+#: field:email_template.preview,ref_ir_value:0
+msgid "Sidebar Button"
+msgstr "Botão da Barra Lateral"
+
+#. module: email_template
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "Ação da barra lateral"
+
+#. module: email_template
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
+msgid ""
+"Sidebar action to make this template available on records of the related "
+"document model"
+msgstr ""
+"Ação da barra lateral para tornar este template disponível no registo do "
+"modelo de documento relacionado"
+
+#. module: email_template
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "Botão da Barra Lateral para Abrir as suas Ações"
+
+#. module: email_template
+#: field:email.template,sub_model_object_field:0
+#: field:email_template.preview,sub_model_object_field:0
+msgid "Sub-field"
+msgstr "SubCampo"
+
+#. module: email_template
+#: field:email.template,sub_object:0 field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "Submodelo"
+
+#. module: email_template
+#: field:email.template,subject:0 field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "Assunto"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0 help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "Assunto (espaços reservados podem ser usados ​​aqui)"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr "Fornecedores"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "Pré-Visualização dos Templates"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "Templates"
+
+#. module: email_template
+#: help:email.template,model_id:0 help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "O tipo de documento com o qual este template pode ser usado"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
+"                                will be taken from the email template."
+msgstr ""
+"Os valores exibidos abaixo são de caráter informativo. Ao enviar o e-mail, "
+"os valores \n"
+"                                 serão tomadas a partir do modelo de e-mail."
+
+#. module: email_template
+#: field:email.template,email_to:0 field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "Para (E-mails)"
+
+#. module: email_template
+#: field:email.template,partner_to:0 field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "Para (Parceiros)"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Usar modelo"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "Aviso"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr "Aviso!"
+
+#. module: email_template
+#: help:email.template,sub_model_object_field:0
+#: help:email_template.preview,sub_model_object_field:0
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr ""
+"Quando um campo de relacionamento é selecionado como primeiro campo, este "
+"campo permite que selecione o campo de destino dentro do modelo de documento "
+"de destino (sub-modelo)."
+
+#. module: email_template
+#: help:email.template,sub_object:0 help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr ""
+"Quando um campo de relacionamento é selecionado como primeiro campo, este "
+"campo mostra o modelo de documento e a relação."
+
+#. module: email_template
+#: help:email.template,attachment_ids:0
+#: help:email_template.preview,attachment_ids:0
+msgid ""
+"You may attach files to this template, to be added to all emails created "
+"from this template"
+msgstr ""
+"Pode anexar ficheiros a este template, para ser adicionado a todos os e-"
+"mails criados a partir desse template"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
+msgstr ""
+"Seu modelo não definiu qualquer email_from. Por favor, atualize seu modelo."
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr "record:"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:384
@@ -46,17 +690,14 @@ msgstr "(sem endereço de e-mail)"
 #. module: mail
 #: code:addons/mail/wizard/invite.py:44
 #, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
+msgid "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
 msgstr "<div><p>Olá,</p><p>%s convidou-o a seguir %s documento: %s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
 #, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr ""
-"<div><p>Olá,</p><p>%s convidou-o a seguir um novo documento.</p></div>"
+msgid "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
+msgstr "<div><p>Olá,</p><p>%s convidou-o a seguir um novo documento.</p></div>"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:134
@@ -78,11 +719,11 @@ msgstr ""
 #: code:addons/mail/mail_thread.py:145
 #, python-format
 msgid ""
-"<p class='oe_view_nocontent_create'>Click here to add new "
-"%(document)s</p>%(static_help)s"
+"<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>"
+"%(static_help)s"
 msgstr ""
-"<p class='oe_view_nocontent_create'>Clique aqui para adicionar "
-"%(document)s</p>%(static_help)s"
+"<p class='oe_view_nocontent_create'>Clique aqui para adicionar %(document)s</"
+"p>%(static_help)s"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_inbox_feeds
@@ -253,8 +894,7 @@ msgstr "Avançado"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
-#: view:mail.alias:mail.view_mail_alias_tree
-#: field:mail.group,alias_id:0
+#: view:mail.alias:mail.view_mail_alias_tree field:mail.group,alias_id:0
 #: field:res.users,alias_id:0
 msgid "Alias"
 msgstr "Apelido"
@@ -355,27 +995,18 @@ msgid "Attach a file"
 msgstr "Anexar um arquivo"
 
 #. module: mail
-#: field:mail.compose.message,attachment_ids:0
-#: view:mail.mail:mail.view_mail_form
-#: field:mail.message,attachment_ids:0
-msgid "Attachments"
-msgstr "Anexos"
-
-#. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
 msgstr "Parceiros Autenticados"
 
 #. module: mail
-#: field:mail.compose.message,author_id:0
-#: view:mail.mail:mail.view_mail_search
+#: field:mail.compose.message,author_id:0 view:mail.mail:mail.view_mail_search
 #: field:mail.message,author_id:0
 msgid "Author"
 msgstr "Autor"
 
 #. module: mail
-#: help:mail.compose.message,author_id:0
-#: help:mail.message,author_id:0
+#: help:mail.compose.message,author_id:0 help:mail.message,author_id:0
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
@@ -395,11 +1026,6 @@ msgid "Authorized Group"
 msgstr "Grupo Autorizado"
 
 #. module: mail
-#: field:mail.mail,auto_delete:0
-msgid "Auto Delete"
-msgstr "Excluir Automaticamente"
-
-#. module: mail
 #: field:mail.group,group_ids:0
 msgid "Auto Subscription"
 msgstr "Auto Inscrição"
@@ -410,8 +1036,7 @@ msgid "Auto subscription"
 msgstr "Subscrição Automática"
 
 #. module: mail
-#: help:mail.compose.message,body:0
-#: help:mail.message,body:0
+#: help:mail.compose.message,body:0 help:mail.message,body:0
 msgid "Automatically sanitized HTML contents"
 msgstr "Conteúdos HTML limpos automaticamente"
 
@@ -424,11 +1049,6 @@ msgstr "Melhores Práticas de Vendas"
 #: model:mail.group,name:mail.group_board
 msgid "Board meetings"
 msgstr "Reuniões"
-
-#. module: mail
-#: view:mail.mail:mail.view_mail_form
-msgid "Body"
-msgstr "Corpo"
 
 #. module: mail
 #. openerp-web
@@ -456,19 +1076,12 @@ msgid "Carbon copy message recipients"
 msgstr "Destinatários de cópia oculta da mensagem"
 
 #. module: mail
-#: field:mail.mail,email_cc:0
-msgid "Cc"
-msgstr "Cc"
-
-#. module: mail
-#: field:mail.compose.message,child_ids:0
-#: field:mail.message,child_ids:0
+#: field:mail.compose.message,child_ids:0 field:mail.message,child_ids:0
 msgid "Child Messages"
 msgstr "Mensagens Filhas"
 
 #. module: mail
-#: selection:mail.compose.message,type:0
-#: view:mail.mail:mail.view_mail_search
+#: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
 #: selection:mail.message,type:0
 msgid "Comment"
 msgstr "Comentário"
@@ -493,42 +1106,14 @@ msgid "Contact"
 msgstr "Contato"
 
 #. module: mail
-#: view:mail.message:mail.view_message_search
-msgid "Content"
-msgstr "Conteúdo"
-
-#. module: mail
 #: field:ir.attachment,file_type:0
 msgid "Content Type"
 msgstr "Tipo de conteúdo"
 
 #. module: mail
-#: field:mail.compose.message,body:0
-#: field:mail.message,body:0
+#: field:mail.compose.message,body:0 field:mail.message,body:0
 msgid "Contents"
 msgstr "Conteúdo"
-
-#. module: mail
-#: field:mail.alias,create_uid:0
-#: field:mail.compose.message,create_uid:0
-#: field:mail.group,create_uid:0
-#: field:mail.mail,create_uid:0
-#: field:mail.message,create_uid:0
-#: field:mail.message.subtype,create_uid:0
-#: field:mail.wizard.invite,create_uid:0
-msgid "Created by"
-msgstr "Criada por"
-
-#. module: mail
-#: field:mail.alias,create_date:0
-#: field:mail.compose.message,create_date:0
-#: field:mail.group,create_date:0
-#: field:mail.mail,create_date:0
-#: field:mail.message,create_date:0
-#: field:mail.message.subtype,create_date:0
-#: field:mail.wizard.invite,create_date:0
-msgid "Created on"
-msgstr "Criada em"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -536,14 +1121,12 @@ msgid "Creation Month"
 msgstr "Mês de Criação"
 
 #. module: mail
-#: help:mail.compose.message,starred:0
-#: help:mail.message,starred:0
+#: help:mail.compose.message,starred:0 help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
 msgstr "Usuário atual marcou uma notificação ligada a esta mensagem"
 
 #. module: mail
-#: help:mail.compose.message,to_read:0
-#: help:mail.message,to_read:0
+#: help:mail.compose.message,to_read:0 help:mail.message,to_read:0
 msgid "Current user has an unread notification linked to this message"
 msgstr "O usuário atual tem uma notificação não lida ligada a esta mensagem"
 
@@ -554,14 +1137,12 @@ msgid "Customers"
 msgstr "Clientes"
 
 #. module: mail
-#: field:mail.compose.message,date:0
-#: field:mail.message,date:0
+#: field:mail.compose.message,date:0 field:mail.message,date:0
 msgid "Date"
 msgstr "Data"
 
 #. module: mail
-#: help:mail.group,message_last_post:0
-#: help:mail.thread,message_last_post:0
+#: help:mail.group,message_last_post:0 help:mail.thread,message_last_post:0
 #: help:res.partner,message_last_post:0
 msgid "Date of the last message posted on the record."
 msgstr "Data da Última Mensagem Inserida no Registo"
@@ -659,13 +1240,6 @@ msgid "Edit subscription"
 msgstr "Editar Subscrição"
 
 #. module: mail
-#: selection:mail.compose.message,type:0
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.message,type:0
-msgid "Email"
-msgstr "E-mail"
-
-#. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Email Alias"
 msgstr "E-mail do Apelido"
@@ -695,8 +1269,7 @@ msgstr ""
 "recebidas aparecerão nas notificações do usuário."
 
 #. module: mail
-#: help:mail.compose.message,email_from:0
-#: help:mail.message,email_from:0
+#: help:mail.compose.message,email_from:0 help:mail.message,email_from:0
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
@@ -708,11 +1281,6 @@ msgstr ""
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
 msgstr "Endereço de email para redirecionar eespostas"
-
-#. module: mail
-#: model:ir.model,name:mail.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "Assistente de composição de Email"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -837,12 +1405,6 @@ msgid "Following"
 msgstr "Seguindo"
 
 #. module: mail
-#: field:mail.compose.message,email_from:0
-#: field:mail.message,email_from:0
-msgid "From"
-msgstr "De"
-
-#. module: mail
 #: code:addons/mail/res_users.py:75
 #, python-format
 msgid "Go to the configuration panel"
@@ -866,8 +1428,7 @@ msgid "Group Form"
 msgstr "Formulário do Grupo"
 
 #. module: mail
-#: view:mail.group:mail.view_group_form
-#: view:mail.group:mail.view_group_tree
+#: view:mail.group:mail.view_group_form view:mail.group:mail.view_group_tree
 msgid "Group Name"
 msgstr "Nome do Grupo"
 
@@ -887,8 +1448,7 @@ msgid "Has attachments"
 msgstr "Possui anexos"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: field:mail.mail,headers:0
+#: view:mail.mail:mail.view_mail_form field:mail.mail,headers:0
 msgid "Headers"
 msgstr "Cabeçalhos"
 
@@ -903,8 +1463,7 @@ msgid "Hide the subtype in the follower options"
 msgstr "Esconder o subtipo nas opcções do seguidor"
 
 #. module: mail
-#: help:mail.group,message_summary:0
-#: help:mail.thread,message_summary:0
+#: help:mail.group,message_summary:0 help:mail.thread,message_summary:0
 #: help:res.partner,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
@@ -913,21 +1472,6 @@ msgstr ""
 "Contém o resumo da conversação (número de mensagens, ...). Este resumo é "
 "gerado diretamente em formato HTML para que possa ser inserido nas visões "
 "kanban."
-
-#. module: mail
-#: field:mail.alias,id:0
-#: field:mail.compose.message,id:0
-#: field:mail.followers,id:0
-#: field:mail.group,id:0
-#: field:mail.mail,id:0
-#: field:mail.message,id:0
-#: field:mail.message.subtype,id:0
-#: field:mail.notification,id:0
-#: field:mail.thread,id:0
-#: field:mail.wizard.invite,id:0
-#: field:publisher_warranty.contract,id:0
-msgid "ID"
-msgstr "ID"
 
 #. module: mail
 #: help:mail.alias,alias_parent_thread_id:0
@@ -939,14 +1483,12 @@ msgstr ""
 "pseudônimo de criação de tarefa )"
 
 #. module: mail
-#: help:mail.followers,res_id:0
-#: help:mail.wizard.invite,res_id:0
+#: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
 msgid "Id of the followed resource"
 msgstr "Id do recurso seguido"
 
 #. module: mail
-#: help:mail.group,message_unread:0
-#: help:mail.thread,message_unread:0
+#: help:mail.group,message_unread:0 help:mail.thread,message_unread:0
 #: help:res.partner,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Se marcado novas mensagens requerem sua atenção"
@@ -991,8 +1533,7 @@ msgid "Inbox"
 msgstr "Caixa de Entrada"
 
 #. module: mail
-#: help:mail.compose.message,parent_id:0
-#: help:mail.message,parent_id:0
+#: help:mail.compose.message,parent_id:0 help:mail.message,parent_id:0
 msgid "Initial thread message."
 msgstr "Mensagem inicial do tópico."
 
@@ -1049,33 +1590,10 @@ msgid "Join a group"
 msgstr "Seguir um grupo"
 
 #. module: mail
-#: field:mail.group,message_last_post:0
-#: field:mail.thread,message_last_post:0
+#: field:mail.group,message_last_post:0 field:mail.thread,message_last_post:0
 #: field:res.partner,message_last_post:0
 msgid "Last Message Date"
 msgstr "Ultima Data de Mensagem"
-
-#. module: mail
-#: field:mail.alias,write_uid:0
-#: field:mail.compose.message,write_uid:0
-#: field:mail.group,write_uid:0
-#: field:mail.mail,write_uid:0
-#: field:mail.message,write_uid:0
-#: field:mail.message.subtype,write_uid:0
-#: field:mail.wizard.invite,write_uid:0
-msgid "Last Updated by"
-msgstr "Ultima atualização por"
-
-#. module: mail
-#: field:mail.alias,write_date:0
-#: field:mail.compose.message,write_date:0
-#: field:mail.group,write_date:0
-#: field:mail.mail,write_date:0
-#: field:mail.message,write_date:0
-#: field:mail.message.subtype,write_date:0
-#: field:mail.wizard.invite,write_date:0
-msgid "Last Updated on"
-msgstr "Ultima atualização em"
 
 #. module: mail
 #: help:mail.wizard.invite,partner_ids:0
@@ -1161,16 +1679,13 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
-#: field:mail.mail,mail_message_id:0
-#: view:mail.message:mail.view_message_form
-#: field:mail.notification,message_id:0
-#: field:mail.wizard.invite,message:0
+#: field:mail.mail,mail_message_id:0 view:mail.message:mail.view_message_form
+#: field:mail.notification,message_id:0 field:mail.wizard.invite,message:0
 msgid "Message"
 msgstr "Mensagem"
 
 #. module: mail
-#: field:mail.compose.message,record_name:0
-#: field:mail.message,record_name:0
+#: field:mail.compose.message,record_name:0 field:mail.message,record_name:0
 msgid "Message Record Name"
 msgstr "Nome do Registro da Mensagem"
 
@@ -1187,8 +1702,7 @@ msgstr "Recipientes da Meensagem (emails)"
 #. module: mail
 #: help:mail.mail,references:0
 msgid "Message references, such as identifiers of previous messages"
-msgstr ""
-"Referências da mensagem, como identificadores de mensagens anteriores"
+msgstr "Referências da mensagem, como identificadores de mensagens anteriores"
 
 #. module: mail
 #: help:mail.message.subtype,name:0
@@ -1220,8 +1734,7 @@ msgstr ""
 "usuário."
 
 #. module: mail
-#: help:mail.compose.message,type:0
-#: help:mail.message,type:0
+#: help:mail.compose.message,type:0 help:mail.message,type:0
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
@@ -1231,23 +1744,19 @@ msgstr ""
 "usuário."
 
 #. module: mail
-#: help:mail.compose.message,message_id:0
-#: help:mail.message,message_id:0
+#: help:mail.compose.message,message_id:0 help:mail.message,message_id:0
 msgid "Message unique identifier"
 msgstr "Identificador da mensagem"
 
 #. module: mail
-#: field:mail.compose.message,message_id:0
-#: field:mail.message,message_id:0
+#: field:mail.compose.message,message_id:0 field:mail.message,message_id:0
 msgid "Message-Id"
 msgstr "Cód da Mensagem"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
-#: model:ir.ui.menu,name:mail.menu_mail_message
-#: field:mail.group,message_ids:0
-#: view:mail.message:mail.view_message_tree
-#: field:mail.thread,message_ids:0
+#: model:ir.ui.menu,name:mail.menu_mail_message field:mail.group,message_ids:0
+#: view:mail.message:mail.view_message_tree field:mail.thread,message_ids:0
 #: field:res.partner,message_ids:0
 msgid "Messages"
 msgstr "Mensagens"
@@ -1258,8 +1767,7 @@ msgid "Messages Search"
 msgstr "Pesquisar Mensagens"
 
 #. module: mail
-#: help:mail.group,message_ids:0
-#: help:mail.thread,message_ids:0
+#: help:mail.group,message_ids:0 help:mail.thread,message_ids:0
 #: help:res.partner,message_ids:0
 msgid "Messages and communication history"
 msgstr "Histórico de mensagens e comunicação"
@@ -1276,14 +1784,7 @@ msgid "Messaging Alias"
 msgstr "Apelidos de Mensagem"
 
 #. module: mail
-#: view:mail.alias:mail.view_mail_alias_search
-#: field:mail.message.subtype,res_model:0
-msgid "Model"
-msgstr "Modelo"
-
-#. module: mail
-#: help:mail.followers,res_model:0
-#: help:mail.wizard.invite,res_model:0
+#: help:mail.followers,res_model:0 help:mail.wizard.invite,res_model:0
 msgid "Model of the followed resource"
 msgstr "Modelo do recurso seguido"
 
@@ -1320,13 +1821,7 @@ msgid "My Groups"
 msgstr "Meus Grupos"
 
 #. module: mail
-#: field:mail.group,name:0
-msgid "Name"
-msgstr "Nome"
-
-#. module: mail
-#: help:mail.compose.message,record_name:0
-#: help:mail.message,record_name:0
+#: help:mail.compose.message,record_name:0 help:mail.message,record_name:0
 msgid "Name get of the related document."
 msgstr "Nome dado ao documento relacionado."
 
@@ -1447,8 +1942,7 @@ msgid "Organizer"
 msgstr "Organizador"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.mail,state:0
+#: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
 msgid "Outgoing"
 msgstr "Enviando"
 
@@ -1474,8 +1968,7 @@ msgid "Parent"
 msgstr "Superior"
 
 #. module: mail
-#: field:mail.compose.message,parent_id:0
-#: field:mail.message,parent_id:0
+#: field:mail.compose.message,parent_id:0 field:mail.message,parent_id:0
 msgid "Parent Message"
 msgstr "Mensagem Principal"
 
@@ -1507,11 +2000,6 @@ msgid "Parent subtype, used for automatic subscription."
 msgstr "Subtipo de pai, usado para inscrição automática."
 
 #. module: mail
-#: model:ir.model,name:mail.model_res_partner
-msgid "Partner"
-msgstr "Parceiro"
-
-#. module: mail
 #: code:addons/mail/res_partner.py:51
 #, python-format
 msgid "Partner Profile"
@@ -1525,12 +2013,6 @@ msgid ""
 msgstr ""
 "Parceiros que serão notificados quando esta mensagem for enviada para suas "
 "caixas de correio"
-
-#. module: mail
-#: help:mail.mail,auto_delete:0
-msgid "Permanently delete this email after sending it, to save space"
-msgstr ""
-"Excluir permanentemente este e-mail depois do envio para economizar espaço"
 
 #. module: mail
 #: field:mail.group,image:0
@@ -1621,17 +2103,9 @@ msgid "Receive Inbox Notifications by Email"
 msgstr "Receber notificações da caixa de entrada por email"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.mail,state:0
+#: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
 msgid "Received"
 msgstr "Recebida"
-
-#. module: mail
-#: view:mail.compose.message:mail.email_compose_message_wizard_form
-#: field:mail.message,partner_ids:0
-#: field:mail.wizard.invite,partner_ids:0
-msgid "Recipients"
-msgstr "Destinatários"
 
 #. module: mail
 #: field:mail.alias,alias_force_thread_id:0
@@ -1644,20 +2118,10 @@ msgid "References"
 msgstr "Referências"
 
 #. module: mail
-#: field:mail.compose.message,res_id:0
-#: field:mail.followers,res_id:0
-#: field:mail.message,res_id:0
-#: field:mail.wizard.invite,res_id:0
+#: field:mail.compose.message,res_id:0 field:mail.followers,res_id:0
+#: field:mail.message,res_id:0 field:mail.wizard.invite,res_id:0
 msgid "Related Document ID"
 msgstr "ID do Documento Relacionado"
-
-#. module: mail
-#: field:mail.compose.message,model:0
-#: field:mail.followers,res_model:0
-#: field:mail.message,model:0
-#: field:mail.wizard.invite,res_model:0
-msgid "Related Document Model"
-msgstr "Modelo de Documento Relacionado"
 
 #. module: mail
 #: field:mail.group,menu_id:0
@@ -1690,8 +2154,7 @@ msgid "Reply"
 msgstr "Responder"
 
 #. module: mail
-#: help:mail.compose.message,reply_to:0
-#: help:mail.message,reply_to:0
+#: help:mail.compose.message,reply_to:0 help:mail.message,reply_to:0
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
@@ -1700,14 +2163,7 @@ msgstr ""
 "de linha automática."
 
 #. module: mail
-#: field:mail.compose.message,reply_to:0
-#: field:mail.message,reply_to:0
-msgid "Reply-To"
-msgstr "Responder Para"
-
-#. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
 msgid "Retry"
 msgstr "Tentar Novamente"
 
@@ -1750,8 +2206,7 @@ msgid "Send Email"
 msgstr "Enviar Email"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
 msgid "Send Now"
 msgstr "Enviar Agora"
 
@@ -1775,8 +2230,7 @@ msgid "Send a message to the group"
 msgstr "Enviar Mensagem para o Grupo"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.mail,state:0
+#: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
 msgid "Sent"
 msgstr "Enviada"
 
@@ -1827,8 +2281,7 @@ msgstr ""
 "campo em lugares onde uma pequena imagem for necessária."
 
 #. module: mail
-#: field:mail.compose.message,starred:0
-#: field:mail.message,starred:0
+#: field:mail.compose.message,starred:0 field:mail.message,starred:0
 #: field:mail.notification,starred:0
 msgid "Starred"
 msgstr "Marcados com estrela"
@@ -1839,17 +2292,10 @@ msgid "Starred message that goes into the todo mailbox"
 msgstr "Mensagem marcada que irá para a caixa de A Fazer"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_search
+#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_search
 #: field:mail.mail,state:0
 msgid "Status"
 msgstr "Estado"
-
-#. module: mail
-#: field:mail.compose.message,subject:0
-#: field:mail.message,subject:0
-msgid "Subject"
-msgstr "Assunto"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -1857,8 +2303,7 @@ msgid "Subject..."
 msgstr "Assunto..."
 
 #. module: mail
-#: field:mail.compose.message,subtype_id:0
-#: field:mail.followers,subtype_ids:0
+#: field:mail.compose.message,subtype_id:0 field:mail.followers,subtype_ids:0
 #: field:mail.message,subtype_id:0
 #: view:mail.message.subtype:mail.view_message_subtype_tree
 msgid "Subtype"
@@ -1878,8 +2323,7 @@ msgid "Suggested Groups"
 msgstr "Grupos Sugeridos"
 
 #. module: mail
-#: field:mail.group,message_summary:0
-#: field:mail.thread,message_summary:0
+#: field:mail.group,message_summary:0 field:mail.thread,message_summary:0
 #: field:res.partner,message_summary:0
 msgid "Summary"
 msgstr "Sumário"
@@ -1890,8 +2334,7 @@ msgid "Support"
 msgstr "Suporte"
 
 #. module: mail
-#: selection:mail.compose.message,type:0
-#: selection:mail.message,type:0
+#: selection:mail.compose.message,type:0 selection:mail.message,type:0
 msgid "System notification"
 msgstr "Notificação do sistema"
 
@@ -2004,18 +2447,12 @@ msgid "To"
 msgstr "Para"
 
 #. module: mail
-#: field:mail.mail,recipient_ids:0
-msgid "To (Partners)"
-msgstr "Para (Parceiros)"
-
-#. module: mail
 #: view:mail.message:mail.view_message_search
 msgid "To Read"
 msgstr "Por Ler"
 
 #. module: mail
-#: field:mail.compose.message,to_read:0
-#: field:mail.message,to_read:0
+#: field:mail.compose.message,to_read:0 field:mail.message,to_read:0
 msgid "To read"
 msgstr "Não lidas"
 
@@ -2045,8 +2482,7 @@ msgstr "Tópicos discutidos neste grupo..."
 
 #. module: mail
 #: field:mail.compose.message,type:0
-#: view:mail.message:mail.view_message_search
-#: field:mail.message,type:0
+#: view:mail.message:mail.view_message_search field:mail.message,type:0
 msgid "Type"
 msgstr "Tipo"
 
@@ -2076,8 +2512,7 @@ msgstr ""
 "outro que seja exclusivo"
 
 #. module: mail
-#: field:mail.group,message_unread:0
-#: field:mail.thread,message_unread:0
+#: field:mail.group,message_unread:0 field:mail.thread,message_unread:0
 #: field:res.partner,message_unread:0
 msgid "Unread Messages"
 msgstr "Mensagens Não Lidas"
@@ -2101,8 +2536,7 @@ msgstr "Usando para ordenar subtipos."
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
 msgid "User"
 msgstr "Usuário"
 
@@ -2119,8 +2553,7 @@ msgid "Users"
 msgstr "Usuários"
 
 #. module: mail
-#: help:mail.compose.message,vote_user_ids:0
-#: help:mail.message,vote_user_ids:0
+#: help:mail.compose.message,vote_user_ids:0 help:mail.message,vote_user_ids:0
 msgid "Users that voted for this message"
 msgstr "Usuários que votaram para esta mensagem"
 
@@ -2129,12 +2562,6 @@ msgstr "Usuários que votaram para esta mensagem"
 #: field:mail.message,vote_user_ids:0
 msgid "Votes"
 msgstr "Votos"
-
-#. module: mail
-#: code:addons/mail/mail_group.py:174
-#, python-format
-msgid "Warning!"
-msgstr "Aviso!"
 
 #. module: mail
 #. openerp-web

@@ -105,7 +105,8 @@
             text-shadow: 0 0 2px black
             vertical-align: top
             position: relative
-            top: -8px
+            margin-right: 5px
+            font-size: 16px
             &:hover
                 text-decoration: none
         .oe_star_on
@@ -123,11 +124,15 @@
     .oe_kanban_header
         .oe_dropdown_kanban
             float: right
-        .oe_dropdown_kanban > span
+        .oe_dropdown_kanban > i
             visibility: hidden
+            margin-top: 11px
+            margin-right: 6px
         &:hover
-            .oe_dropdown_kanban > span
+            .oe_dropdown_kanban > i
                 visibility: visible
+                margin-top: 11px
+                margin-right: 6px
         .oe_dropdown_menu
             font-weight: normal
             font-size: 13px
@@ -146,11 +151,12 @@
             text-overflow: ellipsis
     .oe_fold_column
         .oe_kanban_group_length
-            position: absolute
-            top: -1px
-            right: -14px
+            position: relative
+            top: -23px
+            right: 17px
             float: right
             display: block
+            font-weight: bold
     &.oe_kanban_grouped
         .oe_kanban_column, .oe_kanban_group_header
             width: 185px
@@ -180,11 +186,10 @@
     &.oe_kanban_grouped
         .oe_kanban_column, .oe_kanban_column_cards
             height: 100%
-    .oe_kanban_aggregates
-        padding: 0
-        margin: 0px
     .oe_kanban_group_folded
-        .oe_kanban_group_title, &.oe_kanban_column *, .oe_kanban_aggregates, .oe_kanban_add
+        .oe_kanban_group_length.oe_tag
+            display: none
+        .oe_kanban_group_title, &.oe_kanban_column *, .oe_kanban_add
             display: none
         .oe_kanban_group_title_vertical, .oe_kanban_group_length
             display: block
@@ -218,7 +223,7 @@
         position: relative
         z-index: 1
     .oe_kanban_add
-        top: -8px
+        top: 3px
     .oe_kanban_header .oe_dropdown_toggle
         top: -2px
         height: 14px
@@ -347,8 +352,10 @@
         &:not(.ui-sortable-helper):hover
             border: 1px solid #7C7BAD
             @include box-shadow(0 0 4px #7C7BAD)
-            .oe_dropdown_kanban > span
+            .oe_dropdown_kanban > i
                 visibility: visible
+                margin-top: 11px
+                margin-right: 6px
         h3
             margin: 0 16px 0 0
             color: #4c4c4c
@@ -374,9 +381,9 @@
             padding: 0 2px
             line-height: 16px
             @include radius(3px)
-            .oe_e
+            .fa
                 line-height: 12px
-                font-size: 22px
+                font-size: 15px
         .oe_tags
             margin-right: 0
             .oe_tag
@@ -419,9 +426,12 @@
             > li
                 padding: 3px
     .oe_dropdown_kanban
-        &.oe_opened > span
+        &.oe_opened > i
             visibility: visible
-        > span
+            margin-top: 11px
+            margin-right: 6px
+        > i
+            margin-right: 6px
             visibility: hidden
     // }}}
     // KanbanColorPicker {{{

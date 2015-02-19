@@ -43,6 +43,8 @@
                         !$snipped_id.data("snippet-view")) {
                     website.snippet.readyAnimation.push($snipped_id);
                     $snipped_id.data("snippet-view", new Animation($snipped_id, editable_mode));
+                } else if ($snipped_id.data("snippet-view")) {
+                    $snipped_id.data("snippet-view").start(editable_mode);
                 }
             });
         }
@@ -188,14 +190,16 @@
     website.snippet.animationRegistry.ul = website.snippet.Animation.extend({
         selector: "ul.o_ul_folded, ol.o_ul_folded",
         start: function (editable_mode) {
-            this.$('.o_ul_toggle_self').off('click').on('click', function () {
+            this.$('.o_ul_toggle_self').off('click').on('click', function (event) {
                 $(this).toggleClass('o_open');
                 $(this).closest('li').find('ul,ol').toggleClass('o_close');
+                event.preventDefault();
             });
 
-            this.$('.o_ul_toggle_next').off('click').on('click', function () {
+            this.$('.o_ul_toggle_next').off('click').on('click', function (event) {
                 $(this).toggleClass('o_open');
                 $(this).closest('li').next().toggleClass('o_close');
+                event.preventDefault();
             });
         },
     });
@@ -276,7 +280,7 @@
             var $prev = $indicator.find('li.fa:first');
             var $next = $indicator.find('li.fa:last');
             var index = ($lis.filter('.active').index() || 1) -1;
-            var page = Math.floor((index-1) / 10);
+            var page = Math.floor(index / 10);
             var nb = Math.ceil($lis.length / 10);
 
              // fix bootstrap use index insead of data-slide-to
@@ -292,7 +296,7 @@
 
             function hide () {
                 $lis.addClass('hidden').each(function (i) {
-                    if (i > page*10 && i < (page+1)*10+1) {
+                    if (i >= page*10 && i < (page+1)*10) {
                         $(this).removeClass('hidden');
                     }
                 });
@@ -302,14 +306,14 @@
 
             $indicator.find('li.fa').on('click', function () {
                 page = (page + ($(this).hasClass('o_indicators_left')?-1:1)) % nb;
-                $carousel.carousel(page*10+1);
+                $carousel.carousel(page*10);
                 hide();
             });
             hide();
 
             $carousel.on('slid.bs.carousel', function() {
                 var index = ($lis.filter('.active').index() || 1) -1;
-                page = Math.floor((index-1) / 10);
+                page = Math.floor(index / 10);
                 hide();
             });
         }

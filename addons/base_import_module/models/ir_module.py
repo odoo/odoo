@@ -8,6 +8,7 @@ import openerp
 from openerp.osv import osv
 from openerp.tools import convert_file
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class view(osv.osv):
         unmet_dependencies = set(terp['depends']).difference(installed_mods)
         if unmet_dependencies:
             msg = _("Unmet module dependencies: %s")
-            raise osv.except_osv(_('Error !'), msg % ', '.join(unmet_dependencies))
+            raise UserError(msg % ', '.join(unmet_dependencies))
 
         mod = known_mods_names.get(module)
         if mod:
@@ -79,7 +80,7 @@ class view(osv.osv):
         if not module_file:
             raise Exception("No file sent.")
         if not zipfile.is_zipfile(module_file):
-            raise osv.except_osv(_('Error !'), _('File is not a zip file!'))
+            raise UserError(_('File is not a zip file!'))
 
         success = []
         errors = dict()
@@ -88,7 +89,7 @@ class view(osv.osv):
             for zf in z.filelist:
                 if zf.file_size > MAX_FILE_SIZE:
                     msg = _("File '%s' exceed maximum allowed file size")
-                    raise osv.except_osv(_('Error !'), msg % zf.filename)
+                    raise UserError(msg % zf.filename)
 
             with openerp.tools.osutil.tempdir() as module_dir:
                 z.extractall(module_dir)

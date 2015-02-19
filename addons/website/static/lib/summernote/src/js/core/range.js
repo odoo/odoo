@@ -408,6 +408,36 @@ define([
       this.isOnAnchor = makeIsOn(dom.isAnchor);
       // isOnAnchor: judge whether range is on cell node or not
       this.isOnCell = makeIsOn(dom.isCell);
+      // isOnAnchor: judge whether range is an image node or not
+      this.isOnImg = function () {
+        var nb = 0;
+        var image;
+        var startPoint = {node: sc.childNodes.length && sc.childNodes[so] || sc};
+        startPoint.offset = startPoint.node === sc ? so : 0;
+        var endPoint = {node: ec.childNodes.length && ec.childNodes[eo] || ec};
+        endPoint.offset = endPoint.node === ec ? eo : 0;
+
+        if (dom.isImg(startPoint.node)) {
+          nb ++;
+          image = startPoint.node;
+        }
+        dom.walkPoint(startPoint, endPoint, function (point) {
+          if (!dom.isText(endPoint.node) && point.node === endPoint.node && point.offset === endPoint.offset) {
+            return;
+          }
+          var node = point.node.childNodes.length && point.node.childNodes[point.offset] || point.node;
+          var offset = node === point.node ? point.offset : 0;
+          var isImg = dom.ancestor(node, dom.isImg);
+          if (!isImg && ((!dom.isBR(node) && !dom.isText(node)) || (offset && node.textContent.length !== offset && node.textContent.match(/\S|\u00A0/)))) {
+            nb++;
+          }
+          if (isImg && image !== isImg) {
+            image = isImg;
+            nb ++;
+          }
+        });
+        return nb === 1 && image;
+      };
 
       /**
        * @param {Function} pred
@@ -595,15 +625,6 @@ define([
             eo = endPoint.offset;
           }
 
-          /* fir for some browser like PhantomJS
-           * if you select a span with PhantomJS put the carret on the last char of the previous text node
-           * instead of put the caret on the parent node with the the ofset to target the node
-           */
-          if (sc.nodeType === 3 && sc.nextSibling && sc.nextSibling.tagName && dom.nodeLength(sc) === so) {
-            so = dom.listPrev(ec).length-1;
-            sc = sc.parentNode;
-          }
-
         } else if (arguments.length === 2) { //collapsed
           ec = sc;
           eo = so;
@@ -624,7 +645,7 @@ define([
         var eo = dom.nodeLength(ec);
 
         // browsers can't target a picture or void node
-        if (dom.isVoid(sc) || dom.isImg(sc)) {
+        if (dom.isVoid(sc)) {
           so = dom.listPrev(sc).length-1;
           sc = sc.parentNode;
         }

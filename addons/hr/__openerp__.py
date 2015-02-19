@@ -42,13 +42,7 @@ You can manage:
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'images': [
-        'images/hr_department.jpeg',
-        'images/hr_employee.jpeg',
-        'images/hr_job_position.jpeg',
-        'static/src/img/default_image.png',
-    ],
-    'depends': ['base_setup','mail', 'resource', 'board'],
+    'depends': ['base_setup', 'mail', 'resource', 'board', 'web_tip'],
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',

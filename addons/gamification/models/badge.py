@@ -26,6 +26,7 @@ from openerp.tools.translate import _
 
 from datetime import date
 import logging
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -60,9 +61,10 @@ class gamification_badge_user(osv.Model):
         res = True
         temp_obj = self.pool.get('mail.template')
         user_obj = self.pool.get('res.users')
-        template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
+        template_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'gamification', 'email_template_badge_received')[1]
         for badge_user in self.browse(cr, uid, ids, context=context):
-            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=context)
+            template = temp_obj.get_email_template(cr, uid, template_id, badge_user.id, context=context)
+            body_html = temp_obj.render_template(cr, uid, template.body_html, 'gamification.badge.user', badge_user.id, context=template._context)
             res = user_obj.message_post(
                 cr, uid, badge_user.user_id.id,
                 body=body_html,
@@ -235,13 +237,13 @@ class gamification_badge(osv.Model):
         if status_code == self.CAN_GRANT:
             return True
         elif status_code == self.NOBODY_CAN_GRANT:
-            raise osv.except_osv(_('Warning!'), _('This badge can not be sent by users.'))
+            raise UserError(_('This badge can not be sent by users.'))
         elif status_code == self.USER_NOT_VIP:
-            raise osv.except_osv(_('Warning!'), _('You are not in the user allowed list.'))
+            raise UserError(_('You are not in the user allowed list.'))
         elif status_code == self.BADGE_REQUIRED:
-            raise osv.except_osv(_('Warning!'), _('You do not have the required badges.'))
+            raise UserError(_('You do not have the required badges.'))
         elif status_code == self.TOO_MANY:
-            raise osv.except_osv(_('Warning!'), _('You have already sent this badge too many time this month.'))
+            raise UserError(_('You have already sent this badge too many time this month.'))
         else:
             _logger.exception("Unknown badge status code: %d" % int(status_code))
         return False

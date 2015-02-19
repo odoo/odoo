@@ -29,7 +29,7 @@ import math
 import time
 from operator import attrgetter
 
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError, AccessError
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -53,14 +53,14 @@ class hr_holidays_status(osv.osv):
                     # note: add only validated allocation even for the virtual
                     # count; otherwise pending then refused allocation allow
                     # the employee to create more leaves than possible
-                    status_dict['virtual_remaining_leaves'] += holiday.number_of_days
-                    status_dict['max_leaves'] += holiday.number_of_days
-                    status_dict['remaining_leaves'] += holiday.number_of_days
+                    status_dict['virtual_remaining_leaves'] += holiday.number_of_days_temp
+                    status_dict['max_leaves'] += holiday.number_of_days_temp
+                    status_dict['remaining_leaves'] += holiday.number_of_days_temp
             elif holiday.type == 'remove':  # number of days is negative
-                status_dict['virtual_remaining_leaves'] += holiday.number_of_days
+                status_dict['virtual_remaining_leaves'] -= holiday.number_of_days_temp
                 if holiday.state == 'validate':
-                    status_dict['leaves_taken'] -= holiday.number_of_days
-                    status_dict['remaining_leaves'] += holiday.number_of_days
+                    status_dict['leaves_taken'] += holiday.number_of_days_temp
+                    status_dict['remaining_leaves'] -= holiday.number_of_days_temp
         return result
 
     def _user_left_days(self, cr, uid, ids, name, args, context=None):
@@ -202,8 +202,8 @@ class hr_holidays(osv.osv):
             \nThe status is \'To Approve\', when holiday request is confirmed by user.\
             \nThe status is \'Refused\', when holiday request is refused by manager.\
             \nThe status is \'Approved\', when holiday request is approved by manager.'),
-        'payslip_status': fields.boolean(string='Payslip Status',
-            help='Check this field when the leave has been taken into account in the payslip.'),
+        'payslip_status': fields.boolean(string='Reported in last payslips',
+            help='Green this button when the leave has been taken into account in the payslip.'),
         'report_note': fields.text('HR Comments'),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', relation='res.users', string='User', store=True),
         'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, select=True, copy=False),
@@ -238,10 +238,11 @@ class hr_holidays(osv.osv):
         'payslip_status': False,
     }
     _constraints = [
-        (_check_date, 'You can not have 2 leaves that overlaps on same day!', ['date_from','date_to']),
-        (_check_holidays, 'The number of remaining leaves is not sufficient for this leave type', ['state','number_of_days_temp'])
-    ] 
-    
+        (_check_date, 'You can not have 2 leaves that overlaps on same day!', ['date_from', 'date_to']),
+        (_check_holidays, 'The number of remaining leaves is not sufficient for this leave type.\n'
+                          'Please verify also the leaves waiting for validation.', ['state', 'number_of_days_temp'])
+    ]
+
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", 
          "The employee or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
@@ -305,7 +306,7 @@ class hr_holidays(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel', 'confirm']:
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is in %s state.')%(rec.state))
+                raise UserError(_('You cannot delete a leave which is in %s state.') % (rec.state,))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
@@ -316,7 +317,7 @@ class hr_holidays(osv.osv):
         """
         # date_to has to be greater than date_from
         if (date_from and date_to) and (date_from > date_to):
-            raise osv.except_osv(_('Warning!'),_('The start date must be anterior to the end date.'))
+            raise UserError(_('The start date must be anterior to the end date.'))
 
         result = {'value': {}}
 
@@ -340,7 +341,7 @@ class hr_holidays(osv.osv):
         """
         # date_to has to be greater than date_from
         if (date_from and date_to) and (date_from > date_to):
-            raise osv.except_osv(_('Warning!'),_('The start date must be anterior to the end date.'))
+            raise UserError(_('The start date must be anterior to the end date.'))
 
         result = {'value': {}}
 
@@ -358,12 +359,12 @@ class hr_holidays(osv.osv):
             context = {}
         context = dict(context, mail_create_nolog=True)
         if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
-            raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
+            raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
         return super(hr_holidays, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
-            raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
+            raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
         return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
 
     def holidays_reset(self, cr, uid, ids, context=None):
@@ -479,9 +480,7 @@ class hr_holidays(osv.osv):
                 continue
             leave_days = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, context=context)[record.holiday_status_id.id]
             if leave_days['remaining_leaves'] < 0 or leave_days['virtual_remaining_leaves'] < 0:
-                # Raising a warning gives a more user-friendly feedback than the default constraint error
-                raise Warning(_('The number of remaining leaves is not sufficient for this leave type.\n'
-                                'Please verify also the leaves waiting for validation.'))
+                return False
         return True
 
     def toggle_payslip_status(self, cr, uid, ids, context=None):
@@ -517,14 +516,14 @@ class hr_employee(osv.Model):
         # Find for holidays status
         status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
         if len(status_ids) != 1 :
-            raise osv.except_osv(_('Warning!'),_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
+            raise UserError(_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
         status_id = status_ids and status_ids[0] or False
         if not status_id:
             return False
         if diff > 0:
             leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
         elif diff < 0:
-            raise osv.except_osv(_('Warning!'), _('You cannot reduce validated allocation requests'))
+            raise UserError(_('You cannot reduce validated allocation requests'))
         else:
             return False
         for sig in ('confirm', 'validate', 'second_validate'):

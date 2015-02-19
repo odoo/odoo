@@ -29,13 +29,13 @@ import print_xml
 import render
 from interface import report_int
 import common
-from openerp.osv.osv import except_osv
 from openerp.osv.orm import BaseModel
 from pychart import *
 import misc
 import cStringIO
 from lxml import etree
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class external_pdf(render.render):
     def __init__(self, pdf):
@@ -551,7 +551,7 @@ class report_custom(report_int):
         colors = map(lambda x:fill_style.Plain(bgcolor=x), misc.choice_colors(len(results)))
 
         if reduce(lambda x,y : x+y, map(lambda x : x[1],results)) == 0.0:
-            raise except_osv(_('Error'), _("The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"))
+            raise UserError(_("The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"))
 
         plot = pie_plot.T(data=results, arc_offsets=[0,10,0,10],
                           shadow = (2, -2, fill_style.gray50),

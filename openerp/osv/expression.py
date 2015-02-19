@@ -1066,15 +1066,15 @@ class expression(object):
 
                     subselect = """WITH temp_irt_current (id, name) as (
                             SELECT ct.id, coalesce(it.value,ct.{quote_left})
-                            FROM {current_table} ct 
-                            LEFT JOIN ir_translation it ON (it.name = %s and 
-                                        it.lang = %s and 
-                                        it.type = %s and 
-                                        it.res_id = ct.id and 
+                            FROM {current_table} ct
+                            LEFT JOIN ir_translation it ON (it.name = %s and
+                                        it.lang = %s and
+                                        it.type = %s and
+                                        it.res_id = ct.id and
                                         it.value != '')
-                            ) 
+                            )
                             SELECT id FROM temp_irt_current WHERE {name} {operator} {right} order by name
-                            """.format(current_table=model._table, quote_left=_quote(left), name=unaccent('name'), 
+                            """.format(current_table=model._table, quote_left=_quote(left), name=unaccent('name'),
                                        operator=sql_operator, right=instr)
 
                     params = (
@@ -1208,7 +1208,7 @@ class expression(object):
                 format = need_wildcard and '%s' or model._columns[left]._symbol_set[0]
                 unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
                 column = '%s.%s' % (table_alias, _quote(left))
-                query = '(%s%s %s %s)' % (unaccent(column), cast, sql_operator, unaccent(format))
+                query = '(%s %s %s)' % (unaccent(column + cast), sql_operator, unaccent(format))
             elif left in MAGIC_COLUMNS:
                     query = "(%s.\"%s\"%s %s %%s)" % (table_alias, left, cast, sql_operator)
                     params = right

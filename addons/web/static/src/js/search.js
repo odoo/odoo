@@ -410,7 +410,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.$('.oe_searchview_unfold_drawer')
             .toggleClass('fa-caret-down', !this.visible_filters)
             .toggleClass('fa-caret-up', this.visible_filters);
-        return this.alive($.when(this._super(), load_view.then(this.view_loaded.bind(this))));
+        return this.alive($.when(this._super(), this.alive(load_view).then(this.view_loaded.bind(this))));
     },
     view_loaded: function (r) {
         var self = this;
@@ -509,6 +509,9 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     toggle_visibility: function (is_visible) {
         this.$el.toggle(!this.headless && is_visible);
         this.$buttons && this.$buttons.toggle(!this.headless && is_visible && this.visible_filters);
+        if (!this.headless && is_visible) {
+            this.$('div.oe_searchview_input').last().focus();
+        }
     },
     toggle_buttons: function (is_visible) {
         this.visible_filters = is_visible || !this.visible_filters;
@@ -1230,12 +1233,13 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
         var results = _(this.attrs.selection).chain()
             .filter(function (sel) {
                 var value = sel[0], label = sel[1];
-                if (!value) { return false; }
+                if (value === undefined || !label) { return false; }
                 return label.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
             })
             .map(function (sel) {
                 return {
                     label: _.escape(sel[1]),
+                    indent: true,
                     facet: facet_from(self, sel)
                 };
             }).value();

@@ -254,10 +254,9 @@
                                     </tree>
                                 </field>
                             </div>
-                            <div class="oe_clear">
-                                <label for="comment"/>
+                            <div>
+                                <field name="comment" placeholder="Additional notes..."/>
                             </div>
-                            <field name="comment"/>
                         </page>
                         <page string="Other Info">
                             <group>
@@ -397,9 +396,6 @@
                             <group>
                                     <field name="payment_term" class="oe_inline" on_change="onchange_payment_term_date_invoice(payment_term,date_invoice)"/>
                             </group>
-                            <div class="oe_clear">
-                                <label for="comment"/>
-                            </div>
                             <field name="comment" class="oe_inline" placeholder="Additional notes..."/>
                         </page>
                         <page string="Other Info">

@@ -22,6 +22,7 @@
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -59,6 +60,7 @@ class stock_move(osv.osv):
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         if move.purchase_line_id:
             invoice_line_vals['purchase_line_id'] = move.purchase_line_id.id
+            invoice_line_vals['account_analytic_id'] = move.purchase_line_id.account_analytic_id.id or False
         invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
         if move.purchase_line_id:
             purchase_line = move.purchase_line_id
@@ -192,7 +194,7 @@ class stock_warehouse(osv.osv):
             buy_route_id = route_obj.search(cr, uid, [('name', 'like', _('Buy'))], context=context)
             buy_route_id = buy_route_id and buy_route_id[0] or False
         if not buy_route_id:
-            raise osv.except_osv(_('Error!'), _('Can\'t find any generic Buy route.'))
+            raise UserError(_('Can\'t find any generic Buy route.'))
 
         return {
             'name': self._format_routename(cr, uid, warehouse, _(' Buy'), context=context),

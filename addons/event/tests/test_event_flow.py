@@ -4,7 +4,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp.addons.event.tests.common import TestEventCommon
-from openerp.exceptions import AccessError, ValidationError, Warning
+from openerp.exceptions import AccessError, ValidationError, UserError
 from openerp.tools import mute_logger
 
 
@@ -21,6 +21,7 @@ class TestEventFlow(TestEventCommon):
             'date_begin': datetime.datetime.now() + relativedelta(days=-1),
             'date_end': datetime.datetime.now() + relativedelta(days=1),
             'seats_max': 2,
+            'seats_availability': 'limited',
         })
         self.assertEqual(test_event.state, 'confirm', 'Event: auto_confirmation of event failed')
 
@@ -57,7 +58,7 @@ class TestEventFlow(TestEventCommon):
         test_event.button_done()
 
         # EventUser cancels -> not possible when having attendees
-        with self.assertRaises(Warning):
+        with self.assertRaises(UserError):
             test_event.button_cancel()
 
 

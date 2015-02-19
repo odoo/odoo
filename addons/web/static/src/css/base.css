@@ -1,20 +1,10 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
   src: url("/web/static/src/font/mnmliconsv21-webfont.woff") format("woff");
   src: url("/web/static/src/font/mnmliconsv21-webfont.ttf") format("truetype");
   src: url("/web/static/src/font/mnmliconsv21-webfont.svg") format("svg") active;
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: "EntypoRegular";
-  src: url("/web/static/src/font/entypo-webfont.eot") format("eot");
-  src: url("/web/static/src/font/entypo-webfont.eot?#iefix") format("embedded-opentype");
-  src: url("/web/static/src/font/entypo-webfont.woff") format("woff");
-  src: url("/web/static/src/font/entypo-webfont.ttf") format("truetype");
-  src: url("/web/static/src/font/entypo-webfont.svg") format("svg") active;
   font-weight: normal;
   font-style: normal;
 }
@@ -282,12 +272,6 @@
   font-size: 21px;
   font-weight: 300 !important;
 }
-.openerp .oe_e {
-  font-family: "entypoRegular" !important;
-  font-size: 34px;
-  font-weight: 300 !important;
-  line-height: 100%;
-}
 .openerp .oe_left {
   float: left;
   margin-right: 8px;
@@ -327,34 +311,34 @@
   background: #DC5F59;
 }
 .openerp button.oe_highlight {
-  background-color: #c02c2c;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#df3f3f), to(#a21a1a));
-  background-image: -webkit-linear-gradient(top, #df3f3f, #a21a1a);
-  background-image: -moz-linear-gradient(top, #df3f3f, #a21a1a);
-  background-image: -ms-linear-gradient(top, #df3f3f, #a21a1a);
-  background-image: -o-linear-gradient(top, #df3f3f, #a21a1a);
-  background-image: linear-gradient(to bottom, #df3f3f, #a21a1a);
+  background-color: #5382b9;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#729fcf), to(#3465a4));
+  background-image: -webkit-linear-gradient(top, #729fcf, #3465a4);
+  background-image: -moz-linear-gradient(top, #729fcf, #3465a4);
+  background-image: -ms-linear-gradient(top, #729fcf, #3465a4);
+  background-image: -o-linear-gradient(top, #729fcf, #3465a4);
+  background-image: linear-gradient(to bottom, #729fcf, #3465a4);
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
 }
 .openerp button.oe_highlight:hover {
-  background-color: #c63939;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#e25858), to(#ab1b1b));
-  background-image: -webkit-linear-gradient(top, #e25858, #ab1b1b);
-  background-image: -moz-linear-gradient(top, #e25858, #ab1b1b);
-  background-image: -ms-linear-gradient(top, #e25858, #ab1b1b);
-  background-image: -o-linear-gradient(top, #e25858, #ab1b1b);
-  background-image: linear-gradient(to bottom, #e25858, #ab1b1b);
+  background-color: #3a699f;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#4c85c2), to(#284d7d));
+  background-image: -webkit-linear-gradient(top, #4c85c2, #284d7d);
+  background-image: -moz-linear-gradient(top, #4c85c2, #284d7d);
+  background-image: -ms-linear-gradient(top, #4c85c2, #284d7d);
+  background-image: -o-linear-gradient(top, #4c85c2, #284d7d);
+  background-image: linear-gradient(to bottom, #4c85c2, #284d7d);
 }
 .openerp button.oe_highlight:active {
-  background-color: #cb2121;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#c52020), to(#d22323));
-  background-image: -webkit-linear-gradient(top, #c52020, #d22323);
-  background-image: -moz-linear-gradient(top, #c52020, #d22323);
-  background-image: -ms-linear-gradient(top, #c52020, #d22323);
-  background-image: -o-linear-gradient(top, #c52020, #d22323);
-  background-image: linear-gradient(to bottom, #c52020, #d22323);
+  background-color: #5d8cc3;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#81a9d4), to(#396fb3));
+  background-image: -webkit-linear-gradient(top, #81a9d4, #396fb3);
+  background-image: -moz-linear-gradient(top, #81a9d4, #396fb3);
+  background-image: -ms-linear-gradient(top, #81a9d4, #396fb3);
+  background-image: -o-linear-gradient(top, #81a9d4, #396fb3);
+  background-image: linear-gradient(to bottom, #81a9d4, #396fb3);
 }
 .openerp .oe_background_grey {
   background: #eee !important;
@@ -441,6 +425,13 @@
 .openerp .oe_button_box .oe_stat_button {
   display: inline-table;
 }
+.openerp button.oe_toggle_button {
+  box-shadow: none;
+  white-space: nowrap;
+  background: transparent;
+  outline: none;
+  border: none;
+}
 .openerp .oe_avatar > img {
   max-height: 90px;
   max-width: 90px;
@@ -501,7 +492,8 @@
   text-shadow: 0 0 2px black;
   vertical-align: top;
   position: relative;
-  top: -8px;
+  top: 4px;
+  font-size: 22px;
 }
 .openerp .oe_star_on:hover, .openerp .oe_star_off:hover {
   text-decoration: none;
@@ -536,7 +528,7 @@
   background-image: -webkit-radial-gradient(circle, #eee 0%, #ccc 40%, #bbb 100%);
   background-image: -moz-radial-gradient(#eee 0%, #ccc 40%, #bbb 100%);
   background-image: -ms-radial-gradient(#eee 0%, #ccc 40%, #bbb 100%);
-  background-image: radial-gradient(circle, #eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
+  background-image: radial-gradient(circle, #eee 0%, #ccc 40%, #bbb 100%);
 }
 .openerp .oe_kanban_status_green {
   background: green;
@@ -1055,6 +1047,9 @@
 }
 .openerp .oe-view-manager-header .oe-view-manager-switch .oe-vm-switch-pivot:before {
   content: "";
+}
+.openerp .oe-view-manager-header .oe-view-manager-switch .oe-vm-switch-tree:before {
+  content: "";
 }
 .openerp .oe-view-manager-header .oe-view-manager-buttons {
   display: inline-block;
@@ -2093,10 +2088,9 @@
   border: none;
   text-shadow: none;
 }
-.openerp .oe_fileupload .oe_add button.oe_attach .oe_e {
+.openerp .oe_fileupload .oe_add button.oe_attach .fa {
   position: relative;
-  top: -10px;
-  left: -9px;
+  font-size: 18px;
 }
 .openerp .oe_fileupload .oe_add input.oe_form_binary_file {
   display: inline-block;
@@ -2122,11 +2116,11 @@
   padding-left: 4px;
   padding-right: 4px;
 }
-.openerp .oe_fileupload .oe_attachments .oe_attachment .oe_e {
+.openerp .oe_fileupload .oe_attachments .oe_attachment .fa {
   font-size: 23px;
   margin-top: -5px;
 }
-.openerp .oe_fileupload .oe_attachments .oe_attachment .oe_e:hover {
+.openerp .oe_fileupload .oe_attachments .oe_attachment .fa:hover {
   text-decoration: none;
 }
 .openerp .oe_fileupload .oe_attachments .oe_attachment:nth-child(odd) {
@@ -2147,9 +2141,12 @@
   right: 0px;
 }
 .openerp .oe_form_field_many2one .oe_m2o_cm_button {
-  line-height: 14px;
+  line-height: 27px;
   float: right;
   padding-left: 2px;
+  font-size: 19px;
+  color: #7C7BAD;
+  cursor: pointer;
 }
 .openerp .oe_form_field_many2one input {
   padding-right: 13px;
@@ -2606,17 +2603,10 @@
   cursor: ns-resize;
 }
 .openerp .oe_list_content td.oe_list_field_handle .oe_list_handle {
-  font-size: 1px;
-  letter-spacing: -1px;
-  color: transparent;
-  text-shadow: none;
-  font-weight: normal;
-  margin-right: 7px;
-}
-.openerp .oe_list_content td.oe_list_field_handle .oe_list_handle:before {
-  font: 18px "entypoRegular";
-  content: "}";
+  font-size: 7px;
   color: #E0E0E0;
+  margin-right: 10px;
+  margin-top: 8px;
 }
 .openerp .oe_list_content .oe_list_field_progressbar progress {
   width: 100%;
@@ -2850,18 +2840,20 @@ div.ui-widget-overlay {
 }
 .ui-menu .ui-menu-item a {
   padding: 1px 16px;
-  color: #404040;
+  color: #000000 !important;
 }
 .ui-menu .ui-menu-item a.ui-corner-all {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0;
 }
-.ui-menu .ui-menu-item a.ui-state-active {
-  background: #f0f0fa;
+.ui-menu .ui-state-focus, .ui-menu .ui-state-active {
+  background: #7c7bad !important;
+  border: 0 !important;
 }
-.ui-menu .ui-menu-item a.ui-state-hover, .ui-menu .ui-menu-item a.ui-state-active {
-  background: #7C7BAD;
+.ui-menu .ui-state-focus a, .ui-menu .ui-state-active a {
+  color: #ffffff !important;
+  font-weight: normal !important;
 }
 
 .ui-corner-all {
@@ -3065,7 +3057,7 @@ body.oe_single_form .oe_single_form_container {
   .openerp .tree_header button, .openerp .oe_mail .oe_mail_thread_msg .oe_mail_unread, .openerp .oe_mail_fetch_more, .openerp .oe_m2o_drop_down_button img, .openerp .oe_form_field_one2many_list_row_add {
     visibility: hidden;
   }
-  .openerp a.oe_m2o_cm_button, .openerp a.oe_e {
+  .openerp a.oe_m2o_cm_button, .openerp a.fa {
     visibility: hidden;
   }
   .openerp .oe_form .oe_form_field_date img, .openerp .oe_form .oe_form_field_datetime img {

@@ -6,43 +6,65 @@
 /* ---- SNIPPET EDITOR ---- {{{ */
 
 #oe_snippets
-    position: fixed
-    top: 34px
-    left: 0px
-    right: 0px
-    padding-top: 6px
-    // top property is set programmatically
-    background: rgb(40,40,40)
-    +box-shadow(0px 10px 10px -10px black inset)
-    z-index: 1010
-    overflow: hidden
-    &:hover
-        height: auto
-    .scroll
-        white-space: nowrap
-    .nav
-        display: inline-block
-        border-bottom: none !important
-        vertical-align: middle
-        min-width: 120px
-        > li
-            display: block
-            float: none
-            &.active
-                background: black !important
-            > a
-                padding: 2px 10px !important
-                width: 100%
-                display: block
-                border: 0
-        z-index: 1
-    .pill-content
+    #o_left_bar, #o_arrow
+        position: fixed
+        top: 34px
+        left: 0px
+        bottom: 0
+        background: rgb(40,40,40)
+        +box-shadow(0px 10px 10px -10px black inset)
+    #o_arrow
+        z-index: 1009
+        width: 24px
+        opacity: 0.75
+        > *
+            position: absolute
+            color: white
+        div
+            @include transform( translateX(-36%) rotate(-90deg) )
+            top: 50%
+            white-space: nowrap
+        .fa
+            width: 100%
+            left: 40%
+    #o_left_bar
+        left:  -228px
+        z-index: 1010
+        width: 208px
+        @include transition(all 500ms ease)
+        ul
+            text-align: center
+            margin: 0
+            padding: 6px 0
+            list-style-type: none
+            li
+                display: inline-block
+                padding: 0 3px
+                a
+                    color: #aaa
+                .fa-stack
+                    overflow: hidden
+            li.active a.fa, li.active .fa-stack-1x
+                color: #428bca
+
+    &.o_open #o_left_bar
+        left: 0
+    .o_panel
+        margin: 0
         border: 0
-    .tab-content
-        display: inline-block
-        white-space: nowrap
+        width: 208px
+    .o_panel_header
+        background: #dff0d8
+        padding: 1px 8px
+        color: #414141
+        text-align: center
+        .fa-stack
+            overflow: hidden
+            font-size: 1em
+    .o_panel_body
+        white-space: normal
         background: black
-        margin-right: 60px
+        padding: 7px 3px
         > div
             background: rgb(0,0,0)
             label
@@ -57,11 +79,12 @@
                     @include transform-origin(50%)
 
 .oe_snippet
-    float: left
+    display: inline-block
     vertical-align: top
     width: 93px
-    margin-left: 1px
-    margin-top: 0px
+    margin-left: 3px
+    margin-right: 3px
+    margin-top: 1px
     position: relative
     overflow: hidden
     +user-select(none)
@@ -330,6 +353,13 @@
         content: "\F063" !important
     &.block-n-bottom .n:before
         content: "\f062" !important
+
+    &.o_keypress
+        opacity: 0
+        -webkit-transition: .8s
+        -moz-transition: .8s
+        -o-transition: .8s
+        -transition: .8s
 
 
 .s-resize-important, .s-resize-important *
@@ -638,3 +668,36 @@ table.table_desc tr td
     &.o_block_quotes_slider .oe_snippet_thumbnail_img
         background-image: url('/website/static/src/img/blocks/block_quotes_slider.png')
 // }}}
+
+/* snippets default margins */
+.s_banner
+    margin-bottom: 32px
+
+.s_big_message
+    margin-top: 16px
+    margin-bottom: 16px
+
+.s_text_block
+    margin-top: 16px
+    margin-bottom: 16px
+
+.s_features
+    margin-top: 16px
+
+.s_big_picture
+    margin-top: 16px
+    margin-bottom: 16px
+
+.s_three_columns
+    margin-top: 16px
+    margin-bottom: 16px
+
+.s_references
+    margin-top: 16px
+    margin-bottom: 32px
+
+.s_quotes_slider
+    margin-bottom: 0px
+
+.s_features_grid
+    margin-bottom: 16px

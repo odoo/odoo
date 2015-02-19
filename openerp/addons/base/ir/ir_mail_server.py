@@ -36,6 +36,8 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import html2text
 import openerp.tools as tools
+from openerp.exceptions import UserError
+from openerp.exceptions import except_orm
 
 # ustr was originally from tools.misc.
 # it is moved to loglevels until we refactor tools.
@@ -45,7 +47,7 @@ _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
 
 
-class MailDeliveryException(osv.except_osv):
+class MailDeliveryException(except_orm):
     """Specific exception subclass for mail delivery errors"""
     def __init__(self, name, value):
         super(MailDeliveryException, self).__init__(name, value)
@@ -205,14 +207,14 @@ class ir_mail_server(osv.osv):
                                     password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
                                     smtp_debug=smtp_server.smtp_debug)
             except Exception, e:
-                raise osv.except_osv(_("Connection Test Failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
+                raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s") % tools.ustr(e))
             finally:
                 try:
                     if smtp: smtp.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
-        raise osv.except_osv(_("Connection Test Succeeded!"), _("Everything seems properly set up!"))
+        raise UserError(_("Connection Test Succeeded! Everything seems properly set up!"))
 
     def connect(self, host, port, user=None, password=None, encryption=False, smtp_debug=False):
         """Returns a new SMTP connection to the give SMTP server, authenticated
@@ -229,10 +231,8 @@ class ir_mail_server(osv.osv):
         """
         if encryption == 'ssl':
             if not 'SMTP_SSL' in smtplib.__all__:
-                raise osv.except_osv(
-                             _("SMTP-over-SSL mode unavailable"),
-                             _("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
-                               "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
+                raise UserError(_("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
+                                    "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
             connection = smtplib.SMTP_SSL(host, port)
         else:
             connection = smtplib.SMTP(host, port)
@@ -363,6 +363,27 @@ class ir_mail_server(osv.osv):
                 msg.attach(part)
         return msg
 
+    def _get_default_bounce_address(self, cr, uid, context=None):
+        '''Compute the default bounce address.
+
+        The default bounce address is used to set the envelop address if no
+        envelop address is provided in the message.  It is formed by properly
+        joining the parameters "mail.catchall.alias" and
+        "mail.catchall.domain".
+
+        If "mail.catchall.alias" is not set it defaults to "postmaster-odoo".
+
+        If "mail.catchall.domain" is not set, return None.
+
+        '''
+        get_param = self.pool['ir.config_parameter'].get_param
+        postmaster = get_param(cr, uid, 'mail.bounce.alias',
+                               default='postmaster-odoo',
+                               context=context,)
+        domain = get_param(cr, uid, 'mail.catchall.domain', context=context)
+        if postmaster and domain:
+            return '%s@%s' % (postmaster, domain)
+
     def send_email(self, cr, uid, message, mail_server_id=None, smtp_server=None, smtp_port=None,
                    smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
                    context=None):
@@ -378,8 +399,9 @@ class ir_mail_server(osv.osv):
         and fails if not found.
 
         :param message: the email.message.Message to send. The envelope sender will be extracted from the
-                        ``Return-Path`` or ``From`` headers. The envelope recipients will be
-                        extracted from the combined list of ``To``, ``CC`` and ``BCC`` headers.
+                        ``Return-Path`` (if present), or will be set to the default bounce address.
+                        The envelope recipients will be extracted from the combined list of ``To``,
+                        ``CC`` and ``BCC`` headers.
         :param mail_server_id: optional id of ir.mail_server to use for sending. overrides other smtp_* arguments.
         :param smtp_server: optional hostname of SMTP server to use
         :param smtp_encryption: optional TLS mode, one of 'none', 'starttls' or 'ssl' (see ir.mail_server fields for explanation)
@@ -390,7 +412,14 @@ class ir_mail_server(osv.osv):
         :return: the Message-ID of the message that was just sent, if successfully sent, otherwise raises
                  MailDeliveryException and logs root cause.
         """
-        smtp_from = message['Return-Path'] or message['From']
+        # Use the default bounce address **only if** no Return-Path was
+        # provided by caller.  Caller may be using Variable Envelope Return
+        # Path (VERP) to detect no-longer valid email addresses.
+        smtp_from = message['Return-Path']
+        if not smtp_from:
+            smtp_from = self._get_default_bounce_address(cr, uid, context=context)
+        if not smtp_from:
+            smtp_from = message['From']
         assert smtp_from, "The Return-Path or From header is required for any outbound email"
 
         # The email's "Envelope From" (Return-Path), and all recipient addresses must only contain ASCII characters.
@@ -444,9 +473,7 @@ class ir_mail_server(osv.osv):
                 smtp_encryption = 'starttls' # STARTTLS is the new meaning of the smtp_ssl flag as of v7.0
 
         if not smtp_server:
-            raise osv.except_osv(
-                         _("Missing SMTP Server"),
-                         _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
+            raise UserError(_("Missing SMTP Server")+ "\n" + _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
 
         try:
             message_id = message['Message-Id']
@@ -470,7 +497,7 @@ class ir_mail_server(osv.osv):
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
                                                                              e.__class__.__name__,
                                                                              tools.ustr(e))
-            _logger.error(msg)
+            _logger.info(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 

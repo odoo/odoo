@@ -159,10 +159,10 @@
                                     <field name="user_id" />
                                     <div class="oe_goal_state_block">
                                         <t t-if="record.definition_display.raw_value == 'boolean'">
-                                            <div class="oe_goal_state oe_e">
-                                                <t t-if="record.state.raw_value=='reached'"><span class="oe_green" title="Goal Reached">W</span></t>
-                                                <t t-if="record.state.raw_value=='inprogress'"><span title="Goal in Progress">N</span></t>
-                                                <t t-if="record.state.raw_value=='failed'"><span class="oe_red" title="Goal Failed">X</span></t>
+                                            <div class="oe_goal_state">
+                                                <t t-if="record.state.raw_value=='reached'"><i class="oe_green fa fa-check" title="Goal Reached"/></t>
+                                                <t t-if="record.state.raw_value=='inprogress'"><i class="fa fa-clock-o" title="Goal in Progress"/></t>
+                                                <t t-if="record.state.raw_value=='failed'"><i class="oe_red fa fa-remove" title="Goal Failed"/></t>
                                             </div>
                                         </t>
                                         <t t-if="record.definition_display.raw_value == 'progress'">

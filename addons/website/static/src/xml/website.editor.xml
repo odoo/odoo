@@ -7,7 +7,7 @@
                 <form class="navbar-form text-muted">
                     <button type="button" data-action="save"
                             class="btn btn-primary btn-xs">Save</button>
-                    or
+                    <span>or</span>
                     <a href="#" data-action="cancel" class="btn btn-link btn-xs">Discard</a>
                 </form>
             </div>
@@ -24,7 +24,8 @@
                     </div>
                     <div class="modal-body"><t t-raw="0"/></div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary save">Save</button>
+                        <button type="button" class="btn btn-primary save" t-if="!button">Save</button>
+                        <button type="button" class="btn btn-primary save" t-if="button"><t t-raw="button"/></button>
                         <button type="button" class="btn hidden wait" disabled="disabled"/>
                         or
                         <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
@@ -360,18 +361,17 @@
             <input type="hidden" id="fa-size" value="fa-1x"/>
             <div class="font-icons-icons">
                 <t t-call="website.editor.dialog.font-icons.icons">
-                    <t t-set="icons" t-value="widget.icons"/>
+                    <t t-set="iconsParser" t-value="widget.iconsParser"/>
                 </t>
-            </div>
-            <div class="form-group mt32" id="fa-preview">
-
             </div>
         </form>
     </t>
     <t t-name="website.editor.dialog.font-icons.icons">
-        <span t-foreach="icons" t-as="icon"
-              t-attf-class="fa font-icons-icon #{icon}"
-              t-att-data-id="icon"/>
+        <t t-foreach="iconsParser" t-as="data">
+            <span t-foreach="data.icons" t-as="icon"
+                  t-attf-class="#{data.base} font-icons-icon #{icon}"
+                  t-att-data-id="icon"/>
+        </t>
     </t>
 
     <t t-name="website.editor.dialog.video">

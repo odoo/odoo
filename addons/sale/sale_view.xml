@@ -213,7 +213,7 @@
                                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             </group>
                             <div class="oe_clear"/>
-                            <field name="note" class="oe_inline" placeholder="Terms and conditions..."/>
+                            <field name="note" class="oe_inline" placeholder="An administrator can set up default Terms and conditions in your Company settings."/>
                         </page>
                         <page string="Other Information" groups="base.group_user">
                             <group>
@@ -504,7 +504,7 @@
             <field name="filter" eval="True"/>
         </record>
         <record id="action_order_line_product_tree" model="ir.actions.act_window">
-            <field name="context">{'search_default_product_id': active_id, 'default_product_id': active_id}</field>
+            <field name="context">{}</field><!-- force empty -->
             <field name="name">Sales Order Lines</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_id" ref="view_order_line_tree"/>
@@ -516,7 +516,7 @@
             <field name="groups_id" eval="[(4, ref('base.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button class="oe_inline oe_stat_button" name="%(action_order_line_product_tree)d" 
+                    <button class="oe_inline oe_stat_button" name="action_view_sales"
                         type="action" icon="fa-strikethrough">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>

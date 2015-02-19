@@ -155,5 +155,12 @@
             <field name="default" eval="False"/>
             <field name="description">Invoice paid</field>
         </record>
+        <record id="mt_invoice_created" model="mail.message.subtype">
+            <field name="name">Invoice Created</field>
+            <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Invoice Created</field>
+        </record>
     </data>
 </openerp>

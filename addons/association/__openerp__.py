@@ -37,6 +37,5 @@ membership products (schemes).
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'images': ['images/association1.jpeg'],
     'website': 'https://www.odoo.com'
 }

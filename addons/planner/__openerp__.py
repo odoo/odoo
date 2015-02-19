@@ -11,6 +11,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/planner.xml',
+        'security/planner_security.xml',
     ],
     'qweb': ['static/src/xml/planner.xml'],
     'installable': True,

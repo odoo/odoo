@@ -20,7 +20,3 @@
 ##############################################################################
 
 from . import test_sale_to_invoice
-
-checks = [
-    test_sale_to_invoice,
-]

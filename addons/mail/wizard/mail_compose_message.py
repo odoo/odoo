@@ -227,6 +227,10 @@ class mail_compose_message(osv.TransientModel):
     #------------------------------------------------------
     # Wizard validation and send
     #------------------------------------------------------
+    # action buttons call with positionnal arguments only, so we need an intermediary function
+    # to ensure the context is passed correctly
+    def send_mail_action(self, cr, uid, ids, context=None):
+        self.send_mail(cr, uid, ids, context=context)
 
     def send_mail(self, cr, uid, ids, auto_commit=False, context=None):
         """ Process the wizard content and proceed with sending the related
@@ -282,7 +286,7 @@ class mail_compose_message(osv.TransientModel):
                         batch_mail_mail_ids.append(mail_mail_id)
                     else:
                         subtype = 'mail.mt_comment'
-                        if context.get('mail_compose_log') or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
+                        if wizard.is_log or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
                             subtype = False
                         if wizard.composition_mode == 'mass_post':
                             context = dict(context,
@@ -392,8 +396,8 @@ class mail_compose_message(osv.TransientModel):
                 values.setdefault('attachment_ids', list()).append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
             default_context = dict(context, default_composition_mode=composition_mode, default_model=model, default_res_id=res_id)
-            default_values = self.default_get(cr, uid, ['composition_mode', 'model', 'res_id', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'], context=default_context)
-            values = dict((key, default_values[key]) for key in ['subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
+            default_values = self.default_get(cr, uid, ['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'], context=default_context)
+            values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')

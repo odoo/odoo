@@ -1,9 +1,6 @@
 openerp.pos_discount = function(instance){
     var module   = instance.point_of_sale;
     var round_pr = instance.web.round_precision
-    var QWeb = instance.web.qweb;
-
-    QWeb.add_template('/pos_discount/static/src/xml/discount.xml');
 
     module.DiscountButton = module.ActionButtonWidget.extend({
         template: 'DiscountButton',

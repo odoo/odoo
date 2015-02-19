@@ -28,7 +28,6 @@
     'category': 'Manufacturing',
     'sequence': 18,
     'summary': 'Manufacturing Orders, Bill of Materials, Routing',
-    'images': ['images/bill_of_materials.jpeg', 'images/manufacturing_order.jpeg', 'images/planning_manufacturing_order.jpeg', 'images/manufacturing_analysis.jpeg', 'images/routings.jpeg','images/work_centers.jpeg'],
     'depends': ['product', 'procurement', 'stock_account', 'resource', 'report'],
     'description': """
 Manage the Manufacturing process in OpenERP
@@ -61,7 +60,6 @@ Dashboard / Reports for MRP will include:
         'wizard/mrp_product_produce_view.xml',
         'wizard/change_production_qty_view.xml',
         'wizard/mrp_price_view.xml',
-        'wizard/mrp_workcenter_load_view.xml',
         'wizard/stock_move_view.xml',
         'mrp_view.xml',
         'mrp_report.xml',

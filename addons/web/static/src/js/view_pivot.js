@@ -30,7 +30,6 @@ instance.web.PivotView = instance.web.View.extend({
         this._super(parent, dataset, view_id, options);
         this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
 
-        this.$buttons = options.$buttons;
         this.$sidebar = options.$sidebar;
         this.fields = {};
         this.measures = {};
@@ -88,7 +87,7 @@ instance.web.PivotView = instance.web.View.extend({
             self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
         });
 
-        var another_ctx = {fields: _.pairs(this.groupable_fields)};
+        var another_ctx = {fields: _.chain(this.groupable_fields).pairs().sortBy(function(f){return f[1].string;}).value()};
         this.$field_selection = this.$('.o-field-selection');
         this.$field_selection.html(QWeb.render('PivotView.FieldSelection', another_ctx));
         openerp.web.bus.on('click', self, function () {
@@ -165,12 +164,21 @@ instance.web.PivotView = instance.web.View.extend({
     },
     do_show: function () {
         var self = this;
+        if (this.sidebar) {
+            this.sidebar.$el.show();
+        }
         this.do_push_state({});
         this.data_loaded.done(function () {
             self.display_table(); 
             self.$el.show();
         });
         return this._super();
+    },
+    do_hide: function () {
+        if (this.sidebar) {
+            this.sidebar.$el.hide();
+        }
+        this._super();
     },
     get_context: function () {
         return !this.ready ? {} : {

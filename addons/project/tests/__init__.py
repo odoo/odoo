@@ -21,6 +21,3 @@
 
 from . import test_project_flow
 
-checks = [
-    test_project_flow,
-]

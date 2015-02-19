@@ -30,8 +30,10 @@ import utils
 import color
 import os
 import logging
+import traceback
 from lxml import etree
 import base64
+from distutils.version import LooseVersion
 from reportlab.platypus.doctemplate import ActionFlowable
 from openerp.tools.safe_eval import safe_eval as eval
 from reportlab.lib.units import inch,cm,mm
@@ -44,6 +46,11 @@ try:
     _hush_pyflakes = [ StringIO ]
 except ImportError:
     from StringIO import StringIO
+
+try:
+    from customfonts import SetCustomFonts
+except ImportError:
+    SetCustomFonts=lambda x:None
 
 _logger = logging.getLogger(__name__)
 
@@ -178,6 +185,7 @@ class _rml_styles(object,):
                 'justify':reportlab.lib.enums.TA_JUSTIFY
             }
             data['alignment'] = align.get(node.get('alignment').lower(), reportlab.lib.enums.TA_LEFT)
+        data['splitLongWords'] = 0
         return data
 
     def _table_style_get(self, style_node):
@@ -383,7 +391,7 @@ class _rml_canvas(object):
         try:
             self.canvas.drawString(text=text, **v)
         except TypeError:
-            _logger.error("Bad RML: <drawString> tag requires attributes 'x' and 'y'!")
+            _logger.info("Bad RML: <drawString> tag requires attributes 'x' and 'y'!")
             raise
 
     def _drawCenteredString(self, node):
@@ -772,9 +780,11 @@ class _rml_flowable(object):
             style = self.styles.para_style_get(node)
             if extra_style:
                 style.__dict__.update(extra_style)
-            result = []
-            for i in self._textual(node).split('\n'):
-                result.append(platypus.Paragraph(i, style, **(utils.attr_get(node, [], {'bulletText':'str'}))))
+            text_node = self._textual(node).strip().replace('\n\n', '\n').replace('\n', '<br/>')
+            instance = platypus.Paragraph(text_node, style, **(utils.attr_get(node, [], {'bulletText':'str'})))
+            result = [instance]
+            if LooseVersion(reportlab.Version) > LooseVersion('3.0') and not instance.getPlainText().strip() and instance.text.strip():
+                result.append(platypus.Paragraph('&nbsp;<br/>', style, **(utils.attr_get(node, [], {'bulletText': 'str'}))))
             return result
         elif node.tag=='barCode':
             try:
@@ -1034,14 +1044,9 @@ def parseNode(rml, localcontext=None, fout=None, images=None, path='.', title=No
     r = _rml_doc(node, localcontext, images, path, title=title)
     #try to override some font mappings
     try:
-        from customfonts import SetCustomFonts
         SetCustomFonts(r)
-    except ImportError:
-        # means there is no custom fonts mapping in this system.
-        pass
-    except Exception:
-        _logger.warning('Cannot set font mapping', exc_info=True)
-        pass
+    except Exception, exc:
+        _logger.info('Cannot set font mapping: %s', "".join(traceback.format_exception_only(type(exc),exc)))
     fp = StringIO()
     r.render(fp)
     return fp.getvalue()
@@ -1052,7 +1057,6 @@ def parseString(rml, localcontext=None, fout=None, images=None, path='.', title=
 
     #try to override some font mappings
     try:
-        from customfonts import SetCustomFonts
         SetCustomFonts(r)
     except Exception:
         pass

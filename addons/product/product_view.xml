@@ -87,11 +87,9 @@
                             </page>
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
-                                    <group name="general">
+                                    <group name="general" col="4">
                                         <field name="standard_price"/>
-                                    </group>
-                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
-                                        <field name="uom_po_id"/>
+                                        <field name="uom_po_id" groups="product.group_uom"/>
                                     </group>
                                 </group>
                                 <separator string="Suppliers"/>
@@ -218,6 +216,7 @@
             <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="domain" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
@@ -260,7 +259,7 @@
                         <p class="oe_grey">
                             <strong>Warning</strong>: adding or deleting attributes
                             will delete and recreate existing variants and lead
-                            to the loss of its eventual customizations.
+                            to the loss of their possible customizations.
                         </p>
                         <field name="attribute_line_ids" widget="one2many_list" context="{'show_attribute': False}">
                             <tree string="Variants" editable="bottom">
@@ -290,6 +289,9 @@
                                 <div class="oe_kanban_details">
                                     <h4>
                                         <a type="open">
+                                             <span t-if="record.default_code.value">
+                                                 [<field name="default_code"/>]
+                                              </span>
                                              <field name="name"/> 
                                         </a>
                                     </h4>

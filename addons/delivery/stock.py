@@ -21,6 +21,7 @@
 
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 import openerp.addons.decimal_precision as dp
 
@@ -53,7 +54,7 @@ class stock_picking(osv.osv):
 
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
-        'volume': fields.float('Volume'),
+        'volume': fields.float('Volume', copy=False),
         'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
@@ -64,8 +65,8 @@ class stock_picking(osv.osv):
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
                  'stock.move': (_get_picking_line, ['picking_id', 'product_id','product_uom_qty','product_uom'], 40),
                  }),
-        'carrier_tracking_ref': fields.char('Carrier Tracking Ref'),
-        'number_of_packages': fields.integer('Number of Packages'),
+        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', copy=False),
+        'number_of_packages': fields.integer('Number of Packages', copy=False),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
     }
 
@@ -87,10 +88,7 @@ class stock_picking(osv.osv):
         grid_id = carrier_obj.grid_get(cr, uid, [picking.carrier_id.id],
                 picking.partner_id.id, context=context)
         if not grid_id:
-            raise osv.except_osv(_('Warning!'),
-                    _('The carrier %s (id: %d) has no delivery grid!') \
-                            % (picking.carrier_id.name,
-                                picking.carrier_id.id))
+            raise UserError(_('The carrier %s (id: %d) has no delivery grid!') % (picking.carrier_id.name,picking.carrier_id.id))
         quantity = sum([line.product_uom_qty for line in picking.move_lines])
         price = grid_obj.get_price_from_picking(cr, uid, grid_id,
                 invoice.amount_untaxed, picking.weight, picking.volume,

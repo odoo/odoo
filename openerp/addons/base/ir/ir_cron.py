@@ -33,6 +33,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.modules import load_information_from_description_file
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -277,9 +278,9 @@ class ir_cron(osv.osv):
                        (tuple(ids),), log_exceptions=False)
         except psycopg2.OperationalError:
             cr.rollback() # early rollback to allow translations to work for the user feedback
-            raise osv.except_osv(_("Record cannot be modified right now"),
-                                 _("This cron task is currently being executed and may not be modified, "
-                                  "please try again in a few minutes"))
+            raise UserError(_("Record cannot be modified right now: "
+                                "This cron task is currently being executed and may not be modified "
+                                "Please try again in a few minutes"))
 
     def create(self, cr, uid, vals, context=None):
         res = super(ir_cron, self).create(cr, uid, vals, context=context)

@@ -62,9 +62,10 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p>
-                    Odoo's project management allows you to manage the pipeline
-                    of tasks in order to get things done efficiently. You can
-                    track progress, discuss on tasks, attach documents, etc.
+                    Here, you can create new tasks
+                </p>
+                <p>
+                    You can now manage your tasks in order to get things done efficiently. Track progress, discuss, attach documents, etc.
                 </p>
             </field>
         </record>
@@ -93,15 +94,17 @@
                         <h1>
                             <field name="name" string="Project Name"/>
                         </h1>
-                        <div name="options_active">
+                        <div name="options_active" class="oe_edit_only">
                             <div>
                                 <field name="use_tasks" class="oe_inline" string="Use Tasks"/>
-                                <label for="use_tasks" class="oe_inline"/> as <field name="label_tasks" class="oe_inline"/>
+                                <label for="use_tasks" class="oe_inline"/>
+                                <span attrs="{'invisible':[('use_tasks', '=', False)]}">as</span>
+                                <field name="label_tasks" class="oe_inline oe_input_align" attrs="{'invisible': [('use_tasks', '=', False)]}"/>
                             </div>
                         </div>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
-                         <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"
+                         <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', False)]}"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
@@ -261,7 +264,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_project_task_spark">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
-                                    <span class="oe_e">i</span>
+                                    <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Project</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
@@ -270,35 +273,42 @@
                                 </div>
                                 <div class="oe_project_kanban_content">
                                     <div class="row">
-                                        <h4 class="text-center"><strong><field name="name"/></strong></h4>
-                                        <div class="text-center oe_kanban_alias" t-if="record.alias_name.value and record.alias_domain.value">
-                                            <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                                        <h4 class="text-center">
+                                            <field name="name"/>
+                                        </h4>
+                                        <div t-if="record.alias_name.value and record.alias_domain.value" class="text-center text-muted">
+                                            <small>
+                                                <i class="fa fa-envelope-o"></i> <field name="alias_id"/>
+                                            </small>
                                         </div>
                                     </div>
                                     <div class="row oe_margin_top_8 oe_kanban_project_list">
-                                        <a t-if="record.use_tasks.raw_value" class="oe_sparkline_bar_link" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: -5px">
-                                            <t t-raw="record.task_ids.raw_value.length" /> <field name="label_tasks"/>
-                                            <field name="monthly_tasks" widget="sparkline_bar" options="{'delayIn': '1000'}">
-                                                Created Tasks
-                                            </field>
-                                        </a>
-                                        <div t-if="record.use_tasks.raw_value and record.task_count.raw_value lt 1" style="margin-top: 6px;margin-left:20px;">
+                                        <div class="col-md-6">
+                                            <a t-if="record.use_tasks.raw_value" class="oe_sparkline_bar_link" name="%(act_project_project_2_project_task_all)d" type="action">
+                                                <t t-raw="record.task_ids.raw_value.length" />
+                                                <field name="label_tasks"/>
+                                                <field name="monthly_tasks" widget="sparkline_bar" options="{'delayIn': '1000'}">
+                                                    Created Tasks
+                                                </field>
+                                            </a>
+                                        </div>
+                                        <div t-if="record.use_tasks.raw_value and record.task_count.raw_value lt 1" class="col-md-12">
                                             <img src="/project/static/src/img/top_left_arrow.png" style="margin-top: -8px; width: 22px;" />
                                             <span>No activity yet, click to enter in the project.</span>
                                         </div>
                                     </div>
-                                    <div class="row oe_margin_top_8 oe_kanban_project_list">
-                                        <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="doc_count"/> Documents</a>
+                                    <div class="row oe_margin_top_8 oe_kanban_project_infos">
+                                        <div class="col-md-6">
+                                            <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object">
+                                                <field name="doc_count"/> Documents
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="row oe_margin_top_8 oe_kanban_footer_left">
-                                        <span groups="project.group_time_work_estimation_tasks">
-                                            <span class="oe_e">R</span>
-                                            <t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>
-                                        </span>
-                                        <span t-if="record.date.raw_value">
-                                            <span class="oe_e">N</span>
+                                    <div class="row oe_margin_top_8 oe_kanban_project_tags">
+                                        <h5 t-if="record.date.raw_value" class="label label-default">
+                                            <i class="fa fa-calendar"/>
                                             <field name="date"/>
-                                        </span>
+                                        </h5>
                                     </div>
                                     <div class="row oe_margin_top_8 oe_kanban_project_avatars">
                                         <t t-foreach="record.members.raw_value.slice(0,11)" t-as="member">
@@ -333,15 +343,9 @@
             <field name="context">{'search_default_Current': 1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                  Click to start a new project.
+                    Create a new project.
                 </p><p>
-                  Projects are used to organize your activities; plan
-                  tasks, track issues, invoice timesheets. You can define
-                  internal projects (R&amp;D, Improve Sales Process),
-                  private projects (My Todos) or customer ones.
-                </p><p>
-                  You will be able collaborate with internal users on
-                  projects or invite customers to share your activities.
+                    Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
                 </p>
             </field>
         </record>
@@ -501,12 +505,12 @@
                 <kanban default_group_by="stage_id">
                     <field name="color"/>
                     <field name="priority"/>
-                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
+                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
                     <field name="user_id"/>
                     <field name="user_email"/>
                     <field name="description"/>
                     <field name="sequence"/>
-                    <field name="remaining_hours" sum="Remaining Time" groups="project.group_time_work_estimation_tasks"/>
+                    <field name="remaining_hours" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
                     <field name="message_summary"/>
                     <field name="categ_ids"/>
@@ -514,7 +518,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
-                                <span class="oe_e">i</span>
+                                <i class="fa fa-bars fa-lg"/>
                                 <ul class="oe_dropdown_menu">
                                     <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Task</a></li></t>
                                     <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
@@ -538,12 +542,6 @@
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
                                 </div>
-                                <div class="oe_kanban_footer_left">
-                                    <span groups="project.group_time_work_estimation_tasks" title="Remaining hours">
-                                        <span class="oe_e">N</span>
-                                        <t t-esc="Math.round(record.remaining_hours.raw_value)"/>
-                                    </span>
-                                </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <t t-raw="record.message_summary.raw_value"/>
                                     <field name="categ_ids"/>
@@ -551,7 +549,7 @@
                                     <div class="oe_kanban_bottom_right">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                         <div class="pull-left" groups="base.group_user">
-                                            <field name="kanban_state" widget="kanban_state_selection" 
+                                            <field name="kanban_state" widget="kanban_state_selection"
                                                 options='{"states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                                             <field name="priority" widget="priority"/>
                                         </div>
@@ -654,9 +652,7 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p>
-                    Odoo's project management allows you to manage the pipeline
-                    of tasks in order to get things done efficiently. You can
-                    track progress, discuss on tasks, attach documents, etc.
+                    Odoo's project management allows you to manage the pipeline of your tasks efficiently. You can track progress, discuss on tasks, attach documents, etc.
                 </p>
             </field>
         </record>
@@ -720,18 +716,37 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="sequence"/>
                             <field name="case_default"/>
-                            <field name="fold"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                         </group>
                         <group>
-                            <field name="legend_blocked"/>
-                            <field name="legend_done"/>
-                            <field name="legend_normal"/>
-                            <field name="legend_priority"/>
+                            <field name="fold"/>
                         </group>
                     </group>
-                    <field name="description" placeholder="Add a description..."/>
+                    <group string="Stage Description and Tooltips">
+                        <p class="text-muted" colspan="2">
+                            At each stage employees can block or make task/issue ready for next stage.
+                            You can define here labels that will be displayed for the state instead
+                            of the default labels.
+                        </p>
+                        <label for="legend_normal" string=" " class="oe_kanban_status oe_project_kanban_legend"/>
+                        <field name="legend_normal" nolabel="1"/>
+                        <label for="legend_blocked" string=" " class="oe_kanban_status oe_kanban_status_red oe_project_kanban_legend"/>
+                        <field name="legend_blocked" nolabel="1"/>
+                        <label for="legend_done" string=" " class="oe_kanban_status oe_kanban_status_green oe_project_kanban_legend"/>
+                        <field name="legend_done" nolabel="1"/>
+
+                        <p class="text-muted" colspan="2">
+                            You can also give a tooltip about the use of the stars available in the kanban and form views.
+                        </p>
+                        <label for="legend_priority" string=" " class="fa fa-star fa-lg oe_star_on oe_project_kanban_legend"/>
+                        <field name="legend_priority" nolabel="1"/>
+
+                        <p class="text-muted" colspan="2">
+                            You can also add a description to help your coworkers understanding the meaning and purpose of the stage.
+                        </p>
+                        <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -741,9 +756,10 @@
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
                 <tree string="Task Stage">
-                    <field name="sequence" widget="handle"/>
+                    <field name="sequence" widget="handle" groups="base.group_no_one"/>
                     <field name="name"/>
                     <field name="fold"/>
+                    <field name="description"/>
                 </tree>
             </field>
         </record>

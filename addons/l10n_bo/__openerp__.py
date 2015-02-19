@@ -46,6 +46,5 @@ Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
     "active": False,
     "installable": True,
     "certificate" : "",
-    'images': ['images/config_chart_l10n_bo.jpeg','images/l10n_bo_chart.jpeg'],
 
 }

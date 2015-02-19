@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import random
+import re
 import string
 
 from lxml.html import parse
@@ -11,6 +12,7 @@ from urlparse import urlparse
 
 from openerp import models, fields, api, _
 
+URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
 
 def VALIDATE_URL(url):
     if urlparse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
@@ -40,6 +42,25 @@ class website_links(models.Model):
     redirected_url = fields.Char(string='Redirected URL', compute='_compute_redirected_url')
     short_url_host = fields.Char(string='Host of the short URL', compute='_compute_short_url_host')
     icon_src = fields.Char(string='Favicon Source', compute='_compute_icon_src')
+
+    @api.model
+    def convert_links(self, html, vals, blacklist=None):
+        for match in re.findall(URL_REGEX, html):
+            href = match[0]
+            long_url = match[1]
+
+            vals['url'] = long_url
+
+            if not blacklist or blacklist and not [s for s in blacklist if s in long_url]:
+
+                link = self.create(vals)
+                shorten_url = self.browse(link.id)[0].short_url
+
+                if shorten_url:
+                    new_href = href.replace(long_url, shorten_url)
+                    html = html.replace(href, new_href)
+
+        return html
 
     @api.one
     @api.depends('link_click_ids.link_id')
@@ -130,19 +151,16 @@ class website_links(models.Model):
 
     @api.model
     def create(self, vals):
+        create_vals = vals.copy()
+
         if 'url' not in vals:
             raise ValueError('URL field required')
         else:
-            vals['url'] = VALIDATE_URL(vals['url'])
+            create_vals['url'] = VALIDATE_URL(vals['url'])
 
-        search_domain = [('url', '=', vals['url'])]
-
-        if 'campaign_id' in vals:
-            search_domain.append(('campaign_id', '=', vals['campaign_id']))
-        if 'channel_id' in vals:
-            search_domain.append(('channel_id', '=', vals['channel_id']))
-        if 'source_id' in vals:
-            search_domain.append(('source_id', '=', vals['source_id']))
+        search_domain = []
+        for fname, value in vals.iteritems():
+            search_domain.append((fname, '=', value))
 
         result = self.search(search_domain, limit=1)
 
@@ -150,9 +168,14 @@ class website_links(models.Model):
             return result
 
         if not vals.get('title'):
-            vals['title'] = self._get_title_from_url(vals['url'])
+            create_vals['title'] = self._get_title_from_url(vals['url'])
 
-        link = super(website_links, self).create(vals)
+        # Prevent the UTMs to be set by the values of UTM cookies
+        for (key, fname) in self.env['utm.mixin'].tracking_fields():
+            if fname not in vals:
+                create_vals[fname] = False
+
+        link = super(website_links, self).create(create_vals)
 
         code = self.env['website.links.code'].get_random_code_string()
         self.env['website.links.code'].create({'code': code, 'link_id': link.id})

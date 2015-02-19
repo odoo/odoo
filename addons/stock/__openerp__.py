@@ -51,7 +51,6 @@ Dashboard / Reports for Warehouse Management will include:
 * Moves Analysis
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg'],
     'depends': ['product', 'procurement', 'board', 'web_kanban_gauge', 'web_kanban_sparkline', 'barcodes'],
     'category': 'Warehouse Management',
     'sequence': 16,
@@ -91,6 +90,7 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_stockpicking.xml',
         'views/report_stockinventory.xml',
         'views/stock.xml',
+        'report/report_stock_forecast.xml',
     ],
     'test': [
         'test/inventory.yml',

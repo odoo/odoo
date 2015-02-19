@@ -54,11 +54,18 @@
         <field name="model">res.partner.grade</field>
         <field name="arch" type="xml">
             <form string="Partner Grade">
-                <group col="4">
-                    <field name="name"/>
-                    <field name="sequence"/>
-                    <field name="active"/>
-                </group>
+                <sheet string="Grade">
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -112,7 +119,6 @@
                             <separator string="Partner Activation" colspan="2"/>
                             <field name="grade_id" widget="selection"/>
                             <field name="activation" widget="selection"/>
-                            <field name="assigned_partner_id"/>
                             <field name="partner_weight"/>
                         </group>
                         <group>

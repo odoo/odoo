@@ -22,13 +22,6 @@
                 popover:   { fixed: true },
             },
             {
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Insert building blocks"),
-                content:   _t("Click here to insert blocks of content in the page."),
-                popover:   { fixed: true },
-            },
-            {
                 snippet:   '#snippet_structure .oe_snippet:first',
                 placement: 'bottom',
                 title:     _t("Drag & Drop a Banner"),
@@ -62,13 +55,6 @@
             },
             {
                 waitNot:   '.popover.tour',
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Add Another Block"),
-                content:   _t("Let's add another building block to your page."),
-                popover:   { fixed: true },
-            },
-            {
                 snippet:   '#snippet_structure .oe_snippet:eq(6)',
                 placement: 'bottom',
                 title:     _t("Drag & Drop This Block"),

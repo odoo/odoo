@@ -107,6 +107,7 @@ By default to custom method are defined:
    This method remove all other select_class value (for this option) and add this current ClassName
 
 
+
 Snippet
 +++++++
 
@@ -146,3 +147,8 @@ The container of the snippet became not editable (with branding)
 
 Inside a demo page call the snippet with: ``<div data-oe-call="website.name_of_the_template"/>``
 The snippets are loaded in one time by js and the page stay editable.
+
+More
+++++
+
+- Use the class ``o_not_editable`` to prevent the edition from an area.

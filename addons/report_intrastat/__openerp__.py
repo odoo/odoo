@@ -43,5 +43,4 @@ European Union.""",
     'test': ['test/report_intrastat_report.yml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/country_intrastat_code.jpeg','images/intrastat_code.jpeg'],
 }

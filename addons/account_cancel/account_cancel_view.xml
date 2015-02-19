@@ -40,7 +40,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='bank_account_id']" position="after">
-                    <button name="cancel" attrs="{'invisible': [('journal_entry_id', '=', False)]}" string="Cancel" type="object" icon="gtk-undo"/>
+                    <button name="cancel" attrs="{'invisible': [('journal_entry_ids', '=', [])]}" string="Cancel" type="object" icon="gtk-undo"/>
                 </xpath>
             </field>
         </record>

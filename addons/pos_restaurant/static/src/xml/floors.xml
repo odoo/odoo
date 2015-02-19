@@ -17,15 +17,30 @@
         </t>
     </t>
 
+    <t t-name="TableGuestsButton">
+        <div class='control-button'>
+            <span class='control-button-number'>
+                <t t-esc="widget.guests()" />
+            </span>
+            Guests
+        </div>
+    </t>
+
     <t t-name="TableWidget">
         <t t-if='!widget.selected'>
             <div class='table' t-att-style='widget.table_style_str()'>
+                <span 
+                    t-if="widget.table.shape !== 'round'"
+                    t-att-class='"table-cover " + (widget.fill >= 1 ? "full" : "")'
+                    t-att-style='"height: " + Math.ceil(widget.fill * 100) + "%;"'
+                    ></span>
                 <t t-if='widget.order_count'>
                     <span t-att-class='"order-count " + (widget.notifications.printing ? "notify-printing":"")'><t t-esc='widget.order_count'/></span>
                 </t>
                 <span class='label'>
                     <t t-esc='widget.table.name' />
                 </span>
+                <span class="table-seats"><t t-esc="widget.table.seats" /></span>
             </div>
         </t>
         <t t-if='widget.selected'>
@@ -33,6 +48,7 @@
                 <span class='label'>
                     <t t-esc='widget.table.name' />
                 </span>
+                <span class="table-seats"><t t-esc="widget.table.seats" /></span>
                 <span class='table-handle top'></span>
                 <span class='table-handle bottom'></span>
                 <span class='table-handle left'></span>
@@ -70,7 +86,8 @@
                         </t>
                     </div>
                 </t>
-                <div class='floor-map' t-att-style='widget.floor.background_image ? ("background-image:url("+widget.background_image_url(widget.floor)+");") :"" '>
+                <div class='floor-map' t-att-style='widget.get_floor_style()' >
+                    <div class='tables'></div>
                     <span class='edit-button editing'><i class='fa fa-pencil'></i></span>
                     <div class='edit-bar oe_hidden'>
                         <span class='edit-button new-table'>
@@ -82,25 +99,42 @@
                         <span class='edit-button rename needs-selection'>
                             <i class='fa fa-font'></i>
                         </span>
+                        <span class='edit-button seats needs-selection'>
+                            <i class='fa fa-user'></i>
+                        </span>
                         <span class='edit-button shape needs-selection'>
                             <span class='button-option square'><i class='fa fa-square-o'></i></span>
                             <span class='button-option round oe_hidden'><i class='fa fa-circle-o'></i></span>
                         </span> 
-                        <span class='edit-button color needs-selection'>
+                        <span class='edit-button color'>
                             <i class='fa fa-tint'></i>
-                            <div class='color-picker oe_hidden'>
+                            <div class='color-picker fg-picker oe_hidden'>
                                 <div  class='close-picker'>
                                     <i class='fa fa-times' />
                                 </div>
-                                <span class='color tl'  style='background-color:#EB6D6D'    />
-                                <span class='color'     style='background-color:#35D374'  />
-                                <span class='color tr'  style='background-color:#6C6DEC'   />
+                                <span class='color tl'  style='background-color:#EB6D6D' />
+                                <span class='color'     style='background-color:#35D374' />
+                                <span class='color tr'  style='background-color:#6C6DEC' />
                                 <span class='color'     style='background-color:#EBBF6D' />
                                 <span class='color'     style='background-color:#EBEC6D' />
                                 <span class='color'     style='background-color:#AC6DAD' />
-                                <span class='color bl'  style='background-color:#6C6D6D'  />
-                                <span class='color'     style='background-color:#ACADAD'   />
-                                <span class='color br'  style='background-color:#4ED2BE'   />
+                                <span class='color bl'  style='background-color:#6C6D6D' />
+                                <span class='color'     style='background-color:#ACADAD' />
+                                <span class='color br'  style='background-color:#4ED2BE' />
+                            </div>
+                            <div class='color-picker bg-picker oe_hidden'>
+                                <div  class='close-picker'>
+                                    <i class='fa fa-times' />
+                                </div>
+                                <span class='color tl'  style='background-color:rgb(244, 149, 149)' />
+                                <span class='color'     style='background-color:rgb(130, 233, 171)' />
+                                <span class='color tr'  style='background-color:rgb(136, 137, 242)' />
+                                <span class='color'     style='background-color:rgb(255, 214, 136)' />
+                                <span class='color'     style='background-color:rgb(254, 255, 154)' />
+                                <span class='color'     style='background-color:rgb(209, 171, 210)' />
+                                <span class='color bl'  style='background-color:rgb(75, 75, 75)'    />
+                                <span class='color'     style='background-color:rgb(210, 210, 210)' />
+                                <span class='color br'  style='background-color:rgb(127, 221, 236)' />
                             </div>
                         </span>
                         <span class='edit-button trash needs-selection'>

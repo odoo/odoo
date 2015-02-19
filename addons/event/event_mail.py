@@ -21,8 +21,9 @@ class EventMailScheduler(models.Model):
     that periodically checks for mailing to run. """
     _name = 'event.mail'
 
-    event_id = fields.Many2one('event.event', string='Event', required=True, readonly=True, ondelete='cascade')
-    interval_nbr = fields.Integer('Timing', default=1)
+    event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
+    sequence = fields.Integer('Display order')
+    interval_nbr = fields.Integer('Interval', default=1)
     interval_unit = fields.Selection([
         ('now', 'Immediately'),
         ('hours', 'Hour(s)'), ('days', 'Day(s)'),
@@ -108,4 +109,7 @@ class EventMailRegistration(models.Model):
     @api.one
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
     def _compute_scheduled_date(self):
-        self.scheduled_date = datetime.strptime(self.registration_id.date_open, tools.DEFAULT_SERVER_DATETIME_FORMAT) + _INTERVALS[self.scheduler_id.interval_unit](self.scheduler_id.interval_nbr)
+        if self.registration_id:
+            self.scheduled_date = datetime.strptime(self.registration_id.date_open, tools.DEFAULT_SERVER_DATETIME_FORMAT) + _INTERVALS[self.scheduler_id.interval_unit](self.scheduler_id.interval_nbr)
+        else:
+            self.scheduled_date = False

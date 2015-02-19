@@ -41,7 +41,10 @@ define([
      * @param {jQuery} $editable
      */
     this.saveRange = function ($editable, thenCollapse) {
-      $editable.focus();
+      var r = range.create();
+      if (!r || ($editable[0] !== r.sc && !$.contains($editable[0], r.sc))) {
+        $editable.focus();
+      }
       $editable.data('range', range.create());
       if (thenCollapse) {
         range.create().collapse().select();

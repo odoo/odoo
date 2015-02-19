@@ -151,11 +151,11 @@ csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 #
 def translate(cr, name, source_type, lang, source=None):
     if source and name:
-        cr.execute('select value from ir_translation where lang=%s and type=%s and name=%s and src=%s', (lang, source_type, str(name), source))
+        cr.execute('select value from ir_translation where lang=%s and type=%s and name=%s and src=%s and md5(src)=md5(%s)', (lang, source_type, str(name), source, source))
     elif name:
         cr.execute('select value from ir_translation where lang=%s and type=%s and name=%s', (lang, source_type, str(name)))
     elif source:
-        cr.execute('select value from ir_translation where lang=%s and type=%s and src=%s', (lang, source_type, source))
+        cr.execute('select value from ir_translation where lang=%s and type=%s and src=%s and md5(src)=md5(%s)', (lang, source_type, source, source))
     res_trans = cr.fetchone()
     res = res_trans and res_trans[0] or False
     return res
@@ -169,7 +169,8 @@ class GettextAlias(object):
             return sql_db.db_connect(db_name)
 
     def _get_cr(self, frame, allow_create=True):
-        # try, in order: cr, cursor, self.env.cr, self.cr
+        # try, in order: cr, cursor, self.env.cr, self.cr,
+        # request.env.cr
         if 'cr' in frame.f_locals:
             return frame.f_locals['cr'], False
         if 'cursor' in frame.f_locals:
@@ -179,6 +180,11 @@ class GettextAlias(object):
             return s.env.cr, False
         if hasattr(s, 'cr'):
             return s.cr, False
+        try:
+            from openerp.http import request
+            return request.env.cr, False
+        except RuntimeError:
+            pass
         if allow_create:
             # create a new cursor
             db = self._get_db()
@@ -197,7 +203,7 @@ class GettextAlias(object):
 
     def _get_lang(self, frame):
         # try, in order: context.get('lang'), kwargs['context'].get('lang'),
-        # self.env.lang, self.localcontext.get('lang')
+        # self.env.lang, self.localcontext.get('lang'), request.env.lang
         lang = None
         if frame.f_locals.get('context'):
             lang = frame.f_locals['context'].get('lang')
@@ -212,6 +218,12 @@ class GettextAlias(object):
             if not lang:
                 if hasattr(s, 'localcontext'):
                     lang = s.localcontext.get('lang')
+            if not lang:
+                try:
+                    from openerp.http import request
+                    lang = request.env.lang
+                except RuntimeError:
+                    pass
             if not lang:
                 # Last resort: attempt to guess the language of the user
                 # Pitfall: some operations are performed in sudo mode, and we
@@ -358,6 +370,7 @@ class TinyPoFile(object):
             source = unquote(line[6:])
             line = self.lines.pop(0).strip()
             if not source and self.first:
+                self.first = False
                 # if the source is "" and it's the first msgid, it's the special
                 # msgstr with the informations about the traduction and the
                 # traductor; we skip it
@@ -386,8 +399,6 @@ class TinyPoFile(object):
                 for t, n, r in targets:
                     if t == trans_type == 'code': continue
                     self.extra_lines.append((t, n, r, source, trad, comments))
-
-        self.first = False
 
         if name is None:
             if not fuzzy:
@@ -964,7 +975,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     pass
 
         else:
-            _logger.error('Bad file format: %s', fileformat)
+            _logger.info('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
 
         # Read the POT references, and keep them indexed by source string.

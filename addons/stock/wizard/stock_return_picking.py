@@ -22,6 +22,7 @@
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 class stock_return_picking_line(osv.osv_memory):
     _name = "stock.return.picking.line"
@@ -66,7 +67,7 @@ class stock_return_picking(osv.osv_memory):
         chained_move_exist = False
         if pick:
             if pick.state != 'done':
-                raise osv.except_osv(_('Warning!'), _("You may only return pickings that are Done!"))
+                raise UserError(_("You may only return pickings that are Done!"))
 
             for move in pick.move_lines:
                 if move.move_dest_id:
@@ -81,7 +82,7 @@ class stock_return_picking(osv.osv_memory):
                 result1.append({'product_id': move.product_id.id, 'quantity': qty, 'move_id': move.id})
 
             if len(result1) == 0:
-                raise osv.except_osv(_('Warning!'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
+                raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': result1})
             if 'move_dest_exists' in fields:
@@ -129,7 +130,7 @@ class stock_return_picking(osv.osv_memory):
         for data_get in data_obj.browse(cr, uid, data['product_return_moves'], context=context):
             move = data_get.move_id
             if not move:
-                raise osv.except_osv(_('Warning !'), _("You have manually created product lines, please delete them to proceed"))
+                raise UserError(_("You have manually created product lines, please delete them to proceed"))
             new_qty = data_get.quantity
             if new_qty:
                 returned_lines += 1
@@ -147,7 +148,7 @@ class stock_return_picking(osv.osv_memory):
                 })
 
         if not returned_lines:
-            raise osv.except_osv(_('Warning!'), _("Please specify at least one non-zero quantity."))
+            raise UserError(_("Please specify at least one non-zero quantity."))
 
         pick_obj.action_confirm(cr, uid, [new_picking], context=context)
         pick_obj.action_assign(cr, uid, [new_picking], context)

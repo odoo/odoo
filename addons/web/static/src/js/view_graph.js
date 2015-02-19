@@ -26,7 +26,6 @@ instance.web.GraphView = instance.web.View.extend({
         this.measures = [];
         this.active_measure = '__count__';
         this.initial_groupbys = [];
-        this.$buttons = options.$buttons;
         this.widget = undefined;
     },
     start: function () {

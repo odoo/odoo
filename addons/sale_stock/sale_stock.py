@@ -26,6 +26,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 import pytz
 from openerp import SUPERUSER_ID
+from openerp.exceptions import UserError
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
@@ -163,9 +164,7 @@ class sale_order(osv.osv):
         for sale in self.browse(cr, uid, ids, context=context):
             for pick in sale.picking_ids:
                 if pick.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(
-                        _('Cannot cancel sales order!'),
-                        _('You must first cancel all delivery order(s) attached to this sales order.'))
+                    raise UserError(_('Cannot cancel sales order!') + '\n' + _('You must first cancel all delivery order(s) attached to this sales order.'))
             stock_obj.signal_workflow(cr, uid, [p.id for p in sale.picking_ids], 'button_cancel')
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
@@ -378,7 +377,7 @@ class stock_move(osv.osv):
         return invoice_line_id
 
     def _get_master_data(self, cr, uid, move, company, context=None):
-        if move.procurement_id and move.procurement_id.sale_line_id:
+        if move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'picking':
             sale_order = move.procurement_id.sale_line_id.order_id
             return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
         return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
@@ -418,7 +417,7 @@ class stock_picking(osv.osv):
         """
         saleorder_ids = self.pool['sale.order'].search(cr, uid, [('procurement_group_id' ,'=', picking.group_id.id)], context=context)
         saleorders = self.pool['sale.order'].browse(cr, uid, saleorder_ids, context=context)
-        if saleorders and saleorders[0]:
+        if saleorders and saleorders[0] and saleorders[0].order_policy == 'picking':
             saleorder = saleorders[0]
             return saleorder.partner_invoice_id.id
         return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)
@@ -492,3 +491,14 @@ class sale_advance_payment_inv(osv.TransientModel):
             elem[1]['incoterms_id'] = sale.incoterm.id or False
             res.append(elem)
         return res
+
+
+class procurement_order(osv.osv):
+    _inherit = "procurement.order"
+
+    def _run_move_create(self, cr, uid, procurement, context=None):
+        vals = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
+        #copy the sequence from the sale order line on the stock move
+        if procurement.sale_line_id:
+            vals.update({'sequence': procurement.sale_line_id.sequence})
+        return vals

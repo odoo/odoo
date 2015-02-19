@@ -28,6 +28,7 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -127,6 +128,15 @@ class lang(osv.osv):
                     return False
         return True
 
+    def _check_grouping(self, cr, uid, ids, context=None):
+        for lang in self.browse(cr, uid, ids, context=context):
+            try:
+                if not all(isinstance(x, int) for x in eval(lang.grouping)):
+                    return False
+            except Exception:
+                return False
+        return True
+
     def _get_default_date_format(self, cursor, user, context=None):
         return '%m/%d/%Y'
 
@@ -162,7 +172,8 @@ class lang(osv.osv):
     ]
 
     _constraints = [
-        (_check_format, 'Invalid date/time format directive specified. Please refer to the list of allowed directives, displayed when you edit a language.', ['time_format', 'date_format'])
+        (_check_format, 'Invalid date/time format directive specified. Please refer to the list of allowed directives, displayed when you edit a language.', ['time_format', 'date_format']),
+        (_check_grouping, "The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case.", ['grouping'])
     ]
 
     @tools.ormcache(skiparg=3)
@@ -190,11 +201,11 @@ class lang(osv.osv):
         for language in languages:
             ctx_lang = context.get('lang')
             if language['code']=='en_US':
-                raise osv.except_osv(_('User Error'), _("Base Language 'en_US' can not be deleted!"))
+                raise UserError(_("Base Language 'en_US' can not be deleted!"))
             if ctx_lang and (language['code']==ctx_lang):
-                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is User's Preferred Language!"))
+                raise UserError(_("You cannot delete the language which is User's Preferred Language!"))
             if language['active']:
-                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is Active!\nPlease de-activate the language first."))
+                raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
             trans_obj = self.pool.get('ir.translation')
             trans_ids = trans_obj.search(cr, uid, [('lang','=',language['code'])], context=context)
             trans_obj.unlink(cr, uid, trans_ids, context=context)

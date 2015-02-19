@@ -53,14 +53,14 @@ class WebsiteCustomer(http.Controller):
 
         if country_id:
             domain += [('country_id', '=', country_id)]
-            if not any(x['country_id'][0] == country_id for x in countries):
+            if not any(x['country_id'][0] == country_id for x in countries if x['country_id']):
                 country = country_obj.read(cr, uid, country_id, ['name'], context)
                 if country:
                     countries.append({
                         'country_id_count': 0,
                         'country_id': (country_id, country['name'])
                     })
-                countries.sort(key=lambda d: d['country_id'][1])
+                countries.sort(key=lambda d: d['country_id'] and d['country_id'][1])
             curr_country = country_obj.browse(cr, uid, country_id, context)
 
         countries.insert(0, {
@@ -88,7 +88,7 @@ class WebsiteCustomer(http.Controller):
 
         tag_obj = request.registry['res.partner.tag']
         tag_ids = tag_obj.search(cr, uid, [('website_published', '=', True), ('partner_ids', 'in', partner_ids)],
-                                 order='name ASC', context=context)
+                                 order='classname, name ASC', context=context)
         tags = tag_obj.browse(cr, uid, tag_ids, context=context)
         tag = tag_id and tag_obj.browse(cr, uid, tag_id, context=context) or False
 

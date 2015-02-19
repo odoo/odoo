@@ -35,6 +35,7 @@ except ImportError:
 from openerp.osv import fields, osv
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _ref_vat = {
     'at': 'ATU12345675',
@@ -91,6 +92,10 @@ class res_partner(osv.osv):
                         getattr(vatnumber, check_func_name, None)
         if not check_func:
             # No VAT validation available, default to check that the country code exists
+            if country_code.upper() == 'EU':
+                # Foreign companies that trade with non-enterprises in the EU
+                # may have a VATIN starting with "EU" instead of a country code.
+                return True
             res_country = self.pool.get('res.country')
             return bool(res_country.search(cr, uid, [('code', '=ilike', country_code)], context=context))
         return check_func(vat_number)
@@ -111,7 +116,7 @@ class res_partner(osv.osv):
     def button_check_vat(self, cr, uid, ids, context=None):
         if not self.check_vat(cr, uid, ids, context=context):
             msg = self._construct_constraint_msg(cr, uid, ids, context=context)
-            raise osv.except_osv(_('Error!'), msg)
+            raise UserError(msg)
         return True
 
     def check_vat(self, cr, uid, ids, context=None):

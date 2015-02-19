@@ -23,6 +23,7 @@ import time
 from collections import defaultdict
 from openerp.osv import osv
 from openerp.report import report_sxw
+from openerp.exceptions import UserError
 
 
 class report_rappel(report_sxw.rml_parse):
@@ -79,7 +80,7 @@ class report_rappel(report_sxw.rml_parse):
         fp_obj = self.pool['account_followup.followup']
         fp_line = fp_obj.browse(self.cr, self.uid, followup_id, context=context).followup_line
         if not fp_line:
-            raise osv.except_osv(_('Error!'),_("The followup plan defined for the current company does not have any followup action."))
+            raise UserError(_("The followup plan defined for the current company does not have any followup action."))
         #the default text will be the first fp_line in the sequence with a description.
         default_text = ''
         li_delay = []
@@ -99,9 +100,12 @@ class report_rappel(report_sxw.rml_parse):
                 partner_max_text = i.followup_line_id.description
         text = partner_max_delay and partner_max_text or default_text
         if text:
+            lang_obj = self.pool['res.lang']
+            lang_ids = lang_obj.search(self.cr, self.uid, [('code', '=', stat_line.partner_id.lang)], context=context)
+            date_format = lang_ids and lang_obj.browse(self.cr, self.uid, lang_ids[0], context=context).date_format or '%Y-%m-%d'
             text = text % {
                 'partner_name': stat_line.partner_id.name,
-                'date': time.strftime('%Y-%m-%d'),
+                'date': time.strftime(date_format),
                 'company_name': stat_line.company_id.name,
                 'user_signature': self.pool['res.users'].browse(self.cr, self.uid, self.uid, context).signature or '',
             }

@@ -7,10 +7,10 @@ class event_config_settings(osv.TransientModel):
     _inherit='marketing.config.settings'
     _columns = {
         'module_event_sale': fields.boolean(
-            'Sale different type of ticket',
+            'Sell events tickets',
             help='Install the event_sale module'),
         'module_website_event_track': fields.boolean(
-            'Organize few days event with track,full agenda,own menu in website'),
+            'Organize few days event with track, full agenda, own menu in website'),
         'auto_confirmation': fields.boolean(
             'Automate events and subscription confirmation', help='Unselect this option to manually manage draft event and draft subscription'),
     }

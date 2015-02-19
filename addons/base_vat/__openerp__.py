@@ -58,5 +58,4 @@ only the country code will be validated.
     'data': ['base_vat_view.xml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/1_partner_vat.jpeg'],
 }

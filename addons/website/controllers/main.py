@@ -45,15 +45,26 @@ class Website(openerp.addons.web.controllers.main.Home):
                     return request.registry['ir.http'].reroute(first_menu.url)
         return self.page(page)
 
+    #------------------------------------------------------
+    # Login - overwrite of the web login so that regular users are redirected to the backend 
+    # while portal users are redirected to the frontend by default
+    #------------------------------------------------------
     @http.route(website=True, auth="public")
-    def web_login(self, *args, **kw):
-        # TODO: can't we just put auth=public, ... in web client ?
-        return super(Website, self).web_login(*args, **kw)
+    def web_login(self, redirect=None, *args, **kw):
+        r = super(Website, self).web_login(redirect=redirect, *args, **kw)
+        if request.params['login_success'] and not redirect:
+            if request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_user'):
+                redirect = '/web?' + request.httprequest.query_string
+            else:
+                redirect = '/'
+            return http.redirect_with_hash(redirect)
+        return r
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
         values = {
             'path': page,
+            'deletable': True, # used to add 'delete this page' in content menu
         }
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):
@@ -66,6 +77,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         except ValueError, e:
             # page not found
             if request.website.is_publisher():
+                values.pop('deletable')
                 page = 'website.page_404'
             else:
                 return request.registry['ir.http']._handle_exception(e, 404)
@@ -163,7 +175,8 @@ class Website(openerp.addons.web.controllers.main.Home):
     def pagenew(self, path, noredirect=False, add_menu=None):
         xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
         if add_menu:
-            request.registry['website.menu'].create(request.cr, request.uid, {
+            request.registry['website.menu'].create(
+                request.cr, request.uid, {
                     'name': path,
                     'url': "/page/" + xml_id,
                     'parent_id': request.website.menu_id.id,
@@ -202,10 +215,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, full=False, bundles=False):
-        """ Lists the templates customizing ``xml_id``. By default, only
-        returns optional templates (which can be toggled on and off), if
-        ``full=True`` returns all templates customizing ``xml_id``
+    def customize_template_get(self, key, full=False, bundles=False):
+        """ Get inherit view's informations of the template ``key``. By default, only
+        returns ``customize_show`` templates (which can be active or not), if
+        ``full=True`` returns inherit view's informations of the template ``key``.
         ``bundles=True`` returns also the asset bundles
         """
         imd = request.registry['ir.model.data']
@@ -215,9 +228,8 @@ class Website(openerp.addons.web.controllers.main.Home):
         user = request.registry['res.users']\
             .browse(request.cr, request.uid, request.uid, request.context)
         user_groups = set(user.groups_id)
-
         views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, xml_id, bundles=bundles, context=dict(request.context or {}, active_test=False))
+            ._views_get(request.cr, request.uid, key, bundles=bundles, context=dict(request.context or {}, active_test=False))
         done = set()
         result = []
         for v in views:
@@ -228,7 +240,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     result.append({
                         'name': v.inherit_id.name,
                         'id': v.id,
-                        'xml_id': v.xml_id,
+                        'key': v.key,
                         'inherit_id': v.inherit_id.id,
                         'header': True,
                         'active': False
@@ -237,7 +249,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 result.append({
                     'name': v.name,
                     'id': v.id,
-                    'xml_id': v.xml_id,
+                    'key': v.key,
                     'inherit_id': v.inherit_id.id,
                     'header': False,
                     'active': v.active,
@@ -464,13 +476,16 @@ class Website(openerp.addons.web.controllers.main.Home):
         xmlid can be used to load the image. But the field image must by base64-encoded
         """
         if xmlid and "." in xmlid:
-            xmlid = xmlid.split(".", 1)
             try:
-                model, id = request.registry['ir.model.data'].get_object_reference(request.cr, request.uid, xmlid[0], xmlid[1])
+                record = request.env.ref(xmlid)
+                model, id = record._name, record.id
             except:
                 raise werkzeug.exceptions.NotFound()
-            if model == 'ir.attachment':
-                field = "datas"
+            if model == 'ir.attachment' and not field:
+                if record.sudo().type == "url":
+                    field = "url"
+                else:
+                    field = "datas"
 
         if not model or not id or not field:
             raise werkzeug.exceptions.NotFound()
@@ -523,3 +538,23 @@ class Website(openerp.addons.web.controllers.main.Home):
         if res:
             return res
         return request.redirect('/')
+
+    #------------------------------------------------------
+    # Backend html field
+    #------------------------------------------------------
+    @http.route('/website/field/html', type='http', auth="public", website=True)
+    def FieldTextHtml(self, model=None, res_id=None, field=None, callback=None, **kwargs):
+        record = None
+        if model and res_id:
+            res_id = int(res_id)
+            record = request.registry[model].browse(request.cr, request.uid, res_id, request.context)
+
+        datarecord = json.loads(kwargs['datarecord'])
+        kwargs.update({
+            'content': record and getattr(record, field) or "",
+            'model': model,
+            'res_id': res_id,
+            'field': field,
+            'datarecord': datarecord
+        })
+        return request.website.render(kwargs.get("template") or "website.FieldTextHtml", kwargs)

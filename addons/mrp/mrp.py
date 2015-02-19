@@ -21,12 +21,12 @@
 
 import time
 import openerp.addons.decimal_precision as dp
-from openerp.osv import fields, osv, orm
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools import float_compare
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 from openerp import tools, SUPERUSER_ID
 from openerp.addons.product import _common
+from openerp.exceptions import UserError, AccessError
 
 
 class mrp_property_group(osv.osv):
@@ -217,8 +217,8 @@ class mrp_bom(osv.osv):
         else:
             # neither product nor template, makes no sense to search
             return False
-        domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
-                            '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+        domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
+                            '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT))]
         # order to prioritize bom with product_id over the one without
         ids = self.search(cr, uid, domain, order='product_id', context=context)
         # Search a BoM which has all properties specified, or if you can not find one, you could
@@ -277,8 +277,8 @@ class mrp_bom(osv.osv):
                 })
 
         for bom_line_id in bom.bom_line_ids:
-            if bom_line_id.date_start and bom_line_id.date_start > time.strftime(DEFAULT_SERVER_DATETIME_FORMAT) or \
-                bom_line_id.date_stop and bom_line_id.date_stop < time.strftime(DEFAULT_SERVER_DATETIME_FORMAT):
+            if bom_line_id.date_start and bom_line_id.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT) or \
+                bom_line_id.date_stop and bom_line_id.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT):
                     continue
             # all bom_line_id variant values must be in the product
             if bom_line_id.attribute_value_ids:
@@ -286,7 +286,7 @@ class mrp_bom(osv.osv):
                     continue
 
             if previous_products and bom_line_id.product_id.product_tmpl_id.id in previous_products:
-                raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
+                raise UserError(_('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
 
             quantity = _factor(bom_line_id.product_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding)
             bom_id = self._bom_find(cr, uid, product_id=bom_line_id.product_id.id, properties=properties, context=context)
@@ -312,7 +312,7 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a phantom BoM line but the product "%s" does not have any BoM defined.') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
+                raise UserError(_('BoM "%s" contains a phantom BoM line but the product "%s" does not have any BoM defined.') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
 
         return result, result2
 
@@ -336,7 +336,7 @@ class mrp_bom(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         if self.pool['mrp.production'].search(cr, uid, [('bom_id', 'in', ids), ('state', 'not in', ['done', 'cancel'])], context=context):
-            raise osv.except_osv(_('Warning!'), _('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
+            raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
         return super(mrp_bom, self).unlink(cr, uid, ids, context=context)
 
     def onchange_product_tmpl_id(self, cr, uid, ids, product_tmpl_id, product_qty=0, context=None):
@@ -478,7 +478,7 @@ class mrp_production(osv.osv):
         try:
             location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
             self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-        except (orm.except_orm, ValueError):
+        except (AccessError, ValueError):
             location_id = False
         return location_id
 
@@ -486,7 +486,7 @@ class mrp_production(osv.osv):
         try:
             location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
             self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-        except (orm.except_orm, ValueError):
+        except (AccessError, ValueError):
             location_id = False
         return location_id
 
@@ -618,7 +618,7 @@ class mrp_production(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for production in self.browse(cr, uid, ids, context=context):
             if production.state not in ('draft', 'cancel'):
-                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a manufacturing order in state \'%s\'.') % production.state)
+                raise UserError(_('Cannot delete a manufacturing order in state \'%s\'.') % production.state)
         return super(mrp_production, self).unlink(cr, uid, ids, context=context)
 
     def location_id_change(self, cr, uid, ids, src, dest, context=None):
@@ -678,6 +678,28 @@ class mrp_production(osv.osv):
         return {'value': result}
 
 
+    def _prepare_lines(self, cr, uid, production, properties=None, context=None):
+        # search BoM structure and route
+        bom_obj = self.pool.get('mrp.bom')
+        uom_obj = self.pool.get('product.uom')
+        bom_point = production.bom_id
+        bom_id = production.bom_id.id
+        if not bom_point:
+            bom_id = bom_obj._bom_find(cr, uid, product_id=production.product_id.id, properties=properties, context=context)
+            if bom_id:
+                bom_point = bom_obj.browse(cr, uid, bom_id)
+                routing_id = bom_point.routing_id.id or False
+                self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
+
+        if not bom_id:
+            raise UserError(_("Cannot find a bill of material for this product."))
+
+        # get components and workcenter_lines from BoM structure
+        factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
+        # product_lines, workcenter_lines
+        return bom_obj._bom_explode(cr, uid, bom_point, production.product_id, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id, context=context)
+
+
     def _action_compute_lines(self, cr, uid, ids, properties=None, context=None):
         """ Compute product_lines and workcenter_lines from BoM structure
         @return: product_lines
@@ -685,8 +707,6 @@ class mrp_production(osv.osv):
         if properties is None:
             properties = []
         results = []
-        bom_obj = self.pool.get('mrp.bom')
-        uom_obj = self.pool.get('product.uom')
         prod_line_obj = self.pool.get('mrp.production.product.line')
         workcenter_line_obj = self.pool.get('mrp.production.workcenter.line')
         for production in self.browse(cr, uid, ids, context=context):
@@ -694,23 +714,10 @@ class mrp_production(osv.osv):
             prod_line_obj.unlink(cr, SUPERUSER_ID, [line.id for line in production.product_lines], context=context)
             #unlink workcenter_lines
             workcenter_line_obj.unlink(cr, SUPERUSER_ID, [line.id for line in production.workcenter_lines], context=context)
-            # search BoM structure and route
-            bom_point = production.bom_id
-            bom_id = production.bom_id.id
-            if not bom_point:
-                bom_id = bom_obj._bom_find(cr, uid, product_id=production.product_id.id, properties=properties, context=context)
-                if bom_id:
-                    bom_point = bom_obj.browse(cr, uid, bom_id)
-                    routing_id = bom_point.routing_id.id or False
-                    self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
-    
-            if not bom_id:
-                raise osv.except_osv(_('Error!'), _("Cannot find a bill of material for this product."))
 
-            # get components and workcenter_lines from BoM structure
-            factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
-            # product_lines, workcenter_lines
-            results, results2 = bom_obj._bom_explode(cr, uid, bom_point, production.product_id, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id, context=context)
+            res = self._prepare_lines(cr, uid, production, properties=properties, context=context)
+            results = res[0] # product_lines
+            results2 = res[1] # workcenter_lines
 
             # reset product_lines in production order
             for line in results:
