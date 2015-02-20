@@ -120,10 +120,9 @@ class account_installer(models.TransientModel):
             if res.date_start and res.date_stop:
                 fiscal_year = fy_obj.search([('date_start', '<=', res.date_start), ('date_stop', '>=', res.date_stop), ('company_id', '=', res.company_id.id)], limit=1)
                 if not fiscal_year:
-                    name = code = res.date_start[:4]
+                    name = res.date_start[:4]
                     if int(name) != int(res.date_stop[:4]):
                         name = res.date_start[:4] + '-' + res.date_stop[:4]
-                        code = res.date_start[2:4] + '-' + res.date_stop[2:4]
                     vals = {
                         'name': name,
                         'date_start': res.date_start,

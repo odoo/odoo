@@ -318,10 +318,9 @@ class account_config_settings(models.TransientModel):
                 [('date_start', '<=', self.date_start), ('date_stop', '>=', self.date_stop),
                  ('company_id', '=', self.company_id.id)])
             if not fiscalyear_count:
-                name = code = self.date_start[:4]
+                name = self.date_start[:4]
                 if int(name) != int(self.date_stop[:4]):
                     name = self.date_start[:4] +'-'+ self.date_stop[:4]
-                    code = self.date_start[2:4] +'-'+ self.date_stop[2:4]
                 vals = {
                     'name': name,
                     'date_start': self.date_start,
