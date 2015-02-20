@@ -1152,8 +1152,7 @@ class pos_order(osv.osv):
                         taxes.append(t.id)
                 if not taxes:
                     continue
-
-                for tax in account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, cur.id, line.qty)['taxes']:
+                for tax in account_tax_obj.browse(cr,uid, taxes, context=context).compute_all(line.price_unit * (100.0-line.discount) / 100.0, cur, line.qty)['taxes']:
                     insert_data('tax', {
                         'name': _('Tax') + ' ' + tax['name'],
                         'product_id': line.product_id.id,
