@@ -860,6 +860,49 @@ class BaseModel(object):
             })
             return '__export__.' + name
 
+    def export_fields_xml(self, fields):
+        print "selffff", self  # res.partner(7, 43)
+        print "fieldsss", fields  # [[u'id'], [u'email'], [u'company_id', u'id'], [u'child_ids', u'bank_ids', u'company_id']]
+        rec = []
+        for record in self:
+            res = [''] * len(fields)
+            rec.append(res)
+            primary_done = []
+            for index, field in enumerate(fields):
+                if not field:
+                    continue
+                name = field[0]
+                if name == '.id': #for special case
+                    res[index] = str(record.id)
+                elif name == 'id': #for id of records
+                    res[index] = record.__export_xml_id()
+                else:
+                    fld = record._fields[name]
+                    val = record[name]
+
+                    if not isinstance(val, BaseModel):
+                        res[index] = fld.convert_to_export(val, self.env) #for o2o records "[u'email']"
+                    else:
+                        primary_done.append(name)
+                        if fld.type == 'many2many' and len(field) > 1 and field[1] == 'id': # [u'company_id', u'id']
+                            xml_ids = [r.__export_xml_id() for r in val]
+                            res[index] = ','.join(xml_ids) or False
+                            continue
+                        fld2 = [(p[1:] if p and p[0] == name else []) for p in fields] #for o2m records multiple values will create new fields every time -- need to resolve
+                        rec_temp = val.export_fields_xml(fld2)  #recursive call
+                        if rec_temp:
+                            for j, val in enumerate(rec_temp[0]):
+                                if val:
+                                    res[j] = val
+                            if not res[index]:
+                                xml_ids = [item[1] for item in val.name_get()]
+                                res[index] = ','.join(xml_ids)
+                            else:
+                                rec += rec_temp[1:]
+                        else:
+                            res[index] = False
+        return rec
+
     @api.multi
     def __export_rows(self, fields):
         """ Export fields of the records in `self`.
@@ -940,7 +983,8 @@ class BaseModel(object):
         fields_to_export = map(fix_import_export_id_paths, fields_to_export)
         if raw_data:
             self = self.with_context(export_raw_data=True)
-        return {'datas': self.__export_rows(fields_to_export)}
+        # return {'datas': self.__export_rows(fields_to_export)}
+        return {'datas': self.export_fields_xml(fields_to_export)}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
         """
@@ -1175,7 +1219,8 @@ class BaseModel(object):
                 'to': index + len(record_span) - 1
             }}
             index += len(record_span)
-    
+
+
     def _convert_records(self, cr, uid, records,
                          context=None, log=lambda a: None):
         """ Converts records from the source iterable (recursive dicts of

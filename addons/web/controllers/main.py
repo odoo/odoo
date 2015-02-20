@@ -20,6 +20,7 @@ import urllib2
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
+from lxml import etree
 
 import babel.messages.pofile
 import werkzeug.utils
@@ -35,6 +36,7 @@ from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.modules import get_module_resource
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
+from openerp.models import fix_import_export_id_paths
 from openerp import http
 
 from openerp.http import request, serialize_exception as _serialize_exception
@@ -1280,16 +1282,19 @@ class Action(http.Controller):
 class Export(http.Controller):
 
     @http.route('/web/export/formats', type='json', auth="user")
-    def formats(self):
+    def formats(self, import_compat=True):
         """ Returns all valid export formats
 
         :returns: for each export format, a pair of identifier and printable name
         :rtype: [(str, str)]
         """
-        return [
+        formats = [
             {'tag': 'csv', 'label': 'CSV'},
             {'tag': 'xls', 'label': 'Excel', 'error': None if xlwt else "XLWT required"},
         ]
+        if import_compat:
+            formats.append({'tag': 'xml','label': 'XML'})
+        return formats
 
     def fields_get(self, model):
         Model = request.session.model(model)
@@ -1455,14 +1460,13 @@ class ExportFormat(object):
 
         field_names = map(operator.itemgetter('name'), fields)
         import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas',[])
-
         if import_compat:
             columns_headers = field_names
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
 
-        return request.make_response(self.from_data(columns_headers, import_data),
+        return request.make_response(self.from_data(columns_headers, import_data, model),
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model))),
                      ('Content-Type', self.content_type)],
@@ -1482,7 +1486,7 @@ class CSVExport(ExportFormat, http.Controller):
     def filename(self, base):
         return base + '.csv'
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, rows, model):
         fp = StringIO()
         writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
 
@@ -1522,7 +1526,7 @@ class ExcelExport(ExportFormat, http.Controller):
     def filename(self, base):
         return base + '.xls'
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, rows, model):
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
 
@@ -1551,6 +1555,117 @@ class ExcelExport(ExportFormat, http.Controller):
         data = fp.read()
         fp.close()
         return data
+
+class XMLExport(ExportFormat, http.Controller):
+
+    @http.route('/web/export/xml', type='http', auth="user")
+    def index(self, data, token):
+        return self.base(data, token)
+
+    @property
+    def content_type(self):
+        return 'text/xml;charset=utf8'
+
+    def filename(self, base):
+        return base + '.xml'
+
+    def from_data(self, fields, rows, model):
+        fp = StringIO()
+        root = etree.Element("openerp")
+        data_root = etree.SubElement(root, "data")
+        fields_name = map(fix_import_export_id_paths, fields)  # [u'company_id', u'id']
+        o2m_fields = []
+        m2o_m2m_fields = []
+        o2o_fields = []
+        for fields in fields_name:
+            if fields[0] == "child_ids":
+                o2m_fields.append(fields)
+            elif fields[0] != "child_ids" and len(fields) > 1:
+                m2o_m2m_fields.append(fields)
+            else:
+                o2o_fields.append(fields)
+
+        # for record, _subinfo in request.session.model(model).extract_records(fields_name, rows):
+        for record in self._extract_records(fields_name, rows, model):
+            self._generate_xml_record(model, data_root, record)
+        xml = etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
+        fp.write(xml)
+        fp.seek(0)
+        data = fp.read()
+        fp.close()
+        return data
+
+    def _extract_records(self, fields_name, rows, model):
+        """Extract Records in dictionaries"""
+        res = {}
+        ros = {}
+
+        def extract_o2m(fields, row, index):
+            o2m_fields = [fields[1:]]
+            recordsspan = [list(itertools.islice(row, index, None))]
+            return [o2m_fields, recordsspan]
+
+        def extract_m2o_m2m(fields, row, index):
+            relfield_data = {}
+            record_span = list(itertools.islice(row, index, index + 1, None))
+            relfield_data[fields[1]] = record_span
+            return [fields[0], relfield_data]
+
+        def recursion(fields_name, rows):
+            for row in rows:
+                result = []
+                for index, fields in enumerate(fields_name):
+                    field_details = request.session.model(model).fields_get(fields)
+                    field_type = field_details[fields[0]].get('type')
+                    if field_type == 'one2many':
+                        o2m_rec = extract_o2m(fields, row, index)
+                        ros['child_ids'] = list(subfields for subfields in recursion(o2m_rec[0], o2m_rec[1]))
+                        result.append(ros)
+                    elif field_type == 'many2many' or field_type == 'many2one':
+                        rec = extract_m2o_m2m(fields, row, index)
+                        res[rec[0]] = rec[1]
+                    else:
+                        recordspan = list(itertools.islice(row, index, index + 1, None))
+                        res[fields[0]] = recordspan[0]
+                result.append(res)
+            return result
+        record = recursion(fields_name, rows)
+        yield record
+
+    def _generate_xml_record(self, model, root, record, rel_field=None):
+        """Generate new Odoo compitable xml records"""
+        for index, rows in enumerate(record):
+            new_record = etree.SubElement(root, "record", model=model)
+            #new_record.set("model", model)
+            field_details = request.session.model(model).fields_get(record[index].keys())
+            for field, value in record[index].iteritems():
+                # Only fields which contain data should be exported
+                if not value:
+                    continue
+                if field == 'id':
+                    new_record.set("id", value)
+                    continue
+                elif field_details[field]['type'] == 'one2many':
+                    for child_record in value:
+                        child_record.update({field_details[field]['relation_field']: {'id': [record[index].get('id')]}})
+                        self._generate_xml_record(field_details[field]['relation'], root, child_record, field_details[field]['relation_field'])
+                    continue
+                new_record_element = etree.SubElement(new_record, "field", name=field)
+                #new_record_element.set("name", field)
+                # Note: For Special case where relational field is integer instead of regular m2o.
+                # eg: res_id of ir.mode.data used as relational field of o2m at many palces.
+                # To handle this special case 'or' condition is added here.
+                if field_details[field]['type'] == 'many2one' or (rel_field == field and field_details[field]['type'] == 'integer'):
+                    new_record_element.set("ref", value['id'][0])
+                elif field_details[field]['type'] == 'many2many':
+                    eval = '[' + ', '.join(["(4, ref('%s'))" % m2m_id for m2m_id in value[0]['id'].split(',')]) + ']'
+                    new_record_element.set("eval", eval)
+                elif field_details[field]['type'] == 'selection':
+                    new_value = [selection[0] for selection in field_details[field]['selection'] if selection[1] == value]
+                    new_record_element.text = new_value and new_value[0] or value
+                else:
+                    new_record_element.text = value
+        return True
 
 class Reports(http.Controller):
     POLLING_DELAY = 0.25
