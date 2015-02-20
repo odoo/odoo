@@ -2106,7 +2106,7 @@ class stock_move(osv.osv):
                 ('group_id', '=', procurement_group),
                 ('location_id', '=', location_from),
                 ('location_dest_id', '=', location_to),
-                ('state', 'in', ['draft', 'confirmed', 'waiting'])], context=context)
+                ('state', 'in', ['draft', 'confirmed', 'waiting'])], limit=1, context=context)
         if picks:
             pick = picks[0]
         else:
