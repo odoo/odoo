@@ -2074,14 +2074,25 @@ class stock_move(osv.osv):
         (and company). Those attributes are also given as parameters.
         """
         pick_obj = self.pool.get("stock.picking")
-        picks = pick_obj.search(cr, uid, [
-                ('group_id', '=', procurement_group),
-                ('location_id', '=', location_from),
-                ('location_dest_id', '=', location_to),
-                ('state', 'in', ['draft', 'confirmed', 'waiting'])], context=context)
-        if picks:
-            pick = picks[0]
+        # Use a SQL query as doing with the ORM will split it in different queries with id IN (,,)
+        # In the next version, the locations on the picking should be stored again.
+        query = """
+            SELECT stock_picking.id FROM stock_picking, stock_move
+            WHERE
+                stock_picking.state in ('draft', 'confirmed', 'waiting') AND
+                stock_move.picking_id = stock_picking.id AND
+                stock_move.location_id = %s AND
+                stock_move.location_dest_id = %s AND
+        """
+        params = (location_from, location_to)
+        if not procurement_group:
+            query += "stock_picking.group_id IS NULL LIMIT 1"
         else:
+            query += "stock_picking.group_id = %s LIMIT 1"
+            params += (procurement_group,)
+        cr.execute(query, params)
+        pick = cr.fetchone()
+        if not pick:
             move = self.browse(cr, uid, move_ids, context=context)[0]
             values = {
                 'origin': move.origin,
