@@ -8,13 +8,13 @@ this declaration.
 
 Signed,
 
-  Ronald Portier rportier@therp.nl https://github.com/nl66278
+*  Ronald Portier rportier@therp.nl https://github.com/nl66278
 
 List of contributors:
 
-  Giovanni Capalbo giovanni@therp.nl https://github.com/gfcapalbo
-  Holger Brunn hbrunn@therp.nl https://github.com/hbrunn
-  Lara Freeke lfreeke@therp.nl https://github.com/lfreeke
-  Ronald Portier rportier@therp.nl https://github.com/nl66278
-  Stefan Rijnhart stefan@therp.nl https://github.com/StefanRijnhart
+*  Giovanni Capalbo giovanni@therp.nl https://github.com/gfcapalbo
+*  Holger Brunn hbrunn@therp.nl https://github.com/hbrunn
+*  Lara Freeke lfreeke@therp.nl https://github.com/lfreeke
+*  Ronald Portier rportier@therp.nl https://github.com/nl66278
+*  Stefan Rijnhart stefan@therp.nl https://github.com/StefanRijnhart
 
