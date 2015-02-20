@@ -47,8 +47,18 @@ class hr_employee(models.Model):
 class account_analytic_line(models.Model):
     _inherit = 'account.analytic.line'
 
+    # def create(self, cr, uid, vals, context=None):
+    #     return super(account_analytic_line, self).create(self, cr, uid, vals, context=context)
+
+
     def default_get(self,cr,uid,fields,context=None):
         values = super(account_analytic_line, self).default_get(cr, uid, fields, context=context)
+        #####################################################################################################
+        ## Small Fix to allow creation of timesheets from the project_timesheet UI. Might be removed later ##
+        #####################################################################################################
+        if context.get('default_is_timesheet'):
+            values['is_timesheet'] =  True
+        ##########################################
         if values.get('is_timesheet'):
             if 'product_uom_id' in fields:
                 values['product_uom_id'] = self._get_employee_unit(cr, uid, context=context)

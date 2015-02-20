@@ -14,41 +14,43 @@
     			<!--"main" section-->
 	    		<div class="col-xs-6">
 		    		<!--Put time here-->
-		    		<a href="javascript:void(0)" class="btn btn-default btn-raised btn-material-cyan pt_test_btn">test</a>
+		    		<a href="javascript:void(0)" class="btn btn-link pt_test_btn pt_btn">Test Sync</a>
 		    	</div>
 		    	<div class="col-xs-3">
 		    		<!--Start button / stop button-->
-		    		<a href="javascript:void(0)" class="btn btn-default btn-raised btn-material-cyan pt_btn_start_activity"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>  &amp;nbsp;Start</a>
+		    		<a href="javascript:void(0)" class="btn btn-link pt_btn_start_activity pt_btn"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>  &amp;nbsp;Start</a>
 				</div>
 			</div>
-			<!--Rows etc.-->
-			<t t-if="widget.account_analytic_lines">
-				<t t-foreach="widget.account_analytic_lines" t-as="account_analytic_line">
-					<div class="col-xs-12 pt_activity_box">
-    					<div class="row">
-							<div class="col-xs-7 pt_activity" t-att-data-activity_id="account_analytic_line.id">
-								<t t-esc="widget.get_project_name(account_analytic_line.project_id)"/><br/>
-								<t t-if="account_analytic_line.task_id">
-						    		<t t-esc="widget.get_task_name(account_analytic_line.task_id)"/>
-						    	</t>
-							</div>
-							<div class="col-xs-1">
-								<div class="row">
-								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-								</div>
-								<div class="row">
-								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-								</div>
-							</div>
-							<div class="col-xs-2">
-                                <t t-if="account_analytic_line.unit_amount">
-    								<t t-esc="widget.unit_amount_to_hours_minutes(account_analytic_line.unit_amount)"/>
-                                </t>
-							</div>
+            <div class="pt_activities_list">
+    			<!--Rows etc.-->
+    			<t t-if="widget.account_analytic_lines">
+    				<t t-foreach="widget.account_analytic_lines" t-as="account_analytic_line">
+    					<div class="col-xs-12 pt_activity_box">
+        					<div class="row">
+    							<div class="col-xs-7 pt_activity" t-att-data-activity_id="account_analytic_line.id">
+    								<t t-esc="widget.get_project_name(account_analytic_line.project_id)"/><br/>
+    								<t t-if="account_analytic_line.task_id">
+    						    		<t t-esc="widget.get_task_name(account_analytic_line.task_id)"/>
+    						    	</t>
+    							</div>
+    							<div class="col-xs-1">
+    								<div class="row">
+    								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    								</div>
+    								<div class="row">
+    								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+    								</div>
+    							</div>
+    							<div class="col-xs-2">
+                                    <t t-if="account_analytic_line.unit_amount">
+        								<t t-esc="widget.unit_amount_to_hours_minutes(account_analytic_line.unit_amount)"/>
+                                    </t>
+    							</div>
+        					</div>
     					</div>
-					</div>
-				</t>
-			</t>
+    				</t>
+    			</t>
+            </div>
     	</div>
     </t>
 
@@ -179,7 +181,7 @@
     </t>
     <t t-name="header">
     	<!-- <div class="panel-material-grey"> -->
-    		<div class="well">
+    		<div class="well o_color">
     	    	<div class="row">
     	    		<div class="col-xs-2">
                         <t t-if="widget.screen_name != 'Edit Activity'">

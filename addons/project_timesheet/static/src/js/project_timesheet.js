@@ -321,11 +321,14 @@ openerp.project_timesheet = function(openerp) {
             //this.renderElement();
         },
         load_server_data: function(){
+            var account_analytic_line_model = new openerp.Model("account.analytic.line");
+            var task_model = new openerp.Model('project.task');
+            var project_model = new openerp.Model('project.project');
+            var aals_to_update = [];
+
             self = this;
         	var parent = this.getParent();
             console.log("Down sync starting")
-        	//aal : 
-            var account_analytic_line_model = new openerp.Model("account.analytic.line");
             account_analytic_line_model.query(["id", "user_id", "task_id", "name", "unit_amount", "date", "account_id", '__last_update', 'is_timesheet'])
             	.filter([["user_id", "=", parent.session.uid]
             		,["is_timesheet","=",true]
@@ -345,9 +348,8 @@ openerp.project_timesheet = function(openerp) {
                     });
                     var account_ids_list = _.map(aals_with_account , function(aal){return aal.account_id[0]});
 
-            		var task_model = new openerp.Model('project.task');
             		task_model.query(["id","name", "project_id","user_id"])
-            			.filter(['|' , ["user_id", "=", parent.session.uid] , ["id","=",task_ids_list]])
+            			.filter(['|' , ["user_id", "=", parent.session.uid] , ["id","in",task_ids_list]])
             			.all()
                         .then(function(tasks){
                             //tasks available
@@ -356,14 +358,12 @@ openerp.project_timesheet = function(openerp) {
                             });
                             var project_ids_list = _.map(tasks_with_project , function(task){return task.project_id[0]});
 
-
-            				var project_model = new openerp.Model('project.project');
             				project_model.query(["id", "name","tasks","members", "analytic_account_id"])
             					.filter([ '|' 
                                     , '|'
-                                    , ["id", "=" , project_ids_list] 
+                                    , ["id", "in" , project_ids_list] 
                                     , ["members", '=', parent.session.uid]
-                                    , ["analytic_account_id" , "=" , account_ids_list] ])
+                                    , ["analytic_account_id" , "in" , account_ids_list] ])
             					.all().then(function(projects){
                                     // Projects available
                                     
@@ -406,37 +406,56 @@ openerp.project_timesheet = function(openerp) {
                                         local_aal = _.findWhere(parent.data.account_analytic_lines, {server_id : aal.id});
                                         if(_.isUndefined(local_aal)){
                                             project = _.findWhere(projects, {analytic_account_id : aal.account_id[0]});
+                                            // If the AAL has no project we don't import it.
                                             if(project){
                                                 local_project = _.findWhere(parent.data.projects, {server_id : project.id});
                                                 project_id = local_project.id;
-                                            }
-                                            else{
-                                                project_id = undefined;
-                                            }
+                                                if(aal.task_id){
+                                                    task = _.findWhere(parent.data.tasks, {server_id : aal.task_id[0]});
+                                                    task_id = task.id;
+                                                }
+                                                else{
+                                                    task_id = undefined;
+                                                }
+                                                parent.data.account_analytic_lines.push({
+                                                    id : parent.data.next_aal_id,
+                                                    server_id : aal.id,
+                                                    desc : aal.name,
+                                                    unit_amount : aal.unit_amount,
+                                                    task_id : task_id,
+                                                    project_id : project_id,
+                                                    write_date : aal.__last_update,
+                                                    date : aal.date
+                                                });
+                                                parent.data.next_aal_id++;
+                                                parent.update_localStorage();
 
-                                            if(aal.task_id){
-                                                task = _.findWhere(parent.data.tasks, {server_id : aal.task_id[0]});
-                                                task_id = task.id;
                                             }
-                                            else{
-                                                task_id = undefined;
-                                            }
-                                            parent.data.account_analytic_lines.push({
-                                                id : parent.data.next_aal_id,
-                                                server_id : aal.id,
-                                                name : aal.name,
-                                                unit_amount : aal.unit_amount,
-                                                task_id : task_id,
-                                                project_id : local_project.id,
-                                                write_date : aal.__last_update,
-                                                date : aal.date
-                                            });
-                                            parent.data.next_aal_id++;
-                                            parent.update_localStorage();
                                         }
                                         else{
-                                            // TODO update case
-                                            // Check if local or remote aal is the most recent
+                                            // If the local version is more recent
+                                            // We'll need to update it on the sv
+                                            if(openerp.str_to_datetime(local_aal.write_date) > openerp.str_to_datetime(aal.__last_update)){
+                                                aals_to_update.push(local_aal);
+
+                                            }
+                                            // If the remote version is more recent
+                                            // We will update the local version.
+                                            else if(openerp.str_to_datetime(local_aal.write_date) < openerp.str_to_datetime(aal.__last_update)){
+                                                project = _.findWhere(projects, {analytic_account_id : aal.account_id[0]});
+                                                local_project = _.findWhere(parent.data.projects, {server_id : project.id});
+                                                local_task = _.findWhere(parent.data.tasks, {server_id : aal.task_id[0]});
+
+                                                _.extend(local_aal,{
+                                                    desc : aal.name,
+                                                    unit_amount : aal.unit_amount,
+                                                    task_id : local_task.id,
+                                                    project_id : local_project.id,
+                                                    write_date : aal.__last_update,
+                                                    date : aal.date
+                                                });
+                                                parent.update_localStorage();
+                                            }
                                         }
                                     });
                                     // Sorting to have most recent aals on top of screen.
@@ -453,7 +472,6 @@ openerp.project_timesheet = function(openerp) {
                                     _.each(parent.data.projects, function(project){
                                         if(_.isUndefined(project.server_id)){
                                             // Create project on server
-                                            var project_model = new openerp.Model('project.project');
                                             self.project_defs.push(project_model.call('create', [{name : project.name , use_tasks : true , invoice_on_timesheets : true }]).then(function(project_server_id){
                                                 project.server_id = project_server_id;
                                                 parent.update_localStorage();
@@ -469,7 +487,6 @@ openerp.project_timesheet = function(openerp) {
                                             if(_.isUndefined(task.server_id)){
                                                 // Find the server_id of this task :
                                                 var project_server_id = _.findWhere(parent.data.projects, {id : task.project_id}).server_id;
-                                                var task_model = new openerp.Model('project.task');
                                                 self.task_defs.push(task_model.call('create', [{name : task.name, project_id : project_server_id}]).then(function(task_server_id){
                                                     task.server_id = task_server_id;
                                                     parent.update_localStorage();
@@ -481,18 +498,54 @@ openerp.project_timesheet = function(openerp) {
                                             // AALS sync:
                                             self.aals_defs = [];
                                             _.each(parent.data.account_analytic_lines, function(aal){
+                                                // New AALs created from the UI
                                                 if(_.isUndefined(aal.server_id)){
-                                                    //Find the server_did of the task and project of the aal
-                                                    
-                                                    //
-                                                    var aal_model = new openerp.Model('account.analytic.line');
-                                                    self.aals_defs.push(aal_model.call('create', [{name : aal.desc}]).then(function(aal_server_id){
-                                                        aal.server_id = aal_server_id;
-                                                        parent.update_localStorage();
-                                                    }));
+                                                    // Find the server_id of the task and project of the aal
+                                                    var project_server_id = _.findWhere(parent.data.projects, {id : aal.project_id}).server_id;
+                                                    // We need to call the server to find the analytic account linked to the project
+                                                    project_model.query(["analytic_account_id"]).filter([["id" , "=" , project_server_id]]).first().then(function(server_account_id){
+                                                        var task_server_id;
+                                                        if (aal.task_id){
+                                                            task_server_id = _.findWhere(parent.data.tasks, {id : aal.task_id}).server_id;
+                                                        }
+                                                        var new_aal = {
+                                                            name : aal.desc,
+                                                            account_id : server_account_id.analytic_account_id[0],
+                                                            is_timesheet : true,
+                                                            unit_amount : aal.unit_amount,
+                                                            project_id : project_server_id,
+                                                            task_id : task_server_id
+                                                        };
+                                                        context = new openerp.web.CompoundContext({'default_is_timesheet': true});
+                                                        self.aals_defs.push(account_analytic_line_model.call('create', [new_aal], {context : context}).then(function(aal_server_id){
+                                                            aal.server_id = aal_server_id;
+                                                            parent.update_localStorage();
+                                                        }));
+                                                    });
                                                 }
                                             });
-
+                                            // AAls that need to be updated or deleted
+                                            $.when.apply($, self.aals_defs).then(function() {
+                                                _.each(aals_to_update, function(aal){
+                                                    var project_server_id = _.findWhere(parent.data.projects, {id : aal.project_id}).server_id;
+                                                    // We need to call the server to find the analytic account linked to the project
+                                                    project_model.query(["analytic_account_id"]).filter([["id" , "=" , project_server_id]]).first().then(function(server_account_id){
+                                                        var task_server_id;
+                                                        if (aal.task_id){
+                                                            task_server_id = _.findWhere(parent.data.tasks, {id : aal.task_id}).server_id;
+                                                        }
+                                                        var new_aal = {
+                                                            name : aal.desc,
+                                                            account_id : server_account_id.analytic_account_id[0],
+                                                            is_timesheet : true,
+                                                            unit_amount : aal.unit_amount,
+                                                            project_id : project_server_id,
+                                                            task_id : task_server_id
+                                                        };
+                                                        account_analytic_line_model.call('write', [aal.server_id , new_aal]);
+                                                    });
+                                                });
+                                            });
                                         });
                                     });
                                 });
