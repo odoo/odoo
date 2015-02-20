@@ -314,7 +314,7 @@ Advanced options
 
 .. option:: --auto-reload
 
-    enable auto-reloading of python files to apply code changes without having to restart the server
+    enable auto-reloading of python files and xml files without having to restart the server
 
 Configuration file
 ==================
