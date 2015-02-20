@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
      <template id="website_twitter_snippet" name="Twitter snippet" inherit_id="website.snippets">
         <xpath expr="//div[@id='snippet_feature']/div[@class='o_panel_body']" position="inside">
             <div>
@@ -8,7 +7,7 @@
                     <img class="oe_snippet_thumbnail_img" src="/website_twitter/static/src/img/twitter_scroll.png"/>
                     <span class="oe_snippet_thumbnail_title">Twitter Scroller</span>
                 </div>
-                <section class="oe_snippet_body twitter" data-screen-name="OpenERP" data-limit="15">
+                <section class="oe_snippet_body twitter" data-screen-name="odoo" data-limit="15">
                     <div class="twitter_timeline" contenteditable="false"></div>
                 </section>
             </div>
@@ -33,5 +32,4 @@
             <script type="text/javascript" src="/website_twitter/static/src/js/website.twitter.editor.js"/>
         </xpath>
     </template>
-</data>
-</openerp>
+</odoo>

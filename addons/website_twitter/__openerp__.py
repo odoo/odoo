@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Twitter Roller',
     'category': 'Website',
@@ -9,7 +10,7 @@ Display best tweets
 ========================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website'],
     'data': [
         'security/ir.model.access.csv',
