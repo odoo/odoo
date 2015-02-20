@@ -19,40 +19,24 @@ ENV LC_ALL C.UTF-8
 RUN apt-get update -qq &&  \
 	apt-get upgrade -qq -y && \
 	apt-get install \
-		adduser \
 		postgresql \
+		postgresql-server-dev-all \
 		postgresql-client \
-		python \
-		python-dateutil \
-		python-decorator \
-		python-docutils \
-		python-feedparser \
-		python-imaging \
-		python-jinja2 \
-		python-ldap \
-		python-libxslt1 \
-		python-lxml \
-		python-mako \
-		python-mock \
-		python-openid \
-		python-passlib \
-		python-psutil \
-		python-psycopg2 \
-		python-pybabel \
-		python-pychart \
-		python-pydot \
-		python-pyparsing \
-		python-pypdf \
-		python-reportlab \
-		python-requests \
-		python-simplejson \
-		python-tz \
-		python-unittest2 \
-		python-vatnumber \
-		python-vobject \
-		python-werkzeug \
-		python-xlwt \
-		python-yaml -y && \
+		adduser \
+		libxml2-dev \
+		libxslt1-dev \
+		libldap2-dev \
+		libsasl2-dev \
+		libssl-dev \
+		libjpeg-dev \
+		python-dev \
+		python-pip \
+		build-essential \
+		python -y && \
 	rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /opt/release/requirements.txt
+
+RUN pip install -r /opt/release/requirements.txt
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
