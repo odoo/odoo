@@ -1,5 +1,5 @@
 from openerp.tests.common import TransactionCase
-from openerp import netsvc
+from openerp import netsvc, workflow
 
 
 class TestCheckJournalEntry(TransactionCase):
@@ -13,7 +13,6 @@ class TestCheckJournalEntry(TransactionCase):
         self.expense_obj = self.registry('hr.expense.expense')
         self.exp_line_obj = self.registry('hr.expense.line')
         self.product_obj = self.registry('product.product')
-        self.wf_service = netsvc.LocalService('workflow')
         self.tax_obj = self.registry('account.tax')
         self.code_obj = self.registry('account.tax.code')
         _, self.product_id = self.registry("ir.model.data").get_object_reference(cr, uid, "hr_expense", "air_ticket")
@@ -43,11 +42,11 @@ class TestCheckJournalEntry(TransactionCase):
     def test_journal_entry(self):
         cr, uid = self.cr, self.uid
         #Submit to Manager
-        self.wf_service.trg_validate(uid, 'hr.expense.expense', self.expense_id, 'confirm', cr)
+        workflow.trg_validate(uid, 'hr.expense.expense', self.expense_id, 'confirm', cr)
         #Approve
-        self.wf_service.trg_validate(uid, 'hr.expense.expense', self.expense_id, 'validate', cr)
+        workflow.trg_validate(uid, 'hr.expense.expense', self.expense_id, 'validate', cr)
         #Create Expense Entries
-        self.wf_service.trg_validate(uid, 'hr.expense.expense', self.expense_id, 'done', cr)
+        workflow.trg_validate(uid, 'hr.expense.expense', self.expense_id, 'done', cr)
         self.expense = self.expense_obj.browse(cr, uid, self.expense_id)
         self.assertEquals(self.expense.state, 'done', 'Expense is not in Waiting Payment state')
         self.assertTrue(self.expense.account_move_id.id, 'Expense Journal Entry is not created')
