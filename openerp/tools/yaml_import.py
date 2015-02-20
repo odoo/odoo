@@ -348,12 +348,12 @@ class YamlInterpreter(object):
         def _get_right_one2many_view(fg, field_name, view_type):
             one2many_view = fg[field_name]['views'].get(view_type)
 
-            if not one2many_view.get('name'):
-                one2many_view['name'] = fg[field_name]['relation'] + ".inline"
-
             # if the view is not defined inline, we call fields_view_get()
             if not one2many_view:
-                one2many_view = self.pool[fg[field_name]['relation']].fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
+                one2many_view = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
+            elif not one2many_view.get('name'):
+                one2many_view['name'] = fg[field_name]['relation'] + ".inline"
+
             return one2many_view
 
         def process_val(key, val):
