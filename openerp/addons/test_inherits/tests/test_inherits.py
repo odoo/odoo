@@ -15,3 +15,9 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(pallet.name, 'B')
         self.assertEqual(pallet.field_in_box, 'box')
         self.assertEqual(pallet.field_in_pallet, 'pallet')
+
+    def test_write_3_levels_inherits(self):
+        """ Check that we can create an inherits on 3 levels """
+        pallet = self.env.ref('test_inherits.pallet_a')
+        pallet.write({'name': 'C'})
+        self.assertEqual(pallet.name, 'C')
