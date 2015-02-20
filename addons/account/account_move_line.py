@@ -1176,9 +1176,11 @@ class account_move_line(osv.osv):
             raise UserError(_('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise UserError(_('You cannot use an inactive account.'))
-        if update_check:
-            if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
-                self._update_check(cr, uid, ids, context)
+
+        affects_move = any(f in vals for f in ('account_id', 'journal_id', 'period_id', 'move_id', 'debit', 'credit', 'date'))
+
+        if update_check and affects_move:
+            self._update_check(cr, uid, ids, context)
 
         todo_date = None
         if vals.get('date', False):
@@ -1202,7 +1204,8 @@ class account_move_line(osv.osv):
             if journal.centralisation:
                 self._check_moves(cr, uid, context=ctx)
         result = super(account_move_line, self).write(cr, uid, ids, vals, context)
-        if check and not context.get('novalidate'):
+
+        if affects_move and check and not context.get('novalidate'):
             done = []
             for line in self.browse(cr, uid, ids):
                 if line.move_id.id not in done:
@@ -1378,7 +1381,7 @@ class account_move_line(osv.osv):
                     }
                     self.create(cr, uid, data, context)
                 #create the Tax movement
-                if not tax['amount']:
+                if not tax['amount'] and not tax[tax_code]:
                     continue
                 data = {
                     'move_id': vals['move_id'],

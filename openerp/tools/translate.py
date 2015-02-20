@@ -578,6 +578,7 @@ def trans_parse_view(element, callback):
     for el in element.iter():
         if (not isinstance(el, SKIPPED_ELEMENT_TYPES)
                 and el.tag.lower() not in SKIPPED_ELEMENTS
+                and el.get("translation", '').strip() != "off"
                 and el.text):
             _push(callback, el.text, el.sourceline)
         if el.tail:
