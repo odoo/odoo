@@ -2091,7 +2091,7 @@ class stock_move(osv.osv):
             query += "stock_picking.group_id = %s LIMIT 1"
             params += (procurement_group,)
         cr.execute(query, params)
-        pick = cr.fetchone()
+        [pick] = cr.fetchone() or [None]
         if not pick:
             move = self.browse(cr, uid, move_ids, context=context)[0]
             values = {
