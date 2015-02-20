@@ -266,11 +266,12 @@ def build_deb(o):
     subprocess.call(cmd, cwd=o.build_dir)
     deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir)
     deb.logfile = stdout
-    deb.expect_exact('Enter passphrase: ', timeout=1200)
-    deb.send(GPGPASSPHRASE + '\r\n')
-    deb.expect_exact('Enter passphrase: ')
-    deb.send(GPGPASSPHRASE + '\r\n')
-    deb.expect(pexpect.EOF)
+    if GPGPASSPHRASE:
+        deb.expect_exact('Enter passphrase: ', timeout=1200)
+        deb.send(GPGPASSPHRASE + '\r\n')
+        deb.expect_exact('Enter passphrase: ')
+        deb.send(GPGPASSPHRASE + '\r\n')
+    deb.expect(pexpect.EOF, timeout=1200)
     system(['mv', glob('%s/../odoo_*.deb' % o.build_dir)[0], '%s' % o.build_dir])
     system(['mv', glob('%s/../odoo_*.dsc' % o.build_dir)[0], '%s' % o.build_dir])
     system(['mv', glob('%s/../odoo_*_amd64.changes' % o.build_dir)[0], '%s' % o.build_dir])
