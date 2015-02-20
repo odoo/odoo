@@ -1,169 +1,161 @@
 # -*- coding: utf-8 -*-
 import random
 
-from openerp import SUPERUSER_ID
-from openerp.osv import osv, orm, fields
-from openerp.addons.web.http import request
+from openerp import api, fields, models
+from openerp.http import request
 
 
-class sale_order(osv.Model):
+class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def _cart_info(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict()
-        for order in self.browse(cr, uid, ids, context=context):
-            res[order.id] = {
-                'cart_quantity': int(sum(l.product_uom_qty for l in (order.website_order_line or []))),
-                'only_services': all(l.product_id and l.product_id.type == 'service' for l in order.website_order_line)
-            }
-        return res
+    @api.multi
+    @api.depends('website_order_line')
+    def _compute_cart_info(self):
+        for order in self:
+            order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
+            order.only_services = all(order.website_order_line.filtered(lambda l: (l.product_id and l.product_id.type == 'service')))
 
-    _columns = {
-        'website_order_line': fields.one2many(
-            'sale.order.line', 'order_id',
-            string='Order Lines displayed on Website', readonly=True,
-            help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
-        ),
-        'cart_quantity': fields.function(_cart_info, type='integer', string='Cart Quantity', multi='_cart_info'),
-        'payment_acquirer_id': fields.many2one('payment.acquirer', 'Payment Acquirer', on_delete='set null', copy=False),
-        'payment_tx_id': fields.many2one('payment.transaction', 'Transaction', on_delete='set null', copy=False),
-        'only_services': fields.function(_cart_info, type='boolean', string='Only Services', multi='_cart_info'),
-    }
+    website_order_line = fields.One2many(
+        'sale.order.line', 'order_id',
+        string='Order Lines displayed on Website', readonly=True,
+        help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
+    )
+    cart_quantity = fields.Integer(compute='_compute_cart_info')
+    payment_acquirer_id = fields.Many2one('payment.acquirer', 'Payment Acquirer', on_delete='set null', copy=False)
+    payment_tx_id = fields.Many2one('payment.transaction', 'Transaction', on_delete='set null', copy=False)
+    only_services = fields.Boolean(compute='_compute_cart_info')
 
-    def _get_errors(self, cr, uid, order, context=None):
+    def _get_errors(self):
+        self.ensure_one()
         return []
 
-    def _get_website_data(self, cr, uid, order, context):
+    def _get_website_data(self):
+        self.ensure_one()
         return {
-            'partner': order.partner_id.id,
-            'order': order
+            'partner': self.partner_id.id,
+            'order': self
         }
 
-    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None, **kwargs):
-        for so in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
+        for so in self:
             domain = [('order_id', '=', so.id), ('product_id', '=', product_id)]
             if line_id:
-                domain += [('id', '=', line_id)]
-            return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
+                domain.append(('id', '=', line_id))
+            return self.env['sale.order.line'].sudo().search(domain).ids
 
-    def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, line_id=None, context=None):
-        so = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
-
-        values = self.pool.get('sale.order.line').product_id_change(cr, SUPERUSER_ID, [],
+    @api.multi
+    def _website_product_id_change(self, order_id, product_id, qty=0, line_id=None):
+        OrderLine = self.env['sale.order.line'].sudo()
+        so = self.env['sale.order'].browse(order_id)
+        values = OrderLine.product_id_change(
             pricelist=so.pricelist_id.id,
             product=product_id,
             partner_id=so.partner_id.id,
             fiscal_position=so.fiscal_position.id,
             qty=qty,
-            context=context
         )['value']
 
         if line_id:
-            line = self.pool.get('sale.order.line').browse(cr, SUPERUSER_ID, line_id, context=context)
+            line = OrderLine.browse(line_id)
             values['name'] = line.name
         else:
-            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            product = self.env['product.product'].browse(product_id)
             values['name'] = product.display_name
             if product.description_sale:
                 values['name'] += '\n'+product.description_sale
 
         values['product_id'] = product_id
-        values['order_id'] = order_id
-        if values.get('tax_id') != None:
+        values['order_id'] = self.id
+        if not values.get('tax_id'):
             values['tax_id'] = [(6, 0, values['tax_id'])]
         return values
 
-    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
+    @api.multi
+    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
-        sol = self.pool.get('sale.order.line')
-
+        OrderLine = self.env['sale.order.line'].sudo()
         quantity = 0
-        for so in self.browse(cr, uid, ids, context=context):
-            if line_id != False:
-                line_ids = so._cart_find_product_line(product_id, line_id, context=context, **kwargs)
-                if line_ids:
-                    line_id = line_ids[0]
-
-            # Create line if no line with product_id can be located
+        for so in self:
             if not line_id:
-                values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=1, context=context)
-                line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
-                if add_qty:
-                    add_qty -= 1
+                lines = so._cart_find_product_line(product_id, line_id, kwargs=kwargs)
+                if lines:
+                    line_id = lines[0]
+                else:
+                    # Create line if no line with product_id can be located
+                    values = so._website_product_id_change(so.id, product_id, qty=1)
+                    line_id = OrderLine.create(values).id
+                    if add_qty:
+                        add_qty -= 1
 
             # compute new quantity
+            line = OrderLine.browse(line_id)
             if set_qty:
                 quantity = set_qty
-            elif add_qty != None:
-                quantity = sol.browse(cr, SUPERUSER_ID, line_id, context=context).product_uom_qty + (add_qty or 0)
-
+            elif add_qty >= 0:
+                quantity = line.product_uom_qty + add_qty
             # Remove zero of negative lines
             if quantity <= 0:
-                sol.unlink(cr, SUPERUSER_ID, [line_id], context=context)
+                line.unlink()
             else:
                 # update line
-                values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=quantity, line_id=line_id, context=context)
+                values = so._website_product_id_change(so.id, product_id, qty=quantity, line_id=line_id)
                 values['product_uom_qty'] = quantity
-                sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
-
+                line.write(values)
         return {'line_id': line_id, 'quantity': quantity}
 
-    def _cart_accessories(self, cr, uid, ids, context=None):
-        for order in self.browse(cr, uid, ids, context=context):
-            s = set(j.id for l in (order.website_order_line or []) for j in (l.product_id.accessory_product_ids or []))
-            s -= set(l.product_id.id for l in order.order_line)
-            product_ids = random.sample(s, min(len(s),3))
-            return self.pool['product.product'].browse(cr, uid, product_ids, context=context)
+    def _cart_accessories(self):
+        for order in self:
+            s = (order.mapped('website_order_line.product_id.accessory_product_ids') - order.mapped('order_line.product_id')).ids
+            product_ids = random.sample(s, min(len(s), 3))
+            return self.env['product.product'].browse(product_ids)
 
-class website(orm.Model):
+
+class Website(models.Model):
     _inherit = 'website'
 
-    _columns = {
-        'pricelist_id': fields.related('user_id','partner_id','property_product_pricelist',
-            type='many2one', relation='product.pricelist', string='Default Pricelist'),
-        'currency_id': fields.related('pricelist_id','currency_id',
-            type='many2one', relation='res.currency', string='Default Currency'),
-    }
+    pricelist_id = fields.Many2one('product.pricelist', related='user_id.partner_id.property_product_pricelist', string='Default Pricelist')
+    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', string='Default Currency')
 
-    def sale_product_domain(self, cr, uid, ids, context=None):
+    @api.model
+    def sale_product_domain(self, context=None):
         return [("sale_ok", "=", True)]
 
-    def sale_get_order(self, cr, uid, ids, force_create=False, code=None, update_pricelist=None, context=None):
-        sale_order_obj = self.pool['sale.order']
+    @api.multi
+    def sale_get_order(self, force_create=False, code=None, update_pricelist=None):
+        SaleOrder = self.env['sale.order'].sudo()
         sale_order_id = request.session.get('sale_order_id')
         sale_order = None
         # create so if needed
         if not sale_order_id and (force_create or code):
             # TODO cache partner_id session
-            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+            partner = self.env.user.sudo().partner_id
 
-            for w in self.browse(cr, uid, ids):
+            for w in self:
                 values = {
                     'user_id': w.user_id.id,
                     'partner_id': partner.id,
                     'pricelist_id': partner.property_product_pricelist.id,
-                    'team_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website', 'salesteam_website_sales')[1],
+                    'team_id': self.env.ref['website.salesteam_website_sales'].id,
                 }
-                sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
-                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']
-                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
-                request.session['sale_order_id'] = sale_order_id
+                sale_order = SaleOrder.create(values)
+                values = SaleOrder.onchange_partner_id(part=partner.id)['value']
+                sale_order.write(values)
+                request.session['sale_order_id'] = sale_order.id
         if sale_order_id:
             # TODO cache partner_id session
-            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+            partner = self.env.user.sudo().partner_id
 
-            sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
+            sale_order = SaleOrder.browse(sale_order_id)
             if not sale_order.exists():
                 request.session['sale_order_id'] = None
                 return None
 
             # check for change of pricelist with a coupon
             if code and code != sale_order.pricelist_id.code:
-                pricelist_ids = self.pool['product.pricelist'].search(cr, SUPERUSER_ID, [('code', '=', code)], context=context)
-                if pricelist_ids:
-                    pricelist_id = pricelist_ids[0]
-                    request.session['sale_order_code_pricelist_id'] = pricelist_id
-                    update_pricelist = True
+                pricelist = self.env['product.pricelist'].sudo().search([('code', '=', code)], limit=1)
+                request.session['sale_order_code_pricelist_id'] = pricelist.id
+                update_pricelist = True
 
             pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
 
@@ -174,14 +166,14 @@ class website(orm.Model):
                     flag_pricelist = True
                 fiscal_position = sale_order.fiscal_position and sale_order.fiscal_position.id or False
 
-                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], partner.id, context=context)['value']
+                values = sale_order.onchange_partner_id(part=partner.id)['value']
                 if values.get('fiscal_position'):
-                    order_lines = map(int,sale_order.order_line)
-                    values.update(sale_order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [],
-                        values['fiscal_position'], [[6, 0, order_lines]], context=context)['value'])
+                    order_lines = map(int, sale_order.order_line)
+                    values.update(SaleOrder.onchange_fiscal_position([],
+                                                                     values['fiscal_position'], [[6, 0, order_lines]])['value'])
 
                 values['partner_id'] = partner.id
-                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
+                sale_order.write(values)
 
                 if flag_pricelist or values.get('fiscal_position') != fiscal_position:
                     update_pricelist = True
@@ -195,23 +187,23 @@ class website(orm.Model):
                     sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
 
             # update browse record
-            if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id !=  partner.id:
-                sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order.id, context=context)
-
+            if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id != partner.id:
+                sale_order = SaleOrder.browse(sale_order.id)
         return sale_order
 
-    def sale_get_transaction(self, cr, uid, ids, context=None):
-        transaction_obj = self.pool.get('payment.transaction')
+    @api.model
+    def sale_get_transaction(self):
         tx_id = request.session.get('sale_transaction_id')
         if tx_id:
-            tx_ids = transaction_obj.search(cr, SUPERUSER_ID, [('id', '=', tx_id), ('state', 'not in', ['cancel'])], context=context)
-            if tx_ids:
-                return transaction_obj.browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
+            tx = self.env['payment.transaction'].sudo().search([('id', '=', tx_id), ('state', 'not in', ['cancel'])], limit=1)
+            if tx:
+                return tx
             else:
                 request.session['sale_transaction_id'] = False
         return False
 
-    def sale_reset(self, cr, uid, ids, context=None):
+    @api.model
+    def sale_reset(self):
         request.session.update({
             'sale_order_id': False,
             'sale_transaction_id': False,

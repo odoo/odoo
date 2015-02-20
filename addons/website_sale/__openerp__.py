@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'eCommerce',
     'category': 'Website',
@@ -5,11 +6,11 @@
     'website': 'https://www.odoo.com/page/e-commerce',
     'version': '1.0',
     'description': """
-OpenERP E-Commerce
+Odoo E-Commerce
 ==================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website', 'sale', 'payment'],
     'data': [
         'data/data.xml',
@@ -19,7 +20,7 @@ OpenERP E-Commerce
         'views/sale_order.xml',
         'views/snippets.xml',
         'views/report_shop_saleorder.xml',
-        'res_config_view.xml',
+        'views/res_config_view.xml',
         'security/ir.model.access.csv',
         'security/website_sale.xml',
     ],

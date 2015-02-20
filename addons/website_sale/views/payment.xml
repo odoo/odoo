@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="transaction_form_website_sale" model="ir.ui.view">
-            <field name="name">payment.transaction.form.website_sale</field>
+            <field name="name">payment.transaction.form.inherit</field>
             <field name="model">payment.transaction</field>
             <field name="inherit_id" ref="payment.transaction_form"/>
             <field name="arch" type="xml">
@@ -13,5 +12,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

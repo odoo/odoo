@@ -4,12 +4,12 @@ import base64
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website
-from openerp.addons.website_sale.controllers.main import website_sale
+from openerp.addons.website_sale.controllers.main import WebsiteSale
 from cStringIO import StringIO
 from werkzeug.utils import redirect
 
 
-class website_sale_digital(website_sale):
+class website_sale_digital(WebsiteSale):
 
     orders_page = '/shop/orders'
 

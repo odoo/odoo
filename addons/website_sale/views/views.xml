@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
     <record model="ir.ui.view" id="product_pricelist_view">
-        <field name="name">product.pricelist.website.form</field>
+        <field name="name">product.pricelist.form.inherit</field>
         <field name="model">product.pricelist</field>
         <field name="inherit_id" ref="product.product_pricelist_view"/>
         <field name="arch" type="xml">
@@ -14,7 +13,7 @@
     </record>
 
     <record model="ir.ui.view" id="product_template_form_view">
-        <field name="name">product.template.product.website.form</field>
+        <field name="name">product.template.form.inherit</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
@@ -41,7 +40,7 @@
     <!-- Product attribute -->
 
     <record id="variants_template_tree_view" model="ir.ui.view">
-        <field name="name">variants.template.tree</field>
+        <field name="name">product.attribute.value.tree.inherit</field>
         <field name="model">product.attribute.value</field>
         <field name="inherit_id" ref="product.variants_template_tree_view"/>
         <field name="arch" type="xml">
@@ -51,7 +50,7 @@
         </field>
     </record>
     <record id="variants_tree_view" model="ir.ui.view">
-        <field name="name">variants.template.tree</field>
+        <field name="name">product.attribute.value.tree.inherit</field>
         <field name="model">product.attribute.value</field>
         <field name="inherit_id" ref="product.variants_tree_view"/>
         <field name="arch" type="xml">
@@ -61,7 +60,7 @@
         </field>
     </record>
     <record id="attribute_tree_view" model="ir.ui.view">
-        <field name="name">product.attribute.tree.type</field>
+        <field name="name">product.attribute.tree.inherit</field>
         <field name="model">product.attribute</field>
         <field name="inherit_id" ref="product.attribute_tree_view"></field>
         <field name="arch" type="xml">
@@ -122,8 +121,5 @@
         </field>
     </record>
     <menuitem action="product_public_category_action" id="menu_product_public_category" parent="product.prod_config_main" sequence="2" />
-    <!-- END -->
 
- </data>
-
-</openerp>
+</odoo>
