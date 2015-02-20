@@ -126,7 +126,6 @@ class account_installer(models.TransientModel):
                         code = res.date_start[2:4] + '-' + res.date_stop[2:4]
                     vals = {
                         'name': name,
-                        'code': code,
                         'date_start': res.date_start,
                         'date_stop': res.date_stop,
                         'company_id': res.company_id.id

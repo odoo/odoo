@@ -324,7 +324,6 @@ class account_config_settings(models.TransientModel):
                     code = self.date_start[2:4] +'-'+ self.date_stop[2:4]
                 vals = {
                     'name': name,
-                    'code': code,
                     'date_start': self.date_start,
                     'date_stop': self.date_stop,
                     'company_id': self.company_id.id,
