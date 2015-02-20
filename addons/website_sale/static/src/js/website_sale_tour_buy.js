@@ -28,7 +28,7 @@ Tour.register({
         {
             title:     "click on add to cart",
             waitFor:   'label:contains(32 GB) input:propChecked',
-            element:   '#product_detail form[action^="/shop/cart/update"] .btn',
+            element:   '#product_detail form[action^="/shop/cart"] .btn',
         },
         {
             title:     "add suggested",

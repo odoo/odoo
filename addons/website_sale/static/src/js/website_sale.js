@@ -53,7 +53,7 @@ $('.oe_website_sale').each(function () {
             'set_qty': value})
             .then(function (data) {
                 if (!data.quantity) {
-                    location.reload();
+                    location.href = window.location;
                     return;
                 }
                 var $q = $(".my_cart_quantity");
@@ -65,8 +65,8 @@ $('.oe_website_sale').each(function () {
                 $("#cart_total").replaceWith(data['website_sale.total']);
                 if (data.warning) {
                     var cart_alert = $('.oe_cart').parent().find('#data_warning');
-                    if (cart_alert.length === 0) {
-                        $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
+                    if (cart_alert.length == 0) {
+                        $('.oe_cart').prepend('<div class="alert alert-warning alert-dismissable" role="alert" id="data_warning">'+
                                 '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
                     }
                     else {
@@ -193,6 +193,7 @@ $('.oe_website_sale').each(function () {
             $product_id.val(0);
             $parent.find(".js_check_product").attr("disabled", "disabled");
         }
+        $product_id.trigger('change');
     });
     $('ul.js_add_cart_variants', oe_website_sale).each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');

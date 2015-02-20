@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+  <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
+      <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_sale_stock/static/src/js/website_sale_stock.js"></script>
+      </xpath>
+  </template>
+  <template id="products_out_of_stock_warning" inherit_id="website_sale.product" active="False" customize_show="True" name="Out of Stock Warning">
+  </template>
+
   <template id="orders_followup_shipping" name="Orders Shipping Followup" inherit_id="website_sale.order_invoice">
     <xpath expr="//div[@id='shipping_address']" position="inside">
       <t t-if="o.picking_ids">
@@ -29,6 +37,37 @@
           </t>
         </div>
       </t>
+    </xpath>
+  </template>
+
+  <template id="products_out_of_stock" inherit_id="website_sale.products_add_to_cart" name="Out of Stock Products">
+    <xpath expr="//a[@class='btn btn-default btn-xs a-submit']" position="replace">
+        <a t-attf-class="btn btn-default btn-xs a-submit #{ 'disabled' if website.stock_warning_active and product.qty_available&lt;= 0 and product.type=='product' else '' }">
+            <span class="fa fa-shopping-cart"/>
+        </a>
+    </xpath>
+  </template>
+
+  <template id="product_out_of_stock" inherit_id="website_sale.product" name="Out of Stock Product">
+    <xpath expr="//a[@id='add_to_cart']" position="replace">
+        <a id="add_to_cart" t-attf-class="btn btn-primary btn-lg mt8 js_check_product a-submit #{ 'disabled' if website.stock_warning_active and product.qty_available&lt;= 0 and product.type=='product' else '' }" href="#">Add to Cart</a>
+        <input type="hidden" name="product_stock" t-att-data-stock='json.dumps(dict([(variant.id, variant.qty_available if variant.type == "product" else -1) for variant in product.product_variant_ids])) if website.stock_warning_active else ""' />
+    </xpath>
+  </template>
+  <template id="product_price_out_of_stock" inherit_id="website_sale.product_price" name="Out of Stock Product">
+    <xpath expr="//div[@class='product_price mt16']" position="after">
+        <p t-if="website.stock_warning_active and product.qty_available&lt;= 0 and product.type=='product'" class="bg-danger" id="stock_warning" style="padding: 15px;">Sorry ! This product is out of stock</p>
+    </xpath>
+  </template>
+  <template id="product_quantity_out_of_stock" inherit_id="website_sale.product_quantity" name="Set Stock Limit">
+    <xpath expr="//input[@name='add_qty']" position="replace">
+        <input type="text" t-attf-class="form-control #{'js_check_stock' if website.stock_warning_active and product.type=='product' else ''}" data-min="1" name="add_qty" value="1"/>
+    </xpath>
+  </template>
+
+  <template id="product_variants_out_of_stock" inherit_id="website_sale.product_variants" name="Out of Stock Product Variants">
+    <xpath expr="//input[@class='js_product_change']" position="replace">
+        <input type="radio" name="product_id" t-attf-class="js_product_change #{ 'js_check_stock' if website.stock_warning_active else '' }" t-att-checked="'checked' if variant_id_index == 0 else ''" t-att-value="variant_id.id" t-att-data-product="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
     </xpath>
   </template>
 </odoo>
