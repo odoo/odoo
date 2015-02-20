@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Contact Form',
     'category': 'Website',
@@ -9,7 +10,7 @@ Odoo Contact Form
 ====================
 
         """,
-    'depends': ['website_form','website_partner', 'crm'],
+    'depends': ['website_form', 'website_partner', 'crm'],
     'data': [
         'data/website_crm_data.xml',
         'views/website_crm_templates.xml',

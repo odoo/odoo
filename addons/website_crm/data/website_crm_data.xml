@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="crm.model_crm_lead" model="ir.model">         
             <field name="website_form_default_field_id" ref="crm.field_crm_lead_description" />
             <field name="website_form_access">True</field>
@@ -17,7 +16,6 @@
                 'phone',
             ]"/>
         </function>
-    </data>
     <data noupdate="1">
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Contact Form</field>
@@ -37,4 +35,4 @@
             <field name="use_opportunities" eval="False"/>
         </record>
     </data>
-</openerp>
+</odoo>
