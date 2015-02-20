@@ -309,6 +309,13 @@ Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
 
 .. _reference/cmdline/config:
 
+Advanced options
+================
+
+.. option:: --auto-reload
+
+    enable auto-reloading of python files to apply code changes without having to restart the server
+
 Configuration file
 ==================
 
