@@ -96,6 +96,16 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
         this.setElement(this._make_descriptive());
     },
     /**
+     * Method called between init and start. Performs asynchronous calls required by start.
+     *
+     * This method should return a Deferred which is resolved when start can be executed.
+     *
+     * @return {jQuery.Deferred}
+     */
+    willStart: function() {
+        return $.when();
+    },
+    /**
      * Destroys the current widget, also destroys all its children before destroying itself.
      */
     destroy: function() {
@@ -162,9 +172,12 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
         }, this), target);
     },
     __widgetRenderAndInsert: function(insertion, target) {
-        this.renderElement();
-        insertion(target);
-        return this.start();
+        var self = this;
+        return this.willStart().then(function() {
+            self.renderElement();
+            insertion(target);
+            return self.start();
+        });
     },
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
