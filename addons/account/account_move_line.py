@@ -1374,7 +1374,7 @@ class account_move_line(osv.osv):
                     }
                     self.create(cr, uid, data, context)
                 #create the Tax movement
-                if not tax['amount']:
+                if not tax['amount'] and not tax[tax_code]:
                     continue
                 data = {
                     'move_id': vals['move_id'],
