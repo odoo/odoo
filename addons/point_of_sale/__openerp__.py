@@ -90,7 +90,7 @@ Main Features
         'test/00_register_open.yml',
         'test/01_order_to_payment.yml',
         'test/02_order_to_invoice.yml',
-        # 'test/point_of_sale_report.yml',
+        'test/point_of_sale_report.yml',
         # 'test/account_statement_reports.yml',
     ],
     'installable': True,
