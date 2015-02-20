@@ -750,9 +750,7 @@ record groups. Its root element is ``<graph>`` which can take the following
 attributes:
 
 ``type``
-  one of ``bar`` (default), ``pie``, ``line`` and ``pivot``, the type of graph
-  to use (``pivot`` technically isn't a graph type, it displays the
-  aggregation as a `pivot table`_)
+  one of ``bar`` (default), ``pie`` and ``line``, the type of graph to use
 ``stacked``
   only used for ``bar`` charts. If present and set to ``True``, stacks bars
   within a group
@@ -770,7 +768,7 @@ following attributes:
 
   ``row`` (default)
     groups by the specified field. All graph types support at least one level
-    of grouping, some may support more. For pivot tables, each group gets its
+    of grouping, some may support more. For pivot views, each group gets its
     own row.
   ``col``
     only used by pivot tables, creates column-wise groups
@@ -786,6 +784,19 @@ following attributes:
 
    graph view aggregations are performed on database content, non-stored
    function fields can not be used in graph views
+
+Pivots
+------
+
+The pivot view is used to visualize aggregations as a `pivot table`_. Its root 
+element is ``<pivot>`` which can take the following attributes:
+
+``disable_linking``
+  Set to ``True`` to remove table cell's links to list view.
+``display_quantity``
+  Set to ``true`` to display the Quantity column by default.
+
+The elements allowed within a pivot view are the same as for the graph view.
 
 .. _reference/views/kanban:
 
