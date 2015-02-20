@@ -207,14 +207,14 @@ class im_livechat_channel_rule(osv.Model):
 
     _columns = {
         'regex_url' : fields.char('URL Regex', help="Regular expression identifying the web page on which the rules will be applied."),
-        'action' : fields.selection([('display_button', 'Display the button'),('auto_popup','Auto popup'), ('hide_button', 'Hide the button')], 'Action', size=32, required=True,
-                                 help="Select 'Display the button' to simply display the chat button on the pages."\
-                                 " Select 'Auto popup' for to display the button, and automatically open the conversation window."\
-                                 " Select 'Hide the button' to hide the chat button on the pages."),
-        'auto_popup_timer' : fields.integer('Auto popup timer', help="Delay (in seconds) to automatically open the converssation window. Note : the selected action must be 'Auto popup', otherwise this parameter will not be take into account."),
-        'channel_id': fields.many2one('im_livechat.channel', 'Channel', help="The channel of the rule"),
-        'country_ids': fields.many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Country', help="The actual rule will match only for this country. So if you set select 'Belgium' and 'France' and you set the action to 'Hide Buttun', this 2 country will not be see the support button for the specified URL. This feature requires GeoIP installed on your server."),
-        'sequence' : fields.integer('Matching order', help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
+        'action' : fields.selection([('display_button', 'Display button'),('auto_popup','Auto-popup'), ('hide_button', 'Hide button')], 'Action', size=32, required=True,
+                                 help="Select 'Display button' to simply display the chat button on the pages."\
+                                 " Select 'Auto-popup' for to display the button, and automatically open the conversation window."\
+                                 " Select 'Hide button' to hide the chat button on the pages."),
+        'auto_popup_timer' : fields.integer('Auto-popup Timer', help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Auto-popup', otherwise this parameter will not be taken into account."),
+        'channel_id': fields.many2one('im_livechat.channel', 'Channel', help="Channel on which the rules applies"),
+        'country_ids': fields.many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Countries', help="Countries where this rule apply. If you set select 'Belgium' and 'France' and you set the action to 'Hide Button', people from these two countries won't see the support button for the specified URL. (This feature requires GeoIP installed on your server.)"),
+        'sequence' : fields.integer('Matching Order', help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
     }
 
     _defaults = {
