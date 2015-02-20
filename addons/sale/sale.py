@@ -754,6 +754,9 @@ class sale_order(osv.osv):
             fpos = fiscal_obj.browse(cr, uid, fiscal_position, context=context)
         
         for line in order_lines:
+            # HACK to avoid bug https://github.com/odoo/odoo/issues/5402
+            if len(line) == 3 and line[2] and 'state' not in line:
+                line[2]['state'] = 'draft'
             # create    (0, 0,  { fields })
             # update    (1, ID, { fields })
             if line[0] in [0, 1]:
