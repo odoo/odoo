@@ -156,10 +156,12 @@ class view(osv.osv):
     def get_view_id(self, cr, uid, xml_id, context=None):
         if context and 'website_id' in context and not isinstance(xml_id, (int, long)):
             domain = [('key', '=', xml_id), '|', ('website_id', '=', context['website_id']), ('website_id', '=', False)]
-            [xml_id] = self.search(cr, uid, domain, order='website_id', limit=1, context=context)
+            [view_id] = self.search(cr, uid, domain, order='website_id', limit=1, context=context) or [None]
+            if not view_id:
+                raise ValueError('View %r in website %r not found' % (xml_id, context['website_id']))
         else:
-            xml_id = super(view, self).get_view_id(cr, uid, xml_id, context=context)
-        return xml_id
+            view_id = super(view, self).get_view_id(cr, uid, xml_id, context=context)
+        return view_id
 
     def _prepare_qcontext(self, cr, uid, context=None):
         if not context:
