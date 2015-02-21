@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <template id="assets_nvd3">
+            <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
+            <script src="/web/static/lib/nvd3/d3.v3.js"></script>
+            <script src="/web/static/lib/nvd3/nv.d3.js"></script>
+        </template>
+
+        <template id="graphs" name="Link Statistics">
+            <t t-call="website.layout">
+                <t t-set="head">
+                    <t t-call-assets="website_links.assets_nvd3"/>
+                </t>
+
+                <div class="o_website_links_chart">
+                    <div class="container">
+                        <div class="row mt8">
+                            <div class="col-sm-12">
+                                <ol class="breadcrumb">
+                                  <li><a href="/r">Link Tracker</a></li>
+                                  <li class="active"><t t-esc="title"/></li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="code" t-att-value="code" />
+                        <input type="hidden" id="link_id" t-att-value="id" />
+
+                        <h1 class="page-header mt0"><t t-esc="title"/></h1>
+                            
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-4 col-xs-11">
+                                        <p><strong>Original URL</strong></p>
+                                    </div>
+                                    <div class="col-sm-8 col-xs-11">
+                                        <p class="truncate_text"><a t-att-href="url"><t t-esc="url"/></a></p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p><strong>Tracked Link</strong></p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p>
+                                            <span class="o_website_links_short_url" id="short_url"><span id="short-url-host"><t t-esc="short_url_host"/></span><span id="o_website_links_code"><t t-esc="code"/></span></span>
+                                            <span class="o_website_links_edit_tools" style="display:none;">
+                                                <a class="o_website_links_ok_edit btn btn-xs btn-primary" href="#">ok</a> or 
+                                                <a class="o_website_links_cancel_edit" href="#">cancel</a>
+                                            </span>
+                                            <a class="o_website_links_edit_code"><span class="fa fa-pencil gray"></span></a>
+                                            <a class="copy-to-clipboard" t-att-data-clipboard-text="short_url">copy</a>
+                                            
+                                        </p>
+                                        <p class='o_website_links_code_error' style='color:red;font-weight:bold;display:none'></p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4 col-xs-12">
+                                        <p><strong>Redirected URL</strong></p>
+                                    </div>
+                                    <div class="col-sm-8 col-xs-11" style="word-wrap:break-word;">
+                                        <t t-esc="redirected_url"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <t t-if="campaign_id">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <p><strong>Campaign</strong></p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <p><t t-esc="campaign_id[1]"/></p>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <t t-if="medium_id">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <p><strong>Medium</strong></p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <p><t t-esc="medium_id[1]"/></p>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <t t-if="source_id">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <p><strong>Source</strong></p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <p><t t-esc="source_id[1]"/></p>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <h1 class="page-header">Statistics
+                            <small class="pull-right hidden-xs mt16" id="filters">
+                                <ul class="nav nav-tabs nav-tabs-inline graph-tabs" role="tablist">
+                                    <li class="active"><a href="#all_time_charts" role="tab" data-toggle="tab">All Time</a></li>
+                                    <li><a href="#last_month_charts" role="tab" data-toggle="tab">Last Month</a></li>
+                                    <li><a href="#last_week_charts" role="tab" data-toggle="tab">Last Week</a></li>
+                                </ul>
+                            </small>
+                        </h1>
+                        
+                        <div class="row">
+                            <div class="col-sm-12 mb8">
+                                <div class="tab-content">
+
+                                    <!-- All Time Charts -->
+                                    <div class="tab-pane active" id="all_time_charts">
+                                        <div class="row">
+                                            <div class="col-sm-7 website_links_click_chart" id="all_time_clicks_chart">
+                                                <h3 class="title"></h3>
+                                                <svg style="height:20em;"></svg>
+                                            </div>
+                                            <div class="col-sm-5 website_links_click_chart" id="all_time_countries_charts">
+                                                <h3 class="title"></h3>
+                                                <svg style="height:20em;"></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Last Month Charts -->
+                                    <div class="tab-pane" id="last_month_charts">
+                                        <div class="row">
+                                            <div class="col-sm-7 website_links_click_chart" id="last_month_clicks_chart">
+                                                <h3 class="title"></h3>
+                                                <svg style="height:20em;"></svg>
+                                            </div>
+                                            <div class="col-sm-5 website_links_click_chart" id="last_month_countries_charts">
+                                                <h3 class="title"></h3>
+                                                <svg style="height:20em;"></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Last Week Charts -->
+                                    <div class="tab-pane" id="last_week_charts">
+                                        <div class="row">
+                                            <div class="col-sm-7 website_links_click_chart" id="last_week_clicks_chart">
+                                                <h3 class="title"></h3>
+                                                <svg style="height:20em;"></svg>
+                                            </div>
+                                            <div class="col-sm-5 website_links_click_chart" id="last_week_countries_charts">
+                                                <h3 class="title"></h3>
+                                                <svg style="height:20em;"></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+</odoo>

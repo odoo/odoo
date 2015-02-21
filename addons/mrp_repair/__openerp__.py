@@ -43,7 +43,6 @@ The following topics should be covered by this module:
     'data': [
         'security/ir.model.access.csv',
         'security/mrp_repair_security.xml',
-        'mrp_repair_data.xml',
         'mrp_repair_sequence.xml',
         'wizard/mrp_repair_cancel_view.xml',
         'wizard/mrp_repair_make_invoice_view.xml',
@@ -64,4 +63,3 @@ The following topics should be covered by this module:
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

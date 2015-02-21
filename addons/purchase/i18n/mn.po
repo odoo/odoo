@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
 "PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:14+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:31+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
@@ -206,7 +206,7 @@ msgstr ""
 "* Худалдан авалтын захиалгыг цуцласан бол төлөв 'Цуцласан' болно."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:198
+#: code:addons/purchase/stock.py:185
 #, python-format
 msgid " Buy"
 msgstr ""
@@ -354,7 +354,7 @@ msgid ""
 "                Click to create a request for quotation.\n"
 "              </p><p>\n"
 "                The quotation contains the history of the "
-"discussion/negotiation\n"
+"discussion/negociation\n"
 "                you had with your supplier. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order.\n"
 "              </p><p>\n"
@@ -588,8 +588,8 @@ msgid "Bid Valid Until"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1171
-#: code:addons/purchase/stock.py:192
+#: code:addons/purchase/purchase.py:1160
+#: code:addons/purchase/stock.py:179
 #, python-format
 msgid "Buy"
 msgstr ""
@@ -617,15 +617,7 @@ msgid "Can be Purchased"
 msgstr "Худалдан авч болох"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1189
-#, python-format
-msgid ""
-"Can not cancel this procurement as the related purchase order has been "
-"confirmed already.  Please cancel the purchase order first. "
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/stock.py:195
+#: code:addons/purchase/stock.py:182
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr ""
@@ -646,7 +638,7 @@ msgid "Cancelled"
 msgstr "Цуцалсан"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1016
+#: code:addons/purchase/purchase.py:1007
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -680,7 +672,7 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:515
+#: code:addons/purchase/purchase.py:506
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -691,7 +683,7 @@ msgid "Configuration"
 msgstr "Тохиргоо"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1231
+#: code:addons/purchase/purchase.py:1214
 #, python-format
 msgid "Configuration Error!"
 msgstr "Тохиргооны алдаа!"
@@ -761,7 +753,7 @@ msgid "Date Approved"
 msgstr "Зөвшөөрсөн огноо"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Date Req."
 msgstr "Хүс. Огноо"
 
@@ -816,13 +808,13 @@ msgid "Default invoicing control method"
 msgstr "Нэхэмжлэл хяналтын аргын анхны утга"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:555
+#: code:addons/purchase/purchase.py:546
 #, python-format
 msgid "Define an expense account for this product: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:599
+#: code:addons/purchase/purchase.py:590
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
 msgstr "Дараах компанид худалдан авалтын журналыг тодорхойл: \"%s\" (id:%d)."
@@ -846,8 +838,8 @@ msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,name:0
-#: view:website:purchase.report_purchaseorder_document
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchasequotation
 msgid "Description"
 msgstr "Тайлбар"
 
@@ -887,7 +879,7 @@ msgid "Draft PO"
 msgstr "Ноорог PO"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1384
+#: code:addons/purchase/purchase.py:1366
 #, python-format
 msgid "Draft Purchase Order created"
 msgstr "Ноорог үүсгэсэн худалдан авалтын захиалга"
@@ -909,13 +901,11 @@ msgid "Email composition wizard"
 msgstr "Имэйл үүсгэх харилцах цонх"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:159
-#: code:addons/purchase/purchase.py:413
-#: code:addons/purchase/purchase.py:538
-#: code:addons/purchase/purchase.py:555
-#: code:addons/purchase/purchase.py:598
-#: code:addons/purchase/purchase.py:1188
-#: code:addons/purchase/stock.py:195
+#: code:addons/purchase/purchase.py:404
+#: code:addons/purchase/purchase.py:529
+#: code:addons/purchase/purchase.py:546
+#: code:addons/purchase/purchase.py:589
+#: code:addons/purchase/stock.py:182
 #, python-format
 msgid "Error!"
 msgstr "Алдаа!"
@@ -930,7 +920,7 @@ msgstr "Саатал"
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 #: field:purchase.order,minimum_planned_date:0
 #: field:purchase.report,expected_date:0
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchasequotation
 msgid "Expected Date"
 msgstr "Товлосон огноо"
 
@@ -1003,7 +993,7 @@ msgid "In Shipments"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:337
+#: code:addons/purchase/purchase.py:328
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr ""
@@ -1051,8 +1041,8 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:337
-#: code:addons/purchase/purchase.py:1016
+#: code:addons/purchase/purchase.py:328
+#: code:addons/purchase/purchase.py:1007
 #, python-format
 msgid "Invalid Action!"
 msgstr "Буруу Үйлдэл!"
@@ -1089,13 +1079,13 @@ msgid "Invoice Received"
 msgstr "Хүлээн авсан нэхэмжлэл"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1500
+#: code:addons/purchase/purchase.py:1482
 #, python-format
 msgid "Invoice paid"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1480
+#: code:addons/purchase/purchase.py:1462
 #, python-format
 msgid "Invoice received"
 msgstr ""
@@ -1192,12 +1182,6 @@ msgid "Location & Warehouse"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:159
-#, python-format
-msgid "Make sure you have at least an incoming picking type defined"
-msgstr ""
-
-#. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage calls for bids"
 msgstr ""
@@ -1266,7 +1250,7 @@ msgid "Monthly Purchases"
 msgstr ""
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Net Price"
 msgstr "Цэвэр үнэ"
 
@@ -1276,19 +1260,19 @@ msgid "New Mail"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1222
+#: code:addons/purchase/purchase.py:1205
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Нийлүүлэгчийн хаяг байхгүй"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1220
+#: code:addons/purchase/purchase.py:1203
 #, python-format
 msgid "No default supplier defined for this product"
 msgstr "Энэ бараанд нийлүүлэгч анхны утгаар тодорхойлогдоогүй байна"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1218
+#: code:addons/purchase/purchase.py:1201
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Энэ бараанд нийлүүлэгч тодорхойлоогүй байна !"
@@ -1336,7 +1320,7 @@ msgid "Order Date"
 msgstr "Захиалах огноо"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Order Date:"
 msgstr ""
 
@@ -1379,7 +1363,7 @@ msgid "Orders"
 msgstr "Захиалга"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Our Order Reference:"
 msgstr ""
 
@@ -1389,7 +1373,7 @@ msgid "Outgoing Mails"
 msgstr "Явсан мэйлүүд"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1363
+#: code:addons/purchase/purchase.py:1346
 #, python-format
 msgid "PO: %s"
 msgstr "ХАЗ: %s"
@@ -1422,7 +1406,7 @@ msgid "Picking List"
 msgstr "Агуулахын баримт"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:413
+#: code:addons/purchase/purchase.py:404
 #, python-format
 msgid "Please create Invoices."
 msgstr "Нэхэмжлэл үүсгэнэ үү."
@@ -1540,7 +1524,7 @@ msgid "Products by Category"
 msgstr "Бараа ангиллаар"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:851
+#: code:addons/purchase/purchase.py:842
 #, python-format
 msgid "Products received"
 msgstr ""
@@ -1598,7 +1582,7 @@ msgid "Purchase Order"
 msgstr "Худалдан авах захиалга"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Purchase Order Confirmation N°"
 msgstr "Захиалга баталсан N°"
 
@@ -1650,7 +1634,7 @@ msgid "Purchase Pricelist"
 msgstr "Худалдан авах үнийн санал"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1386
+#: code:addons/purchase/purchase.py:1368
 #, python-format
 msgid "Purchase line created and linked to an existing Purchase Order"
 msgstr ""
@@ -1695,8 +1679,8 @@ msgstr ""
 "уу. Үгүй бол хоосон үлдээснээр өөрийн компанид хүргүүлнэ."
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchasequotation
 msgid "Qty"
 msgstr "Тоо"
 
@@ -1706,7 +1690,7 @@ msgid "Quantity"
 msgstr "Тоо ширхэг"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1388
+#: code:addons/purchase/purchase.py:1370
 #, python-format
 msgid "Quantity added in existing Purchase Order Line"
 msgstr ""
@@ -1744,8 +1728,8 @@ msgid "RFQ Done"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:327
-#: code:addons/purchase/purchase.py:945
+#: code:addons/purchase/purchase.py:318
+#: code:addons/purchase/purchase.py:936
 #, python-format
 msgid "RFQ created"
 msgstr ""
@@ -1820,7 +1804,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchasequotation
 msgid "Regards,"
 msgstr "Хүндэтгэсэн,"
 
@@ -1833,12 +1817,12 @@ msgstr ""
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.report,state:0
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchasequotation
 msgid "Request for Quotation"
 msgstr "Үнийн санал"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Request for Quotation N°"
 msgstr "Үнийн санал N°"
 
@@ -1883,7 +1867,7 @@ msgid "Select an Open Sales Order"
 msgstr "Нээлттэй Борлуулалтын Захиалга сонгох"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1114
+#: code:addons/purchase/purchase.py:1104
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -1913,10 +1897,10 @@ msgid "Shipping Exception"
 msgstr "Тээвэрлэлтийн онцгой тохиолдол"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
-#: view:website:purchase.report_purchasequotation_document
-msgid "Shipping address:"
-msgstr ""
+#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchasequotation
+msgid "Shipping address :"
+msgstr "Хүргэх хаяг :"
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -1979,7 +1963,7 @@ msgid "Supplier Inv."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:444
+#: code:addons/purchase/purchase.py:435
 #: code:addons/purchase/wizard/purchase_line_invoice.py:115
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: view:res.partner:purchase.res_partner_view_purchase_account_buttons
@@ -1995,7 +1979,7 @@ msgstr "Нийлүүлэгчийн дугаар"
 #. module: purchase
 #: field:purchase.order,amount_tax:0
 #: field:purchase.order.line,taxes_id:0
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Taxes"
 msgstr "Татварууд"
 
@@ -2024,7 +2008,7 @@ msgstr ""
 "бараа/тоо ширхэг дээр үндэслэн нийлүүлэгчийн үнийг тооцоолно."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1231
+#: code:addons/purchase/purchase.py:1214
 #, python-format
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
@@ -2034,7 +2018,7 @@ msgstr ""
 "алдаа бололтой байна!"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1134
+#: code:addons/purchase/purchase.py:1123
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
@@ -2044,7 +2028,7 @@ msgstr ""
 "байна. Үүнээс цөөнөөр худалдан авч болохгүй."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1130
+#: code:addons/purchase/purchase.py:1119
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "Сонгосон нийлүүлэгч нь энэ барааг зөвхөн %s-р борлуулдаг."
@@ -2072,7 +2056,7 @@ msgid "The total amount"
 msgstr "Нийт хэмжээ"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1335
+#: code:addons/purchase/purchase.py:1318
 #, python-format
 msgid "There is no supplier associated to product %s"
 msgstr ""
@@ -2107,8 +2091,13 @@ msgid "This will determine picking type of incoming shipment"
 msgstr ""
 
 #. module: purchase
+#: view:product.template:purchase.product_template_search_view_purchase
+msgid "To Purchase"
+msgstr "Худалдан Авах"
+
+#. module: purchase
 #: field:purchase.order,amount_total:0
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Total"
 msgstr "Нийт"
 
@@ -2123,7 +2112,7 @@ msgid "Total Untaxed amount"
 msgstr "Нийт татваргүй хэмжээ"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Total Without Taxes"
 msgstr ""
 
@@ -2133,13 +2122,13 @@ msgid "Total amount"
 msgstr "Бүгд дүн"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:694
+#: code:addons/purchase/purchase.py:685
 #, python-format
 msgid "Unable to cancel the purchase order %s."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:700
+#: code:addons/purchase/purchase.py:691
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr "Энэ худалдан авалтын захиалгыг цуцлаж боломжгүй."
@@ -2155,7 +2144,7 @@ msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,price_unit:0
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Unit Price"
 msgstr "Нэгж үнэ"
 
@@ -2211,8 +2200,8 @@ msgid "User"
 msgstr "Хэрэглэгч"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchasequotation
 msgid "VAT:"
 msgstr ""
 
@@ -2222,7 +2211,7 @@ msgid "Validated By"
 msgstr "Баталсан"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Validated By:"
 msgstr ""
 
@@ -2248,9 +2237,9 @@ msgid "Warehouse"
 msgstr "Агуулах"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1114
-#: code:addons/purchase/purchase.py:1130
-#: code:addons/purchase/purchase.py:1134
+#: code:addons/purchase/purchase.py:1104
+#: code:addons/purchase/purchase.py:1119
+#: code:addons/purchase/purchase.py:1123
 #: code:addons/purchase/wizard/purchase_order_group.py:44
 #, python-format
 msgid "Warning!"
@@ -2272,19 +2261,19 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:538
+#: code:addons/purchase/purchase.py:529
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
 msgstr "Мөр байхгүй худалдан авалтын захиалгыг батлаж болохгүй."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:695
+#: code:addons/purchase/purchase.py:686
 #, python-format
 msgid "You have already received some goods for it.  "
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:701
+#: code:addons/purchase/purchase.py:692
 #, python-format
 msgid "You must first cancel all invoices related to this purchase order."
 msgstr ""
@@ -2292,27 +2281,9 @@ msgstr ""
 "уу."
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Your Order Reference"
 msgstr "Таны захиалгын код"
 
-#. module: purchase
-#: view:purchase.config.settings:purchase.view_purchase_configuration
-#: view:purchase.order.group:purchase.view_purchase_order_group
-#: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
-msgid "or"
-msgstr "эсвэл"
-
-#. module: purchase
-#: field:purchase.order,related_usage:0
-msgid "unknown"
-msgstr ""
-
-#~ msgid "Shipping address :"
-#~ msgstr "Хүргэх хаяг :"
-
 #~ msgid "Reference UOM"
 #~ msgstr "Х.Н-н код"
-
-#~ msgid "To Purchase"
-#~ msgstr "Худалдан Авах"

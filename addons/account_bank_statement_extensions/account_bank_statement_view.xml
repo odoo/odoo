@@ -57,8 +57,9 @@
       <field name="name">bank.statement.line.list</field>
       <field name="model">account.bank.statement.line</field>
       <field name="arch" type="xml">
-        <tree editable="bottom" string="Statement Lines">
+        <tree editable="bottom" string="Statement Lines" colors="blue:not journal_entry_ids">
           <field name="sequence" readonly="1" invisible="1"/>
+          <field name="journal_entry_ids" invisible="1"/>
           <field name="journal_id" readonly="1"/>
           <field name="date" readonly="1"/>
           <field name="val_date" readonly="1"/>
@@ -137,7 +138,9 @@
       <field name="view_id" ref="view_bank_statement_line_list"/>
     </record>
 
+
     <menuitem action="action_bank_statement_line" id="bank_statement_line" parent="account.menu_finance_bank_and_cash" sequence="20" groups="base.group_no_one"/>
+
 
   </data>
 </openerp>

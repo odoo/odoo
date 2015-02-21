@@ -42,13 +42,11 @@ This is extremely useful for collaborative work, knowledge sharing,
 synchronization with other companies.
     """,
     'website': 'https://www.odoo.com',
-    'demo': ['share_demo.xml'],
     'data': [
         'security/share_security.xml',
         'security/ir.model.access.csv',
         'res_users_view.xml',
         'wizard/share_wizard_view.xml',
-        'share_data.xml',
         'views/share.xml',
     ],
     'installable': True,
@@ -56,5 +54,3 @@ synchronization with other companies.
     'web': True,
     'qweb' : ['static/src/xml/*.xml'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

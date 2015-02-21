@@ -36,7 +36,6 @@ import openerp.modules.db
 import openerp.modules.graph
 import openerp.modules.migration
 import openerp.modules.registry
-import openerp.osv as osv
 import openerp.tools as tools
 from openerp import SUPERUSER_ID
 
@@ -289,7 +288,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         graph.add_module(cr, 'base', force)
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
-            raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
+            raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
@@ -459,5 +458,3 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
     finally:
         cr.close()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

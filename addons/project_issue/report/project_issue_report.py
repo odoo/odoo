@@ -29,7 +29,7 @@ class project_issue_report(osv.osv):
     _auto = False
 
     _columns = {
-        'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
+        'team_id':fields.many2one('crm.team', 'Sale Team', oldname='section_id', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'opening_date': fields.datetime('Date of Opening', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
@@ -52,7 +52,6 @@ class project_issue_report(osv.osv):
         'channel': fields.char('Channel', readonly=True, help="Communication Channel."),
         'task_id': fields.many2one('project.task', 'Task'),
         'email': fields.integer('# Emails', size=128, readonly=True),
-        'reviewer_id': fields.many2one('res.users', 'Reviewer', readonly=True),
     }
 
     def init(self, cr):
@@ -67,7 +66,7 @@ class project_issue_report(osv.osv):
                     c.user_id,
                     c.working_hours_open,
                     c.working_hours_close,
-                    c.section_id,
+                    c.team_id,
                     c.stage_id,
                     date(c.date_closed) as date_closed,
                     c.company_id as company_id,
@@ -80,14 +79,10 @@ class project_issue_report(osv.osv):
                     c.task_id,
                     c.day_open as delay_open,
                     c.day_close as delay_close,
-                    (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email,
-                    t.reviewer_id
+                    (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email
 
                 FROM
                     project_issue c
                 LEFT JOIN project_task t on c.task_id = t.id
                 WHERE c.active= 'true'
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-import difflib
 import lxml
 import random
 
@@ -20,7 +19,6 @@ class Blog(osv.Model):
     _columns = {
         'name': fields.char('Blog Name', required=True),
         'subtitle': fields.char('Blog Subtitle'),
-        'description': fields.text('Description'),
     }
 
     def all_tags(self, cr, uid, ids, min_limit=1, context=None):
@@ -66,8 +64,15 @@ class BlogTag(osv.Model):
 class BlogPost(osv.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
     _order = 'id DESC'
+    _mail_post_access = 'read'
+
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        res = super(BlogPost, self)._website_url(cr, uid, ids, field_name, arg, context=context)
+        for blog_post in self.browse(cr, uid, ids, context=context):
+            res[blog_post.id] = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
+        return res
 
     def _compute_ranking(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -89,10 +94,6 @@ class BlogPost(osv.Model):
             'blog.tag', string='Tags',
         ),
         'content': fields.html('Content', translate=True, sanitize=False),
-        # website control
-        'website_published': fields.boolean(
-            'Publish', help="Publish on the website", copy=False,
-        ),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
@@ -100,10 +101,6 @@ class BlogPost(osv.Model):
             ],
             string='Website Messages',
             help="Website communication history",
-        ),
-        'history_ids': fields.one2many(
-            'blog.post.history', 'post_id',
-            'History', help='Last post modifications',
         ),
         # creation / update stuff
         'create_date': fields.datetime(
@@ -202,18 +199,6 @@ class BlogPost(osv.Model):
 
         return content
 
-    def create_history(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for i in ids:
-            history = self.pool.get('blog.post.history')
-            if vals.get('content'):
-                res = {
-                    'content': vals.get('content', ''),
-                    'post_id': i,
-                }
-                history.create(cr, uid, res)
-
     def _check_for_publication(self, cr, uid, ids, vals, context=None):
         if vals.get('website_published'):
             base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
@@ -238,7 +223,6 @@ class BlogPost(osv.Model):
             vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(BlogPost, self).create(cr, uid, vals, context=create_context)
-        self.create_history(cr, uid, [post_id], vals, context)
         self._check_for_publication(cr, uid, [post_id], vals, context=context)
         return post_id
 
@@ -246,35 +230,33 @@ class BlogPost(osv.Model):
         if 'content' in vals:
             vals['content'] = self._postproces_content(cr, uid, ids[0], vals['content'], context=context)
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
-        self.create_history(cr, uid, ids, vals, context)
         self._check_for_publication(cr, uid, ids, vals, context=context)
         return result
 
 
-class BlogPostHistory(osv.Model):
-    _name = "blog.post.history"
-    _description = "Blog Post History"
-    _order = 'id DESC'
-    _rec_name = "create_date"
+class Website(osv.Model):
+    _inherit = "website"
 
-    _columns = {
-        'post_id': fields.many2one('blog.post', 'Blog Post'),
-        'summary': fields.char('Summary', select=True),
-        'content': fields.text("Content"),
-        'create_date': fields.datetime("Date"),
-        'create_uid': fields.many2one('res.users', "Modified By"),
-    }
+    def page_search_dependencies(self, cr, uid, view_id, context=None):
+        dep = super(Website, self).page_search_dependencies(cr, uid, view_id, context=context)
 
-    def getDiff(self, cr, uid, v1, v2, context=None):
-        history_pool = self.pool.get('blog.post.history')
-        text1 = history_pool.read(cr, uid, [v1], ['content'])[0]['content']
-        text2 = history_pool.read(cr, uid, [v2], ['content'])[0]['content']
-        line1 = line2 = ''
-        if text1:
-            line1 = text1.splitlines(1)
-        if text2:
-            line2 = text2.splitlines(1)
-        if (not line1 and not line2) or (line1 == line2):
-            raise osv.except_osv(_('Warning!'), _('There are no changes in revisions.'))
-        diff = difflib.HtmlDiff()
-        return diff.make_table(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=True)
+        post_obj = self.pool.get('blog.post')
+
+        view = self.pool.get('ir.ui.view').browse(cr, uid, view_id, context=context)
+        name = view.key.replace("website.", "")
+        fullname = "website.%s" % name
+
+        dom = [
+            '|', ('content', 'ilike', '/page/%s' % name), ('content', 'ilike', '/page/%s' % fullname)
+        ]
+        posts = post_obj.search(cr, uid, dom, context=context)
+        if posts:
+            page_key = _('Blog Post')
+            dep[page_key] = []
+        for p in post_obj.browse(cr, uid, posts, context=context):
+            dep[page_key].append({
+                'text': _('Blog Post <b>%s</b> seems to have a link to this page !' % p.name),
+                'link': p.website_url
+            })
+
+        return dep

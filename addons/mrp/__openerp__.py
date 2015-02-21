@@ -60,7 +60,6 @@ Dashboard / Reports for MRP will include:
         'wizard/mrp_product_produce_view.xml',
         'wizard/change_production_qty_view.xml',
         'wizard/mrp_price_view.xml',
-        'wizard/mrp_workcenter_load_view.xml',
         'wizard/stock_move_view.xml',
         'mrp_view.xml',
         'mrp_report.xml',
@@ -82,4 +81,3 @@ Dashboard / Reports for MRP will include:
     'application': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

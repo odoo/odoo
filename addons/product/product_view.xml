@@ -11,7 +11,7 @@
             <field name="arch" type="xml">
                 <search string="Product">
                     <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
-                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
+                    <filter string="Services" name="services" domain="[('type','=','service')]"/>
                     <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
@@ -60,11 +60,11 @@
                             <div class="oe_title" style="width: 390px;">
                                 <label class="oe_edit_only" for="name" string="Product Name"/>
                                 <h1><field name="name" class="oe_inline"/></h1>
-                            </div>
-                            <div class="oe_left" name="options" groups="base.group_user">
-                                <div>
-                                    <field name="sale_ok"/>
-                                    <label for="sale_ok"/>
+                                <div name="options" groups="base.group_user">
+                                    <div>
+                                        <field name="sale_ok"/>
+                                        <label for="sale_ok"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -81,17 +81,15 @@
                                     </group>
                                 </group>
                                 <group colspan="4">
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                                 <field name="description" placeholder="describe the product characteristics..."/>
                             </page>
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
-                                    <group name="general">
+                                    <group name="general" col="4">
                                         <field name="standard_price"/>
-                                    </group>
-                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
-                                        <field name="uom_po_id"/>
+                                        <field name="uom_po_id" groups="product.group_uom"/>
                                     </group>
                                 </group>
                                 <separator string="Suppliers"/>
@@ -199,8 +197,13 @@
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
               </p><p>
-                You must define a product for everything you buy or sell,
-                whether it's a physical product, a consumable or service.
+                You must define a product for everything you sell, whether it's
+                a physical product, a consumable or a service you offer to
+                customers.
+              </p><p>
+                The product form contains information to simplify the sale
+                process: price, notes in the quotation, accounting data,
+                procurement methods, etc.
               </p>
             </field>
         </record>
@@ -218,8 +221,13 @@
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
               </p><p>
-                You must define a product for everything you buy or sell,
-                whether it's a physical product, a consumable or service.
+                You must define a product for everything you sell, whether it's
+                a physical product, a consumable or a service you offer to
+                customers.
+              </p><p>
+                The product form contains information to simplify the sale
+                process: price, notes in the quotation, accounting data,
+                procurement methods, etc.
               </p>
             </field>
         </record>
@@ -237,7 +245,7 @@
                     <attribute name="name">Product Template</attribute>
                 </xpath>
                 <field name="active" position="after">
-                    <field name="ean13" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                    <field name="barcode" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
                     <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
                 </field>
                 <xpath expr="//page[@string='Sales']" position="after">
@@ -310,6 +318,15 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_template_kanban_view"/>
             <field name="context">{"search_default_filter_to_sell":1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to define a new product.
+                </p><p>
+                    You must define a product for everything you sell, whether it's a physical product, a consumable or a service you offer to  customers.               
+                </p><p>
+                    The product form contains information to simplify the sale process: price, notes in the quotation, accounting data, procurement methods, etc.
+                </p>
+            </field>
         </record>
 
         <menuitem action="product_template_action"
@@ -318,7 +335,7 @@
 
         <!-- product product -->
 
-        <menuitem id="prod_config_main" name="Product Categories &amp; Attributes" parent="base.menu_base_config" sequence="70" groups="base.group_no_one"/>
+        <menuitem id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="2" groups="base.group_no_one"/>
 
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
@@ -333,7 +350,7 @@
                     <field name="lst_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="uom_id"/>
-                    <field name="ean13"/>
+                    <field name="barcode"/>
                     <field name="state" invisible="1"/>
                     <field name="product_tmpl_id" invisible="1"/>
                 </tree>
@@ -351,7 +368,7 @@
                     <attribute name="string">Product Variant</attribute>
                 </form>
                 <field name="active" position="after">
-                    <field name="ean13"/>
+                    <field name="barcode"/>
                     <field name="default_code"/>
                 </field>
                 <field name="list_price" position="attributes">
@@ -404,6 +421,7 @@
             <field name="model">product.attribute</field>
             <field name="arch" type="xml">
                 <tree string="Variant Values" editable="top">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                 </tree>
             </field>
@@ -419,7 +437,7 @@
 
         <menuitem action="attribute_action"
             id="menu_attribute_action"
-            parent="product.prod_config_main" sequence="9" />
+            parent="product.prod_config_main" sequence="4" />
 
         <record id="variants_tree_view" model="ir.ui.view">
             <field name="name">product.attribute.value.tree</field>
@@ -443,7 +461,7 @@
 
         <menuitem action="variants_action"
             id="menu_variants_action"
-            parent="product.prod_config_main" sequence="10" />
+            parent="product.prod_config_main" sequence="5" />
 
         <!--  -->
 
@@ -488,20 +506,18 @@
             <field name="model">product.category</field>
             <field name="arch" type="xml">
                 <form string="Product Categories">
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group name="parent" col="4">
-                                <field name="parent_id"/>
-                                <field name="type"/>
-                            </group>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="parent" col="4">
+                            <field name="parent_id"/>
+                            <field name="type"/>
                         </group>
-                    </sheet>
+                    </group>
                 </form>
             </field>
         </record>
@@ -639,7 +655,7 @@
             </field>
         </record>
         <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="30" groups="product.group_uom"/>
-        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="base.menu_base_config" sequence="30" groups="product.group_uom"/>
+        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="product.prod_config_main" sequence="6" groups="product.group_uom"/>
 
         <record id="product_uom_categ_form_view" model="ir.ui.view">
             <field name="name">product.uom.categ.form</field>
@@ -669,7 +685,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25" groups="base.group_no_one"/>
+        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.prod_config_main" sequence="7" groups="base.group_no_one"/>
 
         <record id="product_ul_form_view" model="ir.ui.view">
             <field name="name">product.ul.form.view</field>
@@ -718,7 +734,12 @@
             </field>
         </record>
         <menuitem
-            action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="5"/>
+            action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
+
+        <record model="ir.actions.act_window" id="action_packaging_view">
+            <field name="name">Packagings</field>
+            <field name="res_model">product.packaging</field>
+        </record>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
@@ -726,8 +747,9 @@
             <field name="arch" type="xml">
                 <tree string="Packaging">
                     <field name="sequence" widget="handle"/>
+                    <field name="name"/>
                     <field name="product_tmpl_id"/>
-                    <field name="ean"/>
+                    <field name="barcode"/>
                     <field name="qty"/>
                     <field name="ul"/>
                     <field name="ul_container"/>
@@ -754,22 +776,24 @@
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
                 <form string="Packaging">
-                    <group col="4">
-                        <field name="product_tmpl_id"/>
-                        <newline/>
-                        <field name="ean"/>
-                        <field name="sequence" invisible="1"/>
-                        <newline/>
-                        <field name="qty"/>
-                        <field name="ul"/>
-                        <separator colspan="4" string="Palletization"/>
-                        <field name="ul_qty"/>
-                        <field name="rows"/>
-                        <field name="ul_container"/>
-                        <field name="weight"/>
-                        <separator colspan="4" string="Other Info"/>
-                        <field colspan="4" name="name"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="product_tmpl_id"/>
+                            <newline/>
+                            <field name="barcode"/>
+                            <field name="sequence" invisible="1"/>
+                            <newline/>
+                            <field name="qty"/>
+                            <field name="ul"/>
+                            <separator colspan="4" string="Palletization"/>
+                            <field name="ul_qty"/>
+                            <field name="rows"/>
+                            <field name="ul_container"/>
+                            <field name="weight"/>
+                            <separator colspan="4" string="Other Info"/>
+                            <field colspan="4" name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -780,7 +804,7 @@
             <field name="arch" type="xml">
                 <form string="Packaging">
                     <group col="4">
-                        <field name="ean"/>
+                        <field name="barcode"/>
                         <field name="sequence" invisible="1"/>
                         <newline/>
                         <field name="qty"/>
@@ -810,7 +834,7 @@
                         <field name="min_qty"/>
                         <field name="product_uom" groups="product.group_uom"/>
                         <field name="delay"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     </group>
                     <p groups="product.group_purchase_pricelist" class="oe_grey">The prices below will only be taken into account when your pricelist is set as based on supplier prices.</p>
                     <field groups="product.group_purchase_pricelist" name="pricelist_ids">
@@ -837,7 +861,7 @@
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="min_qty"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 </tree>
             </field>
         </record>

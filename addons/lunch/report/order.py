@@ -78,5 +78,3 @@ class report_lunchorder(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'lunch.report_lunchorder'
     _wrapped_report_class = order
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

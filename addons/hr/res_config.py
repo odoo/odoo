@@ -48,6 +48,8 @@ class hr_config_settings(osv.osv_memory):
             help ="""This installs the module account_analytic_analysis, which will install sales management too."""),
         'module_hr_payroll': fields.boolean('Manage payroll',
             help ="""This installs the module hr_payroll."""),
+        'module_website_hr_recruitment': fields.boolean('Publish jobs on your website',
+            help ="""This installs the module website_hr_recruitment"""),
     }
 
     def onchange_hr_timesheet(self, cr, uid, ids, timesheet, context=None):
@@ -61,5 +63,3 @@ class hr_config_settings(osv.osv_memory):
         if not attendance:
             return {'value': {'module_hr_timesheet': False}}
         return {}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

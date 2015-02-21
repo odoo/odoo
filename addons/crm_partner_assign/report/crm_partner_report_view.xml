@@ -8,7 +8,7 @@
             <field name="model">crm.partner.report.assign</field>
             <field name="arch" type="xml">
                 <search string="Partner assigned Analysis">
-                    <field name="section_id" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="grade_id"/>
                     <field name="activation"/>
@@ -16,7 +16,7 @@
                         <filter string="Salesperson" name="user"
                             context="{'group_by':'user_id'}" />
                         <filter string="Sales Team"
-                            context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                            context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Partner" name=""
                             context="{'group_by':'partner_id'}" />
                         <separator/>
@@ -41,7 +41,7 @@
             </field>
        </record>
 
-       <!-- Leads by user and section Action -->
+       <!-- Leads by user and team Action -->
 
        <record id="action_report_crm_partner_assign" model="ir.actions.act_window">
             <field name="name">Partnership Analysis</field>

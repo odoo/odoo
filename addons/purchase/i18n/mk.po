@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
 "PO-Revision-Date: 2014-11-08 12:26+0000\n"
 "Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:14+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2014-11-09 07:35+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
@@ -358,7 +358,7 @@ msgstr ""
 "набавка."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:198
+#: code:addons/purchase/stock.py:185
 #, python-format
 msgid " Buy"
 msgstr " Купи"
@@ -541,7 +541,7 @@ msgid ""
 "                Click to create a request for quotation.\n"
 "              </p><p>\n"
 "                The quotation contains the history of the "
-"discussion/negotiation\n"
+"discussion/negociation\n"
 "                you had with your supplier. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order.\n"
 "              </p><p>\n"
@@ -817,8 +817,8 @@ msgid "Bid Valid Until"
 msgstr "Понудата важи до"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1171
-#: code:addons/purchase/stock.py:192
+#: code:addons/purchase/purchase.py:1160
+#: code:addons/purchase/stock.py:179
 #, python-format
 msgid "Buy"
 msgstr "Купи"
@@ -852,15 +852,7 @@ msgid "Can be Purchased"
 msgstr "Може да се набави"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1189
-#, python-format
-msgid ""
-"Can not cancel this procurement as the related purchase order has been "
-"confirmed already.  Please cancel the purchase order first. "
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/stock.py:195
+#: code:addons/purchase/stock.py:182
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Не е пронајдена 'Купи' рута."
@@ -881,7 +873,7 @@ msgid "Cancelled"
 msgstr "Откажано"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1016
+#: code:addons/purchase/purchase.py:1007
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -916,7 +908,7 @@ msgid "Company"
 msgstr "Компанија"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:515
+#: code:addons/purchase/purchase.py:506
 #, python-format
 msgid "Compose Email"
 msgstr "Состави е-маил"
@@ -927,7 +919,7 @@ msgid "Configuration"
 msgstr "Конфигурација"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1231
+#: code:addons/purchase/purchase.py:1214
 #, python-format
 msgid "Configuration Error!"
 msgstr "Грешка во конфигурацијата!"
@@ -997,7 +989,7 @@ msgid "Date Approved"
 msgstr "Датум е одобрен"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Date Req."
 msgstr "Датум на барање."
 
@@ -1052,13 +1044,13 @@ msgid "Default invoicing control method"
 msgstr "Стандарден метод за контрола на фактурирањето"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:555
+#: code:addons/purchase/purchase.py:546
 #, python-format
 msgid "Define an expense account for this product: \"%s\" (id:%d)."
 msgstr "Дефинирајте сметка за трошоци за овој производ: \"%s\" (id:%d)."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:599
+#: code:addons/purchase/purchase.py:590
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
 msgstr "Дефинирање на запис за набавка на компанијата: \"%s\" (id:%d)."
@@ -1084,8 +1076,8 @@ msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,name:0
-#: view:website:purchase.report_purchaseorder_document
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchasequotation
 msgid "Description"
 msgstr "Опис"
 
@@ -1125,7 +1117,7 @@ msgid "Draft PO"
 msgstr "Нацрт налог за набавка"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1384
+#: code:addons/purchase/purchase.py:1366
 #, python-format
 msgid "Draft Purchase Order created"
 msgstr "Нацрт налогот за набавка е креиран"
@@ -1147,13 +1139,11 @@ msgid "Email composition wizard"
 msgstr "Волшебник за креирање на e-mail"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:159
-#: code:addons/purchase/purchase.py:413
-#: code:addons/purchase/purchase.py:538
-#: code:addons/purchase/purchase.py:555
-#: code:addons/purchase/purchase.py:598
-#: code:addons/purchase/purchase.py:1188
-#: code:addons/purchase/stock.py:195
+#: code:addons/purchase/purchase.py:404
+#: code:addons/purchase/purchase.py:529
+#: code:addons/purchase/purchase.py:546
+#: code:addons/purchase/purchase.py:589
+#: code:addons/purchase/stock.py:182
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
@@ -1168,7 +1158,7 @@ msgstr "Исклучок"
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 #: field:purchase.order,minimum_planned_date:0
 #: field:purchase.report,expected_date:0
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchasequotation
 msgid "Expected Date"
 msgstr "Очекуван датум"
 
@@ -1240,7 +1230,7 @@ msgid "In Shipments"
 msgstr "Во пратки"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:337
+#: code:addons/purchase/purchase.py:328
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "За да избришете нарачка за набавка, најпрво треба да ја откажете."
@@ -1292,8 +1282,8 @@ msgstr ""
 "економски услови што се користат при интернационални трансакции."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:337
-#: code:addons/purchase/purchase.py:1016
+#: code:addons/purchase/purchase.py:328
+#: code:addons/purchase/purchase.py:1007
 #, python-format
 msgid "Invalid Action!"
 msgstr "Невалидна Постапка!"
@@ -1330,13 +1320,13 @@ msgid "Invoice Received"
 msgstr "Примена фактура"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1500
+#: code:addons/purchase/purchase.py:1482
 #, python-format
 msgid "Invoice paid"
 msgstr "Платени фактури"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1480
+#: code:addons/purchase/purchase.py:1462
 #, python-format
 msgid "Invoice received"
 msgstr "Примени фактури"
@@ -1433,12 +1423,6 @@ msgid "Location & Warehouse"
 msgstr "Локација и Магацин"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:159
-#, python-format
-msgid "Make sure you have at least an incoming picking type defined"
-msgstr ""
-
-#. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage calls for bids"
 msgstr "Управувај со повици за прибирање понуди"
@@ -1507,7 +1491,7 @@ msgid "Monthly Purchases"
 msgstr "Месечни нарачки"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Net Price"
 msgstr "Нето цена"
 
@@ -1517,19 +1501,19 @@ msgid "New Mail"
 msgstr "Нова пошта"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1222
+#: code:addons/purchase/purchase.py:1205
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Нема дефинирано адреса(и) за овој добавувач"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1220
+#: code:addons/purchase/purchase.py:1203
 #, python-format
 msgid "No default supplier defined for this product"
 msgstr "Нема дефинирано стандарден добавувач за овој производ"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1218
+#: code:addons/purchase/purchase.py:1201
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Нема дефинирано добавувач за овој производ !"
@@ -1577,7 +1561,7 @@ msgid "Order Date"
 msgstr "Датум на налогот"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Order Date:"
 msgstr "Датум на нарачка:"
 
@@ -1620,7 +1604,7 @@ msgid "Orders"
 msgstr "Налози"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Our Order Reference:"
 msgstr "Наша референца за нарачка:"
 
@@ -1630,7 +1614,7 @@ msgid "Outgoing Mails"
 msgstr "Излезни e-mail пораки"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1363
+#: code:addons/purchase/purchase.py:1346
 #, python-format
 msgid "PO: %s"
 msgstr "Налог за набавка: %s"
@@ -1663,7 +1647,7 @@ msgid "Picking List"
 msgstr "Листа за требување"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:413
+#: code:addons/purchase/purchase.py:404
 #, python-format
 msgid "Please create Invoices."
 msgstr "Ве молиме креирајте Фактури."
@@ -1790,7 +1774,7 @@ msgid "Products by Category"
 msgstr "Производи по категории"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:851
+#: code:addons/purchase/purchase.py:842
 #, python-format
 msgid "Products received"
 msgstr "Примени производи"
@@ -1852,7 +1836,7 @@ msgid "Purchase Order"
 msgstr "Налог за набавка"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Purchase Order Confirmation N°"
 msgstr "Потврда N° на налог за набавка"
 
@@ -1904,7 +1888,7 @@ msgid "Purchase Pricelist"
 msgstr "Ценовник за набавки"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1386
+#: code:addons/purchase/purchase.py:1368
 #, python-format
 msgid "Purchase line created and linked to an existing Purchase Order"
 msgstr ""
@@ -1951,8 +1935,8 @@ msgstr ""
 "компанија."
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchasequotation
 msgid "Qty"
 msgstr "Количина"
 
@@ -1962,7 +1946,7 @@ msgid "Quantity"
 msgstr "Количина"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1388
+#: code:addons/purchase/purchase.py:1370
 #, python-format
 msgid "Quantity added in existing Purchase Order Line"
 msgstr "Количина додадена на постоечка ставка во налог за нарачка"
@@ -2000,8 +1984,8 @@ msgid "RFQ Done"
 msgstr "Завршени барања за прибирање понуди"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:327
-#: code:addons/purchase/purchase.py:945
+#: code:addons/purchase/purchase.py:318
+#: code:addons/purchase/purchase.py:936
 #, python-format
 msgid "RFQ created"
 msgstr "Креирани барања за прибирање понуди"
@@ -2079,7 +2063,7 @@ msgstr ""
 "референца најчесто е напишана на испратницата исшратена од вашиот добавувач."
 
 #. module: purchase
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchasequotation
 msgid "Regards,"
 msgstr "Поздрав,"
 
@@ -2092,12 +2076,12 @@ msgstr "Поврзана локација"
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.report,state:0
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchasequotation
 msgid "Request for Quotation"
 msgstr "Барање за прибирање понуди"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Request for Quotation N°"
 msgstr "Барање за прибирање понуди бр."
 
@@ -2142,7 +2126,7 @@ msgid "Select an Open Sales Order"
 msgstr "Избери налог за отворена продажба"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1114
+#: code:addons/purchase/purchase.py:1104
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -2173,10 +2157,10 @@ msgid "Shipping Exception"
 msgstr "Исклучоци за испорака"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
-#: view:website:purchase.report_purchasequotation_document
-msgid "Shipping address:"
-msgstr ""
+#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchasequotation
+msgid "Shipping address :"
+msgstr "Адреса за испорака :"
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -2239,7 +2223,7 @@ msgid "Supplier Inv."
 msgstr "Фактура на добавувач"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:444
+#: code:addons/purchase/purchase.py:435
 #: code:addons/purchase/wizard/purchase_line_invoice.py:115
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: view:res.partner:purchase.res_partner_view_purchase_account_buttons
@@ -2255,7 +2239,7 @@ msgstr "Референца на добавувачот"
 #. module: purchase
 #: field:purchase.order,amount_tax:0
 #: field:purchase.order.line,taxes_id:0
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Taxes"
 msgstr "Даноци"
 
@@ -2285,7 +2269,7 @@ msgstr ""
 "производи/количини."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1231
+#: code:addons/purchase/purchase.py:1214
 #, python-format
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
@@ -2295,7 +2279,7 @@ msgstr ""
 "изгледа како конфигурациска грешка!"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1134
+#: code:addons/purchase/purchase.py:1123
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
@@ -2305,7 +2289,7 @@ msgstr ""
 "помалку."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1130
+#: code:addons/purchase/purchase.py:1119
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "Избраниот добавувач го продава овој производ единствено по %s"
@@ -2340,7 +2324,7 @@ msgid "The total amount"
 msgstr "Вкупен износ"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1335
+#: code:addons/purchase/purchase.py:1318
 #, python-format
 msgid "There is no supplier associated to product %s"
 msgstr "Нема поврзано добавувач со производ %s"
@@ -2376,8 +2360,13 @@ msgid "This will determine picking type of incoming shipment"
 msgstr "Ова ќе го одреди начинот на подигање на пратените пратки"
 
 #. module: purchase
+#: view:product.template:purchase.product_template_search_view_purchase
+msgid "To Purchase"
+msgstr "Да се набави"
+
+#. module: purchase
 #: field:purchase.order,amount_total:0
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Total"
 msgstr "Вкупно"
 
@@ -2392,7 +2381,7 @@ msgid "Total Untaxed amount"
 msgstr "Вкупно даночна основа"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Total Without Taxes"
 msgstr "Даночна основица"
 
@@ -2402,13 +2391,13 @@ msgid "Total amount"
 msgstr "Вкупна сума"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:694
+#: code:addons/purchase/purchase.py:685
 #, python-format
 msgid "Unable to cancel the purchase order %s."
 msgstr "Не може да се откаже налогот за нарачка %s."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:700
+#: code:addons/purchase/purchase.py:691
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr "Не може да се откаже налогот за набавка."
@@ -2424,7 +2413,7 @@ msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,price_unit:0
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Unit Price"
 msgstr "Единечна цена"
 
@@ -2480,8 +2469,8 @@ msgid "User"
 msgstr "Корисник"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
-#: view:website:purchase.report_purchasequotation_document
+#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchasequotation
 msgid "VAT:"
 msgstr "ДДВ:"
 
@@ -2491,7 +2480,7 @@ msgid "Validated By"
 msgstr "Проверено од"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Validated By:"
 msgstr "Валидирано од:"
 
@@ -2517,9 +2506,9 @@ msgid "Warehouse"
 msgstr "Магацин"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1114
-#: code:addons/purchase/purchase.py:1130
-#: code:addons/purchase/purchase.py:1134
+#: code:addons/purchase/purchase.py:1104
+#: code:addons/purchase/purchase.py:1119
+#: code:addons/purchase/purchase.py:1123
 #: code:addons/purchase/wizard/purchase_order_group.py:44
 #, python-format
 msgid "Warning!"
@@ -2542,7 +2531,7 @@ msgstr ""
 "Кога се купуваат производи тие можат да бидат испорачани во овој магацин"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:538
+#: code:addons/purchase/purchase.py:529
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
 msgstr ""
@@ -2550,40 +2539,22 @@ msgstr ""
 "набавка."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:695
+#: code:addons/purchase/purchase.py:686
 #, python-format
 msgid "You have already received some goods for it.  "
 msgstr "Веќе добивте некои стоки за ова.  "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:701
+#: code:addons/purchase/purchase.py:692
 #, python-format
 msgid "You must first cancel all invoices related to this purchase order."
 msgstr ""
 "Морате прво да ги откажете сите фактури поврзани со овој налог за нарачка."
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchaseorder
 msgid "Your Order Reference"
 msgstr "Референца на вашиот налог"
-
-#. module: purchase
-#: view:purchase.config.settings:purchase.view_purchase_configuration
-#: view:purchase.order.group:purchase.view_purchase_order_group
-#: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
-msgid "or"
-msgstr "или"
-
-#. module: purchase
-#: field:purchase.order,related_usage:0
-msgid "unknown"
-msgstr ""
-
-#~ msgid "Shipping address :"
-#~ msgstr "Адреса за испорака :"
-
-#~ msgid "To Purchase"
-#~ msgstr "Да се набави"
 
 #~ msgid "Reference UOM"
 #~ msgstr "Референтна ЕМ"

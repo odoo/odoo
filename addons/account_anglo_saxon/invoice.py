@@ -209,5 +209,3 @@ class account_invoice(osv.osv):
                                                                               fpos,
                                                                               counterpart_acct_id)
         return invoice_data
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -68,7 +68,7 @@ class sale_order(osv.osv):
                     'message': message,
             }
             if partner.sale_warn == 'block':
-                return {'value': {'partner_id': False}, 'warning': warning}
+                return {'value': {'partner_id': False, 'partner_invoice_id': False, 'partner_shipping_id':False, 'pricelist_id' : False}, 'warning': warning}
 
         result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
 
@@ -155,7 +155,7 @@ class account_invoice(osv.osv):
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
-    def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
+    def onchange_partner_id(self, cr, uid, ids, partner_id=None, context=None):
         if not partner_id:
             return {}
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
@@ -172,7 +172,7 @@ class stock_picking(osv.osv):
             if partner.picking_warn == 'block':
                 return {'value': {'partner_id': False}, 'warning': warning}
 
-        result =  super(stock_picking_in, self).onchange_partner_in(cr, uid, ids, partner_id, context)
+        result = {}
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
@@ -237,7 +237,7 @@ class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
     def onchange_product_id(self,cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, state='draft', context=None):
+            name=False, price_unit=False, state='draft', replace=True, context=None):
         warning = {}
         if not product:
             return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
@@ -255,7 +255,8 @@ class purchase_order_line(osv.osv):
                 return {'value': {'product_id': False}, 'warning': warning}
 
         result =  super(purchase_order_line, self).onchange_product_id(cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned, name=name, price_unit=price_unit, state=state, context=context)
+            partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
+            name=name, price_unit=price_unit, state=state, replace=replace, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
@@ -264,7 +265,3 @@ class purchase_order_line(osv.osv):
         if warning:
             result['warning'] = warning
         return result
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

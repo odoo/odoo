@@ -1,11 +1,11 @@
 // Inspired from https://github.com/tsi/inlineDisqussions
 (function () {
-    
+
     'use strict';
-    
+
     var website = openerp.website,
-    qweb = openerp.qweb;
-    website.add_template_file('/website_blog/static/src/xml/website_blog.inline.discussion.xml');
+        qweb = openerp.qweb;
+
     website.blog_discussion = openerp.Class.extend({
         init: function(options) {
             var self = this ;
@@ -17,7 +17,11 @@
                 public_user: false,
             };
             self.settings = $.extend({}, defaults, options);
-            self.do_render(self);
+
+            // TODO: bundlify qweb templates
+            website.add_template_file('/website_blog/static/src/xml/website_blog.inline.discussion.xml').then(function () {
+                self.do_render(self);
+            });
         },
         do_render: function(data) {
             var self = this;
@@ -47,7 +51,7 @@
         },
         prepare_data : function(identifier, comment_count) {
             var self = this;
-            return openerp.jsonRpc("/blogpost/get_discussion/", 'call', {
+            return openerp.jsonRpc("/blog/post_get_discussion/", 'call', {
                 'post_id': self.settings.post_id,
                 'path': identifier,
                 'count': comment_count, //if true only get length of total comment, display on discussion thread.
@@ -55,7 +59,7 @@
         },
         prepare_multi_data : function(identifiers, comment_count) {
             var self = this;
-            return openerp.jsonRpc("/blogpost/get_discussions/", 'call', {
+            return openerp.jsonRpc("/blog/post_get_discussions/", 'call', {
                 'post_id': self.settings.post_id,
                 'paths': identifiers,
                 'count': comment_count, //if true only get length of total comment, display on discussion thread.
@@ -132,7 +136,7 @@
                     comment += qweb.render("website.blog_discussion.comment", {'res': res});
                 });
                 $('.discussion_history').html('<ul class="media-list">'+comment+'</ul>');
-                self.create_popover(elt, identifier); 
+                self.create_popover(elt, identifier);
                 // Add 'active' class.
                 $('a.discussion-link, a.main-discussion-link').removeClass('active').filter(source).addClass('active');
                 elt.popover('hide').filter(source).popover('show');
@@ -158,9 +162,9 @@
                 var author_name = $('.popover input#author_name').val();
                 var author_email = $('.popover input#author_email').val();
                 if(!comment || !author_name || !author_email){
-                    if (!author_name) 
+                    if (!author_name)
                         $('div#author_name').addClass('has-error');
-                    else 
+                    else
                         $('div#author_name').removeClass('has-error');
                     if (!author_email)
                         $('div#author_email').addClass('has-error');
@@ -189,7 +193,7 @@
             var self = this;
             var val = self.validate(self.settings.public_user)
             if(!val) return
-            openerp.jsonRpc("/blogpost/post_discussion", 'call', {
+            openerp.jsonRpc("/blog/post_discussion", 'call', {
                 'blog_post_id': self.settings.post_id,
                 'path': self.discus_identifier,
                 'comment': val[0],
@@ -207,7 +211,7 @@
             $('a[data-discus-identifier="'+ self.discus_identifier+'"]').popover('destroy');
             $('a.discussion-link').removeClass('active');
         }
-        
+
     });
 
 })();

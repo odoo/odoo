@@ -28,7 +28,7 @@
     'summary': 'Hardware Driver for Weighting Scales',
     'website': 'https://www.odoo.com/page/point-of-sale',
     'description': """
-Barcode Scanner Hardware Driver
+Weighting Scale Hardware Driver
 ================================
 
 This module allows the point of sale to connect to a scale using a USB HSM Serial Scale Interface,
@@ -42,5 +42,3 @@ such as the Mettler Toledo Ariva.
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

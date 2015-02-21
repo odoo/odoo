@@ -2,8 +2,6 @@
 <openerp>
     <data>
 
-        <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="7"/>
-
         <record id="view_payment_mode_search" model="ir.ui.view">
             <field name="name">payment.mode.search</field>
             <field name="model">payment.mode</field>
@@ -40,7 +38,7 @@
                         <field name="name"/>
                         <field name="journal"/>
                         <field name="bank_id" domain="[('partner_id','=',partner_id)]"  />
-                        <field name="company_id" widget='selection' groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
                         <field name="partner_id" invisible="1"/>
                     </group>
                 </form>
@@ -53,8 +51,6 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_payment_mode_search"/>
         </record>
-
-        <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="account.menu_configuration_misc" groups="base.group_no_one"/>
 
         <record id="view_payment_order_form" model="ir.ui.view">
             <field name="name">payment.order.form</field>
@@ -85,7 +81,7 @@
                         <group>
                             <field name="date_prefered"/>
                             <field name="date_scheduled" attrs="{'readonly':[('date_prefered','!=','fixed')]}"/>
-                            <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <field name="line_ids" context="{'order_id': active_id or False}" >
@@ -111,7 +107,7 @@
                                         <field colspan="4" name="communication2"/>
                                         <field name="name"/>
                                         <field name="state"/>
-                                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
                                 </page>
                                 <page string="Information">
@@ -201,7 +197,7 @@
             </field>
         </record>
 
-        <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="menu_main_payment" sequence="3"/>
+        <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="account.menu_finance_payables" sequence="5"/>
 
         <record id="action_payment_order_tree_new" model="ir.actions.act_window">
             <field name="name">New Payment Order</field>

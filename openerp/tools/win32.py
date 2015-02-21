@@ -46,5 +46,3 @@ if not hasattr(locale, 'nl_langinfo'):
                 format_time = format_time.replace(x, y)
             return format_time
     locale.nl_langinfo = nl_langinfo
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

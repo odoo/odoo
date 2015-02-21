@@ -1,25 +1,27 @@
 
-openerp.point_of_sale = function(instance) {
+openerp.point_of_sale = function(openerp) {
+    "use strict";
 
-    instance.point_of_sale = {};
+    var module = openerp.point_of_sale;
 
-    var module = instance.point_of_sale;
+    openerp.point_of_sale.load_db(openerp,module);
 
-    openerp_pos_db(instance,module);         // import db.js
+    openerp.point_of_sale.load_models(openerp,module);
 
-    openerp_pos_models(instance,module);     // import pos_models.js
+    openerp.point_of_sale.load_basewidget(openerp,module);
 
-    openerp_pos_basewidget(instance,module); // import pos_basewidget.js
+    openerp.point_of_sale.load_keyboard(openerp,module);
 
-    openerp_pos_keyboard(instance,module);   // import  pos_keyboard_widget.js
+    openerp.point_of_sale.load_gui(openerp,module);
 
-    openerp_pos_screens(instance,module);    // import pos_screens.js
+    openerp.point_of_sale.load_popups(openerp,module);
 
-    openerp_pos_devices(instance,module);    // import pos_devices.js
-    
-    openerp_pos_widgets(instance,module);    // import pos_widgets.js
+    openerp.point_of_sale.load_screens(openerp,module);
 
-    instance.web.client_actions.add('pos.ui', 'instance.point_of_sale.PosWidget');
+    openerp.point_of_sale.load_devices(openerp,module);
+
+    openerp.point_of_sale.load_chrome(openerp,module);
+
+    openerp.web.client_actions.add('pos.ui', 'openerp.point_of_sale.Chrome');
 };
 
-    

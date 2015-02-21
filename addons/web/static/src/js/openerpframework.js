@@ -287,7 +287,17 @@ openerp.ParentedMixin = {
         });
         this.setParent(undefined);
         this.__parentedDestroyed = true;
-    }
+    },
+    /**
+     * Find the closest ancestor matching predicate
+     */
+    findAncestor: function (predicate) {
+        var ancestor = this;
+        while (!(predicate(ancestor)) && ancestor && ancestor.getParent) {
+            ancestor = ancestor.getParent();
+        }
+        return ancestor;
+    },
 };
 
 /**
@@ -403,7 +413,7 @@ openerp.EventDispatcherMixin = _.extend({}, openerp.ParentedMixin, {
     },
     on: function(events, dest, func) {
         var self = this;
-        if (!(func instanceof Function)) {
+        if (typeof func !== "function") {
             throw new Error("Event handler must be a function.");
         }
         events = events.split(/\s+/);
@@ -683,7 +693,12 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
         var $oldel = this.$el;
         this.setElement($el);
         if ($oldel && !$oldel.is(this.$el)) {
-            $oldel.replaceWith(this.$el);
+            if ($oldel.length > 1) {
+                $oldel.wrapAll('<div/>');
+                $oldel.parent().replaceWith(this.$el);
+            } else {
+                $oldel.replaceWith(this.$el);
+            }
         }
         return this;
     },
@@ -778,6 +793,12 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
         if (selector === undefined)
             return this.$el;
         return this.$el.find(selector);
+    },
+    do_show: function () {
+        this.$el.show();
+    },
+    do_hide: function () {
+        this.$el.hide();
     },
     /**
      * Proxies a method of the object, in order to keep the right ``this`` on
@@ -1521,6 +1542,13 @@ openerp.time_to_str = function(obj) {
     return lpad(obj.getHours(),2) + ":" + lpad(obj.getMinutes(),2) + ":"
          + lpad(obj.getSeconds(),2);
 };
+
+// jQuery custom plugins
+jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+});
 
 openerp.declare = declare;
 

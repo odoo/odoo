@@ -24,7 +24,8 @@ from openerp.osv import fields, osv
 
 
 class res_partner_mail(osv.Model):
-    """ Update partner to add a field about notification preferences """
+    """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
+       to restrict usage of automatic email templates. """
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread']
     _mail_flat_thread = False
@@ -39,10 +40,14 @@ class res_partner_mail(osv.Model):
             help="Policy to receive emails for new messages pushed to your personal Inbox:\n"
                     "- Never: no emails are sent\n"
                     "- All Messages: for every notification you receive in your Inbox"),
+        'opt_out': fields.boolean('Opt-Out',
+            help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
+                    "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing."),
     }
 
     _defaults = {
-        'notify_email': lambda *args: 'always'
+        'notify_email': lambda *args: 'always',
+        'opt_out': False,
     }
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):

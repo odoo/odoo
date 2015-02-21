@@ -98,7 +98,3 @@ class stock_move_scrap(osv.osv_memory):
             }
         else:
             return {'type': 'ir.actions.act_window_close'}
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

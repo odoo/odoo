@@ -174,5 +174,3 @@ class board_create(osv.osv_memory):
     _defaults = {
         'menu_parent_id': _default_menu_parent_id,
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,7 +21,6 @@
 
 from openerp.addons.mail.tests.common import TestMail
 from openerp.exceptions import AccessError
-from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 
@@ -218,7 +217,7 @@ class TestMailMessage(TestMail):
         message_id = self.mail_message.create(cr, uid, {'body': 'My Body', 'attachment_ids': [(4, attachment_id)]})
 
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_message.read(cr, user_bert_id, message_id)
         # Do: message is pushed to Bert
         notif_id = self.mail_notification.create(cr, uid, {'message_id': message_id, 'partner_id': partner_bert_id})
@@ -229,10 +228,10 @@ class TestMailMessage(TestMail):
         # Do: remove notification
         self.mail_notification.unlink(cr, uid, notif_id)
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_message.read(cr, self.user_bert_id, message_id)
         # Test: Bert downloads attachment, crash because he can't read message
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_message.download_attachment(cr, user_bert_id, message_id, attachment_id)
         # Do: Bert is now the author
         self.mail_message.write(cr, uid, [message_id], {'author_id': partner_bert_id})
@@ -241,7 +240,7 @@ class TestMailMessage(TestMail):
         # Do: Bert is not the author anymore
         self.mail_message.write(cr, uid, [message_id], {'author_id': partner_raoul_id})
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_message.read(cr, user_bert_id, message_id)
         # Do: message is attached to a document Bert can read, Jobs
         self.mail_message.write(cr, uid, [message_id], {'model': 'mail.group', 'res_id': self.group_jobs_id})
@@ -250,7 +249,7 @@ class TestMailMessage(TestMail):
         # Do: message is attached to a document Bert cannot read, Pigs
         self.mail_message.write(cr, uid, [message_id], {'model': 'mail.group', 'res_id': self.group_pigs_id})
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_message.read(cr, user_bert_id, message_id)
 
         # ----------------------------------------
@@ -270,12 +269,12 @@ class TestMailMessage(TestMail):
         # Do: Raoul creates a message on Jobs -> ok, write access to the related document
         self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_jobs_id, 'body': 'Test'})
         # Do: Raoul creates a message on Priv -> ko, no write access to the related document
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_priv_id, 'body': 'Test'})
         # Do: Raoul creates a private message -> ok
         self.mail_message.create(cr, user_raoul_id, {'body': 'Test'})
         # Do: Raoul creates a reply to a message on Priv -> ko
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_priv_id, 'body': 'Test', 'parent_id': priv_msg_id})
         # Do: Raoul creates a reply to a message on Priv-> ok if has received parent
         self.mail_notification.create(cr, uid, {'message_id': priv_msg_id, 'partner_id': self.partner_raoul_id})

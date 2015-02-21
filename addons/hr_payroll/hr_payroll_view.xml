@@ -35,7 +35,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="rule_ids"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 </tree>
             </field>
         </record>
@@ -47,7 +47,7 @@
                 <tree string="Salary Structure">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 </tree>
             </field>
         </record>
@@ -71,7 +71,7 @@
                         <field name="name"/>
                         <field name="code"/>
                         <field name="parent_id"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     </group>
                     <notebook colspan="4">
                          <page string="Salary Rules">
@@ -195,7 +195,7 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="state"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="payslip_run_id" invisible="1"/>
                 </tree>
             </field>
@@ -493,7 +493,7 @@
             <field name="arch" type="xml">
                 <tree string="Contribution Registers">
                     <field name="name" />
-                    <field name="company_id"  groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id"  groups="base.group_multi_company" options="{'no_create': True}"/>
                 </tree>
             </field>
         </record>
@@ -514,7 +514,7 @@
                 <form string="Contribution">
                     <group>
                         <field name="name"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection" class="oe_inline"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" class="oe_inline"/>
                     </group>
                     <newline/>
                     <group>
@@ -571,7 +571,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="category_id" invisible="True"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 </tree>
             </field>
         </record>
@@ -590,7 +590,7 @@
                        <field name="sequence" />
                        <field name="active"/>
                        <field name="appears_on_payslip"/>
-                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                       <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
                     <notebook colspan="6">
                         <page string="General">

@@ -6,44 +6,65 @@
 /* ---- SNIPPET EDITOR ---- {{{ */
 
 #oe_snippets
-    position: fixed
-    top: 34px
-    left: 0px
-    right: 0px
-    padding-top: 6px
-    // top property is set programmatically
-    background: rgb(40,40,40)
-    +box-shadow(0px 10px 10px -10px black inset)
-    z-index: 1010
-    overflow: hidden
-    &:hover
-        height: auto
-    .scroll
-        white-space: nowrap
-        overflow-y: none
-    .nav
-        display: inline-block
-        border-bottom: none !important
-        vertical-align: middle
-        min-width: 120px
-        > li
-            display: block
-            float: none
-            &.active
-                background: black !important
-            > a
-                padding: 2px 10px !important
-                width: 100%
-                display: block
-                border: 0
-        z-index: 1
-    .pill-content
+    #o_left_bar, #o_arrow
+        position: fixed
+        top: 34px
+        left: 0px
+        bottom: 0
+        background: rgb(40,40,40)
+        +box-shadow(0px 10px 10px -10px black inset)
+    #o_arrow
+        z-index: 1009
+        width: 24px
+        opacity: 0.75
+        > *
+            position: absolute
+            color: white
+        div
+            @include transform( translateX(-36%) rotate(-90deg) )
+            top: 50%
+            white-space: nowrap
+        .fa
+            width: 100%
+            left: 40%
+    #o_left_bar
+        left:  -228px
+        z-index: 1010
+        width: 208px
+        @include transition(all 500ms ease)
+        ul
+            text-align: center
+            margin: 0
+            padding: 6px 0
+            list-style-type: none
+            li
+                display: inline-block
+                padding: 0 3px
+                a
+                    color: #aaa
+                .fa-stack
+                    overflow: hidden
+            li.active a.fa, li.active .fa-stack-1x
+                color: #428bca
+
+    &.o_open #o_left_bar
+        left: 0
+    .o_panel
+        margin: 0
         border: 0
-    .tab-content
-        margin-right: 120px
-        display: inline-block
+        width: 208px
+    .o_panel_header
+        background: #dff0d8
+        padding: 1px 8px
+        color: #414141
+        text-align: center
+        .fa-stack
+            overflow: hidden
+            font-size: 1em
+    .o_panel_body
         white-space: normal
         background: black
+        padding: 7px 3px
         > div
             background: rgb(0,0,0)
             label
@@ -55,14 +76,15 @@
                     width: 100px
                     text-align: center
                     @include transform( translate(-39px, 44px) , rotate(-90deg) )
-                    @include transform-origin(50% 50%)
+                    @include transform-origin(50%)
 
 .oe_snippet
     display: inline-block
     vertical-align: top
     width: 93px
-    margin-left: 1px
-    margin-top: 0px
+    margin-left: 3px
+    margin-right: 3px
+    margin-top: 1px
     position: relative
     overflow: hidden
     +user-select(none)
@@ -82,13 +104,18 @@
             +text-shadow(0 0 2px rgb(0,0,0))
         .oe_snippet_thumbnail_img
             height: 74px
-            +box-shadow(inset 0px 0px 0px 3px #333333)
+            width: 92px
+            background-size: cover
             @include transform( scale(1,1))
         span, div
             line-height: 18px
     & > :not(.oe_snippet_thumbnail)
         display: none !important
-
+    &.disable
+        .oe_snippet_thumbnail
+            background-color: rgba(255, 0, 0, 0.75)
+        .oe_snippet_thumbnail_img
+            opacity: 0.8
 #oe_snippets .oe_snippet_thumbnail
     @include background(#747474, radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4)))
 
@@ -117,6 +144,12 @@
     &.oe_vertical
         width: 48px
         float: left
+        position: relative
+        margin: 0px -24px !important
+    &.oe_vertical_text
+        width: 48px
+        float: none
+        display: inline-block
         position: relative
         margin: 0px -24px !important
     &.oe_overlay
@@ -203,7 +236,7 @@
             top: 4px
             height: 100%
             &:before
-                content: "\f0d9-\f0da"
+                content: "\f07e"
                 line-height: 16px
             > div
                 width: 0
@@ -287,6 +320,8 @@
                 display: inline-block
                 float: none
                 margin: 0 -3px
+            > div
+                float: none
         .btn, a
             cursor: pointer
         .dropdown
@@ -301,13 +336,13 @@
         content: "\F061" !important
     &.block-w-right .w:before
         content: "\F060" !important
-    &.block-w-left.block-w-right .w
+    &.block-w-left.block-w-right .w:before
         display: none !important
     &.block-e-left .e:before
         content: "\F061" !important
     &.block-e-right .e:before
         content: "\F060" !important
-    &.block-e-left.block-e-right .e
+    &.block-e-left.block-e-right .e:before
         display: none !important
 
     &.block-s-top .s:before
@@ -318,6 +353,13 @@
         content: "\F063" !important
     &.block-n-bottom .n:before
         content: "\f062" !important
+
+    &.o_keypress
+        opacity: 0
+        -webkit-transition: .8s
+        -moz-transition: .8s
+        -o-transition: .8s
+        -transition: .8s
 
 
 .s-resize-important, .s-resize-important *
@@ -508,6 +550,154 @@
             height: 16px
             display: inline-block
 
+/* ---- COLOR-PICKER ----  {{{ */
 
+.colorpicker
+    margin: 0 auto
+    background: transparent
+    border: 0
+    td
+        padding: 0
+        background: transparent
+        > *
+            width: 16px
+            height: 16px
+            border-radius: 2px
+            margin: 3px
+            padding: 0
+            border-width: 1px
+            display: block
+    .only-text
+        display: none
+    .automatic-color
+        background: #fff
+        border-left: 7px solid #f33
+        border-top: 7px solid #0e0
+        border-right: 8px solid #33f
+        border-bottom: 8px solid #fe0
+        margin: 4px 3px 3px 3px
+        width: 0
+        height: 0
 
+// }}}
 
+/* ---- Table Snippet ----  {{{ */
+
+.table_desc
+    margin: 0 0 20px 0
+    width: 100%
+    word-break: break-all
+    border: 1px solid #dddddd
+
+.table_heading
+    background-color: #f5f5f5
+    border: 1px solid #dddddd
+    color: #666666
+    font-size: 14px
+    padding: 4px
+
+table.table_desc tr td
+    text-align: left
+    padding: 5px
+    font-size: 13px
+    &:first-child
+        width: 25%
+        font-weight: bold
+        border-bottom: 1px solid #c9c9c9
+        border-right: 1px solid #c9c9c9
+        border-left: none
+    &:last-child
+        border-bottom: 1px solid #c9c9c9
+
+// }}}
+
+/* ---- thumbnail ----  {{{ */
+
+.oe_snippet
+    &.o_block_banner .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_banner.png')
+    &.o_block_text_image .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_text_image.png')
+    &.o_block_image_text .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_image_text.png')
+    &.o_block_jumbotron .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_jumbotron.png')
+    &.o_block_text_block .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_text_block.png')
+    &.o_block_title .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_title.png')
+    &.o_block_features .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_features.png')
+    &.o_block_big_picture .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_big_picture.png')
+    &.o_block_three_columns .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_three_columns.png')
+
+    &.o_block_well .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_well.png')
+    &.o_block_quote .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_quote.png')
+    &.o_block_panel .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_panel.png')
+    &.o_block_image_float .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_text_image.png')
+    &.o_block_image_floating .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_text_image.png')
+    &.o_block_separator .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_separator.png')
+    &.o_block_button .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_button.png')
+
+    &.o_block_image_gallery .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_image_gallery.png')
+    &.o_block_comparison .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_comparison.png')
+    &.o_block_button .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_button.png')
+    &.o_block_faq .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_faq.png')
+    &.o_block_references .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_references.png')
+    &.o_block_quotes_slider .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_quotes_slider.png')
+    &.o_block_features .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_features.png')
+
+    &.o_block_parallax .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_parallax.png')
+    &.o_block_quotes_slider .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_quotes_slider.png')
+// }}}
+
+/* snippets default margins */
+.s_banner
+    margin-bottom: 32px
+
+.s_big_message
+    margin-top: 16px
+    margin-bottom: 16px
+
+.s_text_block
+    margin-top: 16px
+    margin-bottom: 16px
+
+.s_features
+    margin-top: 16px
+
+.s_big_picture
+    margin-top: 16px
+    margin-bottom: 16px
+
+.s_three_columns
+    margin-top: 16px
+    margin-bottom: 16px
+
+.s_references
+    margin-top: 16px
+    margin-bottom: 32px
+
+.s_quotes_slider
+    margin-bottom: 0px
+
+.s_features_grid
+    margin-bottom: 16px

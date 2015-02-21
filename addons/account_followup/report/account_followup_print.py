@@ -23,6 +23,7 @@ import time
 from collections import defaultdict
 from openerp.osv import osv
 from openerp.report import report_sxw
+from openerp.exceptions import UserError
 
 
 class report_rappel(report_sxw.rml_parse):
@@ -79,7 +80,7 @@ class report_rappel(report_sxw.rml_parse):
         fp_obj = self.pool['account_followup.followup']
         fp_line = fp_obj.browse(self.cr, self.uid, followup_id, context=context).followup_line
         if not fp_line:
-            raise osv.except_osv(_('Error!'),_("The followup plan defined for the current company does not have any followup action."))
+            raise UserError(_("The followup plan defined for the current company does not have any followup action."))
         #the default text will be the first fp_line in the sequence with a description.
         default_text = ''
         li_delay = []
@@ -116,5 +117,3 @@ class report_followup(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account_followup.report_followup'
     _wrapped_report_class = report_rappel
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

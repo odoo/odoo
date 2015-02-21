@@ -163,8 +163,8 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                         self.fields[self.fields_view.arch.attrs.date_delay]);
                     if (!tmp)
                         return;
-                    task_stop = task_start.clone().addMilliseconds(instance.web.parse_value(tmp, {type:"float"}) * 60 * 60 * 1000);
-                    duration_in_business_hours = true;
+                    var m_task_start = moment(task_start).add(instance.web.parse_value(tmp, {type:"float"}), 'hours');
+                    task_stop = m_task_start.toDate();
                 }
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
                 var id = _.uniqueId("gantt_task_");
@@ -213,11 +213,11 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         var itask = task_obj.TaskInfo.internal_task;
         var start = task_obj.getEST();
         var duration = task_obj.getDuration();
-        var duration_in_business_hours = !!self.fields_view.arch.attrs.date_delay;
+        var duration_in_business_hours = !!self.fields_view.arch.attrs.date_delay;        
         if (!duration_in_business_hours){
             duration = (duration / 8 ) * 24;
         }
-        var end = start.clone().addMilliseconds(duration * 60 * 60 * 1000);
+        var end = moment(start).add(duration, 'hours').toDate();
         var data = {};
         data[self.fields_view.arch.attrs.date_start] =
             instance.web.auto_date_to_str(start, self.fields[self.fields_view.arch.attrs.date_start].type);

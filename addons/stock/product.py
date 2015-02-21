@@ -24,6 +24,7 @@ from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 import openerp.addons.decimal_precision as dp
 from openerp.tools.float_utils import float_round
+from openerp.exceptions import UserError
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -182,7 +183,6 @@ class product_product(osv.osv):
     _columns = {
         'reception_count': fields.function(_stock_move_count, string="Receipt", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
-        'qty_available_text': fields.function(_product_available_text, type='char'),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
@@ -197,6 +197,7 @@ class product_product(osv.osv):
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
+        'qty_available2': fields.related('qty_available', type="float", relation="product.product", string="On Hand"),
         'virtual_available': fields.function(_product_available, multi='qty_available',
             type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Forecast Quantity',
@@ -339,7 +340,7 @@ class product_template(osv.osv):
 
     _columns = {
         'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
-        'qty_available_text': fields.function(_product_available_text, type='char'),
+        'qty_available2': fields.related('qty_available', type="float", relation="product.template", string="On Hand"),
         'property_stock_procurement': fields.property(
             type='many2one',
             relation='stock.location',
@@ -447,6 +448,22 @@ class product_template(osv.osv):
             result['context'] = "{'tree_view_ref':'stock.view_move_tree'}"
         return result
 
+    def write(self, cr, uid, ids, vals, context=None):
+        check = ids and 'uom_po_id' in vals
+        if check:
+            cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(ids)])
+            uoms = dict(cr.fetchall())
+
+        result = super(product_template, self).write(cr, uid, ids, vals, context=context)
+
+        if check:
+            cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(ids)])
+            if dict(cr.fetchall()) != uoms:
+                product_ids = self.pool['product.product'].search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
+                if self.pool['stock.move'].search_count(cr, uid, [('product_id', 'in', product_ids)], context=context):
+                    raise UserError(_("You can not change the unit of measure of a product that has already been used in a stock move. If you need to change the unit of measure, you may deactivate this product."))
+        return result
+
 
 class product_removal_strategy(osv.osv):
     _name = 'product.removal'
@@ -515,6 +532,3 @@ class product_category(osv.osv):
         'removal_strategy_id': fields.many2one('product.removal', 'Force Removal Strategy', help="Set a specific removal strategy that will be used regardless of the source location for this product category"),
         'total_route_ids': fields.function(calculate_total_routes, relation='stock.location.route', type='many2many', string='Total routes', readonly=True),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

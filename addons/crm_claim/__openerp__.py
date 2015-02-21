@@ -52,5 +52,3 @@ automatically new claims based on incoming emails.
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -118,5 +118,3 @@ class LRU(object):
         self.d = {}
         self.first = None
         self.last = None
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

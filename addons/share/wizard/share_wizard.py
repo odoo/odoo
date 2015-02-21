@@ -33,6 +33,7 @@ from openerp.osv import expression
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
 import openerp
+from openerp.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 FULL_ACCESS = ('perm_read', 'perm_write', 'perm_create', 'perm_unlink')
@@ -58,7 +59,7 @@ class share_wizard(osv.TransientModel):
            The error_message should have been translated with _().
         """
         if not condition:
-            raise osv.except_osv(_('Sharing access cannot be created.'), error_message)
+            raise UserError(error_message)
 
     def has_group(self, cr, uid, module, group_xml_id, context=None):
         """Returns True if current user is a member of the group identified by the module, group_xml_id pair."""
@@ -70,7 +71,7 @@ class share_wizard(osv.TransientModel):
         return group_id in self.pool.get('res.users').read(cr, uid, [uid], ['groups_id'], context=context)[0]['groups_id']
 
     def has_share(self, cr, uid, unused_param, context=None):
-        return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
+        return self.has_group(cr, uid, module='base', group_xml_id='group_no_one', context=context)
 
     def _user_type_selection(self, cr, uid, context=None):
         """Selection values may be easily overridden/extended via inheritance"""
@@ -201,8 +202,7 @@ class share_wizard(osv.TransientModel):
     def go_step_1(self, cr, uid, ids, context=None):
         wizard_data = self.browse(cr,uid,ids,context)[0]
         if wizard_data.user_type == 'emails' and not self.has_email(cr, uid, context=context):
-            raise osv.except_osv(_('No email address configured'),
-                                 _('You must configure your email address in the user preferences before using the Share button.'))
+            raise UserError(_('You must configure your email address in the user preferences before using the Share button.'))
         model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
         action = self.pool[model].read(cr, uid, [res_id], context=context)[0]
         action['res_id'] = ids[0]
@@ -638,16 +638,15 @@ class share_wizard(osv.TransientModel):
                          group_id, model_id=model.id, domain=str(related_domain),
                          rule_name=rule_name, restrict=True, context=context)
         except Exception:
-            _logger.exception('Failed to create share access')
-            raise osv.except_osv(_('Sharing access cannot be created.'),
-                                 _('Sorry, the current screen and filter you are trying to share are not supported at the moment.\nYou may want to try a simpler filter.'))
+            _logger.info('Failed to create share access', exc_info=True)
+            raise UserError(_('Sorry, the current screen and filter you are trying to share are not supported at the moment.\nYou may want to try a simpler filter.'))
 
     def _check_preconditions(self, cr, uid, wizard_data, context=None):
         self._assert(wizard_data.action_id and wizard_data.access_mode,
                      _('Action and Access Mode are required to create a shared access.'),
                      context=context)
         self._assert(self.has_share(cr, uid, wizard_data, context=context),
-                     _('You must be a member of the Share/User group to use the share wizard.'),
+                     _('You must be a member of the Technical group to use the share wizard.'),
                      context=context)
         if wizard_data.user_type == 'emails':
             self._assert((wizard_data.new_users or wizard_data.email_1 or wizard_data.email_2 or wizard_data.email_3),
@@ -762,7 +761,7 @@ class share_wizard(osv.TransientModel):
                     res_id = cond[2]
             # Record id not found: issue
             if res_id <= 0:
-                raise osv.except_osv(_('Record id not found'), _('The share engine has not been able to fetch a record_id for your invitation.'))
+                raise UserError(_('The share engine has not been able to fetch a record_id for your invitation.'))
             self.pool[model.model].message_subscribe(cr, uid, [res_id], new_ids + existing_ids, context=context)
             # self.send_invite_email(cr, uid, wizard_data, context=context)
             # self.send_invite_note(cr, uid, model.model, res_id, wizard_data, context=context)
@@ -817,7 +816,7 @@ class share_wizard(osv.TransientModel):
         notification_obj = self.pool.get('mail.notification')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise UserError(_('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         for result_line in wizard_data.result_line_ids:
@@ -848,7 +847,7 @@ class share_wizard(osv.TransientModel):
         mail_mail = self.pool.get('mail.mail')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise UserError(_('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         mail_ids = []
@@ -915,5 +914,3 @@ class share_result_line(osv.osv_memory):
     _defaults = {
         'newly_created': True,
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

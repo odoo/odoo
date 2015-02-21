@@ -51,12 +51,98 @@
 .mb0
     margin-bottom: 0px !important
 
+img, .img, span.fa, iframe
+    &.padding-small
+        padding: 4px
+    &.padding-medium
+        padding: 8px
+    &.padding-large
+        padding: 16px
+    &.padding-xl
+        padding: 32px
+div.media_iframe_video
+    &.padding-small iframe
+        padding: 4px
+    &.padding-medium iframe
+        padding: 8px
+    &.padding-large iframe
+        padding: 16px
+    &.padding-xl iframe
+        padding: 32px
+
+.fa-6x
+    font-size: 6em
+.fa-7x
+    font-size: 7em
+.fa-8x
+    font-size: 8em
+.fa-9x
+    font-size: 9em
+.fa-10x
+    font-size: 10em
+.fa.center-block
+    text-align: center
+
+ul
+    list-style-type: disc
+li > ul
+    list-style-type: circle
+li > * > li > ul
+    list-style-type: square
+li > * > li > * > li > ul
+    list-style-type: disc
+li > * > li > * > li > * > li > ul
+    list-style-type: circle
+li > * > li > * > li > * > li > * > li > ul
+    list-style-type: square
+li > * > li > * > li > * > li > * > li > * > li > ul
+    list-style-type: disc
+
+ol
+    list-style-type: decimal
+li > ol
+    list-style-type: lower-alpha
+li > * > li > ol
+    list-style-type: lower-greek
+li > * > li > * > li > ol
+    list-style-type: decimal
+li > * > li > * > li > * > li > ol
+    list-style-type: lower-alpha
+li > * > li > * > li > * > li > * > li > ol
+    list-style-type: lower-greek
+li > * > li > * > li > * > li > * > li > * > li > ol
+    list-style-type: decimal
+
+li > p
+    margin: 0
+
+.o_ul_toggle_self, .o_ul_toggle_next
+    display: none
+.o_ul_folded
+    .o_close
+        display: none !important
+    .o_ul_toggle_self, .o_ul_toggle_next
+        display: inline-block
+        line-height: inherit
+        float: left
+        position: relative
+        margin-left: -1em
+        z-index: 1
+        top: -0.15em
+        left: 0.2em
+        font-size: 1.4em
+        text-decoration: none
+        &:before
+            content: "\f0da"
+        .o_open
+            left: 0em
+            &:before
+                content: "\f0d7"
+
 /* Extra Styles */
 
 img.shadow
-    +border-radius(3px)
     +box-shadow(0px 3px 8px rgba(0, 0, 0, 0.2))
-    margin: 0 auto
 
 h1.text-muted, h2.text-muted, h3.text-muted
     margin-top: 10px
@@ -68,11 +154,23 @@ header
         img
             max-height: 50px
 
-// add {WORD JOINER} (equivalent to deprecated ZERO WIDTH NO-BREAK SPACE) at
-// the beginning of paragraphs so they don't "disappear" after saving when
-// used solely for spacing.
-#wrapwrap p:empty:after
-    content: '\2060'
+hr
+    margin-bottom: 10px
+    padding-bottom: 10px
+
+table.table
+    table-layout: fixed
+
+td
+    min-width: 20px
+
+/* ----- Editor (for public user, like forum) ----- */
+
+.note-toolbar
+    margin-left: 0 !important
+
+.note-popover .popover > .arrow
+    display: none
 
 /* ----- Snippets Styles ----- */
 
@@ -86,17 +184,6 @@ header
     margin-right: auto
 
 /* ----- EDITOR ----- */
-#oe_main_menu_navbar
-    min-height: 34px
-    z-index: 1001
-    +border-radius(0px)
-    margin-bottom: 0px
-    li a, li button
-        padding: 4px 8px 4px 8px
-        margin-top: 2px
-        font-size: 13px
-    .navbar-nav.navbar-right:last-child
-        margin-right: 0 !important
 
 .css_non_editable_mode_hidden
     display: none !important
@@ -127,19 +214,21 @@ html,body, #wrapwrap
 
 #wrapwrap
     display: table
+    table-layout: fixed
     width: 100%
-
-header, main, footer
-    display: table-row
-
-footer
-    height: 100%
-    background: rgb(239, 248, 248)
-    background: rgba(200, 200, 200, 0.1)
-
-#footer_container, #footer
-    padding-top: 24px
-    padding-bottom: 12px
+    > *
+        display: table-row
+    > main
+        height: 100%
+    > footer
+        height: 100%
+        background: rgba(200, 200, 200, 0.1)
+body > nav.navbar
+    width: 100%
+    position: absolute
+    z-index: 10000
+nav.navbar + #wrapwrap
+    padding-top: 34px
 
 /* ----- BOOTSTRAP FIX ----- */
 
@@ -151,17 +240,7 @@ footer
     .table .img-responsive
         width: 100%
 
-/* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
-
-.oe_structure.oe_editable.oe_empty:empty, .oe_editable[data-oe-type=html]:empty, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
-    background-image: url('/website/static/src/img/drag_here.png') !important
-
-.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
-    background-image: none
-    background-repeat: no-repeat
-    background-position: center
-    height: 220px !important
-
+/* ---- HACK FOR COVERING UP EDITOR BOGUS P INSERTION --- */
 .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
     position: static
 
@@ -169,18 +248,15 @@ footer
     content: ' '
     text-align: center
     display: block
-    padding-top: 160px
-    padding-bottom: 30px
+    min-height: 1em
     color: grey
     font-size: 24px
-
-.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
-    content: 'Drag Building Blocks Here' !important
+    padding-top: 160px
 
 .css_editable_display
     display: none
 
-/* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
+/* ---- HACK FOR COVERING UP EDITOR BOGUS P INSERTION --- */
 
 .navbar .nav > li > p
     margin-bottom: 0px
@@ -195,9 +271,6 @@ footer
 
 .nav-hierarchy
     padding-left: 16px
-
-#themes-list .well
-    padding: 0 0 20px 0
 
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal
@@ -334,6 +407,130 @@ ul.nav-stacked > li > a
             margin-right: 32px
 
 
+/* gallery */
+
+.o_gallery
+    &.o_grid, &.o_masonry
+        .img
+            width: 100%
+    &.o_grid
+        &.o_spc-none
+            div.row
+                margin: 0
+                > *
+                    padding: 0
+        &.o_spc-small
+            div.row
+                margin: 5px 0
+                > *
+                    padding: 0 5px
+        &.o_spc-medium
+            div.row
+                margin: 10px 0
+                > *
+                    padding: 0 10px
+        &.o_spc-big
+            div.row
+                margin: 15px 0
+                > *
+                    padding: 0 15px
+    &.o_masonry
+        &.o_spc-none
+            div.col
+                padding: 0
+                > img
+                    margin: 0 !important
+        &.o_spc-small
+            div.col
+                padding: 0 5px
+                > img
+                    margin: 5px 0 !important
+        &.o_spc-medium
+            div.col
+                padding: 0 10px
+                > img
+                    margin: 10px 0 !important
+        &.o_spc-big
+            div.col
+                padding: 0 15px
+                > img
+                    margin: 15px 0 !important
+    &.o_grid
+        &.size-auto .row
+            height: auto
+        &.size-small .row
+            height: 100px
+        &.size-medium .row
+            height: 250px
+        &.size-big .row
+            height: 400px
+        &.size-small, &.size-medium, &.size-big
+            .img
+                height: 100%
+    &.o_nomode
+        &.o_spc-none
+            .img
+                padding: 0
+        &.o_spc-small
+            .img
+                padding: 5px
+        &.o_spc-medium
+            .img
+                padding: 10px
+        &.o_spc-big
+            .img
+                padding: 15px
+
+    &.o_slideshow .carousel ul.carousel-indicators li
+        border: 1px solid #aaa
+    .carousel-inner .item img
+        max-width: none
+
+.o_gallery.o_slideshow > .container
+    height: 100%
+
+.o_gallery.o_slideshow .carousel, .modal-body.o_slideshow .carousel
+    height: 100%
+    .item
+        padding-bottom: 64px
+    img
+        max-height: 100%
+        max-width: 100%
+        margin: auto
+        position: relative
+        top: 50%
+        -webkit-transform: translateY(-50%)
+        -ms-transform: translateY(-50%)
+        transform: translateY(-50%)
+    ul.carousel-indicators
+        display: block
+        height: auto
+        padding: 0
+        border-width: 0
+        position: absolute
+        bottom: 0
+        > *
+            list-style-image: none
+            display: inline-block
+            width: 40px
+            height: 40px
+            margin: 0 0px 5px 5px
+            padding: 0
+            border: 1px solid #aaa
+            text-indent: initial
+            background-size: cover
+            background-color: #fff
+            border-radius: 0
+        > *:not(.active)
+            opacity: 0.8
+            -webkit-filter: grayscale(100%)
+            filter: grayscale(100%)
+            filter: gray
+            filter: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' height='0'><filter id='greyscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0' /></filter></svg>#greyscale")
+    .carousel-control.left, .carousel-control.right
+        background-image: none
+        background-color: transparent
+
 /* Parallax Theme */
 
 div.carousel
@@ -349,7 +546,6 @@ div.carousel
         background-color: black
         color: white
         background: rgba(0, 0, 0, 0.3)
-        margin-top: 75px
 
 .parallax
     background-size: cover
@@ -363,7 +559,7 @@ div.carousel
             vertical-align: middle
             padding: 32px 0
 
-/* Background */
+/* Background (kept for 8.0 compatibility) */
 
 .oe_dark
     background: #eff8f8
@@ -456,9 +652,9 @@ span[data-oe-type="monetary"]
     margin: 40px auto
 
 .oe_website_overflow_ellipsis
-    white-space:nowrap
-    overflow:hidden
-    text-overflow:ellipsis
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
 
 .oe_website_spinner
     width: 121px
@@ -466,17 +662,22 @@ span[data-oe-type="monetary"]
         text-align: center
 
 div.media_iframe_video
-    height: 0
     margin: 0 auto
     text-align: center
     position: relative
     overflow: hidden
-    padding-bottom: 66.5%
     iframe
         width: 100%
         height: 100%
+        top: 0
         position: absolute
+        margin: 0 auto
         margin-left: -50%
+    .media_iframe_video_size
+        padding-bottom: 66.5%
+        position: relative
+        width: 100%
+        height: 0
     .css_editable_mode_display
         position: absolute
         width: 100%
@@ -555,3 +756,18 @@ div.carousel
                     width: 100%
             > .carousel-image
                 display: none !important
+
+/* ---- Menu nav bar ---- {{{ */
+
+#oe_main_menu_navbar
+    position: fixed
+    min-height: 34px
+    z-index: 1001
+    +border-radius(0px)
+    margin-bottom: 0px
+    li a, li button
+        padding: 4px 8px 4px 8px
+        margin-top: 2px
+        font-size: 13px
+    .navbar-nav.navbar-right:last-child
+        margin-right: 0 !important

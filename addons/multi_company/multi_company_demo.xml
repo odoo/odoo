@@ -94,10 +94,6 @@
     Resource: product.product
     -->
 
-        <record id="Odoo1" model="product.category">
-            <field name="parent_id" ref="product.product_category_all"/>
-            <field name="name">Odoo Offers</field>
-        </record>
         <record id="product_product_odoo1" model="product.product">
             <field name="default_code">ODOO</field>
             <field name="list_price">35.0</field>
@@ -105,7 +101,7 @@
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field name="uom_po_id" ref="product.product_uom_unit"/>
             <field name="name">Odoo Offer</field>
-            <field name="categ_id" ref="Odoo1"/>
+            <field name="categ_id" ref="product.product_category_all"/>
         <field name="company_id" ref="res_company_odoo"/>
         </record>
 
@@ -143,7 +139,7 @@
             <field name="sequence_id" ref="account.sequence_sale_journal"/>
             <field name="default_credit_account_id" ref="account.a_sale"/>
             <field name="default_debit_account_id" ref="account.a_sale"/>
-            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
         </record>
@@ -155,7 +151,7 @@
             <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
             <field name="default_credit_account_id" ref="account.a_sale"/>
             <field name="default_debit_account_id" ref="account.a_sale"/>
-            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
         </record>
@@ -191,7 +187,7 @@
             <field name="sequence_id" ref="account.sequence_bank_journal"/>
             <field name="default_debit_account_id" ref="account.cash"/>
             <field name="default_credit_account_id" ref="account.cash"/>
-            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
         </record>
@@ -203,7 +199,7 @@
             <field name="sequence_id" ref="account.sequence_check_journal"/>
             <field name="default_debit_account_id" ref="account.cash"/>
             <field name="default_credit_account_id" ref="account.cash"/>
-            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
         </record>
@@ -215,7 +211,7 @@
             <field name="sequence_id" ref="account.sequence_cash_journal"/>
             <field name="default_debit_account_id" ref="account.cash"/>
             <field name="default_credit_account_id" ref="account.cash"/>
-            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
         </record>
@@ -228,7 +224,7 @@
             <field name="sequence_id" ref="account.sequence_sale_journal"/>
             <field name="default_credit_account_id" ref="account.a_sale"/>
             <field name="default_debit_account_id" ref="account.a_sale"/>
-            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
         </record>
@@ -240,7 +236,7 @@
             <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
             <field name="default_credit_account_id" ref="account.a_sale"/>
             <field name="default_debit_account_id" ref="account.a_sale"/>
-            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
         </record>
@@ -276,7 +272,7 @@
             <field name="sequence_id" ref="account.sequence_bank_journal"/>
             <field name="default_debit_account_id" ref="account.cash"/>
             <field name="default_credit_account_id" ref="account.cash"/>
-            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
         </record>
@@ -288,7 +284,7 @@
             <field name="sequence_id" ref="account.sequence_check_journal"/>
             <field name="default_debit_account_id" ref="account.cash"/>
             <field name="default_credit_account_id" ref="account.cash"/>
-            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
         </record>
@@ -300,7 +296,7 @@
             <field name="sequence_id" ref="account.sequence_cash_journal"/>
             <field name="default_debit_account_id" ref="account.cash"/>
             <field name="default_credit_account_id" ref="account.cash"/>
-            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
         </record>
@@ -314,7 +310,7 @@
             <field name="sequence_id" ref="account.sequence_sale_journal"/>
             <field name="default_credit_account_id" ref="account.a_sale"/>
             <field name="default_debit_account_id" ref="account.a_sale"/>
-            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
         </record>
@@ -326,7 +322,7 @@
             <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
             <field name="default_credit_account_id" ref="account.a_sale"/>
             <field name="default_debit_account_id" ref="account.a_sale"/>
-            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
         </record>
@@ -362,7 +358,7 @@
             <field name="sequence_id" ref="account.sequence_bank_journal"/>
             <field name="default_debit_account_id" ref="account.cash"/>
             <field name="default_credit_account_id" ref="account.cash"/>
-            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
         </record>
@@ -374,7 +370,7 @@
             <field name="sequence_id" ref="account.sequence_check_journal"/>
             <field name="default_debit_account_id" ref="account.cash"/>
             <field name="default_credit_account_id" ref="account.cash"/>
-            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
         </record>
@@ -386,7 +382,7 @@
             <field name="sequence_id" ref="account.sequence_cash_journal"/>
             <field name="default_debit_account_id" ref="account.cash"/>
             <field name="default_credit_account_id" ref="account.cash"/>
-            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
         </record>

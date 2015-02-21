@@ -23,7 +23,7 @@ from openerp.osv import fields, osv
 import time
 import datetime
 from openerp import tools
-from openerp.osv.orm import except_orm
+from openerp.exceptions import UserError
 from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
 
@@ -44,7 +44,7 @@ class fleet_vehicle_cost(osv.Model):
 
     def _set_odometer(self, cr, uid, id, name, value, args=None, context=None):
         if not value:
-            raise except_orm(_('Operation not allowed!'), _('Emptying the odometer value of a vehicle is not allowed.'))
+            raise UserError(_('Emptying the odometer value of a vehicle is not allowed.'))
         date = self.browse(cr, uid, id, context=context).date
         if not(date):
             date = fields.date.context_today(self, cr, uid, context=context)
@@ -110,13 +110,13 @@ class fleet_vehicle_state(osv.Model):
 
 class fleet_vehicle_model(osv.Model):
 
-    def _model_name_get_fnc(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
         for record in self.browse(cr, uid, ids, context=context):
-            name = record.modelname
+            name = record.name
             if record.brand_id.name:
-                name = record.brand_id.name + ' / ' + name
-            res[record.id] = name
+                name = record.brand_id.name + '/' + name
+            res.append((record.id, name))
         return res
 
     def on_change_brand(self, cr, uid, ids, model_id, context=None):
@@ -134,9 +134,8 @@ class fleet_vehicle_model(osv.Model):
     _order = 'name asc'
 
     _columns = {
-        'name': fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
-        'modelname': fields.char('Model name', required=True), 
-        'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
+        'name': fields.char('Model name', required=True),
+        'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Make', required=True, help='Make of the vehicle'),
         'vendors': fields.many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors'),
         'image': fields.related('brand_id', 'image', type="binary", string="Logo"),
         'image_medium': fields.related('brand_id', 'image_medium', type="binary", string="Logo (medium)"),
@@ -160,7 +159,7 @@ class fleet_vehicle_model_brand(osv.Model):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
-        'name': fields.char('Brand Name', required=True),
+        'name': fields.char('Make', required=True),
         'image': fields.binary("Logo",
             help="This field holds the image used as logo for the brand, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
@@ -189,7 +188,7 @@ class fleet_vehicle(osv.Model):
     def _vehicle_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = record.model_id.brand_id.name + '/' + record.model_id.modelname + ' / ' + record.license_plate
+            res[record.id] = record.model_id.brand_id.name + '/' + record.model_id.name + '/' + record.license_plate
         return res
 
     def return_action_to_open(self, cr, uid, ids, context=None):

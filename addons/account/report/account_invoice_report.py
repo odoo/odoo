@@ -69,7 +69,7 @@ class account_invoice_report(osv.osv):
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
+        'categ_id': fields.many2one('product.category','Product Category', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'commercial_partner_id': fields.many2one('res.partner', 'Partner Company', help="Commercial Entity"),
@@ -102,6 +102,7 @@ class account_invoice_report(osv.osv):
         'residual': fields.float('Total Residual', readonly=True),
         'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'country_id': fields.many2one('res.country', 'Country of the Partner Company'),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
     }
     _order = 'date desc'
 
@@ -114,7 +115,7 @@ class account_invoice_report(osv.osv):
         ],
         'account.invoice.line': [
             'account_id', 'invoice_id', 'price_subtotal', 'product_id',
-            'quantity', 'uos_id',
+            'quantity', 'uos_id', 'account_analytic_id',
         ],
         'product.product': ['product_tmpl_id'],
         'product.template': ['categ_id'],
@@ -125,7 +126,7 @@ class account_invoice_report(osv.osv):
 
     def _select(self):
         select_str = """
-            SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id,
+            SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id, sub.account_analytic_id,
                 sub.payment_term, sub.period_id, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
@@ -138,7 +139,7 @@ class account_invoice_report(osv.osv):
         select_str = """
                 SELECT min(ail.id) AS id,
                     ai.date_invoice AS date,
-                    ail.product_id, ai.partner_id, ai.payment_term, ai.period_id,
+                    ail.product_id, ai.partner_id, ai.payment_term, ai.period_id, ail.account_analytic_id,
                     u2.name AS uom_name,
                     ai.currency_id, ai.journal_id, ai.fiscal_position, ai.user_id, ai.company_id,
                     count(ail.*) AS nbr,
@@ -192,7 +193,7 @@ class account_invoice_report(osv.osv):
 
     def _group_by(self):
         group_by_str = """
-                GROUP BY ail.product_id, ai.date_invoice, ai.id,
+                GROUP BY ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
                     ai.partner_id, ai.payment_term, ai.period_id, u2.name, u2.id, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,
@@ -219,6 +220,3 @@ class account_invoice_report(osv.osv):
         )""" % (
                     self._table,
                     self._select(), self._sub_select(), self._from(), self._group_by()))
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

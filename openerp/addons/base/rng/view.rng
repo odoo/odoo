@@ -671,6 +671,21 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="pivot">
+        <rng:element name="pivot">
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="display_quantity"><rng:value>False</rng:value></rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="disable_linking"><rng:value>False</rng:value></rng:attribute>
+            </rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="button">
         <rng:element name="button">
             <rng:ref name="overload"/>
@@ -742,6 +757,7 @@
                     <rng:ref name="tree" />
                     <rng:ref name="notebook" />
                     <rng:ref name="graph" />
+                    <rng:ref name="pivot" />
                     <rng:ref name="calendar" />
                     <rng:ref name="gantt" />
                     <rng:ref name="xpath" />
@@ -769,6 +785,7 @@
             <rng:ref name="tree" />
             <rng:ref name="notebook" />
             <rng:ref name="graph" />
+            <rng:ref name="pivot" />
             <rng:ref name="calendar" />
             <rng:ref name="data" />
             <rng:ref name="gantt" />

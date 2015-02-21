@@ -108,4 +108,3 @@ class product_product(osv.osv):
         'alert_time': fields.integer('Product Alert Time',
             help='When a new a Serial Number is issued, this is the number of days before an alert should be notified.'),
     }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

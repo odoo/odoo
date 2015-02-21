@@ -23,5 +23,3 @@ pads (by default, http://etherpad.com/).
     'web': True,
     'qweb' : ['static/src/xml/*.xml'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

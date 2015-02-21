@@ -27,6 +27,7 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 import openerp
+from openerp.exceptions import UserError
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
@@ -64,7 +65,7 @@ class procurement_group(osv.osv):
         'procurement_ids': fields.one2many('procurement.order', 'group_id', 'Procurements'),
     }
     _defaults = {
-        'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or '',
+        'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').next_by_code(cr, uid, 'procurement.group') or '',
         'move_type': lambda self, cr, uid, c: 'direct'
     }
 
@@ -152,8 +153,7 @@ class procurement_order(osv.osv):
             if s['state'] == 'cancel':
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid Action!'),
-                        _('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
+                raise UserError(_('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def do_view_procurements(self, cr, uid, ids, context=None):
@@ -344,4 +344,3 @@ class procurement_order(osv.osv):
                     pass
 
         return {}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

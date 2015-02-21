@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class hr_holidays_summary_dept(osv.osv_memory):
     _name = 'hr.holidays.summary.dept'
@@ -41,17 +42,10 @@ class hr_holidays_summary_dept(osv.osv_memory):
     def print_report(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
         if not data['depts']:
-            raise osv.except_osv(_('Error!'), _('You have to select at least one Department. And try again.'))
+            raise UserError(_('You have to select at least one Department. And try again.'))
         datas = {
              'ids': [],
-             'model': 'ir.ui.menu',
+             'model': 'hr.department',
              'form': data
             }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'holidays.summary',
-            'datas': datas,
-            }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        return self.pool['report'].get_action(cr, uid, data['depts'], 'hr_holidays.report_holidayssummary', data=datas, context=context)

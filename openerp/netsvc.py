@@ -137,6 +137,8 @@ def init_logger():
 
     # create a format for log messages and dates
     format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s'
+    # Normal Handler on stderr
+    handler = logging.StreamHandler()
 
     if tools.config['syslog']:
         # SysLog Handler
@@ -163,10 +165,6 @@ def init_logger():
                 handler = logging.FileHandler(logf)
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
-            handler = logging.StreamHandler(sys.stdout)
-    else:
-        # Normal Handler on standard output
-        handler = logging.StreamHandler(sys.stdout)
 
     # Check that handler.stream has a fileno() method: when running OpenERP
     # behind Apache with mod_wsgi, handler.stream will have type mod_wsgi.Log,
@@ -221,5 +219,3 @@ PSEUDOCONFIG_MAPPER = {
     'error': ['openerp:ERROR', 'werkzeug:ERROR'],
     'critical': ['openerp:CRITICAL', 'werkzeug:CRITICAL'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

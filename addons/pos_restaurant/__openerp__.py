@@ -48,9 +48,9 @@ This module adds several restaurant features to the Point of Sale:
         'static/src/xml/multiprint.xml',
         'static/src/xml/splitbill.xml',
         'static/src/xml/printbill.xml',
+        'static/src/xml/notes.xml',
+        'static/src/xml/floors.xml',
     ],
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

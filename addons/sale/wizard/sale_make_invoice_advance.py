@@ -21,6 +21,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
@@ -31,17 +32,13 @@ class sale_advance_payment_inv(osv.osv_memory):
             [('all', 'Invoice the whole sales order'), ('percentage','Percentage'), ('fixed','Fixed price (deposit)'),
                 ('lines', 'Some order lines')],
             'What do you want to invoice?', required=True,
-            help="""Use Invoice the whole sale order to create the final invoice.
-                Use Percentage to invoice a percentage of the total amount.
-                Use Fixed Price to invoice a specific amound in advance.
-                Use Some Order Lines to invoice a selection of the sales order lines."""),
+            help="""Use Invoice the whole sale order to create the final invoice.\nUse Percentage to invoice a percentage of the total amount.\nUse Fixed Price to invoice a specific amount in advance.\nUse Some Order Lines to invoice a selection of the sales order lines."""),
         'qtty': fields.float('Quantity', digits=(16, 2), required=True),
         'product_id': fields.many2one('product.product', 'Advance Product',
             domain=[('type', '=', 'service')],
-            help="""Select a product of type service which is called 'Advance Product'.
-                You may have to create it and set it as a default value on this field."""),
+            help="Select a product of type service which is called 'Advance Product'.\nYou may have to create it and set it as a default value on this field."),
         'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Account'),
-            help="The amount to be invoiced in advance."),
+            help="The amount to be invoiced in advance. \nTaxes are not taken into account for advance invoices."),
     }
 
     def _get_advance_product(self, cr, uid, context=None):
@@ -92,18 +89,17 @@ class sale_advance_payment_inv(osv.osv_memory):
                 prop_id = prop and prop.id or False
                 account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position or False, prop_id)
                 if not account_id:
-                    raise osv.except_osv(_('Configuration Error!'),
+                    raise UserError(
                             _('There is no income account defined as global property.'))
                 res['account_id'] = account_id
             if not res.get('account_id'):
-                raise osv.except_osv(_('Configuration Error!'),
+                raise UserError(
                         _('There is no income account defined for this product: "%s" (id:%d).') % \
                             (wizard.product_id.name, wizard.product_id.id,))
 
             # determine invoice amount
             if wizard.amount <= 0.00:
-                raise osv.except_osv(_('Incorrect Data'),
-                    _('The value of Advance Amount must be positive.'))
+                raise UserError(_('The value of Advance Amount must be positive.'))
             if wizard.advance_payment_method == 'percentage':
                 inv_amount = sale.amount_total * wizard.amount / 100
                 if not res.get('name'):
@@ -150,7 +146,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'comment': '',
                 'payment_term': sale.payment_term.id,
                 'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id,
-                'section_id': sale.section_id.id,
+                'team_id': sale.team_id.id,
             }
             result.append((sale.id, inv_values))
         return result
@@ -214,6 +210,3 @@ class sale_advance_payment_inv(osv.osv_memory):
             'context': "{'type': 'out_invoice'}",
             'type': 'ir.actions.act_window',
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -26,6 +26,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 import pytz
 from openerp import SUPERUSER_ID
+from openerp.exceptions import UserError
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
@@ -80,8 +81,15 @@ class sale_order(osv.osv):
         vals['partner_dest_id'] = order.partner_shipping_id.id
         return vals
 
+    def _prepare_invoice(self, cr, uid, order, lines, context=None):
+        if context is None:
+            context = {}
+        invoice_vals = super(sale_order, self)._prepare_invoice(cr, uid, order, lines, context=context)
+        invoice_vals['incoterms_id'] = order.incoterm.id or False
+        return invoice_vals
+
     _columns = {
-        'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
+        'incoterm': fields.many2one('stock.incoterms', 'Incoterms', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
             'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""Pick 'Deliver each product when available' if you allow partial delivery."""),
@@ -94,7 +102,7 @@ class sale_order(osv.osv):
         'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
                 'procurement.order': (_get_orders_procurements, ['state'], 10)
             }),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
     }
     _defaults = {
@@ -156,9 +164,7 @@ class sale_order(osv.osv):
         for sale in self.browse(cr, uid, ids, context=context):
             for pick in sale.picking_ids:
                 if pick.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(
-                        _('Cannot cancel sales order!'),
-                        _('You must first cancel all delivery order(s) attached to this sales order.'))
+                    raise UserError(_('Cannot cancel sales order!') + '\n' + _('You must first cancel all delivery order(s) attached to this sales order.'))
             stock_obj.signal_workflow(cr, uid, [p.id for p in sale.picking_ids], 'button_cancel')
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
@@ -263,15 +269,15 @@ class sale_order_line(osv.osv):
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
 #            qty = qty - qty % q + q
             if qty and (q and not (qty % q) == 0):
-                ean = pack.ean or _('(n/a)')
+                barcode = pack.barcode or _('(n/a)')
                 qty_pack = pack.qty
                 type_ul = pack.ul
                 if not warning_msgs:
                     warn_msg = _("You selected a quantity of %d Units.\n"
                                 "But it's not compatible with the selected packaging.\n"
                                 "Here is a proposition of quantities according to the packaging:\n"
-                                "EAN: %s Quantity: %s Type of ul: %s") % \
-                                    (qty, ean, qty_pack, type_ul.name)
+                                "Barcode: %s Quantity: %s Type of ul: %s") % \
+                                    (qty, barcode, qty_pack, type_ul.name)
                     warning_msgs += _("Picking Information ! : ") + warn_msg + "\n\n"
                 warning = {
                        'title': _('Configuration Error!'),
@@ -453,7 +459,46 @@ class stock_picking(osv.osv):
                 'fiscal_position': sale.fiscal_position.id,
                 'payment_term': sale.payment_term.id,
                 'user_id': sale.user_id.id,
-                'section_id': sale.section_id.id,
+                'team_id': sale.team_id.id,
                 'name': sale.client_order_ref or '',
                 })
         return inv_vals
+
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+    _columns = {
+        'incoterms_id': fields.many2one(
+            'stock.incoterms',
+            "Incoterms",
+            help="Incoterms are series of sales terms. They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices.",
+            readonly=True, 
+            states={'draft': [('readonly', False)]}),
+    }
+
+class sale_advance_payment_inv(osv.TransientModel):
+    _inherit = 'sale.advance.payment.inv'
+
+    def _prepare_advance_invoice_vals(self, cr, uid, ids, context=None):
+        result = super(sale_advance_payment_inv,self)._prepare_advance_invoice_vals(cr, uid, ids, context=context)
+        if context is None:
+            context = {}
+
+        sale_obj = self.pool.get('sale.order')
+        sale_ids = context.get('active_ids', [])
+        res = []
+        for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
+            elem = filter(lambda t: t[0] == sale.id, result)[0]
+            elem[1]['incoterms_id'] = sale.incoterm.id or False
+            res.append(elem)
+        return res
+
+
+class procurement_order(osv.osv):
+    _inherit = "procurement.order"
+
+    def _run_move_create(self, cr, uid, procurement, context=None):
+        vals = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
+        #copy the sequence from the sale order line on the stock move
+        if procurement.sale_line_id:
+            vals.update({'sequence': procurement.sale_line_id.sequence})
+        return vals

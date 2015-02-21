@@ -959,5 +959,3 @@ def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=Fa
 
 # keeps convention of convert.py
 convert_yaml_import = yaml_import
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

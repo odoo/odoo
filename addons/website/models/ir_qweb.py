@@ -29,6 +29,7 @@ from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATET
 from openerp.tools import html_escape as escape
 from openerp.addons.web.http import request
 from openerp.addons.base.ir import ir_qweb
+import simplejson
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -45,29 +46,68 @@ class QWeb(orm.AbstractModel):
         'a': 'href',
     }
 
-    def add_template(self, qcontext, name, node):
-        # preprocessing for multilang static urls
-        if request.website:
-            for tag, attr in self.URL_ATTRS.iteritems():
-                for e in node.iterdescendants(tag=tag):
-                    url = e.get(attr)
-                    if url:
-                        e.set(attr, qcontext.get('url_for')(url))
-        super(QWeb, self).add_template(qcontext, name, node)
+    re_remove_spaces = re.compile('\s+')
+    PRESERVE_WHITESPACE = [
+        'pre',
+        'textarea',
+        'script',
+        'style',
+    ]
 
-    def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
-        URL_ATTRS = self.URL_ATTRS.get(element.tag)
-        is_website = request.website
-        for att, val in super(QWeb, self).render_att_att(element, attribute_name, attribute_value, qwebcontext):
-            if is_website and att == URL_ATTRS and isinstance(val, basestring):
-                val = qwebcontext.get('url_for')(val)
-            yield (att, val)
+    CDN_TRIGGERS = {
+        'link':    'href',
+        'script':  'src',
+        'img':     'src',
+    }
 
+    def render_attribute(self, element, name, value, qwebcontext):
+        context = qwebcontext.context or {}
+        if not context.get('rendering_bundle'):
+            if name == self.URL_ATTRS.get(element.tag):
+                value = qwebcontext.get('url_for')(value)
+            if request and request.website and request.website.cdn_activated and name == self.CDN_TRIGGERS.get(element.tag):
+                value = request.website.get_cdn_url(value)
+
+        return super(QWeb, self).render_attribute(element, name, value, qwebcontext)
+
+    def render_tag_snippet(self, element, template_attributes, generated_attributes, qwebcontext):
+        cr = qwebcontext['request'].cr
+        uid = qwebcontext['request'].uid
+        view_reg = self.pool['ir.ui.view']
+        page_xmlid = self.eval_format(template_attributes["snippet"], qwebcontext)
+        view = view_reg.browse(cr, uid, view_reg.search(cr, uid, [('key', '=', page_xmlid)]))
+        generated_attributes += " " + "".join([
+            'data-oe-name="%s"' % view.name,
+            'data-oe-type="snippet"',
+            'data-oe-thumbnail="%s"' % template_attributes.get('thumbnail', "oe-thumbnail")])
+
+        template_attributes['call'] = template_attributes['snippet']
+        return self.render_tag_call(element, template_attributes, generated_attributes, qwebcontext)
+
+    def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
+        if request and request.website and request.website.cdn_activated:
+            if qwebcontext.context is None:
+                qwebcontext.context = {}
+            qwebcontext.context['url_for'] = request.website.get_cdn_url
+        return super(QWeb, self).render_tag_call_assets(element, template_attributes, generated_attributes, qwebcontext)
 
     def get_converter_for(self, field_type):
         return self.pool.get(
             'website.qweb.field.' + field_type,
             self.pool['website.qweb.field'])
+
+    def render_text(self, text, element, qwebcontext):
+        compress = request and not request.debug and request.website and request.website.compress_html
+        if compress and element.tag not in self.PRESERVE_WHITESPACE:
+            text = self.re_remove_spaces.sub(' ', text.lstrip())
+        return super(QWeb, self).render_text(text, element, qwebcontext)
+
+    def render_tail(self, tail, element, qwebcontext):
+        compress = request and not request.debug and request.website and request.website.compress_html
+        if compress and element.getparent().tag not in self.PRESERVE_WHITESPACE:
+            # No need to recurse because those tags children are not html5 parser friendly
+            tail = self.re_remove_spaces.sub(' ', tail.rstrip())
+        return super(QWeb, self).render_tail(tail, element, qwebcontext)
 
 class Field(orm.AbstractModel):
     _name = 'website.qweb.field'
@@ -228,28 +268,32 @@ class ManyToOne(orm.AbstractModel):
     _name = 'website.qweb.field.many2one'
     _inherit = ['website.qweb.field', 'ir.qweb.field.many2one']
 
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        attrs = super(ManyToOne, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=context)
+        many2one = getattr(record, field_name)
+        if many2one:
+            return itertools.chain(attrs, [
+                    ('data-oe-many2one-id', many2one.id),
+                    ('data-oe-many2one-model', many2one._name)])
+        else:
+            return attrs
+
     def from_html(self, cr, uid, model, field, element, context=None):
-        # FIXME: layering violations all the things
         Model = self.pool[element.get('data-oe-model')]
         M2O = self.pool[field.comodel_name]
         field_name = element.get('data-oe-field')
         id = int(element.get('data-oe-id'))
-        # FIXME: weird things are going to happen for char-type _rec_name
-        value = html_to_text(element)
+        many2one_id = int(element.get('data-oe-many2one-id'))
 
-        # if anything blows up, just ignore it and bail
-        try:
-            # get parent record
-            [obj] = Model.read(cr, uid, [id], [field_name])
-            # get m2o record id
-            (m2o_id, _) = obj[field_name]
-            # assume _rec_name and write directly to it
-            M2O.write(cr, uid, [m2o_id], {
-                M2O._rec_name: value
+        if many2one_id and M2O.exists(cr, uid, [many2one_id]):
+            # save the new id of the many2one
+            Model.write(cr, uid, [id], {
+                field_name: many2one_id
             }, context=context)
-        except:
-            logger.exception("Could not save %r to m2o field %s of model %s",
-                             value, field_name, Model._name)
 
         # not necessary, but might as well be explicit about it
         return None
@@ -264,7 +308,6 @@ class HTML(orm.AbstractModel):
         content.extend(html.tostring(child)
                        for child in element.iterchildren(tag=etree.Element))
         return '\n'.join(content)
-
 
 class Image(orm.AbstractModel):
     """
@@ -298,6 +341,9 @@ class Image(orm.AbstractModel):
             max_size = '%sx%s' % (max_width, max_height)
 
         src = self.pool['website'].image_url(cr, uid, record, field_name, max_size)
+        if options.get('resize'):
+            src = "%s/%s" % (src, options.get('resize'))
+
         img = '<img class="%s" src="%s" style="%s"/>' % (classes, src, options.get('style', ''))
         return ir_qweb.HTMLSafe(img)
 
@@ -419,8 +465,24 @@ class Contact(orm.AbstractModel):
     _name = 'website.qweb.field.contact'
     _inherit = ['ir.qweb.field.contact', 'website.qweb.field.many2one']
 
-    def from_html(self, cr, uid, model, field, element, context=None):
-        return None
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        attrs = super(Contact, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=context)
+        many2one = getattr(record, field_name)
+        if many2one:
+            return itertools.chain(attrs, [('data-oe-contact-options', simplejson.dumps(options))])
+        else:
+            return attrs
+
+    # helper to call the rendering of contact field in website
+    def get_record_to_html(self, cr, uid, ids, options=None, context=None):
+        node = self.record_to_html(cr, uid,
+            'record', {'record': self.pool['res.partner'].browse(cr, uid, ids[0], context=context)},
+            options=options, context=context)
+        return node and node.__html__()
 
 class QwebView(orm.AbstractModel):
     _name = 'website.qweb.field.qweb'

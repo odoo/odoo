@@ -30,7 +30,6 @@ class report_project_task_user(osv.osv):
     _columns = {
         'name': fields.char('Task Summary', readonly=True),
         'user_id': fields.many2one('res.users', 'Assigned To', readonly=True),
-        'reviewer_id': fields.many2one('res.users', 'Reviewer', readonly=True),
         'date_start': fields.datetime('Assignation Date', readonly=True),
         'no_of_days': fields.integer('# of Days', size=128, readonly=True),
         'date_end': fields.datetime('Ending Date', readonly=True),
@@ -71,7 +70,6 @@ class report_project_task_user(osv.osv):
                     t.date_deadline as date_deadline,
                     abs((extract('epoch' from (t.write_date-t.date_start)))/(3600*24))  as no_of_days,
                     t.user_id,
-                    t.reviewer_id,
                     progress as progress,
                     t.project_id,
                     t.effective_hours as hours_effective,
@@ -105,7 +103,6 @@ class report_project_task_user(osv.osv):
                     date_deadline,
                     date_last_stage_update,
                     t.user_id,
-                    t.reviewer_id,
                     t.project_id,
                     t.priority,
                     name,

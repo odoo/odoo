@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="web.tip" id="project_tip_1">
+        <field name="title"><![CDATA[<b>Create new tasks</b>]]></field>
+        <field name="description">By clicking here, you can access the stages view of this project where you will be able to manage all your tasks.</field>
+        <field name="action_id" ref="open_view_project_all"/> 
+        <field name="model">project.project</field>
+        <field name="mode">form</field>
+        <field name="trigger_selector">.oe_form_buttons_view:visible,div.oe_right.oe_button_box > button</field>
+        <field name="highlight_selector">div.oe_right.oe_button_box:visible > button:nth-child(1)</field>
+        <field name="placement">bottom</field>
+    </record>
+    
+    <record model="web.tip" id="project_tip_2">
+        <field name="description">Move one of your tasks to the next stage. This allows you to track progress of each task.</field>
+        <field name="action_id" ref="action_view_task"/> 
+        <field name="model">project.task</field>
+        <field name="mode">kanban</field>
+        <field name="trigger_selector">.oe_kanban_record:visible</field>
+        <field name="highlight_selector">.oe_kanban_record:visible</field>
+        <field name="end_event">mousedown</field>
+        <field name="placement">top</field>
+    </record>
+    
+    <record model="web.tip" id="project_tip_3">
+        <field name="description">This where you can track history and collaborate on tasks. Send a new message to notify followers or log an internal note to keep history but don’t notify followers.</field>
+        <field name="action_id" ref="action_view_task"/>
+        <field name="model">project.task</field>
+        <field name="mode">form</field>
+        <field name="trigger_selector">div.oe_mail div.oe_thread:visible > div.oe_msg_notification:visible, .oe_form_buttons_view:visible</field>
+        <field name="highlight_selector">div.oe_mail > :nth-child(1):visible</field>
+        <field name="placement">top</field>
+    </record>
+    
+    <record model="web.tip" id="project_tip_4">
+         <field name="description">To go back to your tasks pipeline, use the breadcrumb</field>
+         <field name="action_id" ref="action_view_task"/>
+         <field name="model">project.task</field>
+         <field name="mode">form</field>
+         <field name="trigger_selector">.oe_form_buttons_view:visible,ol.breadcrumb a,div.oe_msg_notification:visible</field>
+         <field name="highlight_selector">ol.breadcrumb:visible a:last</field>
+         <field name="placement">bottom</field>
+     </record>   
+</odoo>

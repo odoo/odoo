@@ -34,7 +34,8 @@
         'board',
         'mail',
         'resource',
-        'web_kanban'
+        'web_kanban',
+        'web_tip',
     ],
     'description': """
 Track multi-level projects, tasks, work done on tasks
@@ -62,6 +63,7 @@ Dashboard / Reports for Project Management will include:
         'report/project_cumulative.xml',
         'res_config_view.xml',
         'views/project.xml',
+        'project_tip_data.xml',
     ],
     'demo': ['project_demo.xml'],
     'test': [
@@ -70,4 +72,3 @@ Dashboard / Reports for Project Management will include:
     'auto_install': False,
     'application': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

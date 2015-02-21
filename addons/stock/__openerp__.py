@@ -51,7 +51,7 @@ Dashboard / Reports for Warehouse Management will include:
 * Moves Analysis
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['product', 'procurement', 'board', 'web_kanban_gauge', 'web_kanban_sparkline'],
+    'depends': ['product', 'procurement', 'board', 'web_kanban_gauge', 'web_kanban_sparkline', 'barcodes'],
     'category': 'Warehouse Management',
     'sequence': 16,
     'demo': [
@@ -65,6 +65,7 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_location_demo_cpu3.yml',
     ],
     'data': [
+        'data/default_barcode_patterns.xml',
         'security/stock_security.xml',
         'security/ir.model.access.csv',
         'stock_data.xml',
@@ -89,6 +90,7 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_stockpicking.xml',
         'views/report_stockinventory.xml',
         'views/stock.xml',
+        'report/report_stock_forecast.xml',
     ],
     'test': [
         'test/inventory.yml',
@@ -106,5 +108,3 @@ Dashboard / Reports for Warehouse Management will include:
     'auto_install': False,
     'qweb': ['static/src/xml/picking.xml'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -311,9 +311,8 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
             self.module_list = all_modules;
 
             var loaded = self.load_translations();
-            var datejs_locale = "/web/static/lib/datejs/globalization/" + self.user_context.lang.replace("_", "-") + ".js";
-
-            var file_list = [ datejs_locale ];
+            var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
+            var file_list = [ locale ];
             if(to_load.length) {
                 loaded = $.when(
                     loaded,
@@ -329,13 +328,6 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
             }).done(function() {
                 self.on_modules_loaded();
                 self.trigger('module_loaded');
-                if (!Date.CultureInfo.pmDesignator) {
-                    // If no am/pm designator is specified but the openerp
-                    // datetime format uses %i, date.js won't be able to
-                    // correctly format a date. See bug#938497.
-                    Date.CultureInfo.amDesignator = 'AM';
-                    Date.CultureInfo.pmDesignator = 'PM';
-                }
             });
         });
     },
@@ -547,16 +539,12 @@ instance.web.TranslationDataBase.include({
 });
 
 /** Custom jQuery plugins */
-$.browser = $.browser || {};
-if(navigator.appVersion.indexOf("MSIE") !== -1) {
-    $.browser.msie = 1;
-}
 $.fn.getAttributes = function() {
     var o = {};
     if (this.length) {
         for (var attr, i = 0, attrs = this[0].attributes, l = attrs.length; i < l; i++) {
             attr = attrs.item(i);
-            o[attr.nodeName] = attr.nodeValue;
+            o[attr.nodeName] = attr.value;
         }
     }
     return o;
@@ -635,6 +623,7 @@ instance.web._lt = function (s) {
 instance.web.qweb.debug = instance.session.debug;
 _.extend(instance.web.qweb.default_dict, {
     '__debug__': instance.session.debug,
+    'moment': function(date) { return new moment(date); },
 });
 instance.web.qweb.preprocess_node = function() {
     // Note that 'this' is the Qweb Node
@@ -796,5 +785,3 @@ $.fn.tooltip.Constructor.prototype.show = function () {
 instance.web.client_actions = new instance.web.Registry();
 
 })();
-
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

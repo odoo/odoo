@@ -4,13 +4,15 @@ from openerp.osv import fields, osv
 
 class res_users(osv.Model):
     """ Update of res.users class
-        - if adding groups to an user, check if base.group_user is in it
-        (member of 'Employee'), create an employee form linked to it.
-    """
+
+     - add field for the related employee of the user
+     - if adding groups to an user, check if base.group_user is in it (member of
+       'Employee'), create an employee form linked to it. """
     _name = 'res.users'
     _inherit = ['res.users']
 
     _columns = {
+        'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
         'display_employees_suggestions': fields.boolean("Display Employees Suggestions"),
     }
 

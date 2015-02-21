@@ -42,7 +42,7 @@
     <!-- Budget lines -->
     <data noupdate="1">
         <record id="crossovered_budget_lines_0" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_consultancy"/>
+            <field name="analytic_account_id" ref="analytic.analytic_consultancy"/>
             <field name="general_budget_id" ref="account_budget_post_purchase0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-01-01'" name="date_from"/>
             <field eval="-500.0" name="planned_amount"/>
@@ -50,7 +50,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-01-31'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_1" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_consultancy"/>
+            <field name="analytic_account_id" ref="analytic.analytic_consultancy"/>
             <field name="general_budget_id" ref="account_budget_post_purchase0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-02-01'" name="date_from"/>
             <field eval="-250.0" name="planned_amount"/>
@@ -58,7 +58,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-02-28'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_2" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_consultancy"/>
+            <field name="analytic_account_id" ref="analytic.analytic_consultancy"/>
             <field name="general_budget_id" ref="account_budget_post_sales0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-01-01'" name="date_from"/>
             <field eval="500.0" name="planned_amount"/>
@@ -66,7 +66,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-01-31'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_3" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_consultancy"/>
+            <field name="analytic_account_id" ref="analytic.analytic_consultancy"/>
             <field name="general_budget_id" ref="account_budget_post_sales0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-02-07'" name="date_from"/>
             <field eval="900.0" name="planned_amount"/>
@@ -74,7 +74,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-02-28'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_4" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_consultancy"/>
+            <field name="analytic_account_id" ref="analytic.analytic_consultancy"/>
             <field name="general_budget_id" ref="account_budget_post_sales0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-03-01'" name="date_from"/>
             <field eval="300.0" name="planned_amount"/>
@@ -84,7 +84,7 @@
     </data>
     <data noupdate="1">
         <record id="crossovered_budget_lines_5" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_super_product_trainings"/>
+            <field name="analytic_account_id" ref="analytic.analytic_super_product_trainings"/>
             <field name="general_budget_id" ref="account_budget_post_sales0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-03-16'" name="date_from"/>
             <field eval="375.0" name="planned_amount"/>
@@ -93,7 +93,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-03-31'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_6" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_super_product_trainings"/>
+            <field name="analytic_account_id" ref="analytic.analytic_super_product_trainings"/>
             <field name="general_budget_id" ref="account_budget_post_purchase0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-04-01'" name="date_from"/>
             <field eval="-150.0" name="planned_amount"/>
@@ -101,7 +101,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-04-30'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_7" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_super_product_trainings"/>
+            <field name="analytic_account_id" ref="analytic.analytic_super_product_trainings"/>
             <field name="general_budget_id" ref="account_budget_post_sales0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-05-01'" name="date_from"/>
             <field eval="375.0" name="planned_amount"/>
@@ -112,7 +112,7 @@
     </data>
     <data noupdate="1">
         <record id="crossovered_budget_lines_8" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_seagate_p1"/>
+            <field name="analytic_account_id" ref="analytic.analytic_seagate_p1"/>
             <field name="general_budget_id" ref="account_budget_post_purchase0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-06-01'" name="date_from"/>
             <field eval="-7500.0" name="planned_amount"/>
@@ -120,7 +120,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-06-15'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_9" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_seagate_p1"/>
+            <field name="analytic_account_id" ref="analytic.analytic_seagate_p1"/>
             <field name="general_budget_id" ref="account_budget_post_purchase0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-06-16'" name="date_from"/>
             <field eval="-5000.0" name="planned_amount"/>
@@ -128,7 +128,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-06-30'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_10" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_seagate_p1"/>
+            <field name="analytic_account_id" ref="analytic.analytic_seagate_p1"/>
             <field name="general_budget_id" ref="account_budget_post_purchase0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-07-01'" name="date_from"/>
             <field eval="-2000.0" name="planned_amount"/>
@@ -136,7 +136,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-07-15'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_11" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_seagate_p1"/>
+            <field name="analytic_account_id" ref="analytic.analytic_seagate_p1"/>
             <field name="general_budget_id" ref="account_budget_post_sales0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-07-16'" name="date_from"/>
             <field eval="20000.0" name="planned_amount"/>
@@ -144,7 +144,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-07-31'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_12" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_seagate_p1"/>
+            <field name="analytic_account_id" ref="analytic.analytic_seagate_p1"/>
             <field name="general_budget_id" ref="account_budget_post_sales0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-08-01'" name="date_from"/>
             <field eval="20000.0" name="planned_amount"/>
@@ -154,7 +154,7 @@
     </data>
     <data noupdate="1">
         <record id="crossovered_budget_lines_13" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_seagate_p2"/>
+            <field name="analytic_account_id" ref="analytic.analytic_seagate_p2"/>
             <field name="general_budget_id" ref="account_budget_post_purchase0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-08-16'" name="date_from"/>
             <field eval="-3000.0" name="planned_amount"/>
@@ -162,7 +162,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-08-31'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_14" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_seagate_p2"/>
+            <field name="analytic_account_id" ref="analytic.analytic_seagate_p2"/>
             <field name="general_budget_id" ref="account_budget_post_purchase0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-09-01'" name="date_from"/>
             <field eval="-1000.0" name="planned_amount"/>
@@ -170,7 +170,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-09-15'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_15" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_seagate_p2"/>
+            <field name="analytic_account_id" ref="analytic.analytic_seagate_p2"/>
             <field name="general_budget_id" ref="account_budget_post_sales0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-09-16'" name="date_from"/>
             <field eval="10000.0" name="planned_amount"/>
@@ -178,7 +178,7 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-09-30'" name="date_to"/>
         </record>
         <record id="crossovered_budget_lines_16" model="crossovered.budget.lines">
-            <field name="analytic_account_id" ref="account.analytic_seagate_p2"/>
+            <field name="analytic_account_id" ref="analytic.analytic_seagate_p2"/>
             <field name="general_budget_id" ref="account_budget_post_sales0"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-10-01'" name="date_from"/>
             <field eval="10000.0" name="planned_amount"/>

@@ -25,6 +25,7 @@ from lxml import etree
 from openerp.osv import fields, osv
 from openerp.osv.orm import setup_modifiers
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class account_common_report(osv.osv_memory):
     _name = "account.common.report"
@@ -44,7 +45,7 @@ class account_common_report(osv.osv_memory):
         'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
         'company_id': fields.related('chart_account_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', help='Keep empty for all open fiscal year'),
-        'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),
+        'filter': fields.selection([('filter_no', 'Do not apply filter'), ('filter_date', 'Filter by date'), ('filter_period', 'Filter by period')], "Filter by", required=True),
         'period_from': fields.many2one('account.period', 'Start Period'),
         'period_to': fields.many2one('account.period', 'End Period'),
         'journal_ids': fields.many2many('account.journal', string='Journals', required=True),
@@ -160,7 +161,7 @@ class account_common_report(osv.osv_memory):
             result['date_to'] = data['form']['date_to']
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
-                raise osv.except_osv(_('Error!'),_('Select a starting and an ending period.'))
+                raise UserError(_('Select a starting and an ending period.'))
             result['period_from'] = data['form']['period_from']
             result['period_to'] = data['form']['period_to']
         return result
@@ -182,6 +183,3 @@ class account_common_report(osv.osv_memory):
         data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
         data['form']['used_context'] = dict(used_context, lang=context.get('lang', 'en_US'))
         return self._print_report(cr, uid, ids, data, context=context)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

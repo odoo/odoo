@@ -48,7 +48,6 @@ This is the base module to manage the accounting chart for Dominican Republic.
     'depends': ['account', 'base_iban'],
     'data': [
         # basic accounting data
-        'data/ir_sequence_type.xml',
         'data/ir_sequence.xml',
         'data/account_journal.xml',
         'data/account.account.type.csv',
@@ -68,5 +67,3 @@ This is the base module to manage the accounting chart for Dominican Republic.
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

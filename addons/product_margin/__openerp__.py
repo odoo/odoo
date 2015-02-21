@@ -43,4 +43,3 @@ The wizard to launch the report has several options to help you get the data you
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

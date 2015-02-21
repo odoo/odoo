@@ -2,10 +2,8 @@
 # test cases for new-style fields
 #
 from datetime import date, datetime
-from collections import defaultdict
 
 from openerp.tests import common
-from openerp.exceptions import except_orm
 
 
 class TestNewFields(common.TransactionCase):
@@ -34,7 +32,7 @@ class TestNewFields(common.TransactionCase):
         # field access fails on multiple records
         records = self.env['test_new_api.message'].search([])
         assert len(records) > 1
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValueError):
             faulty = records.body
 
     def test_01_basic_set_assertion(self):
@@ -47,7 +45,7 @@ class TestNewFields(common.TransactionCase):
         # field assignment fails on multiple records
         records = self.env['test_new_api.message'].search([])
         assert len(records) > 1
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValueError):
             records.body = 'Faulty'
 
     def test_10_computed(self):

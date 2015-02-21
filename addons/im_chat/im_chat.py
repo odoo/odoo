@@ -5,10 +5,12 @@ import logging
 import time
 import uuid
 import random
-
+import re
 import simplejson
-
 import openerp
+import cgi
+
+from openerp import tools
 from openerp.http import request
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
@@ -133,6 +135,34 @@ class im_chat_session(osv.Model):
                 user = self.pool['res.users'].read(cr, uid, user_id, ['name'], context=context)
                 self.pool["im_chat.message"].post(cr, uid, uid, session.uuid, "meta", user['name'] + " joined the conversation.", context=context)
 
+    def remove_user(self, cr, uid, session_id, context=None):
+        """ private implementation of removing a user from a given session (and notify the other people) """
+        session = self.browse(cr, openerp.SUPERUSER_ID, session_id, context=context)
+        # send a message to the conversation
+        user = self.pool['res.users'].read(cr, uid, uid, ['name'], context=context)
+        self.pool["im_chat.message"].post(cr, uid, uid, session.uuid, "meta", user['name'] + " left the conversation.", context=context)
+        # close his session state, and remove the user from session
+        self.update_state(cr, uid, session.uuid, 'closed', context=None)
+        self.write(cr, uid, [session.id], {"user_ids": [(3, uid)]}, context=context)
+        # notify the all the channel users and anonymous channel
+        notifications = []
+        for channel_user_id in session.user_ids:
+            info = self.session_info(cr, channel_user_id.id, [session.id], context=context)
+            notifications.append([(cr.dbname, 'im_chat.session', channel_user_id.id), info])
+        # anonymous are not notified when a new user left : cannot exec session_info as uid = None
+        info = self.session_info(cr, openerp.SUPERUSER_ID, [session.id], context=context)
+        notifications.append([session.uuid, info])
+        self.pool['bus.bus'].sendmany(cr, uid, notifications)
+
+    def quit_user(self, cr, uid, uuid, context=None):
+        """ action of leaving a given session """
+        sids = self.search(cr, uid, [('uuid', '=', uuid)], context=context, limit=1)
+        for session in self.browse(cr, openerp.SUPERUSER_ID, sids, context=context):
+            if uid and uid in [u.id for u in session.user_ids] and len(session.user_ids) > 2:
+                self.remove_user(cr, uid, session.id, context=context)
+                return True
+            return False
+
     def get_image(self, cr, uid, uuid, user_id, context=None):
         """ get the avatar of a user in the given session """
         #default image
@@ -153,7 +183,7 @@ class im_chat_message(osv.Model):
         Messages are sent to a session not to users.
     """
     _name = 'im_chat.message'
-    _order = "id desc"
+    _order = "create_date asc"
     _columns = {
         'create_date': fields.datetime('Create Date', required=True, select=True),
         'from_id': fields.many2one('res.users', 'Author'),
@@ -164,6 +194,20 @@ class im_chat_message(osv.Model):
     _defaults = {
         'type' : 'message',
     }
+
+    def _escape_keep_url(self, message):
+        """ escape the message and transform the url into clickable link """
+        safe_message = ""
+        first = 0
+        last = 0
+        for m in re.finditer('(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?', message):
+            last = m.start()
+            safe_message += cgi.escape(message[first:last])
+            safe_message += '<a href="%s" target="_blank">%s</a>' % (cgi.escape(m.group(0)), m.group(0))
+            first = m.end()
+            last = m.end()
+        safe_message += cgi.escape(message[last:])
+        return safe_message
 
     def init_messages(self, cr, uid, context=None):
         """ get unread messages and old messages received less than AWAY_TIMER
@@ -210,7 +254,9 @@ class im_chat_message(osv.Model):
         session_ids = Session.search(cr, uid, [('uuid','=',uuid)], context=context)
         notifications = []
         for session in Session.browse(cr, uid, session_ids, context=context):
-            # build the new message
+            # build and escape the new message
+            message_content = self._escape_keep_url(message_content)
+            message_content = self.pool['im_chat.shortcode'].replace_shortcode(cr, uid, message_content, context=context)
             vals = {
                 "from_id": from_uid,
                 "to_id": session.id,
@@ -234,8 +280,26 @@ class im_chat_message(osv.Model):
             domain = [("to_id.uuid", "=", uuid)]
             if last_id:
                 domain.append(("id", "<", last_id));
-            return self.search_read(cr, uid, domain, ['id', 'create_date','to_id','from_id', 'type', 'message'], limit=limit, context=context)
+            return self.search_read(cr, uid, domain, ['id', 'create_date','to_id','from_id', 'type', 'message'], limit=limit, order="id desc", context=context)
         return False
+
+
+class im_chat_shortcode(osv.Model):
+    """ Message shortcuts """
+    _name = "im_chat.shortcode"
+
+    _columns = {
+        'source' : fields.char('Shortcut', required=True, select=True, help="The shortcut which must be replace in the Chat Messages"),
+        'substitution' : fields.char('Substitution', required=True, select=True, help="The html code replacing the shortcut"),
+        'description' : fields.char('Description'),
+    }
+
+    def replace_shortcode(self, cr, uid, message, context=None):
+        ids = self.search(cr, uid, [], context=context)
+        for shortcode in self.browse(cr, uid, ids, context=context):
+            regex = "(?:^|\s)(%s)(?:\s|$)" % re.escape(shortcode.source)
+            message = re.sub(regex, " " + shortcode.substitution + " ", message)
+        return message
 
 
 class im_chat_presence(osv.Model):
@@ -284,7 +348,9 @@ class im_chat_presence(osv.Model):
             # write only if the last_poll is passed TIMEOUT, or if the status has changed
             delta = datetime.datetime.now() - datetime.datetime.strptime(presences[0].last_poll, DEFAULT_SERVER_DATETIME_FORMAT)
             if (delta > datetime.timedelta(seconds=TIMEOUT) or send_notification):
-                self.write(cr, uid, presence_ids, vals, context=context)
+                # Hide transaction serialization errors, which can be ignored, the presence update is not essential
+                with tools.mute_logger('openerp.sql_db'):
+                    self.write(cr, uid, presence_ids, vals, context=context)
         # avoid TransactionRollbackError
         cr.commit()
         # notify if the status has changed
@@ -422,5 +488,3 @@ class Controller(openerp.addons.bus.bus.Controller):
     def history(self, uuid, last_id=False, limit=20):
         registry, cr, uid, context = request.registry, request.cr, request.session.uid or openerp.SUPERUSER_ID, request.context
         return registry["im_chat.message"].get_messages(cr, uid, uuid, last_id, limit, context=context)
-
-# vim:et:

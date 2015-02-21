@@ -147,5 +147,3 @@ if(phantom.args.length === 1) {
     pt = new PhantomTest();
     pt.run(pt.options.url_path, pt.options.code, pt.options.ready);
 }
-
-// vim:et:

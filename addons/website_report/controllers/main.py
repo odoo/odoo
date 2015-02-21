@@ -26,8 +26,8 @@ from openerp.http import request, route
 class Website(Website):
 
     @route()
-    def customize_template_get(self, xml_id, full=False):
-        res = super(Website, self).customize_template_get(xml_id, full=full)
+    def customize_template_get(self, key, full=False, bundles=False):
+        res = super(Website, self).customize_template_get(key, full=full, bundles=bundles)
         if full and request.session.get('report_view_ids'):
             res += request.session['report_view_ids']
         return res

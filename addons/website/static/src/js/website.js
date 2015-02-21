@@ -68,7 +68,7 @@
        Widgets
        ---------------------------------------------------- */ 
 
-    website.prompt = function (options) {
+    website.prompt = function (options, qweb) {
         /**
          * A bootstrapped version of prompt() albeit asynchronous
          * This was built to quickly prompt the user with a single field.
@@ -102,11 +102,14 @@
                 text: options
             };
         }
+        if (_.isUndefined(qweb)) {
+            qweb = 'website.prompt';
+        }
         options = _.extend({
             window_title: '',
             field_name: '',
             'default': '', // dict notation for IE<9
-            init: function() {}
+            init: function() {},
         }, options || {});
 
         var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
@@ -115,7 +118,7 @@
         options.field_name = options.field_name || options[type];
 
         var def = $.Deferred();
-        var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
+        var dialog = $(openerp.qweb.render(qweb, options)).appendTo("body");
         options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
         field.val(options['default']); // dict notation for IE<9
@@ -245,8 +248,8 @@
        ---------------------------------------------------- */ 
     var templates_def = $.Deferred().resolve();
     website.add_template_file = function(template) {
+        var def = $.Deferred();
         templates_def = templates_def.then(function() {
-            var def = $.Deferred();
             openerp.qweb.add_template(template, function(err) {
                 if (err) {
                     def.reject(err);
@@ -256,6 +259,7 @@
             });
             return def;
         });
+        return def;
     };
 
     website.add_template_file('/website/static/src/xml/website.xml');
@@ -294,11 +298,8 @@
                 return templates_def;
             }).then(function () {
                 // display button if they are at least one editable zone in the page (check the branding)
-                if (!!$('[data-oe-model]').size()) {
+                if ($('[data-oe-model]').size()) {
                     $("#oe_editzone").show();
-
-                    //backwards compatibility with 8.0RC1 templates - Drop next line in master!
-                    $("#oe_editzone button").show();
                 }
 
                 if ($('html').data('website-id')) {

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="web.tip" id="account_tip_1">
+            <field name="title"><![CDATA[<b>Reconciliation on bank statement</b>]]></field>
+            <field name="description">Click here to automatically reconcile your bank statement with the related entries. Do it later by clicking on "Reconcile Bank Statements" under periodical processing menu.</field>
+            <field name="action_id" ref="account.action_bank_statement_tree"/>
+            <field name="model">account.bank.statement</field>
+            <field name="type">form</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">header button span:contains("Reconcile"):visible</field>
+            <field name="highlight_selector">header button:nth-child(1)</field>
+            <field name="placement">bottom</field>
+        </record>
+
+        <record model="web.tip" id="account_tip_2">
+            <field name="title"><![CDATA[<b>Generate PDF file</b>]]></field>
+            <field name="description">Click here to generate a PDF file of your financial reports (like Balance Sheet, Profit <![CDATA[&amp;]]> Loss, Ledgers, etc...)</field>
+            <field name="action_id" ref="account.action_bank_statement_tree"/>
+            <field name="model">account.bank.statement</field>
+            <field name="type">form</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">header button span:contains("Close"):visible</field>
+            <field name="highlight_selector">span.oe_menu_text:contains('Legal Reports')</field>
+            <field name="placement">right</field>
+        </record>
+    </data>
+</openerp>

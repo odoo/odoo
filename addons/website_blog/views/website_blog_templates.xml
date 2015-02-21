@@ -9,6 +9,16 @@
     </xpath>
 </template>
 
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Blog Front-end assets">
+    <xpath expr="." position="inside">
+        <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
+
+        <script type="text/javascript" src="/website_blog/static/lib/contentshare.js"/>
+        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.inline.discussion.js"></script>
+        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
+    </xpath>
+</template>
+
 <!-- Layout add nav and footer -->
 <template id="header_footer_custom" inherit_id="website.footer_default" name="Footer News Blog Link">
     <xpath expr="//div[@id='info']/ul" position="inside">
@@ -36,7 +46,7 @@
                     <t t-set="classname">pull-right</t>
                 </t>
             </section>
-            <section data-snippet-id="title" class="container">
+            <section class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <h1>Latest Posts</h1>
@@ -92,13 +102,15 @@
 <!-- Blog Post List: Displaying a list of Blog Posts -->
 <template id="blog_post_short" name="Blog Posts">
     <t t-call="website_blog.index">
+        <div class="container">
+            <t t-call="website.pager" >
+                <t t-set="classname">pull-right</t>
+            </t>
+        </div>
         <div class="oe_structure">
             <section class="mb0">
                 <div class="container">
                     <div class="row">
-                        <t t-call="website.pager" >
-                            <t t-set="classname">pull-right</t>
-                        </t>
                         <div class="col-md-12 mb32 mt16 text-center">
                             <h1 t-field="blog.name"/>
                             <h3 class="text-muted" t-field="blog.subtitle"/>
@@ -121,10 +133,10 @@
                 </div>
 
                 <div t-foreach="blog_posts" t-as="blog_post" class="mb32">
-                  <span t-field="blog_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
-                  <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
-                      <h2 t-field="blog_post.name" class="mb4"/>
-                  </a>
+                  <span t-field="blog_post.author_avatar" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
+                  <h2>
+                    <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }" t-field="blog_post.name" class="mb4"/>
+                  </h2>
 
                   <div class="text-muted">
                       <h4
@@ -140,6 +152,11 @@
                             &#5760; <t t-esc="len(blog_post.message_ids)"/>
                             <t t-if="len(blog_post.message_ids) &lt;= 1" >comment</t>
                             <t t-if="len(blog_post.message_ids) > 1">comments</t>
+                        </span>
+                        <span t-if="blog_post.visits &gt; 0">
+                            &#5760; <t t-esc="blog_post.visits"/>
+                            <t t-if="blog_post.visits &lt;= 1" >view</t>
+                            <t t-if="blog_post.visits > 1">views</t>
                         </span>
 
                         <span t-if="not blog_post.website_published" class="label label-danger">not published</span>
@@ -162,7 +179,7 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a t-attf-href="#{blog_url(tag=one_tag)}" t-esc="one_tag.name"/> &amp;nbsp;
+                <a t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/> &amp;nbsp;
             </t>
         </p>
     </xpath>
@@ -172,23 +189,15 @@
 <template id="blog_post_complete" name="Blog Post">
   <t t-call="website_blog.index">
 
-    <div class="cover js_fullheight" id="title" t-attf-style="background-image: url(#{blog_post.background_image})" t-ignore="True">
+    <div class="cover js_fullheight" id="title" t-attf-style="min-height:600px; #{blog_post.background_image and ('background-image: url(%s)' % blog_post.background_image)}" t-ignore="True">
         <div class="container">
           <div class="container text-right mt16">
-            <div class="btn-group css_non_editable_mode_hidden">
-                <a id="change_cover" class="btn btn-primary">
-                    Change Cover
-                </a>
-                <a id="clear_cover" class="btn btn-danger">
-                    <span class="fa fa-times"/>
-                </a>
-            </div>
             <div class="cover-storage oe_hidden"></div>
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
                 <t t-set="publish_edit" t-value="True"/>
                 <li>
-                    <form class="duplicate hidden" action="/blogpost/duplicate">
+                    <form class="duplicate hidden" action="/blog/post_duplicate">
                         <input name="blog_post_id" t-att-value="blog_post.id"/>
                     </form>
                     <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
@@ -201,7 +210,7 @@
             <h2 t-field="blog_post.subtitle"/>
             <p class="post-meta text-muted text-center" name="blog_post_data"/>
             <div>
-                <span t-field="blog_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
+                <span t-field="blog_post.author_avatar" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
                 <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
                     "widget": "contact",
                     "fields": ["name"]
@@ -281,11 +290,10 @@
 
 <!-- Options: Blog Post: user can reply -->
 <template id="opt_blog_post_complete_comment" name="Allow blog post comment"
-        inherit_id="website_blog.blog_post_complete" active="False" customize_show="True"
-        groups="website_mail.group_comment">
+        inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
     <xpath expr="//ul[@id='comments-list']" position="before">
         <section class="mb32 read_width css_editable_mode_hidden">
-            <form id="comment" t-attf-action="/blogpost/comment" method="POST">
+            <form id="comment" t-attf-action="/blog/post_comment" method="POST">
                 <div class="media">
                     <span class="pull-left">
                         <img class="img img-circle media-object" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 30px"/>
@@ -327,22 +335,13 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a t-attf-href="#{blog_url(tag=one_tag)}" t-esc="one_tag.name"/> &amp;nbsp;
+                <a t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/> &amp;nbsp;
             </t>
         </p>
     </xpath>
 </template>
 
 <!-- Page -->
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="website_blog assets" >
-    <xpath expr="/t" position="inside">
-        <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
-        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.inline.discussion.js"></script>
-        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
-        <script type="text/javascript" src="/website_blog/static/lib/contentshare.js"/>
-    </xpath>
-</template>
-
 <template id="index" name="Blog Navigation">
     <t t-call="website.layout">
         <div id="wrap" class="js_blog website_blog">
@@ -371,8 +370,10 @@
         <h4>Tags</h4>
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="tags" t-as="nav_tag">
-            <li t-att-class="tag and tag.id == nav_tag.id and 'active' or None" style="display: inline-block;">
-                <a t-attf-href="#{blog_url(tag=nav_tag)}"><span t-field="nav_tag.name"/></a>
+            <li t-att-class="nav_tag.id in active_tag_ids and 'active' or None" style="display: inline-block;">
+                <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, nav_tag.id))}">
+                    <span t-field="nav_tag.name"/>
+                </a>
             </li>
             </t>
         </ul>
@@ -388,9 +389,16 @@
         <h4>Archives</h4>
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="nav_list" t-as="months">
-            <li t-att-class="months['date_begin'] == date and 'active' or None">
-                <a t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
-            </li>
+                <t t-if="months['date_begin'] == date">
+                    <li class="active">
+                        <a t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+                    </li>
+                </t>
+                <t t-if="months['date_begin'] != date">
+                    <li>
+                        <a t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+                    </li>
+                </t>
             </t>
         </ul>
         </section>
@@ -450,7 +458,7 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="blogs" t-as="nav_blog">
                 <li t-att-class="nav_blog.id == blog.id and 'active' or ''">
-                    <a t-attf-href="#{blog_url(blog=nav_blog)}">
+                    <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}">
                         <span t-field="nav_blog.name"/>
                     </a>
                 </li>

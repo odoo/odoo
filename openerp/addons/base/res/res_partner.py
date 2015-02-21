@@ -30,6 +30,7 @@ from openerp import tools, api
 from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 ADDRESS_FORMAT_LAYOUTS = {
     '%(city)s %(state_code)s\n%(zip)s': """
@@ -125,7 +126,7 @@ class res_partner_category(osv.Model):
     def _name_get_fnc(self, field_name, arg):
         return dict(self.name_get())
 
-    _description = 'Partner Tags'
+    _description = 'Partner Categories'
     _name = 'res.partner.category'
     _columns = {
         'name': fields.char('Category Name', required=True, translate=True),
@@ -239,7 +240,7 @@ class res_partner(osv.Model, format_address):
         'parent_id': fields.many2one('res.partner', 'Related Company', select=True),
         'parent_name': fields.related('parent_id', 'name', type='char', readonly=True, string='Parent name'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
-        'ref': fields.char('Contact Reference', select=1),
+        'ref': fields.char('Internal Reference', select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
         'tz': fields.selection(_tz_get,  'Timezone', size=64,
@@ -252,12 +253,12 @@ class res_partner(osv.Model, format_address):
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website', help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
-        'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
+        'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Categories'),
         'credit_limit': fields.float(string='Credit Limit'),
-        'ean13': fields.char('EAN13', size=13),
+        'barcode': fields.char('Barcode', oldname='ean13'),
         'active': fields.boolean('Active'),
-        'customer': fields.boolean('Customer', help="Check this box if this contact is a customer."),
-        'supplier': fields.boolean('Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
+        'customer': fields.boolean('Is a Customer', help="Check this box if this contact is a customer."),
+        'supplier': fields.boolean('Is a Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position'),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
@@ -296,7 +297,7 @@ class res_partner(osv.Model, format_address):
             help="Small-sized image of this contact. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'has_image': fields.function(_has_image, type="boolean"),
+        'has_image': fields.function(_has_image, string="Has image", type="boolean"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
@@ -398,24 +399,6 @@ class res_partner(osv.Model, format_address):
             state = self.env['res.country.state'].browse(state_id)
             return {'value': {'country_id': state.country_id.id}}
         return {}
-
-    def _check_ean_key(self, cr, uid, ids, context=None):
-        for partner_o in self.pool['res.partner'].read(cr, uid, ids, ['ean13',]):
-            thisean=partner_o['ean13']
-            if thisean and thisean!='':
-                if len(thisean)!=13:
-                    return False
-                sum=0
-                for i in range(12):
-                    if not (i % 2):
-                        sum+=int(thisean[i])
-                    else:
-                        sum+=3*int(thisean[i])
-                if math.ceil(sum/10.0)*10-sum!=int(thisean[12]):
-                    return False
-        return True
-
-#   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
     def _update_fields_values(self, cr, uid, partner, fields, context=None):
         """ Returns dict of write() values for synchronizing ``fields`` """
@@ -559,7 +542,7 @@ class res_partner(osv.Model, format_address):
                 if partner.user_ids:
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
-                        raise osv.except_osv(_("Warning"),_("You can not change the company as the partner/user has multiple user linked with different companies."))
+                        raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
 
         result = super(res_partner, self).write(vals)
         for partner in self:
@@ -582,7 +565,7 @@ class res_partner(osv.Model, format_address):
                 'res_model': 'res.partner',
                 'view_mode': 'form',
                 'res_id': partner.commercial_partner_id.id,
-                'target': 'new',
+                'target': 'current',
                 'flags': {'form': {'action_buttons': True}}}
 
     def open_parent(self, cr, uid, ids, context=None):
@@ -639,7 +622,7 @@ class res_partner(osv.Model, format_address):
             context = {}
         name, email = self._parse_partner_name(name, context=context)
         if context.get('force_email') and not email:
-            raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address!"))
+            raise UserError(_("Couldn't create contact without email address!"))
         if not name and email:
             name = email
         rec_id = self.create(cr, uid, {self._rec_name: name or email, 'email': email or False}, context=context)
@@ -678,14 +661,19 @@ class res_partner(osv.Model, format_address):
             query = """SELECT id
                          FROM res_partner
                       {where} ({email} {operator} {percent}
-                           OR {display_name} {operator} {percent})
-                     ORDER BY {display_name}
-                    """.format(where=where_str, operator=operator,
+                           OR {display_name} {operator} {percent}
+                           OR {reference} {operator} {percent})
+                           -- don't panic, trust postgres bitmap
+                     ORDER BY {display_name} {operator} {percent} desc,
+                              {display_name}
+                    """.format(where=where_str,
+                               operator=operator,
                                email=unaccent('email'),
                                display_name=unaccent('display_name'),
+                               reference=unaccent('ref'),
                                percent=unaccent('%s'))
 
-            where_clause_params += [search_name, search_name]
+            where_clause_params += [search_name]*4
             if limit:
                 query += ' limit %s'
                 where_clause_params.append(limit)
@@ -813,5 +801,3 @@ class res_partner(osv.Model, format_address):
         elif address.parent_id:
             address_format = '%(company_name)s\n' + address_format
         return address_format % args
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

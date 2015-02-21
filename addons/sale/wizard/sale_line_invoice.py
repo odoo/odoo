@@ -22,6 +22,7 @@
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp import workflow
+from openerp.exceptions import UserError
 
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
@@ -48,7 +49,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
             'user_id': order.user_id and order.user_id.id or False,
             'company_id': order.company_id and order.company_id.id or False,
             'date_invoice': fields.date.today(),
-            'section_id': order.section_id.id,
+            'team_id': order.team_id.id,
         }
 
     
@@ -110,7 +111,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 workflow.trg_validate(uid, 'sale.order', order.id, 'all_lines', cr)
 
         if not invoices:
-            raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
+            raise UserError(_('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
         if context.get('open_invoices', False):
             return self.open_invoices(cr, uid, ids, res, context=context)
         return {'type': 'ir.actions.act_window_close'}
@@ -134,6 +135,3 @@ class sale_order_line_make_invoice(osv.osv_memory):
             'context': {'type': 'out_invoice'},
             'type': 'ir.actions.act_window',
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

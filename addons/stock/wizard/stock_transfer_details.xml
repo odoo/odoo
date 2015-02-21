@@ -8,12 +8,10 @@
                 <form string="Transfer details" version="7">
                     <field name="picking_source_location_id" invisible="True"/>
                     <field name="picking_destination_location_id" invisible="True"/>
-                    <group string="Products To Move">
-                        <div class="oe_grey" groups="stock.group_tracking_lot">
-                            Setting a product and a source package means that the product will be taken
-                            out of the package.  
-                        </div>
-                    </group>
+                    <div class="oe_grey" groups="stock.group_tracking_lot">
+                        Setting a product and a source package means that the product will be taken
+                        out of the package.
+                    </div>
                     <group>
                         <field name="item_ids"
                             context="{'default_sourceloc_id':picking_source_location_id,

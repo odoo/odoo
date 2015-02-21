@@ -9,37 +9,42 @@
             sequence="70"/>
 
         <menuitem id="menu_stock_warehouse_mgmt" name="Operations" parent="menu_stock_root" sequence="1"/>
-        <menuitem id="menu_stock_product" name="Products" parent="menu_stock_root" sequence="6"/>
-        <menuitem name="Products by Category" id="menu_product_by_category_stock_form" action="product.product_category_action"
-            parent="stock.menu_stock_product" sequence="0" groups="base.group_no_one"/>
-        <menuitem action="product.product_template_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager"/>
-        <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="2"/>
+        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="1" groups="base.group_no_one"/>
+        <menuitem id="menu_reordering_rules_config" name="Schedulers Management" parent="menu_stock_configuration" sequence="3" groups="base.group_no_one"/>
+        <menuitem id="menu_routes_config" name="Routes" parent="menu_stock_configuration" sequence="2" groups="base.group_no_one"/>
+        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="2"/>
+
+
+        <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
         <menuitem
             id="menu_product_in_config_stock" name="Products"
-            parent="stock.menu_stock_configuration" sequence="45" groups="base.group_no_one"/>
+            parent="stock.menu_stock_configuration" sequence="4" groups="base.group_no_one"/>
+        <menuitem
+            id="menu_packs_config" name="Packs"
+            parent="stock.menu_stock_configuration" sequence="5" groups="base.group_no_one"/>
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_stock"
-            parent="stock.menu_product_in_config_stock" sequence="0"/>
-        <menuitem
-            action="product.product_normal_action" id="menu_product_variant_config_stock"
             parent="stock.menu_product_in_config_stock" sequence="2"/>
+        <menuitem
+            action="product.product_normal_action" id="menu_product_variant_config_stock" name="Products"
+            parent="stock.menu_traceability" sequence="5"/>
         <menuitem
             action="product.product_template_action" id="menu_product_template_config_stock"
             parent="stock.menu_product_in_config_stock" sequence="1"/>
         <menuitem
             action="product.product_ul_form_action" groups="product.group_stock_packaging"
-            id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="3"/>
+            id="menu_product_packaging_stock_action" parent="stock.menu_packs_config" sequence="99"/>
         <menuitem
             id="menu_stock_unit_measure_stock" name="Units of Measure"
             parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
         <menuitem
             action="product.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
-            parent="menu_stock_configuration" sequence="30" groups="product.group_uom"/>
+            parent="menu_product_in_config_stock" sequence="5" groups="product.group_uom"/>
         <menuitem
             action="product.product_uom_form_action" id="menu_stock_uom_form_action"
             parent="menu_stock_configuration" sequence="35" groups="product.group_uom"/>
-
+        
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
             <field name="model">stock.inventory.line</field>
@@ -106,7 +111,7 @@
                         </group>
                         <group>
                             <field name="date"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="product_id" domain="[('type','=','product')]" attrs="{'invisible': [('filter', 'not in', ('product', 'product_owner'))]}"/>
                             <field name="lot_id" attrs="{'invisible': [('filter', '!=', 'lot')]}" groups="stock.group_production_lot" />
                             <field name="partner_id" attrs="{'invisible': [('filter', 'not in', ('owner', 'product_owner'))]}" groups="stock.group_tracking_owner"/>
@@ -183,10 +188,6 @@
             </field>
         </record>
         <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="30"/>
-
-
-        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" 
-            sequence="3"/>
 
         <record id="view_production_lot_form" model="ir.ui.view">
             <field name="name">stock.production.lot.form</field>
@@ -339,7 +340,7 @@
                         <group string="Additional Information">
                             <field name="usage"/>
                             <field name="partner_id"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="scrap_location"/>
                             <field name="active"/>
                         </group>
@@ -347,15 +348,14 @@
                             <field name="posx"/>
                             <field name="posy"/>
                             <field name="posz"/>
-                            <field name="loc_barcode"/>
+                            <field name="barcode"/>
                         </group>
                         <group string="Logistics" groups="stock.group_adv_location">
                             <field name="removal_strategy_id" options="{'no_create': True}"/>
                             <field name="putaway_strategy_id"/>
                         </group>
                     </group>
-                    <separator string="Additional Information"/>
-                    <field name="comment"/>
+                    <field name="comment" placeholder="External note..."/>
                 </form>
             </field>
         </record>
@@ -424,6 +424,16 @@
             </field>
         </record>
 
+        <record id="stock_location_path_filter" model="ir.ui.view">
+            <field name="name">stock.location.path.select</field>
+            <field name="model">stock.location.path</field>
+            <field name="arch" type="xml">
+                <search string="Search Stock Location Paths">
+                    <filter string="Global" name="route_false" domain="[('route_id','=',False)]" help="If the route is global"/>
+                </search>
+            </field>
+        </record>
+
         <record id="stock_location_path_tree" model="ir.ui.view">
             <field name="name">stock.location.path.tree</field>
             <field name="model">stock.location.path</field>
@@ -446,6 +456,7 @@
                             <field name="name"/>
                             <field name="location_from_id"/>
                             <field name="location_dest_id"/>
+                            <field name="route_id"/>
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" />
@@ -510,7 +521,7 @@
             </field>
         </record>
         <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
-            parent="menu_stock_configuration" sequence="5"/>
+            parent="menu_warehouse_config" sequence="2"/>
 
 
         <record id="act_product_stock_move_open" model="ir.actions.act_window">
@@ -539,7 +550,7 @@
                                 <field name="code"/>
                             </group>
                             <group>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="partner_id"/>
                             </group>
                             <notebook colspan="4" groups="stock.group_adv_location">
@@ -598,7 +609,7 @@
             </field>
         </record>
         <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" groups="stock.group_locations"
-            parent="menu_stock_configuration" sequence="1"/>
+            parent="menu_warehouse_config" sequence="1"/>
 
         <!--
             Stock picking
@@ -718,7 +729,7 @@
                                     <field name="location_dest_id" invisible="1"/>
                                 </group>
                                 <group>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="date_done" groups="base.group_no_one"/>
                                     <field name="group_id"/>
                                     <field name="priority"/>
@@ -779,6 +790,8 @@
             </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
+
+        <menuitem id="all_picking" name="All Transfers" parent="menu_stock_warehouse_mgmt" sequence="2" action="action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
 
         <record id="action_picking_tree_done" model="ir.actions.act_window">
             <field name="name">Done Transfers</field>
@@ -910,12 +923,24 @@
             </field>
         </record>
 
+        <record id="view_move_pivot" model="ir.ui.view">
+            <field name="name">stock.move.pivot</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <pivot string="Stock Moves Analysis">
+                    <field name="product_id" type="row"/>
+                    <field name="location_dest_id" groups="stock.group_locations" type="row"/>
+                    <field name="product_uom_qty" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <record id="view_move_graph" model="ir.ui.view">
             <field name="name">stock.move.graph</field>
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
-                <graph string="Stock Moves Analysis" type="pivot">
-                    <field name="product_id" type="row"/>
+                <graph string="Stock Moves Analysis">
+                    <field name="product_id"/>
                     <field name="location_dest_id" groups="stock.group_locations" type="row"/>
                     <field name="product_uom_qty" type="measure"/>
                 </graph>
@@ -1026,7 +1051,7 @@
                             <group name="main_grp_col2">
                                 <field name="picking_type_id"/>
                                 <field name="priority"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
                                 <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             </group>
@@ -1042,9 +1067,10 @@
                         <group name="destination_grp" string="Destination" groups="stock.group_locations">
                             <field name="location_dest_id" />
                             <field name="partner_id" context="{'contact_display':'partner'}" />
+                            <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
-                            <field name="reserved_quant_ids"/>
+                            <field name="reserved_quant_ids" nolabel="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -1092,6 +1118,7 @@
                         <field name="create_date" invisible="1"/>
                         <field name="date"/>
                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
+                        <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                     </group>
                     <group string="Locations" groups="stock.group_locations">
                         <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
@@ -1168,14 +1195,21 @@
         <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
+        <record model="ir.actions.act_window.view" id="action_stock_move_pivot_all">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_move_pivot"/>
+            <field name="act_window_id" ref="action_move_form2"/>
+        </record>
+
         <record model="ir.actions.act_window.view" id="action_stock_move_graph_all">
             <field name="sequence" eval="3"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_move_graph"/>
-        <field name="act_window_id" ref="action_move_form2"/>
+            <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
-        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3" groups="stock.group_locations"/>
+        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="18" groups="stock.group_locations"/>
 
         <!--
             Receipt Picking (By Stock Move)
@@ -1186,9 +1220,11 @@
             <field name="model">stock.move</field>
             <field name="priority" eval="6"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state == 'cancel'" string="Moves">
+                <tree colors="grey:state == 'cancel'" default_order='date_expected, picking_id, sequence' string="Moves">
+                    <field name="date_expected" widget='date'/>
                     <field name="date" widget="date"/>
                     <field name="picking_id" string="Reference" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
                     <field name="origin"/>
                     <field name="partner_id" string="Supplier"/>
                     <field name="product_id"/>
@@ -1197,7 +1233,6 @@
                     <field name="location_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
                     <field name="create_date" invisible="1"/>
-                    <field name="date_expected" invisible="1"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
@@ -1267,9 +1302,11 @@
             <field name="arch" type="xml">
                 <form string="Incoterms">
                     <sheet>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="active"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="active"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -1282,8 +1319,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_stock_configuration" sequence="40"/>
-
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="5"/>
 
          <record id="view_pickingtype_filter" model="ir.ui.view">
             <field name="name">stock.picking.type.filter</field>
@@ -1335,7 +1371,6 @@
             </field>
         </record>
 
-
         <record id="stock_picking_type_kanban" model="ir.ui.view">
             <field name="name">stock.picking.type.kanban</field>
             <field name="model">stock.picking.type</field>
@@ -1352,14 +1387,14 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_stock_picking_type">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="stock.group_stock_manager">
-                                    <span class="oe_e">í</span>
+                                    <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Warehouse</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><ul class="oe_kanban_colorpicker" data-field="color"/></li></t>
                                     </ul>
                                 </div>
-                                <div class="oe_kanban_content">
+                                <div class="oe_stock_kanban_content">
                                     <h4 class="text-center"><strong><field name="complete_name"/></strong></h4>
                                     <div class="oe_right">
                                         <a name="open_barcode_interface" type="object">
@@ -1368,41 +1403,32 @@
                                                 class="oe_stock_scan_image" title="Click to launch the barcode interface"/>
                                         </a>
                                     </div>
-                                    <div class="oe_items_list oe_kanban_ellipsis">
-                                        <div>
-                                            <a name="%(action_picking_tree_ready)d" type="action">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <a name="%(action_picking_tree_ready)d" type="action" class="col-md-9">
                                                 <field name="count_picking_ready"/> Ready
                                             </a>
-                                            <a name="%(action_picking_tree_done)d" type="action" class="oe_sparkline_bar_link">
+                                            <a name="%(action_picking_tree_done)d" type="action" class="col-md-3">
                                                 <field name="last_done_picking" widget="sparkline_bar" options="{'type': 'tristate', 'colorMap': {'0': 'orange', '-1': 'red', '1': 'green'}}">Last 10 Done Operations</field>
                                             </a>
-                                        </div>
-                                        <div t-if="record.count_picking_waiting.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree_waiting)d" type="action">
-                                                <field name="count_picking_waiting"/> Waiting Availability
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <a name="%(action_picking_tree)d" type="action">All Operations</a>
+                                            <t t-if="record.count_picking_waiting.raw_value &gt; 0">
+                                                <a name="%(action_picking_tree_waiting)d" type="action" class="col-md-12">
+                                                    <field name="count_picking_waiting"/> Waiting Availability
+                                                </a>
+                                            </t>
+                                            <a class="col-md-9" name="%(action_picking_tree)d" type="action">Transfers</a>
                                         </div>
                                     </div>
-                                    <div class="oe_picking_type_gauge">
-                                        <field name="rate_picking_late" widget="gauge" style="width:150px; height: 110px;" options="{'levelcolors': ['#a9d70b', '#f9c802', '#ff0000'], 'action_jump': '%(action_picking_tree_late)d'}">Late (%%)</field>
-                                        <field name="rate_picking_backorders" widget="gauge" style="width:150px; height: 110px;">Backorders (%%)</field>
-                                        <div class="oe_gauge_labels">
-                                            <div class="oe_gauge_label_column">
-                                                <a name="%(action_picking_tree_late)d" type="action">
-                                                    <field name="count_picking_late"/> Late
-                                                </a>
-                                            </div>
-                                            <div class="oe_gauge_label_column">
-                                                <a name="%(action_picking_tree_backorder)d" type="action">
-                                                    <field name="count_picking_backorders"/> Backorders
-                                                </a>
-                                            </div>
-                                        </div>
+                                    <div class="row">
+                                         <field name="rate_picking_late" widget="gauge" style="margin-left:15px; width:150px; height: 110px;" options="{'levelcolors': ['#a9d70b', '#f9c802', '#ff0000'], 'action_jump': '%(action_picking_tree_late)d'}">Late (%%)</field>
+                                         <field name="rate_picking_backorders" widget="gauge" style="margin-left:15px; width:150px; height: 110px;">Backorders (%%)</field>
+                                         <a name="%(action_picking_tree_late)d" type="action" class="text-center col-md-6">
+                                             <field name="count_picking_late"/> Late
+                                         </a>
+                                         <a name="%(action_picking_tree_backorder)d" type="action" class="text-center col-md-6">
+                                             <field name="count_picking_backorders"/> Backorders
+                                         </a>
                                     </div>
-
                                 </div>
                             </div>
                         </t>
@@ -1412,7 +1438,7 @@
         </record>
 
         <record id="action_picking_type_form" model="ir.actions.act_window">
-            <field name="name">All Operations</field>
+            <field name="name">Overview</field>
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1428,6 +1454,22 @@
               </p>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="view_picking_type_list">
+            <field name="name">stock.picking.type.list</field>
+            <field name="model">stock.picking.type</field>
+            <field name="arch" type="xml">
+                <tree string="Picking Types">
+                    <field name="name"/>
+                    <field name="sequence_id"/>
+                    <field name="warehouse_id"/>
+                    <field name="code" on_change="onchange_picking_code(code)"/>
+                    <field name="return_picking_type_id"/>
+                    <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
+                    <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
+                </tree>
+            </field>
+        </record>
         
         <record id="action_picking_type_list" model="ir.actions.act_window">
             <field name="name">All Operations</field>
@@ -1436,6 +1478,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">list,form</field>            
         </record>
+
+        <menuitem id="stock_picking_type_config" action="action_picking_type_list" name="Picking Types" parent="stock.menu_routes_config" sequence="2" groups="base.group_no_one"/>
 
         <menuitem
             action="action_picking_type_form"
@@ -1503,7 +1547,7 @@
                                 <field name="product_uom" groups="product.group_uom"/>
                                 <field name="location_id" groups="stock.group_locations"/>
                                 <field name="group_id" groups="stock.group_adv_location"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>
                         </group>
                         <group>
@@ -1558,7 +1602,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="do_view_pickings" string="Group's Pickings" type="object"/>
+                    <button name="do_view_pickings" class="oe_stat_button" icon="fa-bars" string="Group's Pickings" type="object"/>
                 </xpath>
                 <xpath expr="//field[@name='rule_id']" position="replace">
                     <field name="rule_id" domain="['|', ('location_id', '=', False), ('location_id', '=', location_id)]"/>
@@ -1619,9 +1663,15 @@
         </record>
         
         <record model="ir.actions.act_window" id="procrules">
-            <field name="context">{}</field>
+            <field name="context">{'search_default_route_false':1}</field>
             <field name="name">Pull Rules</field>
             <field name="res_model">procurement.rule</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="stolocpath">
+            <field name="context">{'search_default_route_false':1}</field>
+            <field name="name">Push Rules</field>
+            <field name="res_model">stock.location.path</field>
         </record>
         
         <record id="quant_search_view" model="ir.ui.view">
@@ -1671,6 +1721,7 @@
                     <group>
                         <field name="product_id"/>
                         <field name="qty"/>
+                        <field name="product_uom_id" groups="product.group_uom"/>
                         <field name="lot_id" groups="stock.group_production_lot"/>
                         <field name="package_id" groups="stock.group_tracking_lot"/>
                         <field name="location_id"/>
@@ -1693,6 +1744,7 @@
                 <tree string="Quants" create="0">
                     <field name="product_id"/>
                     <field name="qty"/>
+                    <field name="product_uom_id" groups="product.group_uom"/>
                     <field name="location_id"/>
                     <field name="owner_id" groups="stock.group_tracking_owner"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
@@ -1721,16 +1773,17 @@
         </record>
 
         <!-- Procurements are located in Warehouse menu hierarchy, MRP users should come to Stock application to use it.  -->
-        <menuitem id="menu_stock_sched" name="Schedulers" parent="stock.menu_stock_root" sequence="4" groups="stock.group_stock_manager"/>
-        <menuitem action="action_procurement_compute" id="menu_procurement_compute" parent="menu_stock_sched" groups="base.group_no_one"/>
-        <menuitem action="procurement.action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="20" groups="stock.group_stock_manager"/>
+        <menuitem id="menu_stock_sched" name="Schedulers" parent="stock.menu_stock_root" sequence="3" groups="stock.group_stock_manager"/>
+        <menuitem action="action_procurement_compute" id="menu_procurement_compute" parent="menu_stock_sched" groups="base.group_no_one" sequence="2"/>
+        <menuitem action="procurement.action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="1" groups="stock.group_stock_manager"/>
         <menuitem action="procurement.procurement_exceptions" id="menu_stock_procurement_action" parent="menu_stock_sched" sequence="50" groups="stock.group_stock_manager"/>
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>
-        <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
-        <menuitem id="stock.next_id_61" name="Warehouse" sequence="15" parent="base.menu_reporting" groups="group_stock_manager"/>
-        <menuitem id="menu_quants" name="Quants" parent="menu_traceability" sequence="20" action="quantsact" groups="base.group_no_one"/>
-        <menuitem id="menu_procurement_rules" name="Procurement Rules" parent="stock.menu_stock_configuration" action="procrules" groups="base.group_no_one"/>
-        <menuitem id="menu_pickingtype" name="Types of Operation" parent="stock.menu_stock_configuration" action="action_picking_type_list"/>
+        <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_reordering_rules_config" sequence="1"/>
+        <menuitem id="stock.next_id_61" name="Warehouse" sequence="40" parent="base.menu_reporting" groups="group_stock_manager"/>
+        <menuitem id="menu_quants" name="Quantitative Valuation" parent="menu_traceability" sequence="20" action="quantsact" groups="base.group_no_one"/>
+        <menuitem id="menu_procurement_rules" name="Global Procurement Rules" parent="stock.menu_routes_config" action="procrules" groups="base.group_no_one" sequence="3"/>
+        <menuitem id="menu_stock_location_path" name="Global Push Rules" parent="stock.menu_routes_config" action="stolocpath" groups="base.group_no_one" sequence="4"/>
+        <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="4"/>
 
 
         <record model="ir.actions.act_window" id="product_open_orderpoint">
@@ -1753,7 +1806,10 @@
                 <form string="Package">
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button name="unpack" string="Unpack" type="object"/>
+                            <button class="oe_inline" name="unpack" string="Unpack" type="object"/>
+                            <button class="oe_inline oe_stat_button" name="%(action_picking_tree_all)d"
+                            string="Package Transfers" type="action" 
+                            widget="statinfo" icon="fa-dropbox"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" string="Package Reference" class="oe_edit_only"/>
@@ -1844,7 +1900,11 @@
                 </p>
             </field>
         </record>
-        <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view" groups="stock.group_tracking_lot"/>
+        <menuitem id="menu_package" name="Packages" parent="menu_traceability" action="action_package_view" groups="stock.group_tracking_lot" sequence="2"/>
+        <menuitem id="menu_package_config" name="Packages" parent="menu_packs_config" action="action_package_view" groups="stock.group_tracking_lot" sequence="2"/>
+        <menuitem id="menu_packagings" name="Packagings" parent="menu_traceability" action="product.action_packaging_view" groups="product.group_stock_packaging" sequence="3"/>
+        <menuitem id="menu_packagings_config" name="Packagings" parent="menu_packs_config" action="product.action_packaging_view" groups="product.group_stock_packaging" sequence="3"/>
+
         
         
         <!--Routes-->
@@ -1872,7 +1932,7 @@
                         </div>
                     <group>
                         <group>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="active" groups="stock.group_adv_location" />
                         </group>
                         <group>
@@ -1920,7 +1980,7 @@
         </record>
         
         <menuitem action="action_routes_form" id="menu_stock_routes"
-            parent="stock.menu_stock_configuration" sequence="11" />
+            parent="stock.menu_routes_config" sequence="1" />
 
         <record id="do_view_pickings" model="ir.actions.act_window">
             <field name="name">Pickings for Groups</field>
@@ -1939,6 +1999,10 @@
                 </xpath>
             </field>
         </record>
-        
+
+        <!-- Barcode Nomenclatures -->
+        <menuitem parent="menu_stock_configuration" action="barcodes.action_barcode_nomenclature_form" id="menu_wms_barcode_nomenclature_all"
+            sequence="50"/>
+       
     </data>
 </openerp>

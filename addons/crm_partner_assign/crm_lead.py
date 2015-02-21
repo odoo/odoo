@@ -21,6 +21,7 @@
 
 from openerp.osv import osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class crm_lead(osv.osv):
@@ -30,7 +31,7 @@ class crm_lead(osv.osv):
         try:
             model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'crm_lead_channel_interested_act')
         except ValueError:
-            raise osv.except_osv(_('Error!'), _("The CRM Channel Interested Action is missing"))
+            raise UserError(_("The CRM Channel Interested Action is missing"))
         action = self.pool[model].read(cr, uid, [action_id], context=context)[0]
         action_context = eval(action['context'])
         action_context['interested'] = interested
@@ -54,5 +55,5 @@ class crm_lead(osv.osv):
                     else:
                         salesmans_leads[salesman_id] = [lead.id]
         for salesman_id, lead_ids in salesmans_leads.items():
-            salesteam_id = self.on_change_user(cr, uid, lead_ids, salesman_id, context=None)['value'].get('section_id')
-            self.write(cr, uid, lead_ids, {'user_id': salesman_id, 'section_id': salesteam_id}, context=context)
+            salesteam_id = self.on_change_user(cr, uid, lead_ids, salesman_id, context=None)['value'].get('team_id')
+            self.write(cr, uid, lead_ids, {'user_id': salesman_id, 'team_id': salesteam_id}, context=context)

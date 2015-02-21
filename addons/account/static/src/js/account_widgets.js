@@ -11,6 +11,7 @@ openerp.account = function (instance) {
         className: 'oe_bank_statement_reconciliation',
 
         events: {
+            "click *[rel='do_action']": "doActionClickHandler",
             "click .statement_name span": "statementNameClickHandler",
             "keyup .change_statement_name_field": "changeStatementNameFieldHandler",
             "click .change_statement_name_button": "changeStatementButtonClickHandler",
@@ -26,6 +27,7 @@ openerp.account = function (instance) {
             this.single_statement = this.statement_ids !== undefined && this.statement_ids.length === 1;
             this.multiple_statements = this.statement_ids !== undefined && this.statement_ids.length > 1;
             this.title = context.context.title || _t("Reconciliation");
+            this.notifications = context.context.notifications || [];
             this.st_lines = [];
             this.last_displayed_reconciliation_index = undefined; // Flow control
             this.reconciled_lines = 0; // idem
@@ -34,7 +36,8 @@ openerp.account = function (instance) {
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.reconciliation_menu_id = false; // Used to update the needaction badge
             this.formatCurrency; // Method that formats the currency ; loaded from the server
-    
+            this.action_manager = this.findAncestor(function(ancestor){ return ancestor instanceof instance.web.ActionManager });
+
             // Only for statistical purposes
             this.lines_reconciled_with_ctrl_enter = 0;
             this.time_widget_loaded = Date.now();
@@ -131,7 +134,7 @@ openerp.account = function (instance) {
             this._super();
             var self = this;
             // Retreive statement infos and reconciliation data from the model
-            var lines_filter = [['journal_entry_id', '=', false], ['account_id', '=', false]];
+            var lines_filter = [['journal_entry_ids', '=', false], ['account_id', '=', false]];
             var deferred_promises = [];
             
             // Working on specified statement(s)
@@ -243,9 +246,39 @@ openerp.account = function (instance) {
                             self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed);
                             self.getChildren()[0].set("mode", "match");
                             self.updateShowMoreButton();
+                            if (self.notifications) {
+                                self.displayNotifications(self.notifications);
+                            }
                         });
                     });
             });
+        },
+
+        doActionClickHandler: function(e) {
+            var name = e.currentTarget.dataset.action_nam;
+            var model = e.currentTarget.dataset.model;
+            var ids = e.currentTarget.dataset.ids.split(",").map(Number);
+            this.action_manager.do_action({
+                name: name,
+                res_model: model,
+                domain: [['id', 'in', ids]],
+                views: [[false, 'list'], [false, 'form']],
+                type: 'ir.actions.act_window',
+                view_type: "list",
+                view_mode: "list"
+            });
+        },
+
+        displayNotifications: function(notifications, speed) {
+            speed = speed === undefined ? this.aestetic_animation_speed : speed;
+            for (var i=0; i<notifications.length; i++) {
+                var $notification = $(QWeb.render("reconciliation_notification", {
+                    type: notifications[i].type,
+                    message: notifications[i].message,
+                    details: notifications[i].details,
+                })).hide();
+                $notification.appendTo(this.$(".notification_area")).slideDown(speed);
+            }
         },
 
         statementNameClickHandler: function() {
@@ -490,23 +523,17 @@ openerp.account = function (instance) {
                 .call("get_object_reference", ['account', 'action_bank_statement_tree'])
                 .then(function (result) {
                     var action_id = result[1];
-                    // Warning : altough I don't see why this widget wouldn't be directly instanciated by the
-                    // action manager, if it wasn't, this code wouldn't work. You'd have to do something like :
-                    // var action_manager = self;
-                    // while (! action_manager instanceof ActionManager)
-                    //    action_manager = action_manager.getParent();
-                    var action_manager = self.getParent();
-                    var breadcrumbs = action_manager.breadcrumbs;
-                    var found = false;
-                    for (var i=breadcrumbs.length-1; i>=0; i--) {
-                        if (breadcrumbs[i].action && breadcrumbs[i].action.id === action_id) {
-                            var title = breadcrumbs[i].get_title();
-                            action_manager.select_breadcrumb(i, _.isArray(title) ? i : undefined);
-                            found = true;
-                        }
+                    var breadcrumbs = self.action_manager.get_widgets();
+                    var widget = _.find(breadcrumbs, function(widget){
+                        return widget.action && widget.action.id === action_id;
+                    });
+                    if (widget) {
+                        self.action_manager.select_widget(widget, 0);
+                    } else {
+                        self.action_manager.do_action(action_id, {
+                            clear_breadcrumbs: true
+                        });
                     }
-                    if (!found)
-                        self.do_action('history_back');
                 });
         },
     
@@ -684,6 +711,7 @@ openerp.account = function (instance) {
             this.presets = this.getParent().presets;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
+            this.is_rapprochement; // matching a statement line with an already reconciled journal item
             this.can_fetch_more_move_lines; // Tell if we can show more move lines
             this.filter = "";
             // In rare cases like when deleting a statement line's partner we don't want the server to
@@ -1043,12 +1071,12 @@ openerp.account = function (instance) {
             if (! line) return; // If no line found, we've got a syncing problem (let's turn a deaf ear)
 
             // Warn the user if he's selecting lines from both a payable and a receivable account
-            var last_selected_line = _.last(self.get("mv_lines_selected"));
-            if (last_selected_line && last_selected_line.account_type != line.account_type) {
-                new instance.web.Dialog(this, {
-                    title: _t("Warning"),
-                    size: 'medium',
-                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), last_selected_line.account_type))).open();
+            selected_lines_account_types = _.collect(self.get("mv_lines_selected").concat(line), function(l) { return l.account_type });
+            if (selected_lines_account_types.indexOf("payable") != -1 && selected_lines_account_types.indexOf("receivable") != -1) {
+                new instance.web.CrashManager().show_warning({data: {
+                    exception_type: "Incorrect Operation",
+                    message: _t("You cannot mix items from receivable and payable accounts.")
+                }});
                 return;
             }
 
@@ -1277,7 +1305,7 @@ openerp.account = function (instance) {
             self.is_valid = false;
             self.$(".tip_reconciliation_not_balanced").show();
             self.$(".tbody_open_balance").empty();
-            self.$(".button_ok").text("OK").removeClass("oe_highlight").attr("disabled", "disabled");
+            self.$(".button_ok").text("OK").removeClass("btn-primary").attr("disabled", "disabled");
 
             // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
             var balance_type = undefined;
@@ -1301,7 +1329,11 @@ openerp.account = function (instance) {
 
             // Show or hide partial reconciliation
             if (self.get("mv_lines_selected").length > 0) {
-                var propose_partial = self.getCreatedLines().length === 0 && self.get("mv_lines_selected").length === 1 && balance_type === "greater" && ! self.get("mv_lines_selected")[0].partial_reconcile;
+                var propose_partial = self.getCreatedLines().length === 0
+                    && self.get("mv_lines_selected").length === 1
+                    && balance_type === "greater"
+                    && ! self.get("mv_lines_selected")[0].partial_reconcile
+                    && ! self.is_rapprochement;
                 self.get("mv_lines_selected")[0].propose_partial_reconcile = propose_partial;
                 self.updateAccountingViewMatchedLines();
             }
@@ -1310,7 +1342,7 @@ openerp.account = function (instance) {
                 self.is_valid = true;
                 self.$(".tip_reconciliation_not_balanced").hide();
                 self.$(".button_ok").removeAttr("disabled");
-                if (higlight_ok_button) self.$(".button_ok").addClass("oe_highlight");
+                if (higlight_ok_button) self.$(".button_ok").addClass("btn-primary");
                 if (ok_button_text !== undefined) self.$(".button_ok").text(ok_button_text)
             }
 
@@ -1407,7 +1439,9 @@ openerp.account = function (instance) {
         
             self.getParent().excludeMoveLines(self, self.partner_id, added_lines);
             self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
-        
+
+            self.is_rapprochement = added_lines.length > 0 && added_lines[0].already_paid;
+
             $.when(self.updateMatches()).then(function(){
                 self.updateAccountingViewMatchedLines();
                 self.updateBalance();
@@ -1434,8 +1468,8 @@ openerp.account = function (instance) {
                     deferred_tax = $.when(self.model_tax
                         .call("compute_for_bank_reconciliation", [tax_id, amount]))
                         .then(function(data){
-                            line_created_being_edited[0].amount_with_tax = line_created_being_edited[0].amount;
-                            line_created_being_edited[0].amount = (data.total.toFixed(3) === amount.toFixed(3) ? amount : data.total);
+                            line_created_being_edited[0].amount_before_tax = (data.total.toFixed(3) === amount.toFixed(3) ? data.total : data.total_included);
+                            line_created_being_edited[0].amount = data.total
                             var current_line_cursor = 1;
                             $.each(data.taxes, function(index, tax){
                                 if (tax.amount !== 0.0) {
@@ -1470,8 +1504,8 @@ openerp.account = function (instance) {
                         line_created_being_edited[index].amount = Math.round(val.amount*rounding)/rounding;
                         line_created_being_edited[index].amount_str = self.formatCurrency(Math.abs(val.amount), val.currency_id);
                     }
-                    if (val.amount_with_tax)
-                        line_created_being_edited[index].amount_with_tax = Math.round(val.amount_with_tax*rounding)/rounding;
+                    if (val.amount_before_tax)
+                        line_created_being_edited[index].amount_before_tax = Math.round(val.amount_before_tax*rounding)/rounding;
                 });
                 self.set("line_created_being_edited", line_created_being_edited);
                 self.createdLinesChanged(); // TODO For some reason, previous line doesn't trigger change handler
@@ -1571,6 +1605,7 @@ openerp.account = function (instance) {
             balance = Math.round(balance*1000)/1000;
 
             self.set("balance", balance);
+    
         },
 
         // Loads move lines according to the widget's state
@@ -1632,6 +1667,7 @@ openerp.account = function (instance) {
                 debit: line.debit,
                 credit: line.credit,
                 counterpart_move_line_id: line.id,
+                already_paid: line.already_paid,
             };
         },
     
@@ -1641,11 +1677,10 @@ openerp.account = function (instance) {
             if (dict['account_id'] === undefined)
                 dict['account_id'] = line.account_id;
             dict['name'] = line.label;
-            var amount = line.tax_id ? line.amount_with_tax: line.amount;
+            var amount = line.tax_id ? line.amount_before_tax: line.amount;
             if (amount > 0) dict['credit'] = amount;
             if (amount < 0) dict['debit'] = -1 * amount;
             if (line.tax_id) dict['account_tax_id'] = line.tax_id;
-            if (line.is_tax_line) dict['is_tax_line'] = line.is_tax_line;
             if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
     
             return dict;
@@ -1667,8 +1702,9 @@ openerp.account = function (instance) {
         makeMoveLineDicts: function() {
             var self = this;
             var mv_line_dicts = [];
-            _.each(self.get("mv_lines_selected"), function(o) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(o)) });
-            _.each(self.getCreatedLines(), function(o) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(o)) });
+            _.each(self.get("mv_lines_selected"), function(l) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(l)) });
+            created_lines = _.filter(self.getCreatedLines(), function(l) { return ! l.is_tax_line; }); // Tax lines are created via account_tax_id
+            _.each(created_lines, function(l) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(l)) });
             if (Math.abs(self.get("balance")).toFixed(3) !== "0.000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
             return mv_line_dicts;
         },

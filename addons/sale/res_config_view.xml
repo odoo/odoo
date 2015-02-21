@@ -11,24 +11,15 @@
                     <group>
                         <label for="id" string="Invoicing Process"/>
                         <div>
-                            <div name="group_invoice_so_lines">
-                                <field name="group_invoice_so_lines" class="oe_inline"/>
-                                <label for="group_invoice_so_lines"/>
-                            </div>
                             <div name="timesheet">
                                 <field name="timesheet" class="oe_inline" on_change="onchange_timesheet(timesheet)"/>
                                 <label for="timesheet"/>
                             </div>
                         </div>
                     </group>
-                    <group name='default_options'>
-                        <label for="id" string="Default Options" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}"/>
-                        <div>
-                            <div name='time_unit' attrs="{'invisible': [('module_account_analytic_analysis','=',False)],'required':[('module_account_analytic_analysis','=',True)]}">
-                                <label for="time_unit"/>
-                                <field name="time_unit" domain="[('category_id.name','=','Working Time')]" class="oe_inline"/>
-                            </div>
-                        </div>
+                    <group name='default_options' invisible="1">
+                        <label for="id" string="Default Options"/>
+                        <div name="div_default_options"/>
                     </group>
                 </div>
                 <div name="Customer Features" position="inside">
@@ -38,7 +29,7 @@
                     </div>
                     <div name="module_warning">
                         <field name="module_warning" class="oe_inline"/>
-                        <label for="module_warning"/>
+                        <label for="module_warning"/> <span class="oe_grey">Purchase and Warehouse Management will be installed</span>
                     </div>
                      <div>
                           <field name="group_sale_delivery_address" class="oe_inline"/>
@@ -52,6 +43,10 @@
                             <div name='module_sale_stock'>
                                 <field name="module_sale_stock" class="oe_inline"/>
                                 <label for="module_sale_stock"/>
+                            </div>
+                            <div name="display_incoterm" attrs="{'invisible': [('module_sale_stock', '!=', True)]}">
+                                <field name="group_display_incoterm" class="oe_inline"/>
+                                <label for="group_display_incoterm"/>
                             </div>
                             <div name='module_sale_journal'>
                                 <field name="module_sale_journal" class="oe_inline"/>
@@ -83,6 +78,10 @@
                     <div name="module_sale_margin">
                         <field name="module_sale_margin" class="oe_inline"/>
                         <label for="module_sale_margin"/>
+                    </div>
+                    <div name="module_sale_layout">
+                        <field name="module_sale_layout" class="oe_inline"/>
+                        <label for="module_sale_layout"/>
                     </div>
                 </div>
                 <div name="customer feature" position="after">

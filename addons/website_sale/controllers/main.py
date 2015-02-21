@@ -3,6 +3,7 @@ import werkzeug
 
 from openerp import SUPERUSER_ID
 from openerp import http
+from openerp import tools
 from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
@@ -181,18 +182,12 @@ class website_sale(http.Controller):
         else:
             pricelist = pool.get('product.pricelist').browse(cr, uid, context['pricelist'], context)
 
-        product_obj = pool.get('product.template')
-
         url = "/shop"
-        product_count = product_obj.search_count(cr, uid, domain, context=context)
         if search:
             post["search"] = search
         if category:
             category = pool['product.public.category'].browse(cr, uid, int(category), context=context)
             url = "/shop/category/%s" % slug(category)
-        pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
-        product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
-        products = product_obj.browse(cr, uid, product_ids, context=context)
 
         style_obj = pool['product.style']
         style_ids = style_obj.search(cr, uid, [], context=context)
@@ -201,6 +196,13 @@ class website_sale(http.Controller):
         category_obj = pool['product.public.category']
         category_ids = category_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
         categs = category_obj.browse(cr, uid, category_ids, context=context)
+
+        product_obj = pool.get('product.template')
+
+        product_count = product_obj.search_count(cr, uid, domain, context=context)
+        pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
+        product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
+        products = product_obj.browse(cr, uid, product_ids, context=context)
 
         attributes_obj = request.registry['product.attribute']
         attributes_ids = attributes_obj.search(cr, uid, [], context=context)
@@ -228,6 +230,8 @@ class website_sale(http.Controller):
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
             'attrib_encode': lambda attribs: werkzeug.url_encode([('attrib',i) for i in attribs]),
         }
+        if category:
+            values['main_object'] = category
         return request.website.render("website_sale.products", values)
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
@@ -247,9 +251,8 @@ class website_sale(http.Controller):
 
         keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_list)
 
-        category_ids = category_obj.search(cr, uid, [], context=context)
-        category_list = category_obj.name_get(cr, uid, category_ids, context=context)
-        category_list = sorted(category_list, key=lambda category: category[1])
+        category_ids = category_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+        categs = category_obj.browse(cr, uid, category_ids, context=context)
 
         pricelist = self.get_pricelist()
 
@@ -269,7 +272,7 @@ class website_sale(http.Controller):
             'compute_currency': compute_currency,
             'attrib_set': attrib_set,
             'keep': keep,
-            'category_list': category_list,
+            'categories': categs,
             'main_object': product,
             'product': product,
             'get_attribute_value_ids': self.get_attribute_value_ids
@@ -308,7 +311,7 @@ class website_sale(http.Controller):
             compute_currency = lambda price: price
 
         values = {
-            'order': order,
+            'website_sale_order': order,
             'compute_currency': compute_currency,
             'suggested_products': [],
         }
@@ -337,6 +340,33 @@ class website_sale(http.Controller):
                 'website_sale_order': request.website.sale_get_order()
             })
         return value
+
+    @http.route([
+        '/shop/orders',
+        '/shop/orders/page/<int:page>',
+    ], type='http', auth="user", website=True)
+    def orders_followup(self, page=1, by = 5, **post):
+        partner = request.env['res.users'].browse(request.uid).partner_id
+        orders = request.env['sale.order'].sudo().search([('partner_id', '=', partner.id), ('state', 'not in', ['draft', 'cancel'])])
+
+        nbr_pages = max((len(orders) / by) + (1 if len(orders) % by > 0 else 0), 1)
+        page = min(page, nbr_pages)
+        pager = request.website.pager(
+            url='/shop/orders', total=nbr_pages, page=page, step=1,
+            scope=by, url_args=post
+        )
+        orders = orders[by*(page-1):by*(page-1)+by]
+
+        order_invoice_lines = {}
+        for o in orders:
+            invoiced_lines = request.env['account.invoice.line'].sudo().search([('invoice_id', 'in', o.invoice_ids.ids)])
+            order_invoice_lines[o.id] = {il.product_id.id: il.invoice_id for il in invoiced_lines}
+
+        return request.website.render("website_sale.orders_followup", {
+            'orders': orders,
+            'order_invoice_lines': order_invoice_lines,
+            'pager': pager,
+        })
 
     #------------------------------------------------------
     # Checkout
@@ -371,7 +401,7 @@ class website_sale(http.Controller):
 
         order = None
 
-        shipping_id = None
+        shipping_id = data and data.get('shipping_id') or None
         shipping_ids = []
         checkout = {}
         if not data:
@@ -387,9 +417,9 @@ class website_sale(http.Controller):
                         checkout.update( self.checkout_parse("billing", order.partner_id) )
         else:
             checkout = self.checkout_parse('billing', data)
-            try: 
-                shipping_id = int(data["shipping_id"])
-            except ValueError:
+            try:
+                shipping_id = int(shipping_id)
+            except (ValueError, TypeError):
                 pass
             if shipping_id == -1:
                 checkout.update(self.checkout_parse('shipping', data))
@@ -434,7 +464,8 @@ class website_sale(http.Controller):
             'shipping_id': partner.id != shipping_id and shipping_id or 0,
             'shippings': shippings,
             'error': {},
-            'has_check_vat': hasattr(registry['res.partner'], 'check_vat')
+            'has_check_vat': hasattr(registry['res.partner'], 'check_vat'),
+            'only_services': order and order.only_services or False
         }
 
         return values
@@ -482,12 +513,20 @@ class website_sale(http.Controller):
     def checkout_form_validate(self, data):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
-        # Validation
         error = dict()
+        error_message = []
+
+        # Validation
         for field_name in self.mandatory_billing_fields:
             if not data.get(field_name):
                 error[field_name] = 'missing'
 
+        # email validation
+        if data.get('email') and not tools.single_email_re.match(data.get('email')):
+            error["email"] = 'error'
+            error_message.append(_('Invalid Email! Please enter a valid email address.'))
+
+        # vat validation
         if data.get("vat") and hasattr(registry["res.partner"], "check_vat"):
             if request.website.company_id.vat_check_vies:
                 # force full VIES online check
@@ -505,7 +544,11 @@ class website_sale(http.Controller):
                 if not data.get(field_name):
                     error[field_name] = 'missing'
 
-        return error
+        # error message for empty required fields
+        if [err for err in error.values() if err == 'missing']:
+            error_message.append(_('Some required fields are empty.'))
+
+        return error, error_message
 
     def checkout_form_save(self, checkout):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
@@ -538,6 +581,7 @@ class website_sale(http.Controller):
             orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
             # create partner
+            billing_info['team_id'] = request.registry.get('ir.model.data').xmlid_to_res_id(cr, uid, 'website.salesteam_website_sales') 
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
         # create a new shipping partner
@@ -597,7 +641,7 @@ class website_sale(http.Controller):
 
         values = self.checkout_values(post)
 
-        values["error"] = self.checkout_form_validate(values["checkout"])
+        values["error"], values["error_message"] = self.checkout_form_validate(values["checkout"])
         if values["error"]:
             return request.website.render("website_sale.checkout", values)
 
@@ -642,7 +686,7 @@ class website_sale(http.Controller):
                 shipping_partner_id = order.partner_invoice_id.id
 
         values = {
-            'order': request.registry['sale.order'].browse(cr, SUPERUSER_ID, order.id, context=context)
+            'website_sale_order': order
         }
         values['errors'] = sale_order_obj._get_errors(cr, uid, order, context=context)
         values.update(sale_order_obj._get_website_data(cr, uid, order, context))
@@ -708,6 +752,7 @@ class website_sale(http.Controller):
                 'sale_order_id': order.id,
             }, context=context)
             request.session['sale_transaction_id'] = tx_id
+            tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
 
         # update quotation
         request.registry['sale.order'].write(
@@ -715,6 +760,10 @@ class website_sale(http.Controller):
                 'payment_acquirer_id': acquirer_id,
                 'payment_tx_id': request.session['sale_transaction_id']
             }, context=context)
+
+        # confirm the quotation
+        if tx.acquirer_id.auto_confirm == 'at_pay_now':
+            request.registry['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         return tx_id
 
@@ -725,47 +774,33 @@ class website_sale(http.Controller):
         order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
         assert order.id == request.session.get('sale_last_order_id')
 
+        values = {}
+        flag = False
         if not order:
-            return {
-                'state': 'error',
-                'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
-            }
-
-        tx_ids = request.registry['payment.transaction'].search(
-            cr, SUPERUSER_ID, [
-                '|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)
-            ], context=context)
-
-        if not tx_ids:
-            if order.amount_total:
-                return {
-                    'state': 'error',
-                    'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
-                }
-            else:
-                state = 'done'
-                message = ""
-                validation = None
+            values.update({'not_order': True, 'state': 'error'})
         else:
-            tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
-            state = tx.state
-            if state == 'done':
-                message = '<p>%s</p>' % _('Your payment has been received.')
-            elif state == 'cancel':
-                message = '<p>%s</p>' % _('The payment seems to have been canceled.')
-            elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
-                if tx.acquirer_id.post_msg:
-                    message += tx.acquirer_id.post_msg
-            else:
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
-            validation = tx.acquirer_id.validation
+            tx_ids = request.registry['payment.transaction'].search(
+                cr, SUPERUSER_ID, [
+                    '|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)
+                ], context=context)
 
-        return {
-            'state': state,
-            'message': message,
-            'validation': validation
-        }
+            if not tx_ids:
+                if order.amount_total:
+                    values.update({'tx_ids': False, 'state': 'error'})
+                else:
+                    values.update({'tx_ids': False, 'state': 'done', 'validation': None})
+            else:
+                tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
+                state = tx.state
+                flag = True if state == 'pending' and tx.acquirer_id.validation == 'automatic' else False
+                values.update({
+                    'tx_ids': True,
+                    'state': state,
+                    'validation' : tx.acquirer_id.validation,
+                    'tx_post_msg': tx.acquirer_id.post_msg or None
+                })
+
+        return {'recall': flag, 'message': request.website._render("website_sale.order_state_message", values)}
 
     @http.route('/shop/payment/validate', type='http', auth="public", website=True)
     def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
@@ -846,6 +881,17 @@ class website_sale(http.Controller):
             return request.redirect('/shop')
 
         return request.website.render("website_sale.confirmation", {'order': order})
+
+    @http.route(['/shop/print'], type='http', auth="public", website=True)
+    def print_saleorder(self):
+        cr, uid, context = request.cr, SUPERUSER_ID, request.context
+        sale_order_id = request.session.get('sale_last_order_id')
+        if sale_order_id:
+            pdf = request.registry['report'].get_pdf(cr, uid, [sale_order_id], 'sale.report_saleorder', data=None, context=context)
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            return request.make_response(pdf, headers=pdfhttpheaders)
+        else:
+            return request.redirect('/shop')
 
     #------------------------------------------------------
     # Edit
@@ -931,5 +977,3 @@ class website_sale(http.Controller):
             }
             ret['lines'] = self.order_lines_2_google_api(order.order_line)
         return ret
-
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

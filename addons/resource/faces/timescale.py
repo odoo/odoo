@@ -111,5 +111,3 @@ class TimeScale(object):
 
 
 _default_scale = TimeScale(pcal._default_calendar)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

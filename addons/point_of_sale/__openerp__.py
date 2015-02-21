@@ -47,9 +47,10 @@ Main Features
 * Refund previous sales
     """,
     'author': 'OpenERP SA',
-    'depends': ['sale_stock'],
+    'depends': ['sale_stock', 'barcodes'],
     'data': [
         'data/report_paperformat.xml',
+        'data/default_barcode_patterns.xml',
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'wizard/pos_box.xml',
@@ -70,6 +71,7 @@ Main Features
         'account_statement_report.xml',
         'res_users_view.xml',
         'res_partner_view.xml',
+        'res_config_view.xml',
         'views/report_statement.xml',
         'views/report_usersproduct.xml',
         'views/report_receipt.xml',
@@ -77,6 +79,7 @@ Main Features
         'views/report_detailsofsales.xml',
         'views/report_payment.xml',
         'views/report_sessionsummary.xml',
+        'views/report_userlabel.xml',
         'views/point_of_sale.xml',
     ],
     'demo': [
@@ -96,5 +99,3 @@ Main Features
     'website': 'https://www.odoo.com/page/point-of-sale',
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

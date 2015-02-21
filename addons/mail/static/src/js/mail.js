@@ -218,7 +218,7 @@ openerp.mail = function (session) {
 
             //formating and add some fields for render
             this.date = this.date ? session.web.str_to_datetime(this.date) : false;
-            this.display_date = this.date.toString('ddd MMM dd yyyy HH:mm');
+            this.display_date = moment(new Date(this.date)).format('ddd MMM DD YYYY LT');
             if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
                 this.timerelative = $.timeago(this.date);
             }
@@ -930,12 +930,63 @@ openerp.mail = function (session) {
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_mail_vote_count').on('mouseenter', this.on_hover);
             this.$('.oe_mail_expand').on('click', this.on_expand);
             this.$('.oe_mail_reduce').on('click', this.on_expand);
             this.$('.oe_mail_action_model').on('click', this.on_record_clicked);
             this.$('.oe_mail_action_author').on('click', this.on_record_author_clicked);
         },
-
+        on_hover : function(event){
+            var self = this;
+            var voter = "";
+            var limit = 10;
+            event.stopPropagation();
+            var $target = $(event.target).hasClass("fa-thumbs-o-up") ? $(event.target).parent() : $(event.target);
+            //Note: We can set data-content attr on target element once we fetch data so that next time when one moves mouse on element it saves call
+            //But if there is new like comes then we'll not have new likes in popover in that case
+            if ($target.data('liker-list'))
+            {
+                voter = $target.data('liker-list');
+                self.bindTooltipTo($target, voter);
+                $target.tooltip('hide').tooltip('show');
+                $(".tooltip").on("mouseleave", function () {
+                    $(this).remove();
+                });
+            }else{
+                this.ds_message.call('get_likers_list', [this.id, limit])
+                .done(function (data) {
+                    _.each(data, function(people, index) {
+                        voter = voter + people.substring(0,1).toUpperCase() + people.substring(1);
+                        if(index != data.length-1) {
+                            voter = voter + "<br/>";
+                        }
+                    });
+                    $target.data('liker-list', voter);
+                    self.bindTooltipTo($target, voter);
+                    $target.tooltip('hide').tooltip('show');
+                    $(".tooltip").on("mouseleave", function () {
+                        $(this).remove();
+                    });
+                });
+            }
+            return true;
+        },
+        bindTooltipTo: function($el, value) {
+            $el.tooltip({
+                'title': value,
+                'placement': 'top',
+                'container': this.el,
+                'html': true,
+                'trigger': 'manual',
+                'animation': false
+             }).on("mouseleave", function () {
+                setTimeout(function () {
+                    if (!$(".tooltip:hover").length) {
+                        $el.tooltip("hide");
+                    }
+                },100);
+            });
+        },
         on_record_clicked: function  (event) {
             event.preventDefault();
             var self = this;
@@ -1138,6 +1189,7 @@ openerp.mail = function (session) {
             this.$(".oe_msg_footer:first .oe_mail_vote_count").remove();
             this.$(".oe_msg_footer:first .oe_msg_vote").replaceWith(vote_element);
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_mail_vote_count').on('mouseenter', this.on_hover);
         },
 
         /**
@@ -1240,6 +1292,7 @@ openerp.mail = function (session) {
         start: function () {
             this._super.apply(this, arguments);
             this.bind_events();
+            return $.when();
         },
 
         /* instantiate the compose message object and insert this on the DOM.
@@ -1925,11 +1978,14 @@ openerp.mail = function (session) {
          * @param {Object} defaults ??
          */
         load_searchview: function (defaults) {
-            var ds_msg = new session.web.DataSetSearch(this, 'mail.message');
-            this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, false);
+            var self = this,
+                ds_msg = new session.web.DataSetSearch(this, 'mail.message'),
+                options = { $buttons: this.$('.oe-search-options') };
+            this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, options);
             this.searchview.on('search_data', this, this.do_searchview_search);
-            this.searchview.appendTo(this.$('.oe_view_manager_view_search'), 
-                                   this.$('.oe_searchview_drawer_container'));
+            this.searchview.appendTo(this.$('.oe-view-manager-search-view')).then(function () {
+                self.searchview.toggle_visibility(true);
+            });
             if (this.searchview.has_defaults) {
                 this.searchview.ready.then(this.searchview.do_search);
             }
@@ -2004,4 +2060,33 @@ openerp.mail = function (session) {
 
     openerp.mail.suggestions(session, mail);        // import suggestion.js (suggestion widget)
 
+    /**
+     * ------------------------------------------------------------
+     * UserMenu
+     * ------------------------------------------------------------
+     *
+     * Add a link on the top user bar for write a full mail
+     */
+    session.web.ComposeMessageTopButton = session.web.Widget.extend({
+        template:'mail.compose_message_top_button',
+        events: {
+            "click": "on_compose_message",
+        },
+        on_compose_message: function (ev) {
+            ev.preventDefault();
+            var action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.compose.message',
+                view_mode: 'form',
+                view_type: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: {},
+            };
+            session.client.action_manager.do_action(action);
+        },
+    });
+
+    // Put the ComposeMessageTopButton widget in the systray menu
+    session.web.SystrayItems.push(session.web.ComposeMessageTopButton);
 };

@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-__all__ = ['synchronized', 'lazy_property', 'classproperty']
+__all__ = ['synchronized', 'lazy_property', 'classproperty', 'conditional']
 
 from functools import wraps
 from inspect import getsourcefile
@@ -55,6 +55,19 @@ class lazy_property(object):
             if isinstance(getattr(cls, name, None), lazy_property):
                 obj_dict.pop(name)
 
+def conditional(condition, decorator):
+    """ Decorator for a conditionally applied decorator.
+
+        Example:
+
+           @conditional(get_config('use_cache'), ormcache)
+           def fn():
+               pass
+    """
+    if condition:
+        return decorator
+    else:
+        return lambda fn: fn
 
 def synchronized(lock_attr='_lock'):
     def decorator(func):
@@ -110,5 +123,3 @@ class _ClassProperty(property):
 
 def classproperty(func):
     return _ClassProperty(classmethod(func))
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

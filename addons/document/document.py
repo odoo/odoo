@@ -34,7 +34,7 @@ import openerp
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
-from openerp.osv.orm import except_orm
+from openerp.exceptions import UserError, AccessError, ValidationError
 import openerp.report.interface
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
@@ -47,6 +47,15 @@ _logger = logging.getLogger(__name__)
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
 
+    def _index(self, cr, uid, bin_data, datas_fname, mimetype):
+        """
+            Override the parent method to use the indexer of document module to find the index_content.
+            It is called from _set_data, when the data changed.
+        """
+        mime, icont = cntIndex.doIndex(bin_data, datas_fname,  mimetype or None, None)
+        icont_u = ustr(icont)
+        return icont_u
+
     _columns = {
         # Columns from ir.attachment:
         'write_date': fields.datetime('Date Modified', readonly=True),
@@ -54,9 +63,7 @@ class document_file(osv.osv):
         # Fields of document:
         'user_id': fields.many2one('res.users', 'Owner', select=1),
         'parent_id': fields.many2one('document.directory', 'Directory', select=1, change_default=True),
-        'index_content': fields.text('Indexed Content'),
         'partner_id':fields.many2one('res.partner', 'Partner', select=1),
-        'file_type': fields.char('Content Type'),
     }
     _order = "id desc"
 
@@ -74,7 +81,7 @@ class document_file(osv.osv):
             ids = [ids]
 
         super(document_file, self).check(cr, uid, ids, mode, context=context, values=values)
-        
+
         if ids:
             self.pool.get('ir.model.access').check(cr, uid, 'document.directory', mode)
 
@@ -87,7 +94,6 @@ class document_file(osv.osv):
         ids = super(document_file, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
         if not ids:
             return 0 if count else []
-
         # Filter out documents that are in directories that the user is not allowed to read.
         # Must use pure SQL to avoid access rules exceptions (we want to remove the records,
         # not fail), and the records have been filtered in parent's search() anyway.
@@ -103,10 +109,13 @@ class document_file(osv.osv):
         visible_parent_ids = self.pool.get('document.directory').search(cr, uid, [('id', 'in', list(parent_ids))])
 
         # null parents means allowed
+        orig_ids = ids # save the ids, to keep order
         ids = parents.get(None,[])
         for parent_id in visible_parent_ids:
             ids.extend(parents[parent_id])
 
+        # sort result according to the original sort ordering
+        ids = [id for id in orig_ids if id in ids]
         return len(ids) if count else ids
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -124,21 +133,12 @@ class document_file(osv.osv):
         # take partner from uid
         if vals.get('res_id', False) and vals.get('res_model', False) and not vals.get('partner_id', False):
             vals['partner_id'] = self.__get_partner_id(cr, uid, vals['res_model'], vals['res_id'], context)
-        if vals.get('datas', False):
-            vals['file_type'], vals['index_content'] = self._index(cr, uid, vals['datas'].decode('base64'), vals.get('datas_fname', False), None)
         return super(document_file, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
-        if vals.get('datas', False):
-            vals['file_type'], vals['index_content'] = self._index(cr, uid, vals['datas'].decode('base64'), vals.get('datas_fname', False), None)
         return super(document_file, self).write(cr, uid, ids, vals, context)
-
-    def _index(self, cr, uid, data, datas_fname, file_type):
-        mime, icont = cntIndex.doIndex(data, datas_fname,  file_type or None, None)
-        icont_u = ustr(icont)
-        return mime, icont_u
 
     def __get_partner_id(self, cr, uid, res_model, res_id, context=None):
         """ A helper to retrieve the associated partner from any res_model+id
@@ -290,7 +290,7 @@ class document_directory(osv.osv):
             try:
                 self.check_access_rule(cr, uid, ids, pperms[0], context=context)
                 res |= pperms[1]
-            except except_orm:
+            except AccessError:
                 pass
         return res
 
@@ -334,17 +334,17 @@ class document_directory(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         if not self._check_duplication(cr, uid, vals, ids, op='write'):
-            raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
+            raise ValidationError(_('Directory name must be unique!'))
         return super(document_directory,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr, uid, vals):
-            raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
+            raise ValidationError(_('Directory name must be unique!'))
         newname = vals.get('name',False)
         if newname:
             for illeg in ('/', '@', '$', '#'):
                 if illeg in newname:
-                    raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
+                    raise ValidationError(_('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
 class document_directory_dctx(osv.osv):
@@ -395,7 +395,7 @@ class document_directory_content(osv.osv):
         'suffix': fields.char('Suffix', size=16),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
         'extension': fields.selection(_extension_get, 'Document Type', required=True, size=4),
-        'include_name': fields.boolean('Include Record Name', 
+        'include_name': fields.boolean('Include Record Name',
                 help="Check this field if you want that the name of the file to contain the record name." \
                     "\nIf set, the directory will have to be a resource one."),
         'directory_id': fields.many2one('document.directory', 'Directory'),
@@ -405,17 +405,17 @@ class document_directory_content(osv.osv):
         'sequence': lambda *args: 1,
         'include_name': lambda *args: 1,
     }
-    
+
     def _file_get(self, cr, node, nodename, content, context=None):
         """ return the nodes of a <node> parent having a <content> content
             The return value MUST be false or a list of node_class objects.
         """
-    
+
         # TODO: respect the context!
         model = node.res_model
         if content.include_name and not model:
             return False
-        
+
         res2 = []
         tname = ''
         if content.include_name:
@@ -447,7 +447,7 @@ class document_directory_content(osv.osv):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         return True
-    
+
     def process_read(self, cr, uid, node, context=None):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
@@ -546,11 +546,11 @@ class document_storage(osv.osv):
         # 2nd phase: store the metadata
         try:
             icont = ''
-            mime = ira.file_type
+            mime = ira.mimetype
             if not mime:
                 mime = ""
             try:
-                mime, icont = cntIndex.doIndex(data, ira.datas_fname, ira.file_type or None, fname)
+                mime, icont = cntIndex.doIndex(data, ira.datas_fname, ira.mimetype or None, fname)
             except Exception:
                 _logger.debug('Cannot index file.', exc_info=True)
                 pass
@@ -561,16 +561,16 @@ class document_storage(osv.osv):
             # a hack: /assume/ that the calling write operation will not try
             # to write the fname and size, and update them in the db concurrently.
             # We cannot use a write() here, because we are already in one.
-            cr.execute('UPDATE ir_attachment SET file_size = %s, index_content = %s, file_type = %s WHERE id = %s', (filesize, icont_u, mime, file_node.file_id))
-            self.pool.get('ir.attachment').invalidate_cache(cr, uid, ['file_size', 'index_content', 'file_type'], [file_node.file_id], context=context)
+            cr.execute('UPDATE ir_attachment SET file_size = %s, index_content = %s, mimetype = %s WHERE id = %s', (filesize, icont_u, mime, file_node.file_id))
+            self.pool.get('ir.attachment').invalidate_cache(cr, uid, ['file_size', 'index_content', 'mimetype'], [file_node.file_id], context=context)
             file_node.content_length = filesize
             file_node.content_type = mime
             return True
         except Exception, e :
-            _logger.warning("Cannot save data.", exc_info=True)
+            _logger.info("Cannot save data.", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
-            raise except_orm(_('Error at doc write!'), str(e))
+            raise UserError(ustr(e))
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)
@@ -862,13 +862,13 @@ class node_class(object):
     def create_child(self, cr, path, data=None):
         """ Create a regular file under this node
         """
-        _logger.warning("Attempted to create a file under %r, not possible.", self)
+        _logger.info("Attempted to create a file under %r, not possible.", self)
         raise IOError(errno.EPERM, "Not allowed to create file(s) here.")
 
     def create_child_collection(self, cr, objname):
         """ Create a child collection (directory) under self
         """
-        _logger.warning("Attempted to create a collection under %r, not possible.", self)
+        _logger.info("Attempted to create a collection under %r, not possible.", self)
         raise IOError(errno.EPERM, "Not allowed to create folder(s) here.")
 
     def rm(self, cr):
@@ -1477,7 +1477,7 @@ class node_res_obj(node_class):
     def get_dav_eprop_DEPR(self, cr, ns, prop):
         # Deprecated!
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-            _logger.warning("Who asks for %s:%s?" % (ns, prop))
+            _logger.info("Who asks for %s:%s?", ns, prop)
             return None
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
@@ -1650,8 +1650,8 @@ class node_file(node_class):
         super(node_file,self).__init__(path, parent,context)
         self.file_id = fil.id
         #todo: more info from ir_attachment
-        if fil.file_type and '/' in fil.file_type:
-            self.mimetype = str(fil.file_type)
+        if fil.mimetype and '/' in fil.mimetype:
+            self.mimetype = str(fil.mimetype)
         self.create_date = fil.create_date
         self.write_date = fil.write_date or fil.create_date
         self.content_length = fil.file_size
@@ -1980,7 +1980,7 @@ class nodefd_content(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s is specified.", mode)
+            _logger.info("Incorrect mode %s is specified.", mode)
             raise IOError(errno.EINVAL, "Invalid file mode.")
         self.mode = mode
 
@@ -2006,7 +2006,7 @@ class nodefd_content(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db content #%d for close.', par.cnt_id)
+            _logger.info('Cannot update db content #%d for close.', par.cnt_id)
             raise
         finally:
             cr.close()
@@ -2033,7 +2033,7 @@ class nodefd_static(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s is specified.", mode)
+            _logger.info("Incorrect mode %s is specified.", mode)
             raise IOError(errno.EINVAL, "Invalid file mode.")
         self.mode = mode
 
@@ -2058,7 +2058,7 @@ class nodefd_static(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db content #%d for close.', par.cnt_id)
+            _logger.info('Cannot update db content #%d for close.', par.cnt_id)
             raise
         finally:
             cr.close()
@@ -2086,7 +2086,7 @@ class nodefd_db(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s is specified.", mode)
+            _logger.info("Incorrect mode %s is specified.", mode)
             raise IOError(errno.EINVAL, "Invalid file mode.")
         self.mode = mode
 
@@ -2105,5 +2105,3 @@ class nodefd_db(StringIO, node_descriptor):
                 registry.get('ir.attachment').write(cr, 1, par.file_id, {'datas': data})
             cr.commit()
         StringIO.close(self)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

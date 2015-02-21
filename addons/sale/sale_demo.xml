@@ -2,12 +2,12 @@
 <openerp>
     <data noupdate="1">
 
-        <record model="crm.case.section" id="sales_team.section_sales_department">
+        <record model="crm.team" id="sales_team.team_sales_department">
             <field name="invoiced_forecast">52700</field>
             <field name="invoiced_target">60000</field>
         </record>
         
-        <record model="crm.case.section" id="sales_team.crm_case_section_1">
+        <record model="crm.team" id="sales_team.crm_team_1">
             <field name="invoiced_forecast">36000</field>
             <field name="invoiced_target">40000</field>
         </record>
@@ -18,7 +18,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_2"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
@@ -59,14 +59,14 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="order_policy">manual</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <record id="sale_order_line_4" model="sale.order.line">
             <field name="order_id" ref="sale_order_2"/>
             <field name="name">Service on demand</field>
-            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">24</field>
             <field name="product_uos_qty">24</field>
             <field name="product_uom" ref="product.product_uom_hour"/>
@@ -90,7 +90,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="order_policy">manual</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
 
         <record id="sale_order_line_6" model="sale.order.line">
@@ -119,13 +119,13 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
 
         <record id="sale_order_line_8" model="sale.order.line">
             <field name="order_id" ref="sale_order_4"/>
             <field name="name">Service on demand</field>
-            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">16</field>
             <field name="product_uos_qty">16</field>
             <field name="product_uom" ref="product.product_uom_hour"/>
@@ -168,7 +168,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_2"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
@@ -208,7 +208,7 @@
             <field name="partner_shipping_id" ref="base.res_partner_18"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
         </record>
 
         <record id="sale_order_line_15" model="sale.order.line">
@@ -228,7 +228,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="order_policy">manual</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date_confirm" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
@@ -280,7 +280,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="order_policy">manual</field>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
         </record>
 
         <record id="sale_order_line_20" model="sale.order.line">
@@ -363,9 +363,9 @@ Thanks!</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="journal_id" ref="account.sales_journal"/>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="state">draft</field>
-            <field name="type">in_invoice</field>
+            <field name="type">out_invoice</field>
             <field name="account_id" ref="account.a_recv"/>
             <field name="name">Test invoice 1</field>
         </record>
@@ -411,7 +411,7 @@ Thanks!</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="journal_id" ref="account.sales_journal"/>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="state">draft</field>
             <field name="type">out_invoice</field>
             <field name="account_id" ref="account.a_recv"/>

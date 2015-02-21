@@ -97,7 +97,7 @@
                         <field name="description" placeholder="Topics discussed in this group..."/>
                         <div class="oe_clear"/>
                         <group class="oe_edit_only">
-                            <field name="public"/>
+                            <field name="public" widget="radio" string="Who can follow the group's activities?"/>
                             <field name="group_public_id"
                                 attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
                                 />

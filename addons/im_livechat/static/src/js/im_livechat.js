@@ -1,7 +1,3 @@
-/*
-    This file must compile in EcmaScript 3 and work in IE7.
-*/
-
 (function() {
 
     "use strict";
@@ -20,6 +16,10 @@
             this._super.apply(this, arguments);
             this.shown = true;
             this.loading_history = true; // since the session is kept after a refresh, anonymous can reload their history
+            this.feedback = false;
+        },
+        define_options: function(){
+            // no options for anonymous user
         },
         show: function(){
             this._super.apply(this, arguments);
@@ -50,9 +50,17 @@
             this.set('session', session);
             openerp.set_cookie(im_livechat.COOKIE_NAME, JSON.stringify(session), 60*60);
         },
-        click_close: function(e) {
-            this._super(e);
-            openerp.set_cookie(im_livechat.COOKIE_NAME, "", -1);
+        click_close: function(event) {
+            if(!this.feedback && (this.get('messages').length > 1)){
+                this.feedback = new im_livechat.Feedback(this);
+                this.$(".oe_im_chatview_content").empty();
+                this.$(".oe_im_chatview_input").prop('disabled', true);
+                this.feedback.appendTo( this.$(".oe_im_chatview_content"));
+                // bind event to close conversation
+                this.feedback.on("feedback_sent", this, this.click_close);
+            }else{
+                this._super.apply(this, arguments);
+            }
         },
     });
 
@@ -78,8 +86,8 @@
     };
 
     im_livechat.LiveSupport = openerp.Widget.extend({
-        init: function(server_url, db, channel, options) {
-            var self = this;
+        init: function(server_url, db, channel, options, rule) {
+            this._super();
             options = options || {};
             _.defaults(options, {
                 buttonText: _t("Chat with one of our collaborators"),
@@ -88,36 +96,45 @@
                 defaultUsername: _t("Visitor"),
             });
             openerp.session = new openerp.Session(null, server_url, { use_cors: false });
+            this.load_template(db, channel, options, rule);
+        },
+        _get_template_list: function(){
+            return ['/im_chat/static/src/xml/im_chat.xml', '/im_livechat/static/src/xml/im_livechat.xml'];
+        },
+        load_template: function(db, channel, options, rule){
+            var self = this;
             // load the qweb templates
             var defs = [];
-            var templates = ['/im_livechat/static/src/xml/im_livechat.xml', '/im_chat/static/src/xml/im_chat.xml'];
+            var templates = this._get_template_list();
             _.each(templates, function(tmpl){
                 defs.push(openerp.session.rpc('/web/proxy/load', {path: tmpl}).then(function(xml) {
                     openerp.qweb.add_template(xml);
                 }));
             });
             return $.when.apply($, defs).then(function() {
-                self.setup(db, channel, options);
+                self.setup(db, channel, options, rule);
             });
         },
-        setup: function(db, channel, options){
+        setup: function(db, channel, options, rule){
             var self = this;
             var session = openerp.get_cookie(im_livechat.COOKIE_NAME);
             if(session){
-                self.build_button(channel, options, JSON.parse(session));
+                self.build_button(channel, options, JSON.parse(session), rule);
             }else{
                 openerp.session.rpc("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
                     if(activated){
-                        self.build_button(channel, options);
+                        self.build_button(channel, options, false, rule);
                     }
                 });
             }
         },
-        build_button: function(channel, options, session){
+        build_button: function(channel, options, session, rule){
             var button = new im_livechat.ChatButton(null, channel, options, session);
             button.appendTo($("body"));
-            if (options.auto){
-                button.click();
+            if (rule.action === 'auto_popup'){
+                setTimeout(function() {
+                    button.click();
+                }, rule.auto_popup_timer*1000);
             }
         }
     });
@@ -137,7 +154,7 @@
             this.no_session_message = _t("None of our collaborators seems to be available, please try again later.");
         },
         start: function() {
-            this.$().append(openerp.qweb.render("chatButton", {widget: this}));
+            this.$().append(openerp.qweb.render("im_livechat.chatButton", {widget: this}));
             // set up the manager
             this.manager = new openerp.im_chat.ConversationManager(this, this.options);
             this.manager.set("bottom_offset", $('.oe_chat_button').outerHeight());
@@ -200,6 +217,56 @@
                     }, 1000);
                 }
             }
+        }
+    });
+
+    /* Rating livechat object */
+    im_livechat.Feedback = openerp.Widget.extend({
+        template : "im_livechat.feedback",
+        init: function(parent){
+            this._super(parent);
+            this.conversation = parent;
+            this.reason = false;
+            this.rating = false;
+        },
+        start: function(){
+            this._super.apply(this.arguments);
+            // bind events
+            this.$('.oe_livechat_rating_choices img').on('click', _.bind(this.click_smiley, this));
+            this.$('#rating_submit').on('click', _.bind(this.click_send, this));
+        },
+        click_smiley: function(ev){
+            var self = this;
+            this.rating = parseInt($(ev.currentTarget).data('value'));
+            this.$('.oe_livechat_rating_choices img').removeClass('selected');
+            this.$('.oe_livechat_rating_choices img[data-value="'+this.rating+'"]').addClass('selected');
+            // only display textearea if bad smiley selected
+            var close_conv = false;
+            if(this.rating == 0){
+                this.$('.oe_livechat_rating_reason').show();
+
+            }else{
+                this.$('.oe_livechat_rating_reason').hide();
+                close_conv = true;
+            }
+            this._send_feedback(close_conv).then(function(){
+                self.$('textarea').val(''); // empty the reason each time a click on a smiley is done
+            });
+        },
+        click_send: function(ev){
+            this.reason = this.$('textarea').val();
+            if(_.contains([0,5,10], this.rating)){ // need to use contains, since the rating can 0, evaluate to false
+                this._send_feedback(true);
+            }
+        },
+        _send_feedback: function(close){
+            var self = this;
+            var uuid = this.conversation.get('session').uuid;
+            return openerp.session.rpc("/rating/livechat/feedback", {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
+                if(close){
+                    self.trigger("feedback_sent"); // will close the conversation
+                }
+            });
         }
     });
 

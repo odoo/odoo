@@ -29,10 +29,10 @@ class crm_lead_report(osv.Model):
     _auto = False
     _description = "CRM Lead Analysis"
     _rec_name = 'date_deadline'
-    _inherit = ["crm.tracking.mixin"]
+    _inherit = ["utm.mixin"]
 
     _columns = {
-        'date_deadline': fields.date('Exp. Closing', readonly=True, help="Expected Closing"),
+        'date_deadline': fields.date('Expected Closing', readonly=True),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'opening_date': fields.datetime('Assignation Date', readonly=True),
         'date_closed': fields.datetime('Close Date', readonly=True),
@@ -45,13 +45,13 @@ class crm_lead_report(osv.Model):
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
 
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
+        'team_id':fields.many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True),  # TDE FIXME master: rename into total_revenue
         'probable_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True),  # TDE FIXME master: rename into expected_revenue
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
+        'stage_id': fields.many2one ('crm.stage', 'Stage', readonly=True, domain="[('team_ids', '=', team_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
@@ -86,7 +86,7 @@ class crm_lead_report(osv.Model):
                     c.type,
                     c.company_id,
                     c.priority,
-                    c.section_id,
+                    c.team_id,
                     c.campaign_id,
                     c.source_id,
                     c.medium_id,
@@ -103,6 +103,3 @@ class crm_lead_report(osv.Model):
                 WHERE c.active = 'true'
                 GROUP BY c.id
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

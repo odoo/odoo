@@ -144,7 +144,7 @@ def cmd_setup():
     cmd_setup_pg()
 
 def main():
-    # regsitry of commands
+    # registry of commands
     g = globals()
     cmds = dict([(i[4:],g[i]) for i in g if i.startswith('cmd_')])
     # if curl URL | python2 then use command setup
@@ -158,4 +158,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

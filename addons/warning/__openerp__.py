@@ -38,4 +38,3 @@ picking and invoice. The message is triggered by the form's onchange event.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

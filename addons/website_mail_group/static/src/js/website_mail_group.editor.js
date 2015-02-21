@@ -5,8 +5,9 @@
     var _t = openerp._t;
 
     website.snippet.options.subscribe = website.snippet.Option.extend({
-        on_prompt: function () {
+        choose_mailing_list: function (type, value) {
             var self = this;
+            if (type !== "click") return;
             return website.prompt({
                 id: "editor_new_subscribe_button",
                 window_title: _t("Add a Subscribe Button"),
@@ -22,14 +23,9 @@
         drop_and_build_snippet: function() {
             var self = this;
             this._super();
-            this.on_prompt().fail(function () {
+            this.choose_mailing_list("click").fail(function () {
                 self.editor.on_remove();
             });
-        },
-        start : function () {
-            var self = this;
-            this.$el.find(".js_mailing_list").on("click", _.bind(this.on_prompt, this));
-            this._super();
         },
         clean_for_save: function () {
             this.$target.addClass("hidden");

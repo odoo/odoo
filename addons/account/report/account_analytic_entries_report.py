@@ -33,8 +33,8 @@ class analytic_entries_report(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-        'account_id': fields.many2one('account.analytic.account', 'Account', required=False),
-        'general_account_id': fields.many2one('account.account', 'General Account', required=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=False),
+        'general_account_id': fields.many2one('account.account', 'Financial Account', required=True),
         'journal_id': fields.many2one('account.analytic.journal', 'Journal', required=True),
         'move_id': fields.many2one('account.move.line', 'Move', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
@@ -73,5 +73,3 @@ class analytic_entries_report(osv.osv):
                      a.move_id,a.product_id,a.product_uom_id
             )
         """)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

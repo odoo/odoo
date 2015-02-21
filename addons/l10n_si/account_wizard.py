@@ -27,4 +27,3 @@ class AccountWizard_cd(osv.osv_memory):
 	_defaults = {
         'code_digits' : 6,
 	}
-

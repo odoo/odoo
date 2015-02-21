@@ -28,6 +28,7 @@ from openerp.tools.translate import _
 from openerp.tools import float_compare
 from openerp.report import report_sxw
 import openerp
+from openerp.exceptions import UserError
 
 class res_currency(osv.osv):
     _inherit = "res.currency"
@@ -328,7 +329,7 @@ class account_voucher(osv.osv):
                         \n* The \'Cancelled\' status is used when user cancel voucher.'),
         'amount': fields.float('Total', digits_compute=dp.get_precision('Account'), required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_amount':fields.float('Tax Amount', digits_compute=dp.get_precision('Account'), readonly=True),
-        'reference': fields.char('Ref #', readonly=True, states={'draft':[('readonly',False)]},
+        'reference': fields.char('Reference', readonly=True, states={'draft':[('readonly',False)]},
                                  help="Transaction reference number.", copy=False),
         'number': fields.char('Number', readonly=True, copy=False),
         'move_id':fields.many2one('account.move', 'Account Entry', copy=False),
@@ -344,8 +345,8 @@ class account_voucher(osv.osv):
         'pre_line':fields.boolean('Previous Payments ?', required=False),
         'date_due': fields.date('Due Date', readonly=True, select=True, states={'draft':[('readonly',False)]}),
         'payment_option':fields.selection([
-                                           ('without_writeoff', 'Keep Open'),
-                                           ('with_writeoff', 'Reconcile Payment Balance'),
+                                           ('without_writeoff', 'Keep it open'),
+                                           ('with_writeoff', 'Reconcile payment balance'),
                                            ], 'Payment Difference', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="This field helps you to choose what you want to do with the eventual difference between the paid amount and the sum of allocated amounts. You can either choose to keep open this difference on the partner's account, or reconcile it with the payment(s)"),
         'writeoff_acc_id': fields.many2one('account.account', 'Counterpart Account', readonly=True, states={'draft': [('readonly', False)]}),
         'comment': fields.char('Counterpart Comment', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -515,7 +516,7 @@ class account_voucher(osv.osv):
             tr_type = 'purchase'
         else:
             if not journal.default_credit_account_id or not journal.default_debit_account_id:
-                raise osv.except_osv(_('Error!'), _('Please define default credit/debit accounts on the journal "%s".') % (journal.name))
+                raise UserError(_('Please define default credit/debit accounts on the journal "%s".') % (journal.name))
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
             tr_type = 'receipt'
 
@@ -956,7 +957,7 @@ class account_voucher(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for t in self.read(cr, uid, ids, ['state'], context=context):
             if t['state'] not in ('draft', 'cancel'):
-                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete voucher(s) which are already opened or paid.'))
+                raise UserError(_('Cannot delete voucher(s) which are already opened or paid.'))
         return super(account_voucher, self).unlink(cr, uid, ids, context=context)
 
     def onchange_payment(self, cr, uid, ids, pay_now, journal_id, partner_id, ttype='sale'):
@@ -1054,18 +1055,13 @@ class account_voucher(osv.osv):
             name = voucher.number
         elif voucher.journal_id.sequence_id:
             if not voucher.journal_id.sequence_id.active:
-                raise osv.except_osv(_('Configuration Error !'),
-                    _('Please activate the sequence of selected journal !'))
+                raise UserError(_('Please activate the sequence of selected journal !'))
             c = dict(context)
-            c.update({'fiscalyear_id': voucher.period_id.fiscalyear_id.id})
+            c.update({'ir_sequence_date': voucher.period_id.date_start})
             name = seq_obj.next_by_id(cr, uid, voucher.journal_id.sequence_id.id, context=c)
         else:
-            raise osv.except_osv(_('Error!'),
-                        _('Please define a sequence on the journal.'))
-        if not voucher.reference:
-            ref = name.replace('/','')
-        else:
-            ref = voucher.reference
+            raise UserError(_('Please define a sequence on the journal.'))
+        ref = voucher.reference or name
 
         move = {
             'name': name,
@@ -1199,7 +1195,7 @@ class account_voucher(osv.osv):
             # currency rate difference
             if line.amount == line.amount_unreconciled:
                 if not line.move_line_id:
-                    raise osv.except_osv(_('Wrong voucher line'),_("The invoice you are willing to pay is not valid anymore."))
+                    raise UserError(_("The invoice you are willing to pay is not valid anymore."))
                 sign = line.type =='dr' and -1 or 1
                 currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
@@ -1240,7 +1236,7 @@ class account_voucher(osv.osv):
             if move_line.get('account_tax_id', False):
                 tax_data = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
                 if not (tax_data.base_code_id and tax_data.tax_code_id):
-                    raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
+                    raise UserError(_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
 
             # compute the amount in foreign currency
             foreign_currency_diff = 0.0
@@ -1568,5 +1564,3 @@ class account_voucher_line(osv.osv):
             'type':ttype
         })
         return values
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -74,6 +74,3 @@ class hr_analytic_issue(osv.osv):
     _columns = {
         'issue_id' : fields.many2one('project.issue', 'Issue'),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

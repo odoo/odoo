@@ -22,6 +22,7 @@
 from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
@@ -29,13 +30,14 @@ class account_analytic_line(osv.osv):
     _columns = {
         'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'product_id': fields.many2one('product.product', 'Product'),
-        'general_account_id': fields.many2one('account.account', 'General Account', required=True, ondelete='restrict'),
+        'general_account_id': fields.many2one('account.account', 'Financial Account', required=True, ondelete='restrict'),
         'move_id': fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='restrict', select=True),
         'code': fields.char('Code', size=8),
         'ref': fields.char('Ref.'),
         'currency_id': fields.related('move_id', 'currency_id', type='many2one', relation='res.currency', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True),
         'amount_currency': fields.related('move_id', 'amount_currency', type='float', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
+        'partner_id': fields.related('account_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', store=True),
     }
 
     _defaults = {
@@ -92,7 +94,7 @@ class account_analytic_line(osv.osv):
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id
             if not a:
-                raise osv.except_osv(_('Error!'),
+                raise UserError(
                         _('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod.id,))
@@ -101,7 +103,7 @@ class account_analytic_line(osv.osv):
             if not a:
                 a = prod.categ_id.property_account_income_categ.id
             if not a:
-                raise osv.except_osv(_('Error!'),
+                raise UserError(
                         _('There is no income account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod_id,))
@@ -158,6 +160,3 @@ class res_partner(osv.osv):
         'contract_ids': fields.one2many('account.analytic.account', \
                                                     'partner_id', 'Contracts', readonly=True),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,7 +7,8 @@ var instance = openerp;
 openerp.web.chrome = {};
 
 var QWeb = instance.web.qweb,
-    _t = instance.web._t;
+    _t = instance.web._t,
+    _lt = instance.web._lt;
 
 instance.web.Notification =  instance.web.Widget.extend({
     template: 'Notification',
@@ -125,14 +126,16 @@ instance.web.Dialog = instance.web.Widget.extend({
         var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
         _.each(buttons, function(fn, text) {
             // buttons can be object or array
+            var pre_text  = fn.pre_text || "";
+            var post_text = fn.post_text || "";
             var oe_link_class = fn.oe_link_class;
             if (!_.isFunction(fn)) {
                 text = fn.text;
                 fn = fn.click;
             }
-            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': oe_link_class} }}}));
+            var $but = $(QWeb.render('WidgetButton', { widget : { pre_text: pre_text, post_text: post_text, string: text, node: { attrs: {'class': oe_link_class} }}}));
             $customButons.append($but);
-            $but.on('click', function(ev) {
+            $but.filter('button').on('click', function(ev) {
                 fn.call(self.$el, ev);
             });
         });
@@ -151,7 +154,6 @@ instance.web.Dialog = instance.web.Widget.extend({
             delete(options.buttons);
         }
         this.renderElement();
-
         this.$dialog_box = $(QWeb.render('Dialog', options)).appendTo("body");
         this.$el.modal({
             'backdrop': false,
@@ -231,7 +233,7 @@ instance.web.Dialog = instance.web.Widget.extend({
                 if (opened_modal.length > 0){
                     //we still have other opened modal so we should focus it
                     opened_modal[opened_modal.length-1].focus();
-                    //keep class modal-open (deleted by bootstrap hide fnct) on body 
+                    //keep class modal-open (deleted by bootstrap hide fnct) on body
                     //to allow scrolling inside the modal
                     $('body').addClass('modal-open');
                 }
@@ -250,6 +252,22 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
+        if (error.code == -32098) {
+            $.blockUI({ message: '' , overlayCSS: {'z-index': 9999, backgroundColor: '#FFFFFF', opacity: 0.0, cursor: 'wait'}});
+            var $indicator = $('<div class="oe_indicator">' + _t("Trying to reconnect... ") + '<i class="fa fa-refresh fa-spin"></i></div>');
+            $indicator.prependTo("body");
+            var timeinterval = setInterval(function(){
+                openerp.jsonRpc('/web/webclient/version_info').then(function() {
+                    clearInterval(timeinterval);
+                    $indicator.html(_t("You are back online"));
+                    $indicator.delay(2000).fadeOut('slow',function(){
+                        $indicator.remove();
+                    });
+                    $.unblockUI();
+                });
+            }, 2000);
+            return;
+        }
         var handler = instance.web.crash_manager_registry.get_object(error.data.name, true);
         if (handler) {
             new (handler)(this, error).display();
@@ -259,8 +277,52 @@ instance.web.CrashManager = instance.web.Class.extend({
             this.show_warning({type: "Session Expired", data: { message: _t("Your Odoo session expired. Please refresh the current web page.") }});
             return;
         }
-        if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning" || error.data.exception_type === "access_error") {
+        var map_title ={
+            user_error: _lt('Warning'),
+            warning: _lt('Warning'),
+            access_error: _lt('Access Error'),
+            missing_error: _lt('Missing Record'),
+            validation_error: _lt('Validation Error'),
+            except_orm: _lt('Global Business Error'),
+            access_denied: _lt('Access Denied'),
+        };
+        if (_.has(map_title, error.data.exception_type)) {
+            if(error.data.exception_type == 'except_orm'){
+                if(error.data.arguments[1]) {
+                    error = _.extend({}, error,
+                                {
+                                    data: _.extend({}, error.data,
+                                        {
+                                            message: error.data.arguments[1],
+                                            title: error.data.arguments[0] !== 'Warning' ? (" - " + error.data.arguments[0]) : '',
+                                        })
+                                });
+                }
+                else {
+                    error = _.extend({}, error,
+                                {
+                                    data: _.extend({}, error.data,
+                                        {
+                                            message: error.data.arguments[0],
+                                            title:  '',
+                                        })
+                                });
+                }
+            }
+            else {
+                error = _.extend({}, error,
+                            {
+                                data: _.extend({}, error.data,
+                                    {
+                                        message: error.data.arguments[0],
+                                        title: map_title[error.data.exception_type] !== 'Warning' ? (" - " + map_title[error.data.exception_type]) : '',
+                                    })
+                            });
+            }
+
             this.show_warning(error);
+        //InternalError
+
         } else {
             this.show_error(error);
         }
@@ -269,12 +331,10 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
-        if (error.data.exception_type === "except_osv") {
-            error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
-        }
         new instance.web.Dialog(this, {
             size: 'medium',
-            title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
+            title: "Odoo " + (_.str.capitalize(error.type) || _t("Warning")),
+            subtitle: error.data.title,
             buttons: [
                 {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
             ],
@@ -343,13 +403,14 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
             size: 'medium',
             title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
-                {text: _t("Ok"), click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}},
                 {text: error.data.arguments[2],
-                 oe_link_class: 'oe_link',
-                 click: function() {
-                    window.location.href='#action='+error.data.arguments[1];
-                    self.destroy();
-                }}
+                    oe_link_class : 'oe_highlight',
+                    post_text : _t("or"),
+                    click: function() {
+                        window.location.href='#action='+error.data.arguments[1]
+                        self.destroy();
+                    }},
+                {text: _t("Cancel"), oe_link_class: 'oe_link', click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}}
             ],
         }, QWeb.render('CrashManager.warning', {error: error})).open();
     }
@@ -701,9 +762,9 @@ instance.web.client_actions.add("reload_context", "instance.web.ReloadContext");
  * If can't go back in history stack, will go back to home.
  */
 instance.web.HistoryBack = function(parent) {
-    if (!parent.history_back()) {
+    parent.history_back().fail(function() {
         instance.web.Home(parent);
-    }
+    });
 };
 instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
 
@@ -751,12 +812,39 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
 });
 instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
+instance.web.SystrayItems = [];
+instance.web.SystrayMenu = instance.web.Widget.extend({
+    /**
+     * This widget renders the systray menu. It creates and renders widgets
+     * pushed in instance.web.SystrayItems.
+     */
+    init: function(parent) {
+        this._super(parent);
+        this.items = [];
+        this.load = $.Deferred();
+    },
+    start: function() {
+        var self = this;
+        self._super.apply(this, arguments);
+        self.load_items();
+        return $.when.apply($, self.items).done(function () {
+            self.load.resolve();
+        });
+    },
+    load_items: function() {
+        var self = this;
+        _.each(instance.web.SystrayItems, function(widgetCls) {
+            var cur_systray_item = new widgetCls(self);
+            self.items.push(cur_systray_item.appendTo(self.$el));
+        });
+    },
+});
+
 instance.web.Menu =  instance.web.Widget.extend({
     init: function() {
         var self = this;
         this._super.apply(this, arguments);
         this.is_bound = $.Deferred();
-        this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
         this.on("menu_bound", this, function() {
             // launch the fetch of needaction counters, asynchronous
@@ -786,10 +874,9 @@ instance.web.Menu =  instance.web.Widget.extend({
             self.open_menu(self.current_menu);
         }
         this.trigger('menu_bound');
-
         var lazyreflow = _.debounce(this.reflow.bind(this), 200);
         instance.web.bus.on('resize', this, function() {
-            if (parseInt(self.$el.parent().css('width')) <= 768 ) {
+            if ($(window).width() < 768 ) {
                 lazyreflow('all_outside');
             } else {
                 lazyreflow();
@@ -824,9 +911,8 @@ instance.web.Menu =  instance.web.Widget.extend({
      * Reflow the menu items and dock overflowing items into a "More" menu item.
      * Automatically called when 'menu_bound' event is triggered and on window resizing.
      *
-     * @param {string} behavior If set to 'all_outside', all the items are displayed. If set to
-     * 'all_inside', all the items are hidden under the more item. If not set, only the 
-     * overflowing items are hidden.
+     * @param {string} behavior If set to 'all_outside', all the items are displayed.
+     * If not set, only the overflowing items are hidden.
      */
     reflow: function(behavior) {
         var self = this;
@@ -835,35 +921,36 @@ instance.web.Menu =  instance.web.Widget.extend({
         var $systray = this.$el.parents().find('.oe_systray');
 
         $more.children('li').insertBefore($more_container);  // Pull all the items out of the more menu
-        
+
         // 'all_outside' beahavior should display all the items, so hide the more menu and exit
         if (behavior === 'all_outside') {
+            // Show list of menu items
+            self.$el.show();
             this.$el.find('li').show();
             $more_container.hide();
             return;
         }
 
+        // Hide all menu items
         var $toplevel_items = this.$el.find('li').not($more_container).not($systray.find('li')).hide();
+        // Show list of menu items (which is empty for now since all menu items are hidden)
+        self.$el.show();
         $toplevel_items.each(function() {
-            // In all inside mode, we do not compute to know if we must hide the items, we hide them all
-            if (behavior === 'all_inside') {
-                return false;
-            }
             var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
             self.$el.parent().children(':visible').each(function() {
                 remaining_space -= $(this).outerWidth();
             });
 
-            if ($(this).width() > remaining_space) {
-                return false;
+            if ($(this).width() >= remaining_space) {
+                return false; // the current item will be appended in more_container
             }
-            $(this).show();
+            $(this).show(); // show the current item in menu bar
         });
         $more.append($toplevel_items.filter(':hidden').show());
-        $more_container.toggle(!!$more.children().length || behavior === 'all_inside');
+        $more_container.toggle(!!$more.children().length);
         // Hide toplevel item if there is only one
-        var $toplevel = this.$el.children("li:visible");
-        if ($toplevel.length === 1 && behavior != 'all_inside') {
+        var $toplevel = self.$el.children("li:visible");
+        if ($toplevel.length === 1) {
             $toplevel.hide();
         }
     },
@@ -1009,7 +1096,6 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        this._super.apply(this, arguments);
         this.$el.on('click', '.dropdown-menu li a[data-menu]', function(ev) {
             ev.preventDefault();
             var f = self['on_menu_' + $(this).data('menu')];
@@ -1018,6 +1104,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             }
         });
         this.$el.parent().show()
+        return this._super.apply(this, arguments);
     },
     do_update: function () {
         var self = this;
@@ -1167,6 +1254,13 @@ instance.web.Client = instance.web.Widget.extend({
             }
         });
     },
+    on_logo_click: function(ev){
+        if (!this.has_uncommitted_changes()) {
+            return;
+        } else {
+            ev.preventDefault();
+        }
+    },
     show_common: function() {
         var self = this;
         this.crashmanager =  new instance.web.CrashManager();
@@ -1176,7 +1270,7 @@ instance.web.Client = instance.web.Widget.extend({
         self.loading = new instance.web.Loading(self);
         self.loading.appendTo(self.$('.openerp_webclient_container'));
         self.action_manager = new instance.web.ActionManager(self);
-        self.action_manager.appendTo(self.$('.oe_application'));
+        self.action_manager.replace(self.$('.oe_application'));
     },
     toggle_bars: function(value) {
         this.$('tr:has(td.navbar),.oe_leftbar').toggle(value);
@@ -1270,16 +1364,32 @@ instance.web.WebClient = instance.web.Client.extend({
         this.$('.oe_logo_edit_admin').click(function(ev) {
             self.logo_edit(ev);
         });
+        this.$('.oe_logo img').click(function(ev) {
+	        self.on_logo_click(ev);
+	    });
 
         // Menu is rendered server-side thus we don't want the widget to create any dom
         self.menu = new instance.web.Menu(self);
         self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
-        self.menu.start();
         self.menu.on('menu_click', this, this.on_menu_action);
+
+        // Create the user menu (rendered client-side)
         self.user_menu = new instance.web.UserMenu(self);
-        self.user_menu.appendTo(this.$el.parents().find('.oe_user_menu_placeholder'));
+        var user_menu_loaded = self.user_menu.appendTo(this.$el.parents().find('.oe_user_menu_placeholder'));
         self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
+
+        // Create the systray menu (rendered server-side)
+        self.systray_menu = new instance.web.SystrayMenu(self);
+        self.systray_menu.setElement(this.$el.parents().find('.oe_systray'));
+        var systray_menu_loaded = self.systray_menu.start();
+
+        // Start the menu once both systray and user menus are rendered
+        // to prevent overflows while loading
+        $.when(systray_menu_loaded, user_menu_loaded).done(function() {
+            self.menu.start();
+        });
+
         self.bind_hashchange();
         self.set_title();
         self.check_timezone();
@@ -1304,6 +1414,7 @@ instance.web.WebClient = instance.web.Client.extend({
                 result.views = [[false, 'form']];
                 result.flags = {
                     action_buttons: true,
+                    headless: true,
                 };
                 self.action_manager.do_action(result);
                 var form = self.action_manager.dialog_widget.views.form.controller;
@@ -1530,5 +1641,3 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
 };
 
 })();
-
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

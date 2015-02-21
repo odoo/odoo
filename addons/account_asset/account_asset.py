@@ -26,6 +26,7 @@ from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class account_asset_category(osv.osv):
     _name = 'account.asset.category'
@@ -40,7 +41,7 @@ class account_asset_category(osv.osv):
         'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True, domain=[('type','=','other')]),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
+        'method': fields.selection([('linear','Linear: Computed on basis of Gross Value / Number of Depreciations'),('degressive','Degressive: Computed on basis of Residual Value * Degressive Factor')], 'Computation Method', required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
             "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"),
         'method_number': fields.integer('Number of Depreciations', help="The number of depreciations needed to depreciate your asset"),
@@ -78,7 +79,7 @@ class account_asset_asset(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for asset in self.browse(cr, uid, ids, context=context):
             if asset.account_move_line_ids: 
-                raise osv.except_osv(_('Error!'), _('You cannot delete an asset that contains posted depreciation lines.'))
+                raise UserError(_('You cannot delete an asset that contains posted depreciation lines.'))
         return super(account_asset_asset, self).unlink(cr, uid, ids, context=context)
 
     def _get_period(self, cr, uid, context=None):
@@ -262,7 +263,7 @@ class account_asset_asset(osv.osv):
                                        "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."),
         'active': fields.boolean('Active'),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
-        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
+        'method': fields.selection([('linear','Linear: Computed on basis of Gross Value / Number of Depreciations'),('degressive','Degressive: Computed on basis of Residual Value * Degressive Factor')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
             "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"),
         'method_number': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="The number of depreciations needed to depreciate your asset"),
@@ -280,7 +281,7 @@ class account_asset_asset(osv.osv):
         'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
-        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
+        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'account.asset.code'),
         'purchase_date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d'),
         'active': True,
         'state': 'draft',
@@ -477,6 +478,3 @@ class account_asset_history(osv.osv):
         'date': lambda *args: time.strftime('%Y-%m-%d'),
         'user_id': lambda self, cr, uid, ctx: uid
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

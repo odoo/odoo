@@ -16,7 +16,7 @@ import psycopg2
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 import openerp.release
 import openerp.sql_db
 import openerp.tools
@@ -136,7 +136,7 @@ def exp_drop(db_name):
         try:
             cr.execute('DROP DATABASE "%s"' % db_name)
         except Exception, e:
-            _logger.error('DROP DB: %s failed:\n%s', db_name, e)
+            _logger.info('DROP DB: %s failed:\n%s', db_name, e)
             raise Exception("Couldn't drop database %s: %s" % (db_name, e))
         else:
             _logger.info('DROP DB: %s', db_name)
@@ -146,9 +146,9 @@ def exp_drop(db_name):
         shutil.rmtree(fs)
     return True
 
-def exp_dump(db_name):
+def exp_dump(db_name, format):
     with tempfile.TemporaryFile() as t:
-        dump_db(db_name, t)
+        dump_db(db_name, t, format)
         t.seek(0)
         return t.read().encode('base64')
 
@@ -222,7 +222,7 @@ def exp_restore(db_name, data, copy=False):
 def restore_db(db, dump_file, copy=False):
     assert isinstance(db, basestring)
     if exp_db_exist(db):
-        _logger.warning('RESTORE DB: %s already exists', db)
+        _logger.info('RESTORE DB: %s already exists', db)
         raise Exception("Database already exists")
 
     _create_empty_database(db)
@@ -290,7 +290,7 @@ def exp_rename(old_name, new_name):
             cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
             _logger.info('RENAME DB: %s -> %s', old_name, new_name)
         except Exception, e:
-            _logger.error('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
+            _logger.info('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
             raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
 
     old_fs = openerp.tools.config.filestore(old_name)
@@ -350,4 +350,3 @@ def exp_migrate_databases(databases):
         openerp.tools.config['update']['base'] = True
         openerp.modules.registry.RegistryManager.new(db, force_demo=False, update_module=True)
     return True
-

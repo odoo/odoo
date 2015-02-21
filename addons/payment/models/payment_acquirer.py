@@ -51,6 +51,7 @@ class PaymentAcquirer(osv.Model):
     """
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
+    _order = 'sequence'
 
     def _get_providers(self, cr, uid, context=None):
         return []
@@ -76,12 +77,18 @@ class PaymentAcquirer(osv.Model):
         'website_published': fields.boolean(
             'Visible in Portal / Website', copy=False,
             help="Make this payment acquirer available (Customer invoices, etc.)"),
+        'auto_confirm': fields.selection(
+            [('none', 'No automatic confirmation'),
+             ('at_pay_confirm', 'At payment confirmation'),
+             ('at_pay_now', 'At payment')],
+            string='Order Confirmation', required=True),
         # Fees
         'fees_active': fields.boolean('Compute fees'),
         'fees_dom_fixed': fields.float('Fixed domestic fees'),
         'fees_dom_var': fields.float('Variable domestic fees (in percents)'),
         'fees_int_fixed': fields.float('Fixed international fees'),
         'fees_int_var': fields.float('Variable international fees (in percents)'),
+        'sequence': fields.integer('Sequence', help="Determine the display order"),
     }
 
     _defaults = {
@@ -89,6 +96,7 @@ class PaymentAcquirer(osv.Model):
         'environment': 'test',
         'validation': 'automatic',
         'website_published': True,
+        'auto_confirm': 'at_pay_confirm',
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):

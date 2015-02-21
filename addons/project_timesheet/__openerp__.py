@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2014 OpenERP S.A. (<https://www.odoo.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -33,11 +33,10 @@ with the effect of creating, editing and deleting either ways.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
-    'depends': ['resource', 'project', 'hr_timesheet_sheet', 'hr_timesheet_invoice', 'account_analytic_analysis', 'procurement'],
+    'depends': ['resource', 'project', 'hr_timesheet', 'hr_timesheet_invoice', 'account_analytic_analysis', 'procurement'],
     'data': [
         'security/ir.model.access.csv',
         'security/project_timesheet_security.xml',
-        'report/task_report_view.xml',
         'project_timesheet_view.xml',
     ],
     'demo': ['project_timesheet_demo.xml'],
@@ -48,4 +47,3 @@ with the effect of creating, editing and deleting either ways.
     'installable': True,
     'auto_install': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

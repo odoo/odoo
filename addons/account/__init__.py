@@ -22,7 +22,6 @@
 import partner
 import account
 import installer
-import project
 import account_invoice
 import account_bank_statement
 import account_bank
@@ -33,10 +32,7 @@ import account_financial_report
 import wizard
 import report
 import product
-import ir_sequence
 import company
 import res_currency
 import edi
 import res_config
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

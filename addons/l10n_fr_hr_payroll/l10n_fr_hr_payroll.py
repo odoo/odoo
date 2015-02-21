@@ -50,5 +50,3 @@ class hr_payslip(osv.osv):
     _columns = {
         'payment_mode': fields.char('Mode de paiement'),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

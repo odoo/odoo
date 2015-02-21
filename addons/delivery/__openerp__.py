@@ -45,4 +45,3 @@ invoices from picking, OpenERP is able to add and compute the shipping line.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

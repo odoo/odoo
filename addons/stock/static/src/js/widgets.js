@@ -28,11 +28,6 @@ function openerp_picking_widgets(instance){
             var self = this;
             this.rows = [];
             this.search_filter = "";
-            jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
-                return function( elem ) {
-                    return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-                };
-            });
         },
         get_header: function(){
             return this.getParent().get_header();
@@ -179,12 +174,12 @@ function openerp_picking_widgets(instance){
             this.$('.js_plus').click(function(){
                 var id = $(this).data('product-id');
                 var op_id = $(this).parents("[data-id]:first").data('id');
-                self.getParent().scan_product_id(id,true,op_id);
+                self.getParent().scan_product_id(id,1,op_id);
             });
             this.$('.js_minus').click(function(){
                 var id = $(this).data('product-id');
                 var op_id = $(this).parents("[data-id]:first").data('id');
-                self.getParent().scan_product_id(id,false,op_id);
+                self.getParent().scan_product_id(id,-1,op_id);
             });
             this.$('.js_unfold').click(function(){
                 var op_id = $(this).parent().data('id');
@@ -367,7 +362,7 @@ function openerp_picking_widgets(instance){
             var container = this.$('.js_pack_op_line.container_head:not(.processed):not(.hidden)')
             var disabled = true;
             $.each(qties,function(index, value){
-                if (parseInt(value)>0){
+                if(value>0) {
                     disabled = false;
                 }
             });
@@ -866,7 +861,7 @@ function openerp_picking_widgets(instance){
                     }
                 });
         },
-        scan_product_id: function(product_id,increment,op_id){ //performs the same operation as a scan, but with product id instead
+        scan_product_id: function(product_id,increment,op_id){ //performs the same operation as a scan, but with product id instead, increment is the value to increment (-1 or 1)
             var self = this;
             return new instance.web.Model('stock.picking')
                 .call('process_product_id_from_ui', [self.picking.id, product_id, op_id, increment])

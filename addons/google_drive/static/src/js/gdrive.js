@@ -9,7 +9,7 @@ openerp.google_drive = function (instance, m) {
             this._super.apply(this, arguments);
             var view = self.getParent();
             var result;
-            if (view.fields_view.type == "form") {
+            if (view.fields_view && view.fields_view.type == "form") {
                 ids = []
                 view.on("load_record", self, function (r) {
                     ids = [r.id]

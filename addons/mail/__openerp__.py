@@ -50,12 +50,12 @@ Main Features
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
         'mail_message_subtype.xml',
-        'res_config_view.xml',
         'mail_message_view.xml',
         'mail_mail_view.xml',
         'mail_followers_view.xml',
         'mail_thread_view.xml',
         'mail_group_view.xml',
+        'res_config_view.xml',
         'res_partner_view.xml',
         'data/mail_data.xml',
         'data/mail_group_data.xml',
@@ -64,6 +64,10 @@ Main Features
         'mail_alias_view.xml',
         'res_users_view.xml',
         'views/mail.xml',
+        'wizard/email_template_preview_view.xml',
+        'views/email_template_view.xml',
+        'views/ir_actions_view.xml',
+        'views/res_partner_view.xml'
     ],
     'demo': [
         'data/mail_demo.xml',
@@ -78,4 +82,3 @@ Main Features
         'static/src/xml/suggestions.xml',
     ],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

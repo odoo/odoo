@@ -37,8 +37,10 @@
 -
   First I check the total amount of the Quotation before Approved.
 -
-  !assert {model: sale.order, id: sale_order_service, string: The amount of the Quotation is not correctly computed}:
-    - sum([l.price_subtotal for l in order_line]) == amount_untaxed
+  !python {model: sale.order}: |
+    from openerp.tools import float_compare
+    so = self.browse(cr, uid, ref('sale_order_service'))
+    float_compare(sum([l.price_subtotal for l in so.order_line]), so.amount_untaxed, precision_digits=2) == 0, "The amount of the Quotation is not correctly computed"
 - 
   I set an explicit invoicing partner that is different from the main SO Customer
 -
@@ -156,6 +158,7 @@
   I check the invoice details after dispatched delivery.
 -
   !python {model: sale.order}: |
+    from openerp.tools import float_compare
     order = self.browse(cr, uid, ref("sale_order_service"))
     assert order.invoice_ids, "Invoice is not created."
     ac = order.partner_invoice_id.property_account_receivable.id
@@ -175,7 +178,7 @@
         assert inv_line.product_id.id == so_line.product_id.id or False,"Product is not correspond"
         assert inv_line.account_id.id == ac,"Account of Invoice line is not corresponding."
         assert inv_line.uos_id.id == (so_line.product_uos and so_line.product_uos.id or so_line.product_uom.id), "Product UOS is not correspond."
-        assert inv_line.price_unit == so_line.price_unit , "Price Unit is not correspond."
+        assert float_compare(inv_line.price_unit, so_line.price_unit , precision_digits=2) == 0, "Price Unit is not correspond."
         assert inv_line.quantity == (so_line.product_uos and so_line.product_uos_qty or so_line.product_uom_qty), "Product qty is not correspond."
         assert inv_line.price_subtotal == so_line.price_subtotal, "Price sub total is not correspond."
 -

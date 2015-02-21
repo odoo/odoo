@@ -30,6 +30,7 @@ import utils
 import color
 import os
 import logging
+import traceback
 from lxml import etree
 import base64
 from distutils.version import LooseVersion
@@ -45,6 +46,11 @@ try:
     _hush_pyflakes = [ StringIO ]
 except ImportError:
     from StringIO import StringIO
+
+try:
+    from customfonts import SetCustomFonts
+except ImportError:
+    SetCustomFonts=lambda x:None
 
 _logger = logging.getLogger(__name__)
 
@@ -385,7 +391,7 @@ class _rml_canvas(object):
         try:
             self.canvas.drawString(text=text, **v)
         except TypeError:
-            _logger.error("Bad RML: <drawString> tag requires attributes 'x' and 'y'!")
+            _logger.info("Bad RML: <drawString> tag requires attributes 'x' and 'y'!")
             raise
 
     def _drawCenteredString(self, node):
@@ -1038,14 +1044,9 @@ def parseNode(rml, localcontext=None, fout=None, images=None, path='.', title=No
     r = _rml_doc(node, localcontext, images, path, title=title)
     #try to override some font mappings
     try:
-        from customfonts import SetCustomFonts
         SetCustomFonts(r)
-    except ImportError:
-        # means there is no custom fonts mapping in this system.
-        pass
-    except Exception:
-        _logger.warning('Cannot set font mapping', exc_info=True)
-        pass
+    except Exception, exc:
+        _logger.info('Cannot set font mapping: %s', "".join(traceback.format_exception_only(type(exc),exc)))
     fp = StringIO()
     r.render(fp)
     return fp.getvalue()
@@ -1056,7 +1057,6 @@ def parseString(rml, localcontext=None, fout=None, images=None, path='.', title=
 
     #try to override some font mappings
     try:
-        from customfonts import SetCustomFonts
         SetCustomFonts(r)
     except Exception:
         pass
@@ -1084,6 +1084,3 @@ if __name__=="__main__":
     else:
         print 'Usage: trml2pdf input.rml >output.pdf'
         print 'Try \'trml2pdf --help\' for more information.'
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

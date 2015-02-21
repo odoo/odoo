@@ -28,9 +28,9 @@ class purchase_config_settings(osv.osv_memory):
 
     _columns = {
         'default_invoice_method': fields.selection(
-            [('manual', 'Based on purchase order lines'),
-             ('picking', 'Based on incoming shipments'),
-             ('order', 'Pre-generate draft invoices based on purchase orders'),
+            [('manual', 'Control supplier invoice on purchase order line'),
+             ('picking', 'Control supplier invoice on incoming shipments'),
+             ('order', 'Control supplier invoice on a pregenerated draft invoice'),
             ], 'Default invoicing control method', required=True, default_model='purchase.order'),
         'group_purchase_pricelist':fields.boolean("Manage pricelist per supplier",
             implied_group='product.group_purchase_pricelist',
@@ -49,20 +49,19 @@ class purchase_config_settings(osv.osv_memory):
         'module_purchase_double_validation': fields.boolean("Force two levels of approvals",
             help='Provide a double validation mechanism for purchases exceeding minimum amount.\n'
                  '-This installs the module purchase_double_validation.'),
-        'module_purchase_requisition': fields.boolean("Manage calls for bids",
-            help="""Calls for bids are used when you want to generate requests for quotations to several suppliers for a given set of products.
+        'module_purchase_requisition': fields.boolean("Manage calls for tenders",
+            help="""Calls for tenders are used when you want to generate requests for quotations to several suppliers for a given set of products.
             You can configure per product if you directly do a Request for Quotation
-            to one supplier or if you want a Call for Bids to compare offers from several suppliers."""),
-        'group_advance_purchase_requisition': fields.boolean("Choose from several bids in a call for bids",
+            to one supplier or if you want a Call for Tenders to compare offers from several suppliers."""),
+        'group_advance_purchase_requisition': fields.boolean("Choose from several bids in a call for tenders",
             implied_group='purchase.group_advance_bidding',
-            help="""In the process of a public bidding, you can compare the bid lines and choose for each requested product from which bid you
-            buy which quantity"""),
+            help="""In the process of a public tendering, you can compare the tender lines and choose for each requested product which quantity you will buy from each bid."""),
         'module_purchase_analytic_plans': fields.boolean('Use multiple analytic accounts on purchase orders',
             help='Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n'
                  '-This installs the module purchase_analytic_plans.'),
         'group_analytic_account_for_purchases': fields.boolean('Analytic accounting for purchases',
             implied_group='purchase.group_analytic_accounting',
-            help="Allows you to specify an analytic account on purchase orders."),
+            help="Allows you to specify an analytic account on purchase order lines."),
         'module_stock_dropshipping': fields.boolean("Manage dropshipping",
             help='\nCreates the dropship route and add more complex tests'
                  '-This installs the module stock_dropshipping.'),
@@ -88,7 +87,7 @@ class account_config_settings(osv.osv_memory):
                  '-This installs the module purchase_analytic_plans.'),
         'group_analytic_account_for_purchases': fields.boolean('Analytic accounting for purchases',
             implied_group='purchase.group_analytic_accounting',
-            help="Allows you to specify an analytic account on purchase orders."),
+            help="Allows you to specify an analytic account on purchase order lines."),
     }
 
     def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):
@@ -96,5 +95,3 @@ class account_config_settings(osv.osv_memory):
         if not module_purchase_analytic_plans:
             return {}
         return {'value': {'group_analytic_account_for_purchases': module_purchase_analytic_plans}}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

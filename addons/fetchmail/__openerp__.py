@@ -65,5 +65,3 @@ For more specific needs, you may also assign custom-defined actions
     'installable': True,
     'auto_install': True,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,6 +20,9 @@
         margin-left: auto
         margin-right: auto
 
+.oe_website_sale ul ul
+    margin-left: 1.5em
+
 /* ---- Default Styles ---- */
 
 .oe_product
@@ -345,16 +348,9 @@ label.css_attribute_color.css_not_available
 
 /* ---- Publish managment and options ---- */
 
-#products_grid .css_options
-    display: none
-    position: absolute
-    top: -6px
-    left: 50%
-    z-index: 10
+.oe_overlay_options
     .dropdown
-        position: relative
-        left: -50%
-        [name="size"]
+        ul[name="size"]
             table
                 margin-left: 20px
             td
@@ -371,9 +367,16 @@ label.css_attribute_color.css_not_available
             table.oe_hover td.select
                 background-color: #B1D4F1
 
-.cke_editable
-    #products_grid .oe_product_cart:hover > .css_options
-        display: block
+/* ---- My Orders page ---- */
+
+.orders_vertical_align
+    display: flex
+    align-items: center
+
+
+.orders_label_text_align
+    vertical-align: 15%
+
 
 /* Wizard */
 
@@ -434,3 +437,7 @@ ul.wizard li.text-primary .chevron:before
 ul.wizard li:first-child
     padding-left: 15px
     border-radius: 4px 0 0 4px
+
+/* Shipping & Billing */
+.label-optional
+    font-weight: normal

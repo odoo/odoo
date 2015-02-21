@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+        <record id="account_bank_statement_import_view" model="ir.ui.view">
+            <field name="name">Import Bank Statements</field>
+            <field name="model">account.bank.statement.import</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Import Bank Statements">
+                    <field name="data_file"/>
+                    <br/><br/><b> How to import your bank statement :</b>
+                    <br/><label string= "1. Download your bank statements from your bank website."/>
+                    <br/><label string= "2. Make sure you have installed the right module to support the file format."/>
+                    <br/><label string= "3. Select the file and click 'Import'."/>
+                    <footer>
+                        <button name="import_file" string="_Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_bank_statement_import" model="ir.actions.act_window">
+            <field name="name">Import</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement.import</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="account_bank_statement_import_view"/>
+        </record>
+
+        <menuitem parent="account.periodical_processing_bank_statements" id="menu_account_bank_statement_import" action="action_account_bank_statement_import" sequence="11"/>
+
+    </data>
+</openerp>

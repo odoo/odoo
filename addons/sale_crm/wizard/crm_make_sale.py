@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class crm_make_sale(osv.osv_memory):
@@ -88,12 +89,12 @@ class crm_make_sale(osv.osv_memory):
                             ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner.property_product_pricelist.id
                 if False in partner_addr.values():
-                    raise osv.except_osv(_('Insufficient Data!'), _('No address(es) defined for this customer.'))
+                    raise UserError(_('No address(es) defined for this customer.'))
 
                 vals = {
                     'origin': _('Opportunity: %s') % str(case.id),
-                    'section_id': case.section_id and case.section_id.id or False,
-                    'categ_ids': [(6, 0, [categ_id.id for categ_id in case.categ_ids])],
+                    'team_id': case.team_id and case.team_id.id or False,
+                    'tag_ids': [(6, 0, [categ_id.id for categ_id in case.tag_ids])],
                     'partner_id': partner.id,
                     'pricelist_id': pricelist,
                     'partner_invoice_id': partner_addr['invoice'],
@@ -101,6 +102,10 @@ class crm_make_sale(osv.osv_memory):
                     'date_order': fields.datetime.now(),
                     'fiscal_position': fpos,
                     'payment_term':payment_term,
+                    'opportunity_id': case.id,
+                    'campaign_id': case.campaign_id and case.campaign_id.id or False,
+                    'medium_id': case.medium_id and case.medium_id.id or False,
+                    'source_id': case.source_id and case.source_id.id or False,
                 }
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid
@@ -147,6 +152,3 @@ class crm_make_sale(osv.osv_memory):
         'close': False,
         'partner_id': _selectPartner,
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

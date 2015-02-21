@@ -38,6 +38,7 @@ from openerp.tools.translate import _
 from openerp import http
 
 from openerp.http import request, serialize_exception as _serialize_exception
+from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -486,7 +487,7 @@ class Home(http.Controller):
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         ensure_db()
-
+        request.params['login_success'] = False
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
             return http.redirect_with_hash(redirect)
 
@@ -494,10 +495,6 @@ class Home(http.Controller):
             request.uid = openerp.SUPERUSER_ID
 
         values = request.params.copy()
-        if not redirect:
-            redirect = '/web?' + request.httprequest.query_string
-        values['redirect'] = redirect
-
         try:
             values['databases'] = http.db_list()
         except openerp.exceptions.AccessDenied:
@@ -507,6 +504,9 @@ class Home(http.Controller):
             old_uid = request.uid
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
+                request.params['login_success'] = True
+                if not redirect:
+                    redirect = '/web'
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = "Wrong login/password"
@@ -553,6 +553,26 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/jslist', type='json', auth="none")
     def jslist(self, mods=None):
         return manifest_list('js', mods=mods)
+
+    @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
+    def load_locale(self, lang):
+        magic_file_finding = [lang.replace("_",'-').lower(), lang.split('_')[0]]
+        addons_path = http.addons_manifest['web']['addons_path']
+        #load momentjs locale
+        momentjs_locale_file = False
+        momentjs_locale = ""
+        for code in magic_file_finding:
+            try:
+                with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'r') as f:
+                    momentjs_locale = f.read()
+                #we found a locale matching so we can exit
+                break
+            except IOError:
+                continue
+
+        #return the content of the locale
+        headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
+        return request.make_response(momentjs_locale, headers)
 
     @http.route('/web/webclient/qweb', type='http', auth="none")
     def qweb(self, mods=None, db=None):
@@ -936,7 +956,7 @@ class DataSet(http.Controller):
                 return records
 
         if method.startswith('_'):
-            raise Exception("Access Denied: Underscore prefixed methods cannot be remotely called")
+            raise AccessError(_("Underscore prefixed methods cannot be remotely called"))
 
         return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
 
@@ -993,19 +1013,6 @@ class View(http.Controller):
             'arch': arch
         }, request.context)
         return {'result': True}
-
-    @http.route('/web/view/undo_custom', type='json', auth="user")
-    def undo_custom(self, view_id, reset=False):
-        CustomView = request.session.model('ir.ui.view.custom')
-        vcustom = CustomView.search([('user_id', '=', request.session.uid), ('ref_id' ,'=', view_id)],
-                                    0, False, False, request.context)
-        if vcustom:
-            if reset:
-                CustomView.unlink(vcustom, request.context)
-            else:
-                CustomView.unlink([vcustom[0]], request.context)
-            return {'result': True}
-        return {'result': False}
 
 class TreeView(View):
 
@@ -1091,10 +1098,14 @@ class Binary(http.Controller):
         Model = request.registry[model]
         cr, uid, context = request.cr, request.uid, request.context
         fields = [field]
+        content_type = 'application/octet-stream'
         if filename_field:
             fields.append(filename_field)
         if id:
+            fields.append('file_type')
             res = Model.read(cr, uid, [int(id)], fields, context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(cr, uid, fields, context)
         filecontent = base64.b64decode(res.get(field) or '')
@@ -1105,7 +1116,7 @@ class Binary(http.Controller):
             if filename_field:
                 filename = res.get(filename_field, '') or filename
             return request.make_response(filecontent,
-                [('Content-Type', 'application/octet-stream'),
+                [('Content-Type', content_type),
                  ('Content-Disposition', content_disposition(filename))])
 
     @http.route('/web/binary/saveas_ajax', type='http', auth="public")
@@ -1118,6 +1129,7 @@ class Binary(http.Controller):
         id = jdata.get('id', None)
         filename_field = jdata.get('filename_field', None)
         context = jdata.get('context', {})
+        content_type = 'application/octet-stream'
 
         Model = request.session.model(model)
         fields = [field]
@@ -1126,7 +1138,10 @@ class Binary(http.Controller):
         if data:
             res = {field: data, filename_field: jdata.get('filename', None)}
         elif id:
+            fields.append('file_type')
             res = Model.read([int(id)], fields, context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field) or '')
@@ -1138,7 +1153,7 @@ class Binary(http.Controller):
             if filename_field:
                 filename = res.get(filename_field, '') or filename
             return request.make_response(filecontent,
-                headers=[('Content-Type', 'application/octet-stream'),
+                headers=[('Content-Type', content_type),
                         ('Content-Disposition', content_disposition(filename))],
                 cookies={'fileToken': token})
 
@@ -1627,7 +1642,3 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
-
-
-
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

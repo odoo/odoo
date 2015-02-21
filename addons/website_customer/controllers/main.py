@@ -7,6 +7,7 @@ from openerp.tools.translate import _
 from openerp.addons.web.http import request
 import werkzeug.urls
 
+
 class WebsiteCustomer(http.Controller):
     _references_per_page = 20
 
@@ -17,10 +18,17 @@ class WebsiteCustomer(http.Controller):
         '/customers/country/<country_name>-<int:country_id>',
         '/customers/country/<int:country_id>/page/<int:page>',
         '/customers/country/<country_name>-<int:country_id>/page/<int:page>',
+        '/customers/tag/<tag_id>',
+        '/customers/tag/<tag_id>/page/<int:page>',
+        '/customers/tag/<tag_id>/country/<int:country_id>',
+        '/customers/tag/<tag_id>/country/<country_name>-<int:country_id>',
+        '/customers/tag/<tag_id>/country/<int:country_id>/page/<int:page>',
+        '/customers/tag/<tag_id>/country/<country_name>-<int:country_id>/page/<int:page>',
     ], type='http', auth="public", website=True)
-    def customers(self, country_id=0, page=0, country_name='', **post):
+    def customers(self, country_id=0, page=0, country_name='', tag_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         country_obj = request.registry['res.country']
+        tag_obj = request.registry['res.partner.tag']
         partner_obj = request.registry['res.partner']
         partner_name = post.get('search', '')
 
@@ -31,6 +39,10 @@ class WebsiteCustomer(http.Controller):
                 ('name', 'ilike', post.get("search")),
                 ('website_description', 'ilike', post.get("search"))
             ]
+
+        if tag_id:
+            tag_id = unslug(tag_id)[1] or 0
+            domain += [('tag_ids', 'in', tag_id)]
 
         # group by country, based on customers found with the search(domain)
         countries = partner_obj.read_group(
@@ -49,6 +61,7 @@ class WebsiteCustomer(http.Controller):
                         'country_id': (country_id, country['name'])
                     })
                 countries.sort(key=lambda d: d['country_id'] and d['country_id'][1])
+            curr_country = country_obj.browse(cr, uid, country_id, context)
 
         countries.insert(0, {
             'country_id_count': country_count,
@@ -73,14 +86,23 @@ class WebsiteCustomer(http.Controller):
         google_map_partner_ids = ','.join(map(str, partner_ids))
         partners = partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids, request.context)
 
+        tag_obj = request.registry['res.partner.tag']
+        tag_ids = tag_obj.search(cr, uid, [('website_published', '=', True), ('partner_ids', 'in', partner_ids)],
+                                 order='classname, name ASC', context=context)
+        tags = tag_obj.browse(cr, uid, tag_ids, context=context)
+        tag = tag_id and tag_obj.browse(cr, uid, tag_id, context=context) or False
+
         values = {
             'countries': countries,
             'current_country_id': country_id or 0,
+            'current_country': country_id and curr_country or False,
             'partners': partners,
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
             'search_path': "?%s" % werkzeug.url_encode(post),
+            'tag': tag,
+            'tags': tags,
         }
         return request.website.render("website_customer.index", values)
 

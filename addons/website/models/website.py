@@ -6,7 +6,6 @@ import hashlib
 import inspect
 import logging
 import math
-import mimetypes
 import unicodedata
 import os
 import re
@@ -24,10 +23,12 @@ except ImportError:
     slugify_lib = None
 
 import openerp
+from openerp.tools.translate import _
 from openerp.osv import orm, osv, fields
 from openerp.tools import html_escape as escape, ustr, image_resize_and_sharpen, image_save_for_web
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
+from werkzeug.exceptions import NotFound
 
 logger = logging.getLogger(__name__)
 
@@ -124,6 +125,12 @@ def slug(value):
 # NOTE: as the pattern is used as it for the ModelConverter (ir_http.py), do not use any flags
 _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
 
+DEFAULT_CDN_FILTERS = [
+    "^/[^/]+/static/",
+    "^/web/(css|js)/",
+    "^/website/image/",
+]
+
 def unslug(s):
     """Extract slug and id from a string.
         Always return un 2-tuple (str|None, int|None)
@@ -137,20 +144,19 @@ def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
 
 class website(osv.osv):
-    def _get_menu_website(self, cr, uid, ids, context=None):
-        # IF a menu is changed, update all websites
-        return self.search(cr, uid, [], context=context)
-
     def _get_menu(self, cr, uid, ids, name, arg, context=None):
-        root_domain = [('parent_id', '=', False)]
-        menus = self.pool.get('website.menu').search(cr, uid, root_domain, order='id', context=context)
-        menu = menus and menus[0] or False
-        return dict( map(lambda x: (x, menu), ids) )
+        res = {}
+        menu_obj = self.pool.get('website.menu')
+        for id in ids:
+            menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False), ('website_id', '=', id)], order='id', context=context)
+            res[id] = menu_ids and menu_ids[0] or False
+        return res
 
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
-        'name': fields.char('Domain'),
+        'name': fields.char('Website Name'),
+        'domain': fields.char('Website Domain'),
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
         'default_lang_id': fields.many2one('res.lang', string="Default language"),
@@ -163,15 +169,20 @@ class website(osv.osv):
         'social_googleplus': fields.char('Google+ Account'),
         'google_analytics_key': fields.char('Google Analytics Key'),
         'user_id': fields.many2one('res.users', string='Public User'),
+        'compress_html': fields.boolean('Compress HTML'),
+        'cdn_activated': fields.boolean('Activate CDN for assets'),
+        'cdn_url': fields.char('CDN Base URL'),
+        'cdn_filters': fields.text('CDN Filters', help="URL matching those filters will be rewritten using the CDN Base URL"),
         'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
-        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
-            store= {
-                'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
-            })
+        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu')
     }
-
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
+        'compress_html': False,
+        'cdn_activated': False,
+        'cdn_url': '//localhost:8069/',
+        'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
     }
 
     # cf. Wizard hack in website_views.xml
@@ -192,27 +203,97 @@ class website(osv.osv):
         page_name = slugify(name, max_length=50)
         page_xmlid = "%s.%s" % (template_module, page_name)
 
-        try:
-            # existing page
-            imd.get_object_reference(cr, uid, template_module, page_name)
-        except ValueError:
-            # new page
-            _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
-            page_id = view.copy(cr, uid, template_id, context=context)
-            page = view.browse(cr, uid, page_id, context=context)
-            page.write({
-                'arch': page.arch.replace(template, page_xmlid),
-                'name': page_name,
-                'page': ispage,
-            })
-            imd.create(cr, uid, {
-                'name': page_name,
-                'module': template_module,
-                'model': 'ir.ui.view',
-                'res_id': page_id,
-                'noupdate': True
-            }, context=context)
+        # find a free xmlid
+        inc = 0
+        dom = [('key', '=', page_xmlid), '|', ('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
+        while view.search(cr, openerp.SUPERUSER_ID, dom, context=dict(context or {}, active_test=False)):
+            inc += 1
+            page_xmlid = "%s.%s" % (template_module, page_name + (inc and "-%s" % inc or ""))
+        page_name += (inc and "-%s" % inc or "")
+
+        # new page
+        _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
+        website_id = context.get('website_id')
+        key = template_module+'.'+page_name
+        page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
+        page = view.browse(cr, uid, page_id, context=context)
+        page.write({
+            'arch': page.arch.replace(template, page_xmlid),
+            'name': page_name,
+            'page': ispage,
+        })
         return page_xmlid
+
+    def delete_page(self, cr, uid, view_id, context=None):
+        if context is None:
+            context = {}
+        View = self.pool.get('ir.ui.view')
+        view_find = View.search(cr, uid, [
+            ('id', '=', view_id),
+            "|", ('website_id', '=', context.get('website_id')), ('website_id', '=', False),
+            ('page', '=', True),
+            ('type', '=', 'qweb')
+        ], context=context)
+        if view_find:
+            View.unlink(cr, uid, view_find, context=context)
+
+    def page_search_dependencies(self, cr, uid, view_id=False, context=None):
+        dep = {}
+        if not view_id:
+            return dep
+
+        # search dependencies just for information.
+        # It will not catch 100% of dependencies and False positive is more than possible
+        # Each module could add dependences in this dict
+        if context is None:
+            context = {}
+        View = self.pool.get('ir.ui.view')
+        Menu = self.pool.get('website.menu')
+
+        view = View.browse(cr, uid, view_id, context=context)
+        website_id = context.get('website_id')
+        name = view.key.replace("website.", "")
+        fullname = "website.%s" % name
+
+        if view.page:
+            # search for page with link
+            page_search_dom = [
+                '|', ('website_id', '=', website_id), ('website_id', '=', False),
+                '|', ('arch_db', 'ilike', '/page/%s' % name), ('arch_db', 'ilike', '/page/%s' % fullname)
+            ]
+            pages = View.search(cr, uid, page_search_dom, context=context)
+            if pages:
+                page_key = _('Page')
+                dep[page_key] = []
+            for page in View.browse(cr, uid, pages, context=context):
+                if page.page:
+                    dep[page_key].append({
+                        'text': _('Page <b>%s</b> seems to have a link to this page !' % page.key),
+                        'link': '/page/%s' % page.key
+                    })
+                else:
+                    dep[page_key].append({
+                        'text': _('Template <b>%s (id:%s)</b> seems to have a link to this page !' % (page.key, page.id)),
+                        'link': '#'
+                    })
+
+            # search for menu with link
+            menu_search_dom = [
+                '|', ('website_id', '=', website_id), ('website_id', '=', False),
+                '|', ('url', 'ilike', '/page/%s' % name), ('url', 'ilike', '/page/%s' % fullname)
+            ]
+
+            menus = Menu.search(cr, uid, menu_search_dom, context=context)
+            if menus:
+                menu_key = _('Menu')
+                dep[menu_key] = []
+            for menu in Menu.browse(cr, uid, menus, context=context):
+                dep[menu_key].append({
+                    'text': _('Menu <b>%s</b> seems to have a link to this page !' % menu.name),
+                    'link': False
+                })
+
+        return dep
 
     def page_for_name(self, cr, uid, ids, name, module='website', context=None):
         # whatever
@@ -231,6 +312,16 @@ class website(osv.osv):
     def _get_languages(self, cr, uid, id, context=None):
         website = self.browse(cr, uid, id)
         return [(lg.code, lg.name) for lg in website.language_ids]
+
+    def get_cdn_url(self, cr, uid, uri, context=None):
+        # Currently only usable in a website_enable request context
+        if request and request.website and not request.debug:
+            cdn_url = request.website.cdn_url
+            cdn_filters = (request.website.cdn_filters or '').splitlines()
+            for flt in cdn_filters:
+                if flt and re.match(flt, uri):
+                    return urlparse.urljoin(cdn_url, uri)
+        return uri
 
     def get_languages(self, cr, uid, ids, context=None):
         return self._get_languages(cr, uid, ids[0], context=context)
@@ -259,9 +350,19 @@ class website(osv.osv):
                 lang['hreflang'] = lang['short']
         return langs
 
+    @openerp.tools.ormcache(skiparg=4)
+    def _get_current_website_id(self, cr, uid, domain_name, context=None):
+        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
+        if ids:
+            return ids[0]
+        else:
+            return self.search(cr, uid, [], limit=1, context=context)[0]
+
     def get_current_website(self, cr, uid, context=None):
-        # TODO: Select website, currently hard coded
-        return self.pool['website'].browse(cr, uid, 1, context=context)
+        domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
+        website_id = self._get_current_website_id(cr, uid, domain_name, context=context)
+        request.context['website_id'] = website_id
+        return self.browse(cr, uid, website_id, context=context)
 
     def is_publisher(self, cr, uid, ids, context=None):
         Access = self.pool['ir.model.access']
@@ -273,14 +374,13 @@ class website(osv.osv):
         return Access.check(cr, uid, 'ir.ui.menu', 'read', False, context=context)
 
     def get_template(self, cr, uid, ids, template, context=None):
-        if isinstance(template, (int, long)):
-            view_id = template
-        else:
-            if '.' not in template:
-                template = 'website.%s' % template
-            module, xmlid = template.split('.', 1)
-            model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
-        return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
+        if not isinstance(template, (int, long)) and '.' not in template:
+            template = 'website.%s' % template
+        View = self.pool['ir.ui.view']
+        view_id = View.get_view_id(cr, uid, template, context=context)
+        if not view_id:
+            raise NotFound
+        return View.browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)
@@ -421,7 +521,7 @@ class website(osv.osv):
                 yield page
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
-        name = (needle or "").replace("/page/website.", "").replace("/page/", "")
+        name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
         res = []
         for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
             if needle in page['loc']:
@@ -573,7 +673,22 @@ class website(osv.osv):
         if response.status_code == 304:
             return response
 
-        data = record[field].decode('base64')
+        if model == 'ir.attachment' and field == 'url' and field in record:
+            path = record[field].strip('/')
+
+            # Check that we serve a file from within the module
+            if os.path.normpath(path).startswith('..'):
+                return self._image_placeholder(response)
+
+            # Check that the file actually exists
+            path = path.split('/')
+            resource = openerp.modules.get_module_resource(*path)
+            if not resource:
+                return self._image_placeholder(response)
+
+            data = open(resource, 'rb').read()
+        else:
+            data = record[field].decode('base64')
         image = Image.open(cStringIO.StringIO(data))
         response.mimetype = Image.MIME[image.format]
 
@@ -608,7 +723,6 @@ class website(osv.osv):
         size = '' if size is None else '/%s' % size
         return '/website/image/%s/%s/%s%s' % (model, id, field, size)
 
-
 class website_menu(osv.osv):
     _name = "website.menu"
     _description = "Website Menu"
@@ -639,7 +753,7 @@ class website_menu(osv.osv):
     _order = "sequence"
 
     # would be better to take a menu_id as argument
-    def get_tree(self, cr, uid, website_id, context=None):
+    def get_tree(self, cr, uid, website_id, menu_id=None, context=None):
         def make_tree(node):
             menu_node = dict(
                 id=node.id,
@@ -653,7 +767,10 @@ class website_menu(osv.osv):
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
             return menu_node
-        menu = self.pool.get('website').browse(cr, uid, website_id, context=context).menu_id
+        if menu_id:
+            menu = self.browse(cr, uid, menu_id, context=context)
+        else:
+            menu = self.pool.get('website').browse(cr, uid, website_id, context=context).menu_id
         return make_tree(menu)
 
     def save(self, cr, uid, website_id, data, context=None):
@@ -675,8 +792,11 @@ class website_menu(osv.osv):
             self.write(cr, uid, [menu['id']], menu, context=context)
         return True
 
+
 class ir_attachment(osv.osv):
+
     _inherit = "ir.attachment"
+
     def _website_url_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for attach in self.browse(cr, uid, ids, context=context):
@@ -685,21 +805,6 @@ class ir_attachment(osv.osv):
             else:
                 result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
         return result
-    def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
-        result = dict.fromkeys(ids, False)
-        attachments = self.read(cr, uid, ids, ['res_model'], context=context)
-        view_attachment_ids = [attachment['id'] for attachment in attachments if attachment['res_model'] == 'ir.ui.view']
-        for attach in self.read(cr, uid, view_attachment_ids, ['res_model', 'res_id', 'type', 'datas'], context=context):
-            result[attach['id']] = self._compute_checksum(attach)
-        return result
-
-    def _compute_checksum(self, attachment_dict):
-        if attachment_dict.get('res_model') == 'ir.ui.view'\
-                and not attachment_dict.get('res_id') and not attachment_dict.get('url')\
-                and attachment_dict.get('type', 'binary') == 'binary'\
-                and attachment_dict.get('datas'):
-            return hashlib.new('sha1', attachment_dict['datas']).hexdigest()
-        return None
 
     def _datas_big(self, cr, uid, ids, name, arg, context=None):
         result = dict.fromkeys(ids, False)
@@ -716,31 +821,10 @@ class ir_attachment(osv.osv):
         return result
 
     _columns = {
-        'datas_checksum': fields.function(_datas_checksum, size=40,
-              string="Datas checksum", type='char', store=True, select=True),
         'website_url': fields.function(_website_url_get, string="Attachment URL", type='char'),
         'datas_big': fields.function (_datas_big, type='binary', store=True,
                                       string="Resized file content"),
-        'mimetype': fields.char('Mime Type', readonly=True),
     }
-
-    def _add_mimetype_if_needed(self, values):
-        if values.get('datas_fname'):
-            values['mimetype'] = mimetypes.guess_type(values.get('datas_fname'))[0] or 'application/octet-stream'
-
-    def create(self, cr, uid, values, context=None):
-        chk = self._compute_checksum(values)
-        if chk:
-            match = self.search(cr, uid, [('datas_checksum', '=', chk)], context=context)
-            if match:
-                return match[0]
-        self._add_mimetype_if_needed(values)
-        return super(ir_attachment, self).create(
-            cr, uid, values, context=context)
-
-    def write(self, cr, uid, ids, values, context=None):
-        self._add_mimetype_if_needed(values)
-        return super(ir_attachment, self).write(cr, uid, ids, values, context=context)
 
     def try_remove(self, cr, uid, ids, context=None):
         """ Removes a web-based image attachment if it is used by no view
@@ -758,7 +842,7 @@ class ir_attachment(osv.osv):
             # in-document URLs are html-escaped, a straight search will not
             # find them
             url = escape(attachment.website_url)
-            ids = Views.search(cr, uid, ["|", ('arch', 'like', '"%s"' % url), ('arch', 'like', "'%s'" % url)], context=context)
+            ids = Views.search(cr, uid, ["|", ('arch_db', 'like', '"%s"' % url), ('arch_db', 'like', "'%s'" % url)], context=context)
 
             if ids:
                 removal_blocked_by[attachment.id] = Views.read(
@@ -845,4 +929,24 @@ class website_seo_metadata(osv.Model):
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 
-# vim:et:
+
+class website_published_mixin(osv.AbstractModel):
+    _name = "website.published.mixin"
+
+    _website_url_proxy = lambda self, *a, **kw: self._website_url(*a, **kw)
+
+    _columns = {
+        'website_published': fields.boolean('Visible in Website', copy=False),
+        'website_url': fields.function(_website_url_proxy, type='char', string='Website URL',
+                                       help='The full URL to access the document through the website.'),
+    }
+
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        return dict.fromkeys(ids, '#')
+
+    def open_website_url(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.browse(cr, uid, ids[0]).website_url,
+            'target': 'self',
+        }

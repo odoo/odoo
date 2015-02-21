@@ -7,9 +7,9 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="priority">36</field>
             <field name="arch" type="xml">
-                <field name="property_product_pricelist" position="after">
+                <group name="purchase" position="inside">
                     <field name="property_product_pricelist_purchase" groups="product.group_purchase_pricelist"/>
-                </field>
+                </group>
             </field>
         </record>
         

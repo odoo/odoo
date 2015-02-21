@@ -55,12 +55,14 @@ Print product labels with barcode.
         'security/product_security.xml',
         'security/ir.model.access.csv',
         'wizard/product_price_view.xml',
+        'res_config_view.xml',
         'product_data.xml',
         'product_report.xml',
         'product_view.xml',
         'pricelist_view.xml',
         'partner_view.xml',
         'views/report_pricelist.xml',
+        'views/report_productlabel.xml'
     ],
     'test': [
         'product_pricelist_demo.yml',
@@ -69,5 +71,3 @@ Print product labels with barcode.
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

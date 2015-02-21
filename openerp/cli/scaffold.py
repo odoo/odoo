@@ -135,4 +135,3 @@ def die(message, code=1):
 def warn(message):
     # ASK: shall we use logger ?
     print "WARNING: " + message
-
