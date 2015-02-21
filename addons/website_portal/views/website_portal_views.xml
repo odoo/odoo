@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <menuitem name="Knowledge" id="knowledge.menu_document"/>
+        <menuitem name="Portal Posts" id="menu_wiki" parent="knowledge.menu_document" sequence="20" />
+
+        <!-- Portal views -->
+        <record model="ir.ui.view" id="view_portal_portal_list">
+            <field name="name">portal.portal.list</field>
+            <field name="model">portal.portal</field>
+            <field name="arch" type="xml">
+                <tree string="Portals">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_portal_portal_form">
+            <field name="name">portal.portal.form</field>
+            <field name="model">portal.portal</field>
+            <field name="arch" type="xml">
+                <form string="Portal">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- page list view  -->
+        <record model="ir.ui.view" id="view_portal_post_list">
+            <field name="name">portal.post.list</field>
+            <field name="model">portal.post</field>
+            <field name="arch" type="xml">
+                <tree string="Portal Posts">
+                    <field name="name"/>
+                    <field name="portal_id"/>
+                    <field name="create_uid" invisible="1"/>
+                    <field name="write_uid"/>
+                    <field name="write_date"/>
+                </tree>
+            </field>
+        </record>
+        <!-- page form view  -->
+        <record model="ir.ui.view" id="view_portal_post_form">
+            <field name="name">portal.post.form</field>
+            <field name="model">portal.post</field>
+            <field name="arch" type="xml">
+                <form string="Portal Post">
+                    <sheet>
+                        <group>
+                            <field name="name" placeholder="Name"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="subtitle" placeholder="Portal Subtitle"/>
+                        </group>
+                        <group>
+                            <field name="background_image"/>
+                            <field name="portal_id"/>
+                        </group>
+                        <group>
+                            <field name="visits"/>
+                            <field name="ranking" invisible="1"/>
+                        </group>
+                        <group string="Technical" groups="base.group_no_one">
+                            <field name="write_uid" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
+                            <field name="write_date"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <!-- page search view  -->
+        <record model="ir.ui.view" id="view_portal_post_search">
+            <field name="name">portal.post.search</field>
+            <field name="model">portal.post</field>
+            <field name="arch" type="xml">
+                <search string="Portal Post">
+                    <field name="name" string="Content" filter_domain="['|', ('name','ilike',self), ('content','ilike',self)]"/>
+                    <field name="write_uid"/>
+                    <field name="portal_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Portal" domain="[]" context="{'group_by': 'portal_id'}"/>
+                        <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
+                        <filter string="Last Contributor" domain="[]" context="{'group_by': 'write_uid'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- page action -->
+        <record model="ir.actions.act_window" id="action_portal_post">
+            <field name="name">Portal Posts</field>
+            <field name="res_model">portal.post</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_portal_post_list"/>
+            <field name="search_view_id" ref="view_portal_post_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new portal post.
+                </p>
+            </field>
+        </record>
+        <menuitem id="menu_page" parent="menu_wiki" name="Portal Posts" action="action_portal_post" sequence="10"/>
+
+        <record model="ir.actions.act_window" id="action_portal_portal">
+            <field name="name">Portals</field>
+            <field name="res_model">portal.portal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_portal" parent="menu_wiki" name="Portals" action="action_portal_portal" sequence="20"/>
+
+        <!-- History Tree view -->
+        <record model="ir.ui.view" id="view_portal_history_tree">
+            <field name="name">portal.post.history.tree</field>
+            <field name="model">portal.post.history</field>
+            <field name="arch" type="xml">
+                <tree string="Document History">
+                    <field name="create_date"/>
+                    <field name="create_uid"/>
+                    <field name="post_id"/>
+                </tree>
+            </field>
+        </record>
+        <!-- History Form view  -->
+        <record model="ir.ui.view" id="view_portal_history_form">
+            <field name="name">portal.post.history.form</field>
+            <field name="model">portal.post.history</field>
+            <field name="arch" type="xml">
+                <form string="Portal Post History">
+                    <label for="post_id" class="oe_edit_only"/>
+                    <h1><field name="post_id" select="1" /></h1>
+                    <label for="create_date" class="oe_edit_only"/>
+                    <field name="create_date" readonly="1"/>
+                </form>
+            </field>
+        </record>
+        <!-- History Action  -->
+        <record model="ir.actions.act_window" id="action_history">
+            <field name="name">Page history</field>
+            <field name="res_model">portal.post.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_page_history" parent="menu_wiki" name="Pages history" action="action_history" sequence="30" groups="base.group_no_one"/>
+        <act_window
+            id="action_related_page_history"
+            context="{'search_default_post_id': [active_id], 'default_post_id': active_id}"
+            domain="[('post_id','=',active_id)]"
+            name="Page History"
+            res_model="portal.post.history"
+            src_model="portal.post"/>
+
+        <record model="ir.ui.view" id="portal_tag_tree">
+            <field name="name">portal_tag_tree</field>
+            <field name="model">portal.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tag List" create="false">
+                    <field name="name"/>
+                    <field name="post_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="portal_tag_form">
+            <field name="name">portal_tag_form</field>
+            <field name="model">portal.tag</field>
+            <field name="arch" type="xml">
+                <form string="Tag Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <label for="post_ids" string="Used in: "/>
+                        <field name="post_ids"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_tags">
+            <field name="name">Portal Tags</field>
+            <field name="res_model">portal.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="portal_tag_tree"/>
+        </record>
+
+        <menuitem id="menu_portal_tag" parent="menu_wiki" name="Portal Tags" action="action_tags" sequence="40" />
+    </data>
+</openerp>

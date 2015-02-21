@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="assets_editor" inherit_id="website.assets_editor" name="Portal Editor" groups="base.group_website_publisher">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_portal/static/src/js/website_portal.editor.js"></script>
+        <script type="text/javascript" src="/website_portal/static/src/js/website.tour.portal.js"></script>
+    </xpath>
+</template>
+
+<!-- Layout add nav and footer -->
+<template id="header_footer_custom" inherit_id="website.footer_default" name="Footer News Portal Link">
+    <xpath expr="//div[@id='info']/ul" position="inside">
+        <li><a t-attf-href="/portal/%(website_portal.portal_portal_1)d">News</a></li>
+    </xpath>
+</template>
+
+<!-- Overview of all portal posts -->
+<template id="latest_portals" name="Latest Portals">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure"/>
+            <section class="container">
+                <div class="alert alert-warning alert-dismissable mt16" groups="base.group_website_publisher">
+                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                   <p>
+                   This page is great to improve your <strong>Search Engine Optimization</strong>;
+                   You can review titles, keywords and descriptions of all portals at once.
+                   </p><p>
+                   You should <strong>add a banner on the top</strong> as it is a frequent landing page for new visitors.
+                   <span class="text-muted">This box will not be visible to your visitors.</span>
+                   </p>
+                </div>
+                <t t-call="website.pager" >
+                    <t t-set="classname">pull-right</t>
+                </t>
+            </section>
+            <section data-snippet-id="title" class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h1>Latest Posts</h1>
+                    </div>
+                </div>
+            </section>
+            <section class="container">
+                <div class="row">
+                    <t t-set="count" t-value="0"/>
+                    <t t-foreach="posts" t-as="post">
+                      <div class="col-md-4">
+                        <h4>
+                            <a t-attf-href="#{portal_url('', ['portal', 'post'], portal=post.portal_id, post=post)}" t-field="post.name"></a>
+                            <span t-if="not post.website_published" class="text-warning">
+                                &amp;nbsp;
+                                <span class="fa fa-warning" title="Not published"/>
+                            </span>
+                        </h4>
+                        <div class="text-muted">
+                            <span class="fa fa-calendar"> <span t-field="post.create_date"/> &amp;nbsp;</span>
+                            <span class="fa fa-folder-open"> In
+                                <a t-attf-href="#{portal_url(portal=post.portal_id)}">
+                                <span t-field="post.portal_id"/>
+                                </a> &amp;nbsp;
+                            </span>
+                        </div>
+                        <div class="text-muted fa fa-tags">
+                            <span t-field="post.website_meta_keywords"/>
+                            <span t-if="editable and not post.website_meta_keywords" class="label label-danger">
+                                No keywords defined!
+                            </span>
+                        </div>
+                        <div class="text-muted" t-if="len(post.message_ids) &gt; 0">
+                            <span class="fa fa-comment-o">
+                                <a t-attf-href="#{portal_url('', ['portalpost'], portalpost=post)}#comments">
+                                    <t t-if="len(post.message_ids) &lt;= 1" ><t t-esc="len(post.message_ids)"/> comment</t>
+                                    <t t-if="len(post.message_ids) > 1"><t t-esc="len(post.message_ids)"/> comments</t>
+                                </a>
+                            </span>
+                        </div>
+                        <div class="text-muted mb16" t-field="post.website_meta_description"/>
+                      </div>
+                      <t t-set="count" t-value="count+1"/>
+                      <div class="clearfix" t-if="(count % 3) == 0"/>
+                    </t>
+                </div>
+            </section>
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<!-- Portal Post List: Displaying a list of Portal Posts -->
+<template id="portal_post_short" name="Portal Posts">
+    <t t-call="website_portal.index">
+        <div class="oe_structure">
+            <section class="mb0">
+                <div class="container">
+                    <div class="row">
+                        <t t-call="website.pager" >
+                            <t t-set="classname">pull-right</t>
+                        </t>
+                        <div class="col-md-12 mb32 mt16 text-center">
+                            <h1 t-field="portal.name"/>
+                            <h3 class="text-muted" t-field="portal.subtitle"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="container">
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2" t-ignore="True" id="main_column">
+
+                <div t-if="not portal_posts" class="container mb64">
+                  <p class="css_editable_hidden">
+                    <h1>No portal post yet.</h1>
+                  </p>
+                  <p groups="base.group_document_user">
+                    Click on "Content" on the top menu to write your first portal post.
+                  </p>
+                </div>
+
+                <div t-foreach="portal_posts" t-as="portal_post" class="mb32">
+                  <span t-field="portal_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
+                  <a t-attf-href="/portal/#{ slug(portal_post.portal_id) }/post/#{ slug(portal_post) }">
+                      <h2 t-field="portal_post.name" class="mb4"/>
+                  </a>
+
+                  <div class="text-muted">
+                      <h4
+                        t-field="portal_post.subtitle"
+                        class="mb4 mt4"/>
+                    <div name='portal_post_data' class='mb0'>
+                         <span t-field="portal_post.author_id" style="display: inline-block;" t-field-options='{
+                                "widget": "contact",
+                                "fields": ["name"]
+                            }'/>
+                        &#5760; <span t-field="portal_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/>
+                        <span t-if="len(portal_post.message_ids) &gt; 0">
+                            &#5760; <t t-esc="len(portal_post.message_ids)"/>
+                            <t t-if="len(portal_post.message_ids) &lt;= 1" >comment</t>
+                            <t t-if="len(portal_post.message_ids) > 1">comments</t>
+                        </span>
+
+                        <span t-if="not portal_post.website_published" class="label label-danger">not published</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="oe_structure"/>
+    </t>
+</template>
+
+<!-- Option: Portal Post List: show tags -->
+<template id="opt_portal_post_short_tags" name="Tags"
+        customize_show="True" inherit_id="website_portal.portal_post_short">
+    <xpath expr="//*[@name='portal_post_data']" position="inside">
+        <p class="post-meta text-muted text-center" t-if="len(portal_post.tag_ids)">
+            <span class="fa fa-tags"/>
+            <t t-foreach="portal_post.tag_ids" t-as="tag">
+                <a t-attf-href="#{portal_url(tag=tag)}" t-esc="tag.name"/> &amp;nbsp;
+            </t>
+        </p>
+    </xpath>
+</template>
+
+<!-- Portal Post Complete -->
+<template id="portal_post_complete" name="Portal Post">
+  <t t-call="website_portal.index">
+    <script type="text/javascript" src="/website_portal/static/src/js/livevalidation_standalone.js"></script>
+
+    <div class="cover js_fullheight" id="title" t-attf-style="background-image: url(#{portal_post.background_image})" t-ignore="True">
+        <div class="container">
+          <div class="container text-right mt16">
+            <div class="btn-group css_non_editable_mode_hidden">
+                <a id="change_cover" class="btn btn-primary">
+                    Change Cover
+                </a>
+                <a id="clear_cover" class="btn btn-danger">
+                    <span class="fa fa-times"/>
+                </a>
+            </div>
+            <div class="cover-storage oe_hidden"></div>
+            <t t-call="website.publish_management">
+                <t t-set="object" t-value="portal_post"/>
+                <t t-set="publish_edit" t-value="True"/>
+                <li>
+                    <form class="duplicate hidden" action="/portalpost/duplicate">
+                        <input name="portal_post_id" t-att-value="portal_post.id"/>
+                    </form>
+                    <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
+                </li>
+            </t>
+          </div>
+        </div>
+        <div class="portal_title">
+            <div>
+                <span t-field="portal_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 130px; display:inline"}' />
+            </div>
+            <p class="post-meta text-muted text-center" name="portal_post_data"/>
+            
+			<div class="container">
+          <div class="rowpage">
+            <div class="col-md-12">
+              <div class="omb_row-sm-offset-3" id="MyChilli" style="display: block;">
+                <div class="col-xs-12 col-sm-6 omb_registo">
+                  <div>
+                    <h2 t-field="portal_post.name" id="portal_post_name" t-att-data-portal-id="portal_post.id"/>
+                    <h3 class="text-muted text-center">LIGA ou <a href="#" onclick="$('#MyChilli').hide(); $('#Registo').show()">Regista-te</a></h3>
+                    <div id="noLocation" style="display: none;">
+                      <h2 class="text-center">De momento não está num hotspot LIGA</h2>
+                    </div>
+                  </div>
+                  <script src="http://149.210.164.33/uam/chilli.js" id="chillijs"/>
+                  <div class="pull-left"><h6>Recuperar password</h6></div>
+                </div>
+              </div>
+              <div class="omb_row-sm-offset-3">
+                <div class="col-xs-12 col-sm-6 omb_registo" id="Registo" style="display: none;">
+                  <div>
+                    <h2 style="text-align: center; font-weight: bold; color: white;">Regista-te
+                    </h2>
+                  </div>
+                  <form action="/web/signup" class="oe_signup_form" id="formregisto" method="post" role="form" target="submission.frame">
+                    <script type="text/javascript">
+                function dbchanged(db) {
+                    document.location = "/web/login?db=" + db;
+                }
+            </script>
+                    <div class="form-group field-login">
+                      <input autofocus="autofocus" class="form-control" id="login" name="login" placeholder="Endereço de Email" required="required" type="text"/>
+                    </div>
+            	  <script type="text/javascript">
+		            var login = new LiveValidation('login');
+		            login.add(Validate.Email );
+		          </script>
+                    <div class="form-group field-name">
+                      <input class="form-control" id="name" name="name" placeholder="Nome Próprio e Apelido" required="required" type="text"/>
+                    </div>
+                    <div class="form-group field-password">
+                      <input autofocus="autofocus" class="form-control" id="password" name="password" placeholder="Password" required="required" type="password"/>
+                    </div>
+                    <div class="form-group field-confirm_password">
+                      <input class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirma a Password" required="required" type="password"/>
+                    </div>
+                    <input name="redirect" type="hidden"/>
+                    <input name="token" type="hidden"/>
+                    <div class="clearfix oe_login_buttons">
+                      <a class="btn btn-link pull-right" href="#" onclick="$('#Registo').hide(); $('#MyChilli').show()">Voltar ao Login</a>
+                      <button class="btn btn-primary pull-left" type="submit">Registar</button>
+                    </div>
+                    <iframe name="submission.frame" hidden=""/>
+                  </form>
+                  <script>
+    		var form = document.getElementById("formregisto");
+			function showDiv() {
+				// Do something.
+				/* Testing Statement: */ alert("O Registo foi efectuado com sucesso!                Volta atrás e faz login");
+			}
+			form.addEventListener("submit", showDiv);
+		</script>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb8">
+              <h5 class="text-muted text-center">
+                <a data-toggle="modal" href="#primary">Termos de Uso</a>
+              </h5>
+            </div>
+            <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade text-left" id="primary" role="dialog" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header modal-header-primary">
+                    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
+                    <h1><i class="glyphicon glyphicon-thumbs-up"/> Termos de Uso</h1>
+                  </div>
+                  <div class="modal-body text-muted">
+                    <p>Ao usar o serviço LIGA WiFi, você concorda com os termos e condições a seguir, e com quaisquer políticas, diretrizes ou emendas referentes apresentadas periodicamente, incluindo, entre outros, os Regulamentos do Programa e as Notificações Legais (coletivamente, os “Termos”). Os Termos podem ser atualizados futuramente.</p>
+                    <p>USO DOS SERVIÇOS<br/>
+O acesso ao serviço requer informações precisas de identificação, contacto entre outras, como parte do processo de inscrição ou da utilização continuada do serviço WiFi. Você é responsável por manter a senha da sua conta confidencial e por todas as actividades que ocorram na conta. Concorda em notificar imediatamente os serviços de apoio ao cliente se observar o uso não autorizado de sua senha ou conta ou qualquer violação de segurança. A Communities não pode ser e não será responsabilizada por qualquer perda ou dano causado por falha sua em nos fornecer informações precisas ou em manter sua senha segura.</p>
+                    <p>CONDUTA ADEQUADA<br/>
+O utilizador compreende que todas as informações, dados, texto, software, música, som, fotografia, gráfico, vídeo ou outros materiais (“Conteúdo”) estão exclusivamente sob a responsabilidade da pessoa que criou o Conteúdo. A Communities reserva-se ao direito, porém não tem nenhuma obrigação, de pré-selecionar, marcar, filtrar, recusar, modificar ou remover qualquer conteúdo que esteja disponível por meio do serviço WiFi. O utilizador compreende ainda que, ao usar o serviço LIGA WiFi, pode ser exposto a Conteúdo ofensivo, indecente ou censurável, e compreende também que usa os serviços por sua conta e risco.</p>
+                    <p>O utilizador concorda que é responsável por sua própria conduta e por qualquer Conteúdo que criar, transmitir ou apresentar ao utilizar o serviço WiFi, e por todas as consequências relacionadas. Concorda em usar os serviços apenas para finalidades legais, adequadas e condizentes com os Termos e com quaisquer políticas ou diretrizes aplicáveis. Concorda em não se envolver em qualquer actividade que interfira ou interrompa os serviços WiFi, ou os servidores e redes relacionados aos serviços.</p>
+                    <p/>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-default pull-left" data-dismiss="modal" type="button">Fechar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> 
+         </div>           
+
+            <div t-if="portal_post.background_image" id="portal_angle_down">
+                <strong><a href="#portal_content" class="fa fa-angle-down fa-3x fa-inverse mt32"/></strong>
+            </div>
+        </div>
+    </div>
+
+    <div id="portal_content" t-field="portal_post.content" class="mt32"/>
+
+    <section id="comments" class="read_width">
+        <hr/>
+        <ul class="media-list" id="comments-list">
+            <li t-foreach="comments" t-as="message" class="media">
+                <span class="pull-left">
+                    <img class="media-object img img-circle" t-att-src="website.image_url(message, 'author_avatar')" style="width: 30px"/>
+                </span>
+                <div class="media-body">
+                    <t t-call="website.publish_short">
+                        <t t-set="object" t-value="message"/>
+                    </t>
+                    <!-- <strong t-field="message.author_id"/> -->
+                    <span t-field="message.author_id" style="display: inline-block;" t-field-options='{
+                            "widget": "contact",
+                            "fields": ["name"]
+                        }'/>
+                    <span class="text-muted">on <span t-field="message.date"/></span>
+                    <div t-field="message.body" class="discussion_scroll_post"/>
+                </div>
+            </li>
+        </ul>
+    </section>
+<!-- 
+    <t t-if="next_post">
+        <div class="cover cover_footer mb0 text-center" t-attf-style="background-image: url(#{next_post.background_image})" t-ignore="True">
+            <div class="portal_title">
+                <a class="hidden js_next" t-attf-href="/portal/#{ slug(next_post.portal_id) }/post/#{ slug(next_post) }/#wrap"/>
+                <h1 t-field="next_post.name"/>
+                <h2 t-field="next_post.subtitle"/>
+                <div>
+                    <span t-field="next_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
+                    <span t-field="next_post.author_id" style="display: inline-block;" t-field-options='{
+                            "widget": "contact",
+                            "fields": ["name"]
+                        }'/>
+                </div>
+                <p class="mt32">Read Next <span class="fa fa-long-arrow-right"/></p>
+            </div>
+        </div>
+    </t>
+-->
+  </t>
+</template>
+
+<!-- Options: Portal Post: breadcrumb -->
+<template id="portal_breadcrumb" name="Breadcrumb"
+        inherit_id="website_portal.portal_post_complete" active="False" customize_show="True">
+    <xpath expr="//div[@id='title']" position="before">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-9">
+                <ol class="breadcrumb">
+                    <li><a t-attf-href="#{portal_url(tag=None, date_begin=None, date_end=None)}"><span t-field="portal.name"/></a></li>
+                    <li t-if="tag"><a t-attf-href="#{portal_url(date_begin=None, date_end=None)}"><span t-field="tag.name"/></a></li>
+                    <li t-if="date"><a t-attf-href="#{portal_url(tag=None)}" t-esc="date"/></li>
+                    <li class="active"><span t-field="portal_post.name"/></li>
+                </ol>
+            </div><div class="col-sm-3">
+            </div>
+          </div>
+        </div>
+    </xpath>
+</template>
+
+<!-- Options: Portal Post: user can reply -->
+<template id="opt_portal_post_complete_comment" name="Allow portal post comment"
+        inherit_id="website_portal.portal_post_complete" active="False" customize_show="True"
+        groups="website_mail.group_comment">
+    <xpath expr="//ul[@id='comments-list']" position="before">
+        <section class="mb32 read_width css_editable_mode_hidden">
+            <form id="comment" t-attf-action="/portalpost/comment" method="POST">
+                <div class="media">
+                    <span class="pull-left">
+                        <img class="img img-circle media-object" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 30px"/>
+                    </span>
+                    <div class="media-body">
+                        <input name="portal_post_id" t-att-value="portal_post.id" type="hidden"/>
+                        <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
+                        <button type="submit" class="btn btn-primary mt8">Post</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </xpath>
+</template>
+
+<!-- Options: Portal Post: user can select text for tweet -->
+<template id="opt_portal_post_select_to_tweet" name="Select to Tweet"
+        inherit_id="website_portal.portal_post_complete" active="False" customize_show="True">
+    <xpath expr="//div[@id='portal_content']" position="attributes">
+        <attribute name="class">js_tweet mt32</attribute>
+    </xpath>
+    <xpath expr="//div[@id='title']//div[@class='portal_title']" position="attributes">
+        <attribute name="class">portal_title js_tweet</attribute>
+    </xpath>
+</template>
+
+<!-- Options: Portal Post: user can add Inline Discussion -->
+<template id="opt_portal_post_inline_discussion" name="Allow comment in text"
+        inherit_id="website_portal.portal_post_complete" active="False" customize_show="True">
+    <xpath expr="//div[@id='portal_content']" position="attributes">
+        <attribute name="enable_chatter_discuss">True</attribute>
+    </xpath>
+</template>
+
+<!-- Options: Portal Post: show tags -->
+<template id="opt_portal_post_complete_tags" name="Tags"
+        customize_show="True" inherit_id="website_portal.portal_post_complete">
+    <xpath expr="//p[@name='portal_post_data']" position="after">
+        <p class="post-meta text-muted text-center" t-if="len(portal_post.tag_ids)">
+            <span class="fa fa-tags"/>
+            <t t-foreach="portal_post.tag_ids" t-as="tag">
+                <a t-attf-href="#{portal_url(tag=tag)}" t-esc="tag.name"/> &amp;nbsp;
+            </t>
+        </p>
+    </xpath>
+</template>
+
+<!-- Page -->
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="website_portal assets" >
+    <xpath expr="/t" position="inside">
+        <link rel='stylesheet' href='/website_portal/static/src/css/website_portal.css'/>
+        <script type="text/javascript" src="/website_portal/static/src/js/website_portal.inline.discussion.js"></script>
+        <script type="text/javascript" src="/website_portal/static/src/js/website_portal.js"/>
+        <script type="text/javascript" src="/website_portal/static/lib/contentshare.js"/>
+    </xpath>
+</template>
+
+<template id="index" name="Portal Navigation">
+    <t t-call="website.layout">
+        <div id="wrap" class="js_portal website_portal">
+            <t t-raw="0"/>
+        </div>
+    </t>
+</template>
+
+<!-- Option:Right Column for extra info -->
+
+<template id="index_right" name="Right Column"
+        inherit_id="website_portal.portal_post_short" active="False" customize_show="True">
+    <xpath expr="//div[@id='main_column']" position="attributes">
+        <attribute name="class">col-sm-8</attribute>
+    </xpath>
+    <xpath expr="//div[@id='main_column']" position="after">
+        <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="portal_right_column"/>
+    </xpath>
+</template>
+
+<!-- Option:Right Column: tags -->
+<template id="opt_portal_rc_tags" name="Tags"
+        inherit_id="website_portal.index_right" active="False" customize_show="True">
+    <xpath expr="//div[@id='portal_right_column']" position="inside">
+        <section class="mt32">
+        <h4>Tags</h4>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="tags" t-as="nav_tag">
+            <li t-att-class="tag and tag.id == nav_tag.id and 'active' or None" style="display: inline-block;">
+                <a t-attf-href="#{portal_url(tag=nav_tag)}"><span t-field="nav_tag.name"/></a>
+            </li>
+            </t>
+        </ul>
+        </section>
+    </xpath>
+</template>
+
+<!-- Option:Right Column: archives -->
+<template id="opt_portal_rc_history" name="Archives"
+        inherit_id="website_portal.index_right" active="False" customize_show="True">
+    <xpath expr="//div[@id='portal_right_column']" position="inside">
+        <section class="mt32">
+        <h4>Archives</h4>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="nav_list" t-as="months">
+            <li t-att-class="months['date_begin'] == date and 'active' or None">
+                <a t-ignore="True" t-attf-href="#{portal_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+            </li>
+            </t>
+        </ul>
+        </section>
+    </xpath>
+</template>
+
+<!-- Option:Right Column: about us -->
+<template id="opt_portal_rc_about_us" name="About Us" priority="2"
+        inherit_id="website_portal.index_right" active="False" customize_show="True">
+    <xpath expr="//div[@id='portal_right_column']" position="inside">
+        <section class="mt32">
+        <h4>About us</h4>
+        <p>
+            Write a small text here for when <b>new visitors</b> find your website
+            through your <b>portal entries</b>, referenced in Google.
+        </p>
+        <div>
+            <a href="/page/website.contactus"><button class="btn btn-primary">Contact us</button></a>
+        </div>
+        </section>
+    </xpath>
+</template>
+
+<!-- Option:Right Column: follow us -->
+<template id="opt_portal_rc_follow_us" name="Follow us" priority="4"
+        inherit_id="website_portal.index_right" active="False" customize_show="True">
+    <xpath expr="//div[@id='portal_right_column']" position="inside">
+        <section class="mt32">
+            <h4>Follow us<small t-if="portal">: <t t-esc="portal.name"/></small></h4>
+            <t t-if="portal">
+                <t t-call="website_mail.follow">
+                    <t t-set="email" t-value="user_id.email"/>
+                    <t t-set="object" t-value="portal"/>
+                </t>
+            </t>
+            <p class="text-muted mb0 mt16">
+                Participate on our social stream.
+            </p>
+            <h2 class="mt4">
+                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
+                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
+                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
+                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
+                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
+                <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
+            </h2>
+        </section>
+    </xpath>
+</template>
+
+<!-- Option:Right Column: portals -->
+<template id="opt_portal_rc_portals" name="Our Portals" priority="6"
+        inherit_id="website_portal.index_right" active="False" customize_show="True">
+    <xpath expr="//div[@id='portal_right_column']" position="inside">
+        <section class="mt32 mb32">
+        <h4>Our Portals</h4>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="portals" t-as="nav_portal">
+                <li t-att-class="nav_portal.id == portal.id and 'active' or ''">
+                    <a t-attf-href="#{portal_url(portal=nav_portal)}">
+                        <span t-field="nav_portal.name"/>
+                    </a>
+                </li>
+            </t>
+        </ul>
+        </section>
+    </xpath>
+</template>
+
+<!-- User Navbar -->
+<template id="content_new_portalpost" inherit_id="website.user_navbar" groups="base.group_document_user">
+    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+         <li><a href="#" data-action="new_portal_post">New Portal Post</a></li>
+    </xpath>
+</template>
+</data>
+</openerp>

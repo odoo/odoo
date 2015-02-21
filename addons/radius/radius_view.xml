@@ -1,0 +1,352 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		
+	<menuitem name="Radius" id="menu_radius"
+	         web_icon="images/conect.png"
+            web_icon_hover="images/conect_hover.png"/>/>
+        <menuitem name="configuration" parent="menu_radius" id="menu_radius_definition" sequence="1"/>
+        <menuitem name="Reports" parent="menu_radius" id="menu_radius_reports" sequence="1"/>
+
+<!-- Groups -->
+
+	<record model="ir.ui.view" id="groups_tree">
+		<field name="name">radius.groups.tree</field>
+		<field name="model">radius.groups</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Groups">
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="groups_form">
+		<field name="name">radius.groups.form</field>
+		<field name="model">radius.groups</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Groups">
+				<field name="name" select="1"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_radius_groups">
+		<field name="name">Groups</field>
+		<field name="res_model">radius.groups</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Groups" parent="radius.menu_radius_definition" id="menu_action_groups_tree" action="action_radius_groups"/>
+ 
+<!-- NAS -->
+
+	<record model="ir.ui.view" id="nas_tree">
+		<field name="name">radius.nas.tree</field>
+		<field name="model">radius.nas</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Nas">
+				<field name="nasname" select="1"/>
+				<field name="shortname" select="1"/>
+				<field name="type" select="2"/>
+				<field name="ports"/>
+				<field name="secret"/>
+				<field name="community" select="2"/>
+				<field name="description"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="nas_form">
+		<field name="name">radius.nas.form</field>
+		<field name="model">radius.nas</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Nas">
+				<field name="nasname"/>
+				<field name="secret"/>
+				<field name="type"/>
+				<field name="shortname"/>
+				<separator/>
+				<notebook>
+				<page string="NAS Advanced">
+				<field name="ports"/>
+				<field name="community"/>
+				<field name="description"/>
+				</page></notebook>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_radius_nas">
+		<field name="name">Nas</field>
+		<field name="res_model">radius.nas</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Nas" parent="radius.menu_radius_definition" id="menu_action_nas_tree" action="action_radius_nas"/>
+
+<!-- Radacct -->
+
+<!-- Radcheck -->
+
+	<record model="ir.ui.view" id="radcheck_tree">
+		<field name="name">radius.radcheck.tree</field>
+		<field name="model">radius.radcheck</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Users">
+				<field name="username" select="1"/>
+                                <field name="attribute" select="1"/>
+				<field name="value" string="Password"/> 
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="radcheck_form">
+		<field name="name">radius.radcheck.form</field>
+		<field name="model">radius.radcheck</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Users">
+				<field name="username" select="1"/>
+				<field name="attribute"/>
+				<field name="op"/>
+				<field name="value" string="Password"/> 
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_radius_radcheck">
+		<field name="name">radcheck</field>
+		<field name="res_model">radius.radcheck</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Users" parent="radius.menu_radius_definition" id="menu_action_radcheck_tree" action="action_radius_radcheck"/>
+
+<!-- Radgroupcheck -->
+
+	<record model="ir.ui.view" id="radgroupcheck_tree">
+		<field name="name">radius.radgroupcheck.tree</field>
+		<field name="model">radius.radgroupcheck</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Group Check Mappings">
+				<field name="groupname" select="1"/>
+				<field name="attribute" select="1"/>
+				<field name="op"/>
+				<field name="value"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="radgroupcheck_form">
+		<field name="name">radius.radgroupcheck.form</field>
+		<field name="model">radius.radgroupcheck</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Group Check Mappings">
+				<field name="groupname" widget="selection"/>
+				<field name="attribute"/>
+				<field name="op"/>
+				<field name="value"/> 
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_radius_radgroupcheck">
+		<field name="name">radgroupcheck</field>
+		<field name="res_model">radius.radgroupcheck</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Group Check Mappings" parent="radius.menu_radius_definition" id="menu_action_radgroupcheck_tree" action="action_radius_radgroupcheck"/>
+
+
+<!-- Radgroupreply -->
+
+	<record model="ir.ui.view" id="radgroupreply_tree">
+		<field name="name">radius.radgroupreply.tree</field>
+		<field name="model">radius.radgroupreply</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Group Reply Mappings">
+				<field name="groupname" select="1"/>
+				<field name="attribute" select="1"/>
+				<field name="op"/>
+				<field name="value"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="radgroupreply_form">
+		<field name="name">radius.radgroupreply.form</field>
+		<field name="model">radius.radgroupreply</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Group Reply Mappings">
+				<field name="groupname" widget="selection"/>
+				<field name="attribute"/>
+				<field name="op"/>
+				<field name="value"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_radius_radgroupreply">
+		<field name="name">radgroupreply</field>
+		<field name="res_model">radius.radgroupreply</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Group Reply Mappings" parent="radius.menu_radius_definition" id="menu_action_radgroupreply_tree" action="action_radius_radgroupreply"/>
+
+
+<!-- Radusergroup -->
+
+	<record model="ir.ui.view" id="radusergroup_tree">
+		<field name="name">radius.radusergroup.tree</field>
+		<field name="model">radius.radusergroup</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="User-Group Mappings">
+				<field name="username" select="1"/>
+				<field name="groupname" select="1"/>
+				<field name="priority"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="radusergroup_form">
+		<field name="name">radius.radusergroup.form</field>
+		<field name="model">radius.radusergroup</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="User-Group Mappings">
+				<field name="username" select="1"/>
+				<field name="groupname" select="1" widget="selection"/>
+				<field name="priority"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_radius_radusergroup">
+		<field name="name">radusergroup</field>
+		<field name="res_model">radius.radusergroup</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="User-Group Mappings" parent="radius.menu_radius_definition" id="menu_action_radusergroup_tree" action="action_radius_radusergroup"/>
+
+
+<!-- Radreply -->
+
+	<record model="ir.ui.view" id="radreply_tree">
+		<field name="name">radius.radreply.tree</field>
+		<field name="model">radius.radreply</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Users Reply Attributes">
+				<field name="username" select="1"/>
+				<field name="attribute" select="1"/>
+				<field name="op"/>
+				<field name="value"/> 
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="radreply_form">
+		<field name="name">radius.radreply.form</field>
+		<field name="model">radius.radreply</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Users Reply Attributes">
+				<field name="username"/>
+				<field name="attribute"/>
+				<field name="op"/>
+				<field name="value"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_radius_radreply">
+		<field name="name">radreply</field>
+		<field name="res_model">radius.radreply</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Users Reply Attributes" parent="radius.menu_radius_definition" id="menu_action_radreply_tree" action="action_radius_radreply"/>
+
+<!-- Radpostauth -->
+
+	<record model="ir.ui.view" id="radpostauth_tree">
+		<field name="name">radius.radpostauth.tree</field>
+		<field name="model">radius.radpostauth</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Last Connections">
+				<field name="username" readonly="1" select="1"/>
+				<field name="pass" readonly="1"/>
+				<field name="authdate" readonly="1" select="1"/>
+				<field name="reply" readonly="1"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="radpostauth_form">
+		<field name="name">radius.radpostauth.form</field>
+		<field name="model">radius.radpostauth</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Last Connections">
+				<field name="username" select="1"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_radius_radpostauth">
+		<field name="name">radpostauth</field>
+		<field name="res_model">radius.radpostauth</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Last Connections" parent="radius.menu_radius_reports" id="menu_action_radpostauth_tree" action="action_radius_radpostauth"/>
+
+<!-- Radacct -->
+
+	<record model="ir.ui.view" id="radacct_tree">
+		<field name="name">radius.radacct.tree</field>
+		<field name="model">radius.radacct</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="User Accounting">
+				<field name="username" readonly="1" select="1"/>
+				<field name="realm" readonly="1"/>
+				<field name="nasipaddress" readonly="1"/>
+				<field name="acctstarttime" readonly="1" select="1"/>
+				<field name="acctstoptime" readonly="1"/>
+				<field name="acctsessiontime" readonly="1"/>
+				<field name="acctinputoctets" readonly="1"/>
+				<field name="acctoutputoctets" readonly="1"/>
+				<field name="acctterminatecause" readonly="1"/>
+				<field name="framedipaddress" readonly="1"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="radacct_form">
+		<field name="name">radius.radacct.form</field>
+		<field name="model">radius.radacct</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="User Accounting">
+				<field name="username" select="1"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_radius_radacct">
+		<field name="name">radacct</field>
+		<field name="res_model">radius.radacct</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="User Accounting" parent="radius.menu_radius_reports" id="menu_action_radacct_tree" action="action_radius_radacct"/>
+
+
+	</data>
+</openerp>

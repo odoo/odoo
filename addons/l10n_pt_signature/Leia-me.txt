@@ -1,0 +1,50 @@
+
+    """decrypt(hash) --> string
+        Decrypt ciphertext (assume hex string) and return the decrypted string.
+    """
+
+    """ 
+    A assinatura não acontece no estado 'draft', mas sim quando a factura é confirmada e é atribuido o numero.
+    Personaliza o metodo write, quando ou apos mudar o estado para 'open'
+    A data relevante para o saft é o 'write_date', porque a factura é criada sempre no estado 'draft' 
+    e só é verdadeiramente uma factura, quando é confirmada.
+    """
+
+##############################################################################
+#
+# 08/10/2010 - Links úteis por Carlos Almeida,
+#
+# No seguinte site são explicados alguns dos problemas que irão surgir, se se
+# utilizar o OpenSSl da forma que é sugerida:
+#  * http://www.cryptosys.net/pki/portugal_DGCI_billing_software.html
+# Existe um exemplo em Java:
+#  * http://code.google.com/p/javacertpt/
+#
+##############################################################################
+#
+# 07/10/2010 - Explicação geral feita por Paulino,
+#
+# Portaria 363/2010 e especificação técnica disponíveis em:
+#  * http://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/CertificacaoSoftware.htm
+# A certificação depende do saft - para ser certificado um programa de
+# facturação tem de ser capaz de emitir o saft. O saft é obrigatório, já a
+# certificação não é necessária em qualquer dos seguintes casos:
+#  * Software produzido internamente, do qual a entidade seja dona dos direitos
+#    de autor;
+#  * Os clientes não sejam consumidores finais - nenhum;
+#  * Vendas inferiores a € 150.000;
+#  * Número de facturas emitidas menor que 1.000 / ano.
+# Nas especificações técnicas, disponíveis na ligação acima, são apresentados
+# exemplos de como gerar as chaves publica e privada, como assinar cada factura
+# emitida com recurso ao OpenSSL.
+# Há uma módulo RSA em python para assinaturas e encriptação - http://stuvel.eu/rsa.
+# Há uma incongruência: O saft requer dois valores Hash e HashControl ambos com 40
+# caracteres. Nos exemplos dados nas especificações técnicas, o cumprimento da
+# assinatura é 172 caracteres...
+# Segundo esclarecimento que obtive será publicada uma actualização ao saft, para
+# alargar o campo Hash para 200 caracteres
+# A chave privada, necessária para assinar as facturas, é do conhecimento
+# exclusivo do produtor do software! O ficheiro que contém a chave privada,
+# deve ser convertido em binário ou encriptado (?)
+#
+##############################################################################

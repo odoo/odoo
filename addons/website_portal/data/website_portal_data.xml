@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="portal_portal_1" model="portal.portal">
+            <field name="name">Our Portal</field>
+            <field name="subtitle">Sharing our evolution with passion</field>
+            <field name="description">Presentation of new Odoo features</field>
+        </record>
+
+        <record id="menu_news" model="website.menu">
+            <field name="name">LIGA</field>
+            <field name="url" eval="'/portal/'+str(ref('website_portal.portal_portal_1'))"/>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">40</field>
+        </record>
+    </data>
+
+    <data>
+
+        <!-- jump to portal at install -->
+        <record id="action_open_website" model="ir.actions.act_url">
+            <field name="name">Website Portals</field>
+            <field name="target">self</field>
+            <field name="url" eval="'/portal/'+str(ref('website_portal.portal_portal_1'))+'/#tutorial.portal=true'"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_website"/>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Portal-related subtypes for messaging / Chatter -->
+        <record id="mt_portal_portal_published" model="mail.message.subtype">
+            <field name="name">Published Post</field>
+            <field name="res_model">portal.portal</field>
+            <field name="default" eval="True"/>
+            <field name="description">Published Post</field>
+        </record>
+
+    </data>
+</openerp>

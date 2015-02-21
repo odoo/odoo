@@ -1,0 +1,335 @@
+@charset "UTF-8";
+.css_website_mail .has-error {
+  border-color: red;
+}
+.css_website_mail .css_nav_month {
+  display: none;
+}
+.css_website_mail .css_nav_month:first-of-type {
+  display: block;
+}
+
+.read_width {
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.portal_content a.oe_mail_expand:after {
+  content: " →";
+}
+.portal_content a.oe_mail_expand {
+  font-weight: bold;
+}
+
+p.post-meta {
+  position: relative;
+  top: -5px;
+}
+
+div#portal_angle_down a:hover {
+  text-decoration: none;
+}
+
+.cover {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: black;
+  color: white;
+  position: relative;
+}
+.cover .portal_title {
+  position: absolute;
+  text-align: center;
+  top: 5%;
+  left: 0;
+  right: 0;
+}
+.cover .portal_title h1 {
+  font-weight: bold;
+}
+
+.cover_footer {
+  min-height: 350px;
+  height: 65vh;
+  cursor: pointer;
+}
+
+/* mobile preview: for portal h1,h2 font-size and cover-footer height of image overlapas */
+@media (max-width: 768px) {
+  .cover h1 {
+    font-size: 26px;
+  }
+  .cover h2 {
+    font-size: 20px;
+  }
+
+  .cover_footer {
+    min-height: 280px;
+    height: 50vh;
+  }
+  .cover_footer .portal_title {
+    top: 2%;
+  }
+}
+/*Inline Discussion */
+.discussion {
+  padding: 5px 10px 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 16px;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: sans-serif;
+  text-align: center;
+  z-index: 7;
+}
+.discussion > a {
+  opacity: 0;
+  display: block;
+  overflow: hidden;
+  width: 20px;
+  height: 17px;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  background: #bbbbbb;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+.discussion > a.has-comments {
+  opacity: 0.6;
+}
+
+.discussion-contain:hover .discussion > a {
+  opacity: 1;
+}
+
+.discussion > a:after {
+  border-right: 7px solid transparent;
+  border-top: 7px solid #bbbbbb;
+  right: 19px;
+  top: 22px;
+  height: 0;
+  width: 0;
+  display: block;
+  content: " ";
+  position: absolute;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+.discussion:hover > a, .discussion.hovered > a {
+  opacity: 1;
+  background: #57ad68;
+}
+.discussion:hover > a:after, .discussion.hovered > a:after {
+  border-top-color: #57ad68;
+}
+
+#discussions_wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#discussions_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 8;
+  display: none;
+}
+
+.discussion .popover-content {
+  max-height: 250px;
+  width: 250px;
+  overflow: auto;
+  font-weight: normal;
+}
+
+mark + .popover {
+  cursor: pointer;
+}
+
+.discussion_scroll_post {
+  overflow-x: auto;
+}
+
+
+
+/*Inline Hotspot login*/
+
+
+.modal-header-primary {
+    color:#fff;
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #428bca;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+}
+
+.oe_img_bg { 
+background-attachment: fixed;
+min-height: 768px;
+}
+
+#wrap { 
+padding-top: 0px;
+}
+
+.rowpage { 
+padding-bottom: 100px;
+}
+
+/*
+.navbar { 
+background-image: linear-gradient(to bottom, #54B4EB, #2FA4E7 10%, rgba(30, 157, 230, 0));
+background-repeat: no-repeat;
+border-bottom: 0px solid #178ACC;
+box-shadow: none;
+filter: none;
+}
+
+.navbar-default { 
+background-color: rgba(46, 164, 232, 0);
+border-bottom-color: #1995DC;
+border-left-color: #1995DC;
+border-right-color: #1995DC;
+border-top-color: #1995DC;
+}
+
+.navbar.navbar-static-top { 
+position: absolute;
+}
+*/
+footer,
+#top_menu {}
+
+
+#Chilli {
+  
+}
+
+#MyChilli {
+  background: url("/images/coova.jpg") right top no-repeat;
+  margin: auto;
+  text-align: center;
+  padding: 0px;
+}
+#locationName {
+  font-size: 120%;
+  font-weight: bold;
+}
+#chilliPage {
+  border-radius: 0px 0px 4px 4px;
+
+  position: relative;
+  border: 0px solid black;
+  padding: 5px;
+  margin-top: 0px;
+  color: white;
+}
+#signUpRow {
+  display: inline;
+}
+
+.btn-lg {
+    padding: 8px 8px;
+    font-size: 16px;
+    line-height: 1.33;
+    border-radius: 4px;
+}
+
+.navbar.navbar-static-top ul.nav &gt; li.divider { 
+border-right: 0px solid rgba(7, 0, 0, 0);
+}
+
+@media (min-width: 768px) {
+    .omb_row-sm-offset-3 div:first-child[class*="col-"] {
+        margin-left: 25%;
+    }
+}
+
+.omb_registo { 
+background: rgba(0, 0, 0, 0.749);
+border-radius: 4px;
+padding-bottom: 20px;
+}
+
+.omb_registo {padding-top: 20px;}
+
+.omb_login .omb_authTitle {
+    text-align: center;
+    line-height: 300%;
+}
+
+.omb_login .omb_loginOr {
+	position: relative;
+	font-size: 1.5em;
+	color: #aaa;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+.omb_login .omb_loginOr .omb_hrOr {
+	background-color: #cdcdcd;
+	height: 1px;
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+}
+.omb_login .omb_loginOr .omb_spanOr {
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    color: #317EAC;
+    display: block;
+    left: 10%;
+    margin-left: 0em;
+    max-width: 80%;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: absolute;
+    text-align: center;
+    top: -0.6em;
+}			
+
+.omb_login .omb_loginForm .input-group.i {
+	width: 2em;
+}
+.omb_login .omb_loginForm  .help-block {
+    color: red;
+}
+
+	
+@media (min-width: 768px) {
+    .omb_login .omb_forgotPwd {
+        text-align: right;
+		margin-top:10px;
+ 	}		
+}
+
+.LV_validation_message {}
+.LV_invalid {color: #F65E5E;}
+.LV_valid {color: #FFFFFF;font-size: smaller;}
