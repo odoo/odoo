@@ -153,7 +153,7 @@ class account_invoice_refund(osv.osv_memory):
                 if inv.type == 'out_invoice':
                     origin = inv.number
                 elif inv.type == 'in_invoice':
-                    origin = inv.supplier_invoice_number and '%s | %s' (
+                    origin = inv.supplier_invoice_number and u'%s | %s' % (
                         inv.number, inv.supplier_invoice_number) or inv.number
 
                 if not period:
