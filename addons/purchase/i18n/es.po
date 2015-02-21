@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-23 16:33+0000\n"
+"PO-Revision-Date: 2015-01-27 13:50+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-24 06:27+0000\n"
+"X-Launchpad-Export-Date: 2015-01-28 06:37+0000\n"
 "X-Generator: Launchpad (build 17306)\n"
 
 #. module: purchase
@@ -545,6 +545,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear una nueva solicitud de presupuesto.\n"
+"              </p><p>\n"
+"El presupuesto contiene el historial de la discusión/negociación que ha\n"
+"tenido con su proveedor. Una vez confirmada, la solicitud de\n"
+"presupuesto se convierte en un pedido de compra.\n"
+"</p><p>\n"
+"La mayoría de propuestas de pedidos de compra se crean\n"
+"automáticamente por Odoo basadas en las necesidades de inventario.\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -846,6 +857,8 @@ msgid ""
 "Can not cancel this procurement as the related purchase order has been "
 "confirmed already.  Please cancel the purchase order first. "
 msgstr ""
+"No se puede cancelar este abastecimiento, ya que el pedido de compra "
+"relacionado ya ha sido confirmado. Cancele primero el pedido de compra. "
 
 #. module: purchase
 #: code:addons/purchase/stock.py:195
@@ -1112,7 +1125,7 @@ msgstr "Borrador"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr "OC en borrador"
+msgstr "PC en borrador"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1384
@@ -1428,6 +1441,7 @@ msgstr "Ubicación y almacén"
 #, python-format
 msgid "Make sure you have at least an incoming picking type defined"
 msgstr ""
+"Asegúrese de que tiene al menos un tipo de albarán de entrada definido"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
@@ -2168,7 +2182,7 @@ msgstr "Excepción de envío"
 #: view:website:purchase.report_purchaseorder_document
 #: view:website:purchase.report_purchasequotation_document
 msgid "Shipping address:"
-msgstr ""
+msgstr "Dirección de envío:"
 
 #. module: purchase
 #: field:purchase.order,origin:0

@@ -269,7 +269,7 @@ class ir_actions_act_window(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Action Name', translate=True),
+        'name': fields.char('Action Name', required=True, translate=True),
         'type': fields.char('Action Type', required=True),
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='set null'),
         'domain': fields.char('Domain Value',
@@ -405,7 +405,7 @@ class ir_actions_act_url(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
     _columns = {
-        'name': fields.char('Action Name', translate=True),
+        'name': fields.char('Action Name', required=True, translate=True),
         'type': fields.char('Action Type', required=True),
         'url': fields.text('Action URL',required=True),
         'target': fields.selection((
