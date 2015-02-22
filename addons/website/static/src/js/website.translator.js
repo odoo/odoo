@@ -18,7 +18,6 @@
             return this._super.apply(this, arguments).then(function () {
                 var $edit_button = $("button[data-action=edit]");
                 $edit_button.removeClass("hidden");
-                $edit_button.text("Translate");
 
                 if(website.no_editor) {
                     $edit_button.removeProp('disabled');
