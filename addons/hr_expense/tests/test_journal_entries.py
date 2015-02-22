@@ -1,10 +1,10 @@
 from openerp.tests.common import TransactionCase
-from openerp import netsvc, workflow
+from openerp import workflow
 
 
 class TestCheckJournalEntry(TransactionCase):
     """
-    Check journal entries when the expense product is having tax which is tax included. 
+    Check journal entries when the expense product is having tax which is tax included.
     """
 
     def setUp(self):
@@ -16,7 +16,7 @@ class TestCheckJournalEntry(TransactionCase):
         self.tax_obj = self.registry('account.tax')
         self.code_obj = self.registry('account.tax.code')
         _, self.product_id = self.registry("ir.model.data").get_object_reference(cr, uid, "hr_expense", "air_ticket")
-        _, self.employee_id = self.registry("ir.model.data").get_object_reference(cr, uid, "hr", "employee_mit")
+        self.employee = self.registry("ir.model.data").xmlid_to_object(cr, uid, "hr.employee_mit")
         self.base_code_id = self.code_obj.create(cr, uid, {'name': 'Expense Base Code'})
         self.tax_id = self.tax_obj.create(cr, uid, {
             'name': 'Expense 10%',
@@ -30,7 +30,8 @@ class TestCheckJournalEntry(TransactionCase):
         self.product_obj.write(cr, uid, self.product_id, {'supplier_taxes_id': [(6, 0, [self.tax_id])]})
         self.expense_id = self.expense_obj.create(cr, uid, {
             'name': 'Expense for Minh Tran',
-            'employee_id': self.employee_id,
+            'employee_id': self.employee.id,
+            'employee_payable_account_id': self.employee.address_home_id.property_account_payable.id,
         })
         self.exp_line_obj.create(cr, uid, {
             'name': 'Car Travel Expenses',
