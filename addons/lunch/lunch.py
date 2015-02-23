@@ -124,10 +124,7 @@ class lunch_order(osv.Model):
         get the previous lunch order details to display on the order form
         """
         data = self._default_get_lunch_order_detail(cr, uid, context=None)
-        res = {}
-        for id in ids:
-            res[id] = data
-        return res
+        return { id: list(data) for id in ids }
 
     def _default_get_lunch_order_detail(self, cr, uid, context=None):
         cr.execute("select MAX(id) id from lunch_order_line where user_id=%s group by note,product_id order by id DESC;", [uid]);
