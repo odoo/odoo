@@ -228,7 +228,7 @@ class account_bank_statement_line(models.Model):
     _order = "statement_id desc, sequence"
     _inherit = ['ir.needaction_mixin']
 
-    name = fields.Char(string='Communication', required=True, default=lambda self: self.env['ir.sequence'].get('account.bank.statement.line'))
+    name = fields.Char(string='Communication', required=True)
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
     amount = fields.Float(digits=0)
     partner_id = fields.Many2one('res.partner', string='Partner')
