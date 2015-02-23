@@ -5793,6 +5793,11 @@ class BaseModel(object):
             # attach `self` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
 
+        # load fields on secondary records, to avoid false changes
+        with env.do_in_onchange():
+            for field_seq in secondary:
+                record.mapped(field_seq)
+
         # determine which field(s) should be triggered an onchange
         todo = list(names) or list(values)
         done = set()
