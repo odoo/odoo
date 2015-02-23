@@ -593,20 +593,20 @@ class account_bank_statement_line(models.Model):
         }
 
     @api.v7
-    def process_reconciliations(self, cr, uid, data, context=None):
+    def process_reconciliations(self, cr, uid, ids, data, context=None):
         """ Handles data sent from the bank statement reconciliation widget (and can otherwise serve as an old-API bridge)
 
             :param list of dicts data: must contains the keys 'counterpart_aml_dicts', 'payment_aml_ids' and 'new_aml_dicts',
                 whose value is the same as described in process_reconciliation except that ids are used instead of recordsets.
         """
         aml_obj = self.pool['account.move.line']
-        for datum in data:
-            st_line = self.browse(cr, uid, datum['st_line_id'], context)
-            payment_aml_rec = aml_obj.browse(cr, uid, datum['payment_aml_ids'], context)
-            for aml_dict in datum['counterpart_aml_dicts']:
+        for id, datum in zip(ids, data):
+            st_line = self.browse(cr, uid, id, context)
+            payment_aml_rec = aml_obj.browse(cr, uid, datum.get('payment_aml_ids', []), context)
+            for aml_dict in datum.get('counterpart_aml_dicts', []):
                 aml_dict['move_line'] = aml_obj.browse(cr, uid, aml_dict['counterpart_aml_id'], context)
                 del aml_dict['counterpart_aml_id']
-            st_line.process_reconciliation(datum['counterpart_aml_dicts'], payment_aml_rec, datum['new_aml_dicts'])
+            st_line.process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
 
     def process_reconciliation(self, counterpart_aml_dicts=None, payment_aml_rec=None, new_aml_dicts=None):
         """ Match statement lines with existing payments (eg. checks) and/or payables/receivables (eg. invoices and refunds) and/or new move lines (eg. write-offs).
@@ -685,8 +685,8 @@ class account_bank_statement_line(models.Model):
             # Create the move line for the statement line
             for aml_rec in payment_aml_rec: # Deduce already reconciled amount
                 aml_amount = aml_rec.debit - aml_rec.credit
-                if aml_rec.currency_id != st_line_currency:
-                    aml_amount = aml_rec.currency_id.with_context({'date': self.date}).compute(aml_amount)
+                if aml_rec.currency_id and aml_rec.currency_id != st_line_currency:
+                    aml_amount = aml_rec.currency_id.with_context({'date': self.date}).compute(aml_amount, company_currency)
                 st_line_amount -= aml_amount
             st_line_move_line_vals = self._prepare_reconciliation_move_line(move, st_line_amount)
             aml_obj.create(st_line_move_line_vals, check=False)

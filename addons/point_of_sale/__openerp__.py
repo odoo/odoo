@@ -30,9 +30,9 @@ Quick and Easy sale process
 ===========================
 
 This module allows you to manage your shop sales very easily with a fully web based touchscreen interface.
-It is compatible with all PC tablets and the iPad, offering multiple payment methods. 
+It is compatible with all PC tablets and the iPad, offering multiple payment methods.
 
-Product selection can be done in several ways: 
+Product selection can be done in several ways:
 
 * Using a barcode reader
 * Browsing through categories of products or via a text search.
@@ -91,7 +91,7 @@ Main Features
         'test/01_order_to_payment.yml',
         'test/02_order_to_invoice.yml',
         'test/point_of_sale_report.yml',
-        # 'test/account_statement_reports.yml',
+        'test/account_statement_reports.yml',
     ],
     'installable': True,
     'application': True,

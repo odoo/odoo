@@ -32,14 +32,13 @@
   I reconcile the bank statement.
 -
   !python {model: account.bank.statement.line}: |
-    counterpart_line_dict = {
+    new_aml_dicts = [{
         'account_id': self.pool.get('res.partner').browse(cr, uid, ref('base.res_partner_4')).property_account_receivable.id,
         'name': "EXT001",
         'credit': 1000.0,
         'debit': 0.0,
-        'counterpart_aml_id': ref("account_bank_statement_line_0"),
-    }
-    self.process_reconciliations(cr, uid, [{'counterpart_aml_dicts': [counterpart_line_dict], 'new_aml_dicts': False,'st_line_id': False ,'payment_aml_ids': False}])
+    }]
+    self.process_reconciliations(cr, uid, [ref("account_bank_statement_line_0")], [{'new_aml_dicts': new_aml_dicts}])
 -
   I confirm the bank statement using Confirm button
 -

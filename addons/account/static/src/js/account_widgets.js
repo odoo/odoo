@@ -1245,9 +1245,10 @@ openerp.account = function (instance) {
         processReconciliations: function(reconciliations) {
             if (reconciliations.length === 0) return;
             var self = this;
+            var ids = _.collect(reconciliations, function(o) { return o.line_id });
             var data = _.collect(reconciliations, function(o) { return o.prepareDataForPersisting() });
             var deferred_animation = self.$(".reconciliation_lines_container, .show_more_container").fadeOut(self.aestetic_animation_speed);
-            var deferred_rpc = self.model_bank_statement_line.call("process_reconciliations", [data]);
+            var deferred_rpc = self.model_bank_statement_line.call("process_reconciliations", [ids, data]);
             return $.when(deferred_animation, deferred_rpc)
                 .done(function() {
                     // Remove children
@@ -2034,7 +2035,6 @@ openerp.account = function (instance) {
             var new_aml_dicts = this.prepareCreatedMoveLinesForPersisting(this.getCreatedLines());
             if (Math.abs(this.get("balance")).toFixed(4) !== "0.0000") new_aml_dicts.push(this.prepareOpenBalanceForPersisting());
             return {
-                'st_line_id': this.line_id,
                 'counterpart_aml_dicts': counterpart_aml_dicts,
                 'payment_aml_ids': payment_aml_ids,
                 'new_aml_dicts': new_aml_dicts,
@@ -2046,7 +2046,7 @@ openerp.account = function (instance) {
             var self = this;
             if (! this.is_consistent) return;
             self.$(".button_ok").attr("disabled", "disabled");
-            this.model_bank_statement_line.call("process_reconciliations", [[this.prepareDataForPersisting()]]).done(function() {
+            this.model_bank_statement_line.call("process_reconciliations", [[this.line_id], [this.prepareDataForPersisting()]]).done(function() {
                 self.bowOut(self.animation_speed, true);
             }).always(function() {
                 self.$(".button_ok").removeAttr("disabled");
