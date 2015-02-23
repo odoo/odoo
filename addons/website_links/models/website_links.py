@@ -46,13 +46,15 @@ class website_links(models.Model):
     @api.model
     def convert_links(self, html, vals, blacklist=None):
         for match in re.findall(URL_REGEX, html):
+
+            short_schema = self.env['ir.config_parameter'].get_param('web.base.url') + '/r/'
+
             href = match[0]
             long_url = match[1]
 
             vals['url'] = long_url
 
-            if not blacklist or blacklist and not [s for s in blacklist if s in long_url]:
-
+            if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
                 link = self.create(vals)
                 shorten_url = self.browse(link.id)[0].short_url
 
@@ -153,13 +155,13 @@ class website_links(models.Model):
     def create(self, vals):
         create_vals = vals.copy()
 
-        if 'url' not in vals:
+        if 'url' not in create_vals:
             raise ValueError('URL field required')
         else:
             create_vals['url'] = VALIDATE_URL(vals['url'])
 
         search_domain = []
-        for fname, value in vals.iteritems():
+        for fname, value in create_vals.iteritems():
             search_domain.append((fname, '=', value))
 
         result = self.search(search_domain, limit=1)
@@ -167,12 +169,12 @@ class website_links(models.Model):
         if result:
             return result
 
-        if not vals.get('title'):
-            create_vals['title'] = self._get_title_from_url(vals['url'])
+        if not create_vals.get('title'):
+            create_vals['title'] = self._get_title_from_url(create_vals['url'])
 
         # Prevent the UTMs to be set by the values of UTM cookies
         for (key, fname) in self.env['utm.mixin'].tracking_fields():
-            if fname not in vals:
+            if fname not in create_vals:
                 create_vals[fname] = False
 
         link = super(website_links, self).create(create_vals)
