@@ -52,13 +52,13 @@ class account_invoice_line(osv.osv):
         return round(price, inv.currency_id.decimal_places)
 
     @api.v8
-    def get_invoice_line_account(self, product, fpos):
-        if self.company_id.anglo_saxon_accounting and self.invoice_id.type in ('in_invoice', 'in_refund'):
+    def get_invoice_line_account(self, type, product, fpos, company):
+        if self.company_id.anglo_saxon_accounting and type in ('in_invoice', 'in_refund'):
             accounts = product.product_tmpl_id.get_product_accounts(fpos)
-            if self.invoice_id.type == 'in_invoice':
+            if type == 'in_invoice':
                 return accounts['stock_input']
             return accounts['stock_ouput']
-        return super(account_invoice_line, self).get_invoice_line_account(product, fpos)
+        return super(account_invoice_line, self).get_invoice_line_account(type, product, fpos, company)
 
     def _anglo_saxon_sale_move_lines(self, cr, uid, i_line, res, context=None):
         """Return the additional move lines for sales invoices and refunds.
