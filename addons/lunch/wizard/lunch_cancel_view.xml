@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-    <record model="ir.ui.view" id="cancel_order_lines_view">
+<odoo>
+    <record model="ir.ui.view" id="view_lunch_cancel_form">
         <field name="name">lunch.cancel.form</field>
         <field name="model">lunch.cancel</field>
         <field name="arch" type="xml">
@@ -25,6 +24,5 @@
     multi="True"
     key2="client_action_multi" name="Cancel meals"
     res_model="lunch.cancel" src_model="lunch.order.line"
-    view_mode="form" target="new" view_type="form" view_id="cancel_order_lines_view"/>
-</data>
-</openerp>
+    view_mode="form" target="new" view_type="form" view_id="view_lunch_cancel_form"/>
+</odoo>

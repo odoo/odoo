@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-    <record model="ir.ui.view" id="validate_order_lines_view">
+<odoo>
+    <record model="ir.ui.view" id="view_lunch_validate_form">
         <field name="name">lunch.validation.form</field>
         <field name="model">lunch.validation</field>
         <field name="arch" type="xml">
@@ -23,6 +22,5 @@
     multi="True"
     key2="client_action_multi" name="Receive meals"
     res_model="lunch.validation" src_model="lunch.order.line"
-    view_mode="form" target="new" view_type="form" view_id="validate_order_lines_view"/>
-</data>
-</openerp>
+    view_mode="form" target="new" view_type="form" view_id="view_lunch_validate_form"/>
+</odoo>
