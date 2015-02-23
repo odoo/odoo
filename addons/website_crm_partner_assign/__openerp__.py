@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Resellers',
     'category': 'Website',
@@ -8,6 +9,7 @@
 Publish and Assign Partner
 ==========================
         """,
+    'author': 'Odoo S.A.',
     'depends': ['crm_partner_assign','website_partner', 'website_google_map'],
     'data': [
         'views/res_partner_grade_views.xml',
