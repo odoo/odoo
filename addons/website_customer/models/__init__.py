@@ -1,1 +1,3 @@
-import website_customer
+# -*- coding: utf-8 -*-
+
+import res_partner
