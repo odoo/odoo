@@ -1,49 +1,27 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
+import getpass
 import logging
 import os
 import tempfile
-import getpass
-
-import werkzeug.urls
 import werkzeug.exceptions
-
+import werkzeug.urls
 from openid import oidutil
-from openid.store import filestore
 from openid.consumer import consumer
 from openid.cryptutil import randomString
 from openid.extensions import ax, sreg
+from openid.store import filestore
 
-import openerp
 from openerp import SUPERUSER_ID
-from openerp.modules.registry import RegistryManager
 from openerp.addons.web.controllers.main import login_and_redirect, set_cookie_and_redirect
 import openerp.http as http
 from openerp.http import request
-
+from openerp.modules.registry import RegistryManager
 from .. import utils
 
 _logger = logging.getLogger(__name__)
 oidutil.log = _logger.debug
+
 
 def get_system_user():
     """Return system user info string, such as USERNAME-EUID"""
@@ -59,15 +37,17 @@ def get_system_user():
         else:
             raise
 
-    euid = getattr(os, 'geteuid', None) # Non available on some platforms
+    euid = getattr(os, 'geteuid', None)  # Non available on some platforms
     if euid is not None:
         info = '%s-%d' % (info, euid())
     return info
 
-_storedir = os.path.join(tempfile.gettempdir(), 
+_storedir = os.path.join(tempfile.gettempdir(),
                          'openerp-auth_openid-%s-store' % get_system_user())
 
+
 class GoogleAppsAwareConsumer(consumer.GenericConsumer):
+
     def complete(self, message, endpoint, return_to):
         if message.getOpenIDNamespace() == consumer.OPENID2_NS:
             server_url = message.getArg(consumer.OPENID2_NS, 'op_endpoint', '')
@@ -199,10 +179,7 @@ class OpenIDController(http.Controller):
                 if installed:
 
                     Users = registry.get('res.users')
-
-                    #openid_url = info.endpoint.canonicalID or display_identifier
                     openid_url = session['openid_url']
-
                     attrs = self._get_attributes_from_success_response(info)
                     attrs['openid_url'] = openid_url
                     session['attributes'] = attrs
@@ -211,21 +188,17 @@ class OpenIDController(http.Controller):
                     domain = []
                     if openid_email:
                         domain += ['|', ('openid_email', '=', False)]
-                    domain += [('openid_email', '=', openid_email)]
+                    domain += [('openid_email', '=', openid_email), ('openid_url', '=', openid_url), ('active', '=', True)]
 
-                    domain += [('openid_url', '=', openid_url), ('active', '=', True)]
-
-                    ids = Users.search(cr, SUPERUSER_ID, domain)
-                    assert len(ids) < 2
-                    if ids:
-                        user_id = ids[0]
-                        login = Users.browse(cr, SUPERUSER_ID, user_id).login
+                    user = Users.search(cr, SUPERUSER_ID, domain)
+                    assert len(user) < 2
+                    if user:
                         key = randomString(utils.KEY_LENGTH, '0123456789abcdef')
-                        Users.write(cr, SUPERUSER_ID, [user_id], {'openid_key': key})
+                        user.openid_key = key
                         # TODO fill empty fields with the ones from sreg/ax
                         cr.commit()
 
-                        return login_and_redirect(dbname, login, key)
+                        return login_and_redirect(dbname, user.login, key)
 
             session['message'] = 'This OpenID identifier is not associated to any active users'
 
