@@ -26,6 +26,7 @@ import sets
 
 from openerp import tools, models
 from openerp.osv import fields, osv
+from openerp.tools import float_is_zero
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -602,7 +603,7 @@ class pos_order(osv.osv):
             session.write({'sequence_number': order['sequence_number'] + 1})
             session.refresh()
 
-        if order['amount_return']:
+        if not float_is_zero(order['amount_return'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')):
             cash_journal = session.cash_journal_id
             if not cash_journal:
                 cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)

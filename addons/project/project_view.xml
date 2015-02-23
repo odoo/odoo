@@ -281,7 +281,7 @@
                                     <div class="row oe_margin_top_8 oe_kanban_project_list">
                                         <div class="col-md-6">
                                             <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action">
-                                                <t t-raw="record.task_ids.raw_value.length" />
+                                                <t t-raw="record.task_count.raw_value" />
                                                 <field name="label_tasks"/>
                                             </a>
                                         </div>

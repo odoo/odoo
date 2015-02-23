@@ -64,7 +64,7 @@ from .api import Environment
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv import fields
 from .osv.query import Query
-from .tools import lazy_property, ormcache
+from .tools import frozendict, lazy_property, ormcache
 from .tools.config import config
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from .tools.safe_eval import safe_eval as eval
@@ -633,6 +633,7 @@ class BaseModel(object):
             '_register': False,
             '_columns': None,           # recomputed in _setup_fields()
             '_defaults': None,          # recomputed in _setup_base()
+            '_fields': frozendict(),    # idem
             '_inherits': dict(cls._inherits),
             '_depends': dict(cls._depends),
             '_constraints': list(cls._constraints),

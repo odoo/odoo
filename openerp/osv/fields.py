@@ -115,6 +115,7 @@ class _column(object):
         """
         args0 = {
             'string': string,
+            'help': args.pop('help', None),
             'required': required,
             'readonly': readonly,
             '_domain': domain,
@@ -127,6 +128,9 @@ class _column(object):
             'translate': translate,
             'select': select,
             'manual': manual,
+            'group_operator': args.pop('group_operator', None),
+            'groups': args.pop('groups', None),
+            'deprecated': args.pop('deprecated', None),
         }
         for key, val in args0.iteritems():
             if val:
@@ -140,30 +144,23 @@ class _column(object):
         if not self._classic_write or self.deprecated or self.manual:
             self._prefetch = False
 
-    def new(self, **args):
-        """ return a column like `self` with the given parameters """
+    def new(self, _computed_field=False, **args):
+        """ Return a column like `self` with the given parameters; the parameter
+            `_computed_field` tells whether the corresponding field is computed.
+        """
         # memory optimization: reuse self whenever possible; you can reduce the
         # average memory usage per registry by 10 megabytes!
-        return self if self.same_parameters(args) else type(self)(**args)
-
-    def same_parameters(self, args):
-        dummy = object()
-        return all(
-            # either both are falsy, or they are equal
-            (not val1 and not val) or (val1 == val)
-            for key, val in args.iteritems()
-            for val1 in [getattr(self, key, getattr(self, '_' + key, dummy))]
-        )
+        column = type(self)(**args)
+        return self if self.to_field_args() == column.to_field_args() else column
 
     def to_field(self):
         """ convert column `self` to a new-style field """
         from openerp.fields import Field
-        return Field.by_type[self._type](**self.to_field_args())
+        return Field.by_type[self._type](column=self, **self.to_field_args())
 
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
         base_items = [
-            ('column', self),                   # field interfaces self
             ('copy', self.copy),
         ]
         truthy_items = filter(itemgetter(1), [
@@ -349,7 +346,7 @@ class float(_column):
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
 
-    def new(self, **args):
+    def new(self, _computed_field=False, **args):
         # float columns are database-dependent, so always recreate them
         return type(self)(**args)
 
@@ -1292,9 +1289,9 @@ class function(_column):
                 self._symbol_f = type_class._symbol_f
                 self._symbol_set = type_class._symbol_set
 
-    def new(self, **args):
-        if args.get('compute'):
-            # field is computed, we need an instance of the given type
+    def new(self, _computed_field=False, **args):
+        if _computed_field:
+            # field is computed, we need an instance of a non-function column
             type_class = globals()[self._type]
             return type_class(**args)
         else:

@@ -1417,6 +1417,12 @@ class calendar_event(osv.Model):
             del context['default_date']
         return super(calendar_event, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
 
+    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
+        return super(calendar_event, self).message_subscribe(cr, uid, get_real_ids(ids), partner_ids, subtype_ids=subtype_ids, context=context)
+
+    def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
+        return super(calendar_event, self).message_unsubscribe(cr, uid, get_real_ids(ids), partner_ids, context=context)
+
     def do_sendmail(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context):
             current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
@@ -1747,7 +1753,6 @@ class calendar_event(osv.Model):
                 res = self.write(cr, uid, id_to_exclure, {'active': False}, context=context)
 
         return res
-
 
 class mail_message(osv.Model):
     _inherit = "mail.message"
