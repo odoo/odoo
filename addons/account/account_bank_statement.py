@@ -811,6 +811,24 @@ class account_bank_statement_line(osv.osv):
                 prorata_factor = (mv_line_dict['debit'] - mv_line_dict['credit']) / st_line.amount_currency
                 mv_line_dict['amount_currency'] = prorata_factor * st_line.amount
             to_create.append(mv_line_dict)
+        # If the reconciliation is performed in another currency than the company currency, the amounts are converted to get the right debit/credit.
+        # If there is more than 1 debit and 1 credit, this can induce a rounding error, which we put in the foreign exchane gain/loss account.
+        if st_line_currency.id != company_currency.id:
+            diff_amount = bank_st_move_vals['debit'] - bank_st_move_vals['credit'] \
+                + sum(aml['debit'] for aml in to_create) - sum(aml['credit'] for aml in to_create)
+            if not company_currency.is_zero(diff_amount):
+                diff_aml = self.get_currency_rate_line(cr, uid, st_line, diff_amount, move_id, context=context)
+                diff_account = diff_aml['account_id']
+                # If a line already is to be created for foreign exchane gain/loss, just add this rounding error to it.
+                # Note: this only works if the rounding error is of the same 'sign' as the already registered gain/loss ;
+                # a smarter algorithm might also try to subtract instead of creating another line of the opposed 'sign',
+                # but this is tricky, and may even be wrong regarding the 'amount_currency' field.
+                preexisting_diff_aml = next((aml for aml in to_create if aml['account_id'] == diff_account), None)
+                if preexisting_diff_aml != None:
+                    preexisting_diff_aml['debit'] += diff_aml['debit']
+                    preexisting_diff_aml['credit'] += diff_aml['credit']
+                else:
+                    to_create.append(diff_aml)
         # Create move lines
         move_line_pairs_to_reconcile = []
         for mv_line_dict in to_create:
