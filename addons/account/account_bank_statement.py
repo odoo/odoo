@@ -672,7 +672,6 @@ class account_bank_statement_line(models.Model):
         # Create move line(s). Either matching an existing journal entry (eg. invoice), in which
         # case we reconcile the existing and the new move lines together, or being a write-off.
         if counterpart_aml_dicts or new_aml_dicts:
-            st_line_amount = self.currency_id and self.amount_currency or self.amount
             st_line_currency = self.currency_id or statement_currency
             st_line_currency_rate = self.currency_id and (self.amount_currency / self.amount) or False
 
@@ -683,6 +682,8 @@ class account_bank_statement_line(models.Model):
             counterpart_moves = (counterpart_moves | move)
 
             # Create the move line for the statement line
+            # FIXME : the amount to deduce should be computed as in prepare_move_lines_for_reconciliation_widget and isn't used in _prepare_reconciliation_move_line
+            st_line_amount = self.currency_id and self.amount_currency or self.amount
             for aml_rec in payment_aml_rec: # Deduce already reconciled amount
                 aml_amount = aml_rec.debit - aml_rec.credit
                 if aml_rec.currency_id and aml_rec.currency_id != st_line_currency:

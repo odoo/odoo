@@ -428,8 +428,6 @@ class account_move_line(models.Model):
             if line_currency != target_currency:
                 amount_currency_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=line_currency)
                 total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)
-                ret_line['credit_currency'] = actual_credit
-                ret_line['debit_currency'] = actual_debit
                 ctx = context.copy()
                 if target_date:
                     ctx.update({'date': target_date})
