@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_calendar_event_search" model="ir.ui.view">
+            <field name="name">CRM - Meetings Search Inherit</field>
+            <field name="model">calendar.event</field>
+            <field name="inherit_id" ref="calendar.view_calendar_event_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='show_as']" position="after">
+                    <field name="opportunity_id"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
