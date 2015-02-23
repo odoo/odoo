@@ -504,8 +504,8 @@ var ViewEditor = Widget.extend({
         }else{
             while (1) {
                 view_find = view_find.prev();
-                if (view_find.length === 0 ||
-                    (self.edit_xml_dialog.$el.find(view_find).find('a').text()).search("view_id") !== -1
+                if (view_find.length == 0) break;
+                if ((self.edit_xml_dialog.$el.find(view_find).find('a').text()).search("view_id") !== -1
                         && parseInt(view_find.attr('level')) < min_level ) {
                     view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
                     view_xml_id = parseInt((view_find.attr('id')).split('-')[1]);
@@ -542,6 +542,7 @@ var ViewEditor = Widget.extend({
         var property_to_check = [];
         var tr = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object.main_object, [])[0].att_list[0];
         var parent_tr = ($(side).prevAll("tr[level=" + String(this.one_object.clicked_tr_level - 1) + "]"))[0];
+        if(!parent_tr) return;
         var field_dataset = new data.DataSetSearch(this, this.model, null, null);
         parent_tr = self.get_object_by_id(parseInt($(parent_tr).attr('id').replace(/[^0-9]+/g, '')), this.one_object.main_object, [])[0].att_list[0];
         _.each([tr, parent_tr],function(element) {
@@ -588,7 +589,7 @@ var ViewEditor = Widget.extend({
         } else {
             last_tr = cur_tr.next();
         }
-        if ((self.edit_xml_dialog.$el.find(last_tr).find('a').text()).search("view_id") != -1) {
+        if ((self.edit_xml_dialog.$el.find(last_tr).find('a').text()).search("view_id") != -1 || cur_tr.attr('level') == 0) {
             return false;
         }
         if (last_tr.length !== 0 &&  parseInt(last_tr.attr('level')) == this.one_object.clicked_tr_level) {
@@ -666,7 +667,7 @@ var ViewEditor = Widget.extend({
                     insert = _.intersection(_.flatten(temp_obj.att_list),_.uniq(check_list));
                 if (insert.length == _.uniq(check_list).length ) {return xml_child;}
             });
-            xml_arch = QWeb.load_xml(utils.xml_to_str(inherited_view));
+            if(inherited_view) xml_arch = QWeb.load_xml(utils.xml_to_str(inherited_view));
         }
         return self.do_save_xml(xml_arch.documentElement, obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
     },
@@ -1019,7 +1020,7 @@ var ViewEditor = Widget.extend({
             type_widget.set_value(node.value);
             self.add_widget.push(type_widget);
         });
-        table_selector.find("td[id^=]").attr("width","100px");
+        table_selector.find("td[id]").attr("width","100px");
         self.add_node_dialog.$el.find('#new_field').click(function() {
             var model_data = new data.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}).done(function(result) {
