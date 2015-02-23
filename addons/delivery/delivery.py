@@ -77,7 +77,7 @@ class delivery_carrier(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Delivery Method', required=True),
+        'name': fields.char('Delivery Method', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Determine the display order"),
         'partner_id': fields.many2one('res.partner', 'Transport Company', required=True, help="The partner that is doing the delivery service."),
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
