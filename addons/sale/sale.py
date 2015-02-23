@@ -695,6 +695,8 @@ class sale_order(osv.osv):
 
         :return: True
         """
+        context = dict(context)
+        context['lang'] = self.pool['res.users'].browse(cr, uid, uid).lang
         procurement_obj = self.pool.get('procurement.order')
         sale_line_obj = self.pool.get('sale.order.line')
         for order in self.browse(cr, uid, ids, context=context):
