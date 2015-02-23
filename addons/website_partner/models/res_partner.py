@@ -1,46 +1,42 @@
 # -*- coding: utf-8 -*-
 
-from openerp.osv import osv, fields
+from openerp import api, fields, models
 from openerp.addons.website.models.website import slug
 
 
-class WebsiteResPartner(osv.Model):
+class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'website.seo.metadata', 'website.published.mixin']
 
-    def _get_ids(self, cr, uid, ids, flds, args, context=None):
-        return {i: i for i in ids}
+    website_private = fields.Boolean(string='Private Profile',
+         compute='_compute_private', inverse='_inverse_private', search='_search_private')
+    website_description = fields.Html(string='Website Partner Full Description', strip_style=True)
+    website_short_description = fields.Text(string='Website Partner Short Description')
+    website_published = fields.Boolean(default=True)
 
-    def _set_private(self, cr, uid, ids, field_name, value, arg, context=None):
-        return self.write(cr, uid, ids, {'website_published': not value}, context=context)
+    # hack to allow using plain browse record in qweb views
+    self_id = fields.Many2one(_name, compute='_compute_self_id')
 
-    def _get_private(self, cr, uid, ids, field_name, arg, context=None):
-        return dict((rec.id, not rec.website_published) for rec in self.browse(cr, uid, ids, context=context))
+    @api.depends('website_published')
+    def _compute_private(self):
+        for partner in self:
+            partner.website_private = not partner.website_published
 
-    def _search_private(self, cr, uid, obj, name, args, context=None):
-        return [('website_published', '=', not args[0][2])]
+    def _inverse_private(self):
+        for partner in self:
+            partner.website_published = not partner.website_private
 
-    _columns = {
-        'website_private': fields.function(
-            _get_private, fnct_inv=_set_private, fnct_search=_search_private,
-            type='boolean', string='Private Profile'),
-        'website_description': fields.html(
-            'Website Partner Full Description',
-            strip_style=True
-        ),
-        'website_short_description': fields.text(
-            'Website Partner Short Description'
-        ),
-        # hack to allow using plain browse record in qweb views
-        'self': fields.function(_get_ids, type='many2one', relation=_name),
-    }
+    def _search_private(self, operator, value):
+        return [('website_published', '=', not value)]
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(WebsiteResPartner, self)._website_url(cr, uid, ids, field_name, arg, context=context)
-        for partner in self.browse(cr, uid, ids, context=context):
-            res[partner.id] = "/partners/%s" % slug(partner)
-        return res
+    @api.multi
+    def _compute_self_id(self):
+        for partner in self:
+            partner.self_id = partner
 
-    _defaults = {
-        'website_private': True,
-    }
+    @api.multi
+    def _website_url(self, field_name, arg):
+        website_url = super(WebsiteResPartner, self)._website_url(field_name, arg)
+        for partner in self:
+            website_url[partner.id] = "/partners/%s" % slug(partner)
+        return website_url

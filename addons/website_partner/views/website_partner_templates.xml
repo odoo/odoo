@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="partner_page" name="Partner Page">
     <t t-call="website.layout">
         <div id="wrap">
@@ -24,7 +23,7 @@
     <div class="col-md-4">
         <div t-field="partner.image" t-field-options='{"widget": "image", "class": "center-block mb16"}'/>
         <address class="well">
-             <div t-field="partner.self" t-field-options='{
+             <div t-field="partner.self_id" t-field-options='{
                  "widget": "contact",
                  "fields": ["address", "website", "phone", "fax", "email"]
              }'/>
@@ -42,5 +41,4 @@
         <t t-raw="right_column or ''"/>
     </div>
 </template>
-</data>
-</openerp>
+</odoo>
