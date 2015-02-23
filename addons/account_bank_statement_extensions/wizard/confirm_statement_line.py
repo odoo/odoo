@@ -20,14 +20,15 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
+from openerp import api, models
 
-class confirm_statement_line(osv.osv_memory):
+
+class ConfirmStatementLine(models.TransientModel):
     _name = 'confirm.statement.line'
     _description = 'Confirm selected statement lines'
 
-    def confirm_lines(self, cr, uid, ids, context):
-        line_ids = context['active_ids']
-        line_obj = self.pool.get('account.bank.statement.line')
-        line_obj.write(cr, uid, line_ids, {'state': 'confirm'}, context=context)
-        return {}
+    @api.multi
+    def confirm_lines(self):
+        line_ids = self._context['active_ids']
+        lines = self.env['account.bank.statement.line'].browse(line_ids)
+        lines.write({'state': 'confirm'})

@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
-<openerp>
-  <data>
+<odoo>
 
     <!-- Batch Payment Info form -->
     
@@ -37,7 +36,7 @@
     <!-- add Valuta Date and Globalisation id to bank statement line -->
     
     <record id="view_bank_statement_form_add_fields" model="ir.ui.view">
-      <field name="name">view.bank.statement.form.add.fields</field>
+      <field name="name">account.bank.statement.form.inherit</field>
       <field name="model">account.bank.statement</field>
       <field name="inherit_id" ref="account.view_bank_statement_form"/>
       <field name="arch" type="xml">
@@ -142,5 +141,4 @@
     <menuitem action="action_bank_statement_line" id="bank_statement_line" parent="account.menu_finance_bank_and_cash" sequence="20" groups="base.group_no_one"/>
 
 
-  </data>
-</openerp>
+</odoo>
