@@ -316,6 +316,11 @@ class Post(models.Model):
         if content and self.env.user.karma < forum.karma_dofollow:
             for match in re.findall(r'<a\s.*href=".*?">', content):
                 content = re.sub(match, match[:3] + 'rel="nofollow" ' + match[3:], content)
+
+        # Smiley shortcode replace
+        for shortcode in self.env['forum.smiley.shortcode'].search([]):
+            regex = "(%s)(?!\/)" % re.escape(shortcode.source)
+            content = re.sub(regex, " " + shortcode.substitution + " ", content, flags=re.M)
         return content
 
     @api.model
@@ -666,3 +671,13 @@ class Tags(models.Model):
     def _get_posts_count(self):
         for tag in self:
             tag.posts_count = len(tag.post_ids)
+
+
+class forum_smiley_shotcode(models.Model):
+    """ Smiley shortcuts """
+    _name = "forum.smiley.shortcode"
+    _description = "forum smiley shortcode"
+
+    source = fields.Char('Shortcut', required=True, help="The shortcut which must be replace in the forum post")
+    substitution = fields.Char('Substitution', required=True, help="The html code replacing the shortcut")
+    description = fields.Char('Description')
