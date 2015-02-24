@@ -49,7 +49,7 @@
                 });
             } else {
                 this.translate().then(function () {
-                    mysuper.call(self);
+                    mysuper.call(self, true);
                     if(self.gengo_translate){
                         self.translation_gengo_display()
                     }
