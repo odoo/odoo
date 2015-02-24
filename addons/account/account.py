@@ -15,7 +15,6 @@ from openerp.exceptions import UserError
 import openerp.addons.decimal_precision as dp
 
 from openerp import api, fields, models, _
-from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
@@ -1567,7 +1566,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 journal_data.append(vals)
         ref_acc_bank = self.bank_account_code_char
         if journal_data and not ref_acc_bank:
-            raise Warning(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
+            raise UserError(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
         company.write({'bank_account_code_char': ref_acc_bank})
 
         for line in journal_data:
