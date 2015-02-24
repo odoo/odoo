@@ -28,7 +28,7 @@
                                 .focusIn().trigger("mousedown").trigger("keyup");
                         },0);
 
-                        this.rte.on('change', this, function () {
+                        $editable.on('content_changed', this, function () {
                             window.top.openerp[callback+"_downup"]($editable.prop('innerHTML'));
                         });
                     });
