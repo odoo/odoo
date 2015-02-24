@@ -242,7 +242,7 @@ class account_invoice(models.Model):
              "The payment term may compute several due dates, for example 50% now, 50% in one month.")
     date = fields.Date(string='Valuation Date',
         copy=False,
-        help="Keep empty to use the date of the validation(invoice) date.",
+        help="Keep empty to use the invoice's validation date.",
         readonly=True, states={'draft': [('readonly', False)]})
 
     account_id = fields.Many2one('account.account', string='Account',
@@ -678,7 +678,7 @@ class account_invoice(models.Model):
         return move_lines
 
     @api.multi
-    def compute_invoice_totals(self, company_currency, ref, invoice_move_lines):
+    def compute_invoice_totals(self, company_currency, invoice_move_lines):
         total = 0
         total_currency = 0
         for line in invoice_move_lines:
@@ -690,7 +690,6 @@ class account_invoice(models.Model):
             else:
                 line['currency_id'] = False
                 line['amount_currency'] = False
-            line['ref'] = ref
             if self.type in ('out_invoice','in_refund'):
                 total += line['price']
                 total_currency += line['amount_currency'] or line['price']
@@ -799,14 +798,9 @@ class account_invoice(models.Model):
                 if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
                     raise UserError(_('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
-            if inv.type in ('in_invoice', 'in_refund'):
-                ref = inv.reference
-            else:
-                ref = inv.number
-
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
-            total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
+            total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, iml)
 
             name = inv.name or inv.supplier_invoice_number or '/'
             if inv.payment_term:
@@ -832,7 +826,6 @@ class account_invoice(models.Model):
                         'date_maturity': t[0],
                         'amount_currency': diff_currency and amount_currency,
                         'currency_id': diff_currency and inv.currency_id.id,
-                        'ref': ref,
                         'invoice': inv.id
                     })
             else:
@@ -844,36 +837,31 @@ class account_invoice(models.Model):
                     'date_maturity': inv.date_due,
                     'amount_currency': diff_currency and total_currency,
                     'currency_id': diff_currency and inv.currency_id.id,
-                    'ref': ref,
                     'invoice': inv.id
                 })
-            date = date_invoice
-
             part = self.env['res.partner']._find_accounting_partner(inv.partner_id)
 
-            line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in iml]
+            line = [(0, 0, self.line_get_convert(l, part.id)) for l in iml]
             line = inv.group_lines(iml, line)
 
             journal = inv.journal_id.with_context(ctx)
             line = inv.finalize_invoice_move_lines(line)
 
+            if inv.type in ('in_invoice', 'in_refund'):
+                ref = inv.reference
+            else:
+                ref = inv.number
+            date = inv.date or date_invoice
             move_vals = {
-                'ref': inv.reference or inv.name,
+                'ref': ref or inv.name,
                 'line_id': line,
                 'journal_id': journal.id,
-                'date': inv.date_invoice,
+                'date': date,
                 'narration': inv.comment,
                 'company_id': inv.company_id.id,
             }
             ctx['company_id'] = inv.company_id.id
             ctx['dont_create_taxes'] = True
-            date = inv.date
-            if not date:
-                date = fields.Date.context_today(self)
-                move_vals['date'] = date
-                for i in line:
-                    i[2]['date'] = date
-
             ctx['invoice'] = inv
             move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
@@ -894,19 +882,17 @@ class account_invoice(models.Model):
         return self.write({'state': 'open'})
 
     @api.model
-    def line_get_convert(self, line, part, date):
+    def line_get_convert(self, line, part):
         return {
             'date_maturity': line.get('date_maturity', False),
             'partner_id': part,
             'name': line['name'][:64],
-            'date': date,
             'debit': line['price'] > 0 and line['price'],
             'credit': line['price'] < 0 and -line['price'],
             'account_id': line['account_id'],
             'analytic_lines': line.get('analytic_lines', []),
             'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
             'currency_id': line.get('currency_id', False),
-            'ref': line.get('ref', False),
             'quantity': line.get('quantity',1.00),
             'product_id': line.get('product_id', False),
             'product_uom_id': line.get('uos_id', False),
