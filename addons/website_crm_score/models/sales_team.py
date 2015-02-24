@@ -144,7 +144,7 @@ class crm_team(osv.osv):
                 haslead = haslead or (len(leads) == 50 and not dry)
 
                 if not leads.exists():
-                    return
+                    continue
 
                 if dry:
                     for lead in leads:

@@ -6221,7 +6221,7 @@ instance.web.form.FieldMany2ManyCheckBoxes = instance.web.form.AbstractField.ext
         var new_value = {};
         this.$("input").each(function() {
             var elem = $(this);
-            new_value[elem.data("record-id")] = elem.attr("checked") ? true : undefined;
+            new_value[elem.data("record-id")] = elem.is(':checked') ? true : undefined;
         });
         if (! _.isEqual(new_value, this.get("value")))
             this.internal_set_value(new_value);
