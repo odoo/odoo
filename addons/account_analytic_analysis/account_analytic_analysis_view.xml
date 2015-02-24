@@ -83,18 +83,18 @@
                                     context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id], 'default_pricelist_id': pricelist_id}"
                                     />
                             </td>
-                        </tr><tr>
+                        </tr><tr attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
                             <td class="oe_timesheet_grey">
                                 <label string="On Timesheets"/>
                             </td><td class="oe_timesheet_grey">
                             </td><td>
-                                <field class="oe_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_inline" name="hours_qtt_est"/>
                             </td><td>
-                                <field class="oe_inline" name="timesheet_ca_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_inline" name="timesheet_ca_invoiced"/>
                             </td><td>
-                                <field class="oe_inline" name="remaining_hours_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_inline" name="remaining_hours_to_invoice"/>
                             </td><td>
-                                <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_inline" name="ca_to_invoice"/>
                             </td><td class="oe_timesheet_action" attrs="{'invisible': ['|',('invoice_on_timesheets','=',False),('type','=','template')]}">
                                 <span attrs="{'invisible': [('ca_to_invoice','=',0.0)]}" class="oe_grey">
                                     <button name="hr_to_invoice_timesheets"

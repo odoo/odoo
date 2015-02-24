@@ -36,12 +36,6 @@ class report_project_task_user(osv.osv):
         'date_deadline': fields.date('Deadline', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
         'project_id': fields.many2one('project.project', 'Project', readonly=True),
-        'hours_planned': fields.float('Planned Hours', readonly=True),
-        'hours_effective': fields.float('Effective Hours', readonly=True),
-        'hours_delay': fields.float('Avg. Plan.-Eff.', readonly=True),
-        'remaining_hours': fields.float('Remaining Hours', readonly=True),
-        'progress': fields.float('Progress', readonly=True, group_operator='avg'),
-        'total_hours': fields.float('Total Hours', readonly=True),
         'closing_days': fields.float('Days to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the task"),
         'opening_days': fields.float('Days to Assign', digits=(16,2), readonly=True, group_operator="avg",
@@ -57,11 +51,9 @@ class report_project_task_user(osv.osv):
     }
     _order = 'name desc, project_id'
 
-    def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'report_project_task_user')
-        cr.execute("""
-            CREATE view report_project_task_user as
-              SELECT
+    def _select(self):
+        select_str = """
+             SELECT
                     (select 1 ) AS nbr,
                     t.id as id,
                     t.date_start as date_start,
@@ -70,32 +62,23 @@ class report_project_task_user(osv.osv):
                     t.date_deadline as date_deadline,
                     abs((extract('epoch' from (t.write_date-t.date_start)))/(3600*24))  as no_of_days,
                     t.user_id,
-                    progress as progress,
                     t.project_id,
-                    t.effective_hours as hours_effective,
                     t.priority,
                     t.name as name,
                     t.company_id,
                     t.partner_id,
                     t.stage_id as stage_id,
                     t.kanban_state as state,
-                    remaining_hours as remaining_hours,
-                    total_hours as total_hours,
-                    t.delay_hours as hours_delay,
-                    planned_hours as hours_planned,
                     (extract('epoch' from (t.write_date-t.create_date)))/(3600*24)  as closing_days,
                     (extract('epoch' from (t.date_start-t.create_date)))/(3600*24)  as opening_days,
                     (extract('epoch' from (t.date_deadline-(now() at time zone 'UTC'))))/(3600*24)  as delay_endings_days
-              FROM project_task t
-                WHERE t.active = 'true'
+        """
+        return select_str
+
+    def _group_by(self):
+        group_by_str = """
                 GROUP BY
                     t.id,
-                    remaining_hours,
-                    t.effective_hours,
-                    progress,
-                    total_hours,
-                    planned_hours,
-                    hours_delay,
                     create_date,
                     write_date,
                     date_start,
@@ -109,4 +92,15 @@ class report_project_task_user(osv.osv):
                     t.company_id,
                     t.partner_id,
                     stage_id
-        """)
+        """
+        return group_by_str
+
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'report_project_task_user')
+        cr.execute("""
+            CREATE view report_project_task_user as
+              %s
+              FROM project_task t
+                WHERE t.active = 'true'
+                %s
+        """% (self._select(), self._group_by()))

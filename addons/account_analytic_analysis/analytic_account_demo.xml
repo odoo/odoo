@@ -15,7 +15,7 @@
             <field name="project_id" ref="analytic.analytic_consultancy"/>
         </record>
         
-        <record id="hr_timesheet.working_hours_maintenance" model="hr.analytic.timesheet">
+        <record id="hr_timesheet.working_hours_maintenance" model="account.analytic.line">
             <field name="account_id" ref="analytic.analytic_consultancy"/>
             <field name="to_invoice" ref="hr_timesheet_invoice.timesheet_invoice_factor1"/>
             <field name="unit_amount">100</field>

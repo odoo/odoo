@@ -31,6 +31,19 @@
     name: HR Timesheet
     type: general
 -
+  Create a user type
+-
+  !record {model: account.account.type, id: user_type0}:
+    name: Other
+    code: 990099
+-
+  Create a financial account
+-
+  !record {model: account.account, id: financial_account0}:
+    name: expenses
+    code: 9999999
+    user_type: user_type0
+-
   Create an employee 'HR Manager' for user 'HR Manager'
 -
   !record {model: hr.employee, id: hr_employee_hrmanager0}:
@@ -58,8 +71,11 @@
   Make a work task entry 'Get work calendar of all employees' of 10 hours done by HR manager
 -
   !record {model: project.task, id: project_task_getalltimesheetrecords0}:
-    work_ids:
+    timesheet_ids:
       - date: !eval time.strftime('%Y-05-%d %H:%M:%S')
-        hours: 10.0
+        unit_amount: 10.0
         name: Get work calendar of all employees
         user_id: res_users_hrmanager0
+        account_id: analytic.analytic_administratif
+        journal_id: account_analytic_journal_hrtimesheet0
+        general_account_id: financial_account0

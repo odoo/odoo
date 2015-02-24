@@ -107,9 +107,9 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         var accounts;
         var account_names;
         var default_get;
-        return this.render_drop.add(new Model("hr.analytic.timesheet").call("default_get", [
-            ['account_id','general_account_id', 'journal_id','date','name','user_id','product_id','product_uom_id','to_invoice','amount','unit_amount'],
-            new data.CompoundContext({'user_id': self.get('user_id')})]).then(function(result) {
+        return this.render_drop.add(new Model("account.analytic.line").call("default_get", [
+            ['account_id','general_account_id', 'journal_id','date','name','user_id','product_id','product_uom_id','to_invoice','amount','unit_amount', 'is_timesheet'],
+            new data.CompoundContext({'user_id': self.get('user_id'), 'default_is_timesheet':true})]).then(function(result) {
             default_get = result;
             // calculating dates
             dates = [];
@@ -132,7 +132,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
 
             var account_ids = _.map(_.keys(accounts), function(el) { return el === "false" ? false : Number(el); });
 
-            return new Model("hr.analytic.timesheet").call("multi_on_change_account_id", [[], account_ids,
+            return new Model("account.analytic.line").call("multi_on_change_account_id", [[], account_ids,
                 new data.CompoundContext({'user_id': self.get('user_id')})]).then(function(accounts_defaults) {
                 accounts = _(accounts).chain().map(function(lines, account_id) {
                     var account_defaults = _.extend({}, default_get, (accounts_defaults[account_id] || {}).value || {});
@@ -216,7 +216,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                             account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
                             var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id;
                             var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id;
-                            self.defs.push(new Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
+                            self.defs.push(new Model("account.analytic.line").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
                                 account.days[day_count].lines[0]['amount'] = res.value.amount || 0;
                                 self.display_totals();
                                 self.sync();
@@ -271,7 +271,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                 return;
             }
             var ops = self.generate_o2m_value();
-            new Model("hr.analytic.timesheet").call("multi_on_change_account_id", [[], [id],
+            new Model("account.analytic.line").call("multi_on_change_account_id", [[], [id],
                 new data.CompoundContext({'user_id': self.get('user_id')})]).then(function(res) {
                 res = res[id];
                 var def = _.extend({}, self.default_get, res.value, {

@@ -39,38 +39,13 @@ class hr_timesheet_invoice_factor(osv.osv):
     }
 
 
-
 class account_analytic_account(osv.osv):
-    def _invoiced_calc(self, cr, uid, ids, name, arg, context=None):
-        obj_invoice = self.pool.get('account.invoice')
-        res = {}
-
-        cr.execute('SELECT account_id as account_id, l.invoice_id '
-                'FROM hr_analytic_timesheet h LEFT JOIN account_analytic_line l '
-                    'ON (h.line_id=l.id) '
-                    'WHERE l.account_id = ANY(%s)', (ids,))
-        account_to_invoice_map = {}
-        for rec in cr.dictfetchall():
-            account_to_invoice_map.setdefault(rec['account_id'], []).append(rec['invoice_id'])
-
-        for account in self.browse(cr, uid, ids, context=context):
-            invoice_ids = filter(None, list(set(account_to_invoice_map.get(account.id, []))))
-            for invoice in obj_invoice.browse(cr, uid, invoice_ids, context=context):
-                res.setdefault(account.id, 0.0)
-                res[account.id] += invoice.amount_untaxed
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
-
-        return res
-
     _inherit = "account.analytic.account"
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist',
             help="The product to invoice is defined on the employee form, the price will be deducted by this pricelist on the product."),
         'amount_max': fields.float('Max. Invoice Price',
             help="Keep empty if this contract is not limited to a total fixed price."),
-        'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
-            help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
             help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sales order), you should invoice the rest on timesheet with a 80% ratio."),
     }
@@ -78,7 +53,7 @@ class account_analytic_account(osv.osv):
     _defaults = {
          'pricelist_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.list0')
     }
-    
+
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
         res = super(account_analytic_account, self).on_change_partner_id(cr, uid, ids, partner_id, name, context=context)
         if partner_id:
@@ -108,14 +83,6 @@ class account_analytic_line(osv.osv):
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoiceable', help="It allows to set the discount while making invoice, keep empty if the activities should not be invoiced."),
     }
 
-    def _default_journal(self, cr, uid, context=None):
-        proxy = self.pool.get('hr.employee')
-        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        if record_ids:
-            employee = proxy.browse(cr, uid, record_ids[0], context=context)
-            return employee.journal_id and employee.journal_id.id or False
-        return False
-
     def _default_general_account(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
@@ -126,30 +93,34 @@ class account_analytic_line(osv.osv):
         return False
 
     _defaults = {
-        'journal_id' : _default_journal,
-        'general_account_id' : _default_general_account,
+        'general_account_id': _default_general_account,
     }
 
     def write(self, cr, uid, ids, vals, context=None):
         self._check_inv(cr, uid, ids, vals)
-        return super(account_analytic_line,self).write(cr, uid, ids, vals,
+        return super(account_analytic_line, self).write(cr, uid, ids, vals,
                 context=context)
 
-    def _check_inv(self, cr, uid, ids, vals):
+    def unlink(self, cr, uid, ids, context=None):
+        if any(line.invoice_id.id for line in self.browse(cr, uid, ids, context)):
+            raise UserError(_('You cannot delete an invoiced analytic line!'))
+        return super(account_analytic_line, self).unlink(cr, uid, ids, context)
+
+    def _check_inv(self, cr, uid, ids, vals, context=None):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
-        if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
-            for line in self.browse(cr, uid, select):
+        if (not vals.has_key('invoice_id')) or vals['invoice_id'] == False:
+            for line in self.browse(cr, uid, select, context):
                 if line.invoice_id:
                     raise UserError(_('You cannot modify an invoiced analytic line!'))
         return True
 
-    def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
+    def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context={}):
         pro_price_obj = self.pool.get('product.pricelist')
         if account.pricelist_id:
             pl = account.pricelist_id.id
-            price = pro_price_obj.price_get(cr,uid,[pl], product_id, qty or 1.0, account.partner_id.id, context=context)[pl]
+            price = pro_price_obj.price_get(cr, uid, [pl], product_id, qty or 1.0, account.partner_id.id, context=context)[pl]
         else:
             price = 0.0
         return price
@@ -337,23 +308,21 @@ class account_analytic_line(osv.osv):
             invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
 
-
-class hr_analytic_timesheet(osv.osv):
-    _inherit = "hr.analytic.timesheet"
-    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False):
-        res = {}
-        if not account_id:
-            return res
-        res.setdefault('value',{})
-        acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
-        st = acc.to_invoice.id
-        res['value']['to_invoice'] = st or False
-        if acc.state=='pending':
-            res['warning'] = {
-                'title': 'Warning',
-                'message': 'The analytic account is in pending state.\nYou should not work on this account !'
-            }
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, is_timesheet=False, context=None):
+        res = {'value': {}}
+        if is_timesheet and account_id:
+            acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id, context=context)
+            st = acc.to_invoice.id
+            res['value']['to_invoice'] = st or False
+            if acc.state == 'pending':
+                res['warning'] = {
+                    'title': 'Warning',
+                    'message': 'The analytic account is in pending state.\nYou should not work on this account !'
+                }
+            elif acc.state == 'close' or acc.state == 'cancelled':
+                raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
         return res
+
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
@@ -366,23 +335,22 @@ class account_invoice(osv.osv):
             obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:
                 if il['account_analytic_id']:
-		    # *-* browse (or refactor to avoid read inside the loop)
+                    # *-* browse (or refactor to avoid read inside the loop)
                     to_invoice = obj_analytic_account.read(cr, uid, [il['account_analytic_id']], ['to_invoice'], context=context)[0]['to_invoice']
                     if to_invoice:
                         il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]
         return iml
 
 
-
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
     def create_analytic_lines(self, cr, uid, ids, context=None):
-        res = super(account_move_line, self).create_analytic_lines(cr, uid, ids,context=context)
+        res = super(account_move_line, self).create_analytic_lines(cr, uid, ids, context=context)
         analytic_line_obj = self.pool.get('account.analytic.line')
         for move_line in self.browse(cr, uid, ids, context=context):
-            #For customer invoice, link analytic line to the invoice so it is not proposed for invoicing in Bill Tasks Work
-            invoice_id = move_line.invoice and move_line.invoice.type in ('out_invoice','out_refund') and move_line.invoice.id or False
+            # For customer invoice, link analytic line to the invoice so it is not proposed for invoicing in Bill Tasks Work
+            invoice_id = move_line.invoice and move_line.invoice.type in ('out_invoice', 'out_refund') and move_line.invoice.id or False
             for line in move_line.analytic_lines:
                 analytic_line_obj.write(cr, uid, line.id, {
                     'invoice_id': invoice_id,

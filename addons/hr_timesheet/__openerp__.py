@@ -43,7 +43,6 @@ up a management by affair.
     'depends': ['account', 'hr', 'base', 'hr_attendance'],
     'data': [
         'security/ir.model.access.csv',
-        'security/hr_timesheet_security.xml',
         'hr_timesheet_view.xml',
         'report/hr_timesheet_report_view.xml',
         'hr_timesheet_installer.xml',
@@ -52,7 +51,6 @@ up a management by affair.
     'demo': ['hr_timesheet_demo.xml'],
     'test': [
         'test/hr_timesheet_users.yml',
-        'test/hr_timesheet_demo.yml',
     ],
     'installable': True,
     'auto_install': False,

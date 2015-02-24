@@ -20,6 +20,7 @@
 ##############################################################################
 import time
 import datetime
+from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
 from openerp import tools
@@ -28,6 +29,73 @@ from openerp.exceptions import UserError
 
 class project_project(osv.osv):
     _inherit = 'project.project'
+
+    def _get_project_and_children(self, cr, uid, ids, context=None):
+        """ retrieve all children projects of project ids;
+            return a dictionary mapping each project to its parent project (or None)
+        """
+        res = dict.fromkeys(ids, None)
+        while ids:
+            cr.execute("""
+                SELECT project.id, parent.id
+                FROM project_project project, project_project parent, account_analytic_account account
+                WHERE project.analytic_account_id = account.id
+                AND parent.analytic_account_id = account.parent_id
+                AND parent.id IN %s
+                """, (tuple(ids),))
+            dic = dict(cr.fetchall())
+            res.update(dic)
+            ids = dic.keys()
+        return res
+
+    def _progress_rate(self, cr, uid, ids, names, arg, context=None):
+        child_parent = self._get_project_and_children(cr, uid, ids, context)
+        # compute planned_hours, total_hours, effective_hours specific to each project
+        cr.execute("""
+            SELECT project_id, COALESCE(SUM(planned_hours), 0.0),
+                COALESCE(SUM(total_hours), 0.0), COALESCE(SUM(effective_hours), 0.0)
+            FROM project_task
+            LEFT JOIN project_task_type ON project_task.stage_id = project_task_type.id
+            WHERE project_task.project_id IN %s AND project_task_type.fold = False
+            GROUP BY project_id
+            """, (tuple(child_parent.keys()),))
+        # aggregate results into res
+        res = dict([(id, {'planned_hours': 0.0, 'total_hours': 0.0, 'effective_hours': 0.0}) for id in ids])
+        for id, planned, total, effective in cr.fetchall():
+            # add the values specific to id to all parent projects of id in the result
+            while id:
+                if id in ids:
+                    res[id]['planned_hours'] += planned
+                    res[id]['total_hours'] += total
+                    res[id]['effective_hours'] += effective
+                id = child_parent[id]
+        # compute progress rates
+        for id in ids:
+            if res[id]['total_hours']:
+                res[id]['progress_rate'] = round(100.0 * res[id]['effective_hours'] / res[id]['total_hours'], 2)
+            else:
+                res[id]['progress_rate'] = 0.0
+        return res
+
+    def _get_projects_from_tasks(self, cr, uid, task_ids, context=None):
+        tasks = self.pool.get('project.task').browse(cr, uid, task_ids, context=context)
+        project_ids = [task.project_id.id for task in tasks if task.project_id]
+        return self.pool.get('project.project')._get_project_and_parents(cr, uid, project_ids, context)
+
+    def _get_project_and_parents(self, cr, uid, ids, context=None):
+        """ return the project ids and all their parent projects """
+        res = set(ids)
+        while ids:
+            cr.execute("""
+                SELECT DISTINCT parent.id
+                FROM project_project project, project_project parent, account_analytic_account account
+                WHERE project.analytic_account_id = account.id
+                AND parent.analytic_account_id = account.parent_id
+                AND project.id IN %s
+                """, (tuple(ids),))
+            ids = [t[0] for t in cr.fetchall()]
+            res.update(ids)
+        return list(res)
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
@@ -39,7 +107,30 @@ class project_project(osv.osv):
                 factor_id = data_obj.browse(cr, uid, data_id).res_id
                 res['value'].update({'to_invoice': factor_id})
         return res
-        
+
+    _columns = {
+        'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
+            store = {
+                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
+                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'timesheet_ids', 'stage_id'], 20),
+            }),
+        'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects.",
+            store = {
+                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
+                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'timesheet_ids', 'stage_id'], 20),
+            }),
+        'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
+            store = {
+                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
+                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'timesheet_ids', 'stage_id'], 20),
+            }),
+        'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo.",
+            store = {
+                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
+                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'timesheet_ids', 'stage_id'], 20),
+            }),
+    }
+
     _defaults = {
         'invoice_on_timesheets': True,
     }
@@ -53,6 +144,7 @@ class project_project(osv.osv):
         view_context = {
             'search_default_account_id': [project.analytic_account_id.id],
             'default_account_id': project.analytic_account_id.id,
+            'default_is_timesheet':True
         }
         help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""") % (project.name,)
         try:
@@ -70,219 +162,72 @@ class project_project(osv.osv):
         result['help'] = help
         return result
 
-
-class project_work(osv.osv):
-    _inherit = "project.task.work"
-
-    def get_user_related_details(self, cr, uid, user_id):
-        res = {}
-        emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', user_id)])
-        if not emp_id:
-            user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
-            raise UserError(_('Please define employee for user "%s". You must create one.')% (user_name,))
-        emp = emp_obj.browse(cr, uid, emp_id[0])
-        if not emp.product_id:
-            raise UserError(_('Please define product and product category property account on the related employee.\nFill in the HR Settings tab of the employee form.'))
-
-        if not emp.journal_id:
-            raise UserError(_('Please define journal on the related employee.\nFill in the HR Settings tab of the employee form.'))
-
-        acc_id = emp.product_id.property_account_expense.id
-        if not acc_id:
-            acc_id = emp.product_id.categ_id.property_account_expense_categ.id
-            if not acc_id:
-                raise UserError(_('Please define product and product category property account on the related employee.\nFill in the HR Settings of the employee form.'))
-
-        res['product_id'] = emp.product_id.id
-        res['journal_id'] = emp.journal_id.id
-        res['general_account_id'] = acc_id
-        res['product_uom_id'] = emp.product_id.uom_id.id
-        return res
-
-    def _create_analytic_entries(self, cr, uid, vals, context):
-        """Create the hr analytic timesheet from project task work"""
-        timesheet_obj = self.pool['hr.analytic.timesheet']
-        task_obj = self.pool['project.task']
-
-        vals_line = {}
-        timeline_id = False
-        acc_id = False
-
-        task_obj = task_obj.browse(cr, uid, vals['task_id'], context=context)
-        result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
-        vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
-        vals_line['user_id'] = vals['user_id']
-        vals_line['product_id'] = result['product_id']
-        if vals.get('date'):
-            if len(vals['date']) > 10:
-                timestamp = datetime.datetime.strptime(vals['date'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
-                ts = fields.datetime.context_timestamp(cr, uid, timestamp, context)
-                vals_line['date'] = ts.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            else:
-                vals_line['date'] = vals['date']
-
-        # Calculate quantity based on employee's product's uom
-        vals_line['unit_amount'] = vals['hours']
-
-        default_uom = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.project_time_mode_id.id
-        if result['product_uom_id'] != default_uom:
-            vals_line['unit_amount'] = self.pool['product.uom']._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
-        acc_id = task_obj.project_id and task_obj.project_id.analytic_account_id.id or acc_id
-        if acc_id:
-            vals_line['account_id'] = acc_id
-            res = timesheet_obj.on_change_account_id(cr, uid, False, acc_id)
-            if res.get('value'):
-                vals_line.update(res['value'])
-            vals_line['general_account_id'] = result['general_account_id']
-            vals_line['journal_id'] = result['journal_id']
-            vals_line['amount'] = 0.0
-            vals_line['product_uom_id'] = result['product_uom_id']
-            amount = vals_line['unit_amount']
-            prod_id = vals_line['product_id']
-            unit = False
-            timeline_id = timesheet_obj.create(cr, uid, vals=vals_line, context=context)
-
-            # Compute based on pricetype
-            amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, timeline_id,
-                prod_id, amount, False, unit, vals_line['journal_id'], context=context)
-            if amount_unit and 'amount' in amount_unit.get('value',{}):
-                updv = { 'amount': amount_unit['value']['amount'] }
-                timesheet_obj.write(cr, uid, [timeline_id], updv, context=context)
-
-        return timeline_id
-
-    def create(self, cr, uid, vals, *args, **kwargs):
-        context = kwargs.get('context', {})
-        if not context.get('no_analytic_entry',False):
-            vals['hr_analytic_timesheet_id'] = self._create_analytic_entries(cr, uid, vals, context=context)
-        return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        """
-        When a project task work gets updated, handle its hr analytic timesheet.
-        """
-        if context is None:
-            context = {}
-        timesheet_obj = self.pool.get('hr.analytic.timesheet')
-        uom_obj = self.pool.get('product.uom')
-        result = {}
-
-        if isinstance(ids, (long, int)):
-            ids = [ids]
-
-        for task in self.browse(cr, uid, ids, context=context):
-            line_id = task.hr_analytic_timesheet_id
-            if not line_id:
-                # if a record is deleted from timesheet, the line_id will become
-                # null because of the foreign key on-delete=set null
-                continue
-
-            vals_line = {}
-            if 'name' in vals:
-                vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name'] or '/'))
-            if 'user_id' in vals:
-                vals_line['user_id'] = vals['user_id']
-            if 'date' in vals:
-                vals_line['date'] = vals['date'][:10]
-            if 'hours' in vals:
-                vals_line['unit_amount'] = vals['hours']
-                prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
-
-                # Put user related details in analytic timesheet values
-                details = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
-                for field in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
-                    if details.get(field, False):
-                        vals_line[field] = details[field]
-
-                # Check if user's default UOM differs from product's UOM
-                user_default_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
-                if details.get('product_uom_id', False) and details['product_uom_id'] != user_default_uom_id:
-                    vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, user_default_uom_id, vals['hours'], details['product_uom_id'])
-
-                # Compute based on pricetype
-                amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, line_id.id,
-                    prod_id=prod_id, company_id=False,
-                    unit_amount=vals_line['unit_amount'], unit=False, journal_id=vals_line['journal_id'], context=context)
-
-                if amount_unit and 'amount' in amount_unit.get('value',{}):
-                    vals_line['amount'] = amount_unit['value']['amount']
-
-            if vals_line:
-                self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
-
-        return super(project_work,self).write(cr, uid, ids, vals, context)
-
-    def unlink(self, cr, uid, ids, *args, **kwargs):
-        hat_obj = self.pool.get('hr.analytic.timesheet')
-        hat_ids = []
-        for task in self.browse(cr, uid, ids):
-            if task.hr_analytic_timesheet_id:
-                hat_ids.append(task.hr_analytic_timesheet_id.id)
-        # Delete entry from timesheet too while deleting entry to task.
-        if hat_ids:
-            hat_obj.unlink(cr, uid, hat_ids, *args, **kwargs)
-        return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
-
-    _columns={
-        'hr_analytic_timesheet_id':fields.many2one('hr.analytic.timesheet','Related Timeline Id', ondelete='set null'),
-    }
-
-
 class task(osv.osv):
     _inherit = "project.task"
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
-        for task_obj in self.browse(cr, uid, ids, *args, **kwargs):
-            if task_obj.work_ids:
-                work_ids = [x.id for x in task_obj.work_ids]
-                self.pool.get('project.task.work').unlink(cr, uid, work_ids, *args, **kwargs)
-
-        return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
-        task_work_obj = self.pool['project.task.work']
-        acc_id = False
-        missing_analytic_entries = {}
-
-        if vals.get('project_id',False) or vals.get('name',False):
-            vals_line = {}
-            hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
-            if vals.get('project_id',False):
-                project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'], context=context)
-                acc_id = project_obj.analytic_account_id.id
-
-            for task_obj in self.browse(cr, uid, ids, context=context):
-                if len(task_obj.work_ids):
-                    for task_work in task_obj.work_ids:
-                        if not task_work.hr_analytic_timesheet_id:
-                            if acc_id :
-                                # missing timesheet activities to generate
-                                missing_analytic_entries[task_work.id] = {
-                                    'name' : task_work.name,
-                                    'user_id' : task_work.user_id.id,
-                                    'date' : task_work.date,
-                                    'account_id': acc_id,
-                                    'hours' : task_work.hours,
-                                    'task_id' : task_obj.id
-                                }
-                            continue
-                        line_id = task_work.hr_analytic_timesheet_id.id
-                        if vals.get('project_id',False):
-                            vals_line['account_id'] = acc_id
-                        if vals.get('name',False):
-                            vals_line['name'] = '%s: %s' % (tools.ustr(vals['name']), tools.ustr(task_work.name) or '/')
-                        hr_anlytic_timesheet.write(cr, uid, [line_id], vals_line, {})
-
-        res = super(task,self).write(cr, uid, ids, vals, context)
-
-        for task_work_id, analytic_entry in missing_analytic_entries.items():
-            timeline_id = task_work_obj._create_analytic_entries(cr, uid, analytic_entry, context=context)
-            task_work_obj.write(cr, uid, task_work_id, {'hr_analytic_timesheet_id' : timeline_id}, context=context)
-
+    # Compute: effective_hours, total_hours, progress
+    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
+        res = {}
+        tasks_data = self.pool['account.analytic.line'].read_group(cr, uid, [('task_id', 'in', ids)], ['task_id','unit_amount'], ['task_id'], context=context)
+        for data in tasks_data:
+            task = self.browse(cr, uid, data['task_id'][0], context=context)
+            res[data['task_id'][0]] = {'effective_hours': data.get('unit_amount', 0.0), 'remaining_hours': task.planned_hours - data.get('unit_amount', 0.0)}
+            res[data['task_id'][0]]['total_hours'] = res[data['task_id'][0]]['remaining_hours'] + data.get('unit_amount', 0.0)
+            res[data['task_id'][0]]['delay_hours'] = res[data['task_id'][0]]['total_hours'] - task.planned_hours
+            res[data['task_id'][0]]['progress'] = 0.0
+            if (task.planned_hours > 0.0 and data.get('unit_amount', 0.0)):
+                res[data['task_id'][0]]['progress'] = round(min(100.0 * data.get('unit_amount', 0.0) / task.planned_hours, 99.99),2)
+            # TDE CHECK: if task.state in ('done','cancelled'):
+            if task.stage_id and task.stage_id.fold:
+                res[data['task_id'][0]]['progress'] = 100.0
         return res
+
+    def _get_task(self, cr, uid, id, context=None):
+        res = []
+        for line in self.pool.get('account.analytic.line').search_read(cr,uid,[('task_id', '!=', False),('id','in',id)], context=context):
+            res.append(line['task_id'][0])
+        return res
+
+    _columns = {
+        'remaining_hours': fields.function(_hours_get, string='Remaining Hours', multi='line_id', help="Total remaining time, can be re-estimated periodically by the assignee of the task.",
+            store = {
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours'], 10),
+                'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
+            }),
+        'effective_hours': fields.function(_hours_get, string='Hours Spent', multi='line_id', help="Computed using the sum of the task work done.",
+            store = {
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours'], 10),
+                'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
+            }),
+        'total_hours': fields.function(_hours_get, string='Total', multi='line_id', help="Computed as: Time Spent + Remaining Time.",
+            store = {
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours'], 10),
+                'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
+            }),
+        'progress': fields.function(_hours_get, string='Working Time Progress (%)', multi='line_id', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
+            store = {
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
+                'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
+            }),
+        'delay_hours': fields.function(_hours_get, string='Delay Hours', multi='line_id', help="Computed as difference between planned hours by the project manager and the total hours of the task.",
+            store = {
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours'], 10),
+                'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
+            }),
+        'timesheet_ids': fields.one2many('account.analytic.line', 'task_id', 'Timesheets'),
+        'analytic_account_id': fields.related('project_id', 'analytic_account_id',
+            type='many2one', relation='account.analytic.account', string='Analytic Account', store=True),
+    }
+
+    _defaults = {
+        'progress': 0,
+    }
+
+    def _prepare_delegate_values(self, cr, uid, ids, delegate_data, context=None):
+        vals = super(task, self)._prepare_delegate_values(cr, uid, ids, delegate_data, context)
+        for task in self.browse(cr, uid, ids, context=context):
+            vals[task.id]['planned_hours'] += task.effective_hours
+        return vals
 
 
 class res_partner(osv.osv):
@@ -295,28 +240,8 @@ class res_partner(osv.osv):
         return super(res_partner,self).unlink(cursor, user, ids,
                 context=context)
 
-
 class account_analytic_line(osv.osv):
-   _inherit = "account.analytic.line"
-
-   def get_product(self, cr, uid, context=None):
-        emp_obj = self.pool.get('hr.employee')
-        emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
-        if emp_ids:
-            employee = emp_obj.browse(cr, uid, emp_ids, context=context)[0]
-            if employee.product_id:return employee.product_id.id
-        return False
-   
-   _defaults = {'product_id': get_product,}
-   
-   def on_change_account_id(self, cr, uid, ids, account_id):
-       res = {}
-       if not account_id:
-           return res
-       res.setdefault('value',{})
-       acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
-       st = acc.to_invoice.id
-       res['value']['to_invoice'] = st or False
-       if acc.state == 'close' or acc.state == 'cancelled':
-           raise UserError(_('You cannot select a Analytic Account which is in Close or Cancelled state.'))
-       return res
+    _inherit = "account.analytic.line"
+    _columns = {
+        'task_id' : fields.many2one('project.task', 'Task'),
+    }
