@@ -254,26 +254,25 @@ class view(osv.osv):
         if view.model_data_id:
             view.model_data_id.write({'noupdate': True})
 
-    def customize_template_get(self, cr, uid, key, full=False, bundles=False):
+    def customize_template_get(self, cr, uid, key, full=False, bundles=False, context=None):
         """ Get inherit view's informations of the template ``key``. By default, only
         returns ``customize_show`` templates (which can be active or not), if
         ``full=True`` returns inherit view's informations of the template ``key``.
         ``bundles=True`` returns also the asset bundles
         """
-        imd = request.registry['ir.model.data']
-        view_model, view_theme_id = imd.get_object_reference(
-            cr, uid, 'website', 'theme')
-        user = request.registry['res.users'].browse(cr, uid, request.context)
+        imd = self.pool['ir.model.data']
+        theme_view_id = imd.xmlid_to_res_id(cr, uid, 'website.theme')
+        user = self.pool['res.users'].browse(cr, uid, context=context)
         user_groups = set(user.groups_id)
         views = self._views_get(
             cr, uid, key, bundles=bundles,
-            context=dict(request.context or {}, active_test=False))
+            context=dict(context or {}, active_test=False))
         done = set()
         result = []
         for v in views:
             if not user_groups.issuperset(v.groups_id):
                 continue
-            if full or (v.customize_show and v.inherit_id.id != view_theme_id):
+            if full or (v.customize_show and v.inherit_id.id != theme_view_id):
                 if v.inherit_id not in done:
                     result.append({
                         'name': v.inherit_id.name,
@@ -298,6 +297,5 @@ class view(osv.osv):
         views = self.customize_template_get(cr, uid, xml_id, full=True, context=context)
         views_ids = [view.get('id') for view in views if view.get('active')]
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
-        irt = request.registry.get('ir.translation')
-        return irt.search_read(cr, uid, domain, field, context=context)
+        return self.pool['ir.translation'].search_read(cr, uid, domain, field, context=context)
 
