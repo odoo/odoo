@@ -8,7 +8,7 @@
 -
   !python {model: crm.phonecall2phonecall}: |
     context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_phonecall_6")], 'active_id': ref("crm.crm_phonecall_6")})
-    res_id = self.create(cr, uid, {'name': "Proposition de réduction"}, context=context)
+    res_id = self.create(cr, uid, {'name': "Proposition de réduction", 'date': "2014-05-05 12:10:10"}, context=context)
     self.action_schedule(cr, uid, [res_id], context=context)
 -
   I schedule a meeting based on this phone call.

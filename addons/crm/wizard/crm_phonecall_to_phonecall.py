@@ -34,9 +34,8 @@ class crm_phonecall2phonecall(osv.osv_memory):
         'contact_name':fields.char('Contact'),
         'phone':fields.char('Phone'),
         'categ_id': fields.many2one('crm.phonecall.category', 'Category'), 
-        'date': fields.datetime('Date'),
+        'date': fields.datetime('Date', required=True),
         'team_id':fields.many2one('crm.team','Sales Team', oldname='section_id'),
-        'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True),
         'partner_id' : fields.many2one('res.partner', "Partner"),
         'note':fields.text('Note')
     }
@@ -59,18 +58,23 @@ class crm_phonecall2phonecall(osv.osv_memory):
                     this.user_id and this.user_id.id or False, \
                     this.team_id and this.team_id.id or False, \
                     this.categ_id and this.categ_id.id or False, \
-                    action=this.action, context=context)
-
-        return phonecall.redirect_phonecall_view(cr, uid, phocall_ids[phonecall_ids[0]], context=context)
+                    context=context)
+        if self.pool.get('ir.model.data').search(cr,uid,[('module','=','crm_voip')],context=context):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload_panel',
+            }
+        else:
+            return phonecall.redirect_phonecall_view(cr, uid, phocall_ids[phonecall_ids[0]], context=context)
     
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
         
         """
+        
         res = super(crm_phonecall2phonecall, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
-        res.update({'action': 'schedule', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         if record_id:
             phonecall = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
 
@@ -81,7 +85,6 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 categ_id = data_obj.browse(cr, uid, res_id, context=context).res_id
             except ValueError:
                 pass
-
             if 'name' in fields:
                 res.update({'name': phonecall.name})
             if 'user_id' in fields:

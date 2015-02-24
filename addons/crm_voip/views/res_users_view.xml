@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_voip_user_config" model="ir.ui.view">
+            <field name="name">res.voip.users.preferences.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <data>
+                        <group name="preferences" position="after">
+                            <group name="voip_config" string="PBX Configuration">
+                                <field name="sip_login" class="oe_inline"/>
+                                <field name="sip_password" class="oe_inline" password="True"/>
+                                <field name="sip_physicalPhone" class="oe_inline"/>
+                                <field name="sip_always_transfert" class="oe_inline"/>
+                                <field name="sip_ring_number" class="oe_inline"/>
+                            </group>
+                        </group>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
