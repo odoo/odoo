@@ -3,7 +3,7 @@ from openerp.tests.common import TransactionCase
 
 class AccountTestUsers(TransactionCase):
 
-    """Tests for diffrent type of user 'Accountant/Financial Manager' and added groups"""
+    """Tests for diffrent type of user 'Accountant/Adviser' and added groups"""
 
     def setUp(self):
         super(AccountTestUsers, self).setUp()
@@ -28,7 +28,7 @@ class AccountTestUsers(TransactionCase):
             groups_id=[(6, 0, [res_users_account_user.id, partner_manager.id])]
         ))
         self.account_manager = self.res_user_model.create(dict(
-            name="Financial Manager",
+            name="Adviser",
             company_id=self.main_company.id,
             login="fm",
             password="fm",
