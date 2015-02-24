@@ -1,1 +1,3 @@
-import gengo_callback
+# -*- coding: utf-8 -*-
+
+import main

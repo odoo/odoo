@@ -5,10 +5,7 @@ import uuid
 import logging
 import re
 import time
-
-from openerp.osv import osv, fields
-from openerp import tools, SUPERUSER_ID
-from openerp.tools.translate import _
+from openerp import api, fields, models, SUPERUSER_ID, tools, _
 from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -21,33 +18,29 @@ except ImportError:
 GENGO_DEFAULT_LIMIT = 20
 
 
-class base_gengo_translations(osv.osv_memory):
+class BaseGengoTranslations(models.TransientModel):
     GENGO_KEY = "Gengo.UUID"
     GROUPS = ['base.group_system']
 
     _name = 'base.gengo.translations'
-    _columns = {
-        'sync_type': fields.selection([('send', 'Send New Terms'),
-                                       ('receive', 'Receive Translation'),
-                                       ('both', 'Both')], "Sync Type", required=True),
-        'lang_id': fields.many2one('res.lang', 'Language', required=True),
-        'sync_limit': fields.integer("No. of terms to sync"),
-    }
-    _defaults = {
-        'sync_type': 'both',
-        'sync_limit': 20
-    }
+
+    sync_type = fields.Selection([
+        ('send', 'Send New Terms'),
+        ('receive', 'Receive Translation'),
+        ('both', 'Both')], required=True, default='both')
+    lang_id = fields.Many2one('res.lang', string='Language', required=True)
+    sync_limit = fields.Integer(string="No. of terms to sync", default=20)
 
     def init(self, cr):
-        icp = self.pool['ir.config_parameter']
-        if not icp.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default=None):
-            icp.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()), groups=self.GROUPS)
+        IrConfigParam = self.pool['ir.config_parameter']
+        if not IrConfigParam.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default=None):
+            IrConfigParam.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()), groups=self.GROUPS)
 
-    def get_gengo_key(self, cr):
-        icp = self.pool['ir.config_parameter']
-        return icp.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default="Undefined")
+    def get_gengo_key(self):
+        IrConfigParamSudo = self.env['ir.config_parameter'].sudo()
+        return IrConfigParamSudo.get_param(self.GENGO_KEY, default="Undefined")
 
-    def gengo_authentication(self, cr, uid, context=None):
+    def gengo_authentication(self):
         '''
         This method tries to open a connection with Gengo. For that, it uses the Public and Private
         keys that are linked to the company (given by Gengo on subscription). It returns a tuple with
@@ -58,7 +51,7 @@ class base_gengo_translations(osv.osv_memory):
             by the cron) or in a dialog box (if requested by the user), thus it's important to return it
             translated.
         '''
-        user = self.pool.get('res.users').browse(cr, 1, uid, context=context)
+        user = self.env.user
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
             return (False, _("Gengo `Public Key` or `Private Key` are missing. Enter your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`."))
         try:
@@ -73,57 +66,57 @@ class base_gengo_translations(osv.osv_memory):
             _logger.exception('Gengo connection failed')
             return (False, _("Gengo connection failed with this message:\n``%s``") % e)
 
-    def act_update(self, cr, uid, ids, context=None):
+    @api.multi
+    def act_update(self):
         '''
         Function called by the wizard.
         '''
-        if context is None:
-            context = {}
-
-        flag, gengo = self.gengo_authentication(cr, uid, context=context)
+        flag, gengo = self.gengo_authentication()
         if not flag:
             raise UserError(gengo)
-        for wizard in self.browse(cr, uid, ids, context=context):
-            supported_langs = self.pool.get('ir.translation')._get_all_supported_languages(cr, uid, context=context)
-            language = self.pool.get('ir.translation')._get_gengo_corresponding_language(wizard.lang_id.code)
+        IrTranslation = self.env['ir.translation']
+        for wizard in self:
+            supported_langs = IrTranslation._get_all_supported_languages()
+            language = IrTranslation._get_gengo_corresponding_language(wizard.lang_id.code)
             if language not in supported_langs:
                 raise UserError(_('This language is not supported by the Gengo translation services.'))
 
-            ctx = context.copy()
-            ctx['gengo_language'] = wizard.lang_id.id
             if wizard.sync_limit > 200 or wizard.sync_limit < 1:
                 raise UserError(_('Sync limit should between 1 to 200 for Gengo translation services.'))
             if wizard.sync_type in ['send', 'both']:
-                self._sync_request(cr, uid, wizard.sync_limit, context=ctx)
+                self.with_context(gengo_language=wizard.lang_id.id)._sync_request(wizard.sync_limit)
             if wizard.sync_type in ['receive', 'both']:
-                self._sync_response(cr, uid, wizard.sync_limit, context=ctx)
+                self.with_context(gengo_language=wizard.lang_id.id)._sync_response(wizard.sync_limit)
         return {'type': 'ir.actions.act_window_close'}
 
-    def _sync_response(self, cr, uid, limit=GENGO_DEFAULT_LIMIT, context=None):
+    @api.model
+    def _sync_response(self, limit=GENGO_DEFAULT_LIMIT):
         """
         This method will be called by cron services to get translations from
         Gengo. It will read translated terms and comments from Gengo and will
         update respective ir.translation in Odoo.
         """
-        translation_pool = self.pool.get('ir.translation')
-        flag, gengo = self.gengo_authentication(cr, uid, context=context)
+        IrTranslation = self.env['ir.translation']
+        flag, gengo = self.gengo_authentication()
         if not flag:
             _logger.warning("%s", gengo)
         else:
             offset = 0
-            all_translation_ids = translation_pool.search(cr, uid, [('state', '=', 'inprogress'), ('gengo_translation', 'in', ('machine', 'standard', 'pro', 'ultra')), ('order_id', "!=", False)], context=context)
+            translations = IrTranslation.search([
+                ('state', '=', 'inprogress'),
+                ('gengo_translation', 'in', ('machine', 'standard', 'pro', 'ultra')),
+                ('order_id', "!=", False)])
             while True:
-                translation_ids = all_translation_ids[offset:offset + limit]
+                translations = translations[offset:offset + limit]
                 offset += limit
-                if not translation_ids:
+                if not translations:
                     break
 
                 terms_progress = {
                     'gengo_order_ids': set(),
                     'ir_translation_ids': set(),
                 }
-                translation_terms = translation_pool.browse(cr, uid, translation_ids, context=context)
-                for term in translation_terms:
+                for term in translations:
                     terms_progress['gengo_order_ids'].add(term.order_id)
                     terms_progress['ir_translation_ids'].add(tools.ustr(term.id))
 
@@ -140,11 +133,11 @@ class base_gengo_translations(osv.osv_memory):
                     if job_response['opstat'] == 'ok':
                         for job in job_response['response'].get('jobs', []):
                             if job.get('custom_data') in terms_progress['ir_translation_ids']:
-                                self._update_terms_job(cr, uid, job, context=context)
+                                self._update_terms_job(job)
         return True
 
-    def _update_terms_job(self, cr, uid, job, context=None):
-        translation_pool = self.pool.get('ir.translation')
+    def _update_terms_job(self, job):
+        IrTranslation = self.env['ir.translation']
         tid = int(job['custom_data'])
         vals = {}
         if job.get('status', False) in ('queued', 'available', 'pending', 'reviewable'):
@@ -154,42 +147,36 @@ class base_gengo_translations(osv.osv_memory):
         if job.get('status', False) in ('approved', 'canceled'):
             vals['state'] = 'translated'
         if vals:
-            translation_pool.write(cr, uid, [tid], vals, context=context)
+            IrTranslation.browse(tid).write(vals)
 
-    def _update_terms(self, cr, uid, response, term_ids, context=None):
+    def _update_terms(self, response, terms):
         """
         Update the terms after their translation were requested to Gengo
         """
-        translation_pool = self.pool.get('ir.translation')
-
         vals = {
             'order_id': response.get('order_id', ''),
             'state': 'inprogress'
         }
-
-        translation_pool.write(cr, uid, term_ids, vals, context=context)
+        terms.write(vals)
         jobs = response.get('jobs', [])
         if jobs:
             for t_id, res in jobs.items():
-                self._update_terms_job(cr, uid, res, context=context)
-
+                self._update_terms_job(res)
         return
 
-    def pack_jobs_request(self, cr, uid, term_ids, context=None):
+    def pack_jobs_request(self, terms):
         ''' prepare the terms that will be requested to gengo and returns them in a dictionary with following format
             {'jobs': {
                 'term1.id': {...}
                 'term2.id': {...}
                 }
             }'''
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        translation_pool = self.pool.get('ir.translation')
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         jobs = {}
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        auto_approve = 1 if user.company_id.gengo_auto_approve else 0
-        for term in translation_pool.browse(cr, uid, term_ids, context=context):
+        auto_approve = 1 if self.env.user.company_id.gengo_auto_approve else 0
+        for term in terms:
             if re.search(r"\w", term.src or ""):
-                comment = user.company_id.gengo_comment or ''
+                comment = self.env.user.company_id.gengo_comment or ''
                 if term.gengo_comment:
                     comment += '\n' + term.gengo_comment
                 jobs[time.strftime('%Y%m%d%H%M%S') + '-' + str(term.id)] = {
@@ -199,30 +186,31 @@ class base_gengo_translations(osv.osv_memory):
                     'custom_data': str(term.id),
                     'body_src': term.src,
                     'lc_src': 'en',
-                    'lc_tgt': translation_pool._get_gengo_corresponding_language(term.lang),
+                    'lc_tgt': self.env['ir.translation']._get_gengo_corresponding_language(term.lang),
                     'auto_approve': auto_approve,
                     'comment': comment,
-                    'callback_url': "%s/website/gengo_callback?pgk=%s&db=%s" % (base_url, self.get_gengo_key(cr), cr.dbname)
+                    'callback_url': "%s/website/gengo_callback?pgk=%s&db=%s" % (base_url, self.get_gengo_key(), self.env.cr.dbname)
                 }
         return {'jobs': jobs, 'as_group': 0}
 
-    def _send_translation_terms(self, cr, uid, term_ids, context=None):
+    def _send_translation_terms(self, terms):
         """
         Send a request to Gengo with all the term_ids in a different job, get the response and update the terms in
         database accordingly.
         """
-        flag, gengo = self.gengo_authentication(cr, uid, context=context)
+        flag, gengo = self.gengo_authentication()
         if flag:
-            request = self.pack_jobs_request(cr, uid, term_ids, context=context)
+            request = self.pack_jobs_request(terms)
             if request['jobs']:
                 result = gengo.postTranslationJobs(jobs=request)
                 if result['opstat'] == 'ok':
-                    self._update_terms(cr, uid, result['response'], term_ids, context=context)
+                    self._update_terms(result['response'], terms)
         else:
             _logger.error(gengo)
         return True
 
-    def _sync_request(self, cr, uid, limit=GENGO_DEFAULT_LIMIT, context=None):
+    @api.model
+    def _sync_request(self, limit=GENGO_DEFAULT_LIMIT):
         """
         This scheduler will send a job request to the gengo , which terms are
         waiing to be translated and for which gengo_translation is enabled.
@@ -231,26 +219,26 @@ class base_gengo_translations(osv.osv_memory):
         request only translations of that language only. Its value is the language
         ID in Odoo.
         """
-        if context is None:
-            context = {}
-        language_pool = self.pool.get('res.lang')
-        translation_pool = self.pool.get('ir.translation')
-        domain = [('state', '=', 'to_translate'), ('gengo_translation', 'in', ('machine', 'standard', 'pro', 'ultra')), ('order_id', "=", False)]
-        if context.get('gengo_language', False):
-            lc = language_pool.browse(cr, uid, context['gengo_language'], context=context).code
-            domain.append(('lang', '=', lc))
+        ResLang = self.env['res.lang']
+        IrTranslation = self.env['ir.translation']
+        domain = [('state', '=', 'to_translate'),
+                  ('gengo_translation', 'in', ('machine', 'standard', 'pro', 'ultra')),
+                  ('order_id', "=", False)]
+        if self.env.context.get('gengo_language', False):
+            LangCode = ResLang.browse(self.env.context['gengo_language']).code
+            domain.append(('lang', '=', LangCode))
 
-        all_term_ids = translation_pool.search(cr, uid, domain, context=context)
+        Translation = IrTranslation.search(domain)
         try:
             offset = 0
             while True:
                 #search for the n first terms to translate
-                term_ids = all_term_ids[offset:offset + limit]
-                if term_ids:
+                terms = Translation[offset:offset + limit]
+                if terms:
                     offset += limit
-                    self._send_translation_terms(cr, uid, term_ids, context=context)
-                    _logger.info("%s Translation terms have been posted to Gengo successfully", len(term_ids))
-                if not len(term_ids) == limit:
+                    self._send_translation_terms(terms)
+                    _logger.info("%s Translation terms have been posted to Gengo successfully", len(terms))
+                if not len(terms) == limit:
                     break
         except Exception, e:
             _logger.error("%s", e)

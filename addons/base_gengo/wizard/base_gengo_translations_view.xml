@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
+
         <record model="ir.ui.view" id="base_gengo_translation_wizard_from">
-            <field name="name">base.gengo.translation.form</field>
+            <field name="name">base.gengo.translation.wizard.form</field>
             <field name="model">base.gengo.translations</field>
             <field name="arch" type="xml">
                 <form string="Gengo Request Form">
@@ -36,5 +36,4 @@
         </record>
         <menuitem action="action_wizard_base_gengo_translations" id="menu_action_wizard_base_gengo_translations" parent="base.menu_translation_app"/>
 
-    </data>
-</openerp>
+</odoo>

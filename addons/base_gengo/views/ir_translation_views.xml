@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="view_translation_search" model="ir.ui.view">
-            <field name="name">Translations</field>
+            <field name="name">ir.translation.search.inherit</field>
             <field name="model">ir.translation</field>
             <field name="inherit_id" ref="base.view_translation_search"/>
             <field name="arch" type="xml">
@@ -27,5 +26,4 @@
                 </xpath>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>
