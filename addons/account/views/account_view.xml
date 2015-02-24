@@ -305,6 +305,7 @@
                     <filter domain="[('type', '=', 'purchase')]" string="Purchase" icon="terp-purchase"/>
                     <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
                     <filter domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Others" icon="terp-stock"/>
+                    <filter name="dashboard" domain="[('show_on_dashboard', '=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Type" context="{'group_by':'type'}" icon="terp-stock_symbol-selection"/>
                         <filter string="Company" context="{'group_by':'company_id'}" icon="terp-go-home" groups="base.group_multi_company"/>
@@ -339,6 +340,7 @@
                                 <group>
                                     <field name="entry_posted"/>
                                     <field name="group_invoice_lines"/>
+                                    <field name="show_on_dashboard"/>
                                 </group>
                                 <group>
                                     <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
@@ -1147,7 +1149,7 @@
                     <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
                     <field name="partner_id"/>
-                    <field name="journal_id" context="{'journal_id':self}" widget="selection"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
+                    <field name="journal_id"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
                     <group expand="0" string="Group By">
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>

@@ -2,7 +2,6 @@
     "use strict";
     var QWeb = openerp.web.qweb;
     var _t = openerp.web._t;
-
     /**
      * Create new payment widget method.
      * Used to show payments and outstanding credit/debit on invoice

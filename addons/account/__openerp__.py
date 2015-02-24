@@ -90,6 +90,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/report_generalledger.xml',
         'views/report_configurator.xml',
         'views/account.xml',
+        'views/account_journal_dashboard_view.xml',
     ],
     'qweb' : [
         "static/src/xml/account_reconciliation.xml",
