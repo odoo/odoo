@@ -35,56 +35,101 @@
 
         <record id="fp_nacional" model="account.fiscal.position.template">
             <field name="name">Régimen Nacional</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="fp_recargo" model="account.fiscal.position.template">
             <field name="name">Recargo de Equivalencia</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="fp_extra" model="account.fiscal.position.template">
             <field name="name">Régimen Extracomunitario</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_id" eval="False"/>
+            <field name="country_group_id" eval="False"/>
+            <field name="sequence">30</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="fp_intra" model="account.fiscal.position.template">
             <field name="name">Régimen Intracomunitario</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+            <field name="sequence">20</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="fp_irpf21" model="account.fiscal.position.template">
             <field name="name">Retención IRPF 21%</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="fp_irpf20" model="account.fiscal.position.template">
             <field name="name">Retención IRPF 20%</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="fp_irpf15" model="account.fiscal.position.template">
             <field name="name">Retención IRPF 15%</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="fp_irpf9" model="account.fiscal.position.template">
             <field name="name">Retención IRPF 9%</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="fp_irpf7" model="account.fiscal.position.template">
             <field name="name">Retención IRPF 7%</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="fp_irpf2" model="account.fiscal.position.template">
             <field name="name">Retención IRPF 2%</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="fp_irpf1" model="account.fiscal.position.template">
             <field name="name">Retención IRPF 1%</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 

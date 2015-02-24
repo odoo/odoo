@@ -6,36 +6,65 @@
     
     <record id="fiscal_position_template_1" model="account.fiscal.position.template">
         <field name="name">Regim National</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="False"/>
+        <field name="country_id" ref="base.ro"/>
+        <field name="sequence">10</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
     
     <record id="fiscal_position_template_2" model="account.fiscal.position.template">
         <field name="name">Regim Taxare Inversa</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_id" ref="base.ro"/>
+        <field name="sequence">10</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
     
     <record id="fiscal_position_template_3" model="account.fiscal.position.template">
         <field name="name">Regim Intra-Comunitar Bunuri</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_group_id" ref="base.europe"/>
+        <field name="sequence">20</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
     
     <record id="fiscal_position_template_4" model="account.fiscal.position.template">
         <field name="name">Regim Intra-Comunitar Servicii</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_group_id" ref="base.europe"/>
+        <field name="sequence">20</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
     
     <record id="fiscal_position_template_5" model="account.fiscal.position.template">
         <field name="name">Regim Intra-Comunitar Scutite</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="False"/>
+        <field name="country_group_id" ref="base.europe"/>
+        <field name="sequence">20</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
     
     <record id="fiscal_position_template_6" model="account.fiscal.position.template">
         <field name="name">Regim Intra-Comunitar Neimpozabile</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_group_id" ref="base.europe"/>
+        <field name="sequence">20</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
     
     <record id="fiscal_position_template_7" model="account.fiscal.position.template">
         <field name="name">Regim Extra-Comunitar</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="False"/>
+        <field name="country_id" eval="False"/>
+        <field name="country_group_id" eval="False"/>
+        <field name="sequence">30</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
     
