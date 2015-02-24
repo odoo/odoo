@@ -1,22 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
 import math
 
-import openerp
 from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.exceptions import UserError
-
+from openerp.exceptions import AccessError, UserError
 import openerp.addons.decimal_precision as dp
-
 from openerp import api, fields, models, _
-
-_logger = logging.getLogger(__name__)
 
 
 class res_company(models.Model):
@@ -1440,7 +1434,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         accounting properties... accordingly for the chosen company.
         '''
         if self._uid != self.sudo()._uid and not self.env.user.has_group('base.group_erp_manager'):
-            raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
+            raise AccessError(_("Only administrators can change the settings"))
         ir_values_obj = self.env['ir.values']
         company = self.company_id
         self.company_id.write({'currency_id': self.currency_id.id,
