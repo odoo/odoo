@@ -369,8 +369,8 @@ class account_invoice(osv.osv):
     _name = "account.invoice"
     _inherit = "account.invoice"
 
-    def line_get_convert(self, cr, uid, x, part, date, context=None):
-        res=super(account_invoice,self).line_get_convert(cr, uid, x, part, date, context=context)
+    def line_get_convert(self, cr, uid, x, part, context=None):
+        res=super(account_invoice,self).line_get_convert(cr, uid, x, part, context=context)
         res['analytics_id'] = x.get('analytics_id', False)
         return res
 
