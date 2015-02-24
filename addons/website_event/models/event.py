@@ -18,6 +18,7 @@ class event(models.Model):
     }
 
     twitter_hashtag = fields.Char('Twitter Hashtag', default=lambda self: self._default_hashtag())
+    website_published = fields.Boolean(track_visibility='onchange')
     # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
