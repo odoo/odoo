@@ -169,16 +169,6 @@ class project_issue(osv.Model):
 
         return res
 
-    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-        task_pool = self.pool.get('project.task')
-        res = {}
-        for issue in self.browse(cr, uid, ids, context=context):
-            progress = 0.0
-            if issue.task_id:
-                progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
-            res[issue.id] = {'progress' : progress}
-        return res
-
     def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
@@ -193,21 +183,6 @@ class project_issue(osv.Model):
             if project and project.partner_id:
                 return {'value': {'partner_id': project.partner_id.id}}
         return {}
-
-    def _get_issue_task(self, cr, uid, ids, context=None):
-        issues = []
-        issue_pool = self.pool.get('project.issue')
-        for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
-            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])
-        return issues
-
-    def _get_issue_work(self, cr, uid, ids, context=None):
-        issues = []
-        issue_pool = self.pool.get('project.issue')
-        for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
-            if work.task_id:
-                issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
-        return issues
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -269,12 +244,6 @@ class project_issue(osv.Model):
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
-        'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
-            store = {
-                'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
-                'project.task': (_get_issue_task, ['work_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
-                'project.task.work': (_get_issue_work, ['hours'], 10),
-            }),
     }
 
     _defaults = {

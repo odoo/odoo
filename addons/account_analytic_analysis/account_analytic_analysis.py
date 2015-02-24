@@ -642,7 +642,7 @@ class account_analytic_account(osv.osv):
         return True
 
     def hr_to_invoice_timesheets(self, cr, uid, ids, context=None):
-        domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids)]
+        domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids), ('unit_amount', '>', 0)]
         names = [record.name for record in self.browse(cr, uid, ids, context=context)]
         name = _('Timesheets to Invoice of %s') % ','.join(names)
         return {

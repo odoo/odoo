@@ -63,7 +63,7 @@ class hr_so_project(osv.osv_memory):
         return res
 
     def _write(self, cr, uid, data, emp_id, context=None):
-        timesheet_obj = self.pool.get('hr.analytic.timesheet')
+        timesheet_obj = self.pool.get('account.analytic.line')
         emp_obj = self.pool.get('hr.employee')
         if context is None:
             context = {}
@@ -72,7 +72,7 @@ class hr_so_project(osv.osv_memory):
         minimum = data['analytic_amount']
         if minimum:
             hour = round(round((hour + minimum / 2) / minimum) * minimum, 2)
-        res = timesheet_obj.default_get(cr, uid, ['product_id','product_uom_id'], context=context)
+        res = timesheet_obj.default_get(cr, uid, ['product_id','product_uom_id' , 'is_timesheet'], context=context)
 
         if not res['product_uom_id']:
             raise UserError(_('Please define cost unit for this employee.'))
@@ -84,7 +84,7 @@ class hr_so_project(osv.osv_memory):
         emp_journal = emp_obj.browse(cr, uid, emp_id, context=context).journal_id
         res['journal_id'] = emp_journal and emp_journal.id or False
         res.update(up)
-        up = timesheet_obj.on_change_account_id(cr, uid, [], res['account_id']).get('value', {})
+        up = timesheet_obj.on_change_account_id(cr, uid, [], res['account_id'], res['is_timesheet']).get('value', {})
         res.update(up)
         return timesheet_obj.create(cr, uid, res, context=context)
 
