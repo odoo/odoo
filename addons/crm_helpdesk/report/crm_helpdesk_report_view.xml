@@ -11,7 +11,7 @@
                 <pivot string="Helpdesk" type="pivot">
                     <field name="date" type="row"/>
                     <field name="team_id" type="row"/>
-                    <field name="state" type="col"/>
+                    <field name="stage_id" type="row"/>
                     <field name="nbr" type="measure"/>
                 </pivot>
             </field>
@@ -38,9 +38,6 @@
             <field name="model">crm.helpdesk.report</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <filter string="New" domain="[('state','=','draft')]" />
-                    <filter string="Open" domain="[('state','=','open')]" />
-                    <filter string="Closed" domain="[('state','=','cancel')]" />
                     <separator/>
                     <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]" help="My Sales Team(s)"  groups="base.group_multi_salesteams"/>
                     <separator/>
@@ -59,7 +56,7 @@
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Partner" context="{'group_by':'partner_id'}" />
-                        <filter string="Status" context="{'group_by':'state'}" />
+                        <filter string="Status" context="{'group_by':'stage_id'}" />
                         <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}" />
                         <separator/>
                         <filter string="Month" context="{'group_by':'date:month'}" help="Month of helpdesk requests"/>

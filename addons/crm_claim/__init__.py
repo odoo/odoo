@@ -19,5 +19,7 @@
 #
 ##############################################################################
 
+import calendar_event
 import crm_claim
+import crm_phonecall
 import report

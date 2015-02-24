@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- helpdesk Tags -->
+        <record id="crm_helpdesk_tag_form" model="ir.ui.view">
+            <field name="name">crm.helpdesk.tag.form</field>
+            <field name="model">crm.helpdesk.tag</field>
+            <field name="arch" type="xml">
+                <form string="Helpdesk Tags">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="crm_helpdesk_tag_tree" model="ir.ui.view">
+            <field name="name">crm.helpdesk.tag.tree</field>
+            <field name="model">crm.helpdesk.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Helpdesk Tags">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="crm_helpdesk_tag_action" model="ir.actions.act_window">
+            <field name="name">Helpdesk Tags</field>
+            <field name="res_model">crm.helpdesk.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm_helpdesk_tag_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new helpdesk tag.
+              </p>
+            </field>
+        </record>
+</odoo>

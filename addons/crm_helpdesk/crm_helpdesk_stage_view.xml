@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- helpdesk Stages -->
+        <record id="crm_helpdesk_stage_tree" model="ir.ui.view">
+            <field name="name">crm.helpdesk.stage.tree</field>
+            <field name="model">crm.helpdesk.stage</field>
+            <field name="arch" type="xml">
+                <tree string="Helpdesk Stages">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="crm_helpdesk_stage_form" model="ir.ui.view">
+            <field name="name">crm.helpdesk.stage.form</field>
+            <field name="model">crm.helpdesk.stage</field>
+            <field name="arch" type="xml">
+                <form string="Helpdesk Stage">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="case_default"/>
+                        <field name="sequence"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="crm_helpdesk_stage_act" model="ir.actions.act_window">
+            <field name="name">Helpdesk Stages</field>
+            <field name="res_model">crm.helpdesk.stage</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm_helpdesk_stage_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to setup a new stage in the processing of the Helpdesk.
+              </p><p>
+                You can create helpdesk stages to categorize the status of every
+                helpdesk entered in the system. The stages define all the steps
+                required for the resolution of a helpdesk.
+              </p>
+            </field>
+        </record>
+</odoo>

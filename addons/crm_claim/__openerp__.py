@@ -33,7 +33,7 @@ This application allows you to track your customers/suppliers claims and grievan
 It is fully integrated with the email gateway so that you can create
 automatically new claims based on incoming emails.
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'website': 'https://www.odoo.com',
     'depends': ['crm'],
     'data': [
@@ -43,6 +43,9 @@ automatically new claims based on incoming emails.
         'report/crm_claim_report_view.xml',
         'crm_claim_data.xml',
         'res_partner_view.xml',
+        'crm_claim_tip.xml',
+        'crm_claim_action_rule_demo.xml',
+        'crm_phonecall_view.xml'
     ],
     'demo': ['crm_claim_demo.xml'],
     'test': [
@@ -50,5 +53,4 @@ automatically new claims based on incoming emails.
         'test/ui/claim_demo.yml'
     ],
     'installable': True,
-    'auto_install': False,
 }

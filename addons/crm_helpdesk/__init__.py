@@ -20,4 +20,7 @@
 ##############################################################################
 
 import crm_helpdesk
+import crm_helpdesk_stage
+import crm_helpdesk_tag
 import report
+import res_config

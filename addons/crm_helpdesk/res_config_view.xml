@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_sale_apll1_config_settings" model="ir.ui.view">
+            <field name="name">sale settings for helpdesk</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="crm.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+               <xpath expr="//div[@name='crm_helpdesk']" position="after">
+                    <div attrs="{'invisible': ['|',('module_crm_helpdesk','=',False),('alias_domain', '=', False)]}">
+                        <field name="alias_prefix_helpdesk" class="oe_inline" attrs="{'required': [('alias_domain', '!=', False)]}"/>
+                        @
+                        <field name="alias_domain_helpdesk" class="oe_inline" readonly="1"/>
+                   </div>
+               </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

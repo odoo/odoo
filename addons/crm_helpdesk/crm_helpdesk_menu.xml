@@ -13,8 +13,9 @@
         <record model="ir.actions.act_window" id="crm_case_helpdesk_act111">
             <field name="name">Helpdesk Requests</field>
             <field name="res_model">crm.helpdesk</field>
-            <field name="view_mode">tree,calendar,form</field>
-            <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,calendar,form</field>
+            <field name="view_id" ref="crm_case_helpdesk_kanban_view"/>
             <field name="search_view_id" ref="view_crm_case_helpdesk_filter"/>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="help" type="html">
@@ -29,6 +30,13 @@
                 history of the conversation with the customer.
               </p>
             </field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_crm_sec_kanban_view_act111">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_case_helpdesk_kanban_view"/>
+            <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_act111">
@@ -56,6 +64,8 @@
             groups="base.group_sale_salesman"
             parent="base.menu_aftersale" action="crm_case_helpdesk_act111" sequence="2"/>
 
+        <menuitem id="menu_helpdesk_stage_view" name="Stages" action="crm_helpdesk_stage_act" parent="menu_config_helpdesk" />
+        <menuitem id="menu_helpdesk_tag_view" name="Tags" action="crm_helpdesk_tag_action" parent="menu_config_helpdesk" />
     </data>
 </openerp>
 
