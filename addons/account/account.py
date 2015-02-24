@@ -497,6 +497,7 @@ class account_move(models.Model):
                 raise UserError(_("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role" % (lock_date)))
         return True
 
+    @api.multi
     @api.constrains
     def account_assert_balanced(self):
         self._cr.execute("""\
