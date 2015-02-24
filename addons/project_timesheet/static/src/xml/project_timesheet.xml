@@ -10,15 +10,15 @@
     	<t t-call="header">
     	</t>
     	<div class="pt_activities_screen">
-    		<div class="row">
+    		<div class="row pt_timer">
     			<!--"main" section-->
 	    		<div class="col-xs-6">
 		    		<!--Put time here-->
-		    		<a href="javascript:void(0)" class="btn btn-link pt_test_btn pt_btn">Test Sync</a>
+		    		
 		    	</div>
 		    	<div class="col-xs-3">
 		    		<!--Start button / stop button-->
-		    		<a href="javascript:void(0)" class="btn btn-link pt_btn_start_activity pt_btn"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>  &amp;nbsp;Start</a>
+		    		<a href="javascript:void(0)" class="btn btn-link pt_btn_start_activity pt_btn"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start</a>
 				</div>
 			</div>
             <div class="pt_activities_list">
@@ -27,8 +27,9 @@
     				<t t-foreach="widget.account_analytic_lines" t-as="account_analytic_line">
     					<div class="col-xs-12 pt_activity_box">
         					<div class="row">
-    							<div class="col-xs-7 pt_activity" t-att-data-activity_id="account_analytic_line.id">
-    								<t t-esc="widget.get_project_name(account_analytic_line.project_id)"/><br/>
+    							<div class="col-xs-8 pt_activity" t-att-data-activity_id="account_analytic_line.id">
+    								<span class="pt_project"><t t-esc="widget.get_project_name(account_analytic_line.project_id)"/></span>
+                                    <br/>
     								<t t-if="account_analytic_line.task_id">
     						    		<t t-esc="widget.get_task_name(account_analytic_line.task_id)"/>
     						    	</t>
@@ -51,12 +52,13 @@
     				</t>
     			</t>
             </div>
+            <br/>
+            <a href="javascript:void(0)" class="btn btn-link pt_test_btn pt_btn">Test Sync</a>
     	</div>
     </t>
 
     <t t-name="day_planner_screen">
-    	<t t-call="header">
-    	</t>
+    	<t t-call="header"></t>
     	<div class="pt_day_planner_screen">
     		<div class="well">
     			What will you be working on today?
@@ -73,7 +75,7 @@
 	    				
 	    					<div class="col-xs-9">
 	    						<div class="row">
-	    							<t t-esc="widget.get_project_name(task.project_id)"/>
+	    							<span class="pt_project"> <t t-esc="widget.get_project_name(task.project_id)"/></span>
 	    						</div>
 	    						<div class="row">
 	    							<t t-esc="task.name"/>
@@ -169,10 +171,10 @@
                 </t>
             </div>
             <div class="col-xs-6">
-                <button type="button" class="btn btn-default btn-raised btn-material-cyan pt_validate_edit_btn">Save</button>
+                <a href="javascript:void(0)" class="btn btn-link pt_btn pt_validate_edit_btn">Save</a>
             </div>
             <div class="col-xs-6">
-                <button type="button" class="btn btn-default btn-raised btn-material-cyan pt_discard_changes">Discard</button>
+                <a href="javascript:void(0)" class="btn btn-link pt_btn pt_discard_changes">Discard</a>
             </div>
             <div class="row">
                 <div class="pt_save_msg well" style="display:none">Please select a project</div>

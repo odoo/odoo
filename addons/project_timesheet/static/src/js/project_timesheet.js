@@ -19,7 +19,7 @@ openerp.project_timesheet = function(openerp) {
 	                    	"next_project_id":3,
 	                    	"next_task_id":4,
 	                        "settings":{
-	                            "default_project_id":1,
+	                            "default_project_id":undefined,
 	                            "minimal_duration":15,
 	                            "time_unit":15
 	                        },
@@ -52,35 +52,35 @@ openerp.project_timesheet = function(openerp) {
 	                            // }                       
 	                        ],
 	                        "account_analytic_lines":[
-	                            // {
-	                            //     "server_id":undefined,
-	                            //     "id":1,
-	                            //     "desc":"/",
-	                            //     "unit_amount":1,
-	                            //     "project_id":1,
-	                            //     "task_id":1,
-	                            //     "date":"2015-02-09",
-	                            //     "write_date":"2015-02-19 12:45:29"
-	                            // },
-	                            // {
-	                            //     "server_id":undefined,
-	                            //     "id":2,
-	                            //     "desc":"Conversion from py 2.7 to 3.3",
-	                            //     "unit_amount":2,
-	                            //     "project_id":1,
-	                            //     "task_id":2,
-	                            //     "date":"2015-02-09",
-	                            //     "write_date":"2015-02-19 12:45:26"
+	                            {
+	                                "server_id":undefined,
+	                                "id":1,
+	                                "desc":"/",
+	                                "unit_amount":1,
+	                                "project_id":1,
+	                                "task_id":1,
+	                                "date":"2015-02-09",
+	                                "write_date":"2015-02-19 12:45:29"
+	                            },
+	                            {
+	                                "server_id":undefined,
+	                                "id":2,
+	                                "desc":"Conversion from py 2.7 to 3.3",
+	                                "unit_amount":2,
+	                                "project_id":1,
+	                                "task_id":2,
+	                                "date":"2015-02-09",
+	                                "write_date":"2015-02-19 12:45:26"
 
-	                            // },
-	                            // {
-	                            //     "server_id":undefined,
-	                            //     "id":3,
-	                            //     "desc":"/",
-	                            //     "unit_amount":0.5,
-	                            //     "date":"2015-02-09",
-	                            //     "write_date":"2015-02-10 16:03:21"
-	                            // },
+	                            },
+	                            {
+	                                "server_id":undefined,
+	                                "id":3,
+	                                "desc":"/",
+	                                "unit_amount":0.5,
+	                                "date":"2015-02-09",
+	                                "write_date":"2015-02-10 16:03:21"
+	                            },
 	                        ],
 	                        "day_plan":[
 	                            {"task_id" : 1},
@@ -294,6 +294,7 @@ openerp.project_timesheet = function(openerp) {
                     "click .pt_button_plus_activity":"goto_create_activity_screen",
                     "click .pt_activity":"edit_activity",
                     "click .pt_btn_start_activity":"start_activity",
+                    "click .pt_btn_stop_activity":"stop_activity",
                     "click .pt_test_btn":"test_fct"
                 }
             );
@@ -312,15 +313,27 @@ openerp.project_timesheet = function(openerp) {
             this.getParent().edit_activity_screen.show();
         },
         start_activity: function(){
+            this.$(".pt_btn_start_activity").html('<span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop </a>');
+            this.$(".pt_btn_start_activity").toggleClass("pt_btn_start_activity pt_btn_stop_activity");
+        },
+        stop_activity: function(){
+            this.$(".pt_btn_stop_activity").html('<span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start</a>');
+            this.$(".pt_btn_stop_activity").toggleClass("pt_btn_start_activity pt_btn_stop_activity");
 
         },
         test_fct: function(){
-            //debugger
-            this.load_server_data();
+            self = this;
+            this.sync();
             this.renderElement();    
-            //this.renderElement();
         },
-        load_server_data: function(){
+        sync: function(){
+            var account_analytic_line_model = new openerp.Model("account.analytic.line");
+            sv_lines = account_analytic_line_model.call("test_fct" , []).then(function(sv_lines){
+                console.log(sv_lines);
+            });
+            
+        },
+        old_load_server_data: function(){
             var account_analytic_line_model = new openerp.Model("account.analytic.line");
             var task_model = new openerp.Model('project.task');
             var project_model = new openerp.Model('project.project');

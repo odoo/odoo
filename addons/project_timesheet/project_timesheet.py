@@ -20,6 +20,7 @@
 ##############################################################################
 import time
 import datetime
+from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
 from openerp import tools
@@ -237,7 +238,6 @@ class res_partner(osv.osv):
         return super(res_partner,self).unlink(cursor, user, ids,
                 context=context)
 
-
 class account_analytic_line(osv.osv):
     _inherit = "account.analytic.line"
     _columns = {
@@ -248,3 +248,48 @@ class account_analytic_line(osv.osv):
     def load_data_for_ui(self, cr, uid, domain, fields=None, context=None):
         res = self.search_read(cr, uid, domain=domain, fields=fields, context=context)
         return res
+
+    def test_fct(self, cr, uid, context=None):
+        # context = {'default_is_timesheet' : True}
+        # x = self.load(cr , uid , ['id' ,'__last_update','task_id.id/id','unit_amount', 'name' ,'date' , 'account_id.id/id', 'user_id.id/id'], [["my_ext_id", '2015-02-19 12:45:29', '1' , '1' , "sdkjf" , '2015-02-09', '2' ,'1']], context)   
+        # #x = self.load(cr, uid, ['id', 'name', 'task_id:id', 'account_id' , '1'], data)
+        # print x
+
+
+        #AALS
+        aal_ids = self.search(cr, uid, [("user_id", "=", uid)
+                    ,("is_timesheet","=",True)
+                    ,("date",">", (datetime.datetime.today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))])
+        
+        aals_fields = ["id" , "task_id/id", "task_id.id" , "name" , "account_id.id" , "date", "unit_amount" , "__last_update"]
+        aals = self.export_data(cr, uid, aal_ids , aals_fields)
+
+        #List comprehension to find the task and account ids used in aals.
+        task_ids_list = list(set([int(aals['datas'][x][2]) for x in range(len(aals['datas'])) if len(aals['datas'][x][2]) > 0]))
+        account_ids_list = list(set([int(aals['datas'][x][4]) for x in range(len(aals['datas'])) if len(aals['datas'][x][4]) > 0]))
+        
+        #Tasks
+        task_ids = self.pool.get("project.task").search(cr, uid , ['|' , ("user_id", "=", uid) , ("id","in",task_ids_list)])
+        tasks_fields = ["id", "project_id/id", "project_id.id" , "name", "user_id"]
+        tasks = self.pool.get("project.task").export_data(cr, uid, task_ids, tasks_fields)
+
+
+        project_ids_list = list(set([int(tasks['datas'][x][2]) for x in range(len(tasks['datas'])) if len(tasks['datas'][x][2]) > 0]))
+
+        #Projects
+        projects_ids = self.pool.get("project.project").search(cr, uid, [ '|' 
+                                    , '|'
+                                    , ("id", "in" , project_ids_list) 
+                                    , ("members", '=', uid)
+                                    , ("analytic_account_id" , "in" , account_ids_list) ])
+
+        projects_fields = ["id", "name","tasks","members", "analytic_account_id"]
+        projects = self.pool.get("project.task").export_data(cr, uid, task_ids, tasks_fields)
+
+        # Add a preprocessing step to give appropriate project to aal?
+        
+        return {
+            'aals' : aals,
+            'tasks' : tasks,
+            'projects' : projects
+        }
