@@ -361,9 +361,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
 
     @api.multi
     def render_html(self, data=None):
-        ctx = data['form'].get('used_context', {})
-        ctx.update({'fiscalyear': False, 'all_fiscalyear': True})
-        self.query = self.env['account.move.line'].with_context(ctx)._query_get(obj='l')
+        self.query = self.env['account.move.line']._query_get(obj='l')
         self.total_account = []
         self.target_move = data['form'].get('target_move', 'all')
         self.date_from = data['form'].get('date_from', time.strftime(DEFAULT_SERVER_DATE_FORMAT))

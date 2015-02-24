@@ -12,7 +12,6 @@ class account_entries_report(models.Model):
     _rec_name = 'date'
 
     date = fields.Date(string='Effective Date', readonly=True)  # TDE FIXME master: rename into date_effective
-    date_created = fields.Date(string='Date Created', readonly=True)
     date_maturity = fields.Date(string='Date Maturity', readonly=True)
     ref = fields.Char(string='Reference', readonly=True)
     nbr = fields.Integer(string='# of Items', readonly=True)
@@ -23,7 +22,6 @@ class account_entries_report(models.Model):
     amount_currency = fields.Float(string='Amount Currency', digits=0, readonly=True)
     account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
-    fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_uom_id = fields.Many2one('product.uom', string='Product Unit of Measure', readonly=True)
     move_state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status', readonly=True)
@@ -48,33 +46,6 @@ class account_entries_report(models.Model):
 
     _order = 'date desc'
 
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        fiscalyear_obj = self.env['account.fiscalyear']
-        current_date = fields.Date.context_today(self)
-        fiscalyear = fiscalyear_obj.search([('date_start', '<=', current_date), ('date_stop', '>=', current_date)], limit=1)
-        for arg in args:
-            if arg[0] == 'date' and arg[2] == 'current_period_date':
-                args.append([('date', '>=', fiscalyear.date_start), ('date', '<=', fiscalyear.date_stop)])
-                break
-            elif arg[0] == 'date' and arg[2] == 'current_year':
-                args.append(('date', '>=', current_year.date_start), ('date', '<=', current_year.date_stop))
-        for a in [['date', '=', 'current_period_date']]:
-            if a in args:
-                args.remove(a)
-        return super(account_entries_report, self).search(args=args, offset=offset, limit=limit, order=order, count=count)
-
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        fiscalyear_obj = self.env['account.fiscalyear']
-        current_date = time.strftime('%Y-%m-%d')
-        fiscalyear = fiscalyear_obj.search([('date_start', '<=', current_date), ('date_stop', '>=', current_date)], limit=1)
-        if self._context.get('date', False) == 'current_period_date':
-            domain.append(['date', '=', current_period_date])
-        elif self._context.get('year', False) == 'current_year':
-            domain.append([('date', '>=', fiscalyear.date_start), ('date', '<=', fiscalyear.date_stop)])
-        return super(account_entries_report, self).read_group(domain=domain, fields=fields, groupby=groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')
         cr.execute("""
@@ -83,7 +54,6 @@ class account_entries_report(models.Model):
                 l.id as id,
                 am.date as date,
                 l.date_maturity as date_maturity,
-                l.date as date_created,
                 am.ref as ref,
                 am.state as move_state,
                 l.reconciled as reconciled,
@@ -92,7 +62,6 @@ class account_entries_report(models.Model):
                 l.product_uom_id as product_uom_id,
                 am.company_id as company_id,
                 am.journal_id as journal_id,
-                f.id as fiscalyear_id,
                 l.account_id as account_id,
                 l.analytic_account_id as analytic_account_id,
                 at.type as type,
@@ -108,7 +77,6 @@ class account_entries_report(models.Model):
                 account_move_line l
                 left join account_account a on (l.account_id = a.id)
                 left join account_move am on (am.id=l.move_id)
-                left join account_fiscalyear f on (f.date_start >= l.date and f.date_stop >= l.date)
                 left join account_account_type at on (a.user_type = at.id)
             )
         """)

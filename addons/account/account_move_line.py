@@ -793,44 +793,31 @@ class account_move_line(models.Model):
             raise UserError(_('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
             raise UserError(_('You cannot use deprecated account.'))
-        if update_check and any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
+        if update_check and any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit', 'amount_currency', 'currency_id')):
             self._update_check()
 
-        # Check for centralisation
-        # TODO : what happened with journal.centralisation ?
-        # for line in self:
-        #     journal = line.move_id and line.move_id.journal_id or line.journal_id
-        #     journal = self._context.get('journal_id') and self.env['account.journal'].browse(self._context.get('journal_id')) or journal # Legacy
-        #     if journal.centralisation:
-        #         pass
-        #         # Do something here
-
-        todo_date = vals.pop('date', False)
         result = super(account_move_line, self).write(vals)
         if check:
-            done = []
+            move_ids = set()
             for line in self:
-                if line.move_id.id not in done:
-                    done.append(line.move_id.id)
-                    line.move_id._post_validate()
-                    if todo_date:
-                        line.move_id.write({'date': todo_date})
+                if line.move_id.id not in move_ids:
+                    move_ids.add(line.move_id.id)
+            self.env['account.move'].browse(list(move_ids))._post_validate()
         return result
 
     @api.multi
     def _update_check(self):
         """ Raise Warning to cause rollback if self is in a correct state """
-        done = {}
+        move_ids = set()
         for line in self:
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
-            if line.move_id.state != 'draft' and (not line.journal_id.entry_posted):
+            if line.move_id.state != 'draft':
                 raise UserError(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
             if line.reconciled:
                 raise UserError(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
-            t = (line.journal_id.id, line.date)
-            if t not in done:
-                self._update_journal_check(line.journal_id.id, line.date)
-                done[t] = True
+            if line.move_id.id not in move_ids:
+                move_ids.add(line.move_id.id)
+            self.env['account.move'].browse(list(move_ids))._check_lock_date()
         return True
 
     @api.model

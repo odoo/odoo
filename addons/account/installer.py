@@ -58,8 +58,6 @@ class account_installer(models.TransientModel):
         help="Installs localized accounting charts to match as closely as "
              "possible the accounting needs of your company based on your "
              "country.")
-    date_start = fields.Date(string='Start Date', required=True, default=lambda *a: time.strftime('%Y-01-01'))
-    date_stop = fields.Date(string='End Date', required=True, default=lambda *a: time.strftime('%Y-12-31'))
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id or False)
     has_default_company = fields.Boolean(string='Has Default Company',
@@ -101,35 +99,9 @@ class account_installer(models.TransientModel):
                     res['fields'][field]['selection'] = cmp_select
         return res
 
-    @api.onchange('date_start')
-    def on_change_start_date(self):
-        if self.date_start:
-            start_date = datetime.datetime.strptime(self.date_start, "%Y-%m-%d")
-            end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
-            self.date_stop = end_date.strftime('%Y-%m-%d')
-
     @api.multi
     def execute(self):
-        self.execute_simple()
         return super(account_installer, self).execute()
-
-    @api.multi
-    def execute_simple(self):
-        fy_obj = self.env['account.fiscalyear']
-        for res in self:
-            if res.date_start and res.date_stop:
-                fiscal_year = fy_obj.search([('date_start', '<=', res.date_start), ('date_stop', '>=', res.date_stop), ('company_id', '=', res.company_id.id)], limit=1)
-                if not fiscal_year:
-                    name = res.date_start[:4]
-                    if int(name) != int(res.date_stop[:4]):
-                        name = res.date_start[:4] + '-' + res.date_stop[:4]
-                    vals = {
-                        'name': name,
-                        'date_start': res.date_start,
-                        'date_stop': res.date_stop,
-                        'company_id': res.company_id.id
-                    }
-                    fiscal_year = fy_obj.create(vals)
 
     @api.multi
     def modules_to_install(self):

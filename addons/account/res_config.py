@@ -55,9 +55,10 @@ class account_config_settings(models.TransientModel):
              the sales and purchase rates or use the usual m2o fields. This last choice assumes that
              the set of tax defined for the chosen template is complete''')
 
-    has_fiscal_year = fields.Boolean(string='Company has a fiscal year')
-    date_start = fields.Date(string='Start date', required=True)
-    date_stop = fields.Date(string='End date', required=True)
+    fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day', default=31)
+    fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], related='company_id.fiscalyear_last_month', default=12)
+    period_lock_date = fields.Date(related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
+    fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
 
     sale_journal_id = fields.Many2one('account.journal', string='Sale journal')
     sale_sequence_prefix = fields.Char(related='sale_journal_id.sequence_id.prefix', string='Invoice sequence')
@@ -141,32 +142,6 @@ class account_config_settings(models.TransientModel):
         return bool(count == 1)
 
     @api.model
-    def _get_default_fiscalyear_data(self, company_id):
-        """Compute default period, starting and ending date for fiscalyear
-        - if in a fiscal year, use its period, starting and ending date
-        - if past fiscal year, use its period, and new dates [ending date of the latest +1 day ; ending date of the latest +1 year]
-        - if no fiscal year, use monthly, 1st jan, 31th dec of this year
-        :return: (date_start, date_stop, period) at format DEFAULT_SERVER_DATETIME_FORMAT
-        """
-        FiscalYearObj = self.env['account.fiscalyear']
-        fiscalyear = FiscalYearObj.search(
-                [('date_start', '<=', time.strftime(DF)), ('date_stop', '>=', time.strftime(DF)),
-                 ('company_id', '=', company_id)], limit=1)
-        if fiscalyear:
-            # is in a current fiscal year, use this one
-            return (fiscalyear.date_start, fiscalyear.date_stop)
-        else:
-            past_fiscalyear_ids = FiscalYearObj.search(
-                [('date_stop', '<=', time.strftime(DF)), ('company_id', '=', company_id)])
-            if past_fiscalyear_ids:
-                # use the latest fiscal, sorted by (start_date, id)
-                latest_year = past_fiscalyear_ids[-1]
-                latest_stop = datetime.datetime.strptime(latest_year.date_stop, DF)
-                return ((latest_stop+datetime.timedelta(days=1)).strftime(DF), latest_stop.replace(year=latest_stop.year+1).strftime(DF))
-            else:
-                return (time.strftime('%Y-01-01'), time.strftime('%Y-12-31'))
-
-    @api.model
     def create(self, values):
         rec = super(account_config_settings, self).create(values)
         # Hack: to avoid some nasty bug, related fields are not written upon record creation.
@@ -185,21 +160,14 @@ class account_config_settings(models.TransientModel):
         values['currency_id'] = False
         if self.company_id:
             has_chart_of_accounts = self.company_id.id not in self.env['account.installer'].get_unconfigured_cmp()
-            fiscalyear_count = self.env['account.fiscalyear'].search_count(
-                [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
-                 ('company_id', '=', self.company_id.id)])
-            date_start, date_stop = self._get_default_fiscalyear_data(self.company_id.id)
             values = {
                 'expects_chart_of_accounts': self.company_id.expects_chart_of_accounts,
                 'currency_id': self.company_id.currency_id.id,
                 'paypal_account': self.company_id.paypal_account,
                 'company_footer': self.company_id.rml_footer,
                 'has_chart_of_accounts': has_chart_of_accounts,
-                'has_fiscal_year': bool(fiscalyear_count),
                 'chart_template_id': False,
                 'tax_calculation_rounding_method': self.company_id.tax_calculation_rounding_method,
-                'date_start': date_start,
-                'date_stop': date_stop,
             }
             # update journals and sequences
             for journal_type in ('sale', 'purchase'):
@@ -263,13 +231,6 @@ class account_config_settings(models.TransientModel):
             self.income_currency_exchange_account_id = False
             self.expense_currency_exchange_account_id = False
 
-    @api.onchange('date_start')
-    def onchange_start_date(self):
-        if self.date_start:
-            start_date = datetime.datetime.strptime(self.date_start, "%Y-%m-%d")
-            end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
-            self.date_stop = end_date.strftime('%Y-%m-%d')
-
     @api.multi
     def open_company_form(self):
         return {
@@ -308,26 +269,6 @@ class account_config_settings(models.TransientModel):
                 'currency_id': self.currency_id.id,
             })
             wizard.execute()
-
-    @api.multi
-    def set_fiscalyear(self):
-        """ create a fiscal year for the given company (if necessary) """
-        if self.has_chart_of_accounts or self.chart_template_id:
-            FiscalYearObj = self.env['account.fiscalyear']
-            fiscalyear_count = FiscalYearObj.search_count(
-                [('date_start', '<=', self.date_start), ('date_stop', '>=', self.date_stop),
-                 ('company_id', '=', self.company_id.id)])
-            if not fiscalyear_count:
-                name = self.date_start[:4]
-                if int(name) != int(self.date_stop[:4]):
-                    name = self.date_start[:4] +'-'+ self.date_stop[:4]
-                vals = {
-                    'name': name,
-                    'date_start': self.date_start,
-                    'date_stop': self.date_stop,
-                    'company_id': self.company_id.id,
-                }
-                fiscalyear = FiscalYearObj.create(vals)
 
     @api.model
     def get_default_dp(self, fields):

@@ -5,6 +5,10 @@ from openerp import fields, models
 class res_company(models.Model):
     _inherit = "res.company"
 
+    fiscalyear_last_day = fields.Integer(default=31)
+    fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], default=12)
+    period_lock_date = fields.Date(help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
+    fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
     bank_account_code_char = fields.Char(string='Code of the main bank account')
     accounts_code_digits = fields.Integer(string='Number of digits in an account code')

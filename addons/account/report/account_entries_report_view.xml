@@ -7,7 +7,6 @@
         <field name="arch" type="xml">
             <tree colors="blue:move_state == 'draft';black:move_state == 'posted'" create="false" string="Entries Analysis">
                 <field name="date" invisible="1"/>
-                <field name="date_created" invisible="1"/>
                 <field name="date_maturity" invisible="1"/>
                 <field name="ref" invisible="1"/>
                 <field name="nbr" sum="# of Entries "/>
@@ -24,7 +23,6 @@
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="account_id" invisible="1"/>
-                <field name="fiscalyear_id" invisible="1"/>
                 <field name="user_type" invisible="1"/>
                 <field name="type" invisible="1"/>
            </tree>
@@ -70,10 +68,8 @@
         <field name="arch" type="xml">
             <search string="Entries Analysis">
                 <field name="date"/>
-                <field name="date_created"/>
                 <field name="date_maturity"/>
-                <filter string="This F.Year" name="thisyear" domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="Journal Entries with period in current year"/>
-                <filter string="This Period" name="period" context="{'period':'current_period'}" help="Journal Entries with period in current period"/>
+                <filter string="This F.Year" name="thisyear" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="Journal Entries in current year"/>
                 <separator/>
                 <filter string="Unposted" domain="[('move_state','=','draft')]" help = "entries"/>
                 <filter string="Posted" domain="[('move_state','=','posted')]" help = "Posted entries"/>
@@ -83,7 +79,6 @@
                 <field name="account_id"/>
                 <field name="journal_id"/>
                 <group expand="0" string="Extended Filters...">
-                    <field name="fiscalyear_id"/>
                     <field name="product_id"/>
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>

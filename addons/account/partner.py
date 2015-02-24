@@ -174,9 +174,7 @@ class res_partner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        ctx = dict(self._context or {})
-        ctx['all_fiscalyear'] = True
-        query = self.env['account.move.line'].with_context(ctx)._query_get()
+        query = self.env['account.move.line']._query_get()
         if not self.ids:
             self.debit = 0
             self.credit = 0
@@ -192,13 +190,13 @@ class res_partner(models.Model):
                       GROUP BY l.partner_id, act.type
                       """,
                    (tuple(self.ids),))
-        maps = {'receivable':'credit', 'payable':'debit' }
+        maps = {'receivable':'credit', 'payable':'debit'}
         for partner in self:
             partner.debit = 0
             partner.credit = 0
         for pid, type, val in self._cr.fetchall():
-            if val is None: val=0
-            value = {maps[type]: (type=='receivable') and val or -val}
+            if val is None: val = 0
+            value = {maps[type]: (type == 'receivable') and val or -val}
             self.browse(pid).write(value)
 
     @api.multi
