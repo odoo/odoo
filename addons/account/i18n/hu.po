@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-23 10:45+0000\n"
+"PO-Revision-Date: 2015-02-03 09:41+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-24 06:26+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-02-04 07:20+0000\n"
+"X-Generator: Launchpad (build 17331)\n"
 
 #. module: account
 #: model:email.template,body_html:account.email_template_edi_invoice
@@ -562,7 +562,7 @@ msgstr ""
 "                Kattintson napló bejegyzés készítéséhez.\n"
 "              </p><p>\n"
 "                Egy napló bejegyzés több napló tételből állhat, melyek\n"
-"                lehetnek Fizetendő/Tartozás vagy Bevétel/Jóváírás "
+"                lehetnek Fizetendő/Terhelendő tartozás vagy Bevétel/Jóváírás "
 "tranzakció.\n"
 "              </p><p>\n"
 "                Odoo rendszer automatikusan a könyvelési dokumentumnak "
@@ -3798,12 +3798,12 @@ msgstr "Létrehozás dátuma"
 #: view:website:account.report_trialbalance
 #: view:website:account.report_vat
 msgid "Credit"
-msgstr "Követelés"
+msgstr "Bevétel/Jóváírás"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Credit Centralisation"
-msgstr "Közös követel ellenszámla"
+msgstr "Közös Bevétel/Jóváírásl ellenszámla"
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
@@ -3813,17 +3813,17 @@ msgstr "Jóváírás, visszatérítés jegyzék"
 #. module: account
 #: view:account.tax.template:account.view_account_tax_template_form
 msgid "Credit Notes"
-msgstr "Jóváíró számlák"
+msgstr "Jóváíró bevételi számlák"
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
 msgid "Credit amount"
-msgstr "Követel összeg"
+msgstr "Bevételi/Jóváírás összege"
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
 msgid "Credit note sequence"
-msgstr "Jóváírás jegyzet sorrend"
+msgstr "Jóváírás bevételi jegyzet sorrend"
 
 #. module: account
 #: field:account.bank.statement,currency:0
@@ -4132,17 +4132,17 @@ msgstr ""
 #: view:website:account.report_trialbalance
 #: view:website:account.report_vat
 msgid "Debit"
-msgstr "Tartozik"
+msgstr "Fizetendő terhelés"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Debit Centralisation"
-msgstr "Közös tartozik ellenszámla"
+msgstr "Közös, fizetendő terhelés ellenszámla"
 
 #. module: account
 #: field:account.move.line.reconcile,debit:0
 msgid "Debit amount"
-msgstr "Tartozik összeg"
+msgstr "Fizetendő/Terhelendő összeg"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -4158,12 +4158,12 @@ msgstr "Tizedes pontosság a napló bevitt tételeinél"
 #. module: account
 #: field:account.journal,default_credit_account_id:0
 msgid "Default Credit Account"
-msgstr "Alapértelmezett követel főkönyvi számla"
+msgstr "Alapértelmezett Bevételi/Jóváíró főkönyvi számla"
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
 msgid "Default Debit Account"
-msgstr "Alapértelmezett tartozik főkönyvi számla"
+msgstr "Alapértelmezett fizetendő/tartozik főkönyvi számla"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax:0
@@ -4345,7 +4345,7 @@ msgstr "Bizonylat: vevő folyószámla kivonat"
 #: field:account.tax,domain:0
 #: field:account.tax.template,domain:0
 msgid "Domain"
-msgstr "Tartomány"
+msgstr "Domain név"
 
 #. module: account
 #: selection:account.invoice.report,state:0
@@ -4432,7 +4432,7 @@ msgstr "Esedékesség hónapja"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
 msgid "Due Payments"
-msgstr ""
+msgstr "Esedékes fizetések"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -5041,7 +5041,7 @@ msgstr "Költségvetési pozíció"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Fiscal Position Remark:"
-msgstr ""
+msgstr "Meglyegyzés költségvetési helyhez"
 
 #. module: account
 #: view:account.fiscal.position.template:account.view_account_position_template_form
@@ -5930,6 +5930,8 @@ msgstr "Vitatott"
 msgid ""
 "In order to close a fiscalyear, you must first post related journal entries."
 msgstr ""
+"Egy költségvetési év lezárásához, először fel kell adnia a főkönyvi "
+"könyvvitelre az oda vonatkozó napló bejegyzéseket."
 
 #. module: account
 #: code:addons/account/wizard/account_period_close.py:52
@@ -6347,7 +6349,7 @@ msgstr "Követel összegek alapértelmezett főkönyvi számlája"
 #. module: account
 #: help:account.journal,default_debit_account_id:0
 msgid "It acts as a default account for debit amount"
-msgstr "Tartozik összegek alapértelmezett főkönyvi számlája"
+msgstr "fizetendő/Tartozik összegek alapértelmezett főkönyvi számlája"
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -7343,7 +7345,7 @@ msgstr "Következő párosítandó partner"
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr "Következő jóváírási értesítés szám"
+msgstr "Következő jbevételi óváírási értesítés szám"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_next:0
@@ -7353,7 +7355,7 @@ msgstr "Következő számla szám"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_next:0
 msgid "Next supplier credit note number"
-msgstr "Következő szállítói jóváírás száma"
+msgstr "Következő szállítótól kapott bevétel/ jóváírás száma"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_next:0
@@ -8077,7 +8079,7 @@ msgstr "Szállítói tartozás limitösszege"
 #. module: account
 #: view:account.statement.from.invoice.lines:account.view_account_statement_from_invoice_lines
 msgid "Payable and Receivables"
-msgstr "Fizetendők/Tartozások & Bevételek/Követelések"
+msgstr "Fizetendők/Szállítói Tartozások & Bevételek/Vásárlóktól Követelések"
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
@@ -8974,7 +8976,7 @@ msgstr "Hivatkozó referencia/Leírás"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Reference:"
-msgstr ""
+msgstr "Hivatkozás:"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -9716,7 +9718,7 @@ msgstr "Gyorsbillentyű parancs"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
 #, python-format
 msgid "Show more... ("
-msgstr ""
+msgstr "Mutasson többet... ("
 
 #. module: account
 #: help:account.partner.reconcile.process,progress:0
@@ -10071,7 +10073,7 @@ msgstr "Beszerzések adói"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_prefix:0
 msgid "Supplier credit note sequence"
-msgstr "Beszállítők jóváírási sorrend"
+msgstr "Beszállítők bevételezési sorrendje"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
@@ -10525,8 +10527,9 @@ msgid ""
 "The amount expressed in the secondary currency must be positive when account "
 "is debited and negative when account is credited."
 msgstr ""
-"A másodlagos pénznemben kifejezett összegnek pozitívnak kell lennie ha a "
-"számla fizetendő/tartozás és negatívnak ha a számla követel/bevétel/jóváírás."
+"A másodlagos pénznemben kifejezett összegnek pozitívnak kell lennie, ha a "
+"számla fizetendő/tartozás, és negatívnak, ha a számla "
+"követel/bevétel/jóváírás."
 
 #. module: account
 #: help:account.statement.operation.template,amount:0
@@ -10669,8 +10672,8 @@ msgstr ""
 #, python-format
 msgid "The journal must have default credit and debit account."
 msgstr ""
-"A naplónak rendelkeznie kell alapértelmezett követelés és tartozás "
-"számlákkal."
+"A naplónak rendelkeznie kell alapértelmezett bevétel/jóváírási és "
+"fizetendő/tartozás számlákkal."
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -10877,7 +10880,7 @@ msgid ""
 "There is no default credit account defined \n"
 "on journal \"%s\"."
 msgstr ""
-"Nincs alapértelmezett követelés számla meghatározva a \n"
+"Nincs alapértelmezett bevétel/követelés számla meghatározva a \n"
 "következő naplón \"%s\"."
 
 #. module: account
@@ -11531,7 +11534,7 @@ msgstr "Bruttó érték"
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_tree
 msgid "Total Credit"
-msgstr "Összes követelés"
+msgstr "Összes bevétel/követelés"
 
 #. module: account
 #: view:account.move:account.view_move_form
@@ -11547,7 +11550,7 @@ msgstr "Teljes számlázva"
 #. module: account
 #: field:res.partner,debit:0
 msgid "Total Payable"
-msgstr "Fizetendő tartozás összesen"
+msgstr "Összes, fizetendő szállítói tartozás"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_tree
@@ -11607,7 +11610,7 @@ msgstr "Esedékes összesen:"
 #. module: account
 #: help:res.partner,credit:0
 msgid "Total amount this customer owes you."
-msgstr "A vevő összes tartozása a vállalat felé."
+msgstr "A vásárló összes tartozása a vállalat felé."
 
 #. module: account
 #: help:res.partner,debit:0
@@ -11617,7 +11620,7 @@ msgstr "A vállalat összes tartozása a szállítóval szemben."
 #. module: account
 #: view:account.move.line:account.view_move_line_tree_reconcile
 msgid "Total credit"
-msgstr "Követelés összesen"
+msgstr "Bevétel/ Jóváírás Követelés összesen"
 
 #. module: account
 #: view:account.move.line:account.view_move_line_tree_reconcile
@@ -12218,7 +12221,7 @@ msgstr "Leírandó összeg"
 #: code:addons/account/wizard/account_reconcile.py:115
 #, python-format
 msgid "Write-off"
-msgstr ""
+msgstr "Veszteség leírás"
 
 #. module: account
 #: code:addons/account/account.py:2304
@@ -12295,7 +12298,7 @@ msgstr "Nem tudja újra megnyitni a már lezárt üzleti évhez tartozó idősza
 #. module: account
 #: constraint:account.fiscal.position:0
 msgid "You can not select a country and a group of countries"
-msgstr ""
+msgstr "Nem választhat egy országot és országok csoportjait"
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:38
@@ -12687,7 +12690,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:68
 #, python-format
 msgid "You must balance the reconciliation"
-msgstr ""
+msgstr "Egyeztetnie kell az egyenleget"
 
 #. module: account
 #. openerp-web
@@ -12916,7 +12919,7 @@ msgstr "összeegyeztetés a ctrl-enter gyorsbillentyűkkel."
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
 #, python-format
 msgid "remaining)"
-msgstr ""
+msgstr "visszamaradt)"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart

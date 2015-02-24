@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-11-19 21:59+0000\n"
+"PO-Revision-Date: 2015-02-03 10:57+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:14+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-02-04 07:21+0000\n"
+"X-Generator: Launchpad (build 17331)\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
@@ -558,6 +558,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson egy árajánlat kérés létrehozásához.\n"
+"              </p><p>\n"
+"                Az árajánlatkérés tartalmazza a beszállítóval történt "
+"tárgyalás/áralku\n"
+"                történetét. Ha jóváhagyásra került, az árajánlat\n"
+"                kérés átalakul beszerzési megrendeléssé.\n"
+"              </p><p>\n"
+"                A legtöbb beszerzési megrendelés javaslatot az Odoo "
+"rendszer\n"
+"                hozza létre automatikusan, a készlet igények alapján.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -867,6 +880,8 @@ msgid ""
 "Can not cancel this procurement as the related purchase order has been "
 "confirmed already.  Please cancel the purchase order first. "
 msgstr ""
+"Nem vonhatja vissza ezt a beszerzést mivel az ide vonatkozó vásárlói "
+"megrendelés már visszaigazolt. Először a vásárlói megrendelést vonja vissza. "
 
 #. module: purchase
 #: code:addons/purchase/stock.py:195
@@ -1452,6 +1467,8 @@ msgstr "Termék hely & Raktárépület"
 #, python-format
 msgid "Make sure you have at least an incoming picking type defined"
 msgstr ""
+"Győzőgyön mer róla, hogy legaláb egy bejövő kiválogatás típus meg legyen "
+"határozva"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
@@ -2196,7 +2213,7 @@ msgstr "Szállítási hiba"
 #: view:website:purchase.report_purchaseorder_document
 #: view:website:purchase.report_purchasequotation_document
 msgid "Shipping address:"
-msgstr ""
+msgstr "Kiszállítási cím:"
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -2599,7 +2616,7 @@ msgstr "vagy"
 #. module: purchase
 #: field:purchase.order,related_usage:0
 msgid "unknown"
-msgstr ""
+msgstr "ismeretlen"
 
 #~ msgid "Shipping address :"
 #~ msgstr "Szállítási cím:"

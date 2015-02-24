@@ -68,7 +68,7 @@ class sale_quote_line(osv.osv):
         if product_obj.description_sale:
             name += '\n' + product_obj.description_sale
         vals.update({
-            'price_unit': product_obj.list_price,
+            'price_unit': product_obj.lst_price,
             'product_uom_id': product_obj.uom_id.id,
             'website_description': product_obj and (product_obj.quote_description or product_obj.website_description) or '',
             'name': name,

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="eu_service_view" model="ir.ui.view">
+            <field name="name">l10n_eu_service.wizard.form</field>
+            <field name="model">l10n_eu_service.wizard</field>
+            <field name="arch" type="xml">
+                <form string='Setup EU MOSS Taxes'>
+                    <p>
+                        Based on the options selected below, this wizard will create one
+                        fiscal position mapping for each EU country to which you are selling
+                        services.
+                        Each fiscal position will automatically map your national VAT tax for
+                        services to the corresponding VAT tax in the country your customer
+                        belongs to.
+                        <br/>
+                        You can use the wizard again later to add more countries.
+                    </p>
+                    <group>
+                        <field name="chart_id" domain="[('parent_id','=', False)]"
+                               context="{'company_id': company_id}" options="{'no_create': True}"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="fiscal_position_id" domain="[('company_id','=', company_id)]"
+                               options="{'no_create': True}"
+                               placeholder="Current EU B2C Fiscal Position, if any"/>
+                        <field name="tax_id"
+                               domain="[('type_tax_use', '=', 'sale'),
+                                        ('type', '=', 'percent'),
+                                        ('account_collected_id', '!=', False),
+                                        ('tax_code_id', '!=', False),
+                                        ('company_id','=', company_id)]"
+                               options="{'no_create': True}"/>
+                        <field name="account_collected_id" 
+                            placeholder="Keep empty to use current Service VAT account"/>
+                        <field name="done_country_ids" widget="many2many_tags" readonly="1" 
+                               attrs="{'invisible': [('done_country_ids', '=', [(6, False, [])])]}"/>
+                        <field name="todo_country_ids" widget="many2many_tags" 
+                               domain="[('country_group_ids', 'in', %(base.europe)d)]"/>
+                    </group>
+                    <footer>
+                        <button string="Create Fiscal Positions and Taxes"
+                                name="generate_eu_service" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                 </form>
+            </field>
+        </record>
+
+        <record id="action_eu_service" model="ir.actions.act_window">
+            <field name="name">Setup EU MOSS Taxes</field>
+            <field name="res_model">l10n_eu_service.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="eu_service_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="open_l10n_eu_service" model="ir.actions.todo">
+            <field name="action_id" ref="action_eu_service"/>
+            <field name="type">automatic</field>
+            <field name="state">open</field>
+        </record>
+
+        <record id="view_account_config_settings_inherit" model="ir.ui.view">
+            <field name="name">account settings</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="arch" type="xml">
+               <field name="default_sale_tax" position="after">
+                    <button type="action" name="%(action_eu_service)d"
+                            string="Setup EU MOSS Taxes" class="oe_link"/>
+                </field>         
+            </field>
+        </record>
+
+    </data>
+</openerp>
