@@ -30,8 +30,8 @@ class account_invoice(osv.osv):
             self.pool.get('account.invoice.line').asset_create(cr, uid, inv.invoice_line)
         return result
 
-    def line_get_convert(self, cr, uid, x, part, date, context=None):
-        res = super(account_invoice, self).line_get_convert(cr, uid, x, part, date, context=context)
+    def line_get_convert(self, cr, uid, x, part, context=None):
+        res = super(account_invoice, self).line_get_convert(cr, uid, x, part, context=context)
         res['asset_id'] = x.get('asset_id', False)
         return res
 
