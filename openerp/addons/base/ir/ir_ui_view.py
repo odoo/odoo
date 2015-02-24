@@ -940,10 +940,9 @@ class view(osv.osv):
             for attr in node.attrib
         )
 
-    def translate_qweb(self, cr, uid, id_, arch, lang, context=None):
+    def _translate_qweb(self, cr, uid, arch, translate_func, context=None):
         # TODO: this should be moved in a place before inheritance is applied
         #       but process() is only called on fields_view_get()
-        Translations = self.pool['ir.translation']
         h = HTMLParser.HTMLParser()
         def get_trans(text):
             if not text or not text.strip():
@@ -951,7 +950,7 @@ class view(osv.osv):
             text = h.unescape(text.strip())
             if len(text) < 2 or (text.startswith('<!') and text.endswith('>')):
                 return None
-            return Translations._get_source(cr, uid, 'website', 'view', lang, text, id_)
+            return translate_func(text)
 
         if type(arch) not in SKIPPED_ELEMENT_TYPES and arch.tag not in SKIPPED_ELEMENTS:
             text = get_trans(arch.text)
@@ -966,7 +965,21 @@ class view(osv.osv):
                 if attr:
                     arch.set(attr_name, attr)
             for node in arch.iterchildren("*"):
-                self.translate_qweb(cr, uid, id_, node, lang, context)
+                self._translate_qweb(cr, uid, node, translate_func, context)
+
+    def translate_qweb(self, cr, uid, id_, arch, lang, context=None):
+        view_ids = []
+        view = self.browse(cr, uid, id_, context=context)
+        if view:
+            view_ids.append(view.id)
+        if view.mode == 'primary' and view.inherit_id.mode == 'primary':
+            # template is `cloned` from parent view
+            view_ids.append(view.inherit_id.id)
+        Translations = self.pool['ir.translation']
+        def translate_func(term):
+            trans = Translations._get_source(cr, uid, 'website', 'view', lang, term, view_ids)
+            return trans
+        self._translate_qweb(cr, uid, arch, translate_func, context=context)
         return arch
 
     @openerp.tools.ormcache()
