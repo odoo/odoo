@@ -82,7 +82,9 @@
                             <a t-attf-href="/forum/#{ slug(forum) }/badge">Badges</a>
                         </li>
                         <li t-if="not is_public_user" t-att-class="searches.get('my_profile') and 'active' or '' ">
-                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{uid}">My Profile</a>
+                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{uid}">
+                                <span t-field="user.name"/> (k: <t t-esc="user.karma"/>)
+                            </a>
                         </li>
                     </ul>
                     <form class="navbar-form navbar-right" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
@@ -1048,9 +1050,7 @@
             </form>
             </div>
         </div>
-        <script type="text/javascript">
-            CKEDITOR.replace("description");
-        </script>
+
     </t>
 </template>
 
