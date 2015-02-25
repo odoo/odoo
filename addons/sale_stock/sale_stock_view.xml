@@ -151,9 +151,9 @@
 
         <template id="report_sale_order_incoterm" inherit_id="sale.report_saleorder_document">
           <xpath expr="//div[@name='payment_term']" position="after">
-            <div class="col-xs-3" t-if="o.incoterm" groups="sale.group_display_incoterm">
+            <div class="col-xs-3" t-if="doc.incoterm" groups="sale.group_display_incoterm">
               <strong>Incoterms:</strong>
-              <p t-field="o.incoterm.code"/>
+              <p t-field="doc.incoterm.code"/>
             </div>
           </xpath>
       </template>
