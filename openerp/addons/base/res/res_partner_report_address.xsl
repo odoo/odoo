@@ -57,7 +57,7 @@
 	</xsl:template>
 
 	<xsl:template match="address" mode="story">
-		<para style="nospace"><xsl:value-of select="company-name"/><xsl:text> </xsl:text><xsl:value-of select="company-title"/></para>
+		<para style="nospace"><xsl:value-of select="company-title"/><xsl:text> </xsl:text><xsl:value-of select="company-name"/></para>
 		<para style="nospace"><xsl:value-of select="street"/></para>
 		<para style="nospace"><xsl:value-of select="street2"/></para>
 		<para style="nospace"><xsl:value-of select="zip"/><xsl:text> </xsl:text><xsl:value-of select="city"/></para>
