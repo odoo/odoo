@@ -132,6 +132,12 @@ class stock_return_picking(osv.osv_memory):
                 raise osv.except_osv(_('Warning !'), _("You have manually created product lines, please delete them to proceed"))
             new_qty = data_get.quantity
             if new_qty:
+                # The return of a return should be linked with the original's destination move if it was not cancelled
+                if move.origin_returned_move_id.move_dest_id.id and move.origin_returned_move_id.move_dest_id.state != 'cancel':
+                    move_dest_id = move.origin_returned_move_id.move_dest_id.id
+                else:
+                    move_dest_id = False
+
                 returned_lines += 1
                 move_obj.copy(cr, uid, move.id, {
                     'product_id': data_get.product_id.id,
@@ -144,6 +150,7 @@ class stock_return_picking(osv.osv_memory):
                     'origin_returned_move_id': move.id,
                     'procure_method': 'make_to_stock',
                     'restrict_lot_id': data_get.lot_id.id,
+                    'move_dest_id': move_dest_id,
                 })
 
         if not returned_lines:

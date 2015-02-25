@@ -70,6 +70,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="priority" eval="20"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action" 
@@ -78,14 +79,38 @@
                         icon="fa-pencil-square-o"
                         name="%(account.action_invoice_tree)d" 
                         attrs="{'invisible': [('customer', '=', False)]}" 
-                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice">
+                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}">
                         <div><strong><field name="total_invoiced" widget="monetary"/></strong><br/>Invoiced</div>
                     </button>
-                    <button type="action" class="oe_stat_button" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user" icon="fa-list">
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="partner_view_button_journal_item_count">
+            <field name="name">partner.view.button.journal_item_count</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="21"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button type="action" class="oe_stat_button" name="%(account.action_account_moves_all_tree)d" icon="fa-list">
                         <field string="Journal Items" name="journal_item_count" widget="statinfo"/>                        
                     </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="partner_view_button_contracts_count">
+            <field name="name">partner.view.button.contracts_count</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="22"/>
+            <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
                     <button class="oe_inline oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d" 
-                        icon="fa-book" groups="analytic.group_analytic_accounting">
+                        icon="fa-book">
                         <field string="Contracts" name="contracts_count" widget="statinfo"/>
                     </button>
                 </xpath>

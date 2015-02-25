@@ -227,54 +227,16 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
     def customize_template_get(self, xml_id, full=False):
-        """ Lists the templates customizing ``xml_id``. By default, only
-        returns optional templates (which can be toggled on and off), if
-        ``full=True`` returns all templates customizing ``xml_id``
-        """
-        imd = request.registry['ir.model.data']
-        view_model, view_theme_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'theme')
+        return request.registry["ir.ui.view"].customize_template_get(
+            request.cr, request.uid, xml_id, full=full, context=request.context)
 
-        user = request.registry['res.users']\
-            .browse(request.cr, request.uid, request.uid, request.context)
-        user_groups = set(user.groups_id)
-
-        views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, xml_id, context=dict(request.context or {}, active_test=False))
-        done = set()
-        result = []
-        for v in views:
-            if not user_groups.issuperset(v.groups_id):
-                continue
-            if full or (v.customize_show and v.inherit_id.id != view_theme_id):
-                if v.inherit_id not in done:
-                    result.append({
-                        'name': v.inherit_id.name,
-                        'id': v.id,
-                        'xml_id': v.xml_id,
-                        'inherit_id': v.inherit_id.id,
-                        'header': True,
-                        'active': False
-                    })
-                    done.add(v.inherit_id)
-                result.append({
-                    'name': v.name,
-                    'id': v.id,
-                    'xml_id': v.xml_id,
-                    'inherit_id': v.inherit_id.id,
-                    'header': False,
-                    'active': v.active,
-                })
-        return result
 
     @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
-        views = self.customize_template_get(xml_id, full=True)
-        views_ids = [view.get('id') for view in views if view.get('active')]
-        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
-        irt = request.registry.get('ir.translation')
-        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value','state','gengo_translation'], context=request.context)
+        return request.registry["ir.ui.view"].get_view_translations(
+            request.cr, request.uid, xml_id, lang=lang, context=request.context)
+
 
     @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):

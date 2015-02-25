@@ -1272,10 +1272,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 new instance.web.Dialog(this, { title: _t("Warning"), size: 'medium',}, $("<div />").text(_t("You must choose at least one record."))).open();
                 return false;
             }
+            var dataset = self.getParent().dataset;
             var active_ids_context = {
                 active_id: ids[0],
                 active_ids: ids,
-                active_model: self.getParent().dataset.model,
+                active_model: dataset.model,
             };
 
             $.when(domain).done(function (domain) {
@@ -1289,7 +1290,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 self.rpc("/web/action/load", {
                     action_id: item.action.id,
                     context: new instance.web.CompoundContext(
-                    self.dataset.get_context(), active_ids_context).eval()
+                    dataset.get_context(), active_ids_context).eval()
                 }).done(function(result) {
                     result.context = new instance.web.CompoundContext(
                         result.context || {}, active_ids_context)

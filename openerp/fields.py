@@ -658,7 +658,7 @@ class Field(object):
             self.column = fields.property(**args)
         elif self.column:
             # let the column provide a valid column for the given parameters
-            self.column = self.column.new(**args)
+            self.column = self.column.new(_computed_field=bool(self.compute), **args)
         else:
             # create a fresh new column of the right type
             self.column = getattr(fields, self.type)(**args)
@@ -677,7 +677,6 @@ class Field(object):
     _column_groups = property(attrgetter('groups'))
     _column_change_default = property(attrgetter('change_default'))
     _column_deprecated = property(attrgetter('deprecated'))
-    _column_compute = property(lambda self: bool(self.compute))
 
     ############################################################################
     #
