@@ -19,9 +19,9 @@ This wizard will activate the CRON job and the Scheduler and will start the auto
     'website': 'https://www.odoo.com',
     'depends': ['base'],
     'data': [
-        'gengo_sync_schedular_data.xml',
-        'ir_translation.xml',
-        'res_company_view.xml',
+        'data/gengo_sync_schedular_data.xml',
+        'views/ir_translation.xml',
+        'views/res_company_view.xml',
         'wizard/base_gengo_translations_view.xml',
     ],
     'demo': [],
