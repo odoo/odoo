@@ -22,7 +22,9 @@
 import math
 import re
 import time
+from collections import OrderedDict
 from _common import ceiling
+
 
 from openerp import SUPERUSER_ID
 from openerp import tools
@@ -797,9 +799,16 @@ class product_template(osv.osv):
             pass
         return super(product_template, self).name_get(cr, user, ids, context)
 
-
-
-
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        product_product = self.pool['product.product']
+        results = product_product.name_search(
+            cr, user, name, args, operator=operator, context=context, limit=limit)
+        product_ids = [p[0] for p in results]
+        template_ids = [p.product_tmpl_id.id
+                            for p in product_product.browse(
+                                cr, user, product_ids, context=context)]
+        uniq_ids = OrderedDict.fromkeys(template_ids).keys()
+        return self.name_get(cr, user, uniq_ids, context=context)
 
 class product_product(osv.osv):
     _name = "product.product"
