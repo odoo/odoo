@@ -265,7 +265,7 @@
     <xpath expr="//div[@id='title']" position="before">
         <div class="container">
           <div class="row">
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-12">
                 <ol class="breadcrumb">
                     <li><a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}"><span t-field="blog.name"/></a></li>
                     <li t-if="tag"><a t-attf-href="#{blog_url(date_begin=None, date_end=None)}"><span t-field="tag.name"/></a></li>
@@ -317,6 +317,7 @@
         inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
     <xpath expr="//div[@id='blog_content']" position="attributes">
         <attribute name="enable_chatter_discuss">True</attribute>
+        <attribute name="class">blog_content_width</attribute>
     </xpath>
 </template>
 
