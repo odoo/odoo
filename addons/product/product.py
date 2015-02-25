@@ -1084,12 +1084,11 @@ class product_product(osv.osv):
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                ids = set(self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context))
+                ids = self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context)
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(ids)) if limit else False
-                    ids.update(self.search(cr, user, args + [('name', operator, name), ('id', 'not in', list(ids))], limit=limit2, context=context))
-                ids = list(ids)
+                    ids += self.search(cr, user, args + [('name', operator, name), ('id', 'not in', ids)], limit=limit2, context=context)
             elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
                 ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
             if not ids and operator in positive_operators:
