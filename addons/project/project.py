@@ -188,7 +188,7 @@ class project(osv.osv):
         return res
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         res={}
-        for tasks in self.browse(cr, uid, ids, context):
+        for tasks in self.browse(cr, uid, ids, dict(context, active_test=False)):
             res[tasks.id] = len(tasks.task_ids)
         return res
     def _get_alias_models(self, cr, uid, context=None):

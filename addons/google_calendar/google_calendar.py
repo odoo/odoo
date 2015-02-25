@@ -502,6 +502,7 @@ class google_calendar(osv.AbstractModel):
             rrule = [rule for rule in single_event_dict["recurrence"] if rule.startswith("RRULE:")][0][6:]
             result['rrule'] = rrule
 
+        context = dict(context or {}, no_mail_to_attendees=True)
         if type == "write":
             res = calendar_event.write(cr, uid, event['id'], result, context=context)
         elif type == "copy":
