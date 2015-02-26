@@ -1228,6 +1228,11 @@ class pos_order(osv.osv):
                 all_lines.append((0, 0, value),)
         if move_id: #In case no order was changed
             self.pool.get("account.move").write(cr, uid, [move_id], {'line_id':all_lines}, context=context)
+            # Here account move lines are linked to existing account move so
+            # autoposting does not work because it's defined on create method
+            move_rec = self.pool.get("account.move").browse(cr, uid, move_id, context=context)
+            if move_rec.journal_id.entry_posted and move_rec.state == 'draft':
+                move_rec.button_validate()
 
         return True
 
