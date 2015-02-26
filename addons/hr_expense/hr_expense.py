@@ -308,6 +308,13 @@ class hr_expense_expense(osv.osv):
 
             # Calculate tax lines and adjust base line
             tax_ids = [tax.id for tax in taxes]
+            print "1 => ", tax_obj
+            print "2 => ", tax_ids
+            print "3 => ", line.unit_amount
+            print "4 => ", exp.currency_id.name
+            print "5 => ", line.unit_quantity
+            print "6 => ", line.product_id.id
+            print "7 => ", exp.user_id.partner_id.name
             tax_res = tax_obj.compute_all(cr, uid, tax_ids, line.unit_amount, exp.currency_id.id, line.unit_quantity, line.product_id.id, exp.user_id.partner_id.id)
             res[-1]['price'] = tax_res['total_excluded']
             res[-1]['tax_ids'] = tax_ids

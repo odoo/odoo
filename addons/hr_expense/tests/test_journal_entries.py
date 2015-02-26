@@ -19,7 +19,7 @@ class TestCheckJournalEntry(TransactionCase):
         self.tax_id = self.tax_obj.create(cr, uid, {
             'name': 'Expense 10%',
             'amount': 10,
-            'type': 'percent',
+            'amount_type': 'percent',
             'type_tax_use': 'purchase',
             'price_include': True,
         })
