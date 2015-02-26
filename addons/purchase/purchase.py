@@ -1430,7 +1430,7 @@ class procurement_order(osv.osv):
             po_lines = po_line_obj.browse(cr, uid, po_line_ids, context=context)
             po_prod_dict = {}
             for pol in po_lines:
-                po_prod_dict[po.product_id.id] = pol
+                po_prod_dict[pol.product_id.id] = pol
             procs_to_create = []
             #Check which procurements need a new line and which need to be added to an existing one
             for proc in procurements:
