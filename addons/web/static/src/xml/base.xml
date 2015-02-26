@@ -94,7 +94,7 @@
                     <tr>
                         <td><label for="db_name">Select a database name:</label></td>
                         <td>
-                            <input type="text" name="db_name" class="required" matches="^[a-zA-Z0-9][a-zA-Z0-9_-]+$" autofocus="true" placeholder="e.g. mycompany"/> 
+                            <input type="text" name="db_name" class="required" matches="^[a-zA-Z0-9][a-zA-Z0-9_-]+$" autofocus="true" placeholder="e.g. mycompany"/>
                         </td>
                     </tr>
                     <tr>
@@ -493,7 +493,7 @@
                 <div class="oe-view-manager-buttons">
                     <t t-foreach="widget.views" t-as="view">
                         <div t-attf-class="oe-#{view}-buttons"/>
-                    </t>                    
+                    </t>
                 </div>
                 <div class="oe-view-manager-sidebar"></div>
             </div>
@@ -536,8 +536,8 @@
             <li><a data-action="translate">Technical Translation</a></li>
             <li><a data-action="manage_views">Manage Views</a></li>
             <li><a data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/> View</a></li>
-            <li t-if="view_manager.searchview"><a data-action="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</a></li> 
-            <li t-if="view_manager.action"><a data-action="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</a></li> 
+            <li t-if="view_manager.searchview"><a data-action="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</a></li>
+            <li t-if="view_manager.action"><a data-action="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</a></li>
             <li><a data-action="edit_workflow">Edit Workflow</a></li>
             <li><a data-action="print_workflow">Print Workflow</a></li>
             <li class="divider"/>
@@ -588,7 +588,7 @@
 <div t-name="Sidebar" class="oe_sidebar btn-group">
     <t t-foreach="widget.sections" t-as="section">
         <div class="oe_form_dropdown_section btn-group btn-group-sm">
-            <button class="btn btn-default dropdown-toggle" 
+            <button class="btn btn-default dropdown-toggle"
                     t-if="section.name != 'buttons'"
                     data-toggle="dropdown">
                 <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
@@ -621,8 +621,10 @@
                     </t>
                     <a class="oe_file_attachment" t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
                         <t t-raw="item.label"/>
+                        <span t-if="section.name == 'files' and !item.callback" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">
+                            <i class="fa fa-trash-o"/>
+                        </span>
                     </a>
-                     <a t-if="section.name == 'files' and !item.callback" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">x</a>
                 </li>
                 <li t-if="section.name == 'files'" class="oe_sidebar_add_attachment">
                     <t t-call="HiddenInputFile">
@@ -801,8 +803,8 @@
 <div t-name="FormView.buttons">
     <t t-if="widget.options.action_buttons !== false">
         <div class="oe_form_buttons_view">
-            <button t-if="widget.is_action_enabled('edit')" 
-                    type="button" 
+            <button t-if="widget.is_action_enabled('edit')"
+                    type="button"
                     class="oe_form_button_edit btn btn-default btn-sm" accesskey="E">
                 Edit
             </button>
@@ -927,7 +929,7 @@
         <button class="btn btn-default fa fa-line-chart oe-line-mode" title="Line Chart"></button>
         <button class="btn btn-default fa fa-pie-chart oe-pie-mode" title="Pie Chart"></button>
     </div>
-    <div class="btn-group btn-group-sm"> 
+    <div class="btn-group btn-group-sm">
         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             Measure <span class="caret"/>
         </button>
@@ -959,7 +961,7 @@
         <button class="btn btn-default fa fa-expand oe-pivot-flip" title="Flip axis"></button>
         <button class="btn btn-default fa fa-arrows-alt oe-pivot-expand-all" title="Expand all"></button>
     </div>
-    <div class="btn-group btn-group-sm"> 
+    <div class="btn-group btn-group-sm">
         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             Measures <span class="caret"/>
         </button>
@@ -1157,7 +1159,7 @@
             ></textarea><img class="oe_field_translate oe_input_icon"
                             t-if="widget.field.translate and !widget.get('effective_readonly')"
                             t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
-            />            
+            />
         </t>
         <t t-if="widget.get('effective_readonly')">
             <span class="oe_form_text_content"></span>
@@ -1485,7 +1487,7 @@
         <div class="oe_placeholder_files"/>
         <div class="oe_add" t-if="!widget.get('effective_readonly')">
             <!-- uploader of file -->
-            <button class="oe_attach"><i class="fa fa-paperclip"/></button> 
+            <button class="oe_attach"><i class="fa fa-paperclip"/></button>
             <span class='oe_attach_label'><t t-esc="widget.string"/></span>
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
