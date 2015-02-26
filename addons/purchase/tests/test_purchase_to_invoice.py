@@ -44,7 +44,7 @@ class TestPurchase(TestMail):
         
         # Usefull record id
         group_id = data_obj.get_object_reference(cr, uid, 'account', 'group_account_invoice')[1]
-        product_ref = data_obj.get_object_reference(cr, uid, 'product', 'product_category_5')
+        product_ref = data_obj.get_object_reference(cr, uid, 'product', 'product_category_3')
         product_id = product_ref and product_ref[1] or False
         company_id = data_obj.get_object_reference(cr, uid, 'base', 'main_company')[1]
         location_id = data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_3')[1]

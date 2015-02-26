@@ -38,12 +38,6 @@ class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Order"
-    _track = {
-        'state': {
-            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state in ['manual'],
-            'sale.mt_order_sent': lambda self, cr, uid, obj, ctx=None: obj.state in ['sent']
-        },
-    }
 
     def _amount_line_tax(self, cr, uid, line, context=None):
         val = 0.0
@@ -291,6 +285,14 @@ class sale_order(osv.osv):
             'target': 'current',
             'nodestroy': True,
         }
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'manual':
+            return 'sale.mt_order_confirmed'
+        elif 'state' in init_values and record.state == 'sent':
+            return 'sale.mt_order_sent'
+        return super(sale_order, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
         context = context or {}
@@ -691,6 +693,8 @@ class sale_order(osv.osv):
 
         :return: True
         """
+        context = dict(context)
+        context['lang'] = self.pool['res.users'].browse(cr, uid, uid).lang
         procurement_obj = self.pool.get('procurement.order')
         sale_line_obj = self.pool.get('sale.order.line')
         for order in self.browse(cr, uid, ids, context=context):

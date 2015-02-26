@@ -256,6 +256,7 @@
             <field name="model">im_livechat.channel.rule</field>
             <field name="arch" type="xml">
                 <tree string="Rules">
+                    <field name="sequence" widget="handle"/>
                     <field name="regex_url"/>
                     <field name="action"/>
                     <field name="country_ids"/>
@@ -272,9 +273,11 @@
                     <sheet>
                         <group>
                             <field name="action"/>
-                            <field name="regex_url" />
-                            <field name="auto_popup_timer" />
-                            <field name="sequence" />
+                            <field name="regex_url"/>
+                            <label for="auto_popup_timer" class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}"/>
+                            <div class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}">
+                                <field name="auto_popup_timer" class="oe_inline"/> seconds
+                            </div>
                             <field name="country_ids" widget="many2many_tags"/>
                         </group>
                     </sheet>

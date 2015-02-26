@@ -41,27 +41,33 @@
         
         duplicate_version: function(event) {
             var version_id = $('html').data('version_id');
-            website.prompt({
-                id: "editor_new_version",
-                window_title: _t("New version"),
-                input: "Version name" ,
-                default :(moment().format('L')),
-            }).then(function (name) {
-                openerp.jsonRpc( '/website_version/create_version', 'call', { 'name': name, 'version_id': version_id}).then(function (result) {
+            var wizardA = $(openerp.qweb.render("website_version.new_version",{'default_name': moment().format('L')}));
+            wizardA.appendTo($('body')).modal({"keyboard" :true});
+            wizardA.on('click','.o_create', function(){
+                wizardA.find('.o_message').remove();
+                var version_name = wizardA.find('.o_version_name').val();
+                if(version_name.length == 0){
+                    wizardA.find(".o_version_name").after("<p class='o_message' style='color : red'> *"+_t("This field is required")+"</p>");
+                }
+                else{
+                    wizardA.modal("hide");
+                    openerp.jsonRpc( '/website_version/create_version', 'call', { 'name': version_name, 'version_id': version_id}).then(function (result) {
 
-                    var wizard = $(openerp.qweb.render("website_version.message",{message:_.str.sprintf("You are actually working on %s version.", name)}));
-                    wizard.appendTo($('body')).modal({"keyboard" :true});
-                    wizard.on('click','.o_confirm', function(){
-                        window.location.href = '\?enable_editor';
+                        var wizard = $(openerp.qweb.render("website_version.dialogue",{message:_.str.sprintf("You are now working on version: %s.", version_name),
+                                                                                       dialogue:_.str.sprintf("If you edit this page or others, all changes will be recorded in the version. It will not be visible by visitors until you publish the version.")}));
+                        wizard.appendTo($('body')).modal({"keyboard" :true});
+                        wizard.on('click','.o_confirm', function(){
+                            window.location.href = '\?enable_editor';
+                        });
+                        wizard.on('hidden.bs.modal', function () {$(this).remove();});
+                    }).fail(function(){
+                        var wizard = $(openerp.qweb.render("website_version.message",{message:_t("This name already exists.")}));
+                        wizard.appendTo($('body')).modal({"keyboard" :true});
+                        wizard.on('hidden.bs.modal', function () {$(this).remove();});
                     });
-                    wizard.on('hidden.bs.modal', function () {$(this).remove();});
-                }).fail(function(){
-                    var wizard = $(openerp.qweb.render("website_version.message",{message:_t("This name already exists.")}));
-                    wizard.appendTo($('body')).modal({"keyboard" :true});
-                    wizard.on('hidden.bs.modal', function () {$(this).remove();});
-
-                });
+                }
             });
+            wizardA.on('hidden.bs.modal', function () {$(this).remove();});
         },
         
         change_version: function(event) {
@@ -104,9 +110,10 @@
 
         publish_version: function(event) {
             var version_id = parseInt($('html').data('version_id'));
-            var name = $(event.currentTarget).parent().parent().parent().children().children(':first-child').text();
+            var name = $('#version-menu-button').attr('data-version_name');
             openerp.jsonRpc( '/website_version/diff_version', 'call', { 'version_id':version_id}).then(function (result) {
-                var wizardA = $(openerp.qweb.render("website_version.publish_message",{message:_.str.sprintf("Are you sure you want to publish the %s version ?", name), list:result}));
+                console.log(result);
+                var wizardA = $(openerp.qweb.render("website_version.publish_message",{message:_.str.sprintf("Publish Version %s", name), list:result}));
                 wizardA.appendTo($('body')).modal({"keyboard" :true});
                 wizardA.on('click','.o_confirm', function(){
                     wizardA.find('.o_message').remove();

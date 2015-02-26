@@ -4,7 +4,6 @@ import time
 import werkzeug.urls
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from collections import OrderedDict
 
 from openerp import http
 from openerp import tools, SUPERUSER_ID
@@ -244,9 +243,16 @@ class website_event(http.Controller):
     def _process_registration_details(self, details):
         ''' Process data posted from the attendee details form. '''
         registrations = {}
+        global_values = {}
         for key, value in details.iteritems():
             counter, field_name = key.split('-', 1)
-            registrations.setdefault(counter, dict())[field_name] = value
+            if counter == '0':
+                global_values[field_name] = value
+            else:
+                registrations.setdefault(counter, dict())[field_name] = value
+        for key, value in global_values.iteritems():
+            for registration in registrations.values():
+                registration[key] = value
         return registrations.values()
 
     @http.route(['/event/<model("event.event"):event>/registration/confirm'], type='http', auth="public", methods=['POST'], website=True)
@@ -256,16 +262,13 @@ class website_event(http.Controller):
         registrations = self._process_registration_details(post)
 
         registration_ids = []
-        user = request.registry.get('res.users').browse(cr, uid, uid, context=context)
         for registration in registrations:
+            registration['event_id'] = event
             registration_ids.append(
-                Registration.create(cr, SUPERUSER_ID, {
-                    'name': registration.get('name', user.name),
-                    'phone': registration.get('phone', user.phone),
-                    'email': registration.get('email', user.email),
-                    'partner_id': user.partner_id.id,
-                    'event_id': event.id,
-                }, context=context))
+                Registration.create(
+                    cr, SUPERUSER_ID,
+                    Registration._prepare_attendee_values(cr, SUPERUSER_ID, registration),
+                    context=context))
 
         attendees = Registration.browse(cr, uid, registration_ids, context=context)
         return request.website.render("website_event.registration_complete", {

@@ -54,11 +54,6 @@ class account_voucher(models.Model):
     _description = 'Accounting Voucher'
     _inherit = ['mail.thread']
     _order = "date desc, id desc"
-    _track = {
-        'state': {
-            'account_voucher.mt_voucher_state_change': lambda self, cr, uid, obj, ctx=None: True,
-        },
-    }
 
     voucher_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase')], string='Type', readonly=True, states={'draft': [('readonly', False)]}, oldname="type")
     name = fields.Char('Memo', readonly=True, states={'draft': [('readonly', False)]}, default='')
@@ -377,6 +372,12 @@ class account_voucher(models.Model):
             if voucher.journal_id.entry_posted:
                 move.post()
         return True
+
+    @api.multi
+    def _track_subtype(self, init_values):
+        if 'state' in init_values:
+            return 'account_voucher.mt_voucher_state_change'
+        return super(account_voucher, self)._track_subtype(init_values)
 
 
 class account_voucher_line(models.Model):

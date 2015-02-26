@@ -252,6 +252,22 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
+        if (error.code == -32098) {
+            $.blockUI({ message: '' , overlayCSS: {'z-index': 9999, backgroundColor: '#FFFFFF', opacity: 0.0, cursor: 'wait'}});
+            var $indicator = $('<div class="oe_indicator">' + _t("Trying to reconnect... ") + '<i class="fa fa-refresh fa-spin"></i></div>');
+            $indicator.prependTo("body");
+            var timeinterval = setInterval(function(){
+                openerp.jsonRpc('/web/webclient/version_info').then(function() {
+                    clearInterval(timeinterval);
+                    $indicator.html(_t("You are back online"));
+                    $indicator.delay(2000).fadeOut('slow',function(){
+                        $indicator.remove();
+                    });
+                    $.unblockUI();
+                });
+            }, 2000);
+            return;
+        }
         var handler = instance.web.crash_manager_registry.get_object(error.data.name, true);
         if (handler) {
             new (handler)(this, error).display();
@@ -1250,7 +1266,7 @@ instance.web.Client = instance.web.Widget.extend({
         this.crashmanager =  new instance.web.CrashManager();
         instance.session.on('error', this.crashmanager, this.crashmanager.rpc_error);
         self.notification = new instance.web.Notification(this);
-        self.notification.appendTo(self.$el);
+        self.notification.appendTo(self.$el.find('.openerp'));
         self.loading = new instance.web.Loading(self);
         self.loading.appendTo(self.$('.openerp_webclient_container'));
         self.action_manager = new instance.web.ActionManager(self);
@@ -1384,7 +1400,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     update_logo: function() {
         var company = this.session.company_id;
-        var img = this.session.url('/web/binary/company_logo' + (company ? '?company=' + company : ''));
+        var img = this.session.url('/web/binary/company_logo' + '?db=' + this.session.db + (company ? '&company=' + company : ''));
         this.$('.oe_logo img').attr('src', '').attr('src', img);
         this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
     },

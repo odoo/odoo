@@ -118,13 +118,14 @@ class account_fiscal_position(models.Model):
             '|', ('vat_required', '=', False), ('vat_required', '=', partner.vat_subjected),
         ]
 
-        fiscal_position = self.search(domain + [('country_id', '=', delivery.country_id.id)], limit=1)
-        if fiscal_position:
-            return fiscal_position
+        if delivery.country_id.id:
+            fiscal_position = self.search(domain + [('country_id', '=', delivery.country_id.id)], limit=1)
+            if fiscal_position:
+                return fiscal_position
 
-        fiscal_position = self.search(domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], limit=1)
-        if fiscal_position:
-            return fiscal_position
+            fiscal_position = self.search(domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], limit=1)
+            if fiscal_position:
+                return fiscal_position
 
         fiscal_position = self.search(domain + [('country_id', '=', None), ('country_group_id', '=', None)], limit=1)
         return fiscal_position.id or False

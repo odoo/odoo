@@ -1,7 +1,7 @@
 -
   !record {model: product.product, id: product_product_4}:
     uom_id: product_uom_unit
-    categ_id: product_category_4
+    categ_id: product_category_5
 -
   !record {model: product.pricelist, id: customer_pricelist}:
     name: Customer Pricelist
@@ -27,7 +27,7 @@
               sequence: 1
               min_quantity: 2
               base: !eval (ref('product.list_price'))
-              categ_id: product_category_4
+              categ_id: product_category_5
               price_discount: -0.05
       - name: v2.0 (Special Discount on all products during last 5 days in current year)
         date_start: 2011-12-27

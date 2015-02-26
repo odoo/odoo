@@ -45,11 +45,12 @@
             },
             {
                 title:     "Validate attendees details",
+                waitFor:   "input[name='1-name'], input[name='2-name'], input[name='3-name']",
                 element:   '.modal button:contains("Continue")',
             },
             {
                 title:     "Check that the cart contains exactly 3 elements",
-                element:   '#top_menu .my_cart_quantity:containsExact(3)',
+                element:   'a:has(.my_cart_quantity:containsExact(3))',
             },
             {
                 title:     "Modify the cart to add 1 unit of `VIP` ticket type",
@@ -58,7 +59,7 @@
             },
             {
                 title:     "Now click on `Process Checkout`",
-                waitFor:   '#top_menu .my_cart_quantity:contains(4)',
+                waitFor:   'a:has(.my_cart_quantity):contains(4)',
                 element:   '.btn-primary:contains("Process Checkout")'
             },
             {

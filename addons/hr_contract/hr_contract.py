@@ -73,13 +73,6 @@ class hr_contract(osv.osv):
     _description = 'Contract'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    _track = {
-        'state': {
-            'hr_contract.mt_contract_pending': lambda self, cr, uid, obj, ctx=None: obj.state == 'pending',
-            'hr_contract.mt_contract_close': lambda self, cr, uid, obj, ctx=None: obj.state == 'close',
-        },
-    }
-
     _columns = {
         'name': fields.char('Contract Reference', required=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
@@ -139,3 +132,11 @@ class hr_contract(osv.osv):
 
     def set_as_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'close'}, context=context)
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'pending':
+            return 'hr_contract.mt_contract_pending'
+        elif 'state' in init_values and record.state == 'close':
+            return 'hr_contract.mt_contract_close'
+        return super(hr_contract, self)._track_subtype(cr, uid, ids, init_values, context=context)

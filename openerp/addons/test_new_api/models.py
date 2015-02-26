@@ -153,12 +153,6 @@ class Message(models.Model):
         self.double_size = self.double_size + size
 
 
-class Talk(models.Model):
-    _name = 'test_new_api.talk'
-
-    parent = fields.Many2one('test_new_api.discussion', delegate=True, required=True)
-
-
 class MixedModel(models.Model):
     _name = 'test_new_api.mixed'
 

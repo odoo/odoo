@@ -50,22 +50,7 @@ class project_issue(osv.Model):
     _description = "Project Issue"
     _order = "priority desc, create_date desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-
     _mail_post_access = 'read'
-    _track = {
-        'stage_id': {
-            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
-            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
-            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence > 1,
-        },
-        'user_id': {
-            'project_issue.mt_issue_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
-        },
-        'kanban_state': {
-            'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
-            'project_issue.mt_issue_ready': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
-        },
-    }
 
     def _get_default_partner(self, cr, uid, context=None):
         project_id = self._get_default_project_id(cr, uid, context)
@@ -424,6 +409,20 @@ class project_issue(osv.Model):
     # Mail gateway
     # -------------------------------------------------------
 
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'kanban_state' in init_values and record.kanban_state == 'blocked':
+            return 'project_issue.mt_issue_blocked'
+        elif 'kanban_state' in init_values and record.kanban_state == 'done':
+            return 'project_issue.mt_issue_ready'
+        elif 'user_id' in init_values and record.user_id:  # assigned -> new
+            return 'project_issue.mt_issue_new'
+        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:  # start stage -> new
+            return 'project_issue.mt_issue_new'
+        elif 'stage_id' in init_values:
+            return 'project_issue.mt_issue_stage'
+        return super(project_issue, self)._track_subtype(cr, uid, ids, init_values, context=context)
+
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
         issues = self.browse(cr, SUPERUSER_ID, ids, context=context)
@@ -487,16 +486,7 @@ class project(osv.Model):
             project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
             for project_id in ids
         }
-    def _get_project_issue_data(self, cr, uid, ids, field_name, arg, context=None):
-        obj = self.pool['project.issue']
-        month_begin = date.today().replace(day=1)
-        date_begin = (month_begin - relativedelta.relativedelta(months=self._period_number - 1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        res = {}
-        for id in ids:
-            created_domain = [('project_id', '=', id), ('date_closed', '>=', date_begin ), ('date_closed', '<=', date_end )]
-            res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, [ 'date_closed'], 'date_closed_count', 'date_closed', context=context))
-        return res
+
     _columns = {
         'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
@@ -504,8 +494,6 @@ class project(osv.Model):
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
                                      domain=[('date_closed', '!=', False)]),
-        'monthly_issues': fields.function(_get_project_issue_data, type='char', readonly=True,
-                                             string='Project Issue By Month')
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):

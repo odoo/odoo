@@ -233,7 +233,7 @@ class account_analytic_plan_instance(osv.osv):
 
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+    def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
         this = self.browse(cr, uid, ids[0], context=context)

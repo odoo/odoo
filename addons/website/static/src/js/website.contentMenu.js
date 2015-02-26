@@ -14,22 +14,34 @@
                 var $content_item = $(this);
                 self[$content_item.data('action')]();
             });
-            
             return this._super();
         },
         edit_menu: function() {
             var self = this;
             var context = website.get_context();
-            openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                model: 'website.menu',
-                method: 'get_tree',
-                args: [context.website_id],
-                kwargs: {
-                    context: context
-                },
-            }).then(function (menu) {
-                var result = new website.contentMenu.EditMenuDialog(menu).appendTo(document.body);
-                return result;
+            var def = $.Deferred();
+            if ($("[data-content_menu_id]").length) {
+                var select = new website.contentMenu.SelectEditMenuDialog();
+                select.appendTo(document.body);
+                select.on('save', this, function (root) {
+                    def.resolve(root);
+                });
+            } else {
+                def.resolve(null);
+            }
+
+            def.then(function (root_id) {
+                openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                    model: 'website.menu',
+                    method: 'get_tree',
+                    args: [context.website_id, root_id],
+                    kwargs: {
+                        context: context
+                    },
+                }).then(function (menu) {
+                    var result = new website.contentMenu.EditMenuDialog(menu).appendTo(document.body);
+                    return result;
+                });
             });
         },
         new_page: function() {
@@ -105,6 +117,22 @@
         }
     });
 
+    website.contentMenu.SelectEditMenuDialog = website.editor.Dialog.extend({
+        template: 'website.contentMenu.dialog.select',
+        init: function () {
+            var self = this;
+            self.roots = [{id: null, name: _t("Top Menu")}];
+            $("[data-content_menu_id]").each(function () {
+                self.roots.push({id: $(this).data("content_menu_id"), name: $(this).attr("name")});
+            });
+            this._super();
+        },
+        save: function () {
+            this.trigger("save", parseInt(this.$el.find("select").val() || null));
+            this._super();
+        }
+    });
+    
     website.contentMenu.EditMenuDialog = website.editor.Dialog.extend({
         template: 'website.contentMenu.dialog.edit',
         events: _.extend({}, website.editor.Dialog.prototype.events, {

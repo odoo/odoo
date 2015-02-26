@@ -314,7 +314,11 @@ class ir_translation(osv.osv):
             source = tools.ustr(source)
             params = (lang or '', types, source, source)
             if res_id:
-                query += " AND res_id=%s"
+                if isinstance(res_id, (int, long)):
+                    res_id = (res_id,)
+                else:
+                    res_id = tuple(res_id)
+                query += " AND res_id in %s"
                 params += (res_id,)
             if name:
                 query += " AND name=%s"
@@ -341,7 +345,7 @@ class ir_translation(osv.osv):
         :param types: single string defining type of term to translate (see ``type`` field on ir.translation), or sequence of allowed types (strings)
         :param lang: language code of the desired translation
         :param source: optional source term to translate (should be unicode)
-        :param res_id: optional resource id to translate (if used, ``source`` should be set)
+        :param res_id: optional resource id or a list of ids to translate (if used, ``source`` should be set)
         :rtype: unicode
         :return: the request translation, or an empty unicode string if no translation was
                  found and `source` was not passed

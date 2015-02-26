@@ -62,9 +62,10 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p>
-                    Odoo's project management allows you to manage the pipeline
-                    of tasks in order to get things done efficiently. You can
-                    track progress, discuss on tasks, attach documents, etc.
+                    Here, you can create new tasks
+                </p>
+                <p>
+                    You can now manage your tasks in order to get things done efficiently. Track progress, discuss, attach documents, etc.
                 </p>
             </field>
         </record>
@@ -111,30 +112,23 @@
                             <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
                     </div>
-                    <group>
-                        <group col="4">
-                            <field name="user_id" string="Project Manager"
-                                    attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
-                                    context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
-                            <newline/>
-                        </group>
-                        <group name="group_alias"
-                                attrs="{'invisible': [('alias_domain', '=', False)]}">
-                            <label for="alias_name" string="Email Alias"/>
-                            <div name="alias_def">
-                                <field name="alias_id" class="oe_read_only oe_inline"
-                                        string="Email Alias" required="0"/>
-                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                                </div>
-                            </div>
-                            <label for="alias_model" string="Incoming Emails create"/>
-                            <field name="alias_model" class="oe_inline" nolabel="1"/>
-                            <field name="alias_contact" class="oe_inline"
-                                    string="Accept Emails From"/>
-                        </group>
-                    </group>
                     <notebook>
+                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <group name="group_alias">
+                                <label for="alias_name" string="Email Alias"/>
+                                <div name="alias_def">
+                                    <field name="alias_id" class="oe_read_only oe_inline"
+                                            string="Email Alias" required="0"/>
+                                    <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                    </div>
+                                </div>
+                                <label for="alias_model" string="Incoming Emails create"/>
+                                <field name="alias_model" class="oe_inline" nolabel="1"/>
+                                <field name="alias_contact" class="oe_inline"
+                                        string="Accept Emails From"/>
+                            </group>
+                        </page>
                         <page string="Team" name="team">
                             <field colspan="4" name="members" widget="many2many_kanban" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}">
                                 <kanban quick_create="false" create="true" delete="true">
@@ -158,6 +152,9 @@
                         <page string="Other Info">
                             <group string="Administration">
                                 <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
+                                <field name="user_id" string="Project Manager"
+                                        attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
+                                        context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
                                 <field name="privacy_visibility" widget="radio"/>
                                 <field name="planned_hours" widget="float_time"
                                         groups="project.group_time_work_estimation_tasks"/>
@@ -261,7 +258,7 @@
                     <field name="doc_count"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_project_task_spark">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
                                     <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
@@ -283,12 +280,14 @@
                                     </div>
                                     <div class="row oe_margin_top_8 oe_kanban_project_list">
                                         <div class="col-md-6">
-                                            <a t-if="record.use_tasks.raw_value" class="oe_sparkline_bar_link" name="%(act_project_project_2_project_task_all)d" type="action">
-                                                <t t-raw="record.task_ids.raw_value.length" />
+                                            <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action">
+                                                <t t-raw="record.task_count.raw_value" />
                                                 <field name="label_tasks"/>
-                                                <field name="monthly_tasks" widget="sparkline_bar" options="{'delayIn': '1000'}">
-                                                    Created Tasks
-                                                </field>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object">
+                                                <field name="doc_count"/> Documents
                                             </a>
                                         </div>
                                         <div t-if="record.use_tasks.raw_value and record.task_count.raw_value lt 1" class="col-md-12">
@@ -296,24 +295,12 @@
                                             <span>No activity yet, click to enter in the project.</span>
                                         </div>
                                     </div>
-                                    <div class="row oe_margin_top_8 oe_kanban_project_infos">
-                                        <div class="col-md-6">
-                                            <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object">
-                                                <field name="doc_count"/> Documents
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="row oe_margin_top_8 oe_kanban_project_tags">
-                                        <h5 t-if="record.date.raw_value" class="label label-default">
-                                            <i class="fa fa-calendar"/>
-                                            <field name="date"/>
-                                        </h5>
-                                    </div>
-                                    <div class="row oe_margin_top_8 oe_kanban_project_avatars">
-                                        <t t-foreach="record.members.raw_value.slice(0,11)" t-as="member">
+                                    <div class="oe_margin_top_8 oe_kanban_project_avatars">
+                                        <t t-foreach="record.members.raw_value.slice(0,12)" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
+                                    <div class="clearfix"/>
                                 </div>
                             </div>
                         </t>
@@ -342,15 +329,9 @@
             <field name="context">{'search_default_Current': 1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                  Click to start a new project.
+                    Create a new project.
                 </p><p>
-                  Projects are used to organize your activities; plan
-                  tasks, track issues, invoice timesheets. You can define
-                  internal projects (R&amp;D, Improve Sales Process),
-                  private projects (My Todos) or customer ones.
-                </p><p>
-                  You will be able collaborate with internal users on
-                  projects or invite customers to share your activities.
+                    Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
                 </p>
             </field>
         </record>
@@ -657,9 +638,7 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p>
-                    Odoo's project management allows you to manage the pipeline
-                    of tasks in order to get things done efficiently. You can
-                    track progress, discuss on tasks, attach documents, etc.
+                    Odoo's project management allows you to manage the pipeline of your tasks efficiently. You can track progress, discuss on tasks, attach documents, etc.
                 </p>
             </field>
         </record>
