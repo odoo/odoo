@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<openerp>
-<data>
+<odoo>
 
     <!-- action of converting, via wizard -->
-    <record model="ir.actions.act_window" id="convert_lead2projectissue_wizard_action" >
+    <record id="convert_lead2projectissue_wizard_action" model="ir.actions.act_window">
         <field name="name">Convert to Issue</field>
         <field name="res_model">crm.lead2projectissue.wizard</field>
         <field name="view_type">form</field>
@@ -12,7 +11,7 @@
     </record>
 
     <!-- view of the Wizard Form --> 
-    <record model="ir.ui.view" id="view_crm_lead2projectissue_wizard" >
+    <record id="view_crm_lead2projectissue_wizard" model="ir.ui.view">
         <field name="name">crm.lead2projectissue.wizard.form</field>
         <field name="model">crm.lead2projectissue.wizard</field>
         <field name="arch" type="xml">
@@ -30,8 +29,8 @@
     </record>
 
     <!-- inherit view of Lead Form : adding the "convert to issue" button -->
-    <record model="ir.ui.view" id="crm_case_form_view_leads_project_issue">
-        <field name="name">CRM - Leads Form</field>
+    <record id="crm_case_form_view_leads_project_issue" model="ir.ui.view">
+        <field name="name">crm.lead2projectissue.form.inherit</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_leads" />
         <field name="arch" type="xml">
@@ -44,5 +43,4 @@
         </field>
     </record>
 
-</data>
-</openerp>
+</odoo>
