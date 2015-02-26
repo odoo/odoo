@@ -321,7 +321,6 @@ class hr_expense_expense(osv.osv):
                     'account_id': tax['account_id'] or mres['account_id'],
                     'tax_line_id': tax['id'],
                 })
-
         return res
 
     def move_line_get_item(self, cr, uid, line, context=None):
