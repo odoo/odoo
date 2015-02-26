@@ -1715,7 +1715,7 @@ class BaseModel(object):
         # for the name_get part to solve some access rights issues
         args = list(args or [])
         # optimize out the default criterion of ``ilike ''`` that matches everything
-        if not self._rec_name:
+        if not self._rec_name and not self.is_transient():
             _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
         elif not (name == '' and operator == 'ilike'):
             args += [(self._rec_name, operator, name)]
