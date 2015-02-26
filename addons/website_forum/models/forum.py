@@ -111,6 +111,14 @@ class Forum(models.Model):
     karma_flag = fields.Integer(string='Flag a post as offensive', default=500)
     karma_dofollow = fields.Integer(string='Disabled links', help='If the author has not enough karma, a nofollow attribute is added to links', default=500)
 
+    @api.one
+    @api.constrains('allow_question', 'allow_discussion', 'allow_link', 'default_post_type')
+    def _check_default_post_type(self):
+        if (self.default_post_type == 'question' and not self.allow_question) \
+                or (self.default_post_type == 'discussion' and not self.allow_discussion) \
+                or (self.default_post_type == 'link' and not self.allow_link):
+            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.' % self.default_post_type))
+
     @api.model
     def create(self, values):
         return super(Forum, self.with_context(mail_create_nolog=True)).create(values)
@@ -163,7 +171,7 @@ class Post(models.Model):
         ('question', 'Question'),
         ('link', 'Article'),
         ('discussion', 'Discussion')],
-        string='Type', default='question')
+        string='Type', default='question', required=True)
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
         domain=lambda self: ['&', ('model', '=', self._name), ('type', 'in', ['email', 'comment'])],
@@ -301,6 +309,14 @@ class Post(models.Model):
         self.can_downvote = user.karma >= self.forum_id.karma_downvote
         self.can_comment = user.karma >= self.karma_comment
         self.can_comment_convert = user.karma >= self.karma_comment_convert
+
+    @api.one
+    @api.constrains('post_type', 'forum_id')
+    def _check_post_type(self):
+        if (self.post_type == 'question' and not self.forum_id.allow_question) \
+                or (self.post_type == 'discussion' and not self.forum_id.allow_discussion) \
+                or (self.post_type == 'link' and not self.forum_id.allow_link):
+            raise UserError(_('This forum does not allow %s' % self.post_type))
 
     def name_get(self, cr, uid, ids, context=None):
         result = []
