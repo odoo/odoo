@@ -280,11 +280,9 @@ class hr_expense_expense(osv.osv):
     def move_line_get(self, cr, uid, expense_id, context=None):
         res = []
         tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
         exp = self.browse(cr, uid, expense_id, context=context)
-        company_currency = exp.company_id.currency_id.id
 
         for line in exp.line_ids:
             mres = self.move_line_get_item(cr, uid, line, context)
@@ -317,7 +315,7 @@ class hr_expense_expense(osv.osv):
                 res.append({
                     'type': 'tax',
                     'name': tax['name'],
-                    'price_unit': tax['price_unit'],
+                    'price_unit': tax['amount'],
                     'quantity': 1,
                     'price': tax['amount'],
                     'account_id': tax['account_id'] or mres['account_id'],

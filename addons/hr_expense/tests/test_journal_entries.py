@@ -18,7 +18,7 @@ class TestCheckJournalEntry(TransactionCase):
         self.employee = self.registry("ir.model.data").xmlid_to_object(cr, uid, "hr.employee_mit")
         self.tax_id = self.tax_obj.create(cr, uid, {
             'name': 'Expense 10%',
-            'amount': 0.10,
+            'amount': 10,
             'type': 'percent',
             'type_tax_use': 'purchase',
             'price_include': True,
@@ -49,9 +49,9 @@ class TestCheckJournalEntry(TransactionCase):
         self.assertTrue(self.expense.account_move_id.id, 'Expense Journal Entry is not created')
         for line in self.expense.account_move_id.line_id:
             if line.credit:
-                self.assertEquals(line.credit, 700.00, 'Expense Payable Amount is not matched for journal item')
+                self.assertAlmostEquals(line.credit, 700.00)
             else:
-                if line.tax_code_id:
-                    self.assertEquals(line.debit, 636.36, 'Tax Amount is not matched for journal item')
+                if not line.tax_line_id.id == self.tax_id:
+                    self.assertAlmostEquals(line.debit, 636.36)
                 else:
-                    self.assertEquals(line.debit, 63.64, 'Tax Base Amount is not matched for journal item')
+                    self.assertAlmostEquals(line.debit, 63.64)
