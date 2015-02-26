@@ -564,7 +564,7 @@ class account_bank_statement_line(models.Model):
         statement_currency = self.journal_id.currency or company_currency
         st_line_currency = self.currency_id or statement_currency
 
-        st_line_amount_currency = False
+        amount_currency = False
         if statement_currency != company_currency or st_line_currency != company_currency:
             # First get the ratio total mount / amount not already reconciled
             if statement_currency == company_currency:
@@ -576,9 +576,9 @@ class account_bank_statement_line(models.Model):
             ratio = total_amount / amount
             # Then use it to adjust the statement.line field that correspond to the move.line amount_currency
             if statement_currency != company_currency:
-                st_line_amount_currency = self.amount * ratio
+                amount_currency = self.amount * ratio
             elif st_line_currency != company_currency:
-                st_line_amount_currency = self.amount_currency * ratio
+                amount_currency = self.amount_currency * ratio
 
         return {
             'name': self.name,
@@ -594,7 +594,7 @@ class account_bank_statement_line(models.Model):
             'statement_id': self.statement_id.id,
             'journal_id': self.statement_id.journal_id.id,
             'currency_id': statement_currency != company_currency and statement_currency.id or (st_line_currency != company_currency and st_line_currency.id or False),
-            'amount_currency': st_line_amount_currency,
+            'amount_currency': amount_currency,
         }
 
     @api.v7
@@ -686,10 +686,9 @@ class account_bank_statement_line(models.Model):
             counterpart_moves = (counterpart_moves | move)
 
             # Complete dicts to create both counterpart move lines and write-offs
+            to_create = (counterpart_aml_dicts + new_aml_dicts)
             ctx = dict(self._context, date=self.date)
-            total_amount = 0
-            for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
-                total_amount += aml_dict['debit'] - aml_dict['credit']
+            for aml_dict in to_create:
                 aml_dict['ref'] = move_name
                 aml_dict['move_id'] = move.id
                 aml_dict['date'] = self.statement_id.date
@@ -720,13 +719,14 @@ class account_bank_statement_line(models.Model):
 
             # Create the move line for the statement line using the total credit/debit of the counterpart
             # This leaves out the amount already reconciled and avoids rounding errors from currency conversion
-            st_line_amount = 0
-            for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
-                st_line_amount += aml_dict['credit'] - aml_dict['debit']
-            st_line_move_line_vals = self._prepare_reconciliation_move_line(move, st_line_amount)
-            aml_obj.create(st_line_move_line_vals, check=False)
+            st_line_amount = sum(aml_dict['credit'] - aml_dict['debit'] for aml_dict in to_create)
+            aml_obj.create(self._prepare_reconciliation_move_line(move, st_line_amount), check=False)
 
-            # Complete dicts, create counterpart move lines and reconcile them
+            # Create write-offs
+            for aml_dict in new_aml_dicts:
+                aml_obj.create(aml_dict, check=False)
+
+            # Create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:
                 if aml_dict['move_line'].partner_id.id:
                     aml_dict['partner_id'] = aml_dict['move_line'].partner_id.id
@@ -738,9 +738,5 @@ class account_bank_statement_line(models.Model):
                     aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], counterpart_move_line.currency_id)
                 new_aml = aml_obj.create(aml_dict, check=False)
                 (new_aml | counterpart_move_line).reconcile()
-
-            # Complete dicts and create write-offs
-            for aml_dict in new_aml_dicts:
-                aml_obj.create(aml_dict, check=False)
 
         return counterpart_moves
