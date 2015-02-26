@@ -679,6 +679,10 @@ class view(osv.osv):
             if node.text and node.text.strip():
                 term = node.text.strip()
                 trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
+                if trans == term and ('base_model_name' in context):
+                    trans = Translations._get_source(
+                        cr, user, context['base_model_name'], 'view',
+                        context['lang'], term)
                 if trans:
                     node.text = node.text.replace(term, trans)
             if node.tail and node.tail.strip():
