@@ -173,9 +173,8 @@ class sale_order(osv.osv):
         if not template_id:
             return True
 
-        if context is None:
-            context = {}
         if partner:
+            context = dict(context or {})
             context['lang'] = self.pool['res.partner'].browse(cr, uid, partner, context).lang
 
         lines = [(5,)]
