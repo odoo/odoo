@@ -2427,6 +2427,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
                 }
                 if (stage_data && stage_data[0][self.options.states_legend[res[0]]]) {
                     value['state_name'] = stage_data[0][self.options.states_legend[res[0]]];
+                    value['tooltip'] = stage_data[0][self.options.states_legend[res[0]]];
                 }
                 if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
                 else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }

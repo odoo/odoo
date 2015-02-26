@@ -1367,6 +1367,7 @@ instance.web_kanban.KanbanSelection = instance.web_kanban.AbstractField.extend({
             var leg_opt = self.options && self.options.states_legend || null;
             if (leg_opt && leg_opt[res[0]] && self.parent.group.values && self.parent.group.values[leg_opt[res[0]]]) {
                 value['state_name'] = self.parent.group.values[leg_opt[res[0]]];
+                value['tooltip'] = self.parent.group.values[leg_opt[res[0]]];
             }
             if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
             else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }
