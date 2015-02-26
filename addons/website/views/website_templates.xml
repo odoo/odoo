@@ -506,7 +506,8 @@
 <template id="search_bar">
    <div class="input-group input-group select2-bootstrap-prepend js_search_bar">
         <div class="input-group-btn">
-            <input type="hidden" class="js_select2_category form-control" t-att-data-route="category_route"></input>
+            <input type="hidden" class="js_select2_category form-control" t-att-data-id="category and category.id"
+                t-att-data-text="category and category.name" t-att-data-route="category_route"></input>
         </div>
         <input type="text" class="form-control js_search_input" t-att-value="search" placeholder="Search..."></input>
         <span class="input-group-btn">

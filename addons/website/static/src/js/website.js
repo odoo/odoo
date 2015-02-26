@@ -337,7 +337,11 @@
             website.init_kanban(this);
         });
 
-        $('.js_select2_category').select2({
+        var $select2_el = $('.js_select2_category'),
+            default_id = $select2_el.data('id'),
+            default_text = $select2_el.data('text');
+
+        $select2_el.select2({
             allowClear: true,
             placeholder: _t("Select Category"),
             query: function (query) {
@@ -352,6 +356,10 @@
                 });
             }
         });
+        if (default_id && default_text){
+            $select2_el.select2('data', {id: default_id, text: default_text});
+        }
+
         $('.js_search_redirect').on('click', function(){
             var url = $(this).data('url'),
                 $search_bar = $(this).parents('.js_search_bar'),

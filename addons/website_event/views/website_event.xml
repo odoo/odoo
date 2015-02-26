@@ -96,6 +96,7 @@
 <template id="event_search_bar" inherit_id="website_event.index" active="False" customize_show="True" name="Category Search">
     <xpath expr="//div[@id='event_search']" position="inside">
         <t t-call="website.search_bar">
+            <t t-set='category' t-value="current_category"/>
             <t t-set="category_route">/event/get_categories</t>
             <t t-set="redirect_url">/event/category/%s?query=%s</t>
         </t>
