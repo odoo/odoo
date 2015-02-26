@@ -132,17 +132,6 @@ class hr_applicant(osv.Model):
     _description = "Applicant"
     _order = "priority desc, id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
-
-    _track = {
-        'emp_id': {
-            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj.emp_id,
-        },
-        'stage_id': {
-            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
-            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
-            'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence > 1,
-        },
-    }
     _mail_mass_mailing = _('Applicants')
 
     def _get_default_department_id(self, cr, uid, context=None):
@@ -428,6 +417,16 @@ class hr_applicant(osv.Model):
         action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', ids)])
         return action
 
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'emp_id' in init_values and record.emp_id:
+            return 'hr_recruitment.mt_applicant_hired'
+        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:
+            return 'hr_recruitment.mt_applicant_new'
+        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence > 1:
+            return 'hr_recruitment.mt_applicant_stage_changed'
+        return super(hr_applicant, self)._track_subtype(cr, uid, ids, init_values, context=context)
+
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
         applicants = self.browse(cr, SUPERUSER_ID, ids, context=context)
@@ -591,6 +590,12 @@ class hr_job(osv.osv):
     _name = "hr.job"
     _inherits = {'mail.alias': 'alias_id'}
 
+    _track = {
+        'state': {
+            'hr_recruitment.mt_job_new': lambda self, cr, uid, obj, ctx=None: obj.state == 'open'
+        },
+    }
+
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         attachment_obj = self.pool.get('ir.attachment')
@@ -643,9 +648,11 @@ class hr_job(osv.osv):
             'hr.applicant', self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        # TDE note: shouldn't it be in mail_create_nolog ?
-        alias_context = dict(context, alias_model_name='hr.applicant', alias_parent_model_name=self._name)
-        job_id = super(hr_job, self).create(cr, uid, vals, context=alias_context)
+        create_context = dict(context,
+            alias_model_name='hr.applicant',
+            mail_create_nolog=True,
+            alias_parent_model_name=self._name)
+        job_id = super(hr_job, self).create(cr, uid, vals, context=create_context)
         job = self.browse(cr, uid, job_id, context=context)
         self.pool.get('mail.alias').write(cr, uid, [job.alias_id.id], {'alias_parent_thread_id': job_id, "alias_defaults": {'job_id': job_id}}, context)
         return job_id
@@ -682,4 +689,27 @@ class applicant_category(osv.osv):
     _description = "Category of applicant"
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
+    }
+
+
+class hr_employee(osv.Model):
+    _inherit = "hr.employee"
+
+    def _newly_hired_employee(self, cr, uid, ids, field_name, arg, context=None):
+        data = self.pool['hr.applicant'].read_group(cr, uid,
+            [('emp_id', 'in', ids), ('job_id.state', '=', 'recruit')],
+            ['emp_id'], ['emp_id'], context=context)
+        result = dict.fromkeys(ids, False)
+        for d in data:
+            if d['emp_id_count'] >= 1:
+                result[d['emp_id'][0]] = True
+        return result
+
+    def _search_newly_hired_employee(self, cr, uid, obj, name, args, context=None):
+        applicant_ids = self.pool['hr.applicant'].search_read(cr, uid, [('job_id.state', '=', 'recruit')], ['emp_id'], context=context)
+        hired_emp_ids = [applicant['emp_id'][0] for applicant in applicant_ids if applicant['emp_id']]
+        return [('id', 'in', hired_emp_ids)]
+
+    _columns = {
+        'newly_hired_employee': fields.function(_newly_hired_employee, fnct_search=_search_newly_hired_employee, type='boolean', string='Newly hired employees')
     }

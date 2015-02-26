@@ -77,6 +77,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         except ValueError, e:
             # page not found
             if request.website.is_publisher():
+                values.pop('deletable')
                 page = 'website.page_404'
             else:
                 return request.registry['ir.http']._handle_exception(e, 404)
@@ -220,49 +221,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         ``full=True`` returns inherit view's informations of the template ``key``.
         ``bundles=True`` returns also the asset bundles
         """
-        imd = request.registry['ir.model.data']
-        view_model, view_theme_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'theme')
-
-        user = request.registry['res.users']\
-            .browse(request.cr, request.uid, request.uid, request.context)
-        user_groups = set(user.groups_id)
-        views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, key, bundles=bundles, context=dict(request.context or {}, active_test=False))
-        done = set()
-        result = []
-        for v in views:
-            if not user_groups.issuperset(v.groups_id):
-                continue
-            if full or (v.customize_show and v.inherit_id.id != view_theme_id):
-                if v.inherit_id not in done:
-                    result.append({
-                        'name': v.inherit_id.name,
-                        'id': v.id,
-                        'key': v.key,
-                        'inherit_id': v.inherit_id.id,
-                        'header': True,
-                        'active': False
-                    })
-                    done.add(v.inherit_id)
-                result.append({
-                    'name': v.name,
-                    'id': v.id,
-                    'key': v.key,
-                    'inherit_id': v.inherit_id.id,
-                    'header': False,
-                    'active': v.active,
-                })
-        return result
+        return request.registry["ir.ui.view"].customize_template_get(
+            request.cr, request.uid, key, full=full, bundles=bundles,
+            context=request.context)
 
     @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
-        views = self.customize_template_get(xml_id, full=True)
-        views_ids = [view.get('id') for view in views if view.get('active')]
-        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
-        irt = request.registry.get('ir.translation')
-        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value','state','gengo_translation'], context=request.context)
+        return request.registry["ir.ui.view"].get_view_translations(
+            request.cr, request.uid, xml_id, lang=lang, context=request.context)
 
     @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
@@ -537,3 +504,23 @@ class Website(openerp.addons.web.controllers.main.Home):
         if res:
             return res
         return request.redirect('/')
+
+    #------------------------------------------------------
+    # Backend html field
+    #------------------------------------------------------
+    @http.route('/website/field/html', type='http', auth="public", website=True)
+    def FieldTextHtml(self, model=None, res_id=None, field=None, callback=None, **kwargs):
+        record = None
+        if model and res_id:
+            res_id = int(res_id)
+            record = request.registry[model].browse(request.cr, request.uid, res_id, request.context)
+
+        datarecord = json.loads(kwargs['datarecord'])
+        kwargs.update({
+            'content': record and getattr(record, field) or "",
+            'model': model,
+            'res_id': res_id,
+            'field': field,
+            'datarecord': datarecord
+        })
+        return request.website.render(kwargs.get("template") or "website.FieldTextHtml", kwargs)

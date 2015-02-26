@@ -6,8 +6,6 @@ as well as render a few fields differently.
 Also, adds methods to convert values back to openerp models.
 """
 
-
-from openerp.addons.base.ir.ir_qweb import QWebContext
 from openerp import models
 
 
@@ -17,11 +15,6 @@ class QWeb(models.AbstractModel):
     _inherit = 'website.qweb'
 
     def render(self, cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None):
-        if qwebcontext is None:
-            qwebcontext = {}
-
-        if not isinstance(qwebcontext, QWebContext):
-            qwebcontext = QWebContext(cr, uid, qwebcontext, loader=loader, context=context)
         if context is None:
             context = {}
         website_id = context.get('website_id')
@@ -46,12 +39,4 @@ class QWeb(models.AbstractModel):
                     id_or_xml_id = self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), ('version_id', '=', False), '|', ('website_id', '=', website_id), ('website_id', '=', False)], order='website_id', limit=1, context=context)[0]
             else:
                 id_or_xml_id = self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), '|', ('website_id', '=', website_id), ('website_id', '=', False), ('version_id', '=', False)], order='website_id', limit=1, context=context)[0]
-
-        qwebcontext['__template__'] = id_or_xml_id
-        stack = qwebcontext.get('__stack__', [])
-        if stack:
-            qwebcontext['__caller__'] = stack[-1]
-        stack.append(id_or_xml_id)
-        qwebcontext['__stack__'] = stack
-        qwebcontext['xmlid'] = str(stack[0])
-        return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
+        return super(QWeb, self).render(cr, uid, id_or_xml_id, qwebcontext, loader=loader, context=context)

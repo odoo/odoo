@@ -384,8 +384,8 @@ class account_move_line(models.Model):
         for line in self:
             ret_line = {
                 'id': line.id,
-                'name': line.name if line.name != '/' else line.move_id.name,
-                'ref': line.move_id.ref,
+                'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
+                'ref': line.move_id.ref or '',
                 # For reconciliation between statement transactions and already registered payments (eg. checks)
                 # NB : we don't use the 'reconciled' field because the line we're selecting is not the one that gets reconciled
                 'already_paid': line.account_id.internal_type == 'liquidity',

@@ -35,7 +35,6 @@ professional emails and reuse templates in a few clicks.
         'mail',
         'marketing',
         'web_kanban_gauge',
-        'web_kanban_sparkline',
         'website_mail',
         'website_links',
         'utm',

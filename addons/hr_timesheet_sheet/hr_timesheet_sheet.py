@@ -37,13 +37,6 @@ class hr_timesheet_sheet(osv.osv):
     _order = "id desc"
     _description = "Timesheet"
 
-    _track = {
-        'state': {
-            'hr_timesheet_sheet.mt_timesheet_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirm',
-            'hr_timesheet_sheet.mt_timesheet_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
-        },
-    }
-
     def _total(self, cr, uid, ids, name, args, context=None):
         """ Compute the attendances, analytic lines timesheets and differences between them
             for all the days of a timesheet and the current day
@@ -280,6 +273,14 @@ class hr_timesheet_sheet(osv.osv):
     # OpenChatter methods and notifications
     # ------------------------------------------------
 
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'confirm':
+            return 'hr_timesheet_sheet.mt_timesheet_confirmed'
+        elif 'state' in init_values and record.state == 'done':
+            return 'hr_timesheet_sheet.mt_timesheet_approved'
+        return super(hr_timesheet_sheet, self)._track_subtype(cr, uid, ids, init_values, context=context)
+
     def _needaction_domain_get(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
         empids = emp_obj.search(cr, uid, [('parent_id.user_id', '=', uid)], context=context)
@@ -327,7 +328,8 @@ class hr_timesheet_line(osv.osv):
         for ts_line in self.browse(cursor, user, ids, context=context):
             sheet_ids = sheet_obj.search(cursor, user,
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
-                 ('employee_id.user_id', '=', ts_line.user_id.id)],
+                 ('employee_id.user_id', '=', ts_line.user_id.id),
+                 ('state', 'in', ['draft', 'new'])],
                 context=context)
             if sheet_ids:
             # [0] because only one sheet possible for an employee between 2 dates
@@ -366,17 +368,11 @@ class hr_timesheet_line(osv.osv):
             ),
     }
 
-    def _check_sheet_state(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        for timesheet_line in self.browse(cr, uid, ids, context=context):
-            if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
-                return False
-        return True
-
-    _constraints = [
-        (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !', ['state']),
-    ]
+    def write(self, cr, uid, ids, values, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        self._check(cr, uid, ids)
+        return super(hr_timesheet_line, self).write(cr, uid, ids, values, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         if isinstance(ids, (int, long)):

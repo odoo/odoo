@@ -35,14 +35,6 @@ class account_invoice(models.Model):
     _inherit = ['mail.thread']
     _description = "Invoice"
     _order = "number desc, id desc"
-    _track = {
-        'type': {},
-        'state': {
-            'account.mt_invoice_paid': lambda self, cr, uid, obj, ctx=None: obj.state == 'paid' and obj.type in ('out_invoice', 'out_refund'),
-            'account.mt_invoice_validated': lambda self, cr, uid, obj, ctx=None: obj.state == 'open' and obj.type in ('out_invoice', 'out_refund'),
-            'account.mt_invoice_created': lambda self, cr, uid, obj, ctx=None: obj.state == 'draft' and obj.type in ('out_invoice', 'out_refund'),
-        },
-    }
 
     @api.one
     @api.depends('invoice_line.price_subtotal', 'tax_line.amount', 'currency_id', 'company_id')
@@ -635,9 +627,6 @@ class account_invoice(models.Model):
                 account_invoice_tax.create(tax)
 
         # dummy write on self to trigger recomputations
-        ctx = dict(self._context)  # TODO : why lang in context ?
-        if self[0].partner_id.lang:
-            ctx['lang'] = self[0].partner_id.lang
         return self.with_context(ctx).write({'invoice_line': []})
 
     @api.multi
@@ -1045,6 +1034,7 @@ class account_invoice(models.Model):
         values['date_invoice'] = date_invoice or fields.Date.context_today(invoice)
         values['state'] = 'draft'
         values['number'] = False
+        values['origin'] = invoice.number
 
         if date:
             values['date'] = date
@@ -1090,6 +1080,18 @@ class account_invoice(models.Model):
         recs = self.browse(cr, uid, ids, context)
         return recs.pay_and_reconcile(pay_amount, pay_account_id, date, pay_journal_id,
                     writeoff_acc_id)
+
+
+    @api.multi
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'state' in init_values and self.state == 'paid' and self.type in ('out_invoice', 'out_refund'):
+            return 'account.mt_invoice_paid'
+        elif 'state' in init_values and self.state == 'open' and self.type in ('out_invoice', 'out_refund'):
+            return 'account.mt_invoice_validated'
+        elif 'state' in init_values and self.state == 'draft' and self.type in ('out_invoice', 'out_refund'):
+            return 'account.mt_invoice_created'
+        return super(account_invoice, self)._track_subtype(init_values)
 
 
 class account_invoice_line(models.Model):

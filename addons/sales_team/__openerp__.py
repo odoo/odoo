@@ -29,7 +29,7 @@ Using this application you can manage Sales Team  with CRM and/or Sales
 =======================================================================
  """,
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['base','mail','web_kanban_sparkline',],
+    'depends': ['base','mail'],
     'data': ['security/sales_team_security.xml',
              'security/ir.model.access.csv',
              'res_config_view.xml',

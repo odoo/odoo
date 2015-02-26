@@ -344,7 +344,7 @@
                 if(!m.from_id){
                     m.from_id = [false, get_anonymous_name()];
                 }
-                m.create_date = moment.utc(m.create_date).format('YYYY-MM-DD HH:mm:ss');
+                m.create_date = moment(openerp.str_to_datetime(m.create_date)).format('YYYY-MM-DD HH:mm:ss');
                 return m;
             });
            	this.set("messages", _.sortBy(this.get("messages").concat(messages), function(m){ return m.id; }));

@@ -199,8 +199,6 @@ class BlogPost(osv.Model):
 
         return content
 
-        if isinstance(ids, (int, long)):
-            ids = [ids]
     def _check_for_publication(self, cr, uid, ids, vals, context=None):
         if vals.get('website_published'):
             base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
@@ -236,7 +234,6 @@ class BlogPost(osv.Model):
         return result
 
 
-
 class Website(osv.Model):
     _inherit = "website"
 
@@ -258,7 +255,7 @@ class Website(osv.Model):
             dep[page_key] = []
         for p in post_obj.browse(cr, uid, posts, context=context):
             dep[page_key].append({
-                'text': _('Blog Post <b>%s</b> probably has a link to this page !' % p.name),
+                'text': _('Blog Post <b>%s</b> seems to have a link to this page !' % p.name),
                 'link': p.website_url
             })
 

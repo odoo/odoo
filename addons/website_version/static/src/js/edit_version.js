@@ -12,29 +12,33 @@
             var self = this;
             this.$el.on('click', '#save_as_new_version', function() {
                 
-                website.prompt({
-                    id: "editor_new_version",
-                    window_title: _t("New version"),
-                    input: "Version name" ,
-                    default :(moment().format('L')),
-                }).then(function (name) {
-                    var context = website.get_context();
-                    openerp.jsonRpc( '/website_version/create_version', 'call', { 'name': name, 'version_id': 0 }).then(function (result) {
-                        $('html').data('version_id', result);
-                        
-                        var wizard = $(openerp.qweb.render("website_version.message",{message:_.str.sprintf("You are actually working on %s version.", name)}));
-                        wizard.appendTo($('body')).modal({"keyboard" :true});
-                        wizard.on('click','.o_confirm', function(){
-                            self.save();
+                var wizardA = $(openerp.qweb.render("website_version.new_version",{'default_name': moment().format('L')}));
+                wizardA.appendTo($('body')).modal({"keyboard" :true});
+                wizardA.on('click','.o_create', function(){
+                    wizardA.find('.o_message').remove();
+                    var version_name = wizardA.find('.o_version_name').val();
+                    if(version_name.length == 0){
+                        wizardA.find(".o_version_name").after("<p class='o_message' style='color : red'> *"+_t("This field is required")+"</p>");
+                    }
+                    else{
+                        wizardA.modal("hide");
+                        openerp.jsonRpc( '/website_version/create_version', 'call', { 'name': version_name, 'version_id': 0}).then(function (result) {
+                            $('html').data('version_id', result);
+                            var wizard = $(openerp.qweb.render("website_version.dialogue",{message:_.str.sprintf("You are now working on version: %s.", version_name),
+                                                                                       dialogue:_.str.sprintf("If you edit this page or others, all changes will be recorded in the version. It will not be visible by visitors until you publish the version.")}));
+                            wizard.appendTo($('body')).modal({"keyboard" :true});
+                            wizard.on('click','.o_confirm', function(){
+                                self.save();
+                            });
+                            wizard.on('hidden.bs.modal', function () {$(this).remove();});
+                        }).fail(function(){
+                            var wizard = $(openerp.qweb.render("website_version.message",{message:_t("This name already exists.")}));
+                            wizard.appendTo($('body')).modal({"keyboard" :true});
+                            wizard.on('hidden.bs.modal', function () {$(this).remove();});
                         });
-                        wizard.on('hidden.bs.modal', function () {$(this).remove();});
-                    }).fail(function(){
-                        var wizard = $(openerp.qweb.render("website_version.message",{message:_t("This name already exists.")}));
-                        wizard.appendTo($('body')).modal({"keyboard" :true});
-                        wizard.on('hidden.bs.modal', function () {$(this).remove();});
-                    });
-
+                    }
                 });
+                wizardA.on('hidden.bs.modal', function () {$(this).remove();});
             
             });
             this.$el.on('click', '#save_and_publish', function() {
@@ -45,7 +49,7 @@
                 }
                 else
                 {
-                    var wizard = $(openerp.qweb.render("website_version.delete_message",{message:_t("Are you sure you want to publish your modifications.")}));
+                    var wizard = $(openerp.qweb.render("website_version.publish",{message:_t("Are you sure you want to publish your modifications.")}));
                     wizard.appendTo($('body')).modal({"keyboard" :true});
                     wizard.on('click','.o_confirm', function(){
                         self.save();

@@ -42,7 +42,19 @@ You can manage:
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'depends': ['base_setup', 'mail', 'resource', 'board', 'web_tip'],
+    'images': [
+        'images/hr_department.jpeg',
+        'images/hr_employee.jpeg',
+        'images/hr_job_position.jpeg',
+        'static/src/img/default_image.png',
+    ],
+    'depends': [
+        'base_setup',
+        'mail',
+        'resource',
+        'board',
+        'web_kanban',
+    ],
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
@@ -64,5 +76,5 @@ You can manage:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'qweb': [ 'static/src/xml/suggestions.xml' ],
+    'qweb': ['static/src/xml/suggestions.xml'],
 }
