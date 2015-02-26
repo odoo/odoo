@@ -75,6 +75,7 @@ var Tour = {
     timer: null,
     testtimer: null,
     currentTimer: null,
+    retry: false,
     register: function (tour) {
         if (tour.mode !== "test") tour.mode = "tutorial";
         Tour.tours[tour.id] = tour;
@@ -463,7 +464,7 @@ var Tour = {
 
             clearTimeout(Tour.timer);
             if (Tour.check(next)) {
-
+                Tour.retry = false;
                 clearTimeout(Tour.currentTimer);
                 // use an other timeout for cke dom loading
                 Tour.saveState(state.id, state.mode, state.step.id, 0);
@@ -500,7 +501,16 @@ var Tour = {
 
             }
             
-            Tour.error(next, "Can't reach the next step");
+            if (Tour.retry){
+                console.log('Retry');
+                Tour.error(next, "Can't reach the next step");
+            }
+            else{
+                Tour.retry = true;
+                Tour.log("Tour '"+state.id+"' Retry the current step.");
+                Tour.autoNextStep(state.tour, state.step);
+                Tour.waitNextStep();
+            }
             return;
 
         }
