@@ -493,16 +493,12 @@ class account_move(models.Model):
     @api.multi
     def _post_validate(self):
         for move in self:
-            amount = 0
             for line in move.line_id:
-                amount += line.debit - line.credit
                 if not move.company_id.id == line.account_id.company_id.id:
                     raise UserError(_("Cannot create moves for different companies."))
                 if line.account_id.currency_id and line.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
                         raise UserError(_("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
-            if abs(amount) > 10 ** -4:
-                raise UserError(_('You cannot validate a non-balanced entry.'))
         return True
 
     @api.model
