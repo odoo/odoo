@@ -1,6 +1,8 @@
 // Phantomjs odoo helper
 // jshint evil: true, loopfunc: true
 
+var system = require('system');
+
 function waitFor (condition, callback, timeout, timeoutMessageCallback) {
     timeout = timeout || 10000;
     var start = new Date();
@@ -19,7 +21,7 @@ function waitFor (condition, callback, timeout, timeoutMessageCallback) {
 
 function PhantomTest() {
     var self = this;
-    this.options = JSON.parse(phantom.args[phantom.args.length-1]);
+    this.options = JSON.parse(system.args[system.args.length-1]);
     this.inject = this.options.inject || [];
     this.timeout = this.options.timeout ? Math.round(parseFloat(this.options.timeout)*1000 - 5000) : 10000;
     this.origin = 'http://localhost';
@@ -143,7 +145,7 @@ function PhantomTest() {
 }
 
 // js mode or jsfile mode
-if(phantom.args.length === 1) {
+if(system.args.length === 2) {
     pt = new PhantomTest();
     pt.run(pt.options.url_path, pt.options.code, pt.options.ready);
 }

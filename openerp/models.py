@@ -2907,6 +2907,7 @@ class BaseModel(object):
         cls._inherit_fields = struct = {}
         for parent_model, parent_field in cls._inherits.iteritems():
             parent = cls.pool[parent_model]
+            parent._inherits_reload()
             for name, column in parent._columns.iteritems():
                 struct[name] = (parent_model, parent_field, column, parent_model)
             for name, source in parent._inherit_fields.iteritems():

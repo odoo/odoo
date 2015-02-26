@@ -2530,6 +2530,7 @@ class stock_move(osv.osv):
             'split_from': move.id,
             'procurement_id': move.procurement_id.id,
             'move_dest_id': move.move_dest_id.id,
+            'origin_returned_move_id': move.origin_returned_move_id.id,
         }
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']

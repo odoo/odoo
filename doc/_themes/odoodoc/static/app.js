@@ -106,8 +106,10 @@ $(function () {
     // programming language switcher
     function findSheet(pattern, fromSheet) {
         if (fromSheet) {
-            for(var i=0; i<fromSheet.cssRules.length; ++i) {
-                var rule = fromSheet.cssRules[i];
+            // cssRules may be `null` in iOS safari (?)
+            var rules = fromSheet.cssRules || [];
+            for(var i=0; i<rules.length; ++i) {
+                var rule = rules[i];
                 if (rule.type !== CSSRule.IMPORT_RULE) { continue; }
                 if (pattern.test(rule.href)) {
                     return rule.styleSheet;
