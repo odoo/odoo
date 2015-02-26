@@ -256,6 +256,14 @@ class hr_timesheet_sheet(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a timesheet which is already confirmed.'))
             elif sheet['total_attendance'] <> 0.00:
                 raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a timesheet which have attendance entries.'))
+
+        toremove = []
+        analytic_timesheet = self.pool.get('hr.analytic.timesheet')
+        for sheet in self.browse(cr, uid, ids, context=context):
+            for timesheet in sheet.timesheet_ids:
+                toremove.append(timesheet.id)
+        analytic_timesheet.unlink(cr, uid, toremove, context=context)
+
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
