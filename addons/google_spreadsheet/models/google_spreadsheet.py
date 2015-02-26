@@ -1,47 +1,30 @@
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2012 OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
 
 import cgi
-import simplejson
 import logging
-from lxml import etree
 import re
-import werkzeug.urls
+import simplejson
 import urllib2
+import werkzeug
+from lxml import etree
 
-from openerp.osv import osv
 from openerp.addons.google_account import TIMEOUT
+from openerp import api, models
 
 _logger = logging.getLogger(__name__)
 
-class config(osv.osv):
+
+class Config(models.Model):
     _inherit = 'google.drive.config'
 
     def get_google_scope(self):
-        scope = super(config, self).get_google_scope()
+        scope = super(Config, self).get_google_scope()
         return '%s https://spreadsheets.google.com/feeds' % scope
 
-    def write_config_formula(self, cr, uid, attachment_id, spreadsheet_key, model, domain, groupbys, view_id, context=None):
-        access_token = self.get_access_token(cr, uid, scope='https://spreadsheets.google.com/feeds', context=context)
+    def write_config_formula(self, attachment_id, spreadsheet_key, model, domain, groupbys, view_id):
+        access_token = self.get_access_token(scope='https://spreadsheets.google.com/feeds')
 
-        fields = self.pool.get(model).fields_view_get(cr, uid, view_id=view_id, view_type='tree')
+        fields = self.env[model].fields_view_get(view_id=view_id, view_type='tree')
         doc = etree.XML(fields.get('arch'))
         display_fields = []
         for node in doc.xpath("//field"):
@@ -56,11 +39,10 @@ class config(osv.osv):
             formula = '=oe_read_group("%s";"%s";"%s";"%s")' % (model, fields, groupbys, domain)
         else:
             formula = '=oe_browse("%s";"%s";"%s")' % (model, fields, domain)
-        url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        dbname = cr.dbname
-        user = self.pool['res.users'].read(cr, uid, [uid], ['login', 'password'], context=context)[0]
-        username = user['login']
-        password = user['password']
+        url = self.env['ir.config_parameter'].get_param('web.base.url')
+        dbname = self.env.cr.dbname
+        username = self.env.user.login
+        password = self.env.user.password
         if not password:
             config_formula = '=oe_settings("%s";"%s")' % (url, dbname)
         else:
@@ -100,21 +82,21 @@ class config(osv.osv):
         formula: %s
         ''' % formula
         if attachment_id:
-            self.pool['ir.attachment'].write(cr, uid, attachment_id, {'description': description}, context=context)
+            self.env['ir.attachment'].browse(attachment_id).write({'description': description})
         return True
 
-    def set_spreadsheet(self, cr, uid, model, domain, groupbys, view_id, context=None):
+    @api.model
+    def set_spreadsheet(self, model, domain, groupbys, view_id):
         try:
-            config_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'google_spreadsheet', 'google_spreadsheet_template')[1]
+            config = self.env.ref('google_spreadsheet.google_spreadsheet_template')
         except ValueError:
             raise
-        config = self.browse(cr, uid, config_id, context=context)
         title = 'Spreadsheet %s' % model
-        res = self.copy_doc(cr, uid, False, config.google_drive_resource_id, title, model, context=context)
+        res = self._model.copy_doc(self._cr, self._uid, False, config.google_drive_resource_id, title, model, context=self._context)
 
         mo = re.search("(key=|/d/)([A-Za-z0-9-_]+)", res['url'])
         if mo:
             key = mo.group(2)
 
-        self.write_config_formula(cr, uid, res.get('id'), key, model, domain, groupbys, view_id, context=context)
+        self.write_config_formula(res.get('id'), key, model, domain, groupbys, view_id)
         return res
