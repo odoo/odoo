@@ -686,10 +686,10 @@ class account_bank_statement_line(models.Model):
             # Create the move line for the statement line, using the amount not already reconciled
             amount_to_reconcile = 0
             for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
-                amount_to_reconcile = amount_to_reconcile + aml_dict['credit'] - aml_dict['debit']
+                amount_to_reconcile += aml_dict['credit'] - aml_dict['debit']
             if self.currency_id:
                 st_line_amount_currency = amount_to_reconcile
-                st_line_amount = st_line_amount * self.amount_currency / st_line_amount_currency
+                st_line_amount = self.amount * self.amount_currency / amount_to_reconcile
             else:
                 st_line_amount_currency = False
                 st_line_amount = amount_to_reconcile
