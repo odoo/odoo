@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+        <record model="ir.ui.view" id="coupon_program_form_view">
+            <field name="name">Sale Coupon Program</field>
+            <field name="model">sale.couponprogram</field>
+            <field name="arch" type="xml">
+              <form>
+                    <group>
+                        <field name="program_name"/>
+                        <field name="program_type"/>
+                    </group>
+              </form>
+            </field>
+        </record>
+
+        <record id="action_sale_coupon_configuration" model="ir.actions.act_window">
+            <field name="name">Sale Coupon Program</field>
+            <field name="res_model">sale.couponprogram</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create a new type of coupon.
+                </p>
+                <p>
+                    Use coupon to allow your customer to buy a service and subscribe to this service later from your shop.
+                </p>
+            </field>
+        </record>
+        <menuitem id="base.menu_sales_config" parent="base.menu_base_config" sequence="1" name="Sales"/>
+        <menuitem action="action_sale_coupon_configuration" id="base.menu_coupon_type_config" parent="base.menu_sales_config"/>
+
+  </data>
+</openerp>
