@@ -627,7 +627,8 @@ class configmanager(object):
         if not os.path.exists(d):
             os.makedirs(d, 0700)
         else:
-            os.chmod(d, 0700)
+            assert os.access(d, os.W_OK), \
+                "%s: directory is not writable" % d
         return d
 
     @property
@@ -636,7 +637,8 @@ class configmanager(object):
         if not os.path.exists(d):
             os.makedirs(d, 0700)
         else:
-            os.chmod(d, 0700)
+            assert os.access(d, os.W_OK), \
+                "%s: directory is not writable" % d
         return d
 
     def filestore(self, dbname):

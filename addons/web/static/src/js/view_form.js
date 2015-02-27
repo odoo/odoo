@@ -2439,7 +2439,6 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = this.view.datarecord.id;
         var dd_fetched = this.prepare_dropdown_selection();;
         return $.when(dd_fetched).then(function (states) {
             self.states = states;
@@ -2460,7 +2459,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
                 write_values[self.name] = value;
                 return this.view.dataset._model.call(
                     'write', [
-                        [self.record_id],
+                        [this.view.datarecord.id],
                         write_values,
                         self.view.dataset.get_context()
                     ]).done(self.reload_record.bind(self));
@@ -2498,7 +2497,6 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = this.view.datarecord.id;
         this.priorities = this.prepare_priority();
         this.$el.html(QWeb.render("Priority", {'widget': this}));
         if (!this.get('readonly')){
@@ -2518,7 +2516,7 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
                 write_values[self.name] = value;
                 return this.view.dataset._model.call(
                     'write', [
-                        [self.record_id],
+                        [this.view.datarecord.id],
                         write_values,
                         self.view.dataset.get_context()
                     ]).done(self.reload_record.bind(self));
