@@ -124,8 +124,10 @@ daemon and automatically start it.
 .. danger:: to print PDF reports, you must install wkhtmltopdf_ yourself:
             the version of wkhtmltopdf_ available in debian repositories does
             not support headers and footers so it can not be installed
-            automatically. Use the version available on
-            `the wkhtmltopdf download page`_.
+            automatically. The recommended version is 0.12.1 and is available on
+            `the wkhtmltopdf download page`_, in the archive section. As there
+            is no official release for Debian Jessie, you can find ours on
+            http://nightly.odoo.com/extra/.
 
 Configuration
 '''''''''''''
