@@ -93,11 +93,27 @@ class product_product(osv.osv):
 
         operator = context.get('compute_child', True) and 'child_of' or 'in'
         domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
-        return (
-            domain + [('location_id', operator, location_ids)],
-            domain + ['&', ('location_dest_id', operator, location_ids), '!', ('location_id', operator, location_ids)],
-            domain + ['&', ('location_id', operator, location_ids), '!', ('location_dest_id', operator, location_ids)]
-        )
+        if operator == "child_of":
+            loc_domain = []
+            dest_loc_domain = []
+            for loc in location_obj.browse(cr, uid, location_ids, context=context):
+                if loc_domain:
+                    loc_domain = ['|'] + loc_domain  + ['&', ('location_id.parent_left', '>=', loc.parent_left), ('location_id.parent_left', '<', loc.parent_right)]
+                    dest_loc_domain = ['|'] + dest_loc_domain + ['&', ('location_dest_id.parent_left', '>=', loc.parent_left), ('location_dest_id.parent_left', '<', loc.parent_right)]
+                else:
+                    loc_domain += ['&', ('location_id.parent_left', '>=', loc.parent_left), ('location_id.parent_left', '<', loc.parent_right)]
+                    dest_loc_domain += ['&', ('location_dest_id.parent_left', '>=', loc.parent_left), ('location_dest_id.parent_left', '<', loc.parent_right)]
+            return (
+                domain + loc_domain,
+                domain + ['&'] + dest_loc_domain + ['!'] + loc_domain,
+                domain + ['&'] + loc_domain + ['!'] + dest_loc_domain
+            )
+        else:
+            return (
+                domain + [('location_id', operator, location_ids)],
+                domain + ['&', ('location_dest_id', operator, location_ids), '!', ('location_id', operator, location_ids)],
+                domain + ['&', ('location_id', operator, location_ids), '!', ('location_dest_id', operator, location_ids)]
+            )
 
     def _get_domain_dates(self, cr, uid, ids, context):
         from_date = context.get('from_date', False)
@@ -114,7 +130,8 @@ class product_product(osv.osv):
         field_names = field_names or []
 
         domain_products = [('product_id', 'in', ids)]
-        domain_quant, domain_move_in, domain_move_out = self._get_domain_locations(cr, uid, ids, context=context)
+        domain_quant, domain_move_in, domain_move_out = [], [], []
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations(cr, uid, ids, context=context)
         domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
         domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
         domain_quant += domain_products
@@ -128,9 +145,13 @@ class product_product(osv.osv):
             moves_in = []
             moves_out = []
         else:
+            domain_move_in += domain_move_in_loc
+            domain_move_out += domain_move_out_loc
             moves_in = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
             moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
 
+        domain_quant += domain_quant_loc
+        print domain_quant
         quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
         quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
 
