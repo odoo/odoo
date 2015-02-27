@@ -118,7 +118,6 @@ class stock_picking(osv.osv):
         }
 
     def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
-        invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoice_ids = super(stock_picking, self)._invoice_create_line(cr, uid, moves, journal_id, inv_type=inv_type, context=context)
         delivey_invoices = {}
@@ -131,7 +130,6 @@ class stock_picking(osv.osv):
                 invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
                 if invoice_line:
                     invoice_line_obj.create(cr, uid, invoice_line)
-                    invoice_obj.button_compute(cr, uid, [invoice.id], context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoice_ids
 
     def _get_default_uom(self, cr, uid, context=None):
