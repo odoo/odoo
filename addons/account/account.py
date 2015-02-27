@@ -509,6 +509,8 @@ class account_move(models.Model):
 
     @api.multi
     def assert_balanced(self):
+        if not self.ids:
+            return True
         self._cr.execute("""\
             SELECT      move_id
             FROM        account_move_line
