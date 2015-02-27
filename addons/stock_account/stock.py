@@ -72,10 +72,6 @@ class procurement_order(osv.osv):
         res.update({'invoice_state': procurement.rule_id.invoice_state or procurement.invoice_state or 'none'})
         return res
 
-    _defaults = {
-        'invoice_state': ''
-        }
-
 
 #----------------------------------------------------------
 # Move
