@@ -511,10 +511,8 @@ class account_bank_statement_line(models.Model):
             return False
 
         # Now reconcile
-
         counterpart_aml_dicts = []
         payment_aml_rec = self.env['account.move.line']
-
         for aml in match_recs:
             if aml.account_id.internal_type == 'liquidity':
                 payment_aml_rec = (payment_aml_rec | aml)
@@ -739,4 +737,5 @@ class account_bank_statement_line(models.Model):
                 new_aml = aml_obj.with_context(check_move_validity=False).create(aml_dict)
                 (new_aml | counterpart_move_line).reconcile()
 
+        counterpart_moves.assert_balanced()
         return counterpart_moves

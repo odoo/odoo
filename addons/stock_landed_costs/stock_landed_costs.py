@@ -114,6 +114,10 @@ class stock_landed_cost(osv.osv):
         Afterwards, for the goods that are already out of stock, we should create the out moves
         """
         aml_obj = self.pool.get('account.move.line')
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        ctx['check_move_validity'] = False
         aml_obj.create(cr, uid, {
             'name': line.name,
             'move_id': move_id,
@@ -121,7 +125,7 @@ class stock_landed_cost(osv.osv):
             'quantity': line.quantity,
             'debit': line.additional_landed_cost,
             'account_id': debit_account_id
-        }, check=False, context=context)
+        }, context=ctx)
         aml_obj.create(cr, uid, {
             'name': line.name,
             'move_id': move_id,
@@ -129,7 +133,7 @@ class stock_landed_cost(osv.osv):
             'quantity': line.quantity,
             'credit': line.additional_landed_cost,
             'account_id': credit_account_id
-        }, check=False, context=context)
+        }, context=ctx)
         
         #Create account move lines for quants already out of stock
         if qty_out > 0:
@@ -140,7 +144,7 @@ class stock_landed_cost(osv.osv):
                                      'quantity': qty_out,
                                      'credit': line.additional_landed_cost * qty_out / line.quantity,
                                      'account_id': debit_account_id
-                                     }, context=context)
+                                     }, context=ctx)
             aml_obj.create(cr, uid, {
                                      'name': line.name + ": " + str(qty_out) + _(' already out'),
                                      'move_id': move_id,
@@ -148,7 +152,8 @@ class stock_landed_cost(osv.osv):
                                      'quantity': qty_out,
                                      'debit': line.additional_landed_cost * qty_out / line.quantity,
                                      'account_id': already_out_account_id
-                                     }, context=context)
+                                     }, context=ctx)
+        self.pool.get('account.move').assert_balanced(cr, uid, [move_id], context=context)
         return True
 
     def _create_account_move(self, cr, uid, cost, context=None):
