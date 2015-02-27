@@ -36,6 +36,7 @@
                        <img t-att-src="'/web/binary/image?model=' + filters_value.avatar_model + '&amp;field=image_small&amp;id=' + filters_value.value"  class="cal_avatar"/>     
                    </t>
                    <span t-attf-class="color_filter cal_opacity underline_color_#{filters_value.color}" ><t t-esc="filters_value.label" /></span>
+                   <span class="oe_remove_follower oe_e" title="Remove this follower" t-att-data-id="filters_value.value">X</span>
                </t>
            </div>
        </div>
