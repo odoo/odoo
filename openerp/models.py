@@ -49,7 +49,7 @@ import pytz
 import re
 import time
 from collections import defaultdict, MutableMapping
-from inspect import getmembers
+from inspect import getmembers, currentframe
 
 import babel.dates
 import dateutil.relativedelta
@@ -66,6 +66,7 @@ from .osv import fields
 from .osv.query import Query
 from .tools import frozendict, lazy_property, ormcache
 from .tools.config import config
+from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from .tools.safe_eval import safe_eval as eval
 from .tools.translate import _
@@ -5480,7 +5481,9 @@ class BaseModel(object):
         """ Test whether two recordsets are equivalent (up to reordering). """
         if not isinstance(other, BaseModel):
             if other:
-                _logger.warning("Comparing apples and oranges: %s == %s", self, other)
+                filename, lineno = frame_codeinfo(currentframe(), 1)
+                _logger.warning("Comparing apples and oranges: %r == %r (%s:%s)",
+                                self, other, filename, lineno)
             return False
         return self._name == other._name and set(self._ids) == set(other._ids)
 
