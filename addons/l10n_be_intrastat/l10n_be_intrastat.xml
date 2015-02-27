@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Customer Invoice Form -->
+        <record id="l10n_be_intrastat_xml_decl_cust_invoice_view" model="ir.ui.view">
+            <field name="name">l10n_be_intrastat_xml.custinvoice_form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_due']" position="after">
+                    <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
+                </xpath>
+                <xpath expr="//field[@name='move_id']" position="after">
+                    <field name="intrastat_transaction_id"/>
+                    <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
+                    <field name="intrastat_country_id"/>
+                </xpath>
+            </field>
+
+        </record>
+
+        <!-- Transaction Form -->
+        <record model="ir.ui.view" id="intra_view_transaction_form">
+            <field name="name">intra.view.transaction_form</field>
+            <field name="model">l10n_be_intrastat.transaction</field>
+            <field name="arch" type="xml">
+                <form string="Intrastat transaction form">
+                    <group>
+                    <field name="code"/>
+                    <field name="description"/>
+                </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Transaction List -->
+        <record model="ir.ui.view" id="intra_view_transaction_tree">
+            <field name="name">intra.view.transaction_tree</field>
+            <field name="model">l10n_be_intrastat.transaction</field>
+            <field name="arch" type="xml">
+                <tree string="Intrastat transaction types">
+                    <field name="code"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Transport mode Form -->
+        <record model="ir.ui.view" id="intra_view_transport_mode_form">
+            <field name="name">intra.view.transport_mode_form</field>
+            <field name="model">l10n_be_intrastat.transport_mode</field>
+            <field name="arch" type="xml">
+                <form string="Intrastat transportation mode form">
+                    <group>
+                    <field name="code"/>
+                    <field name="name"/>
+                </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Transport mode List -->
+        <record model="ir.ui.view" id="intra_view_transport_mode_tree">
+            <field name="name">intra.view.transport_mode_tree</field>
+            <field name="model">l10n_be_intrastat.transport_mode</field>
+            <field name="arch" type="xml">
+                <tree string="Intrastat transportation modes">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Category Form -->
+        <record id="l10n_be_intrastat_xml_decl_product_category_view" model="ir.ui.view">
+            <field name="name">l10n_be_intrastat_xml.productcategory_form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='parent']" position="inside">
+                    <group string="Intrastat" colspan="2">
+                        <field name="intrastat_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Company -->
+        <record id="l10n_be_intrastat_xml_decl_res_company_form_view" model="ir.ui.view">
+            <field name="name">l10n_be_intrastat_xml.rescompany_form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_registry']" position="after">
+                    <field name="region_id" domain="[('country_id','=',country_id)]"/>
+                    <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
+                    <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Warehouse -->
+        <record id="l10n_be_intrastat_xml_decl_stock_warehouse_form_view" model="ir.ui.view">
+            <field name="name">l10n_be_intrastat_xml.stockwarehouse_form</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="region_id"/>
+                </xpath>
+            </field>
+
+        </record>
+
+        <!-- Supplier Invoice Form -->
+        <record id="l10n_be_intrastat_xml_decl_supp_invoice_view" model="ir.ui.view">
+            <field name="name">l10n_be_intrastat_xml.suppinvoice_form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_term']" position="after">
+                    <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
+                </xpath>
+                <xpath expr="//field[@name='period_id']" position="after">
+                    <field name="intrastat_transaction_id" />
+                    <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
+                    <field name="intrastat_country_id" />
+                </xpath>
+            </field>
+
+        </record>
+    </data>
+</openerp>

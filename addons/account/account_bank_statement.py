@@ -108,7 +108,7 @@ class account_bank_statement(osv.osv):
     def _all_lines_reconciled(self, cr, uid, ids, name, args, context=None):
         res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            res[statement.id] = all([line.journal_entry_id.id for line in statement.line_ids])
+            res[statement.id] = all([line.journal_entry_id.id or line.account_id.id for line in statement.line_ids])
         return res
 
     _order = "date desc, id desc"
@@ -161,7 +161,7 @@ class account_bank_statement(osv.osv):
     }
 
     _defaults = {
-        'name': '/', 
+        'name': '/',
         'date': fields.date.context_today,
         'state': 'draft',
         'journal_id': _default_journal_id,
@@ -242,7 +242,7 @@ class account_bank_statement(osv.osv):
 
     def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, context=None):
         """Compute the args to build the dict of values to create the counter part move line from a
-           statement line by calling the _prepare_move_line_vals. 
+           statement line by calling the _prepare_move_line_vals.
 
            :param browse_record st_line: account.bank.statement.line record to create the move from.
            :param int/long move_id: ID of the account.move to link the move line
@@ -388,7 +388,7 @@ class account_bank_statement(osv.osv):
         for item in self.browse(cr, uid, ids, context=context):
             if item.state != 'draft':
                 raise osv.except_osv(
-                    _('Invalid Action!'), 
+                    _('Invalid Action!'),
                     _('In order to delete a bank statement, you must first cancel it to delete related journal items.')
                 )
             # Explicitly unlink bank statement lines
@@ -419,7 +419,11 @@ class account_bank_statement(osv.osv):
         for statement in self.browse(cr, uid, ids, context=context):
             for st_line in statement.line_ids:
                 if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
-                    self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
+                    # Update the partner informations of the bank account, possibly overriding existing ones
+                    bank_obj = self.pool.get('res.partner.bank')
+                    bank_vals = bank_obj.onchange_partner_id(cr, uid, [st_line.bank_account_id.id], st_line.partner_id.id, context=context)['value']
+                    bank_vals.update({'partner_id': st_line.partner_id.id})
+                    bank_obj.write(cr, uid, [st_line.bank_account_id.id], bank_vals, context=context)
 
 class account_bank_statement_line(osv.osv):
 
@@ -432,7 +436,7 @@ class account_bank_statement_line(osv.osv):
         for item in self.browse(cr, uid, ids, context=context):
             if item.journal_entry_id:
                 raise osv.except_osv(
-                    _('Invalid Action!'), 
+                    _('Invalid Action!'),
                     _('In order to delete a bank statement line, you must first cancel it to delete related journal items.')
                 )
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
@@ -642,8 +646,9 @@ class account_bank_statement_line(osv.osv):
         """
         mv_line_pool = self.pool.get('account.move.line')
         domain = self._domain_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, str=str, additional_domain=additional_domain, context=context)
-        
-        # Get move lines ; in case of a partial reconciliation, only consider one line
+
+        # Get move lines ; in case of a partial reconciliation, only keep one line (the first whose amount is greater than
+        # the residual amount because it is presumably the invoice, which is the relevant item in this situation)
         filtered_lines = []
         reconcile_partial_ids = []
         actual_offset = offset
@@ -652,7 +657,9 @@ class account_bank_statement_line(osv.osv):
             lines = mv_line_pool.browse(cr, uid, line_ids, context=context)
             make_one_more_loop = False
             for line in lines:
-                if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
+                if line.reconcile_partial_id and \
+                        (line.reconcile_partial_id.id in reconcile_partial_ids or \
+                        abs(line.debit - line.credit) < abs(line.amount_residual)):
                     #if we filtered a line because it is partially reconciled with an already selected line, we must do one more loop
                     #in order to get the right number of items in the pager
                     make_one_more_loop = True
@@ -804,6 +811,15 @@ class account_bank_statement_line(osv.osv):
                 prorata_factor = (mv_line_dict['debit'] - mv_line_dict['credit']) / st_line.amount_currency
                 mv_line_dict['amount_currency'] = prorata_factor * st_line.amount
             to_create.append(mv_line_dict)
+        # If the reconciliation is performed in another currency than the company currency, the amounts are converted to get the right debit/credit.
+        # If there is more than 1 debit and 1 credit, this can induce a rounding error, which we put in the foreign exchane gain/loss account.
+        if st_line_currency.id != company_currency.id:
+            diff_amount = bank_st_move_vals['debit'] - bank_st_move_vals['credit'] \
+                + sum(aml['debit'] for aml in to_create) - sum(aml['credit'] for aml in to_create)
+            if not company_currency.is_zero(diff_amount):
+                diff_aml = self.get_currency_rate_line(cr, uid, st_line, diff_amount, move_id, context=context)
+                diff_aml['name'] = _('Rounding error from currency conversion')
+                to_create.append(diff_aml)
         # Create move lines
         move_line_pairs_to_reconcile = []
         for mv_line_dict in to_create:
@@ -825,7 +841,7 @@ class account_bank_statement_line(osv.osv):
     # Unfortunately, that spawns a "no access rights" error ; it shouldn't.
     def _needaction_domain_get(self, cr, uid, context=None):
         user = self.pool.get("res.users").browse(cr, uid, uid)
-        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_id', '=', False)]
+        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_id', '=', False), ('account_id', '=', False)]
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"

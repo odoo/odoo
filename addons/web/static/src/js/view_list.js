@@ -356,7 +356,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         //Sort
         var default_order = this.fields_view.arch.attrs.default_order,
             unsorted = !this.dataset._sort.length;
-        if (unsorted && default_order) {
+        if (unsorted && default_order && !this.grouped) {
             this.dataset.set_sort(default_order.split(','));
         }
 
@@ -2304,8 +2304,12 @@ instance.web.list.Binary = instance.web.list.Column.extend({
     _format: function (row_data, options) {
         var text = _t("Download");
         var value = row_data[this.id].value;
+        if (!value) {
+            return options.value_if_empty || '';
+        }
+
         var download_url;
-        if (value && value.substr(0, 10).indexOf(' ') == -1) {
+        if (value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
             download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});

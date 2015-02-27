@@ -10,7 +10,7 @@
             <field name="model">product.template</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                    <field name="name" string="Product"/>
+                    <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
                     <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                     <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                     <separator/>
@@ -150,9 +150,6 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <field name="name" position="replace">
-                   <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
-                </field>
                 <field name="product_variant_ids" position="replace">
                     <field name="attribute_value_ids"/>
                 </field>
@@ -216,6 +213,7 @@
             <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="domain" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
@@ -253,7 +251,7 @@
                         <p class="oe_grey">
                             <strong>Warning</strong>: adding or deleting attributes
                             will delete and recreate existing variants and lead
-                            to the loss of its eventual customizations.
+                            to the loss of their possible customizations.
                         </p>
                         <field name="attribute_line_ids" widget="one2many_list" context="{'show_attribute': False}">
                             <tree string="Variants" editable="bottom">
@@ -283,6 +281,9 @@
                                 <div class="oe_kanban_details">
                                     <h4>
                                         <a type="open">
+                                             <span t-if="record.default_code.value">
+                                                 [<field name="default_code"/>]
+                                              </span>
                                              <field name="name"/> 
                                         </a>
                                     </h4>

@@ -49,7 +49,9 @@ class MyOption (optparse.Option, object):
         super(MyOption, self).__init__(*opts, **attrs)
 
 
-def check_ssl():
+DEFAULT_LOG_HANDLER = ':INFO'
+
+def _check_ssl():
     try:
         from OpenSSL import SSL
         import socket
@@ -57,8 +59,6 @@ def check_ssl():
         return hasattr(socket, 'ssl') and hasattr(SSL, "Connection")
     except:
         return False
-
-DEFAULT_LOG_HANDLER = [':INFO']
 
 def _get_default_datadir():
     home = os.path.expanduser('~')
@@ -71,6 +71,20 @@ def _get_default_datadir():
             func = lambda **kwarg: "/var/lib/%s" % kwarg['appname'].lower()
     # No "version" kwarg as session and filestore paths are shared against series
     return func(appname=release.product_name, appauthor=release.author)
+
+def _deduplicate_loggers(loggers):
+    """ Avoid saving multiple logging levels for the same loggers to a save
+    file, that just takes space and the list can potentially grow unbounded
+    if for some odd reason people use :option`odoo.py --save`` all the time.
+    """
+    # dict(iterable) -> the last item of iterable for any given key wins,
+    # which is what we want and expect. Output order should not matter as
+    # there are no duplicates within the output sequence
+    return (
+        '{}:{}'.format(logger, level)
+        for logger, level in dict(it.split(':') for it in loggers).iteritems()
+    )
+
 
 class configmanager(object):
     def __init__(self, fname=None):
@@ -101,7 +115,7 @@ class configmanager(object):
 
         self.misc = {}
         self.config_file = fname
-        self.has_ssl = check_ssl()
+        self.has_ssl = _check_ssl()
 
         self._LOGLEVELS = dict([
             (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
@@ -189,7 +203,7 @@ class configmanager(object):
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--logrotate", dest="logrotate", action="store_true", my_default=False, help="enable logfile rotation")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-handler', action="append", default=DEFAULT_LOG_HANDLER, my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+        group.add_option('--log-handler', action="append", default=[], my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
         group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.http.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.request:DEBUG')
         group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.http.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.response:DEBUG')
         group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.http:DEBUG", help='shortcut for --log-handler=openerp.http:DEBUG')
@@ -402,14 +416,14 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db',
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_level', 'log_db',
                 'geoip_database',
         ]
 
         for arg in keys:
             # Copy the command-line argument (except the special case for log_handler, due to
             # action=append requiring a real default, so we cannot use the my_default workaround)
-            if getattr(opt, arg) and getattr(opt, arg) != DEFAULT_LOG_HANDLER:
+            if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
@@ -417,6 +431,7 @@ class configmanager(object):
 
         if isinstance(self.options['log_handler'], basestring):
             self.options['log_handler'] = self.options['log_handler'].split(',')
+        self.options['log_handler'].extend(opt.log_handler)
 
         # if defined but None take the configfile value
         keys = [
@@ -621,6 +636,8 @@ class configmanager(object):
                 continue
             if opt in ('log_level',):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
+            elif opt == 'log_handler':
+                p.set('options', opt, ','.join(_deduplicate_loggers(self.options[opt])))
             else:
                 p.set('options', opt, self.options[opt])
 
@@ -682,6 +699,5 @@ class configmanager(object):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
 config = configmanager()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

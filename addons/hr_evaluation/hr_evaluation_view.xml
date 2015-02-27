@@ -94,7 +94,7 @@
                         <group>
                             <separator string="Action to Perform" colspan="4"/>
                             <field name="action"/>
-                            <field name="survey_id" domain="[('state','=','open')]"/>
+                            <field name="survey_id"/>
                         </group>
                         <group string="Send to Managers">
                             <field name="send_answer_manager"/>
@@ -357,6 +357,7 @@
             <field name="res_model">hr.evaluation.interview</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
+            <field name="domain" eval="False"/> <!-- Force empty -->
             <field name="context">{"search_default_todo":1,"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
             <field name="help" type="html">

@@ -555,12 +555,9 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.do_notify(_t("Backed"), _t("Database backed up successfully"));
             },
             error: function(error){
-               if(error){
-                  self.display_error({
-                        title: _t("Backup Database"),
-                        error: 'AccessDenied'
-                  });
-               }
+                if (error && error[1]) {
+                    self.display_error(error[1][0]);
+                }
             },
             complete: function() {
                 self.unblockUI();
@@ -1175,7 +1172,7 @@ instance.web.Client = instance.web.Widget.extend({
         this.crashmanager =  new instance.web.CrashManager();
         instance.session.on('error', this.crashmanager, this.crashmanager.rpc_error);
         self.notification = new instance.web.Notification(this);
-        self.notification.appendTo(self.$el);
+        self.notification.appendTo(self.$el.find('.openerp'));
         self.loading = new instance.web.Loading(self);
         self.loading.appendTo(self.$('.openerp_webclient_container'));
         self.action_manager = new instance.web.ActionManager(self);
@@ -1224,7 +1221,7 @@ instance.web.WebClient = instance.web.Client.extend({
         $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
         if ($.blockUI) {
             var imgkit = Math.floor(Math.random() * 2 + 1);
-            $.blockUI.defaults.message = '<img src="http://www.amigrave.com/loading-kitten/' + imgkit + '.gif" class="loading-kitten">';
+            $.blockUI.defaults.message = '<img src="/web/static/src/img/k-waiting' + imgkit + '.gif" class="loading-kitten">';
         }
     },
     /**
@@ -1293,7 +1290,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     update_logo: function() {
         var company = this.session.company_id;
-        var img = this.session.url('/web/binary/company_logo' + (company ? '?company=' + company : ''));
+        var img = this.session.url('/web/binary/company_logo' + '?db=' + this.session.db + (company ? '&company=' + company : ''));
         this.$('.oe_logo img').attr('src', '').attr('src', img);
         this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
     },

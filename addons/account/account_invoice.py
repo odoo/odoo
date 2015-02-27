@@ -643,7 +643,7 @@ class account_invoice(models.Model):
             partner = invoice.partner_id
             if partner.lang:
                 ctx['lang'] = partner.lang
-            for taxe in account_invoice_tax.compute(invoice).values():
+            for taxe in account_invoice_tax.compute(invoice.with_context(ctx)).values():
                 account_invoice_tax.create(taxe)
         # dummy write on self to trigger recomputations
         return self.with_context(ctx).write({'invoice_line': []})
@@ -1098,6 +1098,7 @@ class account_invoice(models.Model):
         values['date_invoice'] = date or fields.Date.context_today(invoice)
         values['state'] = 'draft'
         values['number'] = False
+        values['origin'] = invoice.number
 
         if period_id:
             values['period_id'] = period_id

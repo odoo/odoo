@@ -62,13 +62,13 @@
                 content:   _t("Click here to set an image describing your product."),
             },
             {
-                element:   'img[alt=ipad]',
+                element:   '.existing-attachment-cell:eq(4) > img',
                 placement: 'top',
                 title:     _t("Select an Image"),
-                content:   _t("Let's select an ipad image."),
+                content:   _t("Let's select this image."),
             },
             {
-                waitFor:   '.media_selected img[alt=ipad]',
+                waitFor:   '.existing-attachment-cell:eq(4).media_selected > img',
                 element:   '.modal-content button.save',
                 placement: 'top',
                 title:     _t("Save this Image"),
