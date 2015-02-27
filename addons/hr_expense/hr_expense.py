@@ -280,11 +280,9 @@ class hr_expense_expense(osv.osv):
     def move_line_get(self, cr, uid, expense_id, context=None):
         res = []
         tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
         exp = self.browse(cr, uid, expense_id, context=context)
-        company_currency = exp.company_id.currency_id.id
 
         for line in exp.line_ids:
             mres = self.move_line_get_item(cr, uid, line, context)
@@ -310,20 +308,19 @@ class hr_expense_expense(osv.osv):
 
             # Calculate tax lines and adjust base line
             tax_ids = [tax.id for tax in taxes]
-            tax_res = tax_obj.compute_all(cr, uid, tax_ids, line.unit_amount, exp.currency_id.id, line.unit_quantity, line.product_id.id, exp.user_id.partner_id.id)
+            tax_res = tax_obj.browse(cr, uid, tax_ids, context=context).compute_all(line.unit_amount, exp.currency_id, line.unit_quantity, line.product_id, exp.user_id.partner_id)
             res[-1]['price'] = tax_res['total_excluded']
             res[-1]['tax_ids'] = tax_ids
             for tax in tax_res['taxes']:
                 res.append({
                     'type': 'tax',
                     'name': tax['name'],
-                    'price_unit': tax['price_unit'],
+                    'price_unit': tax['amount'],
                     'quantity': 1,
                     'price': tax['amount'],
                     'account_id': tax['account_id'] or mres['account_id'],
                     'tax_line_id': tax['id'],
                 })
-
         return res
 
     def move_line_get_item(self, cr, uid, line, context=None):

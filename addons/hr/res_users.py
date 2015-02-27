@@ -41,10 +41,6 @@ class res_users(osv.Model):
             context = {}
         self.write(cr, uid, user_id, {"display_employees_suggestions": False}, context)
 
-    def _create_welcome_message(self, cr, uid, user, context=None):
-        """Do not welcome new users anymore, welcome new employees instead"""
-        return True
-
     def _message_post_get_eid(self, cr, uid, thread_id, context=None):
         assert thread_id, "res.users does not support posting global messages"
         if context and 'thread_model' in context:

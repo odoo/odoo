@@ -58,19 +58,10 @@ class hr_employee_category(osv.Model):
         'employee_ids': fields.many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', 'Employees'),
     }
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from hr_employee_category where id IN %s', (tuple(ids), ))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
     _constraints = [
-        (_check_recursion, 'Error! You cannot create recursive Categories.', ['parent_id'])
+        (osv.osv._check_recursion, _('Error! You cannot create recursive category.'), ['parent_id'])
     ]
+
 
 class hr_job(osv.Model):
 
@@ -133,7 +124,7 @@ class hr_job(osv.Model):
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
-        
+
     ]
 
     def set_recruit(self, cr, uid, ids, context=None):
@@ -246,52 +237,6 @@ class hr_employee(osv.osv):
         'color': 0,
     }
 
-    def _broadcast_welcome(self, cr, uid, employee_id, context=None):
-        """ Broadcast the welcome message to all users in the employee company. """
-        employee = self.browse(cr, uid, employee_id, context=context)
-        partner_ids = []
-        _model, group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')
-        if employee.user_id:
-            company_id = employee.user_id.company_id.id
-        elif employee.company_id:
-            company_id = employee.company_id.id
-        elif employee.job_id:
-            company_id = employee.job_id.company_id.id
-        elif employee.department_id:
-            company_id = employee.department_id.company_id.id
-        else:
-            company_id = self.pool['res.company']._company_default_get(cr, uid, 'hr.employee', context=context)
-        res_users = self.pool['res.users']
-        user_ids = res_users.search(
-            cr, SUPERUSER_ID, [
-                ('company_id', '=', company_id),
-                ('groups_id', 'in', group_id)
-            ], context=context)
-        partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, SUPERUSER_ID, user_ids, context=context)))
-        self.message_post(
-            cr, uid, [employee_id],
-            body=_('Welcome to %s! Please help him/her take the first steps with Odoo!') % (employee.name),
-            partner_ids=partner_ids,
-            subtype='mail.mt_comment', context=context
-        )
-        return True
-
-    def create(self, cr, uid, data, context=None):
-        context = dict(context or {})
-        if context.get("mail_broadcast"):
-            context['mail_create_nolog'] = True
-
-        if data.get('user_id', False) == SUPERUSER_ID and data.get('name',False) == 'Administrator':
-            user_name = self.pool.get('res.users').browse(cr, uid, data.get('user_id'), context=context).name
-            if data['name'] != user_name:
-                data['name'] = user_name
-
-        employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
-
-        if context.get("mail_broadcast"):
-            self._broadcast_welcome(cr, uid, employee_id, context=context)
-        return employee_id
-
     def unlink(self, cr, uid, ids, context=None):
         resource_ids = []
         for employee in self.browse(cr, uid, ids, context=context):
@@ -357,19 +302,7 @@ class hr_employee(osv.osv):
                 user_field_lst.append(name)
         return user_field_lst
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-        level = 100
-        while len(ids):
-            cr.execute('SELECT DISTINCT parent_id FROM hr_employee WHERE id IN %s AND parent_id!=id',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
-    _constraints = [
-        (_check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
-    ]
+    _constraints = [(osv.osv._check_recursion, _('Error! You cannot create recursive hierarchy of Employee(s).'), ['parent_id']),]
 
 
 class hr_department(osv.osv):
@@ -398,20 +331,8 @@ class hr_department(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
     }
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from hr_department where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
     _constraints = [
-        (_check_recursion, 'Error! You cannot create recursive departments.', ['parent_id'])
+        (osv.osv._check_recursion, _('Error! You cannot create recursive departments.'), ['parent_id'])
     ]
 
     def name_get(self, cr, uid, ids, context=None):

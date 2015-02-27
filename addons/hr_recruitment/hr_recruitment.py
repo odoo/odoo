@@ -117,7 +117,7 @@ class hr_recruitment_degree(osv.osv):
     _name = "hr.recruitment.degree"
     _description = "Degree of Recruitment"
     _columns = {
-        'name': fields.char('Name', required=True, translate=True),
+        'name': fields.char('Degree', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of degrees."),
     }
     _defaults = {
@@ -237,7 +237,7 @@ class hr_applicant(osv.Model):
                         domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
         'last_stage_id': fields.many2one('hr.recruitment.stage', 'Last Stage',
                                          help='Stage of the applicant before being in the current stage. Used for lost cases analysis.'),
-        'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
+        'categ_ids': fields.many2many('hr.applicant.category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible', track_visibility='onchange'),
         'date_closed': fields.datetime('Closed', readonly=True, select=True),
@@ -538,6 +538,16 @@ class hr_applicant(osv.Model):
                 self.pool['mail.compose.message'].send_mail(cr, uid, [compose_id], context=compose_ctx)
         return res
 
+    def _broadcast_welcome(self, cr, uid, employee_id, context=None):
+        """ Broadcast the welcome message to all users in the employee company. """
+        employee = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+        mail_group_action, mail_group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
+        self.pool.get('mail.group').message_post(
+            cr, uid, [mail_group_id],
+            body=_('Welcome to %s! Please help him/her take the first steps with Odoo!') % (employee.name),
+            subtype='mail.mt_comment', context=context)
+        return True
+
     def create_employee_from_applicant(self, cr, uid, ids, context=None):
         """ Create an hr.employee from the hr.applicants """
         if context is None:
@@ -552,8 +562,7 @@ class hr_applicant(osv.Model):
                 address_id = self.pool.get('res.partner').address_get(cr, uid, [applicant.partner_id.id], ['contact'])['contact']
                 contact_name = self.pool.get('res.partner').name_get(cr, uid, [applicant.partner_id.id])[0][1]
             if applicant.job_id and (applicant.partner_name or contact_name):
-                applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
-                create_ctx = dict(context, mail_broadcast=True)
+                applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1}, context=context)
                 emp_id = hr_employee.create(cr, uid, {'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
@@ -561,12 +570,13 @@ class hr_applicant(osv.Model):
                                                      'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
                                                      'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
                                                      'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False,
-                                                     }, context=create_ctx)
+                                                     }, context=context)
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
                 self.pool['hr.job'].message_post(
                     cr, uid, [applicant.job_id.id],
                     body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
                     subtype="hr_recruitment.mt_job_applicant_hired", context=context)
+                self._broadcast_welcome(cr, uid, emp_id, context=context)
             else:
                 raise UserError(_('You must define an Applied Job and a Contact Name for this applicant.'))
 
@@ -685,7 +695,7 @@ class hr_job(osv.osv):
 
 class applicant_category(osv.osv):
     """ Category of applicant """
-    _name = "hr.applicant_category"
+    _name = "hr.applicant.category"
     _description = "Category of applicant"
     _columns = {
         'name': fields.char('Name', required=True, translate=True),

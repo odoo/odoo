@@ -39,5 +39,5 @@ Based on invoices.
         'l10n_be_intrastat.xml',
         'wizard/l10n_be_intrastat_xml_view.xml',
     ],
-    'installable': True,
+    'installable': False,
 }
