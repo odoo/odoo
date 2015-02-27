@@ -93,16 +93,18 @@ class product_product(osv.osv):
 
         operator = context.get('compute_child', True) and 'child_of' or 'in'
         domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
-        if operator == "child_of":
+        locations = location_obj.browse(cr, uid, location_ids, context=context)
+        if operator == "child_of" and locations and locations[0].parent_left != 0:
             loc_domain = []
             dest_loc_domain = []
-            for loc in location_obj.browse(cr, uid, location_ids, context=context):
+            for loc in locations:
                 if loc_domain:
                     loc_domain = ['|'] + loc_domain  + ['&', ('location_id.parent_left', '>=', loc.parent_left), ('location_id.parent_left', '<', loc.parent_right)]
                     dest_loc_domain = ['|'] + dest_loc_domain + ['&', ('location_dest_id.parent_left', '>=', loc.parent_left), ('location_dest_id.parent_left', '<', loc.parent_right)]
                 else:
                     loc_domain += ['&', ('location_id.parent_left', '>=', loc.parent_left), ('location_id.parent_left', '<', loc.parent_right)]
                     dest_loc_domain += ['&', ('location_dest_id.parent_left', '>=', loc.parent_left), ('location_dest_id.parent_left', '<', loc.parent_right)]
+
             return (
                 domain + loc_domain,
                 domain + ['&'] + dest_loc_domain + ['!'] + loc_domain,
