@@ -4042,6 +4042,7 @@ class BaseModel(object):
 
         if unknown:
             _logger.warning("%s.create() with vals %s including unknown fields: %s", self._name, vals, ', '.join(sorted(unknown)))
+            raise
 
         # create record with old-style fields
         record = self.browse(self._create(old_vals))
