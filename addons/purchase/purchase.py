@@ -1299,7 +1299,9 @@ class procurement_order(osv.osv):
         qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
         if seller_qty:
             qty = max(qty, seller_qty)
-        price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner.id, {'uom': uom_id})[pricelist_id]
+        ctx_price = context.copy()
+        ctx_price['uom'] = uom_id
+        price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner.id, ctx_price)[pricelist_id]
 
         #Passing partner_id to context for purchase order line integrity of Line name
         new_context = context.copy()
@@ -1351,7 +1353,7 @@ class procurement_order(osv.osv):
             else:
                 schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
                 purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context) 
-                line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
+                line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=ctx_company)
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
                 available_draft_po_ids = po_obj.search(cr, uid, [
                     ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),

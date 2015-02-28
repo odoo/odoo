@@ -599,8 +599,11 @@ class product_template(osv.osv):
             if ptype != 'standard_price':
                 res[product.id] = product[ptype] or 0.0
             else:
-                company_id = product.env.user.company_id.id
-                product = product.with_context(force_company=company_id)
+                if 'force_company' not in context:
+                    company_id = product.env.user.company_id.id
+                    product = product.with_context(force_company=company_id)
+                else:
+                    product = product.with_context(force_company=context.get('force_company'))
                 res[product.id] = res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
