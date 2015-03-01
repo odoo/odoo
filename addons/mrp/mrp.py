@@ -917,8 +917,10 @@ class mrp_production(osv.osv):
 
         main_production_move = False
         if production_mode == 'consume_produce':
+
             # To produce remaining qty of final product
             produced_products = {}
+            planned_quantities = {}
             for produced_product in production.move_created_ids2:
                 if produced_product.scrapped:
                     continue
@@ -932,20 +934,23 @@ class mrp_production(osv.osv):
                 if wiz:
                     lot_id = wiz.lot_id.id
                 qty = min(subproduct_factor * production_qty_uom, produce_product.product_qty) #Needed when producing more than maximum quantity
+                planned_quantities[produce_product.product_id.id] = qty
                 new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], qty,
                                                          location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
                 stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
-                remaining_qty = subproduct_factor * production_qty_uom - qty
-                if remaining_qty: # In case you need to make more than planned
-                    #consumed more in wizard than previously planned
-                    extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'state': 'confirmed',
-                                                                                             'product_uom_qty': remaining_qty,
-                                                                                             'production_id': production_id}, context=context)
-                    if extra_move_id:
-                        stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
-
                 if produce_product.product_id.id == production.product_id.id:
                     main_production_move = produce_product.id
+
+            target_qty = production_qty + produced_products.get(production.product_id.id, 0)
+            if float_compare(target_qty, production.product_qty, precision_rounding=production.product_id.uom_id.rounding) > 0: # In case you need to make more than planned
+                move_to_copy_ids = stock_mov_obj.search(cr, uid, [('production_id', '=', production_id), ('product_id', '=', production.product_id.id)], context=context)
+                if move_to_copy_ids:
+                    #consumed more in wizard than previously planned
+                    extra_move_id = stock_mov_obj.copy(cr, uid, move_to_copy_ids[0], default={'state': 'confirmed',
+                                                                                              'product_uom_qty': production_qty_uom - planned_quantities.get(production.product_id.id, 0),
+                                                                                              'production_id': production_id}, context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+
 
         if production_mode in ['consume', 'consume_produce']:
             if wiz:
