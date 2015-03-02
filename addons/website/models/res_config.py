@@ -27,6 +27,8 @@ class website_config_settings(osv.osv_memory):
     }
 
     def on_change_website_id(self, cr, uid, ids, website_id, context=None):
+        if not website_id:
+            return {'value': {}}
         website_data = self.pool.get('website').read(cr, uid, [website_id], [], context=context)[0]
         values = {'website_name': website_data['name']}
         for fname, v in website_data.items():
