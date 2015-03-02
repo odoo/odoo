@@ -699,6 +699,33 @@
         <field name="user_type" ref="account_type_current_asset" />
         <field name="name">Phải thu dài hạn khác</field>
     </record>
+    
+    <record id="chart139" model="account.account.template">
+        <field name="code">139</field>
+        <field name="reconcile" eval="False" />
+        <field name="type">view</field>
+        <field name="parent_id" ref="chart1" />
+        <field name="user_type" ref="account_type_current_asset" />
+        <field name="name">Dự phòng phải thu khó đòi</field>
+    </record>
+    
+    <record id="chart1391" model="account.account.template">
+        <field name="code">1391</field>
+        <field name="reconcile" eval="False" />
+        <field name="type">other</field>
+        <field name="parent_id" ref="chart139" />
+        <field name="user_type" ref="account_type_current_asset" />
+        <field name="name">Dự phòng phải thu ngắn hạn khó đòi</field>
+    </record>
+    
+    <record id="chart1392" model="account.account.template">
+        <field name="code">1392</field>
+        <field name="reconcile" eval="False" />
+        <field name="type">other</field>
+        <field name="parent_id" ref="chart139" />
+        <field name="user_type" ref="account_type_current_asset" />
+        <field name="name">Dự phòng phải thu dài hạn khó đòi</field>
+    </record>
 
     <record id="chart141" model="account.account.template">
         <field name="code">141</field>
@@ -1289,6 +1316,15 @@
         <field name="user_type" ref="account_type_long_term_asset" />
         <field name="name">Đầu tư vào công ty liên doanh, liên kết</field>
     </record>
+    
+    <record id="chart223" model="account.account.template">
+        <field name="code">223</field>
+        <field name="reconcile" eval="False" />
+        <field name="type">other</field>
+        <field name="parent_id" ref="chart2" />
+        <field name="user_type" ref="account_type_long_term_asset" />
+        <field name="name">Đầu tư vào công ty liên kết</field>
+    </record>
 
     <record id="chart228" model="account.account.template">
         <field name="code">228</field>
@@ -1404,7 +1440,7 @@
         <field name="type">other</field>
         <field name="parent_id" ref="chart2294" />
         <field name="user_type" ref="account_type_long_term_asset" />
-        <field name="name">Dự phòng giảm giá hàng tồn kho: ngắn hạn</field>
+        <field name="name">Dự phòng giảm giá chi phí sản xuất kinh doanh dở dang ngắn hạn</field>
     </record>
     
     <record id="chart22942" model="account.account.template">
@@ -1413,7 +1449,16 @@
         <field name="type">other</field>
         <field name="parent_id" ref="chart2294" />
         <field name="user_type" ref="account_type_long_term_asset" />
-        <field name="name">Dự phòng giảm giá hàng tồn kho: dài hạn</field>
+        <field name="name">Dự phòng giảm giá chi phí sản xuất kinh doanh dở dang dài hạn</field>
+    </record>
+    
+    <record id="chart22943" model="account.account.template">
+        <field name="code">22943</field>
+        <field name="reconcile" eval="False" />
+        <field name="type">other</field>
+        <field name="parent_id" ref="chart2294" />
+        <field name="user_type" ref="account_type_long_term_asset" />
+        <field name="name">Dự phòng giảm giá thiết bị vật tư phụ tùng thay thế dài hạn</field>
     </record>
 
     <record id="chart241" model="account.account.template">
@@ -1498,7 +1543,7 @@
         <field name="code">2441</field>
         <field name="reconcile" eval="False" />
         <field name="type">other</field>
-        <field name="parent_id" ref="chart2" />
+        <field name="parent_id" ref="chart244" />
         <field name="user_type" ref="account_type_long_term_asset" />
         <field name="name">Cầm cố, thế chấp, ký quỹ, ký cược: ngắn hạn</field>
     </record>
@@ -1507,7 +1552,7 @@
         <field name="code">2442</field>
         <field name="reconcile" eval="False" />
         <field name="type">other</field>
-        <field name="parent_id" ref="chart2" />
+        <field name="parent_id" ref="chart244" />
         <field name="user_type" ref="account_type_long_term_asset" />
         <field name="name">Cầm cố, thế chấp, ký quỹ, ký cược: dài hạn</field>
     </record>
@@ -1867,7 +1912,7 @@
         <field name="code">33621</field>
         <field name="reconcile" eval="False" />
         <field name="type">other</field>
-        <field name="parent_id" ref="chart336" />
+        <field name="parent_id" ref="chart3362" />
         <field name="user_type" ref="account_type_liability" />
         <field name="name">Phải trả nội bộ về chênh lệch tỷ giá: ngắn hạn</field>
     </record>
@@ -1876,7 +1921,7 @@
         <field name="code">33622</field>
         <field name="reconcile" eval="False" />
         <field name="type">other</field>
-        <field name="parent_id" ref="chart336" />
+        <field name="parent_id" ref="chart3362" />
         <field name="user_type" ref="account_type_liability" />
         <field name="name">Phải trả nội bộ về chênh lệch tỷ giá: dài hạn</field>
     </record>
@@ -2293,6 +2338,15 @@
     </record>
     <!-- END -->
 
+    <record id="chart342" model="account.account.template">
+        <field name="code">342</field>
+        <field name="reconcile" eval="False" />
+        <field name="type">other</field>
+        <field name="parent_id" ref="chart3" />
+        <field name="user_type" ref="account_type_liability" />
+        <field name="name">Nợ dài hạn</field>
+    </record>
+    
     <record id="chart343" model="account.account.template">
         <field name="code">343</field>
         <field name="reconcile" eval="False" />
@@ -3023,6 +3077,24 @@
         <field name="parent_id" ref="chart521" />
         <field name="user_type" ref="account_type_income" />
         <field name="name">Hàng bán bị trả lại</field>
+    </record>
+    
+    <record id="chart531" model="account.account.template">
+        <field name="code">531</field>
+        <field name="reconcile" eval="False" />
+        <field name="type">other</field>
+        <field name="parent_id" ref="chart5" />
+        <field name="user_type" ref="account_type_income" />
+        <field name="name">Hàng bán bị trả lại</field>
+    </record>
+    
+    <record id="chart532" model="account.account.template">
+        <field name="code">532</field>
+        <field name="reconcile" eval="False" />
+        <field name="type">other</field>
+        <field name="parent_id" ref="chart5" />
+        <field name="user_type" ref="account_type_income" />
+        <field name="name">Giảm giá hàng bán</field>
     </record>
     <!-- END -->
 
