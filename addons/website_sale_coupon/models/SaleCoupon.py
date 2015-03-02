@@ -24,7 +24,7 @@ class SaleApplicability(models.Model):
     product_id = fields.Many2one('product.product', string="Target Product")
     product_category_id = fields.Many2one('product.category', string="Target Categoy")
     product_quantity = fields.Integer("Quantity")
-    product_uom_id = fields.Many2one('product.product', string="UoM of Product")
+    product_uom_id = fields.Many2one('product.uom', string="UoM of Product")
     minimum_amount = fields.Float(string="Amount", help="Alteast amount, for that customer have to purchase to get the reward")
     tax = fields.Selection([('tax_included', 'Tax included'), ('tax_excluded', 'Tax excluded')])
     company_id = fields.Many2one('res.company', string="Company Id")
@@ -42,7 +42,7 @@ class SaleReward(models.Model):
     reward_product_product_id = fields.Many2one('product.product', string="Reward Product")
     reward_quantity = fields.Integer(string="Product Quantity")
     reward_product_uom_id = fields.Many2one('product.uom')
-    #reward_gift_coupon_id = fields.Many2one('sale.couponprogram', string="Coupon Id")
+    reward_gift_coupon_id = fields.Many2one('sale.couponprogram', string="Coupon Id")
     reward_discount_type = fields.Selection([('no', 'No'), ('percentage', 'Percentage'),
                                            ('amount', 'Amount')], string="Discount Type")
     reward_discount = fields.Float("Discount", help='The discount in percentage or fixed amount')
@@ -57,13 +57,13 @@ class SaleCoupon(models.Model):
     _name = 'sale.coupon'
     _description = "Sales Coupon"
 
-    program_id = fields.Many2one('sale.couponprogram', string="Program Id")
+    program_id = fields.Many2one('sale.couponprogram', string="Program")
     coupon_code = fields.Char(string="Coupon Code",
                               default=lambda self: 'SC' + (hashlib.sha1(str(random.getrandbits(256)).encode('utf-8')).hexdigest()[:7]).upper(),
                               required=True, readonly=True, help="Coupon Code")
     nbr_used = fields.Integer(string="Number of times coupon is used")
     nbr_uses = fields.Integer(string="Number of times coupon can be use")
-    #order_line_id = fields.One2many('sale.coupon.orderline', string="Sale order line")
+    order_line_id = fields.One2many('sale.order.line', 'coupon_id', string="Sale order line")
     state = fields.Selection([
                              ('new', 'New'),
                              ('used', 'Used'),
@@ -88,10 +88,12 @@ class SaleCouponProgram(models.Model):
     is_program_active = fields.Boolean(string="Active", default=True, help="Coupon program is active or inactive")
     program_sequence = fields.Integer(string="Sequence", help="According to sequence, one rule is selected from multiple defined rules to apply")
     # Getting the error here
-    coupon_ids = fields.One2many('sale.coupon', string="Coupon Id")
+    coupon_ids = fields.One2many('sale.coupon', 'program_id', string="Coupon Id")
     applicability_id = fields.Many2one('sale.applicability', string="Applicability Id")
     reward_id = fields.Many2one('sale.reward', string="Reward Id")
 
 
 class SaleOrderLine(models.Model):
-    _name = 'sale.coupon.orderline'
+    _inherit = 'sale.order.line'
+
+    coupon_id = fields.Many2one('sale.coupon', string="Coupon")
