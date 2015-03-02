@@ -1950,7 +1950,7 @@ class stock_move(osv.osv):
 
     def _create_procurement(self, cr, uid, move, context=None):
         """ This will create a procurement order """
-        return self.pool.get("procurement.order").create(cr, uid, self._prepare_procurement_from_move(cr, uid, move, context=context))
+        return self.pool.get("procurement.order").create(cr, uid, self._prepare_procurement_from_move(cr, uid, move, context=context), context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:

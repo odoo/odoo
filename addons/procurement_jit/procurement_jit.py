@@ -32,3 +32,14 @@ class procurement_order(osv.osv):
             self.run(cr, uid, [procurement_id], context=context)
             self.check(cr, uid, [procurement_id], context=context)
         return procurement_id
+
+    def run(self, cr, uid, ids, context=None):
+        context = context or {}
+        context['procurement_autorun_defer'] = True
+        res = super(procurement_order, self).run(cr, uid, ids, context=context)
+
+        procurement_ids = self.search(cr, uid, [('move_dest_id.procurement_id', 'in', ids)], order='id', context=context)
+
+        if procurement_ids:
+            return self.run(cr, uid, procurement_ids, context=context)
+        return res
