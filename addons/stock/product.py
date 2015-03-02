@@ -331,7 +331,7 @@ class product_template(osv.osv):
     _inherit = 'product.template'
     
     def _product_available(self, cr, uid, ids, name, arg, context=None):
-        prod_available = dict.fromkeys(ids, 0)
+        prod_available = {}
         product_ids = self.browse(cr, uid, ids, context=context)
         var_ids = []
         for product in product_ids:
