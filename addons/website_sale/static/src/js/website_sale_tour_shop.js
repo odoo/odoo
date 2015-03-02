@@ -41,7 +41,7 @@
                 content:   _t("Click on <em>Continue</em> to create the product."),
             },
             {
-                waitFor:   'body:has(button[data-action=save]:visible):has(.js_sale)',
+                waitFor:   '#o_scroll .oe_snippet',
                 title:     _t("New product created"),
                 content:   _t("This page contains all the information related to the new product."),
                 popover:   { next: _t("Continue") },
@@ -72,6 +72,7 @@
             },
             {
                 element:   '.modal .btn.save',
+                placement: 'right',
                 waitFor:   '.existing-attachment-cell.media_selected',
                 title:       _t("Save"),
                 content:     _t("Click on <em>Save</em> to add the image to the product description"),
