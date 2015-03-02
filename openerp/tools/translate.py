@@ -661,14 +661,19 @@ def trans_generate(lang, modules, cr):
             FROM ir_model AS m, ir_model_data AS imd
             WHERE m.id = imd.res_id AND imd.model = 'ir.model' """
 
+    query_param = None
     if 'all_installed' in modules:
         query += ' WHERE module IN ( SELECT name FROM ir_module_module WHERE state = \'installed\') '
+        query += ' AND model != \'ir.model.fields\' '
         query_models += " AND imd.module in ( SELECT name FROM ir_module_module WHERE state = 'installed') "
-    query_param = None
-    if 'all' not in modules:
+    elif 'all' not in modules:
         query += ' WHERE module IN %s'
+        query += ' AND model != \'ir.model.fields\' '
         query_models += ' AND imd.module in %s'
         query_param = (tuple(modules),)
+    else:
+        query += ' WHERE model != \'ir.model.fields\' '
+
     query += ' ORDER BY module, model, name'
     query_models += ' ORDER BY module, model'
 
@@ -733,42 +738,6 @@ def trans_generate(lang, modules, cr):
         elif model=='ir.actions.wizard':
             pass # TODO Can model really be 'ir.actions.wizard' ?
 
-        elif model=='ir.model.fields':
-            try:
-                field_name = encode(obj.name)
-            except AttributeError, exc:
-                _logger.error("name error in %s: %s", xml_name, str(exc))
-                continue
-            objmodel = registry.get(obj.model)
-            if (objmodel is None or field_name not in objmodel._columns
-                    or not objmodel._translate):
-                continue
-            field_def = objmodel._columns[field_name]
-
-            name = "%s,%s" % (encode(obj.model), field_name)
-            push_translation(module, 'field', name, 0, encode(field_def.string))
-
-            if field_def.help:
-                push_translation(module, 'help', name, 0, encode(field_def.help))
-
-            if field_def.translate:
-                ids = objmodel.search(cr, uid, [])
-                obj_values = objmodel.read(cr, uid, ids, [field_name])
-                for obj_value in obj_values:
-                    res_id = obj_value['id']
-                    if obj.name in ('ir.model', 'ir.ui.menu'):
-                        res_id = 0
-                    model_data_ids = model_data_obj.search(cr, uid, [
-                        ('model', '=', model),
-                        ('res_id', '=', res_id),
-                        ])
-                    if not model_data_ids:
-                        push_translation(module, 'model', name, 0, encode(obj_value[field_name]))
-
-            if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
-                for dummy, val in field_def.selection:
-                    push_translation(module, 'selection', name, 0, encode(val))
-
         elif model=='ir.actions.report.xml':
             name = encode(obj.report_name)
             fname = ""
@@ -823,7 +792,9 @@ def trans_generate(lang, modules, cr):
             constraints = getattr(cls, '_local_' + cons_type, [])
             for constraint in constraints:
                 push_constraint_msg(module, term_type, model._name, constraint[msg_pos])
-            
+
+    seen_fields = set(map(lambda trans:trans[2], _to_translate))
+
     for (_, model, module) in cr.fetchall():
         if model not in registry:
             _logger.error("Unable to find object %r", model)
@@ -836,6 +807,48 @@ def trans_generate(lang, modules, cr):
 
         if model_obj._sql_constraints:
             push_local_constraints(module, model_obj, 'sql_constraints')
+
+        # attributes keyword parameter not present in all fields_get
+        # fields = model_obj.fields_get(cr, SUPERUSER_ID, attributes=['store', 'string', 'help', 'translate', 'selection'], context={})
+        fields = model_obj.fields_get(cr, SUPERUSER_ID, context={})
+
+        for field_name in fields:
+            if field_name in ('__last_update', 'display_name'):
+                continue
+
+            try:
+                name = "%s,%s" % (encode(model), encode(field_name))
+            except AttributeError, exc:
+                _logger.error("name error in %s: %s", model, str(exc))
+                continue
+
+            if name in seen_fields:
+                continue
+
+            field = fields[field_name]
+
+            push_translation(module, 'field', name, 0, encode(field['string']))
+
+            if 'help' in field and field['help']:
+                push_translation(module, 'help', name, 0, encode(field['help']))
+
+            if 'translate' in field and field['translate']:
+                ids = model_obj.search(cr, uid, [])
+                obj_values = model_obj.read(cr, uid, ids, [field_name])
+                for obj_value in obj_values:
+                    res_id = obj_value['id']
+                    if obj.name in ('ir.model', 'ir.ui.menu'):
+                        res_id = 0
+                    model_data_ids = model_data_obj.search(cr, uid, [
+                        ('model', '=', model),
+                        ('res_id', '=', res_id),
+                        ])
+                    if not model_data_ids:
+                        push_translation(module, 'model', name, 0, encode(obj_value[field_name]))
+
+            if 'selection' in field and isinstance(field['selection'], (list, tuple)):
+                for dummy, val in field['selection']:
+                    push_translation(module, 'selection', name, 0, encode(val))
 
     installed_modules = map(
         lambda m: m['name'],
