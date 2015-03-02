@@ -112,16 +112,18 @@ class template(object):
         """
         # overwrite with local
         for path, content in self.files():
-            _, ext = os.path.splitext(path)
-
             local = os.path.relpath(path, self.path)
+            # strip .template extension
+            root, ext = os.path.splitext(local)
+            if ext == '.template':
+                local = root
             dest = os.path.join(directory, modname, local)
             destdir = os.path.dirname(dest)
             if not os.path.exists(destdir):
                 os.makedirs(destdir)
 
             with open(dest, 'wb') as f:
-                if ext not in ('.py', '.xml', '.csv', '.js', '.rst', '.html'):
+                if ext not in ('.py', '.xml', '.csv', '.js', '.rst', '.html', '.template'):
                     f.write(content)
                 else:
                     env.from_string(content)\
