@@ -172,10 +172,7 @@ class stock_picking(osv.osv):
             if partner.picking_warn == 'block':
                 return {'value': {'partner_id': False}, 'warning': warning}
 
-        result =  super(stock_picking_in, self).onchange_partner_in(cr, uid, ids, partner_id, context)
-        if result.get('warning',False):
-            warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
-            warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+        result = {'value': {}}
 
         if warning:
             result['warning'] = warning
