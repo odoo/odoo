@@ -890,8 +890,8 @@ class users_view(osv.osv):
                 selected = [gid for gid in get_selection_groups(f) if gid in gids]
                 values[f] = selected and selected[-1] or False
 
-    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
-        res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access)
+    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, attributes=None):
+        res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access, attributes)
         # add reified groups fields
         for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, uid, context):
             if kind == 'selection':
