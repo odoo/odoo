@@ -19,19 +19,19 @@ to an appropriate local partner, based on the distance and the weight that was a
     'depends': ['base_geolocalize', 'crm', 'account', 'portal'],
     'data': [
         'security/ir.model.access.csv',
-        'res_partner_view.xml',
+        'views/res_partner_view.xml',
         'wizard/crm_forward_to_partner_view.xml',
         'wizard/crm_channel_interested_view.xml',
-        'crm_lead_view.xml',
-        'crm_partner_assign_data.xml',
-        'crm_portal_view.xml',
-        'portal_data.xml',
+        'views/crm_lead_view.xml',
+        'data/crm_partner_assign_data.xml',
+        'views/crm_portal_view.xml',
+        'data/portal_data.xml',
         'report/crm_lead_report_view.xml',
         'report/crm_partner_report_view.xml',
     ],
     'demo': [
-        'res_partner_demo.xml',
-        'crm_lead_demo.xml'
+        'data/res_partner_demo.xml',
+        'data/crm_lead_demo.xml'
     ],
     'test': ['test/partner_assign.yml'],
     'installable': True,
