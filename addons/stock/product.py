@@ -153,7 +153,6 @@ class product_product(osv.osv):
             moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
 
         domain_quant += domain_quant_loc
-        print domain_quant
         quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
         quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
 
@@ -191,8 +190,7 @@ class product_product(osv.osv):
             else:
                 product_ids = self.search(cr, uid, [], context=context)
                 if product_ids:
-                    #TODO: use a query instead of this browse record which is probably making the too much requests, but don't forget
-                    #the context that can be set with a location, an owner...
+                    #TODO: Still optimization possible when searching virtual quantities
                     for element in self.browse(cr, uid, product_ids, context=context):
                         if eval(str(element[field]) + operator + str(value)):
                             ids.append(element.id)
@@ -200,13 +198,14 @@ class product_product(osv.osv):
         return res
 
     def _search_qty_available(self, cr, uid, operator, value, context):
-        domain_quant = self._get_domain_locations(cr, uid, [], context=context)[0]
+        domain_quant = []
         if context.get('lot_id'):
             domain_quant.append(('lot_id', '=', context['lot_id']))
         if context.get('owner_id'):
             domain_quant.append(('owner_id', '=', context['owner_id']))
         if context.get('package_id'):
             domain_quant.append(('package_id', '=', context['package_id']))
+        domain_quant += self._get_domain_locations(cr, uid, [], context=context)[0]
         quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
         quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
         quants = dict((k, v) for k, v in quants.iteritems() if eval(str(v) + operator + str(value)))
@@ -332,7 +331,7 @@ class product_template(osv.osv):
     _inherit = 'product.template'
     
     def _product_available(self, cr, uid, ids, name, arg, context=None):
-        prod_available = dict.fromkeys(ids, 0)
+        prod_available = {}
         product_ids = self.browse(cr, uid, ids, context=context)
         var_ids = []
         for product in product_ids:
@@ -350,10 +349,10 @@ class product_template(osv.osv):
                 incoming_qty += variant_available[p.id]["incoming_qty"]
                 outgoing_qty += variant_available[p.id]["outgoing_qty"]
             prod_available[product.id] = {
-                "qty_available":qty_available,
-                "virtual_available":virtual_available,
-                "incoming_qty":incoming_qty,
-                "outgoing_qty":outgoing_qty,
+                "qty_available": qty_available,
+                "virtual_available": virtual_available,
+                "incoming_qty": incoming_qty,
+                "outgoing_qty": outgoing_qty,
             }
         return prod_available
 
