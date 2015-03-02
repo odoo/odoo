@@ -2160,6 +2160,14 @@ class BaseModel(object):
             for d in fetched_data:
                 d.update(data_dict[d['id']])
 
+        selectionfields = [gb['field'] for gb in annotated_groupbys if gb['type'] == 'selection']
+        if selectionfields:
+            selections_values = {}
+            for selection in selectionfields:
+                selections_values[selection] = dict(self._fields[selection].selection)
+            for d in fetched_data:
+                d.update((selection, (d[selection], selections_values[selection].get(d[selection], d[selection]))) for selection in selectionfields)
+
         data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict, context) for k,v in r.iteritems()}, fetched_data)
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, groupby_dict, domain, context) for d in data]
         if lazy and groupby_fields[0] in self._group_by_full:
