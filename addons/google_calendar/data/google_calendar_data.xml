@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<openerp>
+<odoo>
 
-    <data>
-        <record forcecreate="True" id="ir_cron_sync_all_cals" model="ir.cron">
+        <record id="ir_cron_sync_all_cals" model="ir.cron" forcecreate="True">
             <field name="name">Calendar synchronization</field>
-            <field eval="True" name="active" />
+            <field name="active" eval="True"/>
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">12</field>
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
-            <field eval="False" name="doall" />
-            <field eval="'google.calendar'" name="model" />
-            <field eval="'synchronize_events_cron'" name="function" />
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'google.calendar'"/>
+            <field name="function" eval="'synchronize_events_cron'"/>
         </record>
 
-    </data>
-</openerp>
+</odoo>

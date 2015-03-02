@@ -4,7 +4,6 @@
 
 {
     'name': 'Google Calendar',
-    'version': '1.0',
     'category': 'Tools',
     'description': """
 The module adds the possibility to synchronize Google Calendar with Odoo
@@ -19,11 +18,5 @@ The module adds the possibility to synchronize Google Calendar with Odoo
         'views/google_calendar_templates.xml',
         'views/res_users_views.xml',
         'security/ir.model.access.csv',
-        'views/google_calendar_templates.xml',
-        'views/res_users.xml',
-        'data/google_calendar_data.xml',
     ],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
 }

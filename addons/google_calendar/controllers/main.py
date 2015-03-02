@@ -1,59 +1,57 @@
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import http
+from odoo.http import request
 
 
-class google_calendar_controller(http.Controller):
+class GoogleCalendarController(http.Controller):
 
     @http.route('/google_calendar/sync_data', type='json', auth='user')
     def sync_data(self, arch, fields, model, **kw):
         """
-            This route/function is called when we want to synchronize openERP calendar with Google Calendar
+            This route/function is called when we want to synchronize Odoo calendar with Google Calendar
             Function return a dictionary with the status :  need_config_from_admin, need_auth, need_refresh, success if not calendar_event
-            The dictionary may contains an url, to allow OpenERP Client to redirect user on this URL for authorization for example
+            The dictionary may contains an url, to allow Odoo Client to redirect user on this URL for authorization for example
         """
 
         if model == 'calendar.event':
-            gs_obj = request.registry['google.service']
-            gc_obj = request.registry['google.calendar']
+            GoogleCalendar = request.env['google.calendar'].with_context(kw.get('local_context'))
 
             # Checking that admin have already configured Google API for google synchronization !
-            client_id = gs_obj.get_client_id(request.cr, request.uid, 'calendar', context=kw.get('local_context'))
+            client_id = request.env['google.service'].with_context(kw.get('local_context')).get_client_id('calendar')
 
             if not client_id or client_id == '':
-                action = ''
-                if gc_obj.can_authorize_google(request.cr, request.uid):
-                    dummy, action = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid,
-                                                                                               'google_calendar', 'action_config_settings_google_calendar')
-
+                if GoogleCalendar.can_authorize_google():
+                    action = request.env.ref('google_calendar.action_config_settings_google_calendar')
+                    result['action'] = action.id.id
                 return {
                     "status": "need_config_from_admin",
                     "url": '',
-                    "action": action
+                    "action": action.id
                 }
 
-            # Checking that user have already accepted OpenERP to access his calendar !
-            if gc_obj.need_authorize(request.cr, request.uid, context=kw.get('local_context')):
-                url = gc_obj.authorize_google_uri(request.cr, request.uid, from_url=kw.get('fromurl'), context=kw.get('local_context'))
+            # Checking that user have already accepted Odoo to access his calendar !
+            if GoogleCalendar.need_authorize():
+                url = GoogleCalendar.authorize_google_uri(from_url=kw.get('fromurl'))
                 return {
                     "status": "need_auth",
                     "url": url
                 }
 
             # If App authorized, and user access accepted, We launch the synchronization
-            return gc_obj.synchronize_events(request.cr, request.uid, [], context=kw.get('local_context'))
+            return GoogleCalendar.synchronize_events()
 
         return {"status": "success"}
 
     @http.route('/google_calendar/remove_references', type='json', auth='user')
     def remove_references(self, model, **kw):
         """
-            This route/function is called when we want to remove all the references between one calendar OpenERP and one Google Calendar
+            This route/function is called when we want to remove all the references between one Odoo Calendar and one Google Calendar
         """
         status = "NOP"
         if model == 'calendar.event':
-            gc_obj = request.registry['google.calendar']
-            # Checking that user have already accepted OpenERP to access his calendar !
-            if gc_obj.remove_references(request.cr, request.uid, context=kw.get('local_context')):
+            # Checking that user have already accepted Odoo to access his calendar !
+            if request.env['google.calendar'].with_context(kw.get('local_context')).remove_references():
                 status = "OK"
             else:
                 status = "KO"

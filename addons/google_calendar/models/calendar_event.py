@@ -1,38 +1,39 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
+from odoo import api, fields, models
 
-class calendar_event(osv.Model):
+class CalendarEvent(models.Model):
     _inherit = "calendar.event"
 
-    def get_fields_need_update_google(self, cr, uid, context=None):
-        return ['name', 'description', 'allday', 'start', 'date_end', 'stop',
-                'attendee_ids', 'alarm_ids', 'location', 'class', 'active',
-                'start_date', 'start_datetime', 'stop_date', 'stop_datetime']
+    oe_update_date = fields.Datetime(string='Odoo Update Date')
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
-        sync_fields = set(self.get_fields_need_update_google(cr, uid, context))
-        if (set(vals.keys()) & sync_fields) and 'oe_update_date' not in vals.keys() and 'NewMeeting' not in context:
-            vals['oe_update_date'] = datetime.now()
+    @api.multi
+    def write(self, vals):
+        sync_fields = set(self.get_fields_need_update_google())
+        if (set(vals.keys()) & sync_fields) and 'oe_update_date' not in vals.keys() and 'NewMeeting' not in self.env.context:
+            vals['oe_update_date'] = fields.Datetime.now()
 
-        return super(calendar_event, self).write(cr, uid, ids, vals, context=context)
+        return super(CalendarEvent, self).write(vals)
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    @api.multi
+    def unlink(self, can_be_deleted=False):
+        return super(CalendarEvent, self).unlink(can_be_deleted=can_be_deleted)
+
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
         default = default or {}
-        if default.get('write_type', False):
+        if default.get('write_type'):
             del default['write_type']
-        elif default.get('recurrent_id', False):
-            default['oe_update_date'] = datetime.now()
+        elif default.get('recurrent_id'):
+            default['oe_update_date'] = fields.Datetime.now()
         else:
             default['oe_update_date'] = False
-        return super(calendar_event, self).copy(cr, uid, id, default, context)
+        return super(CalendarEvent, self).copy(default)
 
-    def unlink(self, cr, uid, ids, can_be_deleted=False, context=None):
-        return super(calendar_event, self).unlink(cr, uid, ids, can_be_deleted=can_be_deleted, context=context)
-
-    _columns = {
-        'oe_update_date': fields.datetime('Odoo Update Date'),
-    }
+    def get_fields_need_update_google(self):
+        recurrent_fields = self._get_recurrent_fields()
+        return recurrent_fields + ['name', 'description', 'allday', 'start', 'date_end', 'stop',
+                'attendee_ids', 'alarm_ids', 'location', 'class', 'active',
+                'start_date', 'start_datetime', 'stop_date', 'stop_datetime']

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-         <record id="view_calendar_config_settings" model="ir.ui.view">
-            <field name="name">Calendar_settings_grgrgrgt</field>
+<odoo>
+        <record id="view_calendar_config_settings" model="ir.ui.view">
+            <field name="name">base.config.settings.form.inherit</field>
             <field name="model">base.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_general_configuration"/>
             <field name="arch" type="xml">
@@ -68,5 +67,4 @@
         </record>
 
         <menuitem id="menu_calendar_google_tech_config" name="API Credentials" parent="calendar.menu_calendar_configuration" groups="base.group_no_one" action="action_config_settings_google_calendar"/>
-    </data>
-</openerp>
+</odoo>
