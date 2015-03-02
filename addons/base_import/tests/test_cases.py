@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 import unittest2
 import zipfile
+import xlrd
 from openerp.tests.common import TransactionCase
 from openerp.modules.module import get_module_resource
 
@@ -253,11 +254,8 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
+    @unittest2.skipIf(xlrd is None, ImportError)
     def test_xls_success(self):
-        try:
-            import xlrd as xlrd
-        except ImportError:
-            return True
 
         Import = self.registry('base_import.import')
         xls_file_path = get_module_resource('base_import', 'tests', 'test.xls')
@@ -287,12 +285,8 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
+    @unittest2.skipIf(xlrd is None, ImportError)
     def test_xlsx_success(self):
-        try:
-            import xlrd as xlrd
-        except ImportError:
-            return True
-
         Import = self.registry('base_import.import')
         xlsx_file_path = get_module_resource('base_import', 'tests', 'test.xlsx')
         file_content = open(xlsx_file_path, 'rb').read()

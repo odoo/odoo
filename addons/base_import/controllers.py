@@ -8,7 +8,7 @@ class ImportController(Controller):
     @route('/base_import/set_file')
     def set_file(self, req, file, import_id, jsonp='callback'):
         import_id = int(import_id)
-        if file.filename[-3:] == "ods":
+        if file.content_type == "application/vnd.oasis.opendocument.spreadsheet":
             file_content = zipfile.ZipFile(file).read('content.xml')
         else:
             file_content = file.read()
