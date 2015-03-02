@@ -3363,6 +3363,7 @@ class BaseModel(object):
                     * write_uid: last user who changed the record
                     * write_date: date of the last change to the record
                     * xmlid: XML ID to use to refer to this record (if there is one), in format ``module.name``
+                    * noupdate: A boolean telling if the record will be updated or not
         """
         fields = ['id']
         if self._log_access:
