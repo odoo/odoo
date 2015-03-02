@@ -79,6 +79,7 @@ class sale_order(osv.osv):
         vals['route_ids'] = routes
         vals['warehouse_id'] = order.warehouse_id and order.warehouse_id.id or False
         vals['partner_dest_id'] = order.partner_shipping_id.id
+        vals['invoice_state'] = (order.order_policy == 'picking') and '2binvoiced' or 'none'
         return vals
 
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
