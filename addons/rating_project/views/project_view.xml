@@ -46,9 +46,9 @@
                     <field name="percentage_satisfaction_project" invisible="1"/>
                     <field name="is_visible_happy_customer" invisible="1"/>
                 </field>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="after">
-                    <div class="pull-right oe_margin_top_16">
-                        <a t-if="record.is_visible_happy_customer.raw_value and record.percentage_satisfaction_project.raw_value &gt; -1" name="action_view_all_rating" type="object" title="Percentage of happy people about this project">
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
+                    <div class="col-md-12">
+                        <a t-if="record.is_visible_happy_customer.raw_value and record.percentage_satisfaction_project.raw_value &gt; -1" name="action_view_all_rating" type="object" title="Percentage of happy people about this project" class="pull-right">
                             <h5 t-attf-class="label #{record.percentage_satisfaction_project.raw_value &gt;= 50 ? 'label-success' : 'label-warning'}">
                                 <i t-attf-class="fa #{record.percentage_satisfaction_project.raw_value &gt;= 50 ? 'fa-smile-o' : 'fa-frown-o'}"/> <t t-raw="record.percentage_satisfaction_project.raw_value"/> %
                             </h5>

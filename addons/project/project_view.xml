@@ -258,7 +258,7 @@
                     <field name="doc_count"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_no_auto_height">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
                                     <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
@@ -268,7 +268,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_project_kanban_content">
-                                    <div class="row">
+                                    <div class="oe_kanban_content">
                                         <h4 class="text-center">
                                             <field name="name"/>
                                         </h4>
@@ -279,26 +279,28 @@
                                         </div>
                                     </div>
                                     <div class="row oe_margin_top_8 oe_kanban_project_list">
-                                        <div class="col-md-6">
-                                            <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action">
+                                        <div t-if="record.use_tasks.raw_value" class="col-md-6">
+                                            <a name="%(act_project_project_2_project_task_all)d" type="action">
                                                 <t t-raw="record.task_count.raw_value" />
                                                 <field name="label_tasks"/>
                                             </a>
                                         </div>
-                                        <div class="col-md-6">
-                                            <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object">
-                                                <field name="doc_count"/> Documents
-                                            </a>
-                                        </div>
-                                        <div t-if="record.use_tasks.raw_value and record.task_count.raw_value lt 1" class="col-md-12">
+                                        <div t-if="record.use_tasks.raw_value and record.task_count.raw_value == 0" class="col-md-12">
                                             <img src="/project/static/src/img/top_left_arrow.png" style="margin-top: -8px; width: 22px;" />
                                             <span>No activity yet, click to enter in the project.</span>
                                         </div>
+                                        <div t-if="record.doc_count.raw_value" class="col-md-6">
+                                            <a name="attachment_tree_view" type="object">
+                                                <field name="doc_count"/> Documents
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="oe_margin_top_8 oe_kanban_project_avatars">
-                                        <t t-foreach="record.members.raw_value.slice(0,12)" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
-                                        </t>
+                                    <div class="row oe_margin_top_8 oe_kanban_project_avatars">
+                                        <div class="col-md-12">
+                                            <t t-foreach="record.members.raw_value.slice(0,12)" t-as="member">
+                                                <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                            </t>
+                                        </div>
                                     </div>
                                     <div class="clearfix"/>
                                 </div>
