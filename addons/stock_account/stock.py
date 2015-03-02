@@ -300,9 +300,13 @@ class stock_picking(osv.osv):
         for move in moves:
             company = move.company_id
             origin = move.picking_id.name
-            partner, user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
+            partner, _user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
 
-            key = (partner, currency_id, company.id, user_id)
+            # Force user_id to be current user, to avoid creating multiple invoices when lines
+            # have been sold by different salesmen
+            _user_id = uid
+
+            key = (partner, currency_id, company.id, _user_id)
             invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
 
             if key not in invoices:
