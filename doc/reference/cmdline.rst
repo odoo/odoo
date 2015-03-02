@@ -306,15 +306,15 @@ Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
 
     directory in which to create the new module, defaults to the current
     directory
-
-.. _reference/cmdline/config:
-
+    
 Advanced options
 ================
 
 .. option:: --auto-reload
 
     enable auto-reloading of python files and xml files without having to restart the server
+
+.. _reference/cmdline/config:
 
 Configuration file
 ==================
