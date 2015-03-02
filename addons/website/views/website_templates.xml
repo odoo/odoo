@@ -383,24 +383,29 @@
                             their performance.
                         </p>
                     </div>
-                    <ul class="list-inline js_language_selector mt16" t-if="(request.website_multilang and len(languages) &gt; 1) or editable">
-                        <li t-foreach="languages" t-as="lg">
-                            <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
-                             t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
-                             <t t-esc="lg[1].split('/').pop()"/></a>
-                        </li>
-                        <li groups="base.group_website_publisher">
-                            <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
-                            <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
-                            <i class="fa fa-plus-circle"/>
-                            Add a language...
-                            </a>
-                        </li>
-                    </ul>
+                    <t t-call="website.language_selector"/>
                 </div>
             </div>
         </div>
     </xpath>
+</template>
+
+<template id="language_selector">
+    <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and editable)">
+        <li t-foreach="languages" t-as="lg">
+            <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+               t-att-data-default-lang="editable and 'true' if website and lg[0] == website.default_lang_code else None">
+                <t t-esc="lg[1].split('/').pop()"/>
+            </a>
+        </li>
+        <li groups="base.group_website_publisher">
+            <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+            <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
+                <i class="fa fa-plus-circle"/>
+                Add a language...
+            </a>
+        </li>
+    </ul>
 </template>
 
 <template id="publish_management">
