@@ -4041,8 +4041,7 @@ class BaseModel(object):
                 unknown.append(key)
 
         if unknown:
-            _logger.warning("%s.create() with vals %s including unknown fields: %s", self._name, vals, ', '.join(sorted(unknown)))
-            raise
+            _logger.warning("%s.create() includes unknown fields: %s", self._name, ', '.join(sorted(unknown)))
 
         # create record with old-style fields
         record = self.browse(self._create(old_vals))
