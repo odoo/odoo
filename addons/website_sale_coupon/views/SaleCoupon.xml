@@ -6,10 +6,19 @@
             <field name="model">sale.couponprogram</field>
             <field name="arch" type="xml">
               <form>
-                    <group>
+                    <group colspan="2">
                         <field name="program_name"/>
                         <field name="program_type"/>
                     </group>
+                    <group>
+                        <field name="is_program_active"/>
+                        <field name="program_sequence"/>
+                    </group>
+                    <notebook>
+                        <page string="Conditions">
+                            <field name="program_type"/>
+                        </page>
+                    </notebook>
               </form>
             </field>
         </record>
@@ -30,6 +39,5 @@
         </record>
         <menuitem id="base.menu_sales_config" parent="base.menu_base_config" sequence="1" name="Sales"/>
         <menuitem action="action_sale_coupon_configuration" id="base.menu_coupon_type_config" parent="base.menu_sales_config"/>
-
   </data>
 </openerp>
