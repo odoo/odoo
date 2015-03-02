@@ -349,10 +349,10 @@ class product_template(osv.osv):
                 incoming_qty += variant_available[p.id]["incoming_qty"]
                 outgoing_qty += variant_available[p.id]["outgoing_qty"]
             prod_available[product.id] = {
-                "qty_available":qty_available,
-                "virtual_available":virtual_available,
-                "incoming_qty":incoming_qty,
-                "outgoing_qty":outgoing_qty,
+                "qty_available": qty_available,
+                "virtual_available": virtual_available,
+                "incoming_qty": incoming_qty,
+                "outgoing_qty": outgoing_qty,
             }
         return prod_available
 
