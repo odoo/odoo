@@ -18,17 +18,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import collections
 
+import collections
 import datetime
+import pytz
 import re
 
-import pytz
-
 import openerp
-import openerp.tools
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.tools import html_escape as escape
+
 
 class website_event(http.Controller):
     @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event[0])]"):track>'''], type='http', auth="public", website=True)
@@ -150,7 +150,6 @@ class website_event(http.Controller):
             if post.get('tag_'+str(tag.id)):
                 tags.append(tag.id)
 
-        e = openerp.tools.escape
         track_description = '''<section>
     <div class="container">
         <div class="row">
@@ -166,8 +165,8 @@ class website_event(http.Controller):
             </div>
         </div>
     </div>
-</section>''' % (e(post['track_name']), 
-            e(post['description']), e(post['biography']))
+</section>''' % (escape(post['track_name']), 
+            escape(post['description']), escape(post['biography']))
 
         track_id = tobj.create(cr, openerp.SUPERUSER_ID, {
             'name': post['track_name'],
@@ -179,8 +178,8 @@ class website_event(http.Controller):
 
         tobj.message_post(cr, openerp.SUPERUSER_ID, [track_id], body="""Proposed By: %s<br/>
           Mail: <a href="mailto:%s">%s</a><br/>
-          Phone: %s""" % (e(post['partner_name']), e(post['email_from']), 
-            e(post['email_from']), e(post['phone'])), context=context)
+          Phone: %s""" % (escape(post['partner_name']), escape(post['email_from']), 
+            escape(post['email_from']), escape(post['phone'])), context=context)
 
         track = tobj.browse(cr, uid, track_id, context=context)
         values = {'track': track, 'event':event}
