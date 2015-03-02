@@ -36,6 +36,7 @@
                                     <field name="qty" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
                                     <field name="price_unit" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
                                     <field name="discount"  on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
                                     <field name="price_subtotal"/>
                                     <field name="price_subtotal_incl"/>
                                 </tree>
@@ -1016,4 +1017,3 @@
             sequence="30"/>
     </data>
 </openerp>
-
