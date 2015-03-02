@@ -21,7 +21,7 @@
             <field name="invoice_on_timesheets">True</field>
         </record>
 
-        <record id="working_hours_requirements" model="hr.analytic.timesheet">
+        <record id="working_hours_requirements" model="account.analytic.line">
             <field name="name">Requirements analysis and specification</field>
             <field name="user_id" ref="base.user_root"/>
             <field eval="time.strftime('%Y-%m-%d')" name="date"/>
@@ -32,9 +32,10 @@
             <field eval="-60.00" name="amount"/>
             <field name="general_account_id" ref="account.a_expense"/>
             <field name="journal_id" ref="analytic_journal"/>
+            <field name="is_timesheet" eval="True"/>
         </record>
 
-        <record id="working_hours_design" model="hr.analytic.timesheet">
+        <record id="working_hours_design" model="account.analytic.line">
             <field name="name">Design and specification</field>
             <field name="user_id" ref="base.user_root"/>
             <field eval="time.strftime('%Y-%m-%d')" name="date"/>
@@ -45,9 +46,10 @@
             <field eval="-30.00" name="amount"/>
             <field name="general_account_id" ref="account.a_expense"/>
             <field name="journal_id" ref="analytic_journal"/>
+            <field name="is_timesheet" eval="True"/>
         </record>
 
-        <record id="working_hours_coding" model="hr.analytic.timesheet">
+        <record id="working_hours_coding" model="account.analytic.line">
             <field name="name">Coding and module testing</field>
             <field name="user_id" ref="base.user_root"/>
             <field eval="time.strftime('%Y-%m-%d')" name="date"/>
@@ -58,9 +60,10 @@
             <field eval="-90.00" name="amount"/>
             <field name="general_account_id" ref="account.a_expense"/>
             <field name="journal_id" ref="analytic_journal"/>
+            <field name="is_timesheet" eval="True"/>
         </record>
 
-        <record id="working_hours_testing" model="hr.analytic.timesheet">
+        <record id="working_hours_testing" model="account.analytic.line">
             <field name="name">Integration and system testing</field>
             <field name="user_id" ref="base.user_root"/>
             <field eval="time.strftime('%Y-%m-%d')" name="date"/>
@@ -71,9 +74,10 @@
             <field eval="-30.00" name="amount"/>
             <field name="general_account_id" ref="account.a_expense"/>
             <field name="journal_id" ref="analytic_journal"/>
+            <field name="is_timesheet" eval="True"/>
         </record>
 
-        <record id="working_hours_maintenance" model="hr.analytic.timesheet">
+        <record id="working_hours_maintenance" model="account.analytic.line">
             <field name="name">Delivery and maintenance</field>
             <field name="user_id" ref="base.user_root"/>
             <field eval="time.strftime('%Y-%m-%d')" name="date"/>
@@ -84,6 +88,7 @@
             <field eval="-30.00" name="amount"/>
             <field name="general_account_id" ref="account.a_expense"/>
             <field name="journal_id" ref="analytic_journal"/>
+            <field name="is_timesheet" eval="True"/>
         </record>
         
         <record id="product.product_product_consultant" model="product.product">

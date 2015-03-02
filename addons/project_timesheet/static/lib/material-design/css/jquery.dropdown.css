@@ -1,0 +1,88 @@
+.dropdownjs {
+  position: relative;
+}
+.dropdownjs  * {
+  box-sizing: border-box;
+}
+.dropdownjs > input {
+  width: 100%;
+  padding-right: 30px;
+  text-overflow: ellipsis;
+}
+.dropdownjs > input.focus ~ ul {
+  transform: scale(1);
+}
+.dropdownjs > ul {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  min-width: 200px;
+  transform: scale(0);
+  z-index: 10000;
+}
+.dropdownjs > ul[placement=top-left] {
+  transform-origin: bottom left;
+  bottom: 0;
+  left: 0;
+}
+.dropdownjs > ul[placement=bottom-left] {
+  transform-origin: top left;
+  top: 0;
+  left: 0;
+}
+.dropdownjs > ul  > li {
+  list-style: none;
+  padding: 10px 20px;
+}
+.dropdownjs > ul  > li.dropdownjs-add {
+  padding: 0;
+}
+.dropdownjs > ul  > li.dropdownjs-add > input {
+  border: 0;
+  padding: 10px 20px;
+  width: 100%;
+}
+
+/* Theme */
+.dropdownjs > input[readonly] {
+  cursor: pointer;
+}
+select[data-dropdownjs][disabled] + .dropdownjs > input[readonly] {
+  cursor: default;
+}
+.dropdownjs > ul {
+  background: #FFF;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 6px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease-out;
+  padding: 10px;
+  overflow: auto;
+  max-width: 500px;
+}
+.dropdownjs > ul > li {
+  cursor: pointer;
+  word-wrap: break-word;
+}
+.dropdownjs > ul > li.selected,
+.dropdownjs > ul > li:active {
+  background-color: #eaeaea;
+}
+.dropdownjs > ul > li:focus {
+  outline: 0;
+  outline: 1px solid #d4d4d4;
+}
+.dropdownjs > ul > li > .close:before {
+  content: "\00d7";
+  display: block;
+  position: absolute;
+  right: 15px;
+  float: right;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: .6;
+}
+.dropdownjs > ul > li:h > .close:hover:before {
+  opacity: .9;
+}

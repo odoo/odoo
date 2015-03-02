@@ -345,7 +345,8 @@ class account_analytic_line(osv.osv):
     _defaults = {
         'date': __get_default_date,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
-        'amount': 0.00
+        'amount': 0.00,
+        'user_id': lambda self, cr, uid, ctx: ctx.get('user_id') or uid,
     }
 
     _order = 'date desc'

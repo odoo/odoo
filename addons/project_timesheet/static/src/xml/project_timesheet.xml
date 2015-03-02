@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProjectTimesheet">
+        <div class="container-fluid pt_application">
+            <div class="row screens"></div>
+        </div>
+    </t>
+    <!-- tac stuff : -->
+    <t t-name="activities_screen">
+    	<t t-call="header">
+    	</t>
+    	<div class="pt_activities_screen">
+    		<div class="row pt_timer">
+    			<!--"main" section-->
+	    		<div class="col-xs-6">
+		    		<!--Put time here-->
+		    		
+		    	</div>
+		    	<div class="col-xs-3">
+		    		<!--Start button / stop button-->
+		    		<a href="javascript:void(0)" class="btn btn-link pt_btn_start_activity pt_btn"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start</a>
+				</div>
+			</div>
+            <div class="pt_activities_list">
+    			<!--Rows etc.-->
+    			<t t-if="widget.account_analytic_lines">
+    				<t t-foreach="widget.account_analytic_lines" t-as="account_analytic_line">
+    					<div class="col-xs-12 pt_activity_box">
+        					<div class="row">
+    							<div class="col-xs-8 pt_activity" t-att-data-activity_id="account_analytic_line.id">
+    								<span class="pt_project"><t t-esc="widget.get_project_name(account_analytic_line.project_id)"/></span>
+                                    <br/>
+    								<t t-if="account_analytic_line.task_id">
+    						    		<t t-esc="widget.get_task_name(account_analytic_line.task_id)"/>
+    						    	</t>
+    							</div>
+    							<div class="col-xs-1">
+    								<div class="row">
+    								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    								</div>
+    								<div class="row">
+    								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+    								</div>
+    							</div>
+    							<div class="col-xs-2">
+                                    <t t-if="account_analytic_line.unit_amount">
+        								<t t-esc="widget.unit_amount_to_hours_minutes(account_analytic_line.unit_amount)"/>
+                                    </t>
+    							</div>
+        					</div>
+    					</div>
+    				</t>
+    			</t>
+            </div>
+            <br/>
+            <a href="javascript:void(0)" class="btn btn-link pt_test_btn pt_btn">Test Sync</a>
+    	</div>
+    </t>
+
+    <t t-name="day_planner_screen">
+    	<t t-call="header"></t>
+    	<div class="pt_day_planner_screen">
+    		<div class="well">
+    			What will you be working on today?
+    		</div>
+    		<div class="container-fluid">
+                <t t-if="widget.tasks">
+    	    		<t t-foreach="widget.tasks" t-as="task">
+        				<div class="row pt_day_plan_select" t-att-data-task_id="task.id">
+	    					<div class="col-xs-3 pt_day_plan_selected">
+	    						<!-- Hidden at the moment, should appear dynamically when selected.
+	    						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+	    						-->
+	    					</div>
+	    				
+	    					<div class="col-xs-9">
+	    						<div class="row">
+	    							<span class="pt_project"> <t t-esc="widget.get_project_name(task.project_id)"/></span>
+	    						</div>
+	    						<div class="row">
+	    							<t t-esc="task.name"/>
+	    						</div>
+	    					</div>
+        				</div>
+                    </t>
+	    		</t>
+    		</div>
+    	</div>
+    </t>
+
+	<t t-name="settings_screen">
+    	<t t-call="header">
+    	</t>
+    	<div class="pt_settings_screen container-fluid">
+    		<div class="panel">
+    			<div class="panel-heading">
+	    			<p>Default project</p>
+	    		</div>
+	    		<div class="panel-body">
+	    			<div class="col-xs-12">
+                        <input type="hidden" name="pt_default_project" class="form-control pt_default_project_select2"/>
+			    	</div>
+		    	</div>
+	    	</div>
+	    	<div class="col-xs-12">
+	    		<div class="row">
+    				<p><small>The default project when starting a new timer or adding a new task.</small></p>
+    				<div class="progress" style="width: 100%"></div>
+    			</div>
+    			<div class="row">
+    				<p>Minimal duration</p>
+    				<div class="input-group">
+    					<input type="text" class="pt_minimal_duration" aria-describedby="minutes" t-att-placeholder="widget.data.settings.minimal_duration"></input>
+    					<span class="input-group-addon" id="minutes">minutes</span>
+					</div>
+    				<p><small>When synchronizing, all durations below the minimal duration will be changed to this value.</small></p>
+    				<div class="progress" style="width: 100%"></div>
+    			</div>
+    			<div class="row">
+    				<p>Time unit</p>
+    				<div class="input-group">
+    					<input type="text" class="pt_time_unit" aria-describedby="minutes" t-att-placeholder="widget.data.settings.time_unit"></input>
+    					<span class="input-group-addon" id="minutes">minutes</span>
+					</div>
+    				<p><small>When synchronizing, all durations will be rounded up to the higher multiple of this value.</small></p>
+    				<div class="progress" style="width: 100%"></div>
+    			</div>
+	    	</div>
+    	</div>
+    </t>
+
+    <t t-name="edit_activity_screen">
+        <t t-call="header">
+        </t>
+        <div class="container-fluid"> 
+                <p>Project</p>
+                <!--select2 project selection-->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input type="hidden" name="pt_activity_project" class="form-control pt_activity_project"/>
+                    </div>
+                </div>
+            <div>
+                <p><br/>Task</p>
+                <div>
+                    <input type="hidden" name="pt_activity_task" class="form-control pt_activity_task"/>
+                </div>
+                    <t t-if="!widget.activity">
+                        <p><small>Please select a project first</small></p>
+                    </t>
+                    <br/>
+            </div>
+            <div>
+                <p>Time spent (hh:mm)</p>
+                <t t-if="widget.activity.unit_amount">
+                    <input type="text" class="pt_activity_duration" aria-describedby="Time Spent" t-att-value="widget.unit_amount_to_hours_minutes(widget.activity.unit_amount)"></input>
+                </t>
+                <t t-if="!widget.activity.unit_amount">
+                    <input type="text" class="pt_activity_duration" aria-describedby="Time Spent" placeholder="00:00"></input>
+                </t>
+                <!--Empty p for alert in case of wrong input -->
+                <p></p>
+            </div>
+            <div>
+                <p>Work Summary</p>
+                <t t-if="widget.activity.desc">
+                    <textarea class="pt_description"><t t-esc="widget.activity.desc"/></textarea>
+                </t>
+                <t t-if="!widget.activity.desc">
+                    <textarea class="pt_description"></textarea>
+                </t>
+            </div>
+            <div class="col-xs-6">
+                <a href="javascript:void(0)" class="btn btn-link pt_btn pt_validate_edit_btn">Save</a>
+            </div>
+            <div class="col-xs-6">
+                <a href="javascript:void(0)" class="btn btn-link pt_btn pt_discard_changes">Discard</a>
+            </div>
+            <div class="row">
+                <div class="pt_save_msg well" style="display:none">Please select a project</div>
+            </div>    
+        </div>
+    </t>
+    <t t-name="header">
+    	<!-- <div class="panel-material-grey"> -->
+    		<div class="well o_color">
+    	    	<div class="row">
+    	    		<div class="col-xs-2">
+                        <t t-if="widget.screen_name != 'Edit Activity'">
+        	    			<div class="dropdown">
+        	    				<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+        	    				<ul class="dropdown-menu">
+        	    					<li><a class="pt_activities_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-alarm"></i>   Activities </div></a></li>
+        	    					<li><a class="pt_day_planner_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-notification-event-note"></i>   Day Planner </div></a></li>
+        	    					<li><a class="pt_settings_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-settings"></i>   Settings </div></a></li>
+        	    				</ul>
+        	    			</div>
+                        </t>
+                        <t t-if="widget.screen_name == 'Edit Activity'">
+                            <a href="javascript:void(0)"><span class="glyphicon glyphicon-arrow-left pt_discard_changes" aria-hidden="true"></span></a>
+                        </t>
+
+    	    		</div>
+    	    		<div class="col-xs-8">
+    	    			<a href="javascript:void(0)"><t t-esc="widget.screen_name"/></a>
+    	    		</div>
+    	    		<div class="col-xs-2">
+    	    			<t t-if="widget.screen_name == 'Activities'">
+    						<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus pt_button_plus_activity" aria-hidden="true"></span></a>
+    					</t>
+                        <!-- <t t-if="widget.screen_name == 'Edit Activity'">
+                            <a href="javascript:void(0)"><span class="glyphicon glyphicon-ok pt_validate_edit_btn" aria-hidden="true"></span></a>
+                        </t> -->
+    					<t t-if="widget.screen_name != 'Activities' and widget.screen_name != 'Edit Activity'">
+    						<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
+    					</t>
+	    		</div>
+		    </div>
+    	</div>    		
+    </t>
+</templates>

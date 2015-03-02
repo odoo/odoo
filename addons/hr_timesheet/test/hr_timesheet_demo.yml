@@ -4,7 +4,7 @@
   !context
     uid: 'res_hr_timesheet_officer'
 -
-  !record {model: hr.analytic.timesheet, id: working_hours_coding, view: False}:
+  !record {model: account.analytic.line, id: working_hours_coding, view: False}:
     user_id: base.user_demo
     date: !eval time.strftime('%Y-%m-%d')
     account_id: analytic.analytic_administratif

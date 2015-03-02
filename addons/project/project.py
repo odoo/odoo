@@ -111,73 +111,6 @@ class project(osv.osv):
             val['pricelist_id'] = pricelist_id
         return {'value': val}
 
-    def _get_projects_from_tasks(self, cr, uid, task_ids, context=None):
-        tasks = self.pool.get('project.task').browse(cr, uid, task_ids, context=context)
-        project_ids = [task.project_id.id for task in tasks if task.project_id]
-        return self.pool.get('project.project')._get_project_and_parents(cr, uid, project_ids, context)
-
-    def _get_project_and_parents(self, cr, uid, ids, context=None):
-        """ return the project ids and all their parent projects """
-        res = set(ids)
-        while ids:
-            cr.execute("""
-                SELECT DISTINCT parent.id
-                FROM project_project project, project_project parent, account_analytic_account account
-                WHERE project.analytic_account_id = account.id
-                AND parent.analytic_account_id = account.parent_id
-                AND project.id IN %s
-                """, (tuple(ids),))
-            ids = [t[0] for t in cr.fetchall()]
-            res.update(ids)
-        return list(res)
-
-    def _get_project_and_children(self, cr, uid, ids, context=None):
-        """ retrieve all children projects of project ids;
-            return a dictionary mapping each project to its parent project (or None)
-        """
-        res = dict.fromkeys(ids, None)
-        while ids:
-            cr.execute("""
-                SELECT project.id, parent.id
-                FROM project_project project, project_project parent, account_analytic_account account
-                WHERE project.analytic_account_id = account.id
-                AND parent.analytic_account_id = account.parent_id
-                AND parent.id IN %s
-                """, (tuple(ids),))
-            dic = dict(cr.fetchall())
-            res.update(dic)
-            ids = dic.keys()
-        return res
-
-    def _progress_rate(self, cr, uid, ids, names, arg, context=None):
-        child_parent = self._get_project_and_children(cr, uid, ids, context)
-        # compute planned_hours, total_hours, effective_hours specific to each project
-        cr.execute("""
-            SELECT project_id, COALESCE(SUM(planned_hours), 0.0),
-                COALESCE(SUM(total_hours), 0.0), COALESCE(SUM(effective_hours), 0.0)
-            FROM project_task
-            LEFT JOIN project_task_type ON project_task.stage_id = project_task_type.id
-            WHERE project_task.project_id IN %s AND project_task_type.fold = False
-            GROUP BY project_id
-            """, (tuple(child_parent.keys()),))
-        # aggregate results into res
-        res = dict([(id, {'planned_hours':0.0, 'total_hours':0.0, 'effective_hours':0.0}) for id in ids])
-        for id, planned, total, effective in cr.fetchall():
-            # add the values specific to id to all parent projects of id in the result
-            while id:
-                if id in ids:
-                    res[id]['planned_hours'] += planned
-                    res[id]['total_hours'] += total
-                    res[id]['effective_hours'] += effective
-                id = child_parent[id]
-        # compute progress rates
-        for id in ids:
-            if res[id]['total_hours']:
-                res[id]['progress_rate'] = round(100.0 * res[id]['effective_hours'] / res[id]['total_hours'], 2)
-            else:
-                res[id]['progress_rate'] = 0.0
-        return res
-
     def unlink(self, cr, uid, ids, context=None):
         alias_ids = []
         mail_alias = self.pool.get('mail.alias')
@@ -283,26 +216,6 @@ class project(osv.osv):
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
-        'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
-            store = {
-                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
-                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
-            }),
-        'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects.",
-            store = {
-                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
-                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
-            }),
-        'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
-            store = {
-                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
-                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
-            }),
-        'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo.",
-            store = {
-                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
-                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
-            }),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Tasks",),
@@ -696,22 +609,6 @@ class task(osv.osv):
             border[0]+' '+(task.name or '')+'\n'+ \
             (task.description or '')+'\n\n'
 
-    # Compute: effective_hours, total_hours, progress
-    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-        res = {}
-        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
-        hours = dict(cr.fetchall())
-        for task in self.browse(cr, uid, ids, context=context):
-            res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': (task.remaining_hours or 0.0) + hours.get(task.id, 0.0)}
-            res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
-            res[task.id]['progress'] = 0.0
-            if (task.remaining_hours + hours.get(task.id, 0.0)):
-                res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
-            # TDE CHECK: if task.state in ('done','cancelled'):
-            if task.stage_id and task.stage_id.fold:
-                res[task.id]['progress'] = 100.0
-        return res
-
     def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned=0.0):
         if remaining and not planned:
             return {'value': {'planned_hours': remaining}}
@@ -759,12 +656,6 @@ class task(osv.osv):
                     res[task.id] = False
         return res
 
-    def _get_task(self, cr, uid, ids, context=None):
-        result = {}
-        for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
-            if work.task_id: result[work.task_id.id] = True
-        return result.keys()
-
     _columns = {
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', track_visibility='onchange', size=128, required=True, select=True),
@@ -792,31 +683,10 @@ class task(osv.osv):
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
         'planned_hours': fields.float('Initially Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
-        'effective_hours': fields.function(_hours_get, string='Hours Spent', multi='hours', help="Computed using the sum of the task work done.",
-            store = {
-                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
-                'project.task.work': (_get_task, ['hours'], 10),
-            }),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
-        'total_hours': fields.function(_hours_get, string='Total', multi='hours', help="Computed as: Time Spent + Remaining Time.",
-            store = {
-                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
-                'project.task.work': (_get_task, ['hours'], 10),
-            }),
-        'progress': fields.function(_hours_get, string='Working Time Progress (%)', multi='hours', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
-            store = {
-                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
-                'project.task.work': (_get_task, ['hours'], 10),
-            }),
-        'delay_hours': fields.function(_hours_get, string='Delay Hours', multi='hours', help="Computed as difference between planned hours by the project manager and the total hours of the task.",
-            store = {
-                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
-                'project.task.work': (_get_task, ['hours'], 10),
-            }),
         'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
-        'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
         'id': fields.integer('ID', readonly=True),
@@ -829,7 +699,6 @@ class task(osv.osv):
         'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
         'priority': '0',
-        'progress': 0,
         'sequence': 10,
         'active': True,
         'user_id': lambda obj, cr, uid, ctx=None: uid,
@@ -975,6 +844,10 @@ class task(osv.osv):
             new_attachment_ids.append(attachment.copy(cr, uid, attachment_id, default={'res_id': delegated_task_id}, context=context))
         return new_attachment_ids
 
+    def _get_effective_hours(self, task):
+        # this method is override in project_timesheet modules.
+        return  0.0
+
     def do_delegate(self, cr, uid, ids, delegate_data=None, context=None):
         """
         Delegate Task to another users.
@@ -993,13 +866,12 @@ class task(osv.osv):
                 'parent_ids': [(6, 0, [task.id])],
                 'description': delegate_data['new_task_description'] or '',
                 'child_ids': [],
-                'work_ids': []
             }, context=context)
             self._delegate_task_attachments(cr, uid, task.id, delegated_task_id, context=context)
             newname = delegate_data['prefix'] or ''
             task.write({
                 'remaining_hours': delegate_data['planned_hours_me'],
-                'planned_hours': delegate_data['planned_hours_me'] + (task.effective_hours or 0.0),
+                'planned_hours': delegate_data['planned_hours_me'] + self._get_effective_hours(task),
                 'name': newname,
             }, context=context)
             delegated_tasks[task.id] = delegated_task_id
@@ -1091,6 +963,9 @@ class task(osv.osv):
         res = super(task, self).unlink(cr, uid, ids, context)
         return res
 
+    def _get_total_hours(self, task):
+        return self._get_effective_hours(task) + task.remaining_hours
+
     def _generate_task(self, cr, uid, tasks, ident=4, context=None):
         context = context or {}
         result = ""
@@ -1101,7 +976,7 @@ class task(osv.osv):
             result += '''
 %sdef Task_%s():
 %s  todo = \"%.2fH\"
-%s  effort = \"%.2fH\"''' % (ident,task.id, ident,task.remaining_hours, ident,task.total_hours)
+%s  effort = \"%.2fH\"''' % (ident,task.id, ident,task.remaining_hours, ident, self._get_total_hours(task))
             start = []
             for t2 in task.parent_ids:
                 start.append("up.Task_%s.end" % (t2.id,))
@@ -1180,50 +1055,6 @@ class task(osv.osv):
                     except (ValueError, TypeError):
                         pass
         return super(task, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
-
-class project_work(osv.osv):
-    _name = "project.task.work"
-    _description = "Project Task Work"
-    _columns = {
-        'name': fields.char('Work summary'),
-        'date': fields.datetime('Date', select="1"),
-        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select="1"),
-        'hours': fields.float('Time Spent'),
-        'user_id': fields.many2one('res.users', 'Done by', required=True, select="1"),
-        'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
-    }
-
-    _defaults = {
-        'user_id': lambda obj, cr, uid, context: uid,
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')
-    }
-
-    _order = "date desc"
-    def create(self, cr, uid, vals, context=None):
-        if 'hours' in vals and (not vals['hours']):
-            vals['hours'] = 0.00
-        if 'task_id' in vals:
-            cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
-            self.pool.get('project.task').invalidate_cache(cr, uid, ['remaining_hours'], [vals['task_id']], context=context)
-        return super(project_work,self).create(cr, uid, vals, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'hours' in vals and (not vals['hours']):
-            vals['hours'] = 0.00
-        if 'hours' in vals:
-            task_obj = self.pool.get('project.task')
-            for work in self.browse(cr, uid, ids, context=context):
-                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours',0.0), work.hours, work.task_id.id))
-                task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
-        return super(project_work,self).write(cr, uid, ids, vals, context)
-
-    def unlink(self, cr, uid, ids, context=None):
-        task_obj = self.pool.get('project.task')
-        for work in self.browse(cr, uid, ids):
-            cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
-            task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
-        return super(project_work,self).unlink(cr, uid, ids, context=context)
-
 
 class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'

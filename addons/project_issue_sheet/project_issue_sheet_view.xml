@@ -6,6 +6,9 @@
             <field name="model">project.issue</field>
             <field name="inherit_id" ref="project_issue.project_issue_form_view" />
             <field name="arch" type="xml">
+                <field name="task_id"  position="after">
+                    <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}" class="oe_inline"/>
+                </field>
                 <field name="project_id" position="attributes">
                     <attribute name="on_change">on_change_project(project_id)</attribute>
                 </field>
@@ -15,26 +18,38 @@
                         on_change='on_change_account_id(analytic_account_id)'/>
                 </field>
                 <xpath expr="//notebook/page[@name='extra_info']" position="before">
-                    <page string="Worklogs">
-                        <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : uid, 'default_account_id' : analytic_account_id}"
+                    <page string="Timesheets">
+                        <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : uid, 'default_account_id' : analytic_account_id, 'default_is_timesheet':1}"
                                 groups="base.group_user">
-                            <tree editable="top" string="Timesheets">
-                                <field name="name"/>
-                                <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
-                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id)" groups="analytic.group_analytic_accounting"/>
+                            <tree editable="top" string="Timesheet Activities">
                                 <field name="date"/>
-                                <field name="user_id"/>
-                                <field invisible="1" name="journal_id"/>
-                                <field invisible="1" name="product_id"/>
-                                <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                <field invisible="1" name="amount"/>
-                                <field invisible="1" name="general_account_id"/>
+                                <field name="user_id" required="1"/>
+                                <field name="name"/>
+                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id, context)" groups="analytic.group_analytic_accounting"/>
+                                <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" widget="float_time"/>
                                 <field invisible="1" name="to_invoice"/>
+                                <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)"/>
+                                <field name="journal_id" invisible="1"/>
+                                <field invisible="1" name="amount"/>
+                                <field name="general_account_id" invisible="1"/>
+                                <field invisible="1" name="product_id"/>
                             </tree>
                         </field>
                     </page>
                 </xpath>
             </field>
         </record>
+
+        <record id="project_issue_tree_view_inherited" model="ir.ui.view">
+            <field name="name">Project Issue Tracker Tree Inherited</field>
+            <field name="model">project.issue</field>
+            <field name="inherit_id" ref="project_issue.project_issue_tree_view" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>
