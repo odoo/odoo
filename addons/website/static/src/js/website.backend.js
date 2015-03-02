@@ -46,15 +46,9 @@ instance.web.form.FieldTextHtml = widget.extend({
 
         // init resize
         this.resize = function resize() {
+            if (self.get('effective_readonly')) { return; }
             if ($("body").hasClass("o_form_FieldTextHtml_fullscreen")) {
                 self.$iframe.css('height', $("body").hasClass('o_form_FieldTextHtml_fullscreen') ? (document.body.clientHeight - self.$iframe.offset().top) + 'px' : '');
-            } else if (self.get('effective_readonly')) {
-                var height = 110;
-                try {
-                    height += self.$body.height();
-                    height +=  parseInt(self.$content.parent().css("margin-top"));
-                } catch (e) {}
-                self.$iframe.css("height", height+"px");
             } else {
                 self.$iframe.css("height", (self.$body.find("#oe_snippets").length ? 500 : 300) + "px");
             }
@@ -93,15 +87,17 @@ instance.web.form.FieldTextHtml = widget.extend({
         return src;
     },
     initialize_content: function() {
-        this.$iframe = this.$el.find('iframe');
-        this.document = null;
-        this.$body = $();
-        this.$content = $();
-        this.dirty = false;
-        this.editor = false;
-        window.openerp[this.callback+"_set_value"] = function () {};
+        if (!this.get("effective_readonly")) {
+            this.$iframe = this.$el.find('iframe');
+            this.document = null;
+            this.$body = $();
+            this.$content = $();
+            this.dirty = false;
+            this.editor = false;
+            window.openerp[this.callback+"_set_value"] = function () {};
 
-        this.$iframe.attr("src", this.get_url());
+            this.$iframe.attr("src", this.get_url());
+        }
     },
     on_content_loaded: function () {
         var self = this;
@@ -134,12 +130,16 @@ instance.web.form.FieldTextHtml = widget.extend({
         }, 500);
     },
     render_value: function() {
-        if (!this.$content) {
-            return;
-        }
-        if(window.openerp[this.callback+"_set_value"]) {
-            window.openerp[this.callback+"_set_value"](this.get('value') || '', this.view.get_fields_values());
-            this.resize();
+        if (!this.get("effective_readonly")) {
+            if (!this.$content) {
+                return;
+            }
+            if(window.openerp[this.callback+"_set_value"]) {
+                window.openerp[this.callback+"_set_value"](this.get('value') || '', this.view.get_fields_values());
+                this.resize();
+            }
+        } else {
+            this.$el.html(this.get('value'));
         }
     },
     is_false: function() {
