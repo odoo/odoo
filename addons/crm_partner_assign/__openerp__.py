@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-
 {
     'name': 'Partner Assignation & Geolocation',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """
-This is the module used by OpenERP SA to redirect customers to its partners, based on geolocation.
+This is the module used by Odoo S.A. to redirect customers to its partners, based on geolocation.
 ======================================================================================================
 
 This modules lets you geolocate Leads, Opportunities and Partners based on their address.
@@ -15,7 +13,8 @@ This modules lets you geolocate Leads, Opportunities and Partners based on their
 Once the coordinates of the Lead/Opportunity is known, they can be automatically assigned
 to an appropriate local partner, based on the distance and the weight that was assigned to the partner.
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
+    'website': 'https://www.odoo.com',
     'depends': ['base_geolocalize', 'crm', 'account', 'portal'],
     'data': [
         'security/ir.model.access.csv',
@@ -33,7 +32,5 @@ to an appropriate local partner, based on the distance and the weight that was a
         'data/res_partner_demo.xml',
         'data/crm_lead_demo.xml'
     ],
-    'test': ['test/partner_assign.yml'],
     'installable': True,
-    'auto_install': False,
 }

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!--     Opportunity tree view  -->
         <record id="view_report_crm_lead_assign_filter" model="ir.ui.view">
-            <field name="name">crm.lead.report.assign.select</field>
+            <field name="name">crm.lead.report.assign.search</field>
             <field name="model">crm.lead.report.assign</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
@@ -79,5 +78,4 @@
        <menuitem id="menu_report_crm_opportunities_assign_tree"
            parent="base.menu_sale_report" action="action_report_crm_opportunity_assign" sequence="20"/>
 
-    </data>
-</openerp>
+</odoo>

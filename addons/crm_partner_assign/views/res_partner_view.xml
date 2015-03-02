@@ -1,10 +1,8 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
         <!--Partner Activation -->
-
-        <record model="ir.ui.view" id="res_partner_activation_form">
+        <record id="res_partner_activation_form" model="ir.ui.view">
             <field name="name">openerp_custom.res.partner.activation.form</field>
             <field name="model">res.partner.activation</field>
             <field name="arch" type="xml">
@@ -16,7 +14,7 @@
                 </form>
             </field>
         </record>
-        <record model="ir.ui.view" id="res_partner_activation_tree">
+        <record id="res_partner_activation_tree" model="ir.ui.view">
             <field name="name">openerp_custom.res.partner.activation.tree</field>
             <field name="model">res.partner.activation</field>
             <field name="arch" type="xml">
@@ -26,7 +24,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="res_partner_activation_act">
+        <record id="res_partner_activation_act" model="ir.actions.act_window">
             <field name="name">Partner Activations</field>
             <field name="res_model">res.partner.activation</field>
             <field name="view_type">form</field>
@@ -37,8 +35,6 @@
             sequence="6"/>
 
     <!--Partner Grade -->
-
-
     <record id="view_partner_grade_tree" model="ir.ui.view">
         <field name="name">res.partner.grade.tree</field>
         <field name="model">res.partner.grade</field>
@@ -81,7 +77,7 @@
 
     <!-- Partner form -->
     <record id="view_res_partner_filter_assign_tree" model="ir.ui.view">
-        <field name="name">res.partner.geo.inherit.tree</field>
+        <field name="name">res.partner.geo.tree.inherit</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
@@ -94,7 +90,7 @@
     </record>
 
     <record id="view_res_partner_filter_assign" model="ir.ui.view">
-        <field name="name">res.partner.geo.inherit.search</field>
+        <field name="name">res.partner.geo.search.inherit</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
@@ -139,5 +135,4 @@
         </field>
     </record>
 
-    </data>
-</openerp>
+</odoo>

@@ -1,19 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-    	<record model="ir.ui.view" id="crm_lead_channel_interested_form">
-    		<field name="name">crm_lead_channel_interested</field>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="crm_lead_channel_interested_form">
+            <field name="name">crm.lead.channel.interested.form</field>
             <field name="model">crm.lead.channel.interested</field>
             <field name="arch" type="xml">
-            	<form string="Send Mail">
-            		<group col="1">
+                <form string="Send Mail">
+                    <group col="1">
                         <field name="interested" nolabel="1" invisible="1"/>
                         <div>
                             <div invisible="context.get('interested', True)">
-                            	<label for="comment" string="Why aren't you interested by this lead?" />	
+                                <label for="comment" string="Why aren't you interested by this lead?" />	
                             </div>
                             <div invisible="not context.get('interested', True)">
-                            	<label for="comment" string="What is the next action? When? What is the expected revenue?" />
+                                <label for="comment" string="What is the next action? When? What is the expected revenue?" />
                             </div>
                         </div>
                         <field name="comment" nolabel="1"/>
@@ -30,10 +29,10 @@
                         or
                         <button string="Cancel" special="cancel" class="oe_link"/>
                     </footer>
-            	</form>
+                </form>
             </field>
-    	</record>
-    	<record model="ir.actions.act_window" id="crm_lead_channel_interested_act">
+        </record>
+        <record model="ir.actions.act_window" id="crm_lead_channel_interested_act">
             <field name="name">Lead Feedback</field>
             <field name="res_model">crm.lead.channel.interested</field>
             <field name="view_type">form</field>
@@ -41,5 +40,4 @@
             <field name="view_id" ref="crm_lead_channel_interested_form"/>
             <field name="target">new</field>
         </record>
-    </data>
-</openerp>
+</odoo>

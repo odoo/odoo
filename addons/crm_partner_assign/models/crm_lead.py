@@ -1,42 +1,113 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
-from openerp.tools.translate import _
-from openerp.tools.safe_eval import safe_eval as eval
+import random
+from openerp import api, fields, models, _
 from openerp.exceptions import UserError
+from openerp.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
 
 
-class crm_lead(osv.osv):
+class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
-    def get_interested_action(self, cr, uid, interested, context=None):
+    partner_latitude = fields.Float(string='Geo Latitude', digits=(16, 5))
+    partner_longitude = fields.Float(string='Geo Longitude', digits=(16, 5))
+    partner_assigned_id = fields.Many2one('res.partner', string='Assigned Partner',
+                                          track_visibility='onchange',
+                                          index=True,
+                                          help="Partner this case has been forwarded/assigned to.")
+    date_assign = fields.Date(string='Assignation Date',
+                              help="Last date this case was forwarded/assigned to a partner")
+
+    @api.onchange('partner_assigned_id')
+    def onchange_assign_id(self):
+        """This function updates the "assignation date" automatically,
+           when manually assign a partner in the geo assign tab"""
+        self.date_assign = fields.Date.context_today(self)
+        self.user_id = self.partner_assigned_id.user_id.id
+
+    def get_interested_action(self, interested):
         try:
-            model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'crm_lead_channel_interested_act')
+            LeadChannelAct = self.env.ref('crm_partner_assign.crm_lead_channel_interested_act')
         except ValueError:
             raise UserError(_("The CRM Channel Interested Action is missing"))
-        action = self.pool[model].read(cr, uid, [action_id], context=context)[0]
+        action = LeadChannelAct.read()[0]
         action_context = eval(action['context'])
         action_context['interested'] = interested
         action['context'] = str(action_context)
         return action
 
-    def case_interested(self, cr, uid, ids, context=None):
-        return self.get_interested_action(cr, uid, True, context=context)
+    @api.multi
+    def case_interested(self):
+        self.ensure_one()
+        return self.get_interested_action(True)
 
-    def case_disinterested(self, cr, uid, ids, context=None):
-        return self.get_interested_action(cr, uid, False, context=context)
+    @api.multi
+    def case_disinterested(self):
+        self.ensure_one()
+        return self.get_interested_action(False)
 
-    def assign_salesman_of_assigned_partner(self, cr, uid, ids, context=None):
-        salesmans_leads = {}
-        for lead in self.browse(cr, uid, ids, context=context):
-            if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1: 
-                if lead.partner_assigned_id and lead.partner_assigned_id.user_id and lead.partner_assigned_id.user_id != lead.user_id:
-                    salesman_id = lead.partner_assigned_id.user_id.id
-                    if salesmans_leads.get(salesman_id):
-                        salesmans_leads[salesman_id].append(lead.id)
-                    else:
-                        salesmans_leads[salesman_id] = [lead.id]
-        for salesman_id, lead_ids in salesmans_leads.items():
-            salesteam_id = self.on_change_user(cr, uid, lead_ids, salesman_id, context=None)['value'].get('team_id')
-            self.write(cr, uid, lead_ids, {'user_id': salesman_id, 'team_id': salesteam_id}, context=context)
+    @api.multi
+    def assign_salesman_of_assigned_partner(self):
+        for lead in self.filtered(lambda x: x.partner_assigned_id.user_id != x.user_id and x.stage_id.probability > 0 and x.stage_id.probability < 100 or x.stage_id.sequence == 1):
+            salesman_id = lead.partner_assigned_id.user_id.id
+            salesteam_id = self.on_change_user(salesman_id)['value'].get('team_id')
+            lead.write({'user_id': salesman_id, 'team_id': salesteam_id})
+
+    @api.model
+    def _merge_data(self, oldest, fields):
+        fields += ['partner_latitude', 'partner_longitude',
+                   'partner_assigned_id', 'date_assign']
+        return super(CrmLead, self)._merge_data(oldest, fields)
+
+    @api.multi
+    def action_assign_partner(self):
+        partner_dict = self.search_geo_partner()
+        for lead in self:
+            partner = partner_dict.get(lead.id, False)
+            if not partner:
+                continue
+            if not lead.partner_latitude or not lead.partner_longitude:
+                lead.assign_geo_localize()
+            if partner.user_id:
+                lead.allocate_salesman([partner.user_id.id], team_id=partner.team_id.id)
+            lead.write({
+                'date_assign': fields.Date.context_today(self),
+                'partner_assigned_id': partner.id
+            })
+
+    @api.multi
+    def assign_geo_localize(self):
+        for lead in self:
+            result = geo_find(geo_query_address(street=lead.street,
+                                                zip=lead.zip,
+                                                city=lead.city,
+                                                state=lead.state_id.name,
+                                                country=lead.country_id.name))
+            if result:
+                lead.write({'partner_latitude': result[0], 'partner_longitude': result[1]})
+
+    def search_geo_partner(self):
+        ResPartner = self.env['res.partner']
+        res = {}
+        for lead in self.filtered(lambda x: x.country_id):
+            if not lead.partner_latitude or not lead.partner_longitude:
+                lead.assign_geo_localize()
+            Partners = ResPartner.search_geo_localize_partner(lead.partner_latitude,
+                                                              lead.partner_longitude,
+                                                              lead.country_id)
+            total_weight = 0
+            toassign = []
+            for partner in Partners:
+                total_weight += partner.partner_weight
+                toassign.append((partner, total_weight))
+
+            # avoid always giving the leads to the first ones in db natural
+            # order!
+            random.shuffle(toassign)
+            nearest_weight = random.randint(0, total_weight)
+            for partner, weight in toassign:
+                if nearest_weight <= weight:
+                    res[lead.id] = partner
+                    break
+        return res

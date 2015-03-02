@@ -1,14 +1,13 @@
-<?xml version="1.0" ?>
-<openerp>
-    <data>
-        <record model="crm.stage" id="stage_portal_lead_assigned">
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="stage_portal_lead_assigned" model="crm.stage">
             <field name="name">Assigned</field>
             <field eval="1" name="case_default"/>
             <field eval="10" name="probability"/>
             <field eval="12" name="sequence"/>
             <field name="type">lead</field>
         </record>
-        <record model="crm.stage" id="stage_portal_lead_recycle">
+        <record id="stage_portal_lead_recycle" model="crm.stage">
             <field name="name">To Recycle</field>
             <field eval="1" name="case_default"/>
             <field eval="5" name="probability"/>
@@ -17,7 +16,7 @@
         </record>
         <record id="email_template_lead_forward_mail" model="mail.template">
             <field name="name">Lead Mass Mail</field>
-            <field name="model_id" model="ir.model" search="[('name', '=', 'crm.lead.forward.to.partner')]"></field>
+            <field name="model_id" ref="model_crm_lead_forward_to_partner"/>
             <field name="auto_delete" eval="True"/>
             <field name="email_to">${ctx['partner_id'].email|safe}</field>
             <field name="email_from">${(user.email or '')|safe}</field>
@@ -55,5 +54,4 @@ PS: It looks like you do not have an account manager assigned to you, please con
 % endif
             ]]></field>
         </record>
-    </data>
-</openerp>
+</odoo>

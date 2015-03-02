@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-import crm_partner_assign
+import res_partner
 import crm_lead
