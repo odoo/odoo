@@ -5399,7 +5399,7 @@ class BaseModel(object):
             for name in values:
                 field = self._fields.get(name)
                 if field:
-                    for invf in field.inverse_fields:
+                    for invf in field.get_inverse_fields(record.env):
                         invf._update(record[name], record)
 
         return record
@@ -5605,7 +5605,7 @@ class BaseModel(object):
 
         # invalidate fields and inverse fields, too
         spec = [(f, ids) for f in fields] + \
-               [(invf, None) for f in fields for invf in f.inverse_fields]
+               [(invf, None) for f in fields for invf in f.get_inverse_fields(self.env)]
         self.env.invalidate(spec)
 
     @api.multi
