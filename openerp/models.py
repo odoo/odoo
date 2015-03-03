@@ -659,8 +659,6 @@ class BaseModel(object):
 
         # process store of low-level function fields
         for fname, column in cls._columns.iteritems():
-            if hasattr(column, 'digits_change'):
-                column.digits_change(cr)
             # filter out existing store about this field
             pool._store_function[cls._name] = [
                 stored
