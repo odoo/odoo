@@ -288,7 +288,6 @@ class YamlInterpreter(object):
     def process_record(self, node):
         record, fields = node.items()[0]
         model = self.get_model(record.model)
-
         view_id = record.view
         if view_id and (view_id is not True) and isinstance(view_id, basestring):
             module = self.module
@@ -395,13 +394,12 @@ class YamlInterpreter(object):
         if view is not False:
             fg = view_info['fields']
             onchange_spec = model._onchange_spec(self.cr, SUPERUSER_ID, view_info, context=self.context)
-            # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
-            # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-            defaults = default and model._add_missing_default_values(self.cr, self.uid, {}, context=self.context) or {}
+            # gather the default values on the object.
+            defaults = default and model._add_missing_default_values(self.cr, self.uid, parent, context=self.context) or {}
 
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
             # the other default values will be added later on by the create().
-            record_dict = dict([(key, val) for key, val in defaults.items() if key in fg])
+            record_dict = dict([(key, val) for key, val in defaults.items() if key in fg and key not in fields])
 
             # Process all on_change calls
             nodes = [view]
@@ -415,7 +413,6 @@ class YamlInterpreter(object):
                         if (view is not False) and (fg[field_name]['type']=='one2many'):
                             # for one2many fields, we want to eval them using the inline form view defined on the parent
                             one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
-
                         field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default)
 
                         #call process_val to not update record_dict if values were given for readonly fields
@@ -478,7 +475,7 @@ class YamlInterpreter(object):
         for field_name, expression in fields.items():
             if field_name in record_dict:
                 continue
-            field_value = self._eval_field(model, field_name, expression, default=False)
+            field_value = self._eval_field(model, field_name, expression, parent=record_dict, default=False)
             record_dict[field_name] = field_value
         return record_dict
 
@@ -527,7 +524,7 @@ class YamlInterpreter(object):
             value = self.get_id(expression)
         elif field.type == "one2many":
             other_model = self.get_model(field.comodel_name)
-            value = [(0, 0, self._create_record(other_model, fields, view_info, parent, default=default)) for fields in expression]
+            value = [(0, 0, self._create_record(other_model, fields, view_info, parent=parent, default=default)) for fields in expression]
         elif field.type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
