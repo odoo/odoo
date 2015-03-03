@@ -137,6 +137,7 @@ class google_service(osv.osv_memory):
 
         status = 418
         response = ""
+        ask_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         try:
             if type.upper() == 'GET' or type.upper() == 'DELETE':
                 data = werkzeug.url_encode(params)
@@ -159,13 +160,16 @@ class google_service(osv.osv_memory):
             try:
                 ask_time = datetime.strptime(request.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
             except:
-                ask_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                pass
         except urllib2.HTTPError, e:
             if e.code in (400, 401, 410):
                 raise e
-
-            _logger.exception("Bad google request : %s !" % e.read())
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong with your request to google"), context=context)
+            elif e.code in (204, 404):
+                status = e.code
+                response = ""
+            else:
+                _logger.exception("Bad google request : %s !" % e.read())
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong with your request to google"), context=context)
         return (status, response, ask_time)
 
     def get_base_url(self, cr, uid, context=None):

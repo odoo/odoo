@@ -249,6 +249,43 @@ customize the amout of logging output
     enables DEBUG logging of SQL querying, equivalent to
     ``--log-handler=openerp.sql_db:DEBUG``
 
+.. option:: --log-level <level>
+
+    Shortcut to more easily set predefined levels on specific loggers. "real"
+    levels (``critical``, ``error``, ``warn``, ``debug``) are set on the
+    ``openerp`` and ``werkzeug`` loggers (except for ``debug`` which is only
+    set on ``openerp``).
+
+    Odoo also provides debugging pseudo-levels which apply to different sets
+    of loggers:
+
+    ``debug_sql``
+        sets the SQL logger to ``debug``
+
+        equivalent to ``--log-sql``
+    ``debug_rpc``
+        sets the ``openerp`` and HTTP request loggers to ``debug``
+
+        equivalent to ``--log-level debug --log-request``
+    ``debug_rpc_answer``
+        sets the ``openerp`` and HTTP request and response loggers to
+        ``debug``
+
+        equivalent to ``--log-level debug --log-request --log-response``
+
+    .. note::
+
+        In case of conflict between :option:`--log-level` and
+        :option:`--log-handler`, the latter is used
+
+Advanced options
+----------------
+
+.. option:: --auto-reload
+
+    enable auto-reloading of python files and xml files without having to
+    restart the server. Requires pyinotify_.
+
 .. _reference/cmdline/scaffold:
 
 Scaffolding
@@ -318,3 +355,4 @@ to that file.
     http://www.postgresql.org/docs/9.2/static/libpq-connect.html#AEN38208
 .. _Werkzeug's proxy support:
     http://werkzeug.pocoo.org/docs/0.9/contrib/fixers/#werkzeug.contrib.fixers.ProxyFix
+.. _pyinotify: https://github.com/seb-m/pyinotify/wiki

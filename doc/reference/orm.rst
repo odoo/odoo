@@ -1,13 +1,18 @@
 .. _reference/orm:
 
-===
-ORM
-===
+=======
+ORM API
+=======
 
 Recordsets
 ==========
 
 .. versionadded:: 8.0
+
+    This page documents the New API added in Odoo 8.0 which should be the
+    primary development API going forward. It also provides information about
+    porting from or bridging with the "old API" of versions 7 and earlier, but
+    does not explicitly document that API. See the old documentation for that.
 
 Interaction with models and records is performed through recordsets, a sorted
 set of records of the same model.
@@ -444,8 +449,8 @@ Clearing caches can be performed using the
 
 .. _reference/orm/oldapi:
 
-Old API compatibility
-=====================
+Compatibility between new API and old API
+=========================================
 
 Odoo is currently transitioning from an older (less regular) API, it can be
 necessary to manually bridge from one to the other manually:
@@ -493,7 +498,7 @@ Two decorators can expose a new-style method to the old API:
     empty. Its "old API" signature is ``cr, uid, *arguments, context``::
 
         @api.model
-        def some_method(foo):
+        def some_method(self, a_value):
             pass
         # can be called as
         old_style_model.some_method(cr, uid, a_value, context=context)
@@ -503,7 +508,7 @@ Two decorators can expose a new-style method to the old API:
     "old API" signature is ``cr, uid, ids, *arguments, context``::
 
         @api.multi
-        def some_method(foo):
+        def some_method(self, a_value):
             pass
         # can be called as
         old_style_model.some_method(cr, uid, [id1, id2], a_value, context=context)
@@ -520,7 +525,7 @@ return lists of ids, there is also a decorator managing this:
 
         >>> @api.multi
         ... @api.returns('self')
-        ... def some_method():
+        ... def some_method(self):
         ...     return self
         >>> new_style_model = env['a.model'].browse(1, 2, 3)
         >>> new_style_model.some_method()
@@ -1026,9 +1031,10 @@ Domain criteria can be combined using logical operators in *prefix* form:
         AND (language is NOT english)
         AND (country is Belgium OR Germany)
 
-Porting from the old API
-========================
+Porting from the old API to the new API
+=======================================
 
+* bare lists of ids are to be avoided in the new API, use recordsets instead
 * methods still written in the old API should be automatically bridged by the
   ORM, no need to switch to the old API, just call them as if they were a new
   API method. See :ref:`reference/orm/oldapi/bridging` for more details.

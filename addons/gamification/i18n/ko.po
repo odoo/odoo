@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
 "PO-Revision-Date: 2014-09-03 04:42+0000\n"
 "Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:08+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-01-22 07:42+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 "Language: ko\n"
 
 #. module: gamification
@@ -133,7 +133,7 @@ msgid "<="
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:745
+#: code:addons/gamification/models/challenge.py:756
 #, python-format
 msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewared for this "
@@ -141,13 +141,13 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:743
+#: code:addons/gamification/models/challenge.py:754
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:752
+#: code:addons/gamification/models/challenge.py:763
 #, python-format
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
@@ -365,7 +365,7 @@ msgid "Can not grant"
 msgstr "수여할 수 없음"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:453
+#: code:addons/gamification/models/goal.py:457
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr "시작한 목표의 구성을 수정할 수 없음"
@@ -647,9 +647,9 @@ msgid "End Date"
 msgstr "종료일"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:553
+#: code:addons/gamification/models/challenge.py:561
 #: code:addons/gamification/models/goal.py:148
-#: code:addons/gamification/models/goal.py:453
+#: code:addons/gamification/models/goal.py:457
 #, python-format
 msgid "Error!"
 msgstr "오류!"
@@ -991,7 +991,7 @@ msgid "Inherited models"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:319
+#: code:addons/gamification/models/goal.py:334
 #, python-format
 msgid "Invalid return content from the evaluation of code for definition %s"
 msgstr ""
@@ -1194,7 +1194,7 @@ msgid "No one, assigned through challenges"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:755
+#: code:addons/gamification/models/challenge.py:766
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr ""
@@ -1374,7 +1374,7 @@ msgid "Responsible"
 msgstr "담당"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:553
+#: code:addons/gamification/models/challenge.py:561
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr ""
@@ -1581,7 +1581,7 @@ msgid "The action that will be called to update the goal value."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:739
+#: code:addons/gamification/models/challenge.py:750
 #, python-format
 msgid "The challenge %s is finished."
 msgstr "도전 %s이(가) 끝났습니다."
@@ -1793,7 +1793,7 @@ msgid "Update"
 msgstr "업데이트"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:487
+#: code:addons/gamification/models/goal.py:491
 #, python-format
 msgid "Update %s"
 msgstr "%s 업데이트"
@@ -1822,7 +1822,7 @@ msgstr "사용자"
 #: code:addons/gamification/models/badge.py:240
 #: code:addons/gamification/models/badge.py:242
 #: code:addons/gamification/models/badge.py:244
-#: code:addons/gamification/wizard/grant_badge.py:44
+#: code:addons/gamification/wizard/grant_badge.py:43
 #, python-format
 msgid "Warning!"
 msgstr "경고!"
@@ -1863,7 +1863,7 @@ msgid "You are not in the user allowed list."
 msgstr "허용된 사용자 목록에 없습니다."
 
 #. module: gamification
-#: code:addons/gamification/wizard/grant_badge.py:44
+#: code:addons/gamification/wizard/grant_badge.py:43
 #, python-format
 msgid "You can not grant a badge to yourself"
 msgstr "본인에게 배지를 수여할 수 없습니다."
@@ -1932,6 +1932,13 @@ msgid "more details..."
 msgstr "추가 세부사항..."
 
 #. module: gamification
+#: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
+#: view:gamification.challenge:gamification.view_challenge_wizard
+#: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
+msgid "or"
+msgstr ""
+
+#. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
 msgid "refresh"
 msgstr "새로 고침"
@@ -1955,9 +1962,3 @@ msgstr ""
 #: view:gamification.badge:gamification.badge_kanban_view
 msgid "this month"
 msgstr "이번 달"
-
-#~ msgid "Configure Challenge"
-#~ msgstr "도전 구성"
-
-#~ msgid "Passed"
-#~ msgstr "통과함"

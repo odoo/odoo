@@ -388,9 +388,7 @@ class ir_model_fields(osv.osv):
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
                     model._rec_name = 'x_name'
 
-                if self.pool.fields_by_model is not None:
-                    cr.execute('SELECT * FROM ir_model_fields WHERE id=%s', (res,))
-                    self.pool.fields_by_model.setdefault(vals['model'], []).append(cr.dictfetchone())
+                self.pool.clear_manual_fields()
 
                 # re-initialize model in registry
                 model.__init__(self.pool, cr)
@@ -987,11 +985,15 @@ class ir_model_data(osv.osv):
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
             return False
+        id = False
         try:
-            id = self.read(cr, uid, [self._get_id(cr, uid, module, xml_id)], ['res_id'])[0]['res_id']
-            self.loads[(module,xml_id)] = (model,id)
-        except:
-            id = False
+            # One step to check the ID is defined and the record actually exists
+            record = self.get_object(cr, uid, module, xml_id)
+            if record:
+                id = record.id
+                self.loads[(module,xml_id)] = (model,id)
+        except Exception:
+            pass
         return id
 
     def clear_caches(self):
@@ -1228,20 +1230,25 @@ class ir_model_data(osv.osv):
         and a module in ir_model_data and noupdate set to false, but not
         present in self.loads.
         """
-        if not modules:
+        if not modules or config.get('import_partial'):
             return True
-        to_unlink = []
+
+        bad_imd_ids = []
+        context = {MODULE_UNINSTALL_FLAG: True}
         cr.execute("""SELECT id,name,model,res_id,module FROM ir_model_data
-                      WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s ORDER BY id DESC""",
-                      (tuple(modules), False))
+                      WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s ORDER BY id DESC
+                   """, (tuple(modules), False))
         for (id, name, model, res_id, module) in cr.fetchall():
-            if (module,name) not in self.loads:
-                to_unlink.append((model,res_id))
-        if not config.get('import_partial'):
-            for (model, res_id) in to_unlink:
+            if (module, name) not in self.loads:
                 if model in self.pool:
-                    _logger.info('Deleting %s@%s', res_id, model)
-                    self.pool[model].unlink(cr, uid, [res_id])
+                    _logger.info('Deleting %s@%s (%s.%s)', res_id, model, module, name)
+                    if self.pool[model].exists(cr, uid, [res_id], context=context):
+                        self.pool[model].unlink(cr, uid, [res_id], context=context)
+                    else:
+                        bad_imd_ids.append(id)
+        if bad_imd_ids:
+            self.unlink(cr, uid, bad_imd_ids, context=context)
+        self.loads.clear()
 
 class wizard_model_menu(osv.osv_memory):
     _name = 'wizard.ir.model.menu.create'

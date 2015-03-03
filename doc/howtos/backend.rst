@@ -74,31 +74,9 @@ option.
     most command-line options can also be set using :ref:`a configuration
     file <reference/cmdline/config>`
 
-An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`. It
-is mandatory and contains a single python dictionary declaring various
-metadata for the module: the module's name and description, list of Odoo
-modules required for this one to work properly, references to data files, …
-
-The manifest's general structure is::
-
-    {
-        'name': "MyModule",
-        'version': '1.0',
-        'depends': ['base'],
-        'author': "Author Name",
-        'category': 'Category',
-        'description': """
-        Description text
-        """,
-        # data files always loaded at installation
-        'data': [
-            'mymodule_view.xml',
-        ],
-        # data files containing optionally loaded demonstration data
-        'demo': [
-            'demo_data.xml',
-        ],
-    }
+An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`.
+See the :ref:`manifest documentation <reference/module/manifest>` information
+about it.
 
 A module is also a
 `Python package <http://docs.python.org/2/tutorial/modules.html#packages>`_
@@ -110,13 +88,13 @@ might contain::
 
     from . import mymodule
 
-Fortunately, there is a mechanism to help you set up an module. The command
-``odoo.py`` has a subcommand :ref:`scaffold <reference/cmdline/scaffold>` to
-create an empty module:
+Odoo provides a mechanism to help set up a new module, :ref:`odoo.py
+<reference/cmdline/server>` has a subcommand :ref:`scaffold
+<reference/cmdline/scaffold>` to create an empty module:
 
-.. code:: bash
+.. code-block:: console
 
-    odoo.py scaffold <module name> <where to put it>
+    $ odoo.py scaffold <module name> <where to put it>
 
 The command creates a subdirectory for your module, and automatically creates a
 bunch of standard files for a module. Most of them simply contain commented code

@@ -170,6 +170,7 @@ class purchase_requisition(osv.osv):
             'order_id': purchase_id,
             'product_id': product.id,
             'account_analytic_id': requisition_line.account_analytic_id.id,
+            'taxes_id': [(6, 0, vals.get('taxes_id', []))],
         })
         return vals
 

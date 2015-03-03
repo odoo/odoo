@@ -226,6 +226,7 @@
             var item = false;
             if (record) {
                 item = record.attributes;
+                this.dataset.select_id(record.get('id'));
             } else {
                 record = this.make_empty_record(false);
                 this.records.add(record, {
@@ -649,7 +650,7 @@
             var form = this.editor.form;
             var last_field = _(form.fields_order).chain()
                 .map(function (name) { return form.fields[name]; })
-                .filter(function (field) { return field.$el.is(':visible'); })
+                .filter(function (field) { return field.$el.is(':visible') && !field.get('effective_readonly'); })
                 .last()
                 .value();
             // tabbed from last field in form

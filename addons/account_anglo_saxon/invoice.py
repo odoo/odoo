@@ -75,6 +75,8 @@ class account_invoice_line(osv.osv):
         res: The move line entries produced so far by the parent move_line_get.
         """
         inv = i_line.invoice_id
+        fiscal_pool = self.pool.get('account.fiscal.position')
+        fpos = inv.fiscal_position or False
         company_currency = inv.company_id.currency_id.id
 
         if i_line.product_id.type != 'service' and i_line.product_id.valuation == 'real_time':
@@ -110,7 +112,7 @@ class account_invoice_line(osv.osv):
                         'price_unit':price_unit,
                         'quantity':i_line.quantity,
                         'price': -1 * self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
-                        'account_id':cacc,
+                        'account_id':fiscal_pool.map_account(cr, uid, fpos, cacc),
                         'product_id':i_line.product_id.id,
                         'uos_id':i_line.uos_id.id,
                         'account_analytic_id': False,

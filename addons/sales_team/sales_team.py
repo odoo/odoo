@@ -53,7 +53,7 @@ class crm_case_section(osv.osv):
         month_begin = date.today().replace(day=1)
         section_result = [{
                           'value': 0,
-                          'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B %Y'),
+                          'tooltip': tools.ustr((month_begin + relativedelta.relativedelta(months=-i)).strftime('%B %Y')),
                           } for i in range(self._period_number - 1, -1, -1)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
         pattern = tools.DEFAULT_SERVER_DATE_FORMAT if obj.fields_get(cr, uid, groupby_field)[groupby_field]['type'] == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT

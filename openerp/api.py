@@ -638,7 +638,7 @@ def guess(method):
                         return cr_uid_ids_context(method)
                     else:
                         return cr_uid_ids(method)
-                elif names[3] == 'id':
+                elif names[3] == 'id' or names[3] == 'res_id':
                     if 'context' in names or kwname:
                         return cr_uid_id_context(method)
                     else:
@@ -890,6 +890,19 @@ class Environment(object):
         if invalids:
             raise Warning('Invalid cache for fields\n' + pformat(invalids))
 
+    @property
+    def recompute(self):
+        return self.all.recompute
+
+    @contextmanager
+    def norecompute(self):
+        tmp = self.all.recompute
+        self.all.recompute = False
+        try:
+            yield
+        finally:
+            self.all.recompute = tmp
+
 
 class Environments(object):
     """ A common object for all environments in a request. """
@@ -897,6 +910,7 @@ class Environments(object):
         self.envs = WeakSet()           # weak set of environments
         self.todo = {}                  # recomputations {field: [records]}
         self.mode = False               # flag for draft/onchange
+        self.recompute = True
 
     def add(self, env):
         """ Add the environment `env`. """

@@ -528,16 +528,19 @@ class WebsiteForum(http.Controller):
                     (count_user_questions and current_user.karma > forum.karma_unlink_all))):
             return request.website.render("website_forum.private_profile", values)
 
-        # displaying only the 20 most recent questions
-        user_questions = Post.browse(cr, uid, user_question_ids[:20], context=context)
+        # limit length of visible posts by default for performance reasons, except for the high
+        # karma users (not many of them, and they need it to properly moderate the forum)
+        post_display_limit = None
+        if current_user.karma < forum.karma_unlink_all:
+            post_display_limit = 20
 
+        user_questions = Post.browse(cr, uid, user_question_ids[:post_display_limit], context=context)
         user_answer_ids = Post.search(cr, uid, [
                 ('parent_id', '!=', False),
                 ('forum_id', '=', forum.id), ('create_uid', '=', user.id),
             ], order='create_date desc', context=context)
         count_user_answers = len(user_answer_ids)
-        # displaying only the 20  most recent answers
-        user_answers = Post.browse(cr, uid, user_answer_ids[:20], context=context)
+        user_answers = Post.browse(cr, uid, user_answer_ids[:post_display_limit], context=context)
 
         # showing questions which user following
         obj_ids = Followers.search(cr, SUPERUSER_ID, [('res_model', '=', 'forum.post'), ('partner_id', '=', user.partner_id.id)], context=context)

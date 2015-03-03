@@ -368,11 +368,22 @@ class stock_move(osv.osv):
             self.pool.get('sale.order').write(cr, uid, [sale_line.order_id.id], {
                 'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
             })
+            sale_line_obj = self.pool.get('sale.order.line')
+            invoice_line_obj = self.pool.get('account.invoice.line')
+            sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', '=', move.procurement_id.sale_line_id.order_id.id), ('product_id.type', '=', 'service'), ('invoiced', '=', False)], context=context)
+            if sale_line_ids:
+                created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
+                invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_line_vals['invoice_id']}, context=context)
+
         return invoice_line_id
 
     def _get_master_data(self, cr, uid, move, company, context=None):
         if move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'picking':
             sale_order = move.procurement_id.sale_line_id.order_id
+            return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
+        elif move.picking_id.sale_id:
+            # In case of extra move, it is better to use the same data as the original moves
+            sale_order = move.picking_id.sale_id
             return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
         return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
 
@@ -436,13 +447,6 @@ class stock_picking(osv.osv):
         sale_line_obj = self.pool.get('sale.order.line')
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
-        if picking.group_id:
-            sale_ids = sale_obj.search(cr, uid, [('procurement_group_id', '=', picking.group_id.id)], context=context)
-            if sale_ids:
-                sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', 'in', sale_ids), ('product_id.type', '=', 'service'), ('invoiced', '=', False)], context=context)
-                if sale_line_ids:
-                    created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
-                    invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
 
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):

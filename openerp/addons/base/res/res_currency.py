@@ -301,4 +301,23 @@ class res_currency_rate(osv.osv):
     }
     _order = "name desc"
 
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if operator in ['=', '!=']:
+            try:
+                date_format = '%Y-%m-%d'
+                if context.get('lang'):
+                    lang_obj = self.pool['res.lang']
+                    lang_ids = lang_obj.search(cr, user, [('code', '=', context['lang'])], context=context)
+                    if lang_ids:
+                        date_format = lang_obj.browse(cr, user, lang_ids[0], context=context).date_format
+                name = time.strftime('%Y-%m-%d', time.strptime(name, date_format))
+            except ValueError:
+                try:
+                    args.append(('rate', operator, float(name)))
+                except ValueError:
+                    return []
+                name = ''
+                operator = 'ilike'
+        return super(res_currency_rate, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

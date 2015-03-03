@@ -4076,7 +4076,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-default {
-  background-color: #ffffff;
+  background-color: white;
   border-color: 0;
 }
 .navbar-default .navbar-brand {
@@ -6248,6 +6248,18 @@ body {
 @media (min-width: 992px) {
   .documentwrapper {
     float: left;
+    width: 100%;
+  }
+}
+.with-sidebar .documentwrapper {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 992px) {
+  .with-sidebar .documentwrapper {
+    float: left;
     width: 75%;
   }
 }
@@ -6611,6 +6623,9 @@ div.section > h2 {
   padding-top: 20px;
   margin-top: 0;
 }
+.body {
+  position: relative;
+}
 .body > .section > .section {
   margin-bottom: 60px;
 }
@@ -6663,48 +6678,42 @@ div.section > h2 {
 .admonition.exercise > .admonition-title {
   color: #555555;
 }
-/*
- * Code snippets
- *
- * Generated via Pygments
- */
+.highlight {
+  position: relative;
+  color: #333333;
+  background: #eeeeee none !important;
+  border: 1px solid #777777;
+  border-radius: 4px 0 4px 4px;
+  margin: 10px 0;
+}
 .highlight pre {
-  padding: 4px;
+  padding: 0;
+  margin: 10px;
   font-size: 75%;
   word-break: normal;
   word-wrap: normal;
+  background: none;
+  border: none;
 }
-.switchable .highlight.with-btn-clipboard pre {
-  padding-right: 50px;
+.highlight:hover .btn-show-setup {
+  display: block;
 }
-/*
- * ZeroClipboard styles
- */
-.highlight {
-  position: relative;
-}
-.btn-clipboard {
+.highlight .btn-show-setup {
+  display: none;
   position: absolute;
-  top: 0;
+  bottom: 100%;
   right: 0;
   z-index: 3;
-  display: block;
   padding: 5px 8px;
   font-size: 12px;
-  color: #777;
+  color: #777777;
   cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #e1e1e8;
-  border-radius: 0 4px 0 4px;
+  border: 1px solid #777777;
+  border-radius: 4px 4px 0 0;
+  background: inherit;
 }
-.btn-clipboard:focus {
+.highlight .btn-show-setup:focus {
   outline: none;
-}
-.btn-clipboard.active {
-  background-color: #ffffad;
-  -webkit-transition: background-color 0.5s linear;
-  -o-transition: background-color 0.5s linear;
-  transition: background-color 0.5s linear;
 }
 img.align-center {
   display: block;
@@ -6802,61 +6811,64 @@ td.field-body > ul {
   margin-bottom: 2em;
 }
 @media (min-width: 992px) {
-  .stripe .section > *,
-  .stripe .section > .force-left {
+  .stripe .section:not(.force-right) > *,
+  .stripe .section:not(.force-right) > .force-left {
     width: 49%;
     float: left;
     clear: left;
   }
-  .stripe .section > .force-right {
+  .stripe .section:not(.force-right) > .force-right {
     padding-left: 1em;
     padding-right: 1em;
   }
-  .stripe .section > .force-right,
-  .stripe .section > [class*=highlight] {
+  .stripe .section:not(.force-right) > .force-right,
+  .stripe .section:not(.force-right) > [class*=highlight] {
     float: none;
     clear: none;
     margin-left: 50%;
     width: 50%;
     color: #eeeeee;
   }
-  .stripe .section > .force-right a,
-  .stripe .section > [class*=highlight] a {
+  .stripe .section:not(.force-right) > .force-right legend,
+  .stripe .section:not(.force-right) > [class*=highlight] legend {
+    color: inherit;
+  }
+  .stripe .section:not(.force-right) > .force-right input,
+  .stripe .section:not(.force-right) > [class*=highlight] input {
+    color: inherit;
+    background-color: #555555;
+  }
+  .stripe .section:not(.force-right) > .force-right a,
+  .stripe .section:not(.force-right) > [class*=highlight] a {
     color: #d9a8cc;
   }
-  .stripe .section > .force-right code,
-  .stripe .section > [class*=highlight] code,
-  .stripe .section > .force-right .literal,
-  .stripe .section > [class*=highlight] .literal {
+  .stripe .section:not(.force-right) > .force-right code,
+  .stripe .section:not(.force-right) > [class*=highlight] code,
+  .stripe .section:not(.force-right) > .force-right .literal,
+  .stripe .section:not(.force-right) > [class*=highlight] .literal {
     color: #f9f2f4;
     background-color: #555555;
   }
-  .stripe .section > .force-right:not(.highlight-json) .highlight,
-  .stripe .section > [class*=highlight]:not(.highlight-json) .highlight {
+  .stripe .section:not(.force-right) > .force-right:not(.highlight-json) .highlight,
+  .stripe .section:not(.force-right) > [class*=highlight]:not(.highlight-json) .highlight {
     border-bottom-color: #777777;
   }
-  .stripe .section > .force-right.admonition,
-  .stripe .section > [class*=highlight].admonition {
+  .stripe .section:not(.force-right) > .force-right.admonition,
+  .stripe .section:not(.force-right) > [class*=highlight].admonition {
     margin-left: 51%;
     width: 49%;
     border-top-color: #777777;
     border-bottom-color: #777777;
     border-right-color: #777777;
   }
-  .stripe .section > .force-right pre,
-  .stripe .section > [class*=highlight] pre {
-    padding: 0;
-    margin: 10px;
-    background: none;
-    border: none;
-  }
-  .stripe .section > .force-right .highlight,
-  .stripe .section > [class*=highlight] .highlight {
+  .stripe .section:not(.force-right) > .force-right .highlight,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight {
     border-color: #555555;
     border-style: solid;
     border-width: 1px 0;
+    border-radius: 0;
     color: #cccccc;
-    background: none;
+    background: none !important;
     /* Line Numbers */
     /* Comment */
     /* Error */
@@ -6927,302 +6939,302 @@ td.field-body > ul {
     /* Name.Variable.Instance */
     /* Literal.Number.Integer.Long */
   }
-  .stripe .section > .force-right .highlight .lineno,
-  .stripe .section > [class*=highlight] .highlight .lineno {
+  .stripe .section:not(.force-right) > .force-right .highlight .lineno,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .lineno {
     color: #586e75;
   }
-  .stripe .section > .force-right .highlight .c,
-  .stripe .section > [class*=highlight] .highlight .c {
+  .stripe .section:not(.force-right) > .force-right .highlight .c,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .c {
     color: #586e75;
   }
-  .stripe .section > .force-right .highlight .err,
-  .stripe .section > [class*=highlight] .highlight .err {
+  .stripe .section:not(.force-right) > .force-right .highlight .err,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .err {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .g,
-  .stripe .section > [class*=highlight] .highlight .g {
+  .stripe .section:not(.force-right) > .force-right .highlight .g,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .g {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .k,
-  .stripe .section > [class*=highlight] .highlight .k {
+  .stripe .section:not(.force-right) > .force-right .highlight .k,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .k {
     color: #859900;
   }
-  .stripe .section > .force-right .highlight .l,
-  .stripe .section > [class*=highlight] .highlight .l {
+  .stripe .section:not(.force-right) > .force-right .highlight .l,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .l {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .n,
-  .stripe .section > [class*=highlight] .highlight .n {
+  .stripe .section:not(.force-right) > .force-right .highlight .n,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .n {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .o,
-  .stripe .section > [class*=highlight] .highlight .o {
+  .stripe .section:not(.force-right) > .force-right .highlight .o,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .o {
     color: #859900;
   }
-  .stripe .section > .force-right .highlight .x,
-  .stripe .section > [class*=highlight] .highlight .x {
+  .stripe .section:not(.force-right) > .force-right .highlight .x,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .x {
     color: #cb4b16;
   }
-  .stripe .section > .force-right .highlight .p,
-  .stripe .section > [class*=highlight] .highlight .p {
+  .stripe .section:not(.force-right) > .force-right .highlight .p,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .p {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .cm,
-  .stripe .section > [class*=highlight] .highlight .cm {
+  .stripe .section:not(.force-right) > .force-right .highlight .cm,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .cm {
     color: #586e75;
   }
-  .stripe .section > .force-right .highlight .cp,
-  .stripe .section > [class*=highlight] .highlight .cp {
+  .stripe .section:not(.force-right) > .force-right .highlight .cp,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .cp {
     color: #859900;
   }
-  .stripe .section > .force-right .highlight .c1,
-  .stripe .section > [class*=highlight] .highlight .c1 {
+  .stripe .section:not(.force-right) > .force-right .highlight .c1,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .c1 {
     color: #586e75;
   }
-  .stripe .section > .force-right .highlight .cs,
-  .stripe .section > [class*=highlight] .highlight .cs {
+  .stripe .section:not(.force-right) > .force-right .highlight .cs,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .cs {
     color: #859900;
   }
-  .stripe .section > .force-right .highlight .gd,
-  .stripe .section > [class*=highlight] .highlight .gd {
+  .stripe .section:not(.force-right) > .force-right .highlight .gd,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gd {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .ge,
-  .stripe .section > [class*=highlight] .highlight .ge {
+  .stripe .section:not(.force-right) > .force-right .highlight .ge,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ge {
     color: #cccccc;
     font-style: italic;
   }
-  .stripe .section > .force-right .highlight .gr,
-  .stripe .section > [class*=highlight] .highlight .gr {
+  .stripe .section:not(.force-right) > .force-right .highlight .gr,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gr {
     color: #dc322f;
   }
-  .stripe .section > .force-right .highlight .gh,
-  .stripe .section > [class*=highlight] .highlight .gh {
+  .stripe .section:not(.force-right) > .force-right .highlight .gh,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gh {
     color: #cb4b16;
   }
-  .stripe .section > .force-right .highlight .gi,
-  .stripe .section > [class*=highlight] .highlight .gi {
+  .stripe .section:not(.force-right) > .force-right .highlight .gi,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gi {
     color: #859900;
   }
-  .stripe .section > .force-right .highlight .go,
-  .stripe .section > [class*=highlight] .highlight .go {
+  .stripe .section:not(.force-right) > .force-right .highlight .go,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .go {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .gp,
-  .stripe .section > [class*=highlight] .highlight .gp {
+  .stripe .section:not(.force-right) > .force-right .highlight .gp,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gp {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .gs,
-  .stripe .section > [class*=highlight] .highlight .gs {
+  .stripe .section:not(.force-right) > .force-right .highlight .gs,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gs {
     color: #cccccc;
     font-weight: bold;
   }
-  .stripe .section > .force-right .highlight .gu,
-  .stripe .section > [class*=highlight] .highlight .gu {
+  .stripe .section:not(.force-right) > .force-right .highlight .gu,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gu {
     color: #cb4b16;
   }
-  .stripe .section > .force-right .highlight .gt,
-  .stripe .section > [class*=highlight] .highlight .gt {
+  .stripe .section:not(.force-right) > .force-right .highlight .gt,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gt {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .kc,
-  .stripe .section > [class*=highlight] .highlight .kc {
+  .stripe .section:not(.force-right) > .force-right .highlight .kc,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kc {
     color: #cb4b16;
   }
-  .stripe .section > .force-right .highlight .kd,
-  .stripe .section > [class*=highlight] .highlight .kd {
+  .stripe .section:not(.force-right) > .force-right .highlight .kd,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kd {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .kn,
-  .stripe .section > [class*=highlight] .highlight .kn {
+  .stripe .section:not(.force-right) > .force-right .highlight .kn,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kn {
     color: #859900;
   }
-  .stripe .section > .force-right .highlight .kp,
-  .stripe .section > [class*=highlight] .highlight .kp {
+  .stripe .section:not(.force-right) > .force-right .highlight .kp,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kp {
     color: #859900;
   }
-  .stripe .section > .force-right .highlight .kr,
-  .stripe .section > [class*=highlight] .highlight .kr {
+  .stripe .section:not(.force-right) > .force-right .highlight .kr,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kr {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .kt,
-  .stripe .section > [class*=highlight] .highlight .kt {
+  .stripe .section:not(.force-right) > .force-right .highlight .kt,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kt {
     color: #dc322f;
   }
-  .stripe .section > .force-right .highlight .ld,
-  .stripe .section > [class*=highlight] .highlight .ld {
+  .stripe .section:not(.force-right) > .force-right .highlight .ld,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ld {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .m,
-  .stripe .section > [class*=highlight] .highlight .m {
+  .stripe .section:not(.force-right) > .force-right .highlight .m,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .m {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .s,
-  .stripe .section > [class*=highlight] .highlight .s {
+  .stripe .section:not(.force-right) > .force-right .highlight .s,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .s {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .na,
-  .stripe .section > [class*=highlight] .highlight .na {
+  .stripe .section:not(.force-right) > .force-right .highlight .na,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .na {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .nb,
-  .stripe .section > [class*=highlight] .highlight .nb {
+  .stripe .section:not(.force-right) > .force-right .highlight .nb,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nb {
     color: #b58900;
   }
-  .stripe .section > .force-right .highlight .nc,
-  .stripe .section > [class*=highlight] .highlight .nc {
+  .stripe .section:not(.force-right) > .force-right .highlight .nc,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nc {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .no,
-  .stripe .section > [class*=highlight] .highlight .no {
+  .stripe .section:not(.force-right) > .force-right .highlight .no,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .no {
     color: #cb4b16;
   }
-  .stripe .section > .force-right .highlight .nd,
-  .stripe .section > [class*=highlight] .highlight .nd {
+  .stripe .section:not(.force-right) > .force-right .highlight .nd,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nd {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .ni,
-  .stripe .section > [class*=highlight] .highlight .ni {
+  .stripe .section:not(.force-right) > .force-right .highlight .ni,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ni {
     color: #cb4b16;
   }
-  .stripe .section > .force-right .highlight .ne,
-  .stripe .section > [class*=highlight] .highlight .ne {
+  .stripe .section:not(.force-right) > .force-right .highlight .ne,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ne {
     color: #cb4b16;
   }
-  .stripe .section > .force-right .highlight .nf,
-  .stripe .section > [class*=highlight] .highlight .nf {
+  .stripe .section:not(.force-right) > .force-right .highlight .nf,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nf {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .nl,
-  .stripe .section > [class*=highlight] .highlight .nl {
+  .stripe .section:not(.force-right) > .force-right .highlight .nl,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nl {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .nn,
-  .stripe .section > [class*=highlight] .highlight .nn {
+  .stripe .section:not(.force-right) > .force-right .highlight .nn,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nn {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .nx,
-  .stripe .section > [class*=highlight] .highlight .nx {
+  .stripe .section:not(.force-right) > .force-right .highlight .nx,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nx {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .py,
-  .stripe .section > [class*=highlight] .highlight .py {
+  .stripe .section:not(.force-right) > .force-right .highlight .py,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .py {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .nt,
-  .stripe .section > [class*=highlight] .highlight .nt {
+  .stripe .section:not(.force-right) > .force-right .highlight .nt,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nt {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .nv,
-  .stripe .section > [class*=highlight] .highlight .nv {
+  .stripe .section:not(.force-right) > .force-right .highlight .nv,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nv {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .ow,
-  .stripe .section > [class*=highlight] .highlight .ow {
+  .stripe .section:not(.force-right) > .force-right .highlight .ow,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ow {
     color: #859900;
   }
-  .stripe .section > .force-right .highlight .w,
-  .stripe .section > [class*=highlight] .highlight .w {
+  .stripe .section:not(.force-right) > .force-right .highlight .w,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .w {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .mf,
-  .stripe .section > [class*=highlight] .highlight .mf {
+  .stripe .section:not(.force-right) > .force-right .highlight .mf,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .mf {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .mh,
-  .stripe .section > [class*=highlight] .highlight .mh {
+  .stripe .section:not(.force-right) > .force-right .highlight .mh,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .mh {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .mi,
-  .stripe .section > [class*=highlight] .highlight .mi {
+  .stripe .section:not(.force-right) > .force-right .highlight .mi,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .mi {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .mo,
-  .stripe .section > [class*=highlight] .highlight .mo {
+  .stripe .section:not(.force-right) > .force-right .highlight .mo,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .mo {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .sb,
-  .stripe .section > [class*=highlight] .highlight .sb {
+  .stripe .section:not(.force-right) > .force-right .highlight .sb,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sb {
     color: #586e75;
   }
-  .stripe .section > .force-right .highlight .sc,
-  .stripe .section > [class*=highlight] .highlight .sc {
+  .stripe .section:not(.force-right) > .force-right .highlight .sc,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sc {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .sd,
-  .stripe .section > [class*=highlight] .highlight .sd {
+  .stripe .section:not(.force-right) > .force-right .highlight .sd,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sd {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .s2,
-  .stripe .section > [class*=highlight] .highlight .s2 {
+  .stripe .section:not(.force-right) > .force-right .highlight .s2,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .s2 {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .se,
-  .stripe .section > [class*=highlight] .highlight .se {
+  .stripe .section:not(.force-right) > .force-right .highlight .se,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .se {
     color: #cb4b16;
   }
-  .stripe .section > .force-right .highlight .sh,
-  .stripe .section > [class*=highlight] .highlight .sh {
+  .stripe .section:not(.force-right) > .force-right .highlight .sh,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sh {
     color: #cccccc;
   }
-  .stripe .section > .force-right .highlight .si,
-  .stripe .section > [class*=highlight] .highlight .si {
+  .stripe .section:not(.force-right) > .force-right .highlight .si,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .si {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .sx,
-  .stripe .section > [class*=highlight] .highlight .sx {
+  .stripe .section:not(.force-right) > .force-right .highlight .sx,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sx {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .sr,
-  .stripe .section > [class*=highlight] .highlight .sr {
+  .stripe .section:not(.force-right) > .force-right .highlight .sr,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sr {
     color: #dc322f;
   }
-  .stripe .section > .force-right .highlight .s1,
-  .stripe .section > [class*=highlight] .highlight .s1 {
+  .stripe .section:not(.force-right) > .force-right .highlight .s1,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .s1 {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .ss,
-  .stripe .section > [class*=highlight] .highlight .ss {
+  .stripe .section:not(.force-right) > .force-right .highlight .ss,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ss {
     color: #2aa198;
   }
-  .stripe .section > .force-right .highlight .bp,
-  .stripe .section > [class*=highlight] .highlight .bp {
+  .stripe .section:not(.force-right) > .force-right .highlight .bp,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .bp {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .vc,
-  .stripe .section > [class*=highlight] .highlight .vc {
+  .stripe .section:not(.force-right) > .force-right .highlight .vc,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .vc {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .vg,
-  .stripe .section > [class*=highlight] .highlight .vg {
+  .stripe .section:not(.force-right) > .force-right .highlight .vg,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .vg {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .vi,
-  .stripe .section > [class*=highlight] .highlight .vi {
+  .stripe .section:not(.force-right) > .force-right .highlight .vi,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .vi {
     color: #268bd2;
   }
-  .stripe .section > .force-right .highlight .il,
-  .stripe .section > [class*=highlight] .highlight .il {
+  .stripe .section:not(.force-right) > .force-right .highlight .il,
+  .stripe .section:not(.force-right) > [class*=highlight] .highlight .il {
     color: #2aa198;
   }
   .stripe .body > .section > .section {
     border-top: 1px solid #eeeeee;
   }
-  .stripe .section > h1,
-  .stripe .section > h2,
-  .stripe .section > h3,
-  .stripe .section > h4,
-  .stripe .section > h5,
-  .stripe .section > h6 {
+  .stripe .section:not(.force-right) > h1,
+  .stripe .section:not(.force-right) > h2,
+  .stripe .section:not(.force-right) > h3,
+  .stripe .section:not(.force-right) > h4,
+  .stripe .section:not(.force-right) > h5,
+  .stripe .section:not(.force-right) > h6 {
     max-width: 50%;
   }
-  .stripe .section > h1,
-  .stripe .section > h2,
-  .stripe .section > h3,
-  .stripe .section > h4,
-  .stripe .section > h5,
-  .stripe .section > h6,
-  .stripe .section > .section {
+  .stripe .section:not(.force-right) > h1,
+  .stripe .section:not(.force-right) > h2,
+  .stripe .section:not(.force-right) > h3,
+  .stripe .section:not(.force-right) > h4,
+  .stripe .section:not(.force-right) > h5,
+  .stripe .section:not(.force-right) > h6,
+  .stripe .section > .section:not(.force-right) {
     position: relative;
     width: auto;
     float: none;
@@ -7243,14 +7255,12 @@ td.field-body > ul {
   .stripe .highlight pre {
     white-space: pre-wrap;
   }
-  .stripe .btn-clipboard {
+  .stripe .btn-show-setup {
     background-color: transparent;
     color: #eeeeee;
     border-color: #777777;
-    border-top: none;
-    border-top-right-radius: 0;
   }
-  .stripe .btn-clipboard.active {
+  .stripe .btn-show-setup.active {
     background-color: #555555;
     -webkit-transition: background-color 0.5s linear;
     -o-transition: background-color 0.5s linear;

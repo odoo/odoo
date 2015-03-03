@@ -98,7 +98,7 @@ class crm_make_sale(osv.osv_memory):
                     'pricelist_id': pricelist,
                     'partner_invoice_id': partner_addr['invoice'],
                     'partner_shipping_id': partner_addr['delivery'],
-                    'date_order': fields.date.context_today(self,cr,uid,context=context),
+                    'date_order': fields.datetime.now(),
                     'fiscal_position': fpos,
                     'payment_term':payment_term,
                 }

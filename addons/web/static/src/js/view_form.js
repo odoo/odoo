@@ -452,8 +452,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return "";
         };
 
+        self._onchange_fields = [];
         self._onchange_specs = {};
         _.each(this.fields, function(field, name) {
+            self._onchange_fields.push(name);
             self._onchange_specs[name] = find(name, field.node);
             _.each(field.field.views, function(view) {
                 _.each(view.fields, function(_, subname) {
@@ -490,7 +492,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var change_spec = widget ? onchange_specs[widget.name] : null;
             if (!widget || (!_.isEmpty(change_spec) && change_spec !== "0")) {
                 var ids = [],
-                    trigger_field_name = widget ? widget.name : false,
+                    trigger_field_name = widget ? widget.name : self._onchange_fields,
                     values = self._get_onchange_values(),
                     context = new instance.web.CompoundContext(self.dataset.get_context());
 
@@ -1160,7 +1162,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     build_eval_context: function() {
         var a_dataset = this.dataset;
-        return new instance.web.CompoundContext(this._build_view_fields_values(), a_dataset.get_context());
+        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values());
     },
 });
 
@@ -2363,7 +2365,6 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = this.view.datarecord.id;
         this.states = this.prepare_dropdown_selection();;
         this.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
         this.$el.find('li').on('click', this.set_kanban_selection.bind(this));
@@ -2381,7 +2382,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
                 write_values[self.name] = value;
                 return this.view.dataset._model.call(
                     'write', [
-                        [self.record_id],
+                        [this.view.datarecord.id],
                         write_values,
                         self.view.dataset.get_context()
                     ]).done(self.reload_record.bind(self));
@@ -2419,10 +2420,11 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = this.view.datarecord.id;
         this.priorities = this.prepare_priority();
         this.$el.html(QWeb.render("Priority", {'widget': this}));
-        this.$el.find('li').on('click', this.set_priority.bind(this));
+        if (!this.get('readonly')){
+            this.$el.find('li').on('click', this.set_priority.bind(this));
+        }
     },
     /* setting the value: in view mode, perform an asynchronous call and reload
     the form view; in edit mode, use set_value to save the new value that will
@@ -2437,7 +2439,7 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
                 write_values[self.name] = value;
                 return this.view.dataset._model.call(
                     'write', [
-                        [self.record_id],
+                        [this.view.datarecord.id],
                         write_values,
                         self.view.dataset.get_context()
                     ]).done(self.reload_record.bind(self));
@@ -2535,6 +2537,9 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
         if (value_ === false || value_ === undefined) {
             // As in GTK client, floats default to 0
             value_ = 0;
+        }
+        if (this.digits !== undefined && this.digits.length === 2) {
+            value_ = instance.web.round_decimals(value_, this.digits[1]);
         }
         this._super.apply(this, [value_]);
     },
@@ -3470,7 +3475,7 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
         var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), self.name);
         this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
-        this.$("input").val(this.getParent().last_query);
+        this.$("input").val(this.getParent().$input.val());
         this.$buttons.find(".oe_form_m2o_qc_button").click(function(e){
             if (self.$("input").val() != ''){
                 self.getParent()._quick_create(self.$("input").val());
@@ -3652,13 +3657,13 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                         self.display_value_backup = {};
                         self.display_value["" + self.last_search[0][0]] = self.last_search[0][1];
                         self.reinit_value(self.last_search[0][0]);
+                        self.last_search = []
                     } else {
                         used = true;
                         self.render_value();
                     }
                 } else {
                     used = true;
-                    self.reinit_value(false);
                 }
                 self.floating = false;
             }
@@ -3732,7 +3737,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             // disabled to solve a bug, but may cause others
             //close: anyoneLoosesFocus,
             minLength: 0,
-            delay: 250,
+            delay: 200,
         });
         var appendTo = this.$el.parents('.oe_view_manager_body, .modal-dialog').last();
         if (appendTo.length === 0){
@@ -5636,14 +5641,17 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         } else {
             instance.web.blockUI();
             var c = instance.webclient.crashmanager;
+            var filename_fieldname = this.node.attrs.filename;
+            var filename_field = this.view.fields && this.view.fields[filename_fieldname];
             this.session.get_file({
                 url: '/web/binary/saveas_ajax',
                 data: {data: JSON.stringify({
                     model: this.view.dataset.model,
                     id: (this.view.datarecord.id || ''),
                     field: this.name,
-                    filename_field: (this.node.attrs.filename || ''),
+                    filename_field: (filename_fieldname || ''),
                     data: instance.web.form.is_bin_size(value) ? null : value,
+                    filename: filename_field ? filename_field.get('value') : null,
                     context: this.view.dataset.get_context()
                 })},
                 complete: instance.web.unblockUI,

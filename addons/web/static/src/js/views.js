@@ -860,6 +860,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (_.isString(groupby)) {
                 groupby = [groupby];
             }
+            if (!controller.grouped && !_.isEmpty(groupby)){
+                self.dataset.set_sort([]);
+            }
             $.when(controller.do_search(results.domain, results.context, groupby || [])).then(function() {
                 self.view_completely_inited.resolve();
             });
@@ -1269,10 +1272,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 new instance.web.Dialog(this, { title: _t("Warning"), size: 'medium',}, $("<div />").text(_t("You must choose at least one record."))).open();
                 return false;
             }
+            var dataset = self.getParent().dataset;
             var active_ids_context = {
                 active_id: ids[0],
                 active_ids: ids,
-                active_model: self.getParent().dataset.model,
+                active_model: dataset.model,
             };
 
             $.when(domain).done(function (domain) {
@@ -1285,7 +1289,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
 
                 self.rpc("/web/action/load", {
                     action_id: item.action.id,
-                    context: c
+                    context: new instance.web.CompoundContext(
+                    dataset.get_context(), active_ids_context).eval()
                 }).done(function(result) {
                     result.context = new instance.web.CompoundContext(
                         result.context || {}, active_ids_context)

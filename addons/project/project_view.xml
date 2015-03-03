@@ -273,7 +273,7 @@
                                     </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px">
-                                            <t t-raw="record.task_ids.raw_value.length"/> Tasks
+                                            <t t-raw="record.task_count.raw_value"/> Tasks
                                         </a>
                                     </div>
                                     <div class="oe_kanban_project_list">

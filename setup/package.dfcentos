@@ -42,8 +42,10 @@ RUN yum install -d 0 -e 0 epel-release -y && \
 
 RUN easy_install pyPdf vatnumber pydot psycogreen
 
-# Manual start of postgres
+# Postgres configuration
 RUN mkdir -p /var/lib/postgres/data
 RUN chown -R postgres:postgres /var/lib/postgres/data
 RUN su postgres -c "initdb -D /var/lib/postgres/data -E UTF-8"
 RUN cp /usr/share/pgsql/postgresql.conf.sample /var/lib/postgres/data/postgresql.conf
+
+RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc

@@ -7,16 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-09-30 19:19+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-02-01 21:00+0000\n"
+"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-01 06:33+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-02-02 06:57+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 "Language: de\n"
 
 #. module: project
@@ -460,6 +459,7 @@ msgid "Cumulative Flow"
 msgstr "Kumulierte Werte"
 
 #. module: project
+#: view:project.project:project.edit_project
 #: field:project.task,partner_id:0
 msgid "Customer"
 msgstr "Kunde"
@@ -875,6 +875,12 @@ msgstr ""
 "Eskalationsverfolgungsmodul installiert ist."
 
 #. module: project
+#: code:addons/project/project.py:201
+#, python-format
+msgid "Internal project: all employees can access"
+msgstr "Internes Projekt: Alle Mitarbeiter haben Zugriff"
+
+#. module: project
 #: code:addons/project/project.py:171
 #, python-format
 msgid "Invalid Action!"
@@ -950,11 +956,11 @@ msgstr "Zuletzt aktualisiert am"
 #: help:project.config.settings,module_pad:0
 msgid ""
 "Lets the company customize which Pad installation should be used to link to "
-"new pads (for example: http://ietherpad.com/).\n"
+"new pads (for example: http://etherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
 "Hiermit können Sie steuern, welche Pad Instanz für neue Pads genutzt wird "
-"(z.B.: http://ietherpad.com/).\n"
+"(z.B.: http://etherpad.com/).\n"
 "- Hiermit installieren Sie das Modul Pad."
 
 #. module: project
@@ -1210,6 +1216,12 @@ msgid "Privacy / Visibility"
 msgstr "Privat / Öffentlich"
 
 #. module: project
+#: code:addons/project/project.py:202
+#, python-format
+msgid "Private project: followers Only"
+msgstr "Privates Projekt: Nur für Follower"
+
+#. module: project
 #: field:project.project,progress_rate:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
@@ -1340,6 +1352,12 @@ msgstr ""
 "- Dies installiert das Modul project_issue_sheet."
 
 #. module: project
+#: code:addons/project/project.py:200
+#, python-format
+msgid "Public project"
+msgstr "Öffentliches Projekt"
+
+#. module: project
 #: view:project.project:project.edit_project
 msgid "Re-open project"
 msgstr "Projekt wiedereröffnen"
@@ -1467,6 +1485,11 @@ msgstr "Stufen"
 #: view:project.task.type:project.task_type_search
 msgid "Stages common to all projects"
 msgstr "Generelle Stufe in allen Projekten"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Start Date"
+msgstr "Startdatum"
 
 #. module: project
 #: field:project.task,date_start:0
@@ -1863,6 +1886,11 @@ msgid "Usability"
 msgstr "Bedienung"
 
 #. module: project
+#: view:project.project:project.edit_project
+msgid "Use Tasks"
+msgstr "Aufgaben verwenden"
+
+#. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
 msgstr "Kollaborative Notizen durch Anbindung eines webbasierten Editors"
@@ -1966,6 +1994,12 @@ msgstr "Delegiere"
 #: view:project.task:project.view_task_kanban
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
+
+#. module: project
+#: view:project.config.settings:project.view_config_settings
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "or"
+msgstr "oder"
 
 #. module: project
 #: code:addons/project/project.py:878

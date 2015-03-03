@@ -37,10 +37,10 @@ class account_fiscal_position(osv.osv):
         'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping', copy=True),
         'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping', copy=True),
         'note': fields.text('Notes'),
-        'auto_apply': fields.boolean('Automatic', help="Apply automatically this fiscal position."),
+        'auto_apply': fields.boolean('Automatic', help="Apply automatically this fiscal position if the conditions match."),
         'vat_required': fields.boolean('VAT required', help="Apply only if partner has a VAT number."),
-        'country_id': fields.many2one('res.country', 'Countries', help="Apply only if delivery or invoicing country match."),
-        'country_group_id': fields.many2one('res.country.group', 'Country Group', help="Apply only if delivery or invocing country match the group."),
+        'country_id': fields.many2one('res.country', 'Country', help="Apply when the shipping or invoicing country matches. Takes precedence over positions matching on a country group."),
+        'country_group_id': fields.many2one('res.country.group', 'Country Group', help="Apply when the shipping or invoicing country is in this country group, and no position matches the country directly."),
     }
 
     _defaults = {
@@ -127,14 +127,14 @@ class account_fiscal_position(osv.osv):
             ('auto_apply', '=', True),
             '|', ('vat_required', '=', False), ('vat_required', '=', partner.vat_subjected),
         ]
+        if delivery.country_id.id:
+            fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', delivery.country_id.id)], context=context, limit=1)
+            if fiscal_position_ids:
+                return fiscal_position_ids[0]
 
-        fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', delivery.country_id.id)], context=context, limit=1)
-        if fiscal_position_ids:
-            return fiscal_position_ids[0]
-
-        fiscal_position_ids = self.search(cr, uid, domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], context=context, limit=1)
-        if fiscal_position_ids:
-            return fiscal_position_ids[0]
+            fiscal_position_ids = self.search(cr, uid, domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], context=context, limit=1)
+            if fiscal_position_ids:
+                return fiscal_position_ids[0]
 
         fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', None), ('country_group_id', '=', None)], context=context, limit=1)
         if fiscal_position_ids:

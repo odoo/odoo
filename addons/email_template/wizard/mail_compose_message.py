@@ -116,8 +116,8 @@ class mail_compose_message(osv.TransientModel):
                 values.setdefault('attachment_ids', list()).append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
             default_context = dict(context, default_composition_mode=composition_mode, default_model=model, default_res_id=res_id)
-            default_values = self.default_get(cr, uid, ['composition_mode', 'model', 'res_id', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'], context=default_context)
-            values = dict((key, default_values[key]) for key in ['subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
+            default_values = self.default_get(cr, uid, ['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'], context=default_context)
+            values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')

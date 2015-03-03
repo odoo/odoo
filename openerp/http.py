@@ -270,7 +270,8 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
         self._failed = exception # prevent tx commit
-        if not isinstance(exception, NO_POSTMORTEM):
+        if not isinstance(exception, NO_POSTMORTEM) \
+                and not isinstance(exception, werkzeug.exceptions.HTTPException):
             openerp.tools.debugger.post_mortem(
                 openerp.tools.config, sys.exc_info())
         raise
@@ -395,14 +396,18 @@ def route(route=None, **kw):
             response = f(*args, **kw)
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
-            elif isinstance(response, werkzeug.wrappers.BaseResponse):
+
+            if isinstance(response, basestring):
+                return Response(response)
+
+            if isinstance(response, werkzeug.exceptions.HTTPException):
+                response = response.get_response()
+            if isinstance(response, werkzeug.wrappers.BaseResponse):
                 response = Response.force_type(response)
                 response.set_default()
                 return response
-            elif isinstance(response, basestring):
-                return Response(response)
-            else:
-                _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
+
+            _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
             return response
         response_wrap.routing = routing
         response_wrap.original_func = f
@@ -554,7 +559,7 @@ class JsonRequest(WebRequest):
                 start_time = time.time()
                 _, start_vms = 0, 0
                 if psutil:
-                    _, start_vms = psutil.Process().get_memory_info()
+                    _, start_vms = psutil.Process(os.getpid()).get_memory_info()
                 if rpc_request and rpc_response_flag:
                     rpc_request.debug('%s: %s %s, %s',
                         endpoint, model, method, pprint.pformat(args))
@@ -565,7 +570,7 @@ class JsonRequest(WebRequest):
                 end_time = time.time()
                 _, end_vms = 0, 0
                 if psutil:
-                    _, end_vms = psutil.Process().get_memory_info()
+                    _, end_vms = psutil.Process(os.getpid()).get_memory_info()
                 logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
                     endpoint, model, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
                 if rpc_response_flag:

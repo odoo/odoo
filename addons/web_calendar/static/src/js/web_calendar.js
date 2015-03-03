@@ -681,25 +681,33 @@ openerp.web_calendar = function(instance) {
                         }
                         
                         if (!self.useContacts) {  // If we use all peoples displayed in the current month as filter in sidebars
-                            var filter_value;
                             var filter_item;
                             
                             self.now_filter_ids = [];
 
+                            var color_field = self.fields[self.color_field];
                             _.each(events, function (e) {
-                                filter_value = e[self.color_field][0];
-                                if (!self.all_filters[e[self.color_field][0]]) {
+                                var key,val = null;
+                                if (self.color_field.type == "selection") {
+                                    key = e[self.color_field];
+                                    val = _.find( self.color_field.selection, function(name){ return name[0] === key;});
+                                }
+                                else {
+                                    key = e[self.color_field][0];
+                                    val = e[self.color_field];
+                                }
+                                if (!self.all_filters[key]) {
                                     filter_item = {
-                                        value: filter_value,
-                                        label: e[self.color_field][1],
-                                        color: self.get_color(filter_value),
+                                        value: key,
+                                        label: val[1],
+                                        color: self.get_color(key),
                                         avatar_model: (_.str.toBoolElse(self.avatar_filter, true) ? self.avatar_filter : false ),
                                         is_checked: true
                                     };
-                                    self.all_filters[e[self.color_field][0]] = filter_item;
+                                    self.all_filters[key] = filter_item;
                                 }
-                                if (! _.contains(self.now_filter_ids, filter_value)) {
-                                    self.now_filter_ids.push(filter_value);
+                                if (! _.contains(self.now_filter_ids, key)) {
+                                    self.now_filter_ids.push(key);
                                 }
                             });
 
@@ -708,7 +716,8 @@ openerp.web_calendar = function(instance) {
                                 self.sidebar.filter.set_filters();
                                 
                                 events = $.map(events, function (e) {
-                                    if (_.contains(self.now_filter_ids,e[self.color_field][0]) &&  self.all_filters[e[self.color_field][0]].is_checked) {
+                                    var key = self.color_field.type == "selection" ? e[self.color_field] : e[self.color_field][0];
+                                    if (_.contains(self.now_filter_ids, key) &&  self.all_filters[key].is_checked) {
                                         return e;
                                     }
                                     return null;
@@ -730,10 +739,7 @@ openerp.web_calendar = function(instance) {
                                     });
                                 }
                             }
-
-                            
                         }
-
                         var all_attendees = $.map(events, function (e) { return e[self.attendee_people]; });
                         all_attendees = _.chain(all_attendees).flatten().uniq().value();
 
@@ -1378,7 +1384,9 @@ openerp.web_calendar = function(instance) {
     });
     instance.web_calendar.SidebarFilter = instance.web.Widget.extend({
         events: {
-            'change input:checkbox': 'filter_click'
+            'change input:checkbox': 'filter_click',
+            'click span.color_filter': 'select_previous',
+
         },
         init: function(parent, view) {
             this._super(parent);
@@ -1409,10 +1417,13 @@ openerp.web_calendar = function(instance) {
             if (self.view.all_filters[0] && e.target.value == self.view.all_filters[0].value) {
                 self.view.all_filters[0].is_checked = e.target.checked;
             } else {
-                self.view.all_filters[parseInt(e.target.value)].is_checked = e.target.checked;
+                self.view.all_filters[e.target.value].is_checked = e.target.checked;
             }
             self.view.$calendar.fullCalendar('refetchEvents');
         },
+        select_previous: function(e) {
+            $(e.target).siblings('input').trigger('click');
+        }
     });
 
 };

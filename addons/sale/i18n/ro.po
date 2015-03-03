@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-11-10 08:04+0000\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-01-19 05:33+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-11 07:37+0000\n"
-"X-Generator: Launchpad (build 17241)\n"
+"X-Launchpad-Export-Date: 2015-01-22 08:18+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
@@ -115,6 +115,101 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Bună ziua ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Aceasta este ${object.state in ('draft', 'sent') and 'cotația' or "
+"'comanda'} de la ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERINȚE</strong><br />\n"
+"       &nbsp;&nbsp;Număr comandă: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Total comandă: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Dată comandă: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Referință comandă: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Referința dumneavoastră: ${object.client_order_ref}<br "
+"/>\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"    <p>\n"
+"        Puteți să vedeți cotația online:\n"
+"    </p>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
+"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
+"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
+"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
+"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View "
+"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>Dacă aveți întrebări nu ezitați să ne contactați.</p>\n"
+"    <p>Mulțumim că ați ales ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Telefon:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: field:product.product,sales_count:0
@@ -354,7 +449,7 @@ msgid "Advance Amount"
 msgstr "Sumă în avans"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:203
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:207
 #, python-format
 msgid "Advance Invoice"
 msgstr "Factură în avans"
@@ -365,14 +460,13 @@ msgid "Advance Product"
 msgstr "Avans Produse"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:107
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %%"
 msgstr "Avans de %s %%"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:114
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:116
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %s"
 msgstr "Avans %s %s"
@@ -564,7 +658,7 @@ msgid "Before Delivery"
 msgstr "Înainte de Livrare"
 
 #. module: sale
-#: code:addons/sale/sale.py:1041
+#: code:addons/sale/sale.py:1048
 #, python-format
 msgid ""
 "Before choosing a product,\n"
@@ -624,7 +718,7 @@ msgid "Cannot cancel this sales order!"
 msgstr "Imposibil de anulat aceasta comanda de vanzare!"
 
 #. module: sale
-#: code:addons/sale/sale.py:1164
+#: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
@@ -632,7 +726,7 @@ msgstr ""
 "'%s'."
 
 #. module: sale
-#: code:addons/sale/sale.py:1133
+#: code:addons/sale/sale.py:1140
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -694,9 +788,9 @@ msgid "Company"
 msgstr "Companie"
 
 #. module: sale
-#: code:addons/sale/sale.py:1141
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:92
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
+#: code:addons/sale/sale.py:1148
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:95
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:99
 #, python-format
 msgid "Configuration Error!"
 msgstr "Eroare de configurare!"
@@ -704,7 +798,7 @@ msgstr "Eroare de configurare!"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Confirm Sale"
-msgstr "Confirmați vănzarea"
+msgstr "Confirmați vânzarea"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -964,8 +1058,8 @@ msgstr "Activati Liniile Comenzii de vanzare de facturare"
 #: code:addons/sale/sale.py:390
 #: code:addons/sale/sale.py:522
 #: code:addons/sale/sale.py:605
-#: code:addons/sale/sale.py:927
-#: code:addons/sale/sale.py:944
+#: code:addons/sale/sale.py:934
+#: code:addons/sale/sale.py:951
 #, python-format
 msgid "Error!"
 msgstr "Eroare!"
@@ -1076,8 +1170,12 @@ msgid ""
 "The 'Waiting Schedule' status is set when the invoice is confirmed           "
 "    but waiting for the scheduler to run on the order date."
 msgstr ""
-"Prezinta starea cotatiei sau al comenzii de vanzare.              \n"
-"Starea exceptie este setata automat"
+"Prezintă starea curentă a cotației sau comenzii de vânzare.              \n"
+"Statusul de excepție este setata automat atunci când este anulată o operație "
+"în validarea facturii (Excepție Factură) sau în procesarea livrării "
+"(Excepție Livrare)\n"
+" Statusul 'Așteaptă planificare' este setat când factura este confirmată dar "
+"se așteaptă planificarea la data din comandă."
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1152,21 +1250,21 @@ msgstr ""
 "înainte!"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:105
 #, python-format
 msgid "Incorrect Data"
 msgstr "Date incorecte"
 
 #. module: sale
 #: code:addons/sale/sale.py:274
-#: code:addons/sale/sale.py:983
-#: code:addons/sale/sale.py:1164
+#: code:addons/sale/sale.py:990
+#: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Invalid Action!"
 msgstr "Acțiune nevalidă!"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: code:addons/sale/wizard/sale_line_invoice.py:127
 #: model:ir.model,name:sale.model_account_invoice
 #: view:sale.order:sale.view_order_form
 #, python-format
@@ -1230,7 +1328,7 @@ msgid "Invoice and shipping address:"
 msgstr "Adresa de facturare şi livrare:"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_line_invoice.py:113
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -1245,13 +1343,13 @@ msgstr ""
 "2. Linia Comenzii de Vanzare este facturata!"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:97
+#: code:addons/sale/wizard/sale_line_invoice.py:102
 #, python-format
 msgid "Invoice created"
 msgstr "Factură creată"
 
 #. module: sale
-#: code:addons/sale/sale.py:1217
+#: code:addons/sale/sale.py:1224
 #, python-format
 msgid "Invoice paid"
 msgstr "Factură plătită"
@@ -1375,19 +1473,19 @@ msgid "New Mail"
 msgstr "Email nou"
 
 #. module: sale
-#: code:addons/sale/sale.py:1041
+#: code:addons/sale/sale.py:1048
 #, python-format
 msgid "No Customer Defined!"
 msgstr "Nici un Client Definit!"
 
 #. module: sale
-#: code:addons/sale/sale.py:1125
+#: code:addons/sale/sale.py:1132
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Nici o Listă de prețuri ! : "
 
 #. module: sale
-#: code:addons/sale/sale.py:1136
+#: code:addons/sale/sale.py:1143
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Nu a fost gasita nicio linie valida a listei de preturi !:"
@@ -1538,7 +1636,7 @@ msgid "Percentage"
 msgstr "Procentaj"
 
 #. module: sale
-#: code:addons/sale/sale.py:928
+#: code:addons/sale/sale.py:935
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -1561,6 +1659,11 @@ msgstr "Pregatiti facturile pe baza fiselor de pontaj"
 #: view:website:sale.report_saleorder_document
 msgid "Price"
 msgstr "Preț"
+
+#. module: sale
+#: field:sale.order.line,price_reduce:0
+msgid "Price Reduce"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,pricelist_id:0
@@ -1917,13 +2020,14 @@ msgstr "Statistici comenzi de vânzare"
 #: view:account.invoice:sale.account_invoice_groupby_inherit
 #: view:account.invoice:sale.account_invoice_tree
 #: field:account.invoice,section_id:0
+#: view:account.invoice.report:sale.view_account_invoice_report_search_inherit
 #: field:account.invoice.report,section_id:0
 #: view:sale.order:sale.view_sales_order_filter
 #: field:sale.order,section_id:0
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,section_id:0
 msgid "Sales Team"
-msgstr "Echipa de vanzări"
+msgstr "Echipa de vânzări"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_case_section
@@ -2011,8 +2115,8 @@ msgstr "Excepție la expediere"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
-msgid "Shipping address :"
-msgstr "Adresa de expediere:"
+msgid "Shipping address:"
+msgstr ""
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -2107,13 +2211,13 @@ msgid "The total amount."
 msgstr "Valoare totală."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:103
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:106
 #, python-format
 msgid "The value of Advance Amount must be positive."
 msgstr "Valoarea Sumei in Avans trebuie sa fie pozitiva."
 
 #. module: sale
-#: code:addons/sale/sale.py:945
+#: code:addons/sale/sale.py:952
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -2129,13 +2233,13 @@ msgid "There is no default company for the current user!"
 msgstr "Nu există nici o companie implicită pentru utilizatorul curent!"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:93
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
 msgid "There is no income account defined as global property."
 msgstr "Nu există nici un cont de venituri definit ca proprietate globală."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:97
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:100
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -2376,7 +2480,7 @@ msgstr "Vizualizează factură"
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
-msgstr "Programul de asteptare"
+msgstr "Așteaptă planificare"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -2384,7 +2488,7 @@ msgid "Warehouse Features"
 msgstr "Caracteristicile Depozitului"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_line_invoice.py:113
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
@@ -2412,7 +2516,7 @@ msgid "What do you want to invoice?"
 msgstr "Ce doriți să facturați?"
 
 #. module: sale
-#: code:addons/sale/sale.py:983
+#: code:addons/sale/sale.py:990
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
@@ -2439,7 +2543,7 @@ msgstr ""
 "Nu puteti grupa vanzarile care au valute diferite pentru acelasi partener."
 
 #. module: sale
-#: code:addons/sale/sale.py:1123
+#: code:addons/sale/sale.py:1130
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -2461,6 +2565,13 @@ msgid "Your Reference:"
 msgstr "Referința"
 
 #. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "or"
+msgstr "sau"
+
+#. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "sale.group_delivery_invoice_address"
 msgstr ""
@@ -2468,6 +2579,9 @@ msgstr ""
 
 #~ msgid "Order Date"
 #~ msgstr "Data comenzii"
+
+#~ msgid "Shipping address :"
+#~ msgstr "Adresa de expediere:"
 
 #~ msgid "Reference Unit of Measure"
 #~ msgstr "Unitatea de măsură de referință"

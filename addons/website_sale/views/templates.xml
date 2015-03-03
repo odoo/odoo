@@ -70,7 +70,7 @@
 <!-- Product item used by /shop and /shop/cart -->
 
 <template id="products_item" name="Product item">
-  <form action="/shop/cart/update" method="post" style="display: inline-block;">
+  <form action="/shop/cart/update" method="post">
   <div itemscope="itemscope" itemtype="http://schema.org/Product">
   <div class="ribbon-wrapper">
     <div class="ribbon btn btn-danger">Sale</div>
@@ -677,10 +677,10 @@
                               <td t-if="line.product_id.product_tmpl_id">
                                   <div>
                                       <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
-                                          <strong t-esc="line.product_id.name_get()[0][1]"/>
+                                          <strong t-esc="line.product_id.with_context(display_default_code=False).display_name"/>
                                       </a>
                                   </div>
-                                  <div class="text-muted" t-field="line.name"/>
+                                  <div class="text-muted" t-esc="'\n'.join(line.name.splitlines()[1:])"/>
                               </td>
                               <td class="text-center" name="price">
                                 <t t-if="(compute_currency(line.product_id.lst_price) - line.price_unit) &gt; 1">
@@ -721,7 +721,7 @@
                   <t t-call="website_sale.total"/>
                   <div class="clearfix"/>
 
-                  <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32" href="/shop/checkout">Process Checkout <span class="fa fa-long-arrow-right"/></a>
+                  <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32" href="/shop/checkout"><span class="hidden-xs">Process Checkout</span><span class="visible-xs-inline">Checkout</span> <span class="fa fa-long-arrow-right"/></a>
 
                   <div class="oe_structure"/>
               </div>
@@ -804,7 +804,7 @@
 
 <template id="continue_shopping" inherit_id="website_sale.cart" customize_show="True" name="Continue Shopping Button">
   <xpath expr="//a[@href='/shop/checkout']" position="before">
-    <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Continue Shopping</a>
+    <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> <span class="hidden-xs">Continue Shopping</span><span class="visible-xs-inline">Continue</span></a>
   </xpath>
 </template>
 
@@ -1045,7 +1045,7 @@
                               </a>
                           </td>
                           <td t-if="line.product_id.product_tmpl_id">
-                             <strong t-field="line.product_id.name"/>
+                             <strong t-field="line.product_id.with_context(display_default_code=False).display_name"/>
                           </td>
                           <td class="text-center">
                              <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{

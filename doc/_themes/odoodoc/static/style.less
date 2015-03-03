@@ -37,6 +37,9 @@ body {
 }
 
 .documentwrapper {
+  .make-md-column(12);
+}
+.with-sidebar .documentwrapper {
   .make-md-column(9);
 }
 .sphinxsidebar {
@@ -403,8 +406,12 @@ div.section > h2 {
   margin-top: 0;
 }
 // ~docs-section
-.body > .section > .section {
-  margin-bottom: 60px;
+.body {
+  // otherwise main section right column content may not be visible
+  position: relative;
+  > .section > .section {
+    margin-bottom: 60px;
+  }
 }
 
 .literal:extend(code) {}
@@ -465,50 +472,50 @@ div.section > h2 {
   }
 }
 
-/*
- * Code snippets
- *
- * Generated via Pygments
- */
-.highlight pre {
-  padding: 4px;
-  font-size: 75%;
-  // don't break lines within words
-  word-break: normal;
-  word-wrap: normal;
-}
-.switchable .highlight.with-btn-clipboard pre {
-  // avoid copy button overlapping with even long lines
-  padding-right: 50px;
-}
-
-/*
- * ZeroClipboard styles
- */
 .highlight {
   position: relative;
-}
-.btn-clipboard {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 3;
-  display: block;
-  padding: 5px 8px;
-  font-size: 12px;
-  color: #777;
-  cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #e1e1e8;
-  border-radius: 0 4px 0 4px;
 
-  &:focus {
-    outline: none;
+  // move styling from pre to highlight so can have multiple pre elements in
+  // a single "code block" for ease of adding and removing setup code &al
+  color: @gray-dark;
+  // force override of pygments yellow background background
+  background: @gray-lighter none !important;
+  border: 1px solid @gray-light;
+  border-radius: @border-radius-base 0 @border-radius-base @border-radius-base;
+  margin: 10px 0;
+
+  pre {
+    padding: 0;
+    margin: 10px;
+    font-size: 75%;
+    // don't break lines within words
+    word-break: normal;
+    word-wrap: normal;
+
+    background: none;
+    border: none;
   }
 
-  &.active {
-    background-color: #ffffad;
-    .transition(background-color .5s linear);
+  &:hover .btn-show-setup {
+    display: block;
+  }
+  .btn-show-setup {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    z-index: 3;
+    padding: 5px 8px;
+    font-size: 12px;
+    color: @gray-light;
+    cursor: pointer;
+    border: 1px solid @gray-light;
+    border-radius: @border-radius-base @border-radius-base 0 0;
+    background: inherit;
+
+    &:focus {
+      outline: none;
+    }
   }
 }
 
@@ -603,24 +610,31 @@ td.field-body {
   // === columning only on medium+ ===
   @media (min-width: @screen-md-min) {
     // column 1
-    .section > *,
-    .section > .force-left {
+    .section:not(.force-right) > *,
+    .section:not(.force-right) > .force-left {
       width: 49%;
       float: left;
       clear: left;
     }
     // column 2
-    .section > .force-right {
+    .section:not(.force-right) > .force-right {
       padding-left: 1em;
       padding-right: 1em;
     }
-    .section > .force-right,
-    .section > [class*=highlight] {
+    .section:not(.force-right) > .force-right,
+    .section:not(.force-right) > [class*=highlight] {
       float: none;
       clear: none;
       margin-left: 50%;
       width: 50%;
       color: @color-right;
+      legend {
+        color: inherit;
+      }
+      input {
+        color: inherit;
+        background-color: @gray;
+      }
       a {
         color: lighten(@link-color, 30%);
       }
@@ -638,22 +652,14 @@ td.field-body {
         border-bottom-color: @separator-right;
         border-right-color: @separator-right;
       }
-      pre {
-        // padding leads to overflow scrollbar in safari for no reason I understand,
-        // margin does not have that issue
-        padding: 0;
-        margin: 10px;
-
-        background: none;
-        border: none;
-      }
       .highlight {
         border-color: @gray;
         border-style: solid;
         border-width: 1px 0;
+        border-radius: 0;
         // solarized-ish from https://gist.github.com/qguv/7936275
         color: @color-right-code;
-        background: none;
+        background: none !important;
         .lineno { color: #586e75 } /* Line Numbers */
         .c { color: #586e75 } /* Comment */
         .err { color: @color-right-code } /* Error */
@@ -729,13 +735,16 @@ td.field-body {
     .body > .section > .section {
       border-top: 1px solid @color-right;
     }
-    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
-    .section > h6 {
+    .section:not(.force-right) > h1, .section:not(.force-right) > h2,
+    .section:not(.force-right) > h3, .section:not(.force-right) > h4,
+    .section:not(.force-right) > h5, .section:not(.force-right) > h6 {
       max-width: 50%;
 
     }
-    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
-    .section > h6, .section > .section {
+    .section:not(.force-right) > h1, .section:not(.force-right) > h2,
+    .section:not(.force-right) > h3, .section:not(.force-right) > h4,
+    .section:not(.force-right) > h5, .section:not(.force-right) > h6,
+    .section > .section:not(.force-right) {
       position: relative;
       width: auto;
       float: none;
@@ -761,12 +770,10 @@ td.field-body {
       white-space: pre-wrap;
     }
 
-    .btn-clipboard {
+    .btn-show-setup {
       background-color: transparent;
       color: @color-right;
       border-color: @separator-right;
-      border-top: none;
-      border-top-right-radius: 0;
 
       &.active {
         background-color: @gray;

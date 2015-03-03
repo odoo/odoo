@@ -538,7 +538,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             data = pickle.loads(base64.decodestring(wizard.file_import))
 
             migration_fix_obj = self.pool.get('ir.model.fields.anonymization.migration.fix')
-            fix_ids = migration_fix_obj.search(cr, uid, [('target_version', '=', '7.0')])
+            fix_ids = migration_fix_obj.search(cr, uid, [('target_version', '=', '8.0')])
             fixes = migration_fix_obj.read(cr, uid, fix_ids, ['model_name', 'field_name', 'query', 'query_type', 'sequence'])
             fixes = group(fixes, ('model_name', 'field_name'))
 

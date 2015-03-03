@@ -369,6 +369,16 @@ openerp.mail = function (session) {
             this.is_log = false;
             this.recipients = [];
             this.recipient_ids = [];
+            session.web.bus.on('clear_uncommitted_changes', this, function(e) {
+                if (this.show_composer && !e.isDefaultPrevented()){
+                    if (!confirm(_t("You are currently composing a message, your message will be discarded.\n\nAre you sure you want to leave this page ?"))) {
+                        e.preventDefault();
+                    }
+                    else{
+                        this.on_cancel();
+                    }
+                }
+            });
         },
 
         start: function () {

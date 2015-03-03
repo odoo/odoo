@@ -256,6 +256,14 @@ class hr_timesheet_sheet(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a timesheet which is already confirmed.'))
             elif sheet['total_attendance'] <> 0.00:
                 raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a timesheet which have attendance entries.'))
+
+        toremove = []
+        analytic_timesheet = self.pool.get('hr.analytic.timesheet')
+        for sheet in self.browse(cr, uid, ids, context=context):
+            for timesheet in sheet.timesheet_ids:
+                toremove.append(timesheet.id)
+        analytic_timesheet.unlink(cr, uid, toremove, context=context)
+
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
@@ -318,7 +326,8 @@ class hr_timesheet_line(osv.osv):
         for ts_line in self.browse(cursor, user, ids, context=context):
             sheet_ids = sheet_obj.search(cursor, user,
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
-                 ('employee_id.user_id', '=', ts_line.user_id.id)],
+                 ('employee_id.user_id', '=', ts_line.user_id.id),
+                 ('state', 'in', ['draft', 'new'])],
                 context=context)
             if sheet_ids:
             # [0] because only one sheet possible for an employee between 2 dates
@@ -357,17 +366,11 @@ class hr_timesheet_line(osv.osv):
             ),
     }
 
-    def _check_sheet_state(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        for timesheet_line in self.browse(cr, uid, ids, context=context):
-            if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
-                return False
-        return True
-
-    _constraints = [
-        (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !', ['state']),
-    ]
+    def write(self, cr, uid, ids, values, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        self._check(cr, uid, ids)
+        return super(hr_timesheet_line, self).write(cr, uid, ids, values, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         if isinstance(ids, (int, long)):

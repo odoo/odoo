@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-17 10:32+0000\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-01-22 08:27+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-18 07:25+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2015-01-23 06:51+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:43
-#: code:addons/product_extended/wizard/wizard_price.py:52
+#: code:addons/product_extended/wizard/wizard_price.py:44
+#: code:addons/product_extended/wizard/wizard_price.py:56
 #, python-format
 msgid "Active ID is not set in Context."
 msgstr "Active ID is niet ingesteld in Context."
@@ -72,7 +72,7 @@ msgstr "Aangemaakt op"
 #. module: product_extended
 #: field:wizard.price,real_time_accounting:0
 msgid "Generate accounting entries when real-time"
-msgstr "Bij real-time voorraad waardering, financiële boekingen maken."
+msgstr "Bij real-time voorraadwaardering, financiële boekingen maken."
 
 #. module: product_extended
 #: field:wizard.price,id:0
@@ -95,12 +95,12 @@ msgid "Last Updated on"
 msgstr "Laatst aangepast op"
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_product_product
-msgid "Product"
-msgstr "Product"
+#: model:ir.model,name:product_extended.model_product_template
+msgid "Product Template"
+msgstr "Productsjabloon"
 
 #. module: product_extended
-#: view:product.product:product_extended.product_product_ext_form_view2
+#: view:product.template:product_extended.product_product_ext_form_view2
 msgid "Recompute price from BoM"
 msgstr "Herbereken de prijzen voor materiaallijst"
 
@@ -113,3 +113,33 @@ msgstr "Stel prijs in op materiaallijst"
 #: field:mrp.bom,standard_price:0
 msgid "Standard Price"
 msgstr "Standaardprijs"
+
+#. module: product_extended
+#: view:wizard.price:product_extended.view_compute_price_wizard
+msgid ""
+"The price is computed from the bill of material lines which are not variant "
+"specific"
+msgstr ""
+"De prijs is berekend op basis van de materiaallijstregels welke niet variant "
+"specifiek zijn."
+
+#. module: product_extended
+#: code:addons/product_extended/wizard/wizard_price.py:54
+#, python-format
+msgid ""
+"This wizard is build for product templates, while you are currently running "
+"it from a product variant."
+msgstr ""
+"deze wizard is gemaakt voor productsjablonen, terwijl u deze nu gestart "
+"heeft vanaf een productvariant."
+
+#. module: product_extended
+#: code:addons/product_extended/wizard/wizard_price.py:54
+#, python-format
+msgid "Wrong model!"
+msgstr "Verkeerde model!"
+
+#. module: product_extended
+#: view:wizard.price:product_extended.view_compute_price_wizard
+msgid "or"
+msgstr "of"

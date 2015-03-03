@@ -118,9 +118,12 @@ class project_work(osv.osv):
         vals_line['user_id'] = vals['user_id']
         vals_line['product_id'] = result['product_id']
         if vals.get('date'):
-            timestamp = datetime.datetime.strptime(vals['date'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            ts = fields.datetime.context_timestamp(cr, uid, timestamp, context)
-            vals_line['date'] = ts.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+            if len(vals['date']) > 10:
+                timestamp = datetime.datetime.strptime(vals['date'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                ts = fields.datetime.context_timestamp(cr, uid, timestamp, context)
+                vals_line['date'] = ts.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+            else:
+                vals_line['date'] = vals['date']
 
         # Calculate quantity based on employee's product's uom
         vals_line['unit_amount'] = vals['hours']
@@ -263,7 +266,7 @@ class task(osv.osv):
                                 missing_analytic_entries[task_work.id] = {
                                     'name' : task_work.name,
                                     'user_id' : task_work.user_id.id,
-                                    'date' : task_work.date and task_work.date[:10] or False,
+                                    'date' : task_work.date,
                                     'account_id': acc_id,
                                     'hours' : task_work.hours,
                                     'task_id' : task_obj.id

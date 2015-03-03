@@ -414,6 +414,10 @@ class QWeb(orm.AbstractModel):
                     '%s_odd' % varname: False,
                 })
             ru.append(self.render_element(element, template_attributes, generated_attributes, copy_qwebcontext))
+
+        for k in qwebcontext.keys():
+            qwebcontext[k] = copy_qwebcontext[k]
+
         return "".join(ru)
 
     def render_tag_if(self, element, template_attributes, generated_attributes, qwebcontext):

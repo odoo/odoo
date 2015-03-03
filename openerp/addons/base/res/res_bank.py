@@ -151,8 +151,8 @@ class res_partner_bank(osv.osv):
         'name': '/'
     }
 
-    def fields_get(self, cr, uid, allfields=None, context=None):
-        res = super(res_partner_bank, self).fields_get(cr, uid, allfields=allfields, context=context)
+    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, attributes=None):
+        res = super(res_partner_bank, self).fields_get(cr, uid, allfields=allfields, context=context, write_access=write_access, attributes=attributes)
         bank_type_obj = self.pool.get('res.partner.bank.type')
         type_ids = bank_type_obj.search(cr, uid, [])
         types = bank_type_obj.browse(cr, uid, type_ids)
@@ -216,10 +216,11 @@ class res_partner_bank(osv.osv):
         return {'value': result}
 
 
-    def onchange_partner_id(self, cr, uid, id, partner_id, context=None):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         result = {}
-        if partner_id:
-            part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+        if partner_id is not False:
+            # be careful: partner_id may be a NewId
+            part = self.pool['res.partner'].browse(cr, uid, [partner_id], context=context)
             result['owner_name'] = part.name
             result['street'] = part.street or False
             result['city'] = part.city or False

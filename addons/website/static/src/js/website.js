@@ -1,6 +1,18 @@
 (function() {
     "use strict";
 
+    /* --- Set the browser into the dom for css selectors --- */
+    var browser;
+    if ($.browser.webkit) browser = "webkit";
+    else if ($.browser.safari) browser = "safari";
+    else if ($.browser.opera) browser = "opera";
+    else if ($.browser.msie || ($.browser.mozilla && +$.browser.version.replace(/^([0-9]+\.[0-9]+).*/, '\$1') < 20)) browser = "msie";
+    else if ($.browser.mozilla) browser = "mozilla";
+    browser += ","+$.browser.version;
+    if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) browser += ",mobile";
+    document.documentElement.setAttribute('data-browser', browser);
+    /* ---------------------------------------------------- */
+
     var website = {};
     openerp.website = website;
 

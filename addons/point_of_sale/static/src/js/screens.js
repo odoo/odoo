@@ -1077,7 +1077,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
            
             if( this.pos.config.iface_invoicing ){
                 this.add_action_button({
-                        label: 'Invoice',
+                        label: _t('Invoice'),
                         name: 'invoice',
                         icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
                         click: function(){

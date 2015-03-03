@@ -724,21 +724,21 @@ class Database(http.Controller):
             return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @http.route('/web/database/backup', type='http', auth="none")
-    def backup(self, backup_db, backup_pwd, token):
+    def backup(self, backup_db, backup_pwd, token, backup_format='zip'):
         try:
-            db_dump = base64.b64decode(
-                request.session.proxy("db").dump(backup_pwd, backup_db))
-            filename = "%(db)s_%(timestamp)s.dump" % {
-                'db': backup_db,
-                'timestamp': datetime.datetime.utcnow().strftime(
-                    "%Y-%m-%d_%H-%M-%SZ")
-            }
-            return request.make_response(db_dump,
-               [('Content-Type', 'application/octet-stream; charset=binary'),
-               ('Content-Disposition', content_disposition(filename))],
-               {'fileToken': token}
-            )
+            openerp.service.security.check_super(backup_pwd)
+            ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
+            filename = "%s_%s.%s" % (backup_db, ts, backup_format)
+            headers = [
+                ('Content-Type', 'application/octet-stream; charset=binary'),
+                ('Content-Disposition', content_disposition(filename)),
+            ]
+            dump_stream = openerp.service.db.dump_db(backup_db, None, backup_format)
+            response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
+            response.set_cookie('fileToken', token)
+            return response
         except Exception, e:
+            _logger.exception('Database.backup')
             return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @http.route('/web/database/restore', type='http', auth="none")
@@ -1097,7 +1097,7 @@ class Binary(http.Controller):
             res = Model.read(cr, uid, [int(id)], fields, context)[0]
         else:
             res = Model.default_get(cr, uid, fields, context)
-        filecontent = base64.b64decode(res.get(field, ''))
+        filecontent = base64.b64decode(res.get(field) or '')
         if not filecontent:
             return request.not_found()
         else:
@@ -1124,12 +1124,12 @@ class Binary(http.Controller):
         if filename_field:
             fields.append(filename_field)
         if data:
-            res = { field: data }
+            res = {field: data, filename_field: jdata.get('filename', None)}
         elif id:
             res = Model.read([int(id)], fields, context)[0]
         else:
             res = Model.default_get(fields, context)
-        filecontent = base64.b64decode(res.get(field, ''))
+        filecontent = base64.b64decode(res.get(field) or '')
         if not filecontent:
             raise ValueError(_("No content found for field '%s' on '%s:%s'") %
                 (field, model, id))

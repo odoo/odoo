@@ -458,7 +458,7 @@
                                     </div>
                                 </strong>
                             </td>
-                            <td class="pull-right">
+                            <td class="pull-right" t-if="quotation.state in ['draft', 'sent']">
                                 <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
                                     <span class="fa fa-shopping-cart"/>
                                 </a>

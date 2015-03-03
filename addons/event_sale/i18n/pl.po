@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
 "PO-Revision-Date: 2014-09-26 15:30+0000\n"
 "Last-Translator: Monika Grzelak (OpenGLOBE.pl) "
 "<monika.grzelak@openglobe.pl>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-27 06:38+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-01-22 07:41+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: event_sale
 #: field:event.event.ticket,seats_available:0
@@ -102,12 +102,8 @@ msgstr ""
 "potwierdzeniu pozycji zamówienia sprzedaży."
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_event_event
-msgid "Email Thread"
-msgstr "Wątek email"
-
-#. module: event_sale
 #: field:event.event.ticket,event_id:0
+#: model:ir.model,name:event_sale.model_event_event
 #: field:sale.order.line,event_id:0
 msgid "Event"
 msgstr "Wydarzenie"
@@ -222,6 +218,11 @@ msgid "Price"
 msgstr "Cena"
 
 #. module: event_sale
+#: field:event.event.ticket,price_reduce:0
+msgid "Price Reduce"
+msgstr ""
+
+#. module: event_sale
 #: field:event.event.ticket,product_id:0
 #: model:ir.model,name:event_sale.model_product_product
 msgid "Product"
@@ -275,7 +276,7 @@ msgid "Status"
 msgstr "Stan"
 
 #. module: event_sale
-#: code:addons/event_sale/event_sale.py:146
+#: code:addons/event_sale/event_sale.py:154
 #, python-format
 msgid "Subscription"
 msgstr "Subskrypcja"
@@ -286,7 +287,7 @@ msgid "Technical Training"
 msgstr "Szkolenie techniczne"
 
 #. module: event_sale
-#: code:addons/event_sale/event_sale.py:115
+#: code:addons/event_sale/event_sale.py:123
 #, python-format
 msgid ""
 "The registration has been created for event <i>%s</i> from the Sale Order "
@@ -295,7 +296,7 @@ msgstr ""
 "Utworzono rejestrację na wydarzenie <i>%s</i> z zamówienia sprzedaży %s. "
 
 #. module: event_sale
-#: code:addons/event_sale/event_sale.py:113
+#: code:addons/event_sale/event_sale.py:121
 #, python-format
 msgid ""
 "The registration has been created for event <i>%s</i> with the ticket "
