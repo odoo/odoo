@@ -4,31 +4,34 @@ import base64
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website
+from openerp.addons.website_portal.controllers.main import website_account
 from openerp.addons.website_sale.controllers.main import website_sale
 from cStringIO import StringIO
 from werkzeug.utils import redirect
 
 
-class website_sale_digital(website_sale):
-
-    orders_page = '/shop/orders'
+class website_sale_digital_confirmation(website_sale):
 
     @http.route([
         '/shop/confirmation',
     ], type='http', auth="public", website=True)
     def payment_confirmation(self, **post):
-        response = super(website_sale_digital, self).payment_confirmation(**post)
+        response = super(website_sale_digital_confirmation, self).payment_confirmation(**post)
         order_lines = response.qcontext['order'].order_line
         digital_content = map(lambda x: x.product_id.digital_content, order_lines)
         response.qcontext.update(digital=any(digital_content))
         return response
 
+
+class website_sale_digital(website_account):
+
+    orders_page = '/account/orders'
+
     @http.route([
-        '/shop/orders',
-        '/shop/orders/page/<int:page>',
+        '/account/orders/<int:order>',
     ], type='http', auth='user', website=True)
-    def orders_followup(self, page=1, **post):
-        response = super(website_sale_digital, self).orders_followup(**post)
+    def orders_followup(self, page=1, order=None, **post):
+        response = super(website_sale_digital, self).orders_followup(page=page, order=order, **post)
 
         order_products_attachments = {}
         for o in response.qcontext['orders']:
@@ -65,7 +68,7 @@ class website_sale_digital(website_sale):
         return response
 
     @http.route([
-        '/shop/download',
+        '/account/download',
     ], type='http', auth='public')
     def download_attachment(self, attachment_id):
         # Check if this is a valid attachment id
