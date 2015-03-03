@@ -7,7 +7,7 @@ class SaleApplicability(models.Model):
     _name = 'sale.applicability'
     _description = "Sales Coupon Applicability"
 
-    partner_id = fields.Many2one('res.partner', string="Customer", help="Coupon program will work only for the perticular selected customer")
+    partner_id = fields.Many2one('res.partner', string="Limit to a single customer", help="Coupon program will work only for the perticular selected customer")
     date_from = fields.Date("Date From", help="Date on which coupon will get activated")
     date_to = fields.Date("Date To", help="Date after which coupon will get deactivated")
     validity_type = fields.Selection(
@@ -15,11 +15,11 @@ class SaleApplicability(models.Model):
          ('week', 'Week(s)'),
          ('month', 'Month(s)'),
          ('year', 'Year(s)'),
-         ], string='Validity Duration', required=True, default='day',
-        help="Validity Duration can be based on either day, month, week or year.")
+         ], string='Validity Type', required=True, default='day',
+        help="Validity Type can be based on either day, month, week or year.")
     validity_duration = fields.Integer("Validity Duration", help="Validity duration can be set according to validity type")
     expiration_use = fields.Integer("Expiration use", default='1', help="Number of Times coupon can be Used")
-    purchase_type = fields.Selection([('poroduct', 'Product'), ('category', 'Category'),
+    purchase_type = fields.Selection([('product', 'Product'), ('category', 'Category'),
                                       ('amount', 'Amount')], string="Type", required=True)
     product_id = fields.Many2one('product.product', string="Target Product")
     product_category_id = fields.Many2one('product.category', string="Target Categoy")
@@ -32,25 +32,27 @@ class SaleApplicability(models.Model):
 
 
 class SaleReward(models.Model):
-    _name = 'sale.reward'
-    _description = "Sales Coupon Reward"
+    _name = 'sale.coupon.reward'
+    _description = "Sales Coupon Rewards"
 
     reward_type = fields.Selection([('product', 'Product'),
                                     ('discount', 'Discount'),
-                                    ('coupon', 'Coupon')], string="Reward Type", help="Type of reward to give to customer")
-    reward_shipping_free = fields.Boolean(string="Free Shipping", default=False, help="Shipment of the order is free or not")
+                                    ('coupon', 'Coupon')], string="Free gift", help="Type of reward to give to customer")
+    reward_shipping_free = fields.Selection([('yes', 'Yes'), ('no', 'No')], string="Free Shipping", default=False, help="Shipment of the order is free or not")
     reward_product_product_id = fields.Many2one('product.product', string="Reward Product")
     reward_quantity = fields.Integer(string="Product Quantity")
-    reward_product_uom_id = fields.Many2one('product.uom')
+    reward_product_uom_id = fields.Many2one('product.uom', string="Product UoM")
     reward_gift_coupon_id = fields.Many2one('sale.couponprogram', string="Coupon Id")
     reward_discount_type = fields.Selection([('no', 'No'), ('percentage', 'Percentage'),
-                                           ('amount', 'Amount')], string="Discount Type")
-    reward_discount = fields.Float("Discount", help='The discount in percentage or fixed amount')
-    reward_discount_on = fields.Selection([('cart'), ('cheapest_product'), ('specific_product')], string="Discount On")
+                                             ('amount', 'Amount')], string="Apply a discount")
+    reward_discount_percentage = fields.Float("Discount", help='The discount in percentage')
+    reward_discount_amount = fields.Float("Discount", help='The discount in fixed amount')
+    reward_discount_on = fields.Selection([('cart', 'On cart'), ('cheapest_product', 'On cheapest product'),
+                                           ('specific_product', 'On specific product')], string="Discount On")
     reward_discount_on_product_id = fields.Many2one('product.product', string="Product")
     reward_tax = fields.Selection([('tax_included', 'Tax included'),
-                                   ('tax_excluded', 'Tax excluded')])
-    reward_partial_use = fields.Boolean("The reward can be used partially or not")
+                                   ('tax_excluded', 'Tax excluded')], string="Tax")
+    reward_partial_use = fields.Boolean(string="Partial use", help="The reward can be used partially or not")
 
 
 class SaleCoupon(models.Model):
@@ -79,18 +81,18 @@ class SaleCoupon(models.Model):
 class SaleCouponProgram(models.Model):
     _name = 'sale.couponprogram'
     _description = "Sales Coupon Program"
+    _inherits = {'sale.applicability': 'applicability_id', 'sale.coupon.reward': 'reward_id'}
 
-    program_name = fields.Char(help="Program name")
+    program_name = fields.Char(help="Program name", required=True)
     program_code = fields.Char(string="Code", help="Unique code to provide the reward")
     program_type = fields.Selection([('apply immediately', 'Apply Immediately'), ('public unique code',
                                      'Public Unique Code'), ('generated coupon', 'Generated Coupon')],
                                     string="Program Type", help="The type of the coupon program")
     is_program_active = fields.Boolean(string="Active", default=True, help="Coupon program is active or inactive")
     program_sequence = fields.Integer(string="Sequence", help="According to sequence, one rule is selected from multiple defined rules to apply")
-    # Getting the error here
     coupon_ids = fields.One2many('sale.coupon', 'program_id', string="Coupon Id")
     applicability_id = fields.Many2one('sale.applicability', string="Applicability Id")
-    reward_id = fields.Many2one('sale.reward', string="Reward Id")
+    reward_id = fields.Many2one('sale.coupon.reward', string="Reward Id")
 
 
 class SaleOrderLine(models.Model):
