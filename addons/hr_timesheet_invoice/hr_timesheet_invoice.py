@@ -33,7 +33,8 @@ class account_analytic_account(osv.osv):
     }
 
     _defaults = {
-         'pricelist_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.list0')
+         'pricelist_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.list0'),
+         'to_invoice': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'hr_timesheet_invoice.timesheet_invoice_factor1')
     }
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):

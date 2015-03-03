@@ -3,4 +3,4 @@
 
 import models
 import report
-import test
+import tests

@@ -21,162 +21,190 @@
             <field name="name">account.analytic.account.invoice.form.inherit</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
-            <field eval="40" name="priority"/>
+            <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="duration"]' position="after">
-                    <label for="quantity_max"/>
-                    <div>
-                        <field name="quantity_max"/>
-                        <div attrs="{'invisible': [('hours_quantity','=',0)]}" class="oe_grey">
-                            <field name="hours_quantity" class="oe_inline"/> Units Consumed
-                        </div>
-                        <div attrs="{'invisible': [('quantity_max','=',0)]}" class="oe_grey">
-                            <field name="remaining_hours" class="oe_inline"/> Units Remaining
-                        </div>
-                    </div>
+                <xpath expr="/form/sheet" position='before'>
+                    <header  attrs="{'invisible': [('type','!=','template')]}">
+                        <button name="set_close" string="Set to Inactive" type="object" states="open" />
+                        <button name="set_open" string="Set to Active" type="object" states="close" />
+                    </header>
                 </xpath>
-                <field name="partner_id" position="attributes">
-                    <attribute name="attrs">{'required': [('type','=','contract'),'|','|',('fix_price_invoices','=',True), ('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}</attribute>
-                </field>
-                <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
+                <xpath expr='//field[@name="partner_id"]' position='after'>
+                    <field name="pricelist_id"
+                           class="oe_inline"
+                           attrs="{'required': ['|',('invoice_on_timesheets', '=', True),('contract_type','=','subscription')], 'invisible': [('contract_type','=','prepaid')]}"
+                           domain="[('type', '=', 'sale')]"
+                           groups="product.group_sale_pricelist"/>
                 </xpath>
-                <xpath expr='//separator[@name="description"]' position='before'>
-                    <separator name="toinvoice" string="Invoicing"/>
-                    <table class="oe_form_analytic_account">
-                        <tr>
-                            <th class="oe_timesheet_grey" width="160px"></th>
-                            <th class="oe_timesheet_grey" width="25px"></th>
-                            <th class="oe_timesheet_grey" width="100px"><label string="Expected"/></th>
-                            <th class="oe_timesheet_grey" width="100px"><label string="Invoiced"/></th>
-                            <th class="oe_timesheet_grey" width="100px"><label string="Remaining"/></th>
-                            <th class="oe_timesheet_grey" width="100px"><label string="To Invoice"/></th>
-                            <th width="30px"></th>
-                            <th></th>
-                        </tr><tr>
-                            <td class="oe_timesheet_grey">
-                                <label for="fix_price_invoices"/>
-                            </td><td class="oe_timesheet_grey">
-                                <field name="fix_price_invoices" class="oe_inline"/>
-                            </td><td>
-                                <field class="oe_inline" name="amount_max" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
-                            </td><td>
-                                <field class="oe_inline" name="ca_invoiced" attrs="{'invisible': [('fix_price_invoices','=',False)]}" widget="monetary"/>
-                            </td><td>
-                                <field class="oe_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}" widget="monetary"/>
-                            </td><td>
-                                <field class="oe_inline" name="fix_price_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
-                            </td><td attrs="{'invisible': [('fix_price_invoices','=',False)]}" class="oe_timesheet_action">
-                                <span attrs="{'invisible': [('fix_price_to_invoice','=',0.0)]}" class="oe_grey">
-                                    <button name="open_sale_order_lines"
-                                        class="oe_link"
-                                        string="⇒ Invoice" type="object"
-                                        context="{'default_partner_id': partner_id,'default_project_id': active_id,'search_default_uninvoiced': 1,'search_default_project_id': active_id,'search_default_partner_id': [partner_id]}"/>
-                                    or view
-                                </span>
-
-                                <span attrs="{'invisible': [('fix_price_to_invoice','&lt;&gt;',0.0 )]}" class="oe_grey">
-                                    No order to invoice, create
-                                </span>
-                                <button name="%(action_sales_order)d" string="Sales Orders"
-                                    type="action"
-                                    class="oe_link"
-                                    context="{'default_partner_id': partner_id, 'search_default_project_id': [active_id],'default_project_id': [active_id], 'default_pricelist_id': pricelist_id}"
-                                    />
-                            </td>
-                        </tr><tr attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
-                            <td class="oe_timesheet_grey">
-                                <label string="On Timesheets"/>
-                            </td><td class="oe_timesheet_grey">
-                            </td><td>
-                                <field class="oe_inline" name="hours_qtt_est"/>
-                            </td><td>
-                                <field class="oe_inline" name="timesheet_ca_invoiced"/>
-                            </td><td>
-                                <field class="oe_inline" name="remaining_hours_to_invoice"/>
-                            </td><td>
-                                <field class="oe_inline" name="ca_to_invoice"/>
-                            </td><td class="oe_timesheet_action" attrs="{'invisible': ['|',('invoice_on_timesheets','=',False),('type','=','template')]}">
-                                <span attrs="{'invisible': [('ca_to_invoice','=',0.0)]}" class="oe_grey">
-                                    <button name="hr_to_invoice_timesheets"
-                                        type="object"
-                                        class="oe_link"
-                                        string="⇒ Invoice"/>
-                                    or view 
-                                </span>
-                                <span attrs="{'invisible': [('ca_to_invoice','&lt;&gt;',0.0)]}" class="oe_grey">
-                                    Nothing to invoice, create 
-                                </span>
-
-                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d"
-                                    string="Timesheets" type="action"
-                                    class="oe_link"
-                                    context="{'default_account_id': active_id,'search_default_account_id': active_id}"/>
-                            </td>
-                        </tr><tr name='total'>
-                            <th class="oe_timesheet_grey">
-                                <label string="Total"/>
-                            </th><td class="oe_timesheet_grey">
-                            </td><td class="oe_timesheet_grey">
-                                <field name="est_total" class="oe_inline" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
-                            </td><td class="oe_timesheet_grey">
-                                <field name="invoiced_total" class="oe_inline"/>
-                            </td><td class="oe_timesheet_grey">
-                                <field name="remaining_total" class="oe_inline"/>
-                            </td><td class="oe_timesheet_grey">
-                                <field name="toinvoice_total" class="oe_inline"/>
-                            </td><td>
-                            </td>
-                        </tr>
-                    </table>
-                    <group name='invoice_on_timesheets'>
-                        <p name='invoice_on_timesheets_label' class="oe_grey oe_edit_only" colspan="2" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
-                            When reinvoicing costs, Odoo uses the
-                            pricelist of the contract which uses the price
-                            defined on the product related (e.g timesheet 
-                            products are defined on each employee). 
-                        </p>
+                <xpath expr='//div[@name="duration"]' position='after'>
+                    <field name="close_reason_id" attrs="{'invisible': ['|',('type','!=','contract'),('state','in',['open','pending'])]}"/>
+                    <field name="to_invoice"
+                            widget="selection"
+                            attrs="{'required': [('invoice_on_timesheets', '=', True)], 'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                </xpath>
+                <notebook position="inside">
+                    <page id="prepaid" string="Prepaid Support Hours" attrs="{'invisible': ['|',('contract_type','!=','prepaid'),('type','in',['view','normal'])]}" >
                         <group>
-                            <field name="pricelist_id"
-                                class="oe_inline"
-                                attrs="{'required': [('invoice_on_timesheets', '=', True)]}"
-                                domain="[('type', '=', 'sale')]"
-                                groups="product.group_sale_pricelist"/>
-                            <field name="to_invoice"
-                                class="oe_inline"
-                                widget="selection"
-                                attrs="{'required': [('invoice_on_timesheets', '=', True)], 'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                            <label for="quantity_max"/>
+                            <div>
+                                <field name="quantity_max"/>
+                                <div attrs="{'invisible': [('hours_quantity','=',0)]}" class="oe_grey">
+                                    <field name="hours_quantity" class="oe_inline"/> Units Consumed
+                                </div>
+                                <div attrs="{'invisible': [('quantity_max','=',0)]}" class="oe_grey">
+                                    <field name="remaining_hours" class="oe_inline"/> Units Remaining
+                                </div>
+                            </div>
                         </group>
-                    </group>
-                    <separator string="Recurring Invoices" attrs="{'invisible': [('recurring_invoices','!=',True)]}"/>
-                    <div>
-                        <div attrs="{'invisible': [('type','!=', 'contract'), ('recurring_invoices', '=', False)]}">
-                            <field name="recurring_invoices" on_change="onchange_recurring_invoices(recurring_invoices, date_start)" class="oe_inline" />
-                            <label for="recurring_invoices" />
-                        </div>
-                        <button class="oe_link" name="recurring_create_invoice" attrs="{'invisible': [('recurring_invoices','!=',True)]}" string="⇒ create invoices" type="object" groups="base.group_no_one"/>
-                    </div>
-                    <group attrs="{'invisible': [('recurring_invoices','!=',True)]}">
-                        <label for="recurring_interval"/>
+                        <group>
+                            <p colspan="2" class="oe_grey oe_edit_only">
+                                Once the end date of the contract is
+                                passed or the maximum number of service
+                                units (e.g. support contract) is
+                                reached, the account manager is notified 
+                                by email to renew the contract with the
+                                customer.
+                            </p>
+                        </group>
+                    </page>
+                    <page id="billing_summary" string="Billing Summary" attrs="{'invisible': ['|',('contract_type','!=','regular'),('type','in',['view','normal'])]}">
+                        <separator name="toinvoice" string="Invoicing"/>
+                        <table class="oe_form_analytic_account">
+                            <tr>
+                                <th class="oe_timesheet_grey" width="160px"></th>
+                                <th class="oe_timesheet_grey" width="25px"></th>
+                                <th class="oe_timesheet_grey" width="100px"><label string="Expected"/></th>
+                                <th class="oe_timesheet_grey" width="100px"><label string="Invoiced"/></th>
+                                <th class="oe_timesheet_grey" width="100px"><label string="Remaining"/></th>
+                                <th class="oe_timesheet_grey" width="100px"><label string="To Invoice"/></th>
+                                <th width="30px"></th>
+                                <th></th>
+                            </tr><tr>
+                                <td class="oe_timesheet_grey">
+                                    <label for="fix_price_invoices"/>
+                                </td><td class="oe_timesheet_grey">
+                                    <field name="fix_price_invoices" class="oe_inline"/>
+                                </td><td>
+                                    <field class="oe_inline" name="amount_max" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                </td><td>
+                                    <field class="oe_inline" name="ca_invoiced" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                </td><td>
+                                    <field class="oe_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                </td><td>
+                                    <field class="oe_inline" name="fix_price_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                </td><td attrs="{'invisible': [('fix_price_invoices','=',False)]}" class="oe_timesheet_action">
+                                    <span attrs="{'invisible': [('fix_price_to_invoice','=',0.0)]}" class="oe_grey">
+                                        <button name="open_sale_order_lines"
+                                            class="oe_link"
+                                            string="⇒ Invoice" type="object"
+                                            context="{'default_partner_id': [partner_id],'default_project_id': active_id,'search_default_uninvoiced': 1,'search_default_project_id': active_id,'search_default_partner_id': [partner_id]}"/>
+                                        or view
+                                    </span>
+
+                                    <span attrs="{'invisible': [('fix_price_to_invoice','&lt;&gt;',0.0 )]}" class="oe_grey">
+                                        No order to invoice, create
+                                    </span>
+                                    <button name="%(action_sales_order)d" string="Sales Orders"
+                                        type="action"/>
+                                </td>
+                            </tr><tr>
+                                <td class="oe_timesheet_grey">
+                                    <label string="On Timesheets"/>
+                                </td><td class="oe_timesheet_grey">
+                                </td><td>
+                                    <field class="oe_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                </td><td>
+                                    <field class="oe_inline" name="timesheet_ca_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                </td><td>
+                                    <field class="oe_inline" name="remaining_hours_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                </td><td>
+                                    <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                </td><td class="oe_timesheet_action" attrs="{'invisible': ['|',('invoice_on_timesheets','=',False),('type','=','template')]}">
+                                    <span attrs="{'invisible': [('ca_to_invoice','=',0.0)]}" class="oe_grey">
+                                        <button name="hr_to_invoice_timesheets"
+                                            type="object"
+                                            class="oe_link"
+                                            string="⇒ Invoice"/>
+                                        or view 
+                                    </span>
+                                    <span attrs="{'invisible': [('ca_to_invoice','&lt;&gt;',0.0)]}" class="oe_grey">
+                                        Nothing to invoice, create 
+                                    </span>
+
+                                    <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d"
+                                        string="Timesheets" type="action"
+                                        class="oe_link"
+                                        context="{'default_account_id': active_id,'search_default_account_id': active_id}"/>
+                                </td>
+                            </tr><tr name='total'>
+                                <th class="oe_timesheet_grey">
+                                    <label string="Total"/>
+                                </th><td class="oe_timesheet_grey">
+                                </td><td class="oe_timesheet_grey">
+                                    <field name="est_total" class="oe_inline" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                </td><td class="oe_timesheet_grey">
+                                    <field name="invoiced_total" class="oe_inline"/>
+                                </td><td class="oe_timesheet_grey">
+                                    <field name="remaining_total" class="oe_inline"/>
+                                </td><td class="oe_timesheet_grey">
+                                    <field name="toinvoice_total" class="oe_inline"/>
+                                </td><td>
+                                </td>
+                            </tr>
+                        </table>
+                        <group name='invoice_on_timesheets'>
+                            <p name='invoice_on_timesheets_label' class="oe_grey oe_edit_only" colspan="2" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
+                                When reinvoicing costs, Odoo uses the
+                                pricelist of the contract which uses the price
+                                defined on the product related (e.g timesheet 
+                                products are defined on each employee). 
+                            </p>
+                        </group>
+                    </page>
+                    <page id="recurring_lines" string="Subscription" attrs="{'invisible': ['|',('contract_type','!=','subscription'),('type','in',['view','normal'])]}">
                         <div>
-                            <field name="recurring_interval" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
-                            <field name="recurring_rule_type" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
+                            <button string="=> Renewal Quotation" class="oe_link oe_right" 
+                                    help="Create a sale order that will overwrite this contract when confirmed (renewal quotation)" 
+                                    name="prepare_renewal_order" type="object" attrs="{'invisible': [('type','!=','contract')]}" />
+                            <field name="recurring_invoice_line_ids">
+                                <tree string="Account Analytic Lines" editable="bottom">
+                                    <field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, False, parent.partner_id, False, parent.pricelist_id, parent.company_id)"/>
+                                    <field name="name"/>
+                                    <field name="quantity" readonly="1"/>
+                                    <field name="actual_quantity"/>
+                                    <field name="sold_quantity"/>
+                                    <field name="uom_id" on_change="product_uom_change(product_id,uom_id,quantity,name,parent.partner_id, parent.pricelist_id,context)"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                    <field name="price_subtotal"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="recurring_total" class="oe_subtotal_footer_separator"
+                                    widget="monetary" options="{'currency_field': 'pricelist_currency_id'}"
+                                    modifiers="{'readonly': true}"
+                                />
+                            </group>
                         </div>
-                        <field name="recurring_next_date"/>
-                    </group>
-                    <label for="recurring_invoice_line_ids" attrs="{'invisible': [('recurring_invoices','=',False)]}"/>
-                    <div attrs="{'invisible': [('recurring_invoices','=',False)]}">
-                        <field name="recurring_invoice_line_ids">
-                            <tree string="Account Analytic Lines" editable="bottom">
-                                <field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, False, parent.partner_id, False, parent.pricelist_id, parent.company_id)"/>
-                                <field name="name"/>
-                                <field name="quantity"/>
-                                <field name="uom_id"/>
-                                <field name="price_unit"/>
-                                <field name="price_subtotal" widget="monetary"/>
-                            </tree>
-                        </field>
+                    </page>
+                </notebook>
+               <field name="partner_id" position="attributes">
+                    <attribute name="attrs">{'invisible': [('type','in',['view','normal','template'])], 'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), ('invoice_on_timesheets', '=', True)]}</attribute>
+                </field>
+                <xpath expr='//field[@name="contract_type"]' position='after'>
+                    <label for="recurring_interval" string="Contract Duration" attrs="{'invisible': [('type','!=','template')]}"/>
+                    <div attrs="{'invisible': [('type','!=','template')]}">
+                        <field name="recurring_interval" class="oe_inline"/>
+                        <field name="recurring_rule_type" class="oe_inline"/>
                     </div>
-                 </xpath>
+
+                    <label for="recurring_next_date" string="Date of Next Invoice" attrs="{'invisible': ['|',('type','=','template'),('contract_type','!=','subscription')]}"/>
+                    <div attrs="{'invisible': ['|',('type','=','template'),('contract_type','!=','subscription')]}">
+                        <field name="recurring_next_date"  attrs="{'required': [('contract_type','=','subscription')]}"/>
+                        <button string="=> Generate Invoice" class="oe_link" name="recurring_invoice"
+                                type="object" attrs="{'invisible': [('type','!=','contract')]}" />
+                    </div>
+                </xpath>
             </field>
         </record>
 
@@ -202,10 +230,26 @@
             <field name="arch" type="xml">
                 <field name="date_start" position="before">
                     <field name="last_invoice_date"/>
-                    <field name="toinvoice_total"/>
-                    <field name="remaining_hours"/>
+                    <field name="contract_type"/>
                     <field name="pricelist_id" invisible="1"/>
                 </field>
+            </field>
+        </record>
+
+        <!-- Analytic Account list view for contract templates -->
+        <record id="view_account_analytic_account_template_list" model="ir.ui.view">
+            <field name="name">account.analytic.account.list</field>
+            <field name="model">account.analytic.account</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <tree toolbar="1" colors="grey:state=='close';" string="Analytic Accounts">
+                    <field name="complete_name"/>
+                    <field name="manager_id"/>
+                    <field name="contract_type"/>
+                    <field name="parent_id"/>
+                    <field name="state" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
             </field>
         </record>
 
@@ -248,6 +292,18 @@
                         <filter string="Pricelist" domain="[]" context="{'group_by' : 'pricelist_id'}" />
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <!-- From view for Close Reasons -->
+        <record id="account_analytic_close_reason_view_tree" model="ir.ui.view">
+            <field name="name">account.analytic.close.reason.list</field>
+            <field name="model">account.analytic.close.reason</field>
+            <field name="arch" type="xml">
+                <tree string="Close Reasons" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </tree>
             </field>
         </record>
 
@@ -303,6 +359,10 @@
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+           <field name="view_ids" 
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('account.invoice_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('account.invoice_form')})]"/>
             <field name="domain">[('invoice_line_ids.account_analytic_id', '=', active_id)]</field>
             <field name="context">{'create':False}</field>
             <field name="help" type="html">
@@ -339,15 +399,35 @@
         </record>
         <menuitem action="action_account_analytic_overdue" id="menu_action_account_analytic_overdue" sequence="50" parent="base.menu_invoiced"/>
 
+        <!-- Search view for contract templates -->
+        <!-- Analytic Account search view for contract -->
+        <record id="account_analytic_account_template_view_search" model="ir.ui.view">
+            <field name="name">account.analytic.account.search</field>
+            <field name="model">account.analytic.account</field>
+            <field name="arch" type="xml">
+                <search string="Contract Templates">
+                    <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Template"/>
+                    <filter name="open" string="Active" domain="[('state','in',('open','draft'))]" help="Contracts in progress (open, draft)"/>
+                    <filter name="closed" string="Inactive" domain="[('state','=','close')]" help="Closed contracts"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Parent" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <!-- Action Sales/Configuration/Contract template -->
-        <record id="template_of_contract_action" model="ir.actions.act_window">
-            <field name="name">Contract Template</field>
+        <record id="template_of_regular_contract_action" model="ir.actions.act_window">
+            <field name="name">Regular Contract Template</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','template')]</field>
-            <field name="context">{'search_default_type':'template','default_type' : 'template'}</field>
+            <field name="view_id" ref="view_account_analytic_account_template_list"/>
+            <field name="domain">[('type','=','template'),('contract_type','=','regular')]</field>
+            <field name="context">{'search_default_type':'template','default_type' : 'template', 'default_contract_type': 'regular', 'search_default_open':1}</field>
+            <field name="search_view_id" ref="account_analytic_account_template_view_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click here to create a template of contract.
@@ -359,6 +439,56 @@
             </field>
         </record>
 
+        <record id="template_of_prepaid_contract_action" model="ir.actions.act_window">
+            <field name="name">Prepaid Contract Template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_analytic_account_template_list"/>
+            <field name="domain">[('type','=','template'),('contract_type','=','prepaid')]</field>
+            <field name="context">{'search_default_type':'template','default_type' : 'template', 'default_contract_type': 'prepaid', 'search_default_open':1}</field>
+            <field name="search_view_id" ref="account_analytic_account_template_view_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create a template of contract.
+                </p><p>
+                    Templates are used to prefigure contract/project that 
+                    can be selected by the salespeople to quickly configure the
+                    terms and conditions of the contract.
+                </p>
+            </field>
+        </record>
+
+        <record id="template_of_subscription_contract_action" model="ir.actions.act_window">
+            <field name="name">Subscription Contract Template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_analytic_account_template_list"/>
+            <field name="domain">[('type','=','template'),('contract_type','=','subscription')]</field>
+            <field name="context">{'search_default_type':'template','default_type' : 'template', 'default_contract_type': 'subscription', 'search_default_open':1}</field>
+            <field name="search_view_id" ref="account_analytic_account_template_view_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create a template of contract.
+                </p><p>
+                    Templates are used to prefigure contract/project that 
+                    can be selected by the salespeople to quickly configure the
+                    terms and conditions of the contract.
+                </p>
+            </field>
+        </record>
+
+        <record id="analytic_account_lost_reason_action" model="ir.actions.act_window">
+            <field name="name">Close Reasons</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.close.reason</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
         <menuitem
             id= "base.menu_sales_config"
             parent= "base.menu_sale_config"
@@ -366,9 +496,12 @@
             name= "Sales"
         />
 
-        <menuitem action="template_of_contract_action" id="menu_template_of_contract_action" parent="base.menu_sales_config" sequence="3"/>
+        <menuitem action="template_of_regular_contract_action" id="menu_template_of_regular_contract_action" parent="base.menu_sales_config" sequence="3"/>
+        <menuitem action="template_of_prepaid_contract_action" id="menu_template_of_prepaid_contract_action" parent="base.menu_sales_config" sequence="4"/>
+        <menuitem action="template_of_subscription_contract_action" id="menu_template_of_subscription_contract_action" parent="base.menu_sales_config" sequence="5"/>
+        <menuitem action="analytic_account_lost_reason_action" id="menu_analytic_account_lost_reason_action" parent="base.menu_sales_config" sequence="10"/>
         
-        <record id="sale_contract_form_form" model="ir.ui.view">
+        <record id="account_analytic_analysis_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
@@ -379,13 +512,19 @@
                         string="To invoice"
                         icon="fa-money"
                         name="%(action_hr_tree_invoiced_all)d"
-                        type="action"
+                        type="action" attrs="{'invisible': [('type','=','template')]}"
                         context="{'search_default_account_id': [active_id], 'default_account_id': active_id}"/>
                     <button class="oe_stat_button" string="Invoices"
                         icon="fa-book"
                         name="%(action_contract_invoices_all)d"
-                        type="action"/>
+                        type="action" attrs="{'invisible': [('type','=','template')]}"/>
+                    <button class="oe_inline oe_stat_button" string="Contracts"
+                        icon="fa-book"
+                        name="%(action_account_analytic_overdue_all)d"
+                        context="{'search_default_template_id': [active_id], 'default_template_id': active_id}"
+                        type="action" attrs="{'invisible': [('type','!=','template')]}"/>
                 </div>
+
             </field>
         </record>
 

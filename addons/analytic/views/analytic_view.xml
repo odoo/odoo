@@ -6,7 +6,7 @@
             <field name="name">analytic.analytic.account.form</field>
             <field name="model">account.analytic.account</field>
             <field name="arch" type="xml">
-                <form string="Analytic Account" version="7.0">
+                <form string="Analytic Account">
                     <sheet string="Analytic Account">
                         <div class="oe_button_box" name="button_box"/>
 
@@ -20,39 +20,28 @@
 
                         <group name="main">
                             <group>
-                                <field name="partner_id" on_change="on_change_partner_id(partner_id, name)"/>
-                                <field name="manager_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_manager']}"/>
-                                <field name="currency_id" attrs="{'invisible': ['|',('type', '&lt;&gt;', 'view'), ('company_id', '&lt;&gt;', False)]}"/>
+                                <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'invisible': [('type','in',['view','normal','template'])]}"/>
+                                <field name="manager_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_manager']}" attrs="{'invisible': [('type','in',['view','normal','template'])]}"/>
+                                <field name="contract_type" widget="radio" attrs="{'invisible': ['|',('template_id','!=',False),('type','in',['view','normal'])]}"/>
                             </group>
                             <group>
                                 <field name="type" invisible="context.get('default_type', False)"/>
-                                <field name="template_id" on_change="on_change_template(template_id, date_start)" domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
-                                <field name="code"/>
-                                <field name="parent_id" on_change="on_change_parent(parent_id)"/>
+                                <field name="template_id" on_change="on_change_template(template_id, date_start)" domain="[('type','=','template'),('state','=','open')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
+                                <field name="code" attrs="{'invisible': [('type','=','template')]}"/>
+                                <field name="parent_id" on_change="on_change_parent(parent_id)" attrs="{'invisible': [('type','in',['contract'])]}"/>
+                                <field name="currency_id" attrs="{'invisible': ['|',('type', '&lt;&gt;', 'view'), ('company_id', '&lt;&gt;', False)]}"/>
                                 <field name="company_id" on_change="on_change_company(company_id)" options="{'no_create': True}" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
+                                <field name="date_start" attrs="{'invisible': [('type','in',['view','normal','template'])]}"/>
+                                <label for="date" string="End Date" attrs="{'invisible': [('type','in',['view','normal','template'])]}"/>
+                                <div name="duration" attrs="{'invisible': [('type','=','template')]}">
+                                    <field name="date" class="oe_inline"/>
+                                </div>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Contract Information" name="contract_page" attrs="{'invisible':[('type','not in',['contract', 'template'])]}">
-                                <group string="Renewal" name="contract">
-                                    <p colspan="2" class="oe_grey oe_edit_only">
-                                        Once the end date of the contract is
-                                        passed or the maximum number of service
-                                        units (e.g. support contract) is
-                                        reached, the account manager is notified 
-                                        by email to renew the contract with the
-                                        customer.
-                                    </p>
-                                    <field name="date_start"/>
-                                    <label for="date" string="End Date"/>
-                                    <div name="duration">
-                                        <field name="date" class="oe_inline"/>
-                                    </div>
-                                </group>
-                                <separator string="Terms and Conditions" name="description"/>
-                                <field name="description"/>
-                            </page>
                         </notebook>
+                        <separator string="Terms and Conditions" name="description" attrs="{'invisible': [('type','in',['view','normal'])]}"/>
+                        <field name="description" attrs="{'invisible': [('type','in',['view','normal'])]}"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

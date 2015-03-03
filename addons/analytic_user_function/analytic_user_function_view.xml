@@ -39,7 +39,7 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <separator name="description" position="before">
-                    <div name="user_function_price" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
+                    <div name="user_function_price" attrs="{'invisible': ['|',('invoice_on_timesheets','=',False),('contract_type','!=','regular')]}">
                         <separator string="Invoice Price Rate per User"/>
                         <p class="oe_grey oe_edit_only">
                             Define a specific service (e.g. Senior Consultant)
