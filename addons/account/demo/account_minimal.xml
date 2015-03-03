@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
         <record id="base.main_company" model="res.company">
             <field name="bank_account_code_char">X1100</field>
             <field name="accounts_code_digits">7</field>
@@ -117,6 +117,19 @@
             <field name="code">X2020</field>
             <field name="name">Product Sales - (test)</field>
             <field name="user_type" ref="data_account_type_sales"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_operating')])]"/>
+        </record>
+        <record id="a_sale_invest" model="account.account">
+            <field name="code">X2021</field>
+            <field name="name">Sale of Lands - (test)</field>
+            <field name="user_type" ref="data_account_type_sales"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_investing')])]"/>
+        </record>
+        <record id="a_sale_finance" model="account.account">
+            <field name="code">X2022</field>
+            <field name="name">Bank Accounts Interests - (test)</field>
+            <field name="user_type" ref="data_account_type_sales"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_financing')])]"/>
         </record>
         <record id="cog" model="account.account">
             <field name="code">X2030</field>
@@ -124,22 +137,35 @@
             <field name="user_type" ref="data_account_type_direct_costs"/>
         </record>
 
-        <record id="a_expense" model="account.account">
-            <field name="code">X2110</field>
-            <field name="name">Expenses - (test)</field>
-            <field name="user_type" ref="data_account_type_expenses"/>
-        </record>
         <record model="account.account" id="income_fx_expense">
             <field name="name">Foreign Exchange Loss - (test)</field>
-            <field name="code">X2111</field>
+            <field name="code">X2110</field>
             <field name="user_type" ref="data_account_type_overheads"/>
             <field name="reconcile" eval="False"/>
         </record>
-
+        <record id="a_expense" model="account.account">
+            <field name="code">X2120</field>
+            <field name="name">Expenses - (test)</field>
+            <field name="user_type" ref="data_account_type_expenses"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_operating')])]"/>
+        </record>
         <record id="a_salary_expense" model="account.account">
-            <field name="code">X2112</field>
+            <field name="code">X2121</field>
             <field name="name">Salary Expenses - (test)</field>
             <field name="user_type" ref="data_account_type_overheads"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_operating')])]"/>
+        </record>
+        <record id="a_expense_invest" model="account.account">
+            <field name="code">X2122</field>
+            <field name="name">Purchase of Equipments - (test)</field>
+            <field name="user_type" ref="data_account_type_expenses"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_investing')])]"/>
+        </record>
+        <record id="a_expense_finance" model="account.account">
+            <field name="code">X2123</field>
+            <field name="name">Bank Fees - (test)</field>
+            <field name="user_type" ref="data_account_type_expenses"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_financing')])]"/>
         </record>
         <record id="a_dividends" model="account.account">
             <field name="code">X3001</field>
@@ -204,14 +230,6 @@
             <field name="default_credit_account_id" ref="bnk"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
         </record>
-        <record id="check_journal" model="account.journal">
-            <field name="name">Checks Journal - (test)</field>
-            <field name="code">TCHK</field>
-            <field name="type">bank</field>
-            <field name="default_debit_account_id" ref="cash"/>
-            <field name="default_credit_account_id" ref="cash"/>
-            <field name="analytic_journal_id" ref="analytic.sit"/>
-        </record>
         <record id="cash_journal" model="account.journal">
             <field name="name">Cash Journal - (test)</field>
             <field name="code">TCSH</field>
@@ -236,13 +254,6 @@
             <field name="type">general</field>
             <field name="default_debit_account_id" ref="income_fx_income"/>
             <field name="default_credit_account_id" ref="income_fx_expense"/>
-        </record>
-        <record id="opening_journal" model="account.journal">
-            <field name="name">Opening Entries Journal - (test)</field>
-            <field name="code">TOEJ</field>
-            <field name="type">situation</field>
-            <field name="default_debit_account_id" ref="o_income"/>
-            <field name="default_credit_account_id" ref="o_expense"/>
         </record>
 
         <record id="bank_journal_usd" model="account.journal">

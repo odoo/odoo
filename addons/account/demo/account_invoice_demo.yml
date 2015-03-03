@@ -3,11 +3,10 @@
     company_id: base.main_company
     partner_id: base.res_partner_17
     currency_id: base.EUR
-    state: draft
     user_id: base.user_demo
     reference_type: none
     payment_term: account.account_payment_term
-    type: in_invoice
+    type: 'in_invoice'
     date_invoice: !eval time.strftime('%Y')+'-01-01'
     invoice_line:
       - name: 'Toner Cartridge'
@@ -25,11 +24,10 @@
     company_id: base.main_company
     partner_id: base.res_partner_9
     currency_id: base.EUR
-    state: draft
     user_id: base.user_demo
     reference_type: none
     payment_term: account.account_payment_term
-    type: out_invoice
+    type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y')+'-01-01'
     invoice_line:
       - name: 'Otpez Laptop without OS'
@@ -45,8 +43,7 @@
     company_id: base.main_company
     partner_id: base.res_partner_2
     currency_id: base.EUR
-    state: draft
-    type: out_invoice
+    type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y')+'-01-08'
     invoice_line:
       - name: '8-port Switch'
@@ -62,8 +59,7 @@
     company_id: base.main_company
     partner_id: base.res_partner_2
     currency_id: base.EUR
-    state: draft
-    type: out_invoice
+    type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line:
       - name: 'TypeMatrix Dvorak Keyboard'
@@ -74,3 +70,79 @@
         quantity: 5.0
 -
   !workflow {model: account.invoice, action: invoice_open, ref: demo_invoice_3}
+-
+  !record {model: account.invoice, id: demo_invoice_invest_sale}:
+    company_id: base.main_company
+    partner_id: base.res_partner_5
+    currency_id: base.EUR
+    type: 'out_invoice'
+    date_invoice: !eval time.strftime('%Y-%m')+'-08'
+-
+  !python {model: account.invoice.line} : |
+      account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_sales')), ('tag_ids', 'in', [ref('account_tag_investing')])])
+      line_vals = {
+          'invoice_id': ref('demo_invoice_invest_sale'),
+          'name': "Land located at '50.635336,4.863298'",
+          'price_unit': 210600,
+      }
+      if account_id:
+          line_vals['account_id'] = account_id[0]
+      self.create(cr, uid, line_vals)
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: demo_invoice_invest_sale}
+-
+  !record {model: account.invoice, id: demo_invoice_january_wages}:
+    company_id: base.main_company
+    partner_id: base.res_partner_10
+    currency_id: base.EUR
+    type: 'in_invoice'
+    date_invoice: !eval time.strftime('%Y')+'-01-01'
+-
+  !python {model: account.invoice.line} : |
+      account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_overheads'))])
+      line_vals = {
+          'invoice_id': ref('demo_invoice_january_wages'),
+          'name': "CEO wages",
+          'price_unit': 10000,
+      }
+      if account_id:
+          line_vals['account_id'] = account_id[0]
+      self.create(cr, uid, line_vals)
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: demo_invoice_january_wages}
+-
+  !record {model: account.invoice, id: demo_invoice_equipment_purchase}:
+    company_id: base.main_company
+    partner_id: base.res_partner_6
+    currency_id: base.EUR
+    type: 'in_invoice'
+    date_invoice: !eval time.strftime('%Y')+'-01-15'
+-
+  !python {model: account.invoice.line} : |
+      account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_expenses')), ('tag_ids', 'in', [ref('account_tag_investing')])])
+      line_vals = {
+          'invoice_id': ref('demo_invoice_equipment_purchase'),
+          'name': "Coffee Machine with huge 'employee\'s performances boosting perk'",
+          'price_unit': 4999.99,
+      }
+      if account_id:
+          line_vals['account_id'] = account_id[0]
+      self.create(cr, uid, line_vals)
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: demo_invoice_equipment_purchase}
+-
+  !python {model: account.bank.statement.line} : |
+      import time
+      account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_sales')), ('tag_ids', 'in', [ref('account_tag_financing')])])
+      line_vals = {
+          'statement_id': ref('demo_bank_statement_1'),
+          'name': "Last Year Interests",
+          'amount': 102.78,
+          'sequence': 10,
+          'date': time.strftime('%Y') + '-01-01'
+      }
+      if account_id:
+          line_vals['account_id'] = account_id[0]
+      line_id = self.create(cr, uid, line_vals)
+      line = self.browse(cr, uid, line_id)
+      line.fast_counterpart_creation()

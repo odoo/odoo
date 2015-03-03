@@ -106,14 +106,7 @@ class account_bank_statement(models.Model):
             moves = self.env['account.move']
             for st_line in statement.line_ids:
                 if st_line.account_id and not st_line.journal_entry_ids.ids:
-                    # Technical functionality to automatically reconcile by creating a new move line
-                    vals = {
-                        'name': st_line.name,
-                        'debit': st_line.amount < 0 and -st_line.amount or 0.0,
-                        'credit': st_line.amount > 0 and st_line.amount or 0.0,
-                        'account_id': st_line.account_id.id,
-                    }
-                    st_line.process_reconciliation(new_aml_dicts=[vals])
+                    sl_line.fast_counterpart_creation()
                 elif not st_line.journal_entry_ids.ids:
                     raise UserError(_('All the account entries lines must be processed in order to close the statement.'))
                 moves = (moves | st_line.journal_entry_ids)
@@ -611,6 +604,17 @@ class account_bank_statement_line(models.Model):
                 aml_dict['move_line'] = aml_obj.browse(cr, uid, aml_dict['counterpart_aml_id'], context)
                 del aml_dict['counterpart_aml_id']
             st_line.process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
+
+    def fast_counterpart_creation(self):
+        for st_line in self:
+            # Technical functionality to automatically reconcile by creating a new move line
+            vals = {
+                'name': st_line.name,
+                'debit': st_line.amount < 0 and -st_line.amount or 0.0,
+                'credit': st_line.amount > 0 and st_line.amount or 0.0,
+                'account_id': st_line.account_id.id,
+            }
+            st_line.process_reconciliation(new_aml_dicts=[vals])
 
     def process_reconciliation(self, counterpart_aml_dicts=None, payment_aml_rec=None, new_aml_dicts=None):
         """ Match statement lines with existing payments (eg. checks) and/or payables/receivables (eg. invoices and refunds) and/or new move lines (eg. write-offs).

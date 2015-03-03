@@ -304,7 +304,7 @@
                     <filter domain="[('type', '=', 'sale')]" string="Sale" icon="terp-camera_test"/>
                     <filter domain="[('type', '=', 'purchase')]" string="Purchase" icon="terp-purchase"/>
                     <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
-                    <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Others" icon="terp-stock"/>
+                    <filter domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Others" icon="terp-stock"/>
                     <group expand="0" string="Group By">
                         <filter string="Type" context="{'group_by':'type'}" icon="terp-stock_symbol-selection"/>
                         <filter string="Company" context="{'group_by':'company_id'}" icon="terp-go-home" groups="base.group_multi_company"/>

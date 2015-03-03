@@ -2,6 +2,19 @@
 <openerp>
     <data noupdate="1">
 
+        <!-- TAGS FOR CASH FLOW STATEMENT -->
+
+        <record id="account_tag_operating" model="account.account.tag">
+            <field name="name">Operating Activities</field>
+        </record>
+        <record id="account_tag_financing" model="account.account.tag">
+            <field name="name">Financing Activities</field>
+        </record>
+        <record id="account_tag_investing" model="account.account.tag">
+            <field name="name">Investing Activities</field>
+        </record>
+
+        <!-- Analytic journals -->
         <record id="analytic_journal_sale" model="account.analytic.journal">
             <field name="code">SAL</field>
             <field name="name">Sales</field>

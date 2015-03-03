@@ -303,6 +303,7 @@ class account_invoice(models.Model):
 
     @api.model
     def create(self, vals):
+        import pdb;pdb.set_trace()
         return super(account_invoice, self.with_context(mail_create_nolog = True)).create(vals)
 
     @api.model
@@ -497,10 +498,6 @@ class account_invoice(models.Model):
 
     @api.multi
     def onchange_company_id(self, company_id, part_id, type, invoice_line, currency_id):
-        # TODO: add the missing context parameter when forward-porting in trunk
-        # so we can remove this hack!
-        self = self.with_context(self.env['res.users'].context_get())
-
         values = {}
         domain = {}
 
@@ -544,8 +541,8 @@ class account_invoice(models.Model):
             else:
                 for line_cmd in invoice_line or []:
                     if len(line_cmd) >= 3 and isinstance(line_cmd[2], dict):
-                        line = self.env['account.account'].browse(line_cmd[2]['account_id'])
-                        if line.company_id.id != company_id:
+                        account = self.env['account.account'].browse(line_cmd[2]['account_id'])
+                        if account and account.company_id.id != company_id:
                             raise UserError(_("""Configuration Error!\nInvoice line account's company and invoice's company does not match."""))
 
         if company_id and type:
@@ -1159,13 +1156,11 @@ class account_invoice_line(models.Model):
 
     @api.model
     def _default_account(self):
-        # XXX this gets the default account for the user's company,
-        # it should get the default account for the invoice's company
-        # however, the invoice's company does not reach this point
-        if self._context.get('type') in ('out_invoice', 'out_refund'):
-            return self.env['ir.property'].get('property_account_income_categ', 'product.category')
-        else:
-            return self.env['ir.property'].get('property_account_expense_categ', 'product.category')
+        if self._context.get('journal_id'):
+            journal = self.env['account.journal'].browse(self._context.get('journal_id'))
+            if self._context.get('type') in ('out_invoice', 'in_refund'):
+                return journal.default_credit_account_id.id
+            return journal.default_debit_account_id.id
 
     name = fields.Text(string='Description', required=True)
     origin = fields.Char(string='Source Document',

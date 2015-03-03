@@ -328,7 +328,7 @@
                     <field name="sent" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Invoice Lines">
-                            <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}">
+                            <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type, 'journal_id': journal_id}">
                                 <tree string="Invoice Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"

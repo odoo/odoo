@@ -238,9 +238,8 @@ class account_journal(models.Model):
             ('sale', 'Sale'),
             ('purchase', 'Purchase'),
             ('cash', 'Cash'),
-            ('bank', 'Bank and Checks'),
+            ('bank', 'Bank'),
             ('general', 'General'),
-            ('situation', 'Opening/Closing Situation')
         ], string='Type', required=True,
         help="Select 'Sale' for customer invoices journals."\
         " Select 'Purchase' for supplier invoices journals."\
@@ -912,29 +911,22 @@ class account_chart_template(models.Model):
                 default_account = acc_template_ref.get(self.property_account_income_categ.id)
             elif journal_type == 'purchase':
                 default_account = acc_template_ref.get(self.property_account_expense_categ.id)
-            elif journal_type == 'situation':
-                if type == 'debit':
-                    default_account = acc_template_ref.get(self.property_account_expense_opening.id)
-                else:
-                    default_account = acc_template_ref.get(self.property_account_income_opening.id)
             return default_account
 
         journal_names = {
             'sale': _('Sales Journal'),
             'purchase': _('Purchase Journal'),
             'general': _('Miscellaneous Journal'),
-            'situation': _('Opening Entries Journal'),
         }
         journal_codes = {
             'sale': _('SAJ'),
             'purchase': _('EXJ'),
             'general': _('MISC'),
-            'situation': _('OPEJ'),
         }
 
         self.ensure_one()
         journal_data = []
-        for journal_type in ['sale', 'purchase', 'general', 'situation']:
+        for journal_type in ['sale', 'purchase', 'general']:
             vals = {
                 'type': journal_type,
                 'name': journal_names[journal_type],

@@ -39,6 +39,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'data/data_account_type.xml',
+        'data/account_data.xml',
         'views/account_menuitem.xml',
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
@@ -67,7 +68,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/pos_box.xml',
         'views/account_end_fy.xml',
         'views/account_invoice_view.xml',
-        'data/account_data.xml',
         'data/configurable_account_chart.xml',
         'data/invoice_action_data.xml',
         'views/account_invoice_workflow.xml',
@@ -98,8 +98,8 @@ You could use this simplified accounting in case you work with an (external) acc
     'demo': [
         'demo/account_demo.xml',
         'demo/account_minimal.xml',
-        'demo/account_invoice_demo.yml',
         'demo/account_bank_statement.xml',
+        'demo/account_invoice_demo.yml',
         'views/account_unit_test.xml',
     ],
     'test': [
