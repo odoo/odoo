@@ -52,16 +52,11 @@ class ormcache(object):
                 (100*float(self.stat_hit))/(self.stat_miss+self.stat_hit))
 
     def lru(self, model):
-        ormcache = model._ormcache
-        try:
-            d = ormcache[self.method]
-        except KeyError:
-            d = ormcache[self.method] = lru.LRU(self.size)
-        return d
+        return model.pool.cache, (model.pool.db_name, model._name, self.method)
 
     def lookup(self, method, *args, **kwargs):
-        d = self.lru(args[0])
-        key = args[self.skiparg:]
+        d, key0 = self.lru(args[0])
+        key = key0 + args[self.skiparg:]
         try:
             r = d[key]
             self.stat_hit += 1
@@ -76,12 +71,12 @@ class ormcache(object):
 
     def clear(self, model, *args):
         """ Remove *args entry from the cache or all keys if *args is undefined """
-        d = self.lru(model)
+        d, key0 = self.lru(model)
         if args:
             logger.warn("ormcache.clear arguments are deprecated and ignored "
                         "(while clearing caches on (%s).%s)",
                         model._name, self.method.__name__)
-        d.clear()
+        d.clear_prefix(key0)
         model.pool._any_cache_cleared = True
 
 
@@ -97,7 +92,7 @@ class ormcache_context(ormcache):
         return super(ormcache_context, self).__call__(method)
 
     def lookup(self, method, *args, **kwargs):
-        d = self.lru(args[0])
+        d, key0 = self.lru(args[0])
 
         # Note. The decorator() wrapper (used in __call__ above) will resolve
         # arguments, and pass them positionally to lookup(). This is why context
@@ -109,7 +104,7 @@ class ormcache_context(ormcache):
         ckey = [(k, context[k]) for k in self.accepted_keys if k in context]
 
         # Beware: do not take the context from args!
-        key = args[self.skiparg:self.context_pos] + tuple(ckey)
+        key = key0 + args[self.skiparg:self.context_pos] + tuple(ckey)
         try:
             r = d[key]
             self.stat_hit += 1
@@ -130,8 +125,8 @@ class ormcache_multi(ormcache):
         self.multi = multi
 
     def lookup(self, method, *args, **kwargs):
-        d = self.lru(args[0])
-        base_key = args[self.skiparg:self.multi] + args[self.multi+1:]
+        d, key0 = self.lru(args[0])
+        base_key = key0 + args[self.skiparg:self.multi] + args[self.multi+1:]
         ids = args[self.multi]
         result = {}
         missed = []

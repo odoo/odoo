@@ -105,6 +105,10 @@ class Registry(Mapping):
         return self.models[model_name]
 
     @lazy_property
+    def cache(self):
+        return RegistryManager.cache
+
+    @lazy_property
     def pure_function_fields(self):
         """ Return the list of pure function fields (field objects) """
         fields = []
@@ -287,6 +291,7 @@ class RegistryManager(object):
 
     """
     _registries = None
+    _cache = None
     _lock = threading.RLock()
     _saved_lock = None
 
@@ -306,6 +311,18 @@ class RegistryManager(object):
 
             cls._registries = LRU(size)
         return cls._registries
+
+    @classproperty
+    def cache(cls):
+        """ Return the global LRU ormcache. Its keys are tuples with the
+        following structure: (db_name, model_name, method, args...).
+        """
+        with cls.lock():
+            if cls._cache is None:
+                # we allocate one cache entry per 32KB of memory
+                size = max(8192, int(config['limit_memory_soft'] / 32768))
+                cls._cache = LRU(size)
+            return cls._cache
 
     @classmethod
     def lock(cls):
