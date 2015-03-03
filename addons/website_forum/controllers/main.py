@@ -239,8 +239,9 @@ class WebsiteForum(http.Controller):
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        # increment view counter
-        request.registry['forum.post'].set_viewed(cr, SUPERUSER_ID, [question.id], context=context)
+        # increment the view counter if we weren't already on that question page
+        if request.httprequest.url != request.httprequest.referrer:
+            request.registry['forum.post'].set_viewed(cr, SUPERUSER_ID, [question.id], context=context)
 
         if question.parent_id:
             redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(question.parent_id))
