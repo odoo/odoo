@@ -79,7 +79,7 @@
             },
             {
                 waitNot:   '.modal-content:visible',
-                snippet:   '#snippet_structure .oe_snippet:eq(7)',
+                snippet:   '#snippet_structure .oe_snippet:eq(9)',
                 placement: 'bottom',
                 title:     _t("Drag & Drop a block"),
                 content:   _t("Drag the 'Big Picture' block and drop it in your page."),
