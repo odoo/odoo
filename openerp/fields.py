@@ -528,7 +528,7 @@ class Field(object):
     @property
     def base_field(self):
         """ Return the base field of an inherited field, or `self`. """
-        return self.related_field if self.inherited else self
+        return self.related_field.base_field if self.inherited else self
 
     #
     # Setup of field triggers
