@@ -278,6 +278,14 @@ customize the amout of logging output
         In case of conflict between :option:`--log-level` and
         :option:`--log-handler`, the latter is used
 
+Advanced options
+----------------
+
+.. option:: --auto-reload
+
+    enable auto-reloading of python files and xml files without having to
+    restart the server. Requires pyinotify_.
+
 .. _reference/cmdline/scaffold:
 
 Scaffolding
@@ -347,3 +355,4 @@ to that file.
     http://www.postgresql.org/docs/9.2/static/libpq-connect.html#AEN38208
 .. _Werkzeug's proxy support:
     http://werkzeug.pocoo.org/docs/0.9/contrib/fixers/#werkzeug.contrib.fixers.ProxyFix
+.. _pyinotify: https://github.com/seb-m/pyinotify/wiki
