@@ -13,7 +13,7 @@
   <template id="pricing" name="Price">
       <section id="quote">
           <h1 class="page-header">Pricing</h1>
-          <table class="table">
+          <table class="table wq-table">
               <thead>
                   <tr>
                       <th>Products</th>
@@ -47,24 +47,22 @@
                           </strong>
                       </td>
                       <td>
-                          <strong class="text-right">
-                              <div t-field="line.price_unit"
-                                  t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
-                                  t-att-style="line.discount and 'text-decoration: line-through' or ''"
-                                  t-att-class="line.discount and 'text-danger' or ''"/>
-                              <!-- TODO: apply monetary widget formating -->
-                              <div t-if="line.discount">
-                                  <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
-                              </div>
-                          </strong>
+                            <div t-field="line.price_unit"
+                                t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                t-att-style="line.discount and 'text-decoration: line-through' or ''"
+                                t-att-class="(line.discount and 'text-danger' or '') + 'text-right'"/>
+                            <!-- TODO: apply monetary widget formating -->
+                            <div t-if="line.discount">
+                                <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
+                            </div>
                       </td>
                       <td>
                           <div class="text-right"
                               t-field="line.price_subtotal"
                               t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                       </td>
-                      <td>
-                          <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right hidden-print" t-if="line.option_line_id">
+                      <td class="text-center">
+                          <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id">
                               <span class="fa fa-trash-o"></span>
                           </a>
                       </td>
@@ -449,7 +447,9 @@
   <template id="optional_products">
         <section t-if="quotation.options" id="options">
             <h1 class="page-header">Options</h1>
-            <table class="table table-hover">
+        </section>
+        <section id="options">
+            <table class="table table-hover wq-table">
                 <thead>
                     <tr>
                         <th>Products</th>
@@ -463,7 +463,7 @@
                     <tr t-foreach="quotation.options" t-as="option">
                         <t t-if="not option.line_id">
                             <td>
-                                <div t-field="option.product_id.name"/>
+                                <div t-field="option.product_id.name_template"/>
                             </td>
                             <td>
                                 <div t-field="option.name"/>
@@ -484,9 +484,9 @@
                                     </div>
                                 </strong>
                             </td>
-                            <td>
-                                <a t-if="quotation.state in ['draft', 'sent']" t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
-                                    <span class="fa fa-shopping-cart" title="Buy the product"/>
+                            <td class="text-center" t-if="quotation.state in ['draft', 'sent']">
+                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
+                                    <span class="fa fa-shopping-cart"/>
                                 </a>
                             </td>
                         </t>
