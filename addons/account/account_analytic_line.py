@@ -37,7 +37,6 @@ class account_analytic_line(osv.osv):
         'ref': fields.char('Ref.'),
         'currency_id': fields.related('move_id', 'currency_id', type='many2one', relation='res.currency', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True),
         'amount_currency': fields.related('move_id', 'amount_currency', type='float', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
-        'partner_id': fields.related('account_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', store=True),
     }
 
     _defaults = {
@@ -152,11 +151,3 @@ class account_analytic_line(osv.osv):
         return False
 
 
-class res_partner(osv.osv):
-    """ Inherits partner and adds contract information in the partner form """
-    _inherit = 'res.partner'
-
-    _columns = {
-        'contract_ids': fields.one2many('account.analytic.account', \
-                                                    'partner_id', 'Contracts', readonly=True),
-    }

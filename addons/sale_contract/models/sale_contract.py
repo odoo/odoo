@@ -32,68 +32,8 @@ from openerp.addons.decimal_precision import decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
-class account_analytic_invoice_line(osv.osv):
-    _name = "account.analytic.invoice.line"
 
-    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.quantity * line.price_unit
-            if line.analytic_account_id.pricelist_id:
-                cur = line.analytic_account_id.pricelist_id.currency_id
-                res[line.id] = self.pool.get('res.currency').round(cr, uid, cur, res[line.id])
-        return res
-
-    _columns = {
-        'product_id': fields.many2one('product.product','Product',required=True),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'name': fields.text('Description', required=True),
-        'quantity': fields.float('Quantity', required=True),
-        'uom_id': fields.many2one('product.uom', 'Unit of Measure',required=True),
-        'price_unit': fields.float('Unit Price', required=True),
-        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float",digits_compute= dp.get_precision('Account')),
-    }
-    _defaults = {
-        'quantity' : 1,
-    }
-
-    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, pricelist_id=False, company_id=None, context=None):
-        context = context or {}
-        uom_obj = self.pool.get('product.uom')
-        company_id = company_id or False
-        local_context = dict(context, company_id=company_id, force_company=company_id, pricelist=pricelist_id)
-
-        if not product:
-            return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
-        if partner_id:
-            part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=local_context)
-            if part.lang:
-                local_context.update({'lang': part.lang})
-
-        result = {}
-        res = self.pool.get('product.product').browse(cr, uid, product, context=local_context)
-        price = False
-        if price_unit is not False:
-            price = price_unit
-        elif pricelist_id:
-            price = res.price
-        if price is False:
-            price = res.list_price
-        if not name:
-            name = self.pool.get('product.product').name_get(cr, uid, [res.id], context=local_context)[0][1]
-            if res.description_sale:
-                name += '\n'+res.description_sale
-
-        result.update({'name': name or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price})
-
-        res_final = {'value':result}
-        if result['uom_id'] != res.uom_id.id:
-            selected_uom = uom_obj.browse(cr, uid, result['uom_id'], context=local_context)
-            new_price = uom_obj._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uom_id'])
-            res_final['value']['price_unit'] = new_price
-        return res_final
-
-
+# Regular
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
     _inherit = "account.analytic.account"
@@ -305,23 +245,6 @@ class account_analytic_account(osv.osv):
         res_final = res
         return res_final
 
-    def _remaining_hours_calc(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for account in self.browse(cr, uid, ids, context=context):
-            if account.quantity_max != 0:
-                res[account.id] = account.quantity_max - account.hours_quantity
-            else:
-                res[account.id] = 0.0
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
-        return res
-
-    def _remaining_hours_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for account in self.browse(cr, uid, ids, context=context):
-            res[account.id] = max(account.hours_qtt_est - account.timesheet_ca_invoiced, account.ca_to_invoice)
-        return res
-
     def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
@@ -407,21 +330,6 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    def _is_overdue_quantity(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict.fromkeys(ids, 0)
-        for record in self.browse(cr, uid, ids, context=context):
-            if record.quantity_max > 0.0:
-                result[record.id] = int(record.hours_quantity > record.quantity_max)
-            else:
-                result[record.id] = 0
-        return result
-
-    def _get_analytic_account(self, cr, uid, ids, context=None):
-        result = set()
-        for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
-            result.add(line.account_id.id)
-        return list(result)
-
     def _get_total_estimation(self, account):
         tot_est = 0.0
         if account.fix_price_invoices:
@@ -464,11 +372,6 @@ class account_analytic_account(osv.osv):
          return res
 
     _columns = {
-        'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
-                                                store={
-                                                    'account.analytic.line' : (_get_analytic_account, None, 20),
-                                                    'account.analytic.account': (lambda self, cr, uid, ids, c=None: ids, ['quantity_max'], 10),
-                                                }),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
             digits_compute=dp.get_precision('Account')),
@@ -493,10 +396,6 @@ class account_analytic_account(osv.osv):
             help="Number of time (hours/days) (from journal of type 'general') that can be invoiced if you invoice based on analytic account."),
         'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, type='float', string='Invoiced Time',
             help="Number of time (hours/days) that can be invoiced plus those that already have been invoiced."),
-        'remaining_hours': fields.function(_remaining_hours_calc, type='float', string='Remaining Time',
-            help="Computed using the formula: Maximum Time - Total Worked Time"),
-        'remaining_hours_to_invoice': fields.function(_remaining_hours_to_invoice_calc, type='float', string='Remaining Time',
-            help="Computed using the formula: Expected on timesheets - Total invoiced on timesheets"),
         'fix_price_to_invoice': fields.function(_fix_price_to_invoice_calc, type='float', string='Remaining Time',
             help="Sum of quotations for this contract."),
         'timesheet_ca_invoiced': fields.function(_timesheet_ca_invoiced_calc, type='float', string='Remaining Time',
@@ -524,22 +423,6 @@ class account_analytic_account(osv.osv):
         'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
-        'recurring_invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id', 'Invoice Lines', copy=True),
-        'recurring_invoices' : fields.boolean('Generate recurring invoices automatically'),
-        'recurring_rule_type': fields.selection([
-            ('daily', 'Day(s)'),
-            ('weekly', 'Week(s)'),
-            ('monthly', 'Month(s)'),
-            ('yearly', 'Year(s)'),
-            ], 'Recurrency', help="Invoice automatically repeat at specified interval"),
-        'recurring_interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
-        'recurring_next_date': fields.date('Date of Next Invoice'),
-    }
-
-    _defaults = {
-        'recurring_interval': 1,
-        'recurring_next_date': lambda *a: time.strftime('%Y-%m-%d'),
-        'recurring_rule_type':'monthly'
     }
 
     def open_sale_order_lines(self,cr,uid,ids,context=None):
@@ -558,6 +441,158 @@ class account_analytic_account(osv.osv):
             'res_model': 'sale.order.line',
             'nodestroy': True,
         }
+
+    def cron_account_analytic_account(self, cr, uid, context=None):
+        context = dict(context or {})
+        remind = {}
+
+        def fill_remind(key, domain, write_pending=False):
+            base_domain = [
+                ('type', '=', 'contract'),
+                ('partner_id', '!=', False),
+                ('manager_id', '!=', False),
+                ('manager_id.email', '!=', False),
+            ]
+            base_domain.extend(domain)
+
+            accounts_ids = self.search(cr, uid, base_domain, context=context, order='name asc')
+            accounts = self.browse(cr, uid, accounts_ids, context=context)
+            for account in accounts:
+                if write_pending:
+                    account.write({'state' : 'pending'})
+                remind_user = remind.setdefault(account.manager_id.id, {})
+                remind_type = remind_user.setdefault(key, {})
+                remind_partner = remind_type.setdefault(account.partner_id, []).append(account)
+
+        # Already expired
+        fill_remind("old", [('state', 'in', ['pending'])])
+
+        # Expires now
+        fill_remind("new", [('state', 'in', ['draft', 'open']), '|', '&', ('date', '!=', False), ('date', '<=', time.strftime('%Y-%m-%d')), ('is_overdue_quantity', '=', True)], True)
+
+        # Expires in less than 30 days
+        fill_remind("future", [('state', 'in', ['draft', 'open']), ('date', '!=', False), ('date', '<', (datetime.datetime.now() + datetime.timedelta(30)).strftime("%Y-%m-%d"))])
+
+        context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        context['action_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale_contract', 'action_account_analytic_overdue_all')[1]
+        template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale_contract', 'account_analytic_cron_email_template')[1]
+        for user_id, data in remind.items():
+            context["data"] = data
+            _logger.debug("Sending reminder to uid %s", user_id)
+            self.pool.get('mail.template').send_mail(cr, uid, template_id, user_id, force_send=True, context=context)
+
+        return True
+
+    def hr_to_invoice_timesheets(self, cr, uid, ids, context=None):
+        domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids)]
+        names = [record.name for record in self.browse(cr, uid, ids, context=context)]
+        name = _('Timesheets to Invoice of %s') % ','.join(names)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': name,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'domain' : domain,
+            'res_model': 'account.analytic.line',
+            'nodestroy': True,
+        }
+
+
+# Prepaid
+class account_analytic_account(osv.osv):
+    _name = "account.analytic.account"
+    _inherit = "account.analytic.account"
+
+    def _get_analytic_account(self, cr, uid, ids, context=None):
+        result = set()
+        for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
+            result.add(line.account_id.id)
+        return list(result)
+
+    def _is_overdue_quantity(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, 0)
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.quantity_max > 0.0:
+                result[record.id] = int(record.hours_quantity > record.quantity_max)
+            else:
+                result[record.id] = 0
+        return result
+
+    def _remaining_hours_calc(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.quantity_max != 0:
+                res[account.id] = account.quantity_max - account.hours_quantity
+            else:
+                res[account.id] = 0.0
+        for id in ids:
+            res[id] = round(res.get(id, 0.0), 2)
+        return res
+
+    def _remaining_hours_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            res[account.id] = max(account.hours_qtt_est - account.timesheet_ca_invoiced, account.ca_to_invoice)
+        return res
+
+    _columns = {
+        'is_overdue_quantity': fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
+                                               store={
+                                                   'account.analytic.line': (_get_analytic_account, None, 20),
+                                                   'account.analytic.account': (lambda self, cr, uid, ids, c=None: ids, ['quantity_max'], 10),
+                                               }),
+        'remaining_hours': fields.function(_remaining_hours_calc, type='float', string='Remaining Time',
+                                           help="Computed using the formula: Maximum Time - Total Worked Time"),
+        'remaining_hours_to_invoice': fields.function(_remaining_hours_to_invoice_calc, type='float', string='Remaining Time',
+                                                      help="Computed using the formula: Expected on timesheets - Total invoiced on timesheets"),
+    }
+
+
+# Recurring
+class account_analytic_account(osv.osv):
+    _name = "account.analytic.account"
+    _inherit = "account.analytic.account"
+
+    def _get_recurring_line_ids(self, cr, uid, ids, context=None):
+        result = []
+        for line in self.pool.get('account.analytic.invoice.line').browse(cr, uid, ids, context=context):
+            result.append(line.analytic_account_id.id)
+        return result
+
+    def _get_contract_type_selection(self, cr, uid, context=None):
+        select = super(account_analytic_account, self)._get_contract_type_selection(cr, uid, context=context)
+        select.append(('subscription', 'Susbcription'))
+        return select
+
+    def _get_recurring_price(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, 0.0)
+        for account in self.browse(cr, uid, ids, context=context):
+            result[account.id] = sum(line.price_subtotal for line in account.recurring_invoice_line_ids)
+        return result
+
+    _columns = {
+        'recurring_invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id', 'Invoice Lines', copy=True),
+        'recurring_invoices': fields.boolean('Generate recurring invoices automatically'),
+        'recurring_rule_type': fields.selection([('daily', 'Day(s)'), ('weekly', 'Week(s)'), ('monthly', 'Month(s)'), ('yearly', 'Year(s)'), ], 'Recurrency', help="Invoice automatically repeat at specified interval"),
+        'recurring_interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
+        'recurring_next_date': fields.date('Date of Next Invoice'),
+        'recurring_total': fields.function(_get_recurring_price, string="Recurring Price", type="float", store={
+            'account.analytic.account': (lambda self, cr, uid, ids, c={}: ids, ['database_ids'], 5),
+            'account.analytic.invoice.line': (_get_recurring_line_ids, None, 5),
+            }, track_visibility='onchange'),
+        # Fields that only matters on template
+        'plan_description': fields.html(string='Plan Description', help="Describe this contract in a few lines",),
+        'user_selectable': fields.boolean(string='Allow Online Order', help="""Leave this unchecked if you don't want this contract template to be available to the customer in the frontend (for a free trial, for example)"""),
+    }
+
+
+    _defaults = {
+        'recurring_interval': 1,
+        'recurring_next_date': lambda *a: time.strftime('%Y-%m-%d'),
+        'recurring_rule_type':'monthly',
+        'user_selectable': True,
+        'contract_type': 'regular',
+    }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         if not template_id:
@@ -592,68 +627,19 @@ class account_analytic_account(osv.osv):
             res['value']['recurring_interval'] = template.recurring_interval
             res['value']['recurring_rule_type'] = template.recurring_rule_type
             res['value']['recurring_invoice_line_ids'] = invoice_line_ids
+        if template.contract_type == 'subscription':
+            res['value']['date'] = False
+        elif template.recurring_rule_type and template.recurring_interval:
+            periods = {'daily': 'days', 'weekly': 'weeks', 'monthly': 'months', 'yearly': 'years'}
+            contract_period = relativedelta(**{periods[template.recurring_rule_type]: template.recurring_interval})
+            res['value']['date'] = datetime.datetime.strftime(datetime.date.today() + contract_period, openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
         return res
 
-    def onchange_recurring_invoices(self, cr, uid, ids, recurring_invoices, date_start=False, context=None):
-        value = {}
-        if date_start and recurring_invoices:
-            value = {'value': {'recurring_next_date': date_start}}
-        return value
-
-    def cron_account_analytic_account(self, cr, uid, context=None):
-        context = dict(context or {})
-        remind = {}
-
-        def fill_remind(key, domain, write_pending=False):
-            base_domain = [
-                ('type', '=', 'contract'),
-                ('partner_id', '!=', False),
-                ('manager_id', '!=', False),
-                ('manager_id.email', '!=', False),
-            ]
-            base_domain.extend(domain)
-
-            accounts_ids = self.search(cr, uid, base_domain, context=context, order='name asc')
-            accounts = self.browse(cr, uid, accounts_ids, context=context)
-            for account in accounts:
-                if write_pending:
-                    account.write({'state' : 'pending'})
-                remind_user = remind.setdefault(account.manager_id.id, {})
-                remind_type = remind_user.setdefault(key, {})
-                remind_partner = remind_type.setdefault(account.partner_id, []).append(account)
-
-        # Already expired
-        fill_remind("old", [('state', 'in', ['pending'])])
-
-        # Expires now
-        fill_remind("new", [('state', 'in', ['draft', 'open']), '|', '&', ('date', '!=', False), ('date', '<=', time.strftime('%Y-%m-%d')), ('is_overdue_quantity', '=', True)], True)
-
-        # Expires in less than 30 days
-        fill_remind("future", [('state', 'in', ['draft', 'open']), ('date', '!=', False), ('date', '<', (datetime.datetime.now() + datetime.timedelta(30)).strftime("%Y-%m-%d"))])
-
-        context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        context['action_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'action_account_analytic_overdue_all')[1]
-        template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'account_analytic_cron_email_template')[1]
-        for user_id, data in remind.items():
-            context["data"] = data
-            _logger.debug("Sending reminder to uid %s", user_id)
-            self.pool.get('mail.template').send_mail(cr, uid, template_id, user_id, force_send=True, context=context)
-
-        return True
-
-    def hr_to_invoice_timesheets(self, cr, uid, ids, context=None):
-        domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids)]
-        names = [record.name for record in self.browse(cr, uid, ids, context=context)]
-        name = _('Timesheets to Invoice of %s') % ','.join(names)
-        return {
-            'type': 'ir.actions.act_window',
-            'name': name,
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'domain' : domain,
-            'res_model': 'account.analytic.line',
-            'nodestroy': True,
-        }
+    def on_change_contract_type(self, cr, uid, ids, contract_type, date_start=False, context=None):
+        res = {'recurring_invoices': True if contract_type == 'subscription' else False}
+        if contract_type == 'subscription' and date_start:
+            res['recurring_next_date'] = date_start
+        return {'value': res}
 
     def _prepare_invoice_data(self, cr, uid, contract, context=None):
         context = context or {}
@@ -714,7 +700,7 @@ class account_analytic_account(osv.osv):
                 'account_id': account_id,
                 'account_analytic_id': contract.id,
                 'price_unit': line.price_unit or 0.0,
-                'quantity': line.quantity,
+                'quantity': max(line.quantity, line.real_quantity),
                 'uos_id': line.uom_id.id or False,
                 'product_id': line.product_id.id or False,
                 'invoice_line_tax_id': [(6, 0, tax_id)],
@@ -767,3 +753,76 @@ class account_analytic_account(osv.osv):
                         else:
                             raise
         return invoice_ids
+
+
+class account_analytic_invoice_line(osv.osv):
+    _name = "account.analytic.invoice.line"
+
+    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict, context=None):
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = line.quantity * line.price_unit
+            if line.analytic_account_id.pricelist_id:
+                cur = line.analytic_account_id.pricelist_id.currency_id
+                res[line.id] = self.pool.get('res.currency').round(cr, uid, cur, res[line.id])
+        return res
+
+    _columns = {
+        'product_id': fields.many2one('product.product','Product',required=True),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'name': fields.text('Description', required=True),
+        'quantity': fields.float('Quantity', required=True),
+        'real_quantity': fields.float('Real Quantity', help="If the real quantity is higher than the prepaid quantity, the real quantity will be invoiced",required=True),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure',required=True),
+        'price_unit': fields.float('Unit Price', required=True),
+        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float",digits_compute= dp.get_precision('Account')),
+    }
+    _defaults = {
+        'quantity' : 1,
+        'real_quantity': 0,
+    }
+
+    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, pricelist_id=False, company_id=None, context=None):
+        context = context or {}
+        uom_obj = self.pool.get('product.uom')
+        company_id = company_id or False
+        local_context = dict(context, company_id=company_id, force_company=company_id, pricelist=pricelist_id)
+
+        if not product:
+            return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
+        if partner_id:
+            part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=local_context)
+            if part.lang:
+                local_context.update({'lang': part.lang})
+
+        result = {}
+        res = self.pool.get('product.product').browse(cr, uid, product, context=local_context)
+        price = False
+        if price_unit is not False:
+            price = price_unit
+        elif pricelist_id:
+            price = res.price
+        if price is False:
+            price = res.list_price
+        if not name:
+            name = self.pool.get('product.product').name_get(cr, uid, [res.id], context=local_context)[0][1]
+            if res.description_sale:
+                name += '\n'+res.description_sale
+
+        result.update({'name': name or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price})
+
+        res_final = {'value':result}
+        if result['uom_id'] != res.uom_id.id:
+            selected_uom = uom_obj.browse(cr, uid, result['uom_id'], context=local_context)
+            new_price = uom_obj._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uom_id'])
+            res_final['value']['price_unit'] = new_price
+
+        if not uom_id:
+            res_final['domain'] = {'uom_id': [('category_id', '=', res.uom_id.category_id.id)]}
+        return res_final
+
+    def product_uom_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, pricelist_id=False, context=None):
+        context = context or {}
+        if not uom_id:
+            return {'value': {'price_unit': 0.0, 'uom_id': uom_id or False}}
+        return self.product_id_change(cr, uid, ids, product, uom_id=uom_id, qty=qty, name=name, partner_id=partner_id, pricelist_id=pricelist_id, context=context)
