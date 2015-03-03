@@ -3013,7 +3013,7 @@ class BaseModel(object):
                 model = self.env[model_name]
                 for field_name in field_names:
                     field = model._fields[field_name]
-                    field._triggers.update(triggers)
+                    field.add_triggers(self.env, triggers)
 
         # determine old-api cls._inherit_fields and cls._all_columns
         cls._inherits_reload()
@@ -5672,6 +5672,7 @@ class BaseModel(object):
     # Generic onchange method
     #
 
+    @api.model
     def _has_onchange(self, field, other_fields):
         """ Return whether `field` should trigger an onchange event in the
             presence of `other_fields`.
@@ -5679,7 +5680,7 @@ class BaseModel(object):
         # test whether self has an onchange method for field, or field is a
         # dependency of any field in other_fields
         return field.name in self._onchange_methods or \
-            any(dep in other_fields for dep in field.dependents)
+            any(dep in other_fields for dep in field.get_dependents(self.env))
 
     @api.model
     def _onchange_spec(self, view_info=None):

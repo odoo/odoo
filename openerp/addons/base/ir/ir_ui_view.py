@@ -750,7 +750,7 @@ class view(osv.osv):
             # if field should trigger an onchange, add on_change="1" on the
             # nodes referring to field
             model = self.pool[field.model_name]
-            if model._has_onchange(field, field_nodes):
+            if model._has_onchange(cr, user, field, field_nodes):
                 for node in nodes:
                     if not node.get('on_change'):
                         node.set('on_change', '1')
