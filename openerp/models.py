@@ -2991,8 +2991,9 @@ class BaseModel(object):
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)
         for field in cls._fields.itervalues():
-            if field.compute:
-                field.computed_fields = fields_by_compute[field.compute]
+            compute = field.compute or field._compute
+            if compute:
+                field.computed_fields = fields_by_compute[compute]
                 field.computed_fields.append(field)
             else:
                 field.computed_fields = []
@@ -3743,7 +3744,7 @@ class BaseModel(object):
             if field:
                 if field.column or field.inherited:
                     old_vals[key] = val
-                if field.inverse and not field.inherited:
+                if field._inverse and not field.inherited:
                     new_vals[key] = val
             else:
                 unknown.append(key)
@@ -4043,7 +4044,7 @@ class BaseModel(object):
             if field:
                 if field.column or field.inherited:
                     old_vals[key] = val
-                if field.inverse and not field.inherited:
+                if field._inverse and not field.inherited:
                     new_vals[key] = val
             else:
                 unknown.append(key)

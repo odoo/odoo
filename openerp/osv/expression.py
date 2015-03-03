@@ -857,7 +857,7 @@ class expression(object):
 
             elif not column:
                 # Non-stored field should provide an implementation of search.
-                if not field.search:
+                if not field._search:
                     # field does not support search!
                     _logger.error("Non-stored field %s cannot be searched.", field)
                     if _logger.isEnabledFor(logging.DEBUG):
