@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Portal -->
+    <record id="contract_portal" model="ir.rule">
+        <field name="name">Contract portal access</field>
+        <field name="model_id" ref="website_contract.model_account_analytic_account"/>
+        <field name="domain_force">[('partner_id','=',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="inv_line_portal" model="ir.rule">
+        <field name="name">Invoice line portal access</field>
+        <field name="model_id" ref="website_contract.model_account_analytic_invoice_line"/>
+        <field name="domain_force">[('analytic_account_id.partner_id','=',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="opt_line_portal" model="ir.rule">
+        <field name="name">Option line portal access</field>
+        <field name="model_id" ref="website_contract.model_account_analytic_invoice_line_option"/>
+        <field name="domain_force">[('is_authorized','=',True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Public -->
+    <record id="contract_public" model="ir.rule">
+        <field name="name">Contract public access</field>
+        <field name="model_id" ref="website_contract.model_account_analytic_account"/>
+        <field name="domain_force">[('type','=','contract')]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+</odoo>

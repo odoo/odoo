@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Contract Manager">
+      <xpath expr="." position="inside">
+          <link rel='stylesheet' href='/website_contract/static/src/css/website_contract.less'/>
+          <script type="text/javascript" src="/website_contract/static/src/js/website_contract.js"></script>
+      </xpath>
+    </template>
+
+    <!-- Specific Contract Page -->
+
+    <template id="contract" name="Contract">
+        <t t-call="website.layout">
+            <div id="wrap" t-att-data-account-id="account.id">
+                <div class="container">
+                    <div class="row" t-if="user.partner_id == account.partner_id">
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb mt8">
+                                <li><a href="/account">My Account</a></li>
+                                <li>Contract <span t-field="account.name"/></li>
+                            </ol>
+                        </div>
+                    </div>
+                    <h3>Contract <span t-field="account.name"/>
+                        <small>
+                            <t t-if="account.state == 'open'">
+                                <span class="label label-success"><i class="fa fa-fw fa-check"/> Running</span>
+                            </t>
+                            <t t-if="account.state == 'pending'">
+                                <span class="label label-warning"><i class="fa fa-fw fa-refresh"/> To Renew</span>
+                            </t>
+                            <t t-if="account.state == 'close'">
+                                <span class="label label-default"><i class="fa fa-fw fa-remove"/> Closed</span>
+                            </t>
+                        </small>
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-5">
+                                <h4>Invoice Address</h4>
+                                    <div t-field="account.partner_id" t-field-options='{
+                                        "widget": "contact",
+                                        "fields": [
+                                            "name",
+                                            "address",
+                                            "phone",
+                                            "email"]}'/>
+                            </div>
+                            <div class="col-md-5">
+                                <p t-if="account.date"><strong>Valid until: </strong><span t-field="account.date"/></p>
+                                <p><strong>Billing: </strong>
+                                    Every 
+                                    <span t-field="account.recurring_interval"/>
+                                    <t t-if="account.recurring_rule_type=='daily'">
+                                        day(s)
+                                    </t>
+                                    <t t-if="account.recurring_rule_type=='weekly'">
+                                        week(s)
+                                    </t>
+                                    <t t-if="account.recurring_rule_type=='monthly'">
+                                        month(s)
+                                    </t>
+                                    <t t-if="account.recurring_rule_type=='yearly'">
+                                        years(s)
+                                    </t>
+                                </p>
+                                <p><strong>Next invoice: </strong><span id="wc-next-invoice" t-field="account.recurring_next_date"/></p>
+                                <p t-if="account.sudo().template_id.user_closable and account.state!='close'"><button class="btn btn-default btn-xs" id="wc-close-account">Close Contract</button></p>
+                            </div>
+                            
+                    </div>
+                    <h3>Your Plan: <span t-field="account.sudo().template_id.name"/> <a t-if="account.state!='close'" class="btn btn-default" t-att-href="'/account/contract/'+str(account.id)+'/change'">Change</a></h3>
+                        <table class="table table-default" id="wc-account-table">
+                            <thead>
+                                <tr><th>Description</th><th></th><th>Price</th><th/></tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="account.recurring_mandatory_lines" t-as="line">
+                                    <td class="line-description"><span t-field="line.name"/></td>
+                                    <td><t t-if="line.quantity > 1"><span t-field="line.quantity"/></t></td>
+                                    <td><span t-field="line.price_subtotal" t-field-options='{"widget": "monetary", "display_currency": "account.company_id.currency_id"}'/> / <span t-field="line.uom_id"/></td>
+                                    <td/>
+                                </tr>
+                                <tr t-if="account.recurring_option_lines">
+                                    <td colspan="4"><h4 class="strong">Your Options</h4></td>
+                                </tr>
+                                <tr t-foreach="account.recurring_option_lines" t-as="line">
+                                    <td class="line-description"><span t-field="line.name"/></td>
+                                    <td ><t t-if="line.quantity > 1"><span t-field="line.quantity"/></t></td>
+                                    <td>
+                                        <span t-field="line.price_subtotal" t-field-options='{"widget": "monetary", "display_currency": "account.company_id.currency_id"}'/> / <span t-field="line.uom_id"/>
+                                    </td>
+                                    <td>
+                                        <a t-if="line.get_template_option_line().portal_access in ['both'] or user.has_group('base.group_sale_salesman') and account.state!='close'"
+                                           class="btn btn-danger btn-xs wc-remove-option"
+                                           t-att-data-option-id="line.get_template_option_line().id"
+                                           t-att-data-option-name="line.name"
+                                           t-att-data-option-subtotal="str(line.price_subtotal)"
+                                           data-target="removal">
+                                            <i class="fa fa-fw fa-remove"/> Remove
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr t-if="account.recurring_custom_lines">
+                                    <td colspan="4"><h4 class="strong">Your  Custom Options <small>- These options have been added manually and are not part of this plan</small></h4></td>
+                                </tr>
+                                <tr t-foreach="account.recurring_custom_lines" t-as="line">
+                                    <td class="line-description"><span t-field="line.name"/></td>
+                                    <td ><t t-if="line.quantity > 1"><span t-field="line.quantity"/></t></td>
+                                    <td>
+                                        <span t-field="line.price_subtotal" t-field-options='{"widget": "monetary", "display_currency": "account.company_id.currency_id"}'/> / <span t-field="line.uom_id"/>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td/>
+                                    <td>
+                                        <strong>Subtotal</strong>
+                                        <br/>
+                                        <strong>Taxes</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="account.recurring_total" t-field-options='{"widget": "monetary", "display_currency": "account.company_id.currency_id"}'/>
+                                        <br/>
+                                        <span t-field="account.recurring_amount_tax" t-field-options='{"widget": "monetary", "display_currency": "account.company_id.currency_id"}'/>
+                                    </td>
+                                    <td/>
+                                </tr>
+                                <tr class="active">
+                                    <td colspan="2">
+                                        <h4>Total</h4>
+                                    </td>
+                                    <td>
+                                        <h4 t-field="account.recurring_amount_total" t-field-options='{"widget": "monetary", "display_currency": "account.company_id.currency_id"}'/> 
+                                    </td>
+                                    <td/>
+                                </tr>
+                                <t t-if="account.recurring_inactive_lines">
+                                    <tr>
+                                        <td colspan="4"><h4 class="strong">Extra Options</h4></td>
+                                    </tr>
+                                    <tr t-foreach="account.recurring_inactive_lines" t-as="line">
+                                        <td  class="line-description"><span t-field="line.name"/></td>
+                                        <td ><t t-if="line.quantity > 1"><span t-field="line.quantity"/></t></td>
+                                        <td>
+                                            <span t-field="line.sudo().price_subtotal" t-field-options='{"widget": "monetary", "display_currency": "account.company_id.currency_id"}'/> / <span t-field="line.uom_id"/>
+                                        </td>
+                                        <td>
+                                            <a t-if="line.portal_access in ['both', 'upgrade'] and account.state!='close'"
+                                               class="btn btn-success btn-xs wc-add-option"
+                                               t-att-data-option-id="line.id"
+                                               t-att-data-option-name="line.name"
+                                               t-att-data-option-subtotal="str(line.sudo().price_subtotal)"
+                                               data-target="add">
+                                                <i class="fa fa-fw fa-shopping-cart"/> Add
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    <t t-if="account.description">
+                        <h3>Terms and conditions</h3>
+                        <div t-field="account.description"/>
+                    </t>
+                    <h4 t-if="account.manager_id">Your Contact: </h4>
+                        <div t-field="account.manager_id" t-field-options='{
+                            "widget": "contact",
+                            "fields": [
+                                "name",
+                                "address",
+                                "phone",
+                                "email"]}'/>
+                </div>
+            </div>
+            <div class="modal fade" id="wc-modal-confirm">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!--  Modification Pages -->
+    <template id="change_template" name="Change your plan">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb mt8">
+                                <li><a href="/account">My Account</a></li>
+                                <li><a t-att-href="'/account/contract/'+str(account.id)">Contract <span t-field="account.name"/></a></li>
+                                <li>Change Your Plan</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <h1>Change Your Plan</h1>
+                    <p>Your options will be carried to the new contract if they are available.</p>
+                    <div class="row">
+                        <t t-set="template" t-value="account.sudo().template_id"/>
+                        <t t-call="website_contract.template_panel"/>
+
+                        <t t-foreach="account_templates" t-as="template">
+                            <t t-if="template.user_selectable and not template.id==account.template_id.id">
+                                <t t-call="website_contract.template_panel"/>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="template_panel">
+        <div class="col-md-4">
+            <div t-att-class="'panel panel-primary' if (account.template_id.id == template.id) else 'panel panel-default'">
+                <div class="panel-heading">
+                    <h4 class="pull-left"><span t-field="template.name" /> <span t-if="template.user_selectable and account.template_id.id == template.id" class="label label-default">Current Plan</span></h4>
+                    <button type="button"
+                            class="btn btn-primary pull-right"
+                            data-toggle="modal"
+                            t-if="template.user_selectable and account.template_id.id != template.id"
+                            t-att-data-target="'#contract_confirm_'+str(template.id)">
+                        <i class="fa fa-fw fa-arrow-circle-right"></i> Select
+                    </button>
+                    <div class="clearfix"/>
+                </div>
+                <div class="panel-body">
+                    <div t-field="template.plan_description" />
+                    <hr/>
+                    <p>
+                        Billing Period: <span t-field="template.recurring_interval"/>
+                                    <t t-if="template.recurring_rule_type=='daily'">
+                                        day(s)
+                                    </t>
+                                    <t t-if="template.recurring_rule_type=='weekly'">
+                                        week(s)
+                                    </t>
+                                    <t t-if="template.recurring_rule_type=='monthly'">
+                                        month(s)
+                                    </t>
+                                    <t t-if="template.recurring_rule_type=='yearly'">
+                                        year(s)
+                                    </t>
+                    </p>
+                </div>
+                    <table class="table wc-template-panel-table">
+                        <tbody>
+                            <tr>
+                                <td><h4>Basic Plan</h4></td>
+                                <td/>
+                            </tr>
+                            <tr t-foreach="template.recurring_invoice_line_ids" t-as="invoice_line" class="line-description">
+                                <td class="line-description"><span t-field="invoice_line.name"/></td>
+                                <td><span t-field="invoice_line.price_unit" t-field-options='{"widget": "monetary", "display_currency": "template.company_id.currency_id"}'/></td>
+                            </tr>
+                            <tr>
+                                <td><h4>Options</h4></td>
+                                <td/>
+                            </tr>
+                            <tr t-foreach="template.option_invoice_line_ids" t-as="invoice_line" class="line-description">
+                                <td class="line-description"><span t-field="invoice_line.name"/></td>
+                                <td><span t-field="invoice_line.price_unit" t-field-options='{"widget": "monetary", "display_currency": "template.company_id.currency_id"}'/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                <div class="panel-footer clearfix">
+                    <h4 class="pull-left">Base Price: <span t-field="template.recurring_total" t-field-options='{"widget": "monetary", "display_currency": "template.company_id.currency_id"}'/></h4>
+                    <form method="post" t-if="template.user_selectable and account.template_id.id != template.id">
+                        <input class="hidden" name="new_template_id" t-att-value="template.id"/>
+                        <button type="button" class="btn btn-primary pull-right" data-toggle="modal" t-att-data-target="'#contract_confirm_'+str(template.id)"><i class="fa fa-fw fa-arrow-circle-right"></i> Select</button>
+                        <div class="modal fade" t-att-id="'contract_confirm_'+str(template.id)">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Change Contract</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Please ensure that you have selected the correct contract:</p>
+                                        <ul>
+                                            <li>Contract: <span t-field="template.name"/></li>
+                                            <li>
+                                                Billing Period: <span t-field="template.recurring_interval"/>
+                                                <t t-if="template.recurring_rule_type=='daily'">
+                                                    day(s)
+                                                </t>
+                                                <t t-if="template.recurring_rule_type=='weekly'">
+                                                    week(s)
+                                                </t>
+                                                <t t-if="template.recurring_rule_type=='monthly'">
+                                                    month(s)
+                                                </t>
+                                                <t t-if="template.recurring_rule_type=='yearly'">
+                                                    year(s)
+                                                </t>
+                                            </li>
+                                        </ul>
+                                        <p>These modifications will be active immedialy, however your next invoice date will not be changed. Your next invoice will arrive on: <span t-field="account.recurring_next_date"/></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <a class="btn btn-primary contract-submit">Confirm</a>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Modify website_portal templates -->
+    <template id="account" name="Account" inherit_id="website_portal.account">
+        <xpath expr="//t[@t-call='website_portal.quotations']" position="before">
+            <t t-call="website_contract.contracts" />
+        </xpath>
+        <xpath expr="//h2[@id='page_subtitle']" position="replace">
+            <h2 class="text-center text-muted" id="page_subtitle">Manage your contracts and sales documents</h2>
+        </xpath>
+    </template>
+
+    <template id="contracts" name="Contracts">
+        <h3 class="page-header">Your Subscriptions</h3>
+        
+        <t t-if="not cust_accounts">
+            <p>You don't have any subscriptions yet.</p>
+        </t>
+        <t t-if="cust_accounts">
+            <table class="table table-hover">
+                <thead>
+                    <th width="50%">Name</th>
+                    <th width="25%">Payment</th>
+                    <th width="25%">Status</th>
+                </thead>
+                <t t-foreach="cust_accounts" t-as="account">
+                    <tr>
+                        <td><a t-att-href="'/account/contract/'+str(account.id)"><t t-esc="account.name"/></a></td>
+                        <td><span t-field="account.recurring_amount_total" t-field-options='{"widget": "monetary", "display_currency": "account.company_id.currency_id"}'/></td>
+                        <td>
+                            <t t-if="account.state == 'open'">
+                                <span class="label label-success"><i class="fa fa-fw fa-check"/> Running</span>
+                            </t>
+                            <t t-if="account.state == 'pending'">
+                                <span class="label label-warning"><i class="fa fa-fw fa-refresh"/> To Renew</span>
+                            </t>
+                            <t t-if="account.state == 'close'">
+                                <span class="label label-default"><i class="fa fa-fw fa-remove"/> Closed</span>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+            </table>
+        </t>
+    </template>
+
+    <!-- Modify website_sale templates -->
+    <template id="cart" name="Shopping Cart" inherit_id="website_sale.cart">
+        <xpath expr="//td[@name='price']" position="replace">
+            <!-- Normal price display (discount comes from using different pricelists-->
+            <td class="text-center" name="price" t-if="not line.discount">
+                <t t-if="(compute_currency(line.product_id.lst_price) - line.price_unit) &gt; 1">
+                    <del class="text-danger" style="white-space: nowrap;"
+                        t-field="line.product_id.lst_price" t-field-options='{
+                        "widget": "monetary",
+                        "from_currency": "line.company_id.currency_id",
+                        "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                        }'/>&amp;nbsp;
+                </t>
+                <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
+                    "widget": "monetary",
+                    "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                    }'/>
+            </td>
+            <!-- Price display with discount directly in the sale_order_line -->
+            <td class="text-center" name="price" t-if="line.discount">
+                <del class="text-danger" style="white-space: nowrap;"
+                    t-field="line.price_unit" t-field-options='{
+                    "widget": "monetary",
+                    "from_currency": "line.company_id.currency_id",
+                    "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                    }'/>&amp;nbsp;
+                <span t-field="line.price_subtotal" style="white-space: nowrap;" t-field-options='{
+                    "widget": "monetary",
+                    "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                    }'/>
+            </td>
+        </xpath>
+    </template>
+
+</odoo>

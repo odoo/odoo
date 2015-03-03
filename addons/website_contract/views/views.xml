@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action Show all sales documents related to a contract -->
+    <record id="action_contract_sales_all" model="ir.actions.act_window">
+        <field name="name">Sales Documents</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="context">{'create':False}</field>
+        <field name="help" type="html">
+          <p>
+            You will find here all the quotations and sale orders related to this contract.
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_analytic_account_form">
+        <field name="name">analytic.analytic.account.form</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contract_type']" position="after">
+                <field name="user_selectable" attrs="{'invisible': [('type','in',['view','normal','contract'])]}"/>
+                <field name="user_closable"  attrs="{'invisible': [('type','!=','template')]}"/>
+            </xpath>
+            <xpath expr="//button[@string='Cost/Revenue']" position="before">
+                <button class="oe_inline oe_stat_button" name="open_website_url"
+                    type="object" icon="fa-globe" string="View Contract" attrs="{'invisible': [('type','!=','contract')]}"/>
+                <button class="oe_inline oe_stat_button" name="%(action_contract_sales_all)d" type="action" icon="fa-credit-card"
+                    string="Sales" attrs="{'invisible': [('type','!=','contract')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="wizard_form_view">
+        <field name="name">wizard.form</field>
+        <field name="model">account.analytic.account.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add Options">
+                <field name="lines">
+                    <tree string="Account Analytic Lines" editable="bottom">
+                        <field name="product_id" on_change="product_id_change(product_id, uom_id, quantity)"/>
+                        <field name="name" invisible="1"/>
+                        <field name="quantity"/>
+                        <field name="uom_id" on_change="product_uom_change(product_id,uom_id,quantity,name,False,False,context)"/>
+                        <field name="price_unit"/>
+                        <field name="price_subtotal"/>
+                    </tree>
+                </field>
+                <footer>
+                    <p>A Quotation will be sent to the partner. The option will be automatically added to the contract when this Quotation is confirmed.</p>
+                    <button name="create_sale_order" type="object"
+                            string="Send Sale Order" class="oe_highlight"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wizard_action">
+        <field name="name">Add Options (with partial sale order)</field>
+        <field name="res_model">account.analytic.account.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_form_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <record model="ir.ui.view" id="account_analytic_account_form_form">
+        <field name="name">sale.contract.invoice.form.inherit</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="sale_contract.account_analytic_account_form_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='recurring_lines']" position="after">
+                <page string="Optional Lines" attrs="{'invisible': ['|',('contract_type','!=','subscription'),('type','!=','template')]}">
+                    <label for="option_invoice_line_ids" />
+                    <div>
+                        <field name="option_invoice_line_ids" on_write="on_add_set_optional">
+                            <tree string="Account Analytic Lines" editable="bottom">
+                                <field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, False, parent.partner_id, False, parent.pricelist_id, parent.company_id)"/>
+                                <field name="name"/>
+                                <field name="portal_access"/>
+                                <field name="quantity"/>
+                                <field name="uom_id" on_change="product_uom_change(product_id,uom_id,quantity,name,parent.partner_id, parent.pricelist_id,context)"/>
+                                <field name="price_unit"/>
+                                <field name="price_subtotal"/>
+                            </tree>
+                        </field>
+                    </div>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='recurring_invoice_line_ids']" position="before">
+                <button string="=> Add an option" class="oe_link oe_right" 
+                        help="Add an option and create a sale order with discount for the current invoicing period" 
+                        name="%(wizard_action)d" type="action" attrs="{'invisible': [('type','!=','contract')]}" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

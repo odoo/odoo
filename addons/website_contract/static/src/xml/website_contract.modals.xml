@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website_contract.modal_removal">
+        <form method="post" t-att-action="'/account/contract/'+data.account_id+'/remove_option'">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm Option Removal</h4>
+            </div>
+            <div class="modal-body">
+                <p>The following option will be removed from your next invoice:</p>
+                <p class="line-description"><t t-raw="data.option_name"/></p>
+                <input name="remove_option_id" type="hidden" t-att-value="data.option_id" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary contract-submit">Confirm</button>
+            </div>
+        </form>
+    </t>
+
+    <t t-name="website_contract.modal_add">
+        <div class="modal-header">
+            <h4 class="modal-title">Confirm Option</h4>
+        </div>
+        <div class="modal-body">
+            <p>The following option will be added to your next invoice:</p>
+            <p class="line-description"><t t-raw="data.option_name"/></p>
+            <p t-if="(data.option_price)&gt;0.0">You will be invoiced for the remaining of this invoicing period (from today to <span t-esc="data.next_date" />).</p>
+        </div>
+        <div class="modal-footer">
+            <form method="post" t-att-action="'/account/contract/'+data.account_id+'/pay_option'" t-if="(data.option_price)&gt;0.0">
+                <input name="new_option_id" type="hidden" t-att-value="data.option_id" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary contract-submit">Confirm</button>
+            </form>
+            <form method="post" t-att-action="'/account/contract/'+data.account_id+'/add_option'" t-if="(data.option_price)==0.0">
+                <input name="new_option_id" type="hidden" t-att-value="data.option_id" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary contract-submit">Confirm</button>
+            </form>
+        </div>
+    </t>
+
+    <t t-name="website_contract.modal_close">
+        <div class="modal-header">
+            <h4 class="modal-title">Close your contract</h4>
+        </div>
+        <form method="post" t-att-action="'/account/contract/'+data.account_id+'/close'">
+            <div class="modal-body">
+                <input type="checkbox" name="confirm_close"> Yes, I wish to close this contract</input>
+                <p>If you confirm, you contract will be closed right away. Your current invoicing period is valid until <span t-esc="data.next_date" />.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary contract-submit">Confirm</button>
+            </div>
+        </form>
+    </t>
+</templates>

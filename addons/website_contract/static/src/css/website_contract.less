@@ -1,0 +1,40 @@
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+/* account pricing table */
+#wc-account-table td:nth-last-child(2),
+#wc-account-table td:nth-last-child(3),
+#wc-account-table th:nth-last-child(2), {
+    text-align:right;
+}
+
+#wc-account-table th:nth-last-child(2) {
+    width: 200px;
+}
+
+#wc-account-table th:nth-last-child(3) {
+    width: 75px;
+}
+
+#wc-account-table th:nth-last-child(1) {
+    width: 100px;
+}
+
+.wc-template-panel-table td:last-child {
+    width: 30%;
+}
+
+/* line description */
+.line-description::first-line {
+    font-weight: bold;
+}
