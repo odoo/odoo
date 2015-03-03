@@ -276,8 +276,6 @@ class QWeb(orm.AbstractModel):
                             self, element, attribute_name, attribute_value, qwebcontext)
                         for att, val in attrs:
                             if not val: continue
-                            if not isinstance(val, str):
-                                val = unicode(val).encode('utf-8')
                             generated_attributes += self.render_attribute(element, att, val, qwebcontext)
                         break
                 else:
@@ -340,7 +338,10 @@ class QWeb(orm.AbstractModel):
             return "<%s%s/>" % (name, generated_attributes)
 
     def render_attribute(self, element, name, value, qwebcontext):
-        return ' %s="%s"' % (name, escape(value))
+        value = ' %s="%s"' % (name, escape(value))
+        if isinstance(value, unicode):
+            return value.encode('utf-8')
+        return value
 
     def render_text(self, text, element, qwebcontext):
         return text.encode('utf-8')
@@ -605,6 +606,12 @@ class FieldConverter(osv.AbstractModel):
         return self.value_to_html(
             cr, uid, record[field_name], field, options=options, context=context)
 
+    def render_attribute(self, name, value, qwebcontext):
+        value = ' %s="%s"' % (name, escape(value))
+        if isinstance(value, unicode):
+            return value.encode('utf-8')
+        return value
+
     def to_html(self, cr, uid, field_name, record, options,
                 source_element, t_att, g_att, qweb_context, context=None):
         """ to_html(cr, uid, field_name, record, options, source_element, t_att, g_att, qweb_context, context=None)
@@ -633,12 +640,9 @@ class FieldConverter(osv.AbstractModel):
 
         if inherit_branding:
             # add branding attributes
-            g_att += ''.join(
-                ' %s="%s"' % (name, escape(value))
-                for name, value in self.attributes(
-                    cr, uid, field_name, record, options,
-                    source_element, g_att, t_att, qweb_context)
-            )
+            for name, value in self.attributes(cr, uid, field_name, record, options,
+                    source_element, g_att, t_att, qweb_context):
+                g_att += self.render_attribute(name, value, qweb_context)
 
         return self.render_element(cr, uid, source_element, t_att, g_att,
                                    qweb_context, content)
