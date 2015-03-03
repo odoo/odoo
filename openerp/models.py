@@ -827,9 +827,6 @@ class BaseModel(object):
                 "TransientModels must have log_access turned on, " \
                 "in order to implement their access rights policy"
 
-        # prepare ormcache, which must be shared by all instances of the model
-        cls._ormcache = {}
-
     @api.model
     @ormcache()
     def _is_an_ordinary_table(self):
@@ -1827,7 +1824,7 @@ class BaseModel(object):
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
         try:
-            self._ormcache.clear()
+            self.pool.cache.clear_prefix((self.pool.db_name, self._name))
             self.pool._any_cache_cleared = True
         except AttributeError:
             pass
