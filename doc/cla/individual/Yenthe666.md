@@ -1,4 +1,3 @@
-```
 Belgium, 02/03/2015
 
 I hereby agree to the terms of the Odoo Individual Contributor License
@@ -10,4 +9,3 @@ declaration.
 Signed,
 
 Yenthe Van Ginneken yenthevg@gmail.com https://github.com/Yenthe666
-```
