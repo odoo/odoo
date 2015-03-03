@@ -49,7 +49,10 @@ animation.registry.follow = animation.Animation.extend({
                 'message_is_follower': this.$target.attr("data-follow") || "off",
                 'email': email,
             }).then(function (follow) {
-                self.toggle_subscription(follow, email);
+                self.toggle_subscription(follow[0], email);
+                    if (!follow[1]) {
+                        location.reload();
+                    }
             });
         }
     },

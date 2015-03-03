@@ -21,6 +21,7 @@
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.share.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_tour_forum_question.js"/>
+        <script type="text/javascript" src="/website_forum/static/src/js/follow_tags.js"/>
         <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
     </xpath>
 </template>
@@ -430,7 +431,7 @@
         </p>
         <form t-att-action="action_url" method="post" role="form" class="tag_text form-horizontal">
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
-            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+            <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="content_link">URL to Share</label>
                 <div class="col-sm-8">
@@ -449,7 +450,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="post_tags">Tags</label>
                 <div class="col-sm-8">
-                    <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+                    <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
                     <input type="text" name="post_tags" class="form-control js_select2"/>
                 </div>
             </div>
@@ -481,7 +482,7 @@
             </textarea>
             <br/>
             <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
-            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+            <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
             <input type="text" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
             <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
@@ -520,7 +521,7 @@
             </textarea>
             <br/>
             <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
-            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+            <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
             <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
             <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
@@ -549,7 +550,7 @@
             </textarea>
             <div t-if="not is_answer">
                 <br/>
-                <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+                <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
                 <input type="text" name="post_tags" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags"/>
                 <br/>
             </div>
@@ -938,7 +939,7 @@
         <p class="text-muted">
             A tag is a label that categorizes your question with other,
             similar questions. Using the right tags makes it easier for
-            others to find and answer your question.
+            others to find and answer your question. (Hover the mouse to follow/unfollow tag(s))
         </p>
         <nav t-if="pager_tag_chars">
             <ul class="pagination mt0 mb0">
@@ -948,22 +949,24 @@
                 </t>
             </ul>
         </nav>
-        <div class="row">
+        <div class="row tags tags_follow" t-att-data-record="tags.ids">
             <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
-                <span t-att-id="tag.name" class="o_js_forum_tag_follow">
-                    <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="badge label label-default"><span t-field="tag.name"/></a>
-                    <div class="well o_forum_tag_follow_box">
-                        <div class="row input-group js_follow" t-att-data-id="tag.id" t-att-data-object="tag._name" t-att-data-follow="tag.id and tag.message_is_follower and 'on' or 'off'">
-                            <input type="email" name="email" class="js_follow_email form-control" placeholder="your email..." style="height: 30px"/>
-                            <span class="input-group-btn">
-                                <button href="#" t-attf-class="btn btn-default btn-sm js_unfollow_btn">Unfollow</button>
-                                <button href="#" t-attf-class="btn btn-primary btn-sm js_follow_btn">Follow</button>
+                <span t-att-id="tag.name" t-attf-class="o_js_forum_tag_follow tag_#{tag.id}">
+                    <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="label label-default" t-att-data-tag-id="tag.id">
+                        <span t-field="tag.name"/>
+                    </a>
+                    <div t-attf-class="well o_forum_tag_follow_box tag_#{tag.id}">
+                        <div class="row input-group" t-att-data-ids="tag.id" data-follow="off">
+                            <input name="email" t-att-data-id="tag.id" class="js_tag_follow_email form-control" groups="base.group_public" placeholder="your email..." t-att-type="'hidden' if is_session else 'email'" style="height: 30px"/>
+                            <span class="input-group-btn tag_btn" t-att-data-id="tag.id">
+                                <button href="#" t-att-id="tag.id" t-attf-class="btn btn-default btn-sm js_tag_unfollow_btn">Unfollow</button>
+                                <button href="#" t-att-id="tag.id" t-attf-class="btn btn-primary btn-sm js_tag_follow_btn">Follow</button>
                             </span>
                         </div>
                     </div>
-                <span>
-                    X <t t-esc="tag.posts_count"/>
-                </span>
+                    <span>
+                        X <t t-esc="tag.posts_count"/>
+                    </span>
                 </span>
             </div>
         </div>

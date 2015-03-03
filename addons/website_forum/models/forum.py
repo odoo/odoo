@@ -411,7 +411,6 @@ class Post(models.Model):
     def write(self, vals):
         if 'content' in vals:
             vals['content'] = self._update_content(vals['content'], self.forum_id.id)
-
         if 'state' in vals:
             if vals['state'] in ['active', 'close'] and any(not post.can_close for post in self):
                 raise KarmaError('Not enough karma to close or reopen a post.')
@@ -428,7 +427,7 @@ class Post(models.Model):
                     post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * mult)
                     self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accept * mult)
         if 'tag_ids' in vals:
-            if any(self.env.user.karma < post.forum_id.karma_retag for post in self):
+            if any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
                 raise KarmaError('Not enough karma to retag.')
         if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id', 'tag_ids'] for key in vals.keys()) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
@@ -723,7 +722,7 @@ class Tags(models.Model):
 
     @api.model
     def create(self, vals):
-        tag = super(Tags, self).create(vals)
-        if self.env.user.karma < tag.forum_id.karma_tag_create:
+        forum = self.env['forum.forum'].browse(vals.get('forum_id'))
+        if self.env.user.karma < forum.karma_tag_create:
             raise KarmaError(_('Not enough karma to create a new Tag'))
-        return tag
+        return super(Tags, self).create(vals)

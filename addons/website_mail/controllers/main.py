@@ -30,6 +30,7 @@ class WebsiteMail(http.Controller):
     def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
+        is_session = True
         partner_obj = request.registry['res.partner']
         user_obj = request.registry['res.users']
 
@@ -42,6 +43,8 @@ class WebsiteMail(http.Controller):
         if uid != public_id:
             partner_ids = [user_obj.browse(cr, uid, uid, context).partner_id.id]
         else:
+            #check for session for public user
+            is_session = request.session.get('partner_id', False)
             # mail_thread method
             partner_ids = _object._find_partner_from_emails(
                 cr, SUPERUSER_ID, _id, [email], context=context, check_followers=True)
@@ -52,13 +55,13 @@ class WebsiteMail(http.Controller):
         if _message_is_follower:
             _object.check_access_rule(cr, uid, [_id], 'read', context)
             _object.message_unsubscribe(cr, SUPERUSER_ID, [_id], partner_ids, context=context)
-            return False
+            return (False, is_session)
         else:
             _object.check_access_rule(cr, uid, [_id], 'read', context)
             # add partner to session
             request.session['partner_id'] = partner_ids[0]
             _object.message_subscribe(cr, SUPERUSER_ID, [_id], partner_ids, context=context)
-            return True
+            return (True, is_session)
 
     @http.route(['/website_mail/is_follower'], type='json', auth="public", website=True)
     def call(self, model, id, **post):

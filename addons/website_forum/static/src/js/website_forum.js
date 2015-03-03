@@ -25,13 +25,13 @@ website.if_dom_contains('.website_forum', function () {
         }
     });
 
-    $('.o_js_forum_tag_follow').hover(
-        function(event) {
-            $(this).find('.o_forum_tag_follow_box').stop().fadeIn().css('display','block');
-        },
-        function(event) {
-            $(this).find('.o_forum_tag_follow_box').stop().fadeOut().css('display','none');
-    });
+        $('.o_js_forum_tag_follow').hover(
+            function(event) {
+                $(this).find('.o_forum_tag_follow_box').stop().fadeIn().css('display','block');
+            },
+            function(event) {
+                $(this).find('.o_forum_tag_follow_box').stop().fadeOut().css('display','none');
+        });
 
     $('.vote_up,.vote_down').not('.karma_required').on('click', function (ev) {
         ev.preventDefault();
@@ -193,7 +193,7 @@ website.if_dom_contains('.website_forum', function () {
         createSearchChoice: function (term) {
             if ($(lastsearch).filter(function () { return this.text.localeCompare(term) === 0;}).length === 0) {
                 //check Karma
-                if (parseInt($("#karma").val()) >= parseInt($("#karma_retag").val())) {
+                if (parseInt($("#karma").val()) >= parseInt($("#karma_edit_retag").val())) {
                     return {
                         id: "_" + $.trim(term),
                         text: $.trim(term) + ' *',
