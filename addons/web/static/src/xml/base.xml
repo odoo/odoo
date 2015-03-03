@@ -495,12 +495,6 @@
     </div>
 </t>
 
-<t t-name="ControlPanel.switch-buttons">
-    <t t-foreach="views" t-as="view">
-        <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label"/>
-    </t>
-</t>
-
 <div t-name="ViewManager" class="oe-view-manager">
     <div class="oe-view-manager-content">
         <t t-foreach="widget.views" t-as="view">
@@ -508,6 +502,12 @@
         </t>
     </div>
 </div>
+<t t-name="ViewManager.switch-buttons">
+    <t t-foreach="views" t-as="view">
+        <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label"/>
+    </t>
+</t>
+
 <t t-name="WebClient.DebugManager">
     <li class="oe_debug_manager">
         <a href="#" t-att-title='_t("Open Debug Menu")' class="dropdown-toggle oe_debug_button" data-toggle="dropdown">

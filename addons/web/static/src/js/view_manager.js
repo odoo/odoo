@@ -5,8 +5,10 @@ var core = require('web.core');
 var data = require('web.data');
 var Model = require('web.Model');
 var pyeval = require('web.pyeval');
+var SearchView = require('web.SearchView');
 var Widget = require('web.Widget');
 
+var QWeb = core.qweb;
 var _t = core._t;
 
 var ViewManager = Widget.extend({
@@ -46,10 +48,10 @@ var ViewManager = Widget.extend({
         this.cp_bus = cp_bus;
 
         _.each(views, function (view) {
-            var view_type = view[1] || view.view_type,
-                View = core.view_registry.get(view_type, true),
-                view_label = View ? View.prototype.display_name: (void 'nope'),
-                view_descr = {
+            var view_type = view[1] || view.view_type;
+            var View = core.view_registry.get(view_type, true);
+            var view_label = View ? View.prototype.display_name: (void 'nope');
+            var view_descr = {
                     controller: null,
                     options: view.options || {},
                     view_id: view[0] || view.view_id,
@@ -77,8 +79,8 @@ var ViewManager = Widget.extend({
      */
     start: function() {
         var self = this;
-        var default_view = this.get_default_view(),
-            default_options = this.flags[default_view] && this.flags[default_view].options;
+        var default_view = this.get_default_view();
+        var default_options = this.flags[default_view] && this.flags[default_view].options;
 
         this._super();
 
@@ -97,89 +99,24 @@ var ViewManager = Widget.extend({
         if (this.cp_bus) {
             this.control_elements = {};
             if (this.flags.search_view) {
-                // Ask the ControlPanel to setup the search view
-                this.search_view_loaded = $.Deferred();
-                this.cp_bus.trigger('setup_search_view', this, this.action, this.dataset, this.flags);
-                $.when(this.search_view_loaded).then(function() {
-                    self.searchview.on('search_data', self, self.search);
-                });
+                this.search_view_loaded = this.setup_search_view();
             }
             if (this.flags.views_switcher) {
-                // Ask the ControlPanel to render the switch-buttons
-                self.cp_bus.trigger('render_switch_buttons', self, self.view_order);
+                this.render_switch_buttons();
             }
         }
 
         // Switch to the default_view to load it
-        this.main_view_loaded = this.switch_mode(default_view, null, default_options);
+        var main_view_loaded = this.switch_mode(default_view, null, default_options);
 
-        return $.when(self.main_view_loaded, this.search_view_loaded);
-    },
-    /**
-     * Executed by the ControlPanel when the searchview requested by this ViewManager is loaded
-     * @param {Widget} [searchview] the SearchView
-     */
-    set_search_view: function(searchview) {
-        this.searchview = searchview;
-        _.extend(this.control_elements, {
-            $searchview: searchview.$el,
-            $searchview_buttons: searchview.$buttons.contents(),
-        });
-        this.search_view_loaded.resolve();
-    },
-    /**
-     * Executed by the ControlPanel when the switch_buttons requested by this ViewManager are rendered
-     * @param {jQuery} [$switch_buttons] the rendered switch_buttons
-     */
-    set_switch_buttons: function($switch_buttons) {
-        _.extend(this.control_elements, {
-            $switch_buttons: $switch_buttons,
-        });
-    },
-    get_search_view: function() {
-        return this.searchview;
-    },
-    /**
-     * Executed on event "search_data" thrown by the SearchView
-     */
-    search: function(domains, contexts, groupbys) {
-        var self = this,
-            controller = this.active_view.controller, // the correct view must be loaded here
-            action_context = this.action.context || {},
-            view_context = controller.get_context();
-        pyeval.eval_domains_and_contexts({
-            domains: [this.action.domain || []].concat(domains || []),
-            contexts: [action_context, view_context].concat(contexts || []),
-            group_by_seq: groupbys || []
-        }).done(function (results) {
-            if (results.error) {
-                self.active_search.resolve();
-                throw new Error(
-                        _.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
-                                      JSON.stringify(results.error)));
-            }
-            self.dataset._model = new Model(
-                self.dataset.model, results.context, results.domain);
-            var groupby = results.group_by.length
-                        ? results.group_by
-                        : action_context.group_by;
-            if (_.isString(groupby)) {
-                groupby = [groupby];
-            }
-            if (!controller.grouped && !_.isEmpty(groupby)){
-                self.dataset.set_sort([]);
-            }
-            $.when(controller.do_search(results.domain, results.context, groupby || [])).then(function() {
-                self.active_search.resolve();
-            });
-        });
+        return $.when(main_view_loaded, this.search_view_loaded);
     },
     get_default_view: function() {
         return this.flags.default_view || this.view_order[0].type;
     },
     switch_mode: function(view_type, no_store, view_options) {
-        var self = this,
-            view = this.views[view_type];
+        var self = this;
+        var view = this.views[view_type];
 
         if (!view) {
             return $.Deferred().reject();
@@ -226,7 +163,7 @@ var ViewManager = Widget.extend({
                 // Render the control elements of the active view (buttons, sidebar, pager)
                 var view_elements = self.render_view_control_elements();
                 var status = {
-                    active_view: self.active_view,
+                    active_view_selector: '.oe-cp-switch-' + self.active_view.type,
                     breadcrumbs: self.action_manager && self.action_manager.get_breadcrumbs(),
                     cp_content: _.extend({}, self.control_elements, view_elements),
                     hidden: self.flags.headless,
@@ -239,17 +176,17 @@ var ViewManager = Widget.extend({
         });
     },
     create_view: function(view, view_options) {
-        var self = this,
-            View = this.registry.get(view.type),
-            options = _.clone(view.options),
-            view_loaded = $.Deferred();
+        var self = this;
+        var View = this.registry.get(view.type);
+        var options = _.clone(view.options);
+        var view_loaded = $.Deferred();
 
-        if (view.type === "form" && ((this.action && (this.action.target === 'new' || this.action.target === 'inline'))
-                || (view_options && view_options.mode === 'edit'))) {
+        if (view.type === "form" && ((this.action && (this.action.target === 'new' || this.action.target === 'inline')) ||
+            (view_options && view_options.mode === 'edit'))) {
             options.initial_mode = 'edit';
         }
-        var controller = new View(this, this.dataset, view.view_id, options),
-            $container = view.$container;
+        var controller = new View(this, this.dataset, view.view_id, options);
+        var $container = view.$container;
 
         $container.hide();
         view.controller = controller;
@@ -280,6 +217,32 @@ var ViewManager = Widget.extend({
         var view_type = this.view_stack[index].type;
         this.view_stack.splice(index);
         return this.switch_mode(view_type);
+    },
+    /**
+     * Renders the switch buttons and adds listeners on them but does not append them to the DOM
+     * Sets $switch_buttons in control_elements to send to the ControlPanel
+     * @param {Object} [src] the source requesting the switch_buttons
+     * @param {Array} [views] the array of views
+     */
+    render_switch_buttons: function() {
+        if (this.flags.views_switcher && this.view_order.length > 1) {
+            var self = this;
+
+            // Render switch buttons but do not append them to the DOM as this will
+            // be done later, simultaneously to all other ControlPanel elements
+            this.control_elements.$switch_buttons = $(QWeb.render('ViewManager.switch-buttons', {views: self.view_order}));
+
+            // Create bootstrap tooltips
+            _.each(this.views, function(view) {
+                self.control_elements.$switch_buttons.siblings('.oe-cp-switch-' + view.type).tooltip();
+            });
+
+            // Add onclick event listener
+            this.control_elements.$switch_buttons.siblings('button').click(function() {
+                var view_type = $(event.target).data('view-type');
+                self.switch_mode(view_type);
+            });
+        }
     },
     /**
      * Renders the control elements (buttons, sidebar, pager) of the current view
@@ -314,6 +277,83 @@ var ViewManager = Widget.extend({
      */
     get_view_id: function(view_type) {
         return this.views[view_type] && this.views[view_type].view_id || false;
+    },
+    /**
+     * Sets up the current viewmanager's search view.
+     * Sets $searchview and $searchview_buttons in control_elements to send to the ControlPanel
+     *
+     * @param {Number|false} view_id the view to use or false for a default one
+     * @returns {jQuery.Deferred} search view startup deferred
+     */
+    setup_search_view: function() {
+        var self = this;
+        if (this.searchview) {
+            this.searchview.destroy();
+        }
+
+        var view_id = (this.action && this.action.search_view_id && this.action.search_view_id[0]) || false;
+
+        var search_defaults = {};
+
+        var context = this.action ? this.action.context : [];
+        _.each(context, function (value, key) {
+            var match = /^search_default_(.*)$/.exec(key);
+            if (match) {
+                search_defaults[match[1]] = value;
+            }
+        });
+
+
+        var options = {
+            hidden: this.flags.search_view === false,
+            disable_custom_filters: this.flags.search_disable_custom_filters,
+            $buttons: $("<div>"),
+            action: this.action,
+        };
+        // Instantiate the SearchView, but do not append it nor its buttons to the DOM as this will
+        // be done later, simultaneously to all other ControlPanel elements
+        this.searchview = new SearchView(this, this.dataset, view_id, search_defaults, options);
+
+        this.searchview.on('search_data', this, this.search.bind(this));
+        return $.when(this.searchview.appendTo($("<div>"))).done(function() {
+            self.control_elements.$searchview = self.searchview.$el;
+            self.control_elements.$searchview_buttons = self.searchview.$buttons.contents();
+        });
+    },
+    /**
+     * Executed on event "search_data" thrown by the SearchView
+     */
+    search: function(domains, contexts, groupbys) {
+        var self = this;
+        var controller = this.active_view.controller; // the correct view must be loaded here
+        var action_context = this.action.context || {};
+        var view_context = controller.get_context();
+        pyeval.eval_domains_and_contexts({
+            domains: [this.action.domain || []].concat(domains || []),
+            contexts: [action_context, view_context].concat(contexts || []),
+            group_by_seq: groupbys || []
+        }).done(function (results) {
+            if (results.error) {
+                self.active_search.resolve();
+                throw new Error(
+                        _.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
+                                      JSON.stringify(results.error)));
+            }
+            self.dataset._model = new Model(
+                self.dataset.model, results.context, results.domain);
+            var groupby = results.group_by.length ?
+                          results.group_by :
+                          action_context.group_by;
+            if (_.isString(groupby)) {
+                groupby = [groupby];
+            }
+            if (!controller.grouped && !_.isEmpty(groupby)){
+                self.dataset.set_sort([]);
+            }
+            $.when(controller.do_search(results.domain, results.context, groupby || [])).then(function() {
+                self.active_search.resolve();
+            });
+        });
     },
     do_push_state: function(state) {
         if (this.action_manager) {

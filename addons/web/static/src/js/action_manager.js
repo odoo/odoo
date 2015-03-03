@@ -12,94 +12,144 @@ var session = require('web.session');
 var ViewManager = require('web.ViewManager');
 var Widget = require('web.Widget');
 
-var State = core.Class.extend({
-    init: function(title, flags) {
-        this.title = title;
-        this.flags = flags;
+/**
+ * Class representing the actions of the ActionManager
+ * Basic implementation for client actions that are functions
+ */
+var Action = core.Class.extend({
+    init: function(action) {
+        this.action_descr = action;
+        this.title = action.display_name || action.name;
     },
-    enable: function() { return $.when(); },
-    disable: function() {},
-    destroy: function() {},
-    get_widget: function() {},
-    get_title: function() { return this.title; },
-    is_headless: function() { return this.flags.headless; },
-    get_action: function() {},
-    get_active_view: function() {},
-    get_dataset: function() {},
-    get_searchview: function() {},
+    /**
+     * This method should restore this previously loaded action
+     * Calls on_reverse_breadcrumb callback if defined
+     * @return {Deferred} resolved when widget is enabled
+     */
+    restore: function() {
+        if (this.__on_reverse_breadcrumb) {
+            return this.__on_reverse_breadcrumb();
+        }
+    },
+    /**
+     * Destroyer: there is nothing to destroy in the case of a client function
+     */
+    destroy: function() {
+    },
+    /**
+     * Sets the on_reverse_breadcrumb callback to be called when coming back to that action
+     * @param {Function} [on_reverse_breadcrumb] the callback
+     */
+    set_on_reverse_breadcrumb: function(on_reverse_breadcrumb) {
+        this.on_reverse_breadcrumb = on_reverse_breadcrumb;
+    },
+    /**
+     * @return {Object} the description of the action
+     */
+    get_action_descr: function() {
+        return this.action_descr;
+    },
+    /**
+     * @return {Object} dictionnary that will be interpreted to display the breadcrumbs
+     */
+    get_breadcrumbs: function() {
+        return { title: this.title, action: this };
+    },
+    /**
+     * @return {int} the number of views stacked, i.e. 0 for client functions
+     */
+    get_nb_views: function() {
+        return 0;
+    },
 });
-
-var WidgetState = State.extend({
-    init: function(title, flags, widget) {
-        this._super(title, flags);
+/**
+ * Specialization of Action for client actions that are Widgets
+ */
+var WidgetAction = Action.extend({
+    /**
+     * Initializes the WidgetAction
+     * Sets the title of the widget
+     */
+    init: function(action, widget) {
+        this._super(action);
 
         this.widget = widget;
-        if (this.widget.get('title')) {
-            this.title = title;
-        } else {
-            this.widget.set('title', title);
+        if (!this.widget.get('title')) {
+            this.widget.set('title', this.title);
         }
-        this.widget.on("do_search", this, function() {
-            // active_search = this.control_panel.activate_search(view.created);
-            // call activate search on search view
-            // domain context and groupby computed are important
-        });
     },
-    set_cp_content: function(content) { this.cp_content = content; },
-    get_cp_content: function() { return this.cp_content; },
-    get_action: function() { return this.widget.action; },
-    get_active_view: function() { return this.widget.active_view; },
-    get_dataset: function() { return this.widget.dataset; },
-    get_searchview: function() { return this.widget.get_search_view(); },
+    /**
+     * Restores WidgetAction by calling do_show on its widget
+     */
+    restore: function() {
+        this.widget.do_show();
+        return this._super();
+    },
+    /**
+     * Destroys the widget
+     */
     destroy: function() { 
-        if (this.cp_content && this.cp_content.searchview) {
-            this.cp_content.searchview.destroy();
-        }
         this.widget.destroy();
     },
-    get_widget: function() {
-        return this.widget;
-    },
 });
-
-var FunctionState = State.extend({
-    init: function(title, flags) {
-        this._super(title, flags);
-
-        this.widget = {
-            view_stack: [{
-                controller: { get: function () { return this.title; }}
-            }]
-        };
-    }
+/**
+ * Specialization of WidgetAction for window actions (i.e. ViewManagers)
+ */
+var ViewManagerAction = WidgetAction.extend({
+    /**
+     * Restores a ViewManagerAction
+     * Switches to the requested view by calling select_view on the ViewManager
+     * @param {int} [view_index] the index of the view to select
+     */
+    restore: function(view_index) {
+        var self = this;
+        var _super = this._super;
+        return this.widget.select_view(view_index).then(function() {
+            _super.call(self);
+        });
+    },
+    /**
+     * @return {Array} array of Objects that will be interpreted to display the breadcrumbs
+     */
+    get_breadcrumbs: function() {
+        var self = this;
+        return this.widget.view_stack.map(function (view, index) {
+            return {
+                title: view.controller.get('title') || self.title,
+                index: index,
+                action: self,
+            };
+        });
+    },
+    /**
+     * @return {int} the number of views stacked in the ViewManager
+     */
+    get_nb_views: function() {
+        return this.widget.view_stack.length;
+    },
 });
 
 var ActionManager = Widget.extend({
     template: "ActionManager",
     init: function(parent) {
         this._super(parent);
+        this.action_stack = [];
         this.inner_action = null;
         this.inner_widget = null;
         this.webclient = parent;
         this.dialog = null;
         this.dialog_widget = null;
-        this.states = [];
         this.on('history_back', this, this.proxy('history_back'));
     },
     start: function() {
         this._super();
 
-        // Instantiate the unique main control panel used by every widget in this.states
+        // Instantiate a unique main ControlPanel used by widgets of actions in this.action_stack
         this.main_control_panel = new ControlPanel(this);
-        // Listen to event "switch_view" trigerred on the control panel when clicking
-        // on switch buttons. Forward this event to the current inner_widget
-        this.main_control_panel.on("switch_view", this, function(view_type) {
-            this.inner_widget.trigger("switch_view", view_type);
-        });
         // Listen to event "on_breadcrumb_click" trigerred on the control panel when
-        // clicking on a part of the breadcrumbs. Call select_state for this breadcrumb.
-        this.main_control_panel.on("on_breadcrumb_click", this, function(state, index) {
-            this.select_state(state, index);
+        // clicking on a part of the breadcrumbs. Call select_action for this breadcrumb.
+        this.main_control_panel.on("on_breadcrumb_click", this, function(action, index) {
+            this.select_action(action, index);
         });
 
         // Append the main control panel to the DOM (inside the ActionManager jQuery element)
@@ -112,47 +162,46 @@ var ActionManager = Widget.extend({
         this.dialog = null;
     },
     /**
-     * Add a new state to the action manager
+     * Add a new action to the action manager
      *
-     * widget: typically, widgets added are web.ViewManager.  The action manager
-     *      uses this list of widget to handle the breadcrumbs.
-     * action: new action
-     * options.on_reverse_breadcrumb: will be called when breadcrumb is selected
-     * options.clear_breadcrumbs: boolean, if true, current widgets are destroyed
+     * widget: typically, widgets added are openerp.web.ViewManager. The action manager
+     *      uses the stack of actions to handle the breadcrumbs.
+     * action_descr: new action description
+     * options.on_reverse_breadcrumb: will be called when breadcrumb is clicked on
+     * options.clear_breadcrumbs: boolean, if true, action stack is destroyed
      */
-    push_state: function(widget, action, options) {
-        var self = this,
-            to_destroy,
-            old_widget = this.inner_widget,
-            old_state = this.get_current_state();
+    push_action: function(widget, action_descr, options) {
+        var self = this;
+        var to_destroy;
+        var old_widget = this.inner_widget;
+        var old_action = this.inner_action;
         options = options || {};
 
+        // Empty action_stack if requested
         if (options.clear_breadcrumbs) {
-            to_destroy = this.states;
-            this.states = [];
+            to_destroy = this.action_stack;
+            this.action_stack = [];
         }
-        var new_state,
-            title = action.display_name || action.name;
-        if (widget instanceof Widget) {
-            new_state = new WidgetState(title, action.flags, widget);
+
+        // Instantiate the new action
+        var new_action;
+        if (widget instanceof ViewManager) {
+            new_action = new ViewManagerAction(action_descr, widget);
+        } else if (widget instanceof Widget) {
+            new_action = new WidgetAction(action_descr, widget);
         } else {
-            new_state = new FunctionState(title, action.flags);
+            new_action = new Action(action_descr);
         }
-        this.states.push(new_state);
 
-        this.get_current_state().__on_reverse_breadcrumb = options.on_reverse_breadcrumb;
-        this.inner_action = action;
+        // Set on_reverse_breadcrumb callback on previous inner_action
+        if (old_action) {
+            old_action.set_on_reverse_breadcrumb(options.on_reverse_breadcrumb);
+        }
+
+        // Update action_stack
+        this.action_stack.push(new_action);
+        this.inner_action = new_action;
         this.inner_widget = widget;
-
-        // Sets the main ControlPanel state
-        // AAB: temporary restrict the use of main control panel to act_window actions
-        if (action.type === 'ir.actions.act_window') {
-            this.main_control_panel.set_state(new_state, old_state);
-            if (old_state) {
-                // Save the previous state control_panel content to restore it later
-                old_state.cp_content = this.main_control_panel.get_content();
-            }
-        }
 
         // Append the inner_widget and hide the old one
         return $.when(this.inner_widget.appendTo(this.$el)).done(function () {
@@ -160,42 +209,29 @@ var ActionManager = Widget.extend({
                 old_widget.$el.hide();
             }
             if (options.clear_breadcrumbs) {
-                self.clear_states(to_destroy);
+                self.clear_action_stack(to_destroy);
             }
         });
     },
     get_breadcrumbs: function () {
-        return _.flatten(_.map(this.states, function (state) {
-            if (state.widget instanceof ViewManager) {
-                return state.widget.view_stack.map(function (view, index) {
-                    return {
-                        title: view.controller.get('title') || state.get_title(),
-                        index: index,
-                        widget: state,
-                    };
-                });
-            } else {
-                return { title: state.get_title(), widget: state };
-            }
+        return _.flatten(_.map(this.action_stack, function (action) {
+            return action.get_breadcrumbs();
         }), true);
     },
     get_title: function () {
-        if (this.states.length === 1) {
+        if (this.action_stack.length === 1) {
             // horrible hack to display the action title instead of "New" for the actions
             // that use a form view to edit something that do not correspond to a real model
             // for example, point of sale "Your Session" or most settings form,
-            var state = this.states[0];
-            if (state.widget instanceof ViewManager && state.widget.view_stack.length === 1) {
-                return state.get_title();
+            var action = this.action_stack[0];
+            if (action.get_breadcrumbs().length === 1) {
+                return action.title;
             }
         }
         return _.pluck(this.get_breadcrumbs(), 'title').join(' / ');
     },
-    get_states: function () {
-        return this.states;
-    },
-    get_current_state: function() {
-        return _.last(this.states);
+    get_action_stack: function () {
+        return this.action_stack;
     },
     get_inner_action: function() {
         return this.inner_action;
@@ -204,54 +240,38 @@ var ActionManager = Widget.extend({
         return this.inner_widget;
     },
     history_back: function() {
-        var state = this.get_current_state();
-        if (state.widget instanceof ViewManager) {
-            var nbr_views = state.widget.view_stack.length;
-            if (nbr_views > 1) {
-                return this.select_state(state, nbr_views - 2);
-            } 
-        } 
-        if (this.states.length > 1) {
-            state = this.states[this.states.length - 2];
-            var index = state.widget.view_stack && state.widget.view_stack.length - 1;
-            return this.select_state(state, index);
+        var nb_views = this.inner_action.get_nb_views();
+        if (nb_views > 1) {
+            // Stay on this action, but select the previous view
+            return this.select_action(this.inner_action, nb_views - 2);
+        }
+        if (this.action_stack.length > 1) {
+            // Select the previous action
+            var action = this.action_stack[this.action_stack.length - 2];
+            nb_views = action.get_nb_views();
+            return this.select_action(action, nb_views - 1);
         }
         return $.Deferred().reject();
     },
-    select_state: function(state, index) {
-        var self = this;
+    select_action: function(action, index) {
         if (this.webclient.has_uncommitted_changes()) {
             return $.Deferred().reject();
         }
 
-        // Client widget (-> put in ClientState?)
-        if (state.__on_reverse_breadcrumb) {
-            state.__on_reverse_breadcrumb();
-        }
-        // Set the control panel new state
-        // Put in VMState?
-        // Inform the ControlPanel that the current state changed (mainly restore the searchview
-        // for the ViewManager to be able to do select_view, i.e. switch_mode)
-        // Storing in old_state is not necessary here
-        var old_state = this.get_current_state();
-        this.main_control_panel.set_state(state, old_state);
-        var state_index = this.states.indexOf(state),
-            def = $.when(state.widget.select_view && state.widget.select_view(index));
+        // Set the new inner_widget and clear the action_stack
+        this.inner_widget = action.widget;
+        var action_index = this.action_stack.indexOf(action);
+        this.clear_action_stack(this.action_stack.splice(action_index + 1));
 
-        this.clear_states(this.states.splice(state_index + 1));
-        this.inner_widget = state.widget;
-        return def.done(function () {
-            if (self.inner_widget.do_show) {
-                self.inner_widget.do_show();
-            }
-        });
+        return action.restore(index);
     },
-    clear_states: function(states) {
-        _.map(states || this.states, function(state) {
-            state.destroy();
+    clear_action_stack: function(action_stack) {
+        _.map(action_stack || this.action_stack, function(action) {
+            action.destroy();
         });
-        if (!states) {
-            this.states = [];
+        if (!action_stack) {
+            this.action_stack = [];
+            this.inner_action = null;
             this.inner_widget = null;
         }
     },
@@ -261,47 +281,48 @@ var ActionManager = Widget.extend({
         }
         state = state || {};
         if (this.inner_action) {
-            if (this.inner_action._push_me === false) {
+            var inner_action_descr = this.inner_action.get_action_descr();
+            if (inner_action_descr._push_me === false) {
                 // this action has been explicitly marked as not pushable
                 return;
             }
             state.title = this.get_title();
-            if(this.inner_action.type == 'ir.actions.act_window') {
-                state.model = this.inner_action.res_model;
+            if(inner_action_descr.type == 'ir.actions.act_window') {
+                state.model = inner_action_descr.res_model;
             }
-            if (this.inner_action.menu_id) {
-                state.menu_id = this.inner_action.menu_id;
+            if (inner_action_descr.menu_id) {
+                state.menu_id = inner_action_descr.menu_id;
             }
-            if (this.inner_action.id) {
-                state.action = this.inner_action.id;
-            } else if (this.inner_action.type == 'ir.actions.client') {
-                state.action = this.inner_action.tag;
+            if (inner_action_descr.id) {
+                state.action = inner_action_descr.id;
+            } else if (inner_action_descr.type == 'ir.actions.client') {
+                state.action = inner_action_descr.tag;
                 var params = {};
-                _.each(this.inner_action.params, function(v, k) {
+                _.each(inner_action_descr.params, function(v, k) {
                     if(_.isString(v) || _.isNumber(v)) {
                         params[k] = v;
                     }
                 });
                 state = _.extend(params || {}, state);
             }
-            if (this.inner_action.context) {
-                var active_id = this.inner_action.context.active_id;
+            if (inner_action_descr.context) {
+                var active_id = inner_action_descr.context.active_id;
                 if (active_id) {
                     state.active_id = active_id;
                 }
-                var active_ids = this.inner_action.context.active_ids;
+                var active_ids = inner_action_descr.context.active_ids;
                 if (active_ids && !(active_ids.length === 1 && active_ids[0] === active_id)) {
                     // We don't push active_ids if it's a single element array containing the active_id
                     // This makes the url shorter in most cases.
-                    state.active_ids = this.inner_action.context.active_ids.join(',');
+                    state.active_ids = inner_action_descr.context.active_ids.join(',');
                 }
             }
         }
         this.webclient.do_push_state(state);
     },
     do_load_state: function(state, warm) {
-        var self = this,
-            action_loaded;
+        var self = this;
+        var action_loaded;
         if (state.action) {
             if (_.isString(state.action) && core.action_registry.contains(state.action)) {
                 var action_client = {
@@ -338,8 +359,8 @@ var ActionManager = Widget.extend({
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
                         self.webclient.menu.is_bound.done(function() {
-                            if (self.inner_action && self.inner_action.id) {
-                                self.webclient.menu.open_action(self.inner_action.id);
+                            if (self.inner_action && self.inner_action.get_action_descr().id) {
+                                self.webclient.menu.open_action(self.inner_action.get_action_descr().id);
                             }
                         });
                     });
@@ -478,15 +499,15 @@ var ActionManager = Widget.extend({
     },
     null_action: function() {
         this.dialog_stop();
-        this.clear_states();
+        this.clear_action_stack();
     },
     /**
      *
      * @param {Object} executor
      * @param {Object} executor.action original action
-     * @param {Function<web.Widget>} executor.widget function used to fetch the widget instance
+     * @param {Function<instance.web.Widget>} executor.widget function used to fetch the widget instance
      * @param {String} executor.klass CSS class to add on the dialog root, if action.target=new
-     * @param {Function<web.Widget, undefined>} executor.post_process cleanup called after a widget has been added as inner_widget
+     * @param {Function<instance.web.Widget, undefined>} executor.post_process cleanup called after a widget has been added as inner_widget
      * @param {Object} options
      * @return {*}
      */
@@ -544,7 +565,7 @@ var ActionManager = Widget.extend({
         }
         widget = executor.widget();
         this.dialog_stop(executor.action);
-        return this.push_state(widget, executor.action, options);
+        return this.push_action(widget, executor.action, options);
     },
     ir_actions_act_window: function (action, options) {
         var self = this;
@@ -562,7 +583,6 @@ var ActionManager = Widget.extend({
         if (!ClientWidget) {
             return self.do_warn("Action Error", "Could not find client action '" + action.tag + "'.");
         }
-
         if (!(ClientWidget.prototype instanceof Widget)) {
             var next;
             if ((next = ClientWidget(this, action))) {

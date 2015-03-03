@@ -26,9 +26,9 @@ if (core.debug) {
             this.$dropdown = this.$(".js_debug_dropdown");
         },
         /**
-         * Updates its attributes according to the current state of the ActionManager
+         * Updates its attributes according to the inner_widget of the ActionManager
          */
-        _update_state: function() {
+        _update: function() {
             this.view_manager = odoo.__DEBUG__.services['web.web_client'].action_manager.get_inner_widget();
             if (!this.view_manager instanceof ViewManager) { return; }
             this.dataset = this.view_manager.dataset;
@@ -38,7 +38,7 @@ if (core.debug) {
             return true;
         },
         /**
-         * Renders dropdown according to the current state
+         * Renders the DebugManager dropdown
          */
         render_dropdown: function() {
             var self = this;
@@ -46,8 +46,8 @@ if (core.debug) {
             // Empty the previously rendered dropdown
             this.$dropdown.empty();
 
-            // Attempt to retrieve the current state of the ActionManager
-            if (!this._update_state()) {
+            // Attempt to retrieve the inner_widget of the ActionManager
+            if (!this._update()) {
                 // Disable the button when not available
                 console.warn("DebugManager is not available");
                 return;
