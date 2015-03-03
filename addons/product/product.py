@@ -661,7 +661,7 @@ class product_template(osv.osv):
                 temp_variants = []
                 for variant in all_variants:
                     for value_id in variant_id.value_ids:
-                        temp_variants.append(variant + [int(value_id)])
+                        temp_variants.append(sorted(variant + [int(value_id)]))
                 if temp_variants:
                     all_variants = temp_variants
 
@@ -679,7 +679,7 @@ class product_template(osv.osv):
             variants_active_ids = []
             variants_inactive = []
             for product_id in tmpl_id.product_variant_ids:
-                variants = map(int,product_id.attribute_value_ids)
+                variants = sorted(map(int,product_id.attribute_value_ids))
                 if variants in all_variants:
                     variants_active_ids.append(product_id.id)
                     all_variants.pop(all_variants.index(variants))

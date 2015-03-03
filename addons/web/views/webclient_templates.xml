@@ -332,6 +332,9 @@
                     <t t-call="web.assets_common"/>
                     <t t-call="web.assets_backend"/>
 
+                    <style>
+                        body { overflow: auto !important; }
+                    </style>
                     <script type="text/javascript" id="qunit_config">
                         localStorage.clear();
                         QUnit.config.testTimeout = 5 * 60 * 1000;
