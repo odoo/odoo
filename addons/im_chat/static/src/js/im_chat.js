@@ -226,7 +226,6 @@
             // quit the conversation
             this._add_option('Quit discussion', 'im_chat_option_quit', 'fa fa-minus-square');
             this.$('.oe_im_chatview_option_list .im_chat_option_quit').on('click', this, _.bind(this.action_quit_conversation, this));
-
         },
         _add_option: function(label, style_class, icon_fa_class){
             if(icon_fa_class){
@@ -239,7 +238,7 @@
             var Session = new openerp.Model("im_chat.session");
             return Session.call("quit_user", [this.get("session").uuid]).then(function(res) {
                if(! res){
-                    self.do_warn(_t("Warning"), _t("You are only 2 identified users. Just close the conversation to leave."));
+                    openerp.client.do_warn(_t("Warning"), _t("You are only 2 identified users. Just close the conversation to leave."));
                }
             });
         },
