@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
             <form string="Pay Order">
                 <group>
-                    <field name="journal_id" />
+                    <field name="journal_id" widget="selection"
+                        domain="[('type', 'in', ('bank', 'cash'))]"/>
                     <field name="amount" />
                     <field name="payment_name"/>
                 </group>
