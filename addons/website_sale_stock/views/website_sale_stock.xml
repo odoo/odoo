@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <template id="orders_followup_shipping" name="Orders Shipping Followup" inherit_id="website_sale.order_invoice">
+  <template id="orders_followup_shipping" name="Orders Shipping Followup" inherit_id="website_portal.orders_followup">
     <xpath expr="//div[@id='shipping_address']" position="inside">
-      <t t-if="o.picking_ids">
+      <t t-if="order.picking_ids">
         <div>
           <strong>Delivery Orders</strong>
         </div>
         <div>
-          <t t-foreach="o.picking_ids" t-as="i">
+          <t t-foreach="order.picking_ids" t-as="i">
             <t t-set="report_url" t-value="'/report/pdf/stock.report_picking/%s' % i.id"/>
             <div>
               <a t-att-href="report_url"><span class="fa fa-download"/></a>
