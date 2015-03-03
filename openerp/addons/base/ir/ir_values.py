@@ -442,7 +442,7 @@ class ir_values(osv.osv):
                 results[action['name']] = (action['id'], action['name'], action_def)
             except except_orm:
                 continue
-        return sorted(results.values())
+        return sorted(results.values(), key=lambda t: t[2].get('name'))
 
     def _map_legacy_model_list(self, model_list, map_fn, merge_results=False):
         """Apply map_fn to the various models passed, according to
