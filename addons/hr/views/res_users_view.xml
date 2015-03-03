@@ -1,10 +1,9 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
         <!-- Update user form !-->
         <record id="view_users_form_mail" model="ir.ui.view">
-            <field name="name">res.users.form.hr</field>
+            <field name="name">res.users.form.inherit</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="mail.view_users_form_mail"/>
             <field name="arch" type="xml">
@@ -16,5 +15,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>
