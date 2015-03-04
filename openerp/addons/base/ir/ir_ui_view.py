@@ -324,6 +324,8 @@ class view(osv.osv):
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
+        if not context:
+            context = {}
 
         user = self.pool['res.users'].browse(cr, 1, uid, context=context)
         user_groups = frozenset(user.groups_id or ())
@@ -334,13 +336,13 @@ class view(osv.osv):
             ['mode', '=', 'extension'],
             ['active', '=', True],
         ]
-        if self.pool._init:
+        if self.pool._init and not context.get('load_all_views'):
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
             conditions.extend([
                 '|',
                 ['model_ids.module', 'in', tuple(self.pool._init_modules)],
-                ['id', 'in', context and context.get('check_view_ids') or (0,)],
+                ['id', 'in', context.get('check_view_ids') or (0,)],
             ])
         view_ids = self.search(cr, uid, conditions, context=context)
 
@@ -1110,7 +1112,8 @@ class view(osv.osv):
                    """, (model,))
 
         ids = map(itemgetter(0), cr.fetchall())
-        return self._check_xml(cr, uid, ids)
+        context = dict(load_all_views=True)
+        return self._check_xml(cr, uid, ids, context=context)
 
     def _validate_module_views(self, cr, uid, module):
         """Validate architecture of all the views of a given module"""
