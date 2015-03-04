@@ -79,14 +79,12 @@
                 <form string="Project">
                 <header>
                     <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_highlight" groups="base.group_user"/>
-                    <button name="set_done" string="Close Project" type="object" states="open,pending" groups="base.group_user"/>
                     <button name="set_open" string="Re-open project" type="object" states="cancelled,close" groups="base.group_user"/>
-                    <button name="set_pending" string="Set as Pending" type="object" states="open" groups="base.group_user"/>
-                    <button name="set_template" string="Set as Template" type="object" states="open" groups="base.group_user"/>
+                    <button name="set_template" string="Set as Template" type="object" states="open" groups="base.group_no_one"/>
                     <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_highlight" groups="base.group_user"/>
                     <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight" groups="base.group_user"/>
                     <button name="set_cancel" string="Cancel Project" type="object" states="open,pending" groups="base.group_user"/>
-                    <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' readonly="1"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,pending,close" statusbar_colors='{"pending":"blue"}' clickable="True"/>
                 </header>
                 <sheet string="Project">
                     <field name="analytic_account_id" invisible="1" required="0"/>
