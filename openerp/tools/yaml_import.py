@@ -413,7 +413,7 @@ class YamlInterpreter(object):
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
             # the other default values will be added later on by the create(). The other fields in the view that haven't any
             # default value are set to False because we may have references to them in other field's context
-            record_dict = {key: defaults.get(key, False) for key in fg}
+            record_dict = default and {key: defaults.get(key, False) for key in fg} or {}
 
             # Process all on_change calls
             nodes = [view]
@@ -428,7 +428,7 @@ class YamlInterpreter(object):
                             # for one2many fields, we want to eval them using the inline form view defined on the parent
                             one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
                         ctx = context.copy()
-                        if el.get('context'):
+                        if default and el.get('context'):
                             browsable_parent = dotdict(parent)
                             ctx_env = dict(parent=browsable_parent)
                             evaluated_ctx = eval(el.get('context'), globals_dict=ctx_env, locals_dict=record_dict)
