@@ -1,14 +1,15 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'eCommerce Optional Products',
     'category': 'Website',
     'version': '1.0',
     'website': 'https://www.odoo.com/page/e-commerce',
     'description': """
-OpenERP E-Commerce
+Odoo E-Commerce
 ==================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_sale'],
     'data': [
         'views/views.xml',

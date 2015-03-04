@@ -1,24 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 from openerp.addons.website_sale.controllers.main import WebsiteSale
 
-class website_sale_options(WebsiteSale):
+
+class WebsiteSaleOptions(WebsiteSale):
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
-        r = super(website_sale_options, self).product(product, category, search, **kwargs)
-
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        template_obj = pool['product.template']
+        r = super(WebsiteSaleOptions, self).product(product, category, search, **kwargs)
 
         optional_product_ids = []
         for p in product.optional_product_ids:
-            ctx = dict(context, active_id=p.id)
-            optional_product_ids.append(template_obj.browse(cr, uid, p.id, context=ctx))
-
+            optional_product_ids.append(request.env['product.template'].with_context(active_id=p.id).browse(p.id))
         r.qcontext['optional_product_ids'] = optional_product_ids
         return r
 
@@ -30,13 +25,12 @@ class website_sale_options(WebsiteSale):
             request.website = request.website.with_context(context)
 
         order = request.website.sale_get_order(force_create=1)
-        product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
+        product = request.env['product.product'].with_context(context).browse(int(product_id))
 
-
-        option_ids = [p.id for tmpl in product.optional_product_ids for p in tmpl.product_variant_ids]
+        options = product.optional_product_ids.mapped('product_variant_ids')
         optional_product_ids = []
         for k, v in kw.items():
-            if "optional-product-" in k and int(kw.get(k.replace("product", "add"))) and int(v) in option_ids:
+            if "optional-product-" in k and int(kw.get(k.replace("product", "add"))) and int(v) in options.ids:
                 optional_product_ids.append(int(v))
 
         value = {}
@@ -55,17 +49,17 @@ class website_sale_options(WebsiteSale):
 
     @http.route(['/shop/modal'], type='json', auth="public", methods=['POST'], website=True)
     def modal(self, product_id, **kw):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         pricelist = self.get_pricelist()
+        context = request.context
         if not context.get('pricelist'):
             context['pricelist'] = int(pricelist)
 
         website_context = kw.get('kwargs', {}).get('context', {})
         context = dict(context or {}, **website_context)
-        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+        from_currency = request.env['product.price.type'].search([('field', '=', 'list_price')], limit=1)
         to_currency = pricelist.currency_id
-        compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
-        product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
+        compute_currency = lambda price: request.env['res.currency']._compute(from_currency, to_currency, price)
+        product = request.env['product.product'].with_context(context).browse(int(product_id))
         request.website = request.website.with_context(context)
 
         return request.website._render("website_sale_options.modal", {
