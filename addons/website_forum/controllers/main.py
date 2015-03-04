@@ -5,7 +5,7 @@ import werkzeug.urls
 import werkzeug.wrappers
 import simplejson
 import lxml
-from urllib2 import urlopen
+from urllib2 import urlopen, URLError
 
 from openerp import tools
 from openerp.addons.web import http
@@ -180,8 +180,11 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
     def get_url_title(self, **kwargs):
-        arch = lxml.html.parse(urlopen(kwargs.get('url')))
-        return arch.find(".//title").text
+        try:
+            arch = lxml.html.parse(urlopen(kwargs.get('url')))
+            return arch.find(".//title").text
+        except URLError:
+            return False
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
