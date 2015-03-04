@@ -1681,6 +1681,8 @@ class column_info(object):
             contains it i.e in case of multilevel inheritance, ``None`` for
             local columns.
     """
+    __slots__ = ['name', 'column', 'parent_model', 'parent_column', 'original_parent']
+
     def __init__(self, name, column, parent_model=None, parent_column=None, original_parent=None):
         self.name = name
         self.column = column
