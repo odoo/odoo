@@ -349,6 +349,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             values = {
                 'partner_name' : partner.name,
+                'title': partner.title and partner.title.id or False,
                 'street' : partner.street,
                 'street2' : partner.street2,
                 'city' : partner.city,
@@ -359,6 +360,7 @@ class crm_lead(base_stage, format_address, osv.osv):
                 'mobile' : partner.mobile,
                 'fax' : partner.fax,
                 'zip': partner.zip,
+                'function': partner.function,
             }
         return {'value' : values}
 
