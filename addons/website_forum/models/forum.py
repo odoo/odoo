@@ -504,7 +504,7 @@ class Post(models.Model):
         # post the message
         question = self.parent_id
         values = {
-            'author_id': self.create_uid.partner_id.id,
+            'author_id': self.sudo().create_uid.partner_id.id,  # use sudo here because of access to res.users model
             'body': tools.html2plaintext(self.content),
             'type': 'comment',
             'subtype': 'mail.mt_comment',
