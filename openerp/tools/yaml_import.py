@@ -494,7 +494,7 @@ class YamlInterpreter(object):
             record_dict = {}
 
         for field_name, expression in fields.items():
-            if field_name in record_dict:
+            if record_dict.get(field_name):
                 continue
             field_value = self._eval_field(model, field_name, expression, parent=record_dict, default=False, context=context)
             record_dict[field_name] = field_value
