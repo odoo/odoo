@@ -528,7 +528,7 @@ class Field(object):
     @property
     def base_field(self):
         """ Return the base field of an inherited field, or `self`. """
-        return self.related_field if self.inherited else self
+        return self.related_field.base_field if self.inherited else self
 
     #
     # Setup of field triggers
@@ -1482,7 +1482,11 @@ class Many2one(_Relational):
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             try:
-                return value.sudo().name_get()[0]
+                value_sudo = value.sudo()
+                # performance trick: make sure that all records of the same
+                # model as value in value.env will be prefetched in value_sudo.env
+                value_sudo.env.prefetch[value._name].update(value.env.prefetch[value._name])
+                return value_sudo.name_get()[0]
             except MissingError:
                 # Should not happen, unless the foreign key is missing.
                 return False

@@ -63,6 +63,12 @@ def raise_qweb_exception(etype=None, **kw):
         e.qweb['cause'] = original
         raise
 
+def _build_attribute(name, value):
+    value = escape(value)
+    if isinstance(name, unicode): name = name.encode('utf-8')
+    if isinstance(value, unicode): value = value.encode('utf-8')
+    return ' %s="%s"' % (name, value)
+
 class FileSystemLoader(object):
     def __init__(self, path):
         # TODO: support multiple files #add_file() + add cache
@@ -276,8 +282,6 @@ class QWeb(orm.AbstractModel):
                             self, element, attribute_name, attribute_value, qwebcontext)
                         for att, val in attrs:
                             if not val: continue
-                            if not isinstance(val, str):
-                                val = unicode(val).encode('utf-8')
                             generated_attributes += self.render_attribute(element, att, val, qwebcontext)
                         break
                 else:
@@ -340,7 +344,7 @@ class QWeb(orm.AbstractModel):
             return "<%s%s/>" % (name, generated_attributes)
 
     def render_attribute(self, element, name, value, qwebcontext):
-        return ' %s="%s"' % (name, escape(value))
+        return _build_attribute(name, value)
 
     def render_text(self, text, element, qwebcontext):
         return text.encode('utf-8')
@@ -634,7 +638,7 @@ class FieldConverter(osv.AbstractModel):
         if inherit_branding:
             # add branding attributes
             g_att += ''.join(
-                ' %s="%s"' % (name, escape(value))
+                _build_attribute(name, value)
                 for name, value in self.attributes(
                     cr, uid, field_name, record, options,
                     source_element, g_att, t_att, qweb_context)
