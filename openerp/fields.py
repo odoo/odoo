@@ -89,6 +89,11 @@ class MetaField(type):
             elif attr.startswith('_description_'):
                 cls.description_attrs.append((attr[13:], attr))
 
+#
+# Implementation invariant: fields can store metadata that depend on the set of
+# installed modules only. Database-dependent metadata (like Float precision,
+# recomputation triggers) should be stored on the corresponding Registry object.
+#
 
 class Field(object):
     """ The field descriptor contains the field definition, and manages accesses

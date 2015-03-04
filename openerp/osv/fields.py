@@ -62,6 +62,11 @@ def _symbol_set(symb):
         return symb.encode('utf-8')
     return str(symb)
 
+#
+# Implementation invariant: columns can store metadata that depend on the set of
+# installed modules only. Database-dependent metadata (like float precision)
+# should be stored on the corresponding Registry object.
+#
 
 class _column(object):
     """ Base of all fields, a database column
