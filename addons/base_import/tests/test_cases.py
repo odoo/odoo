@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 import unittest2
 import zipfile
-import xlrd
 from openerp.tests.common import TransactionCase
 from openerp.modules.module import get_module_resource
 
@@ -26,6 +25,12 @@ def sorted_fields(fields):
     """ recursively sort field lists to ease comparison """
     recursed = [dict(field, fields=sorted_fields(field['fields'])) for field in fields]
     return sorted(recursed, key=lambda field: field['id'])
+
+def test_module_installed(module_name):
+    try:
+        __import__(module_name)
+    except ImportError:
+        return True
 
 class BaseImportCase(TransactionCase):
     def assertEqualFields(self, fields1, fields2):
@@ -254,7 +259,7 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
-    @unittest2.skipIf(xlrd is None, ImportError)
+    @unittest2.skipIf(test_module_installed('xlrd'), "Skipping XLS file test, module XLRD not found")
     def test_xls_success(self):
 
         Import = self.registry('base_import.import')
@@ -285,7 +290,7 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
-    @unittest2.skipIf(xlrd is None, ImportError)
+    @unittest2.skipIf(test_module_installed('xlrd'), "Skipping XLSX file test, module XLRD not found")
     def test_xlsx_success(self):
         Import = self.registry('base_import.import')
         xlsx_file_path = get_module_resource('base_import', 'tests', 'test.xlsx')

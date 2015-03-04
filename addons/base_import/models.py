@@ -140,8 +140,7 @@ class ir_import(orm.TransientModel):
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':'xlsx',
                     'application/vnd.oasis.opendocument.spreadsheet':'ods'
                     }
-
-        file_extension = file_type_dict[file_type]
+        file_extension = file_type_dict.get(file_type)
         if file_extension:
             return getattr(self, '_read_' + file_extension)(record, options)
         else:
@@ -345,7 +344,7 @@ class ir_import(orm.TransientModel):
         # Get only list of actually imported fields
         import_fields = filter(None, fields)
 
-        rows_to_import = self._read_import_file(record, options)
+        rows_to_import = self._file_type_handler(record.file_type, record, options)
         if options.get('headers'):
             rows_to_import = itertools.islice(
                 rows_to_import, 1, None)
