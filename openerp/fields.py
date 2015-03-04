@@ -36,6 +36,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
+EMPTY_DICT = {}
 
 _logger = logging.getLogger(__name__)
 
@@ -259,7 +260,7 @@ class Field(object):
     __metaclass__ = MetaField
 
     _attrs = None               # dictionary with all field attributes
-    _free_attrs = None          # list of semantic-free attribute names
+    _free_attrs = ()            # collection of semantic-free attribute names
 
     automatic = False           # whether the field is automatically created ("magic" field)
     inherited = False           # whether the field is inherited (_inherits)
@@ -280,6 +281,7 @@ class Field(object):
     recursive = False           # whether self depends on itself
     compute = None              # compute(recs) computes field on recs
     compute_sudo = False        # whether field should be recomputed as admin
+    computed_fields = ()        # fields computed with the same method as self
     inverse = None              # inverse(recs) inverses field on recs
     search = None               # search(recs, operator, value) searches on self
     related = None              # sequence of field names, for related fields
@@ -298,8 +300,8 @@ class Field(object):
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
-        self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
-        self._free_attrs = []
+        attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
+        self._attrs = attrs or EMPTY_DICT
 
     def new(self, **kwargs):
         """ Return a field of the same type as `self`, with its own parameters. """
@@ -336,7 +338,7 @@ class Field(object):
 
         for attr, value in attrs.iteritems():
             if not hasattr(self, attr):
-                self._free_attrs.append(attr)
+                self._free_attrs += (attr,)
             setattr(self, attr, value)
 
         if not self.string and not self.related:
@@ -472,7 +474,7 @@ class Field(object):
 
         for attr in field._free_attrs:
             if attr not in self._free_attrs:
-                self._free_attrs.append(attr)
+                self._free_attrs += (attr,)
                 setattr(self, attr, getattr(field, attr))
 
         # special case for states: copy it only for inherited fields

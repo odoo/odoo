@@ -2985,15 +2985,16 @@ class BaseModel(object):
             if column:
                 cls._columns[name] = column
 
-        # group fields by compute to determine field.computed_fields
-        fields_by_compute = defaultdict(list)
+        # determine field.computed_fields
+        computed_fields = defaultdict(list)
         for field in cls._fields.itervalues():
             compute = field.compute or field._compute
             if compute:
-                field.computed_fields = fields_by_compute[compute]
-                field.computed_fields.append(field)
-            else:
-                field.computed_fields = []
+                computed_fields[compute].append(field)
+
+        for fields in computed_fields.itervalues():
+            for field in fields:
+                field.computed_fields = fields
 
     @api.model
     def _setup_complete(self):
