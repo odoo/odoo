@@ -569,11 +569,22 @@ class BaseModel(object):
 
         """
 
-        # IMPORTANT: the registry contains an instance for each model. The class
-        # of each model carries inferred metadata that is shared among the
-        # model's instances for this registry, but not among registries. Hence
-        # we cannot use that "registry class" for combining model classes by
-        # inheritance, since it confuses the metadata inference process.
+        # The model's class inherits from cls and the classes of the inherited
+        # models. All those classes are combined in a flat hierarchy:
+        #
+        #         Model                 the base class of all models
+        #        /  |  \
+        #      cls  c2  c1              the classes defined in modules
+        #        \  |  /
+        #       ModelClass              the final class of the model
+        #        /  |  \
+        #     model   recordset ...     the class' instances
+        #
+        # The registry contains the instance `model`. Its class, `ModelClass`,
+        # carries inferred metadata that is shared between all the model's
+        # instances for this registry only. When we '_inherit' from another
+        # model, we do not inherit its `ModelClass`, but this class' parents.
+        # This is a limitation of the inheritance mechanism.
 
         # Keep links to non-inherited constraints in cls; this is useful for
         # instance when exporting translations
@@ -590,65 +601,48 @@ class BaseModel(object):
         # determine the module that introduced the model
         original_module = pool[name]._original_module if name in parents else cls._module
 
-        # build the class hierarchy for the model
+        # determine all the classes the model should inherit from
+        bases = [cls]
         for parent in parents:
             if parent not in pool:
                 raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
                     'You may need to add a dependency on the parent class\' module.' % (name, parent))
-            parent_model = pool[parent]
+            bases += type(pool[parent]).__bases__
 
-            # do no use the class of parent_model, since that class contains
-            # inferred metadata; use its ancestor instead
-            parent_class = type(parent_model).__base__
+        # determine the attributes of the model's class
+        inherits = {}
+        depends = {}
+        constraints = {}
+        sql_constraints = []
 
-            inherits = dict(parent_class._inherits)
-            inherits.update(cls._inherits)
+        for base in reversed(bases):
+            inherits.update(base._inherits)
 
-            depends = dict(parent_class._depends)
-            for m, fs in cls._depends.iteritems():
-                depends[m] = depends.get(m, []) + fs
+            for mname, fnames in base._depends.iteritems():
+                depends[mname] = depends.get(mname, []) + fnames
 
-            old_constraints = parent_class._constraints
-            new_constraints = cls._constraints
-            # filter out from old_constraints the ones overridden by a
-            # constraint with the same function name in new_constraints
-            constraints = new_constraints + [oldc
-                for oldc in old_constraints
-                if not any(newc[2] == oldc[2] and same_name(newc[0], oldc[0])
-                           for newc in new_constraints)
-            ]
+            for cons in base._constraints:
+                # cons may override a constraint with the same function name
+                constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
 
-            sql_constraints = cls._sql_constraints + \
-                              parent_class._sql_constraints
+            sql_constraints += base._sql_constraints
 
-            attrs = {
-                '_name': name,
-                '_register': False,
-                '_inherits': inherits,
-                '_depends': depends,
-                '_constraints': constraints,
-                '_sql_constraints': sql_constraints,
-            }
-            cls = type(name, (cls, parent_class), attrs)
-
-        # introduce the "registry class" of the model;
-        # duplicate some attributes so that the ORM can modify them
-        attrs = {
+        # build the actual class of the model
+        ModelClass = type(name, tuple(bases), {
             '_name': name,
             '_register': False,
             '_columns': None,           # recomputed in _setup_fields()
             '_defaults': None,          # recomputed in _setup_base()
             '_fields': frozendict(),    # idem
-            '_inherits': dict(cls._inherits),
-            '_depends': dict(cls._depends),
-            '_constraints': list(cls._constraints),
-            '_sql_constraints': list(cls._sql_constraints),
+            '_inherits': inherits,
+            '_depends': depends,
+            '_constraints': constraints.values(),
+            '_sql_constraints': sql_constraints,
             '_original_module': original_module,
-        }
-        cls = type(cls._name, (cls,), attrs)
+        })
 
         # instantiate the model, and initialize it
-        model = object.__new__(cls)
+        model = object.__new__(ModelClass)
         model.__init__(pool, cr)
         return model
 
