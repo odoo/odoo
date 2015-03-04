@@ -536,9 +536,8 @@ class view(osv.osv):
             parent_view = self.read_combined(
                 cr, uid, v.inherit_id.id, fields=fields, context=context)
             arch_tree = etree.fromstring(parent_view['arch'])
-            self.apply_inheritance_specs(
+            arch_tree = self.apply_inheritance_specs(
                 cr, uid, arch_tree, view_arch, parent_view['id'], context=context)
-
 
         if context.get('inherit_branding'):
             arch_tree.attrib.update({
