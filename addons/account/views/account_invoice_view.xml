@@ -483,7 +483,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','out_invoice')]</field>
+            <field name="domain">[('type','in',('out_invoice', 'out_refund'))]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
@@ -523,7 +523,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','in_invoice')]</field>
+            <field name="domain">[('type','in',('in_invoice', 'in_refund'))]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
@@ -537,62 +537,6 @@
             </field>
         </record>
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables" sequence="1"/>
-
-        <record id="action_invoice_tree3" model="ir.actions.act_window">
-            <field name="name">Customer Refunds</field>
-            <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,pivot,graph</field>
-            <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','out_refund')]</field>
-            <field name="context">{'default_type':'out_refund', 'type':'out_refund', 'journal_type': 'sale'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a customer refund.
-              </p><p>
-                A refund is a document that credits an invoice completely or
-                partially.
-              </p><p>
-                Instead of manually creating a customer refund, you
-                can generate it directly from the related customer invoice.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="act_window_id" ref="action_invoice_tree3"/>
-        </record>
-
-        <record id="action_invoice_tree3_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="invoice_form"/>
-            <field name="act_window_id" ref="action_invoice_tree3"/>
-        </record>
-        <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="menu_finance_receivables"/>
-
-        <record id="action_invoice_tree4" model="ir.actions.act_window">
-            <field name="name">Supplier Refunds</field>
-            <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,pivot,graph</field>
-            <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','in_refund')]</field>
-            <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to register a refund you received from a supplier.
-              </p><p>
-                Instead of creating the supplier refund manually, you can generate
-                refunds and reconcile them directly from the related supplier invoice.
-              </p>
-            </field>
-        </record>
-        <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables" sequence="2"/>
 
         <act_window
            id="act_account_journal_2_account_invoice_opened"

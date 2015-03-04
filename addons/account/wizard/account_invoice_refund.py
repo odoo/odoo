@@ -118,10 +118,8 @@ class account_invoice_refund(models.TransientModel):
                             if 'value' in data and data['value']:
                                 inv_id.write(data['value'])
                         created_inv.append(inv_id.id)
-                xml_id = (inv.type == 'out_refund') and 'action_invoice_tree1' or \
-                         (inv.type == 'in_refund') and 'action_invoice_tree2' or \
-                         (inv.type == 'out_invoice') and 'action_invoice_tree3' or \
-                         (inv.type == 'in_invoice') and 'action_invoice_tree4'
+                xml_id = (inv.type in ['out_refund', 'out_invoice']) and 'action_invoice_tree1' or \
+                         (inv.type in ['in_refund', 'in_invoice']) and 'action_invoice_tree2'
         if xml_id:
             result = self.env.ref('account.%s' % (xml_id)).read()[0]
             invoice_domain = eval(result['domain'])
