@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 
+import openerp
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.addons.web.http import request
@@ -190,7 +191,11 @@ class website(orm.Model):
                 values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
                 sale_order.write(values)
                 for line in sale_order.order_line:
-                    sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
+                    try:
+                        sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
+                    except openerp.exceptions.MissingError:
+                        # _cart_update may modify order_line when website_sale_delivery module is installed
+                        pass
 
             # update browse record
             if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id !=  partner.id:
