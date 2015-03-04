@@ -911,34 +911,81 @@ class account_move_line(models.Model):
         }
 
     @api.model
-    def _query_get(self, domain=None):
+    def _query_get(self, obj='l'):
+        account_obj = self.env['account.account']
         context = dict(self._context or {})
-        domain = domain and safe_eval(domain) or []
+        company_clause = " "
+        if context.get('company_id', False):
+            company_clause = " AND " +obj+".company_id = %s" % context.get('company_id', False)
 
-        if context.get('date_to'):
-            domain += [('date', '<=', context['date_to'])]
-        if context.get('date_from'):
-            if not context.get('strict_range'):
-                domain += ['|', ('date', '>=', context['date_from']), ('account_id.user_type.include_initial_balance', '=', True)]
+        state = context.get('state', False)
+        where_move_state = ''
+        where_move_lines_by_date = ''
+
+        if context.get('date_from', False) and context.get('date_to', False):
+            if context.get('initial_bal', False):
+                dt = context['date_from'][:4] + '-01-01'
+                where_move_lines_by_date = "("+obj+".move_id IN (SELECT id FROM account_move WHERE date <= '"+context['date_from']+"')" \
+                                           " AND "+obj+".account_id IN (SELECT id FROM account_account WHERE user_type in (SELECT id FROM account_account_type WHERE include_initial_balance is True)))"\
+                                           " OR " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +dt+"' AND date <= '"+context['date_from']+"')"
+            elif context.get('closing_bal', False):
+                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date <= '" +context['date_to']+"')"
+            elif context.get('opening_year_bal', False):
+                dt = context['date_from'][:4] + '-01-01'
+                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +dt+"')"
+            elif context.get('non_issued', False):
+                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date > '" +context['date_to']+"')"
             else:
-                domain += [('date', '>=', context['date_from'])]
+                where_move_lines_by_date = "("+obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')" \
+                                           " OR ("+obj+".move_id IN (SELECT id FROM account_move WHERE date <= '" +context['date_from']+"'))" \
+                                           " AND "+obj+".account_id IN (SELECT id FROM account_account WHERE user_type in (SELECT id FROM account_account_type WHERE include_initial_balance is True)))" \
 
-        if context.get('journal_ids'):
-            domain += [('journal_id', 'in', context['journal_ids'])]
+        if state:
+            if state.lower() not in ['all']:
+                where_move_state = " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = '"+state+"')"
 
-        state = context.get('state')
-        if state and state.lower() != 'all':
-            domain += [('move_id.state', '=', state)]
+        query = "%s %s" % (where_move_lines_by_date, where_move_state)
 
-        if context.get('company_id'):
-            domain += [('company_id', '=', context['company_id'])]
+        if context.get('journal_ids', False):
+            query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
 
-        where_clause = ""
-        where_clause_params = []
-        if domain:
-            query = self._where_calc(domain)
-            dummy, where_clause, where_clause_params = query.get_sql()
-        return where_clause, where_clause_params
+        if context.get('chart_account_id', False): #  Deprecated ?
+            child_ids = account_obj.browse(context['chart_account_id'])._get_children_and_consol()
+            if child_ids:
+                query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
+
+        query += company_clause
+        return query
+
+    # @api.model
+    # def _query_get(self, domain=None):
+    #     context = dict(self._context or {})
+    #     domain = domain and safe_eval(domain) or []
+
+    #     if context.get('date_to'):
+    #         domain += [('date', '<=', context['date_to'])]
+    #     if context.get('date_from'):
+    #         if not context.get('strict_range'):
+    #             domain += ['|', ('date', '>=', context['date_from']), ('account_id.user_type.include_initial_balance', '=', True)]
+    #         else:
+    #             domain += [('date', '>=', context['date_from'])]
+
+    #     if context.get('journal_ids'):
+    #         domain += [('journal_id', 'in', context['journal_ids'])]
+
+    #     state = context.get('state')
+    #     if state and state.lower() != 'all':
+    #         domain += [('move_id.state', '=', state)]
+
+    #     if context.get('company_id'):
+    #         domain += [('company_id', '=', context['company_id'])]
+
+    #     where_clause = ""
+    #     where_clause_params = []
+    #     if domain:
+    #         query = self._where_calc(domain)
+    #         dummy, where_clause, where_clause_params = query.get_sql()
+    #     return where_clause, where_clause_params
 
 
 class account_partial_reconcile(models.Model):
