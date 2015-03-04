@@ -691,7 +691,7 @@ class test_views(ViewCase):
             model=model,
             priority=5,
             inherit_id=vid,
-            arch_db="""<?xml version="1.0"?>
+            arch="""<?xml version="1.0"?>
                         <xpath expr="//field[@name='name']" position="after">
                           <field name="target"/>
                         </xpath>
