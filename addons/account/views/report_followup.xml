@@ -9,9 +9,6 @@
 </record>
 
 <template id="report_followup_line" inherit_id="account.report_financial_line" primary="True">
-    <xpath expr="//span[@style='font-style: italic; margin-left: 70px']" position='attributes'>
-        <attribute name="style">font-style: italic;</attribute>
-    </xpath>
     <xpath expr="//div[@class='dropdown']" position="replace">
         <div class="dropdown" t-if="a['type'] == 'unreconciled_aml' and mode != 'print'">
             <a data-toggle="dropdown">
@@ -131,7 +128,7 @@
             })();
         </script>
     </xpath>
-    <xpath expr="//div[@class='dropdown']" position="replace">
+    <xpath expr="//div[@class='dropdown exportDropdown']" position="replace">
     </xpath>
     <xpath expr="//t[@t-call='account.report_financial_body']" position="replace">
         <t t-call='account.report_followup_body' />
