@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Payment Methods -->
+        <record id="account_payment_method_sepa_ct" model="account.payment.method">
+            <field name="name">SEPA Credit Transfer</field>
+            <field name="code">sepa_ct</field>
+            <field name="type">outbound</field>
+        </record>
+
+        <record id="account_payment_method_dummy_in_1" model="account.payment.method">
+            <field name="name">Dummy In 1</field>
+            <field name="code">dummy_in_1</field>
+            <field name="type">inbound</field>
+        </record>
+
+    </data>
+</openerp>

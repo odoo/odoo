@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.actions.server" id="action_account_download_sepa_sct_file">
+            <field name="name">Download SEPA Payment</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="code">
+                if context.get('active_model') == 'account.payment' and context.get('active_ids'):
+                    self.pool['account.sepa'].create_sepa_ct(cr, uid, context['active_ids'], context=context)
+            </field>
+        </record>
+
+        <record model="ir.values" id="account_download_sepa_sct_file">
+            <field name="model_id" ref="account.model_account_move_line" />
+            <field name="name">Download SEPA Payment</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,' +str(ref('action_account_download_sepa_sct_file'))" />
+            <field name="key">action</field>
+            <field name="model">account.payment</field>
+        </record>
+
+        <record id="view_sepa_credit_transfer_search" model="ir.ui.view">
+            <field name="name">account.sepa.credit.transfer.search</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <search string="SEPA Payments">
+                    <filter string="To Send" domain="[('payment_state','=','todo')]"/>
+                    <filter string="Failed" domain="[('payment_state','=','failed')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_sepa_credit_transfer_tree" model="ir.ui.view">
+            <field name="name">account.sepa.credit.transfer.tree</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <tree colors="red:payment_state == 'failed'" delete="false" create="false" edit="false">
+                    <field name="name"/>
+                    <field name="date_paid"/>
+                    <field name="payment_amount" widget="monetary"/>
+                    <!-- <field name="currency_id" groups="base.group_multi_currency"/> -->
+                    <field name="payment_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_sepa_credit_transfer" model="ir.actions.act_window">
+            <field name="name">SEPA Credit Transfer</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_sepa_credit_transfer_tree"/>
+            <field name="domain">[
+                ('payment_method.code', '=', 'sepa_ct'),
+                ('payment_state', 'in', ('todo', 'failed'))
+            ]</field>
+            <field name="help" type="html">
+                <p>There is currently no payment waiting to be sent via SEPA.</p>
+            </field>
+        </record>
+
+        <menuitem string="SEPA Credit Transfer" action="action_sepa_credit_transfer" id="menu_sepa_credit_transfer" parent="account.menu_finance_bank_and_cash" sequence="5"/>
+
+    </data>
+</openerp>
