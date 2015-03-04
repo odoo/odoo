@@ -152,6 +152,8 @@ def constrains(*args):
                 raise ValidationError("Fields name and description must be different")
 
     Invoked on the records on which one of the named fields has been modified.
+    
+    Accessing relational fields attributes using the dot operator does not work.
 
     Should raise :class:`~openerp.exceptions.ValidationError` if the
     validation failed.
