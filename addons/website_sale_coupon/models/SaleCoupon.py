@@ -20,14 +20,14 @@ class SaleApplicability(models.Model):
     validity_duration = fields.Integer("Validity Duration", help="Validity duration can be set according to validity type")
     expiration_use = fields.Integer("Expiration use", default='1', help="Number of Times coupon can be Used")
     purchase_type = fields.Selection([('product', 'Product'), ('category', 'Category'),
-                                      ('amount', 'Amount')], string="Type", required=True)
-    product_id = fields.Many2one('product.product', string="Target Product")
-    product_category_id = fields.Many2one('product.category', string="Target Categoy")
+                                      ('amount', 'Amount')], string="Type", required=True, default="product")
+    product_id = fields.Many2one('product.product', string="Product")
+    product_category_id = fields.Many2one('product.category', string="Product Categoy")
     product_quantity = fields.Integer("Quantity")
-    product_uom_id = fields.Many2one('product.uom', string="UoM of Product")
+    product_uom_id = fields.Many2one('product.uom', string="UoM")
     minimum_amount = fields.Float(string="Amount", help="Alteast amount, for that customer have to purchase to get the reward")
-    tax = fields.Selection([('tax_included', 'Tax included'), ('tax_excluded', 'Tax excluded')])
-    company_id = fields.Many2one('res.company', string="Company Id")
+    tax = fields.Selection([('tax_included', 'Tax included'), ('tax_excluded', 'Tax excluded')], default="tax_excluded")
+    company_id = fields.Many2one('res.company', string="Company")
     currency_id = fields.Many2one("res.currency", readonly=True)
 
 
@@ -39,9 +39,9 @@ class SaleReward(models.Model):
                                     ('discount', 'Discount'),
                                     ('coupon', 'Coupon')], string="Free gift", help="Type of reward to give to customer")
     reward_shipping_free = fields.Selection([('yes', 'Yes'), ('no', 'No')], string="Free Shipping", default=False, help="Shipment of the order is free or not")
-    reward_product_product_id = fields.Many2one('product.product', string="Reward Product")
-    reward_quantity = fields.Integer(string="Product Quantity")
-    reward_product_uom_id = fields.Many2one('product.uom', string="Product UoM")
+    reward_product_product_id = fields.Many2one('product.product', string="Product")
+    reward_quantity = fields.Integer(string="Quantity")
+    reward_product_uom_id = fields.Many2one('product.uom', string="UoM")
     reward_gift_coupon_id = fields.Many2one('sale.couponprogram', string="Coupon Id")
     reward_discount_type = fields.Selection([('no', 'No'), ('percentage', 'Percentage'),
                                              ('amount', 'Amount')], string="Apply a discount")
