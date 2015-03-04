@@ -11,10 +11,10 @@
             events: {
                 'click .fa-pencil-square': 'clickPencil',
                 'click .fa-pencil': 'clickPencil',
-                'click .foldable': 'fold',
-                'click .unfoldable': 'unfold',
+                'click .oe-account-foldable': 'fold',
+                'click .oe-account-unfoldable': 'unfold',
                 'click .saveFootNote': 'saveFootNote',
-                'click .to_amls': 'displayMoveLinesByAccount',
+                'click .oe-account-to-amls': 'displayMoveLinesByAccount',
                 'click span.user_type': 'displayMoveLinesByType',
                 'click span.partner_id': 'displayMoveLinesByPartner',
                 'click span.aml': 'displayMoveLine',
@@ -22,7 +22,7 @@
                 'mouseleave .footnote': 'rmPencil',
                 'click .fa-trash-o': 'rmContent',
                 'click .closeSummary': 'rmContent',
-                'click .savedSummary > span': 'editSummary',
+                'click .oe-account-saved-summary > span': 'editSummary',
                 "change *[name='date_filter']": 'onChangeDateFilter',
                 "change *[name='date_filter_cmp']": 'onChangeCmpDateFilter',
                 "change *[name='date_to']": 'onChangeCmpDateFilter',
@@ -32,10 +32,10 @@
                 "click button.saveSummary": 'saveSummary',
                 'click button.saveContent': 'saveContent',
                 'click button#saveFootNote': 'saveFootNote',
-                'click .add_footnote': 'footnoteFromDropdown',
-                'click .to_graph': 'displayMoveLinesByAccountGraph',
-                'click .to_net': 'displayNetTaxLines',
-                'click .to_tax': 'displayTaxLines',
+                'click .oe-account-add-footnote': 'footnoteFromDropdown',
+                'click .oe-account-to-graph': 'displayMoveLinesByAccountGraph',
+                'click .oe-account-to-net': 'displayNetTaxLines',
+                'click .oe-account-to-tax': 'displayTaxLines',
             },
             saveFootNote: function() {
                 var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
@@ -61,12 +61,12 @@
             },
             onClickSummary: function(e) {
                 e.stopPropagation();
-                this.$("div.summary").html(openerp.qweb.render("editSummary"));
+                this.$("div.oe-account-summary").html(openerp.qweb.render("editSummary"));
             },
             saveSummary: function(e) {
                 e.stopPropagation();
                 var summary = this.$("textarea[name='summary']").val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
-                this.$("div.summary").html(openerp.qweb.render("savedSummary", {summary : summary}));
+                this.$("div.oe-account-summary").html(openerp.qweb.render("savedSummary", {summary : summary}));
                 var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
                 var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
                 var model = new openerp.Model('account.report.context.common');
@@ -312,7 +312,7 @@
             clickPencil: function(e) {
                 e.stopPropagation();
                 e.preventDefault();
-                if ($(e.target).parents("div.summary, p.footnote").length > 0) {
+                if ($(e.target).parents("div.oe-account-summary, p.footnote").length > 0) {
                     var num = 0;
                     if ($(e.target).parent().parent().is("p.footnote")) {
                         var $el = $(e.target).parent().parent().find('span.text');
@@ -323,7 +323,7 @@
                         $el.html(openerp.qweb.render("editContent", {num: num, text: text}));
                     }
                     else {
-                        var $el = $(e.target).parents('div.savedSummary').children('span');
+                        var $el = $(e.target).parents('div.oe-account-saved-summary').children('span');
                         var text = $el.html().replace(/\s+/g, ' ').replace(/\r?\n/g, '').replace(/<br>/g, '\n').replace(/(\n\s*)+$/g, '');
                         $el.replaceWith(openerp.qweb.render("editContent", {num: 0, text: text}));
                     }
@@ -376,7 +376,7 @@
             rmContent: function(e) {
                 e.stopPropagation();
                 e.preventDefault();
-                if ($(e.target).parents("div.summary").length > 0) {
+                if ($(e.target).parents("div.oe-account-summary").length > 0) {
                     $(e.target).parent().parent().replaceWith(openerp.qweb.render("addSummary"));
                     var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
                     var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
@@ -408,16 +408,16 @@
                 var $el;
                 var $nextEls = $(e.target).parents('tr').nextAll();
                 for (el in $nextEls) {
-                    $el = $($nextEls[el]).find("td span.domainLine");
+                    $el = $($nextEls[el]).find("td span.oe-account-domain-line");
                     if ($el.length == 0)
                         break;
                     else {
                         $($el[0]).parents("tr").hide();
                     }
                 }
-                var active_id = $(e.target).parents('tr').find('td.foldable').attr("class").split(/\s+/)[1];
-                $(e.target).parents('tr').find('td.foldable').attr('class', 'unfoldable ' + active_id)
-                $(e.target).parents('tr').find('span.foldable').replaceWith(openerp.qweb.render("unfoldable", {lineId: active_id}));
+                var active_id = $(e.target).parents('tr').find('td.oe-account-foldable').attr("class").split(/\s+/)[1];
+                $(e.target).parents('tr').find('td.oe-account-foldable').attr('class', 'oe-account-unfoldable ' + active_id)
+                $(e.target).parents('tr').find('span.oe-account-foldable').replaceWith(openerp.qweb.render("unfoldable", {lineId: active_id}));
                 var model = new openerp.Model('account.report.context.common');
                 model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                     var contextModel = new openerp.Model(result);
@@ -429,7 +429,7 @@
                 e.preventDefault();
                 var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
                 var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
-                var active_id = $(e.target).parents('tr').find('td.unfoldable').attr("class").split(/\s+/)[1];
+                var active_id = $(e.target).parents('tr').find('td.oe-account-unfoldable').attr("class").split(/\s+/)[1];
                 var commonContext = new openerp.Model('account.report.context.common');
                 commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                     var contextObj = new openerp.Model(result);
@@ -439,7 +439,7 @@
                         var $nextEls = $(e.target).parents('tr').nextAll();
                         var isLoaded = false;
                         for (el in $nextEls) {
-                            $el = $($nextEls[el]).find("td span.domainLine");
+                            $el = $($nextEls[el]).find("td span.oe-account-domain-line");
                             if ($el.length == 0)
                                 break;
                             else {
@@ -470,8 +470,8 @@
                                 }
                             });
                         }
-                        $(e.target).parents('tr').find('td.unfoldable').attr('class', 'foldable ' + active_id)
-                        $(e.target).parents('tr').find('span.unfoldable').replaceWith(openerp.qweb.render("foldable", {lineId: active_id}));
+                        $(e.target).parents('tr').find('td.oe-account-unfoldable').attr('class', 'oe-account-foldable ' + active_id)
+                        $(e.target).parents('tr').find('span.oe-account-unfoldable').replaceWith(openerp.qweb.render("foldable", {lineId: active_id}));
                     });
                 });
             },

@@ -147,14 +147,6 @@ class account_financial_report_line(models.Model):
     show_domain = fields.Selection([('always', 'Always'), ('never', 'Never'), ('foldable', 'Foldable')], default='foldable')
     hide_if_zero = fields.Boolean('Hide if zero', default=False)
 
-    @api.model
-    def _ids_to_sql(self, ids):
-        if len(ids) == 0:
-            return '()'
-        if len(ids) == 1:
-            return '(' + str(ids[0]) + ')'
-        return str(tuple(ids))
-
     def get_sum(self, field_names=None):
         ''' Returns the sum of the amls in the domain '''
         if not field_names:
