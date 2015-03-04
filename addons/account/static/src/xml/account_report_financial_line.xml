@@ -53,9 +53,9 @@
     <t t-name="report_financial_line">
         <t t-set="column" t-value="0" />
         <tr t-att-class="l.type + ' ' + l.id">
-            <td>
-                <a t-if="l.type != 'account_id' &amp; l.type != 'tax_id'"><span t-att-class="l.type + ' ' + l.id + ' oe-account-domain-line'"><t t-esc="l.name"/></span></a>
-                <div class="dropdown" t-if="l.type == 'account_id'">
+            <td t-att-colspan="l['colspan-name'] || 0">
+                <a t-if="l.type != 'account_id' &amp; l.type != 'tax_id' &amp; l.type != 'move_line_id'"><span t-att-class="l.type + ' ' + l.id + ' oe-account-domain-line'"><t t-esc="l.name"/></span></a>
+                <div class="dropdown" t-if="l.type == 'account_id' || l.type == 'move_line_id'">
                     <a data-toggle="dropdown">
                         <span t-att-class="l.type + ' ' + l.id + ' oe-account-domain-line'"><t t-esc="l.name"></t></span><span class="caret"></span>
                     </a>
@@ -64,26 +64,29 @@
                         <t t-call="supFootNoteSeqNum" />
                     </t>
                     <ul class="dropdown-menu domainDropdowm" role="menu" aria-labelledby="dLabel">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" class="oe-account-to-graph">Graph</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" class="oe-account-to-amls">Account Move Lines</a></li>
+                        <li role="presentation" t-if="l.type != 'move_line_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-graph">Graph</a></li>
+                        <li role="presentation" t-if="l.type != 'move_line_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-amls">Account Move Lines</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" class="oe-account-add-footnote">Add Footnote</a></li>
-                        <li role="presentation" t-if="a['type'] == 'tax_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-net">See net move lines</a></li>
-                        <li role="presentation" t-if="a['type'] == 'tax_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-tax">See tax move lines</a></li>
+                        <li role="presentation" t-if="l.type == 'tax_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-net">See net move lines</a></li>
+                        <li role="presentation" t-if="l.type == 'tax_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-tax">See tax move lines</a></li>
+                        <li role="presentation" t-if="l.type == 'move_line_id'"><a role="menuitem" tabindex="-1" t-att-class="'oe-account-to-move-line ' + l.move_id">See journal entries</a></li>
                     </ul>
                 </div>
             </td>
             <t t-foreach="l.columns" t-as="c">
                 <t t-set="column" t-value="column + 1" />
                 <td class="text-right" style="white-space: nowrap;">
-                    <t t-if="typeof c != 'string'"><span class="annotable" t-att-style="c[1] + 'font-style: italic;'">
-                        <t t-raw="c[0]"/>
+                    <t t-if="typeof c == 'string' || typeof c == 'number'"><span style="font-style: italic;">
+			<span style="color: black;"><i class="fa fa-pencil-square"></i></span>
+                        <t t-raw="c"/>
                         <t t-if="l.footnotes[column] != undefined">
                             <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />
                             <t t-call="supFootNoteSeqNum" />
                         </t>
                     </span></t>
-                    <t t-if="typeof c == 'string'"><span class="annotable" style="font-style: italic;">
-                        <t t-raw="c"/>
+                    <t t-if="typeof c != 'string' &amp; typeof c != 'number'"><span t-att-style="c[1] + 'font-style: italic;'">
+			<span style="color: black;"><i class="fa fa-pencil-square"></i></span>
+                        <t t-raw="c[0]"/>
                         <t t-if="l.footnotes[column] != undefined">
                             <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />
                             <t t-call="supFootNoteSeqNum" />

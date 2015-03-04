@@ -21,7 +21,6 @@
 
 import account_balance
 import account_partner_balance
-import account_general_ledger
 import account_partner_ledger
 import account_print_overdue
 import account_aged_partner_balance
@@ -32,3 +31,4 @@ import account_report_context_common
 import account_financial_report
 import account_generic_tax_report
 import account_bank_reconciliation_report
+import account_general_ledger

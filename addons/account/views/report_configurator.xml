@@ -71,8 +71,8 @@
                         <option selected="selected" t-if="context.date_filter == 'custom'" value='custom'>Custom</option>
                         <option t-if="context.date_filter != 'custom'" value='custom'>Custom</option>
                     </select>
-                    <label for="date_filter_cmp">Comparison Date Filter :</label>
-                    <select name="date_filter_cmp" class="form-control">
+                    <label for="date_filter_cmp" t-if="report.get_report_type() != 'no_comparison'">Comparison Date Filter :</label>
+                    <select name="date_filter_cmp" class="form-control" t-if="report.get_report_type() != 'no_comparison'">
                         <option selected="selected" t-if="context.date_filter_cmp == 'no_comparison'" value='no_comparison'>No Comparison</option>
                         <option t-if="context.date_filter_cmp != 'no_comparison'" value='no_comparison'>No Comparison</option>
                         <option disabled="disabled">&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;</option>
@@ -105,7 +105,7 @@
                     <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control custom-cmp" name="date_from_cmp" t-att-value="context.date_from_cmp"></input>
                     <t t-set="style" value="''" />
                     <t t-if="context.date_filter_cmp == 'custom'"><t t-set="style" t-value="'display: none'" /></t>
-                    <span t-att-style="style">
+                    <span t-att-style="style" t-if="report.get_report_type() != 'no_comparison'">
                         <label for="periods_number">Number of periods :</label>
                         <input type="number" name="periods_number" t-att-value="context.periods_number"/>
                     </span>
