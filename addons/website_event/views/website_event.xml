@@ -408,9 +408,7 @@
                  </tr>
             </tbody>
         </table>
-        <t t-if="event.seats_availability == 'unlimited' or event.seats_available">
-            <button type="submit" class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
-        </t>
+        <button type="submit" t-if="event.seats_availability == 'unlimited' or event.seats_available" class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
     </form>
 </template>
 
