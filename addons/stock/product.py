@@ -73,6 +73,7 @@ class product_product(osv.osv):
         warehouse_obj = self.pool.get('stock.warehouse')
 
         location_ids = []
+        operator = context.get('compute_child', True) and 'child_of' or 'in'
         if context.get('location', False):
             if type(context['location']) == type(1):
                 location_ids = [context['location']]
@@ -88,11 +89,18 @@ class product_product(osv.osv):
                 wids = [context['warehouse']]
             else:
                 wids = warehouse_obj.search(cr, uid, [], context=context)
+            
+            if len(wids) > 100:
+                locs = [x.view_location_id.id for x in warehouse_obj.browse(cr, uid, wids, context=context)]
+                dom_loc = [('location_id', operator, locs)]
+                if context.get('force_company', False):
+                    dom_loc += [('company_id', '=', context['force_company'])]
+                location_ids = location_obj.search(cr, uid, dom_loc, context=context)
+                operator = 'in'
+            else:
+                for w in warehouse_obj.browse(cr, uid, wids, context=context):
+                    location_ids.append(w.view_location_id.id)                
 
-            for w in warehouse_obj.browse(cr, uid, wids, context=context):
-                location_ids.append(w.view_location_id.id)
-
-        operator = context.get('compute_child', True) and 'child_of' or 'in'
         domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
         locations = location_obj.browse(cr, uid, location_ids, context=context)
         if operator == "child_of" and locations and locations[0].parent_left != 0:
