@@ -31,21 +31,15 @@ class account_move_line(osv.osv):
         (excepting cancelled orders)"""
         if not ids:
             return {}
+        res = dict.fromkeys(ids, 0.0)
         cr.execute("""SELECT ml.id,
-                    CASE WHEN ml.amount_currency < 0
-                        THEN - ml.amount_currency
-                        ELSE ml.credit
-                    END -
-                    (SELECT coalesce(sum(amount_currency),0)
-                        FROM payment_line pl
-                            INNER JOIN payment_order po
-                                ON (pl.order_id = po.id)
-                        WHERE move_line_id = ml.id
-                        AND po.state != 'cancel') AS amount
+                    (SELECT sum(coalesce(residual, 0))
+                        FROM account_invoice
+                        WHERE move_id = ml.move_id)
                     FROM account_move_line ml
                     WHERE id IN %s""", (tuple(ids),))
-        r = dict(cr.fetchall())
-        return r
+        res.update(cr.fetchall())
+        return res
 
     def _to_pay_search(self, cr, uid, obj, name, args, context=None):
         if not args:
