@@ -18,9 +18,9 @@ class SaleApplicability(models.Model):
          ], string='Validity Type', required=True, default='day',
         help="Validity Type can be based on either day, month, week or year.")
     validity_duration = fields.Integer("Validity Duration", help="Validity duration can be set according to validity type")
-    expiration_use = fields.Integer("Expiration use", default='1', help="Number of Times coupon can be Used")
+    expiration_use = fields.Integer("Expiration use", default="1", help="Number of Times coupon can be Used")
     purchase_type = fields.Selection([('product', 'Product'), ('category', 'Category'),
-                                      ('amount', 'Amount')], string="Type", required=True, default="product")
+                                      ('amount', 'Amount')], string="Type", required=True)
     product_id = fields.Many2one('product.product', string="Product")
     product_category_id = fields.Many2one('product.category', string="Product Categoy")
     product_quantity = fields.Integer("Quantity")
@@ -37,8 +37,8 @@ class SaleReward(models.Model):
 
     reward_type = fields.Selection([('product', 'Product'),
                                     ('discount', 'Discount'),
-                                    ('coupon', 'Coupon')], string="Free gift", help="Type of reward to give to customer")
-    reward_shipping_free = fields.Selection([('yes', 'Yes'), ('no', 'No')], string="Free Shipping", default=False, help="Shipment of the order is free or not")
+                                    ('coupon', 'Coupon')], string="Free gift", help="Type of reward to give to customer", default="product")
+    reward_shipping_free = fields.Selection([('yes', 'Yes'), ('no', 'No')], string="Free Shipping", default="no", help="Shipment of the order is free or not")
     reward_product_product_id = fields.Many2one('product.product', string="Product")
     reward_quantity = fields.Integer(string="Quantity")
     reward_product_uom_id = fields.Many2one('product.uom', string="UoM")
@@ -48,11 +48,11 @@ class SaleReward(models.Model):
     reward_discount_percentage = fields.Float("Discount", help='The discount in percentage')
     reward_discount_amount = fields.Float("Discount", help='The discount in fixed amount')
     reward_discount_on = fields.Selection([('cart', 'On cart'), ('cheapest_product', 'On cheapest product'),
-                                           ('specific_product', 'On specific product')], string="Discount On")
+                                           ('specific_product', 'On specific product')], string="Discount On", default="cart")
     reward_discount_on_product_id = fields.Many2one('product.product', string="Product")
     reward_tax = fields.Selection([('tax_included', 'Tax included'),
                                    ('tax_excluded', 'Tax excluded')], string="Tax")
-    reward_partial_use = fields.Boolean(string="Partial use", help="The reward can be used partially or not")
+    reward_partial_use = fields.Selection([('yes', 'Yes'), ('no', 'No')], default="no", string="Partial use", help="The reward can be used partially or not")
 
 
 class SaleCoupon(models.Model):
@@ -84,7 +84,7 @@ class SaleCouponProgram(models.Model):
     _inherits = {'sale.applicability': 'applicability_id', 'sale.coupon.reward': 'reward_id'}
 
     program_name = fields.Char(help="Program name", required=True)
-    program_code = fields.Char(string="Code", help="Unique code to provide the reward")
+    program_code = fields.Text(string="Code", help="Unique code to provide the reward", readonly="True")
     program_type = fields.Selection([('apply immediately', 'Apply Immediately'), ('public unique code',
                                      'Public Unique Code'), ('generated coupon', 'Generated Coupon')],
                                     string="Program Type", help="The type of the coupon program")
@@ -94,8 +94,29 @@ class SaleCouponProgram(models.Model):
     applicability_id = fields.Many2one('sale.applicability', string="Applicability Id")
     reward_id = fields.Many2one('sale.coupon.reward', string="Reward Id")
 
+    @api.onchange('program_type')
+    def _compute_generate_coupon(self):
+        if self.program_type == 'public unique code':
+            coupon = self.env['sale.coupon'].create({'program_id': self.id})
+            self.program_code = coupon.coupon_code
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
+    _name = 'sale.order.line'
 
     coupon_id = fields.Many2one('sale.coupon', string="Coupon")
+
+
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
+    _name = "sale.order"
+
+    def apply_coupon(self, code):
+        print "---------------- i  am   here"
+
+
+class GenerateManualCoupon(models.TransientModel):
+    _name = 'sale.manual.coupon'
+
+    nbr_coupons = fields.Integer("Nimber of coupons")

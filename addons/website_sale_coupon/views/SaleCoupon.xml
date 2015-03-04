@@ -7,16 +7,19 @@
             <field name="arch" type="xml">
                 <form string="Coupon Program">
                      <sheet>
+                        <div class="oe_left" style="width: 350px;">
+                            <label class="oe_edit_only" for="program_Name" string="Program Name"/>
+                            <h1><field name="program_name" class="oe_title" placeholder="Promotion Rule Name..." height="20px"/></h1>
+                        </div>
                         <div class="oe_right">
-                            <button class="oe_stat_button" type="action" string="Generated Coupon" icon="fa-xing"/>
-                            <button class="oe_inline oe_stat_button" type="action" string="Sale Order" icon="fa-sitemap"/>
+                            <button class="oe_stat_button" type="action" string="Generated Coupon" icon="fa-xing" attrs="{'invisible': [('program_type', '!=', 'generated coupon')]}"/>
+                            <button class="oe_inline oe_stat_button" type="action" string="Sale Order" icon="fa fa-strikethrough fa-fw"/>
                         </div>
                         <group>
-                            <div class="oe_left" style="width: 350px;">
-                                <h1><field name="program_name" class="oe_title" placeholder="Promotion Rule Name..." height="20px"/></h1>
-                                <label class="oe_edit_only" for="program_type" string="Program Type"/>
+                            <group>
                                 <field name="program_type"/>
-                            </div>
+                                <field name="program_code" />
+                            </group>
                             <group>
                                     <field name="is_program_active"/>
                                     <field name="program_sequence"/>
@@ -24,7 +27,7 @@
                         </group>
                         <notebook>
                             <page string="Conditions" name="condition">
-                                <group class="oe_left" style="width: 400px;">
+                                <group>
                                     <field name="partner_id"/>
                                     <field name="company_id"/>
                                     <field name="purchase_type"/>
@@ -33,8 +36,9 @@
                                         <field name="validity_duration" class="oe_inline"/>
                                         <field name="validity_type" class="oe_inline"/>
                                     </div>
-                                    <label for="minimum_amount" string="Amount"/>
+                                    <label string="Amount"/>
                                     <div>
+                                        
                                         <field name="minimum_amount" attrs="{'invisible': [('purchase_type', '!=', 'amount')]}" class="oe_inline"/>
                                         <field name="currency_id" attrs="{'invisible': [('purchase_type', '!=', 'amount')]}" class="oe_inline"/>
                                         <field name="tax" attrs="{'invisible': [('purchase_type', '!=', 'amount')]}" class="oe_inline"/>
@@ -42,10 +46,11 @@
                                     <field name="product_id" attrs="{'invisible': [('purchase_type', '!=', 'product')]}"/>
                                     <field name="product_category_id" attrs="{'invisible': [('purchase_type', '!=', 'category')]}"/>
                                 </group>
+                                <group/>
                             </page>
                             <page string="Rewards" name="rewards">
                                 <form>
-                                    <group class="oe_left" style="width: 400px;">
+                                    <group>
                                         <field name="reward_type"/>
                                         <field name="reward_shipping_free" widget="radio" class="oe_inline"/>
                                         <field name="reward_product_product_id" attrs="{'invisible': [('reward_type', '!=', 'product')]}"/>
@@ -60,7 +65,7 @@
 
                                         <field name="reward_discount_amount" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}"/>
                                         <field name="reward_tax" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}"/>
-                                        <field name="reward_partial_use" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}"/>
+                                        <field name="reward_partial_use" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}" widget="radio"/>
                                         <field name="reward_gift_coupon_id" attrs="{'invisible': [('reward_type', '!=', 'coupon')]}"/>
                                     </group>
                                 </form>
@@ -68,6 +73,23 @@
                         </notebook>
                      </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="wizard_form_view">
+            <field name="name">wizard.form.coupon</field>
+            <field name="model">sale.manual.coupon</field>
+            <field name="arch" type="xml">
+                <form string="Generate Coupons">
+                    <group>
+                        <field name="nbr_coupons"/>
+                    </group>
+                    <footer>
+                        <button name="sale.couponprogram.generate_coupon" type="object" string="Generate" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+
             </field>
         </record>
 
@@ -80,6 +102,29 @@
                     <field name="is_program_active"/>
                 </tree>
             </field>
+        </record>
+
+        <act_window id="launch_coupon_wizard"
+                    name="Generate Coupons"
+                    src_model="sale.couponprogram"
+                    res_model="sale.manual.coupon"
+                    view_mode="form"
+                    target="new"
+                    key2="client_action_multi"/>
+
+
+        <record model="ir.ui.view" id="sale_coupon_tree">
+             <field name="name">sale.coupon.tree</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form" />
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='note']" position="before">
+                    <group style="width: 100px">
+                        <h2><input type="text" name="txt_typed_coupon"/></h2>
+                        <button name="apply_coupon('Hello')" string="Apply"/>
+                    </group>
+                </xpath>
+             </field>
         </record>
 
         <record id="action_sale_coupon_configuration" model="ir.actions.act_window">
