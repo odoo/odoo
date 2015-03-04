@@ -136,7 +136,7 @@ class TestAccountFollowup(TransactionCase):
         current_date = datetime.datetime.utcnow()
         delta = datetime.timedelta(days=1)
         result = current_date + delta
-        self.invoice.pay_and_reconcile(cr, uid, [self.invoice_id], 1000.0, self.pay_account_id, 
+        self.invoice.pay_and_reconcile(cr, uid, [self.invoice_id], 1000.0,
                                              self.date, self.journal_id, self.pay_account_id) 
         self.assertFalse(self.partner.browse(cr, uid, self.partner_id).latest_followup_level_id, "Level not empty")
         self.wizard_id = self.wizard.create(cr, uid, {'date':result.strftime(tools.DEFAULT_SERVER_DATE_FORMAT), 

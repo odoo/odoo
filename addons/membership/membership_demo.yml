@@ -9,5 +9,5 @@
 
     for id in invoice_ids[-4:]:
         pay = invoice_pool.pay_and_reconcile(cr, uid, [id],
-            9050.0, ref('account.cash'), time.strftime('%Y-%m-%d'),
+            9050.0, time.strftime('%Y-%m-%d'),
             ref('account.bank_journal'), ref('account.cash'))

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_payment_tree" model="ir.ui.view">
+            <field name="name">account.payment.tree</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <tree colors="grey:payment_state=='done'; blue:state=='draft'" edit="false">
+                    <field name="payment_state" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="journal_id"/>
+                    <field name="payment_type"/>
+                    <field name="payment_amount"/>
+                    <field name="payment_method"/>
+                    <field name="partner_id"/>
+                    <field name="destination_journal_id"/>
+                    <field name="date_paid"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_payment_search" model="ir.ui.view">
+            <field name="name">account.payment.search</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <search string="Payments">
+                    <field name="partner_id" />
+                    <field name="journal_id" />
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <filter string="Payable" domain="[('payment_type','=','outbound')]"/>
+                    <filter string="Receivable" domain="[('payment_type','=','inbound')]"/>
+                    <filter string="Transfers" domain="[('payment_type','=','transfer')]"/>
+                    <separator />
+                    <filter string="Draft" domain="[('state','=','draft')]" name='state_draft'/>
+                    <filter string="To Process" domain="[('payment_state','in',('todo', 'failed'))]" name='state_todo'/>
+                    <filter string="Processed" domain="[('payment_state','=','done')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_account_payment_form" model="ir.ui.view">
+            <field name="name">account.payment.form</field>
+            <field name="model">account.payment</field>
+            <field name="priority">5</field>
+            <field name="arch" type="xml">
+                <form string="Register Payment" version="7">
+                    <header>
+                        <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="payment_type" widget="radio" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="partner_type" widget="radio" attrs="{'required': [('payment_type', '!=', 'transfer')], 'invisible': [('payment_type', 'in', ('transfer', False))], 'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="invoice_id" attrs="{'invisible': ['|', ('payment_type', '=', 'transfer'), '&amp;', ('state', '=', 'confirmed'), ('invoice_id', '=', False)], 'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="date_paid" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="partner_id" attrs="{'required': [('payment_type', '!=', 'transfer')], 'invisible': [('payment_type', 'in', ('transfer', False))], 'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="payment_amount" widget="monetary" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="hide_payment_method" invisible="1"/>
+                                <!-- domain just serves to prevent a visual glitch and is overrident via onchanges -->
+                                <field name="payment_method" widget="radio" create="false" class="oe_no_button" attrs="{'invisible': ['|', ('journal_id', '=', False), ('hide_payment_method', '=', True)], 'readonly': [('state', '=', 'confirmed')]}" domain="[('type', 'not in', ['inbound', 'outbound'])]"/>
+                                <field name="reference" attrs="{'invisible': [('state', '=', 'confirmed'), ('reference', '=', False)]}"/>
+                            </group>
+                            <group attrs="{'invisible': ['|', ('invoice_id', '=', False), ('payment_difference', '&lt;=', 0.0)]}">
+                                <field name="payment_difference" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="payment_difference_handling" widget="radio" attrs="{'required': [('invoice_id', '!=', False)], 'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="writeoff_account" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')], 'invisible': [('payment_difference_handling', '!=', 'reconcile')], 'readonly': [('state', '=', 'confirmed')]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_payments" model="ir.actions.act_window">
+            <field name="name">Payments</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_state_todo': 1, 'search_default_state_draft': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                  Click to register a payment
+                </p><p>
+                  Payments are used to send or collect money using the payments methods provided by installed modules.
+                  Each payment generates a journal entry in the selected bank or cash journal.
+                </p>
+            </field>
+        </record>
+        <menuitem action="action_account_payments" id="menu_action_account_payments" parent="menu_finance_bank_and_cash" sequence="1"/>
+
+        <record id="view_account_payment_invoice_form" model="ir.ui.view">
+            <field name="name">account.payment.invoice.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="view_account_payment_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <!-- TODO: since everything in the group on the left is hidden, it is ugly. Move some fields ? Remove first group ? Make a new view ? -->
+                <header position="attributes"><attribute name="invisible">1</attribute></header>
+                <field name="invoice_id" position="attributes"><attribute name="invisible">1</attribute></field>
+                <field name="partner_id" position="attributes"><attribute name="invisible">1</attribute></field>
+                <field name="partner_type" position="attributes"><attribute name="invisible">1</attribute></field>
+                <field name="payment_type" position="attributes"><attribute name="invisible">1</attribute></field>
+                <xpath expr="//form" position="inside">
+                    <footer>
+                        <button string='Register Payment' name="button_create_and_post" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_account_invoice_payment" model="ir.actions.act_window">
+            <field name="name">Register Payment</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_payment_invoice_form"/>
+            <field name="context">{'invoice_id': active_id}</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <!-- Register payment from several invoices -->
+
+        <record id="view_account_payment_from_invoices" model="ir.ui.view">
+            <field name="name">account.register.payments.wizard</field>
+            <field name="model">account.register.payments</field>
+            <field name="arch" type="xml">
+                <form string="Register Payment" version="7">
+                    <group>
+                        <group>
+                            <field name="journal_id" widget="selection"/>
+                            <field name="payment_type" invisible="1"/>
+                            <field name="hide_payment_method" invisible="1"/>
+                            <field name="payment_method" widget="radio" create="false" class="oe_no_button" attrs="{'invisible': ['|', ('journal_id', '=', False), ('hide_payment_method', '=', True)]}"/>
+                        </group>
+                        <group>
+                            <field name="date_paid"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string='Register Payments' name="button_register_payments" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <act_window
+            id="action_account_payment_from_invoices"
+            name="Register Payments"
+            res_model="account.register.payments"
+            src_model="account.invoice"
+            view_mode="form"
+            multi="True"
+            target="new"
+            key2="client_action_multi"
+        />
+
+    </data>
+</openerp>

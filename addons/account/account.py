@@ -275,6 +275,11 @@ class AccountJournal(models.Model):
     analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
     refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal")
 
+    inbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
+        domain=[('type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_in').id])
+    outbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
+        domain=[('type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_out').id])
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]

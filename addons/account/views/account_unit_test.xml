@@ -50,7 +50,6 @@
         <function model="account.invoice" name="pay_and_reconcile">
             <!-- ids = -->                   <value eval="[ref('test_invoice_1')]"/>
             <!-- pay_amount = -->            <value eval="1950"/>
-            <!-- pay_account_id = -->        <value eval="ref('cash')"/>
             <!-- date = -->                  <value eval="time.strftime('%Y-%m-%d')"/>
             <!-- pay_journal_id = -->        <value eval="ref('bank_journal')"/>
             <!-- writeoff_acc_id = -->       <value eval="ref('cash')"/>

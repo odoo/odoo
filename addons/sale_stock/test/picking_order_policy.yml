@@ -204,7 +204,7 @@
     import time
     for invoice in order.invoice_ids:
         invoice.pay_and_reconcile(
-            invoice.amount_total, ref('account.cash'), time.strftime('%Y-%m-%d'),
+            invoice.amount_total, time.strftime('%Y-%m-%d'),
             journal_ids[0])
 -
   To test process of the Sale Order with access rights of saleman,

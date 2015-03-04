@@ -91,7 +91,7 @@
                                     </div>
                                     <field name="tax_amount" nolabel="1"/>
                                     <field name="amount" widget="monetary"/>
-                                </group>              
+                                </group>
 			                </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
@@ -138,7 +138,7 @@
             <field name="act_window_id" ref="action_sale_receipt"/>
         </record>
 
-        <menuitem id="menu_action_sale_receipt" 
+        <menuitem id="menu_action_sale_receipt"
             action="action_sale_receipt"
             parent="account.menu_finance_receivables"
             sequence="10"/>
@@ -223,7 +223,7 @@
             <field name="target">current</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to register a purchase receipt. 
+                Click to register a purchase receipt.
               </p><p>
                 When the purchase receipt is confirmed, you can record the
                 supplier payment related to this purchase receipt.
@@ -242,8 +242,8 @@
             <field name="act_window_id" ref="action_purchase_receipt"/>
         </record>
 
-        <menuitem id="menu_action_purchase_receipt" 
-            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="3"/>
+        <menuitem id="menu_action_purchase_receipt"
+            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="4"/>
 
     </data>
 </openerp>
