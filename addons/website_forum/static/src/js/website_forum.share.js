@@ -3,7 +3,7 @@
 
     var website = openerp.website;
     var qweb = openerp.qweb;
-    website.add_template_file('/website_forum/static/src/xml/website_forum.share_templates.xml');
+    website.add_template_file('/website_forum/static/src/xml/website_forum_share_templates.xml');
 
     website.forum_share = website.social_share.extend({
         init: function (parent, target_type) {
