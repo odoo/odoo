@@ -18,8 +18,6 @@
                 'click span.user_type': 'displayMoveLinesByType',
                 'click span.partner_id': 'displayMoveLinesByPartner',
                 'click span.aml': 'displayMoveLine',
-                'mouseleave td': 'rmPencil',
-                'mouseleave .footnote': 'rmPencil',
                 'click .fa-trash-o': 'rmContent',
                 'click .closeSummary': 'rmContent',
                 'click .oe-account-saved-summary > span': 'editSummary',
@@ -36,6 +34,8 @@
                 'click .oe-account-to-graph': 'displayMoveLinesByAccountGraph',
                 'click .oe-account-to-net': 'displayNetTaxLines',
                 'click .oe-account-to-tax': 'displayTaxLines',
+		'click .oe-account-to-bank-statement': 'display_bank_statement',
+		'click .oe-account-to-move-line': 'display_move_line',
             },
             saveFootNote: function() {
                 var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
@@ -208,6 +208,7 @@
                 this.onChangeCmpDateFilter();
             },
             onChangeCmpDateFilter: function() {
+		if ($(".date_bank_reconciliation")) return;
                 var date_filter = this.$("select[name='date_filter']").val();
                 var cmp_filter = this.$("select[name='date_filter_cmp']").val();
                 var no_date_range = this.$("input[name='date_from']").length == 0;
@@ -585,6 +586,16 @@
                 var active_id = $(e.target).attr("class").split(/\s+/)[1];
                 window.open("/web?#id=" + active_id + "&view_type=form&model=account.move.line", "_self");
             },
+	    display_bank_statement: function(e) {
+		e.stopPropagation();
+                var active_id = $(e.target).attr("class").split(/\s+/)[1];
+                window.open("/web?#id=" + active_id + "&view_type=form&model=account.bank.statement", "_self");
+	    },
+	    display_move_line: function(e) {
+		e.stopPropagation();
+                var active_id = $(e.target).attr("class").split(/\s+/)[1];
+                window.open("/web?#id=" + active_id + "&view_type=form&model=account.move", "_self");
+	    },
         });
         var reportWidgets = new openerp.reportWidgets();
         reportWidgets.setElement($('.oe_account_report_widgets'));

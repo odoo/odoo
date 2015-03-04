@@ -10,6 +10,8 @@ class FinancialReportController(http.Controller):
             return request.env['account.financial.report'].sudo(uid)
         if name == 'generic_tax_report':
             return request.env['account.generic.tax.report'].sudo(uid)
+        if name == 'bank_reconciliation':
+            return request.env['account.bank.reconciliation'].sudo(uid)
 
     @http.route('/account/<string:report_name>/<string:report_id>', type='http', auth='none')
     def report(self, report_name, report_id=None, **kw):

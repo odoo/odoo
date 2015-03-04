@@ -30,7 +30,19 @@
                         </t>   
                     </select>
                 </div>
-                <div class="col-sm-3">
+		<div class="col-sm-3" t-if="report.get_report_type() == 'bank_reconciliation'">
+		  <label for="bank_account_id">Bank Accounts :</label>
+		  <select name="journal_id" class="form-control">
+		    <t t-foreach="context.journals" t-as="bank">
+		      <option t-attf-value="{{ bank.id }}" t-if="context.journal_id == bank" selected="selected"><t t-esc="bank.name"/></option>
+		      <option t-attf-value="{{ bank.id }}" t-if="context.journal_id != bank"><t t-esc="bank.name"/></option>
+
+		    </t>
+		  </select>
+		  <label class="start-date" for="date_from">Date :</label>
+                  <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control date_bank_reconciliation" name="date_from" t-att-value="context.date_from"></input>
+		</div>
+                <div class="col-sm-3" t-if="report.get_report_type() != 'bank_reconciliation'">
                     <label for="date_filter">Date Filter :</label>
                     <select name="date_filter" t-if="report.get_report_type() == 'no_date_range'" class="form-control">
                         <option selected="selected" t-if="context.date_filter == 'today'" value='today'>Today</option>
@@ -86,7 +98,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-sm-3" t-if="report.get_report_type() != 'no_date_range'">
+                <div class="col-sm-3" t-if="report.get_report_type() != 'no_date_range' and report.get_report_type() != 'bank_reconciliation'">
                     <label class="custom-date" t-if="report.get_report_type() != 'no_date_range'" for="date_from">Start Date :</label>
                     <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control custom-date" name="date_from" t-att-value="context.date_from"></input>
                     <label class="custom-cmp" t-if="report.get_report_type() != 'no_date_range'" for="date_from_cmp">Comparison Start Date :</label>
@@ -98,7 +110,7 @@
                         <input type="number" name="periods_number" t-att-value="context.periods_number"/>
                     </span>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3" t-if="report.get_report_type() != 'bank_reconciliation'">
                     <label class="custom-date" for="date_to" t-if="report.get_report_type() != 'no_date_range'">End Date :</label>
                     <label class="custom-date" for="date_to" t-if="report.get_report_type() == 'no_date_range'">Date :</label>
                     <input type="date" class="form-control custom-date" name="date_to" t-att-value="context.date_to"></input>
