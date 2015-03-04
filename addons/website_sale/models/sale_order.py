@@ -136,7 +136,7 @@ class Website(models.Model):
                     'user_id': w.user_id.id,
                     'partner_id': partner.id,
                     'pricelist_id': partner.property_product_pricelist.id,
-                    'team_id': self.env.ref['website.salesteam_website_sales'].id,
+                    'team_id': self.env.ref('website.salesteam_website_sales').id,
                 }
                 sale_order = SaleOrder.create(values)
                 values = SaleOrder.onchange_partner_id(part=partner.id)['value']

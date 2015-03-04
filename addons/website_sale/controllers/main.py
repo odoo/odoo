@@ -535,7 +535,7 @@ class WebsiteSale(http.Controller):
             partner.sudo().write(billing_info)
         else:
             # create partner
-            billing_info['team_id'] = request.env.ref['website.salesteam_website_sales'].id
+            billing_info['team_id'] = request.env.ref('website.salesteam_website_sales').id
             partner = Partner.create(billing_info)
 
         # create a new shipping partner

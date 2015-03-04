@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website.controllers.main import Website
+from openerp import http
+from openerp.http import request
 from openerp.addons.website_sale.controllers.main import WebsiteSale
 
 
-class website_sale_stock(WebsiteSale):
+class WebsiteSaleStock(WebsiteSale):
 
     @http.route([
         '/shop/orders',
         '/shop/orders/page/<int:page>',
     ], type='http', auth='user', website=True)
     def orders_followup(self, page=1, **post):
-        response = super(website_sale_stock, self).orders_followup(**post)
+        response = super(WebsiteSaleStock, self).orders_followup(**post)
 
         order_shipping_lines = {}
         for o in response.qcontext['orders']:
