@@ -17,7 +17,9 @@ class account_invoice_report(models.Model):
         """
         context = dict(self._context or {})
         user_currency_id = self.env.user.company_id.currency_id
-        currency_rate_id = self.env['res.currency.rate'].search([('rate', '=', 1), '|', ('currency_id.company_id', '=', user.company_id.id), ('currency_id.company_id', '=', False)], limit=1)
+        currency_rate_id = self.env['res.currency.rate'].search([
+            ('rate', '=', 1),
+            '|', ('company_id', '=', self.env.user.company_id.id), ('company_id', '=', False)], limit=1)
         base_currency_id = currency_rate_id.currency_id
         ctx = context.copy()
         for record in self:
