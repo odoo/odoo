@@ -30,7 +30,7 @@ TYPE2REFUND = {
 MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
 
 
-class account_invoice(models.Model):
+class AccountInvoice(models.Model):
     _name = "account.invoice"
     _inherit = ['mail.thread']
     _description = "Invoice"
@@ -103,7 +103,7 @@ class account_invoice(models.Model):
     def _get_outstanding_info_JSON(self):
         self.outstanding_credits_debits_widget = json.dumps(False)
         if self.state == 'open':
-            domain = [('journal_id.type', 'in', ('bank','cash')),('account_id', '=', self.account_id.id),('partner_id', '=', self.partner_id.id),('reconciled', '=', False),('amount_residual', '!=', 0.0)]
+            domain = [('journal_id.type', 'in', ('bank', 'cash')), ('account_id', '=', self.account_id.id), ('partner_id', '=', self.partner_id.id), ('reconciled', '=', False), ('amount_residual', '!=', 0.0)]
             if self.type in ('out_invoice', 'in_refund'):
                 domain.extend([('credit', '>', 0), ('debit', '=', 0)])
                 type_payment = 'Outstanding credit'
@@ -183,7 +183,7 @@ class account_invoice(models.Model):
             ('in_invoice','Supplier Invoice'),
             ('out_refund','Customer Refund'),
             ('in_refund','Supplier Refund'),
-        ], string='Type', readonly=True, index=True, change_default=True,
+        ], readonly=True, index=True, change_default=True,
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
 
@@ -200,11 +200,11 @@ class account_invoice(models.Model):
 
     state = fields.Selection([
             ('draft','Draft'),
-            ('proforma','Pro-forma'),
-            ('proforma2','Pro-forma'),
-            ('open','Open'),
-            ('paid','Paid'),
-            ('cancel','Cancelled'),
+            ('proforma', 'Pro-forma'),
+            ('proforma2', 'Pro-forma'),
+            ('open', 'Open'),
+            ('paid', 'Paid'),
+            ('cancel', 'Cancelled'),
         ], string='Status', index=True, readonly=True, default='draft',
         track_visibility='onchange', copy=False,
         help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
@@ -227,7 +227,7 @@ class account_invoice(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         track_visibility='always')
-    payment_term = fields.Many2one('account.payment.term', string='Payment Terms',
+    payment_term = fields.Many2one('account.payment.term',
         readonly=True, states={'draft': [('readonly', False)]},
         help="If you use payment terms, the due date will be computed automatically at the generation "
              "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
@@ -288,7 +288,7 @@ class account_invoice(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson', track_visibility='onchange',
         readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env.user)
-    fiscal_position = fields.Many2one('account.fiscal.position', string='Fiscal Position',
+    fiscal_position = fields.Many2one('account.fiscal.position',
         readonly=True, states={'draft': [('readonly', False)]})
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity',
         related='partner_id.commercial_partner_id', store=True, readonly=True,
@@ -303,7 +303,7 @@ class account_invoice(models.Model):
 
     @api.model
     def create(self, vals):
-        return super(account_invoice, self.with_context(mail_create_nolog = True)).create(vals)
+        return super(AccountInvoice, self.with_context(mail_create_nolog = True)).create(vals)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
@@ -329,7 +329,7 @@ class account_invoice(models.Model):
                 elif partner.customer and not partner.supplier:
                     view_id = get_view_id('invoice_form', 'account.invoice.form')
 
-        res = super(account_invoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        res = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
         # adapt selection of field journal_id
         for field in res['fields']:
@@ -411,7 +411,7 @@ class account_invoice(models.Model):
                 raise UserError(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
             elif invoice.internal_number:
                 raise UserError(_('You cannot delete an invoice after it has been validated (and received a number). You can set it back to "Draft" state and modify its content, then re-confirm it.'))
-        return super(account_invoice, self).unlink()
+        return super(AccountInvoice, self).unlink()
 
     @api.multi
     def onchange_partner_id(self, type, partner_id, date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
@@ -602,7 +602,7 @@ class account_invoice(models.Model):
                         'manual': False,
                         'sequence': tax['sequence'],
                         'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
-                        'account_id': self.type in ('out_invoice','in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
+                        'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
                     }
 
                     # If the taxes generate moves on the same financial account as the invoice line,
@@ -675,7 +675,7 @@ class account_invoice(models.Model):
             else:
                 line['currency_id'] = False
                 line['amount_currency'] = False
-            if self.type in ('out_invoice','in_refund'):
+            if self.type in ('out_invoice', 'in_refund'):
                 total += line['price']
                 total_currency += line['amount_currency'] or line['price']
                 line['price'] = - line['price']
@@ -703,7 +703,7 @@ class account_invoice(models.Model):
                 'tax_ids': tax_ids,
             }
             if line['account_analytic_id']:
-                move_line_dict['analytic_lines'] = [(0,0, line._get_analytic_line())]
+                move_line_dict['analytic_lines'] = [(0, 0, line._get_analytic_line())]
             res.append(move_line_dict)
         return res
 
@@ -751,7 +751,7 @@ class account_invoice(models.Model):
                     line2[tmp] = l
             line = []
             for key, val in line2.items():
-                line.append((0,0,val))
+                line.append((0, 0, val))
         return line
 
     @api.multi
@@ -878,7 +878,7 @@ class account_invoice(models.Model):
             'analytic_lines': line.get('analytic_lines', []),
             'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
             'currency_id': line.get('currency_id', False),
-            'quantity': line.get('quantity',1.00),
+            'quantity': line.get('quantity', 1.00),
             'product_id': line.get('product_id', False),
             'product_uom_id': line.get('uos_id', False),
             'analytic_account_id': line.get('account_analytic_id', False),
@@ -1065,7 +1065,7 @@ class account_invoice(models.Model):
             'date_paid': date,
             'reference': ref,
             'journal_id': pay_journal_id,
-            'payment_difference': 'open' if writeoff_acc_id == None else 'reconcile',
+            'payment_difference': 'open' if writeoff_acc_id is None else 'reconcile',
             'writeoff_account': writeoff_acc_id if writeoff_acc_id else False,
             })
         pay_wizard.pay()
@@ -1077,7 +1077,6 @@ class account_invoice(models.Model):
         return recs.pay_and_reconcile(pay_amount, pay_account_id, date, pay_journal_id,
                     writeoff_acc_id)
 
-
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
@@ -1087,10 +1086,10 @@ class account_invoice(models.Model):
             return 'account.mt_invoice_validated'
         elif 'state' in init_values and self.state == 'draft' and self.type in ('out_invoice', 'out_refund'):
             return 'account.mt_invoice_created'
-        return super(account_invoice, self)._track_subtype(init_values)
+        return super(AccountInvoice, self)._track_subtype(init_values)
 
 
-class account_invoice_line(models.Model):
+class AccountInvoiceLine(models.Model):
     _name = "account.invoice.line"
     _description = "Invoice Line"
     _order = "invoice_id,sequence,id"
@@ -1164,7 +1163,7 @@ class account_invoice_line(models.Model):
     name = fields.Text(string='Description', required=True)
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.")
-    sequence = fields.Integer(string='Sequence', default=10,
+    sequence = fields.Integer(default=10,
         help="Gives the sequence of this line when displaying the invoice.")
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference',
         ondelete='cascade', index=True)
@@ -1184,7 +1183,7 @@ class account_invoice_line(models.Model):
         store=True, readonly=True, compute='_compute_price',
         help="Total amount in the currency of the company, negative for credit notes.")
 
-    quantity = fields.Float(string='Quantity', digits= dp.get_precision('Product Unit of Measure'),
+    quantity = fields.Float(digits= dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     discount = fields.Float(string='Discount (%)', digits= dp.get_precision('Discount'),
         default=0.0)
@@ -1200,7 +1199,7 @@ class account_invoice_line(models.Model):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(account_invoice_line, self).fields_view_get(
+        res = super(AccountInvoiceLine, self).fields_view_get(
             view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if self._context.get('type'):
             doc = etree.XML(res['arch'])
@@ -1328,7 +1327,7 @@ class account_invoice_line(models.Model):
         return {'value': {'invoice_line_tax_id': unique_tax_ids}}
 
 
-class account_invoice_tax(models.Model):
+class AccountInvoiceTax(models.Model):
     _name = "account.invoice.tax"
     _description = "Invoice Tax"
     _order = 'sequence'
@@ -1338,13 +1337,13 @@ class account_invoice_tax(models.Model):
     tax_id = fields.Many2one('account.tax', string='Tax')
     account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
-    amount = fields.Float(string='Amount', digits=0)
-    manual = fields.Boolean(string='Manual', default=True)
-    sequence = fields.Integer(string='Sequence', help="Gives the sequence order when displaying a list of invoice tax.")
+    amount = fields.Float(digits=0)
+    manual = fields.Boolean(default=True)
+    sequence = fields.Integer(help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
 
 
-class res_partner(models.Model):
+class ResPartner(models.Model):
     # Inherits partner and adds invoice information in the partner form
     _inherit = 'res.partner'
 
@@ -1356,7 +1355,7 @@ class res_partner(models.Model):
         return partner.commercial_partner_id
 
 
-class mail_compose_message(models.Model):
+class MailComposeMessage(models.Model):
     _inherit = 'mail.compose.message'
 
     @api.multi
@@ -1368,4 +1367,4 @@ class mail_compose_message(models.Model):
             invoice = invoice.with_context(mail_post_autofollow=True)
             invoice.write({'sent': True})
             invoice.message_post(body=_("Invoice sent"))
-        return super(mail_compose_message, self).send_mail()
+        return super(MailComposeMessage, self).send_mail()

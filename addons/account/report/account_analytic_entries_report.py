@@ -3,12 +3,13 @@
 from openerp import tools
 from openerp import models, fields
 
-class analytic_entries_report(models.Model):
+
+class AnalyticEntriesReport(models.Model):
     _name = "analytic.entries.report"
     _description = "Analytic Entries Statistics"
     _auto = False
 
-    date = fields.Date(string='Date', readonly=True)
+    date = fields.Date(readonly=True)
     user_id = fields.Many2one('res.users', string='User', readonly=True)
     name = fields.Char(string='Description', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
@@ -20,8 +21,8 @@ class analytic_entries_report(models.Model):
     move_id = fields.Many2one('account.move.line', string='Move', required=True)
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_id = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
-    amount = fields.Float(string='Amount', readonly=True)
-    unit_amount = fields.Integer(string='Unit Amount', readonly=True)
+    amount = fields.Float(readonly=True)
+    unit_amount = fields.Integer(readonly=True)
     nbr_entries = fields.Integer(string='# Entries', readonly=True)
 
     def init(self, cr):

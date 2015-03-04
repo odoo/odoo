@@ -26,7 +26,7 @@ from openerp.tools import float_compare
 from openerp.exceptions import UserError
 
 
-class account_voucher(models.Model):
+class AccountVoucher(models.Model):
 
     @api.one
     @api.depends('move_id.line_id.reconciled', 'move_id.line_id.account_id.internal_type')
@@ -57,7 +57,7 @@ class account_voucher(models.Model):
 
     voucher_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase')], string='Type', readonly=True, states={'draft': [('readonly', False)]}, oldname="type")
     name = fields.Char('Memo', readonly=True, states={'draft': [('readonly', False)]}, default='')
-    date = fields.Date('Date', readonly=True, select=True, states={'draft': [('readonly', False)]},
+    date = fields.Date(readonly=True, select=True, states={'draft': [('readonly', False)]},
                            help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft': [('readonly', False)]})
     account_id = fields.Many2one('account.account', 'Account', required=True, readonly=True, states={'draft': [('readonly', False)]}, domain=[('deprecated', '=', False)])
@@ -80,11 +80,11 @@ class account_voucher(models.Model):
     reference = fields.Char('Ref #', readonly=True, states={'draft': [('readonly', False)]},
                                  help="Transaction reference number.", copy=False)
     amount = fields.Float(string='Total', digits=0, required=True, readonly=True, states={'draft': [('readonly', False)]})
-    tax_amount = fields.Float(string='Tax Amount', digits=0, readonly=True)
-    number = fields.Char('Number', readonly=True, copy=False)
+    tax_amount = fields.Float(digits=0, readonly=True)
+    number = fields.Char(readonly=True, copy=False)
     move_id = fields.Many2one('account.move', 'Journal Entry', copy=False)
     partner_id = fields.Many2one('res.partner', 'Partner', change_default=1, readonly=True, states={'draft': [('readonly', False)]})
-    paid = fields.Boolean(compute='_check_paid', string='Paid', help="The Voucher has been totally paid.")
+    paid = fields.Boolean(compute='_check_paid', help="The Voucher has been totally paid.")
     pay_now = fields.Selection([
             ('pay_now', 'Pay Directly'),
             ('pay_later', 'Pay Later or Group Funds'),
@@ -149,7 +149,7 @@ class account_voucher(models.Model):
     @api.multi
     def action_cancel_draft(self):
         self.create_workflow()
-        self.write({'state':'draft'})
+        self.write({'state': 'draft'})
 
     @api.multi
     def cancel_voucher(self):
@@ -163,7 +163,7 @@ class account_voucher(models.Model):
         for voucher in self:
             if voucher.state not in ('draft', 'cancel'):
                 raise Warning(_('Cannot delete voucher(s) which are already opened or paid.'))
-        return super(account_voucher, self).unlink()
+        return super(AccountVoucher, self).unlink()
 
     @api.onchange('pay_now')
     def onchange_payment(self):
@@ -293,7 +293,7 @@ class account_voucher(models.Model):
                     else:
                         line.type = 'dr'
 
-                if (line.type=='dr'):
+                if (line.type == 'dr'):
                     tot_line += amount
                     move_line['debit'] = amount
                 else:
@@ -311,7 +311,6 @@ class account_voucher(models.Model):
                 move_line['amount_currency'] = amount_currency
                 self.env['account.move.line'].create(move_line)
         return tot_line
-
 
     @api.multi
     def _get_company_currency(self):
@@ -377,7 +376,7 @@ class account_voucher(models.Model):
     def _track_subtype(self, init_values):
         if 'state' in init_values:
             return 'account_voucher.mt_voucher_state_change'
-        return super(account_voucher, self)._track_subtype(init_values)
+        return super(AccountVoucher, self)._track_subtype(init_values)
 
 
 class account_voucher_line(models.Model):
@@ -391,7 +390,7 @@ class account_voucher_line(models.Model):
         self.price_subtotal = taxes['total_excluded']
 
     name = fields.Text(string='Description', required=True)
-    sequence = fields.Integer(string='Sequence', default=10,
+    sequence = fields.Integer(default=10,
         help="Gives the sequence of this line when displaying the voucher.")
     voucher_id = fields.Many2one('account.voucher', 'Voucher', required=1, ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product',
@@ -403,9 +402,9 @@ class account_voucher_line(models.Model):
         digits=dp.get_precision('Product Price'))
     price_subtotal = fields.Float(string='Amount', digits=0,
         store=True, readonly=True, compute='_compute_subtotal')
-    quantity = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
+    quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
-    account_id = fields.Many2one('account.account','Account', required=True, domain=[('deprecated', '=', False)])
+    account_id = fields.Many2one('account.account', 'Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     company_id = fields.Many2one('res.company', related='voucher_id.company_id', string='Company', store=True, readonly=True)
-    tax_ids = fields.Many2many('account.tax', string='Tax', domain=[('price_include','=', False)], help="Only for tax excluded from price")
+    tax_ids = fields.Many2many('account.tax', string='Tax', domain=[('price_include', '=', False)], help="Only for tax excluded from price")

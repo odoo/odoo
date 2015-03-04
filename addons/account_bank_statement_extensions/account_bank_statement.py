@@ -24,7 +24,7 @@ from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 
 
-class account_bank_statement(models.Model):
+class AccountBankStatement(models.Model):
     _inherit = 'account.bank.statement'
 
     @api.multi
@@ -33,18 +33,18 @@ class account_bank_statement(models.Model):
         if vals.get('line_ids') or self._context.get('ebanking_import'):
             res = super(models.Model, self).write(vals)
         else:
-            res = super(account_bank_statement, self).write(vals)
+            res = super(AccountBankStatement, self).write(vals)
         return res
 
     @api.multi
     def button_confirm_bank(self):
-        super(account_bank_statement, self).button_confirm_bank()
+        super(AccountBankStatement, self).button_confirm_bank()
         for st in self:
             st.line_ids.write({'state': 'confirm'})
 
     @api.multi
     def button_cancel(self):
-        super(account_bank_statement, self).button_cancel()
+        super(AccountBankStatement, self).button_cancel()
         for st in self:
             st.line_ids.write({'state': 'draft'})
 
@@ -83,7 +83,7 @@ class AccountBankStatementLineGlobal(models.Model):
         return statment_global_lines.name_get()
 
 
-class account_bank_statement_line(models.Model):
+class AccountBankStatementLine(models.Model):
     _inherit = 'account.bank.statement.line'
 
     val_date = fields.Date(string='Value Date', states={'confirm': [('readonly', True)]})
@@ -99,4 +99,4 @@ class account_bank_statement_line(models.Model):
     def unlink(self):
         if self._context.get('block_statement_line_delete'):
             raise UserError(_('Delete operation not allowed. Please go to the associated bank statement in order to delete and/or modify bank statement line.'))
-        return super(account_bank_statement_line, self).unlink()
+        return super(AccountBankStatementLine, self).unlink()

@@ -1,16 +1,17 @@
 from openerp import models, fields, api
 
-class account_common_journal_report(models.TransientModel):
+
+class AccountCommonJournalReport(models.TransientModel):
     _name = 'account.common.journal.report'
     _description = 'Account Common Journal Report'
     _inherit = "account.common.report"
 
-    amount_currency = fields.Boolean(string='With Currency', 
+    amount_currency = fields.Boolean(string='With Currency',
         help="Print Report with the currency column if the currency differs from the company currency.")
 
     @api.multi
     def _build_contexts(self, data):
-        result = super(account_common_journal_report, self)._build_contexts(data)
+        result = super(AccountCommonJournalReport, self)._build_contexts(data)
 
         if data['form']['filter'] == 'filter_date':
             self._cr.execute('SELECT date FROM account_move_line WHERE date >= %s AND date <= %s', (data['form']['date_from'], data['form']['date_to']))

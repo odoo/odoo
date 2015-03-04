@@ -3,23 +3,23 @@
 from openerp import api, fields, models, _
 
 
-class bank(models.Model):
+class Bank(models.Model):
     _inherit = "res.partner.bank"
 
-    journal_id = fields.Many2one('account.journal', string='Account Journal', 
+    journal_id = fields.Many2one('account.journal', string='Account Journal',
         help="This journal will be created automatically for this bank account when you save the record")
     currency_id = fields.Many2one('res.currency', related='journal_id.currency', string='Currency',
         readonly=True, help="Currency of the related account journal.")
 
     @api.model
     def create(self, data):
-        result = super(bank, self).create(data)
+        result = super(Bank, self).create(data)
         result.post_write()
         return result
 
     @api.multi
     def write(self, data):
-        result = super(bank, self).write(data)
+        result = super(Bank, self).write(data)
         self.post_write()
         return result
 
@@ -37,7 +37,7 @@ class bank(models.Model):
 
         for data in bank_dicts:
             data['currency_name'] = data.get('currency_id') and currency_name[data['currency_id'][0]] or ''
-        return super(bank, self)._prepare_name_get(bank_dicts)
+        return super(Bank, self)._prepare_name_get(bank_dicts)
 
     @api.multi
     def post_write(self):
@@ -49,7 +49,7 @@ class bank(models.Model):
                 # Find the code and parent of the bank account to create
                 dig = 6
                 current_num = 1
-                account = AccountObj.search([('internal_type','=','liquidity'), ('company_id', '=', bank.company_id.id)], limit=1)
+                account = AccountObj.search([('internal_type', '=', 'liquidity'), ('company_id', '=', bank.company_id.id)], limit=1)
                 # No liquidity account exists, no template available
                 if not account: continue
 
@@ -68,12 +68,12 @@ class bank(models.Model):
                     'reconcile': False,
                     'company_id': bank.company_id.id,
                 }
-                acc_bank_id  = AccountObj.create(acc)
+                acc_bank = AccountObj.create(acc)
 
                 new_code = 1
                 while True:
                     code = _('BNK')+str(new_code)
-                    account = JournalObj.search([('code','=',code)], limit=1)
+                    account = JournalObj.search([('code', '=', code)], limit=1)
                     if not account:
                         break
                     new_code += 1
@@ -85,8 +85,8 @@ class bank(models.Model):
                     'type': 'bank',
                     'company_id': bank.company_id.id,
                     'analytic_journal_id': False,
-                    'default_credit_account_id': acc_bank_id.id,
-                    'default_debit_account_id': acc_bank_id.id,
+                    'default_credit_account_id': acc_bank.id,
+                    'default_debit_account_id': acc_bank.id,
                 }
 
                 bank.journal_id = JournalObj.create(vals_journal)

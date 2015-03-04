@@ -23,12 +23,13 @@ from openerp import models, api
 from openerp.tools.translate import _
 from common_report_header import common_report_header
 
+
 class PartnerBalanceReport(models.AbstractModel, common_report_header):
     _name = 'report.account.report_partnerbalance'
 
     @api.model
     def _lines(self, data):
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
@@ -87,7 +88,7 @@ class PartnerBalanceReport(models.AbstractModel, common_report_header):
             # For the first element we always add the line
             # type = 1 is the line is the first of the account
             # type = 2 is an other line of the account
-            if i==0:
+            if i == 0:
                 # We add the first as the header
                 #
                 ##
@@ -194,7 +195,7 @@ class PartnerBalanceReport(models.AbstractModel, common_report_header):
 
     @api.model
     def _sum_debit(self, data):
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
         if not data.get('form', False) and data['form'].get('ids'):
@@ -212,7 +213,7 @@ class PartnerBalanceReport(models.AbstractModel, common_report_header):
 
     @api.model
     def _sum_credit(self, data):
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
         if not data.get('form', False) and data['form'].get('ids'):
@@ -231,7 +232,7 @@ class PartnerBalanceReport(models.AbstractModel, common_report_header):
     @api.model
     def _sum_litige(self, data):
         #gives the total of move lines with blocked boolean set to TRUE for the report selection
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
@@ -292,11 +293,10 @@ class PartnerBalanceReport(models.AbstractModel, common_report_header):
             'get_fiscalyear': self._get_fiscalyear,
             'get_journal': self._get_journal,
             'get_target_move': self._get_target_move,
-            'get_partners':self._get_partners,
+            'get_partners': self._get_partners,
             'sum_debit': self._sum_debit,
             'sum_credit': self._sum_credit,
             'sum_litige': self._sum_litige,
             'lines': self._lines
         }
         return report_obj.render('account.report_partnerbalance', docargs)
-

@@ -1,7 +1,7 @@
 from openerp import models, fields, api
 
 
-class account_report_general_ledger(models.TransientModel):
+class AccountReportGeneralLedger(models.TransientModel):
     _inherit = "account.common.account.report"
     _name = "account.report.general.ledger"
     _description = "General Ledger Report"
@@ -26,7 +26,7 @@ class account_report_general_ledger(models.TransientModel):
         context = dict(self._context or {})
         data = self.pre_print_report(data)
         data['form'].update(self.read(['landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
-        if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record
+        if not data['form']['fiscalyear_id']:  # GTK client problem onchange does not consider in save record
             data['form'].update({'initial_balance': False})
 
         if data['form']['landscape'] is False:
@@ -35,4 +35,3 @@ class account_report_general_ledger(models.TransientModel):
             context['landscape'] = data['form']['landscape']
 
         return self.env['report'].with_context(context).get_action(self.env['account.report.general.ledger'], 'account.report_generalledger', data=data)
-

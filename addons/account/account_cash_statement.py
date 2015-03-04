@@ -5,7 +5,7 @@ from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 
 
-class account_cashbox_line(models.Model):
+class AccountCashboxLine(models.Model):
     """ Cash Box Details """
     _name = 'account.cashbox.line'
     _description = 'CashBox Line'
@@ -28,7 +28,7 @@ class account_cashbox_line(models.Model):
     parent_state = fields.Selection([('draft', 'New'), ('open', 'Open'), ('confirm', 'Closed')], related='cash_statement_id.state', string='Cash Statement Status')
 
 
-class account_cash_statement(models.Model):
+class AccountCashStatement(models.Model):
     _name = 'account.cash.statement'
     _inherits = {'account.bank.statement': 'statement_id'}
 
@@ -55,7 +55,7 @@ class account_cash_statement(models.Model):
         if journal and (journal.type == 'cash'):
             last_coin_value = None
 
-            if journal.with_last_closing_balance == True:
+            if journal.with_last_closing_balance:
                 domain = [('journal_id', '=', journal.id),
                           ('state', '=', 'confirm')]
                 last_bank_statement = self.search(domain, limit=1, order='create_date desc')
@@ -66,9 +66,9 @@ class account_cash_statement(models.Model):
                     )
             for value in journal.cashbox_line_ids:
                 nested_values = {
-                    'number_closing' : 0,
-                    'number_opening' : last_coin_value.get(value.coin_value, 0) if isinstance(last_coin_value, dict) else 0,
-                    'coin_value' : value.coin_value
+                    'number_closing': 0,
+                    'number_opening': last_coin_value.get(value.coin_value, 0) if isinstance(last_coin_value, dict) else 0,
+                    'coin_value': value.coin_value
                 }
                 details_ids.append([0, False, nested_values])
         return details_ids
@@ -116,7 +116,7 @@ class account_cash_statement(models.Model):
         return statement.statement_id.button_confirm_bank()
 
 
-class account_journal(models.Model):
+class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     @api.model
@@ -137,7 +137,7 @@ class account_journal(models.Model):
         string='CashBox', copy=True, default=lambda self: self._default_cashbox_line_ids())
 
 
-class account_journal_cashbox_line(models.Model):
+class AccountJournalCashboxLine(models.Model):
     _name = 'account.journal.cashbox.line'
     _rec_name = 'coin_value'
     _order = 'coin_value asc'

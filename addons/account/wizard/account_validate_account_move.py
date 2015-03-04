@@ -2,7 +2,7 @@ from openerp import models, fields, api, _
 from openerp.exceptions import UserError
 
 
-class validate_account_move(models.TransientModel):
+class ValidateAccountMove(models.TransientModel):
     _name = "validate.account.move"
     _description = "Validate Account Move"
 
@@ -18,7 +18,7 @@ class validate_account_move(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
-class validate_account_move_lines(models.TransientModel):
+class ValidateAccountMoveLines(models.TransientModel):
     _name = "validate.account.move.lines"
     _description = "Validate Account Move Lines"
 
@@ -28,7 +28,7 @@ class validate_account_move_lines(models.TransientModel):
         move_ids = []
         data_line = self.env['account.move.line'].browse(context['active_ids'])
         for line in data_line:
-            if line.move_id.state=='draft':
+            if line.move_id.state == 'draft':
                 move_ids.append(line.move_id)
         move_ids = list(set(move_ids))
         if not move_ids:

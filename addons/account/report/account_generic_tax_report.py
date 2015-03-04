@@ -129,12 +129,12 @@ class report_account_generic_tax_report(models.AbstractModel):
         return 'date_range'
 
 
-class account_report_context_tax(models.TransientModel):
+class AccountReportContextTax(models.TransientModel):
     _name = "account.report.context.tax"
     _description = "A particular context for the generic tax report"
     _inherit = "account.report.context.common"
 
-    footnotes = fields.Many2many('account.report.footnote', 'account_context_footnote_tax', string='Footnotes')
+    footnotes = fields.Many2many('account.report.footnote', 'account_context_footnote_tax')
 
     @api.multi
     def add_footnote(self, type, target_id, column, number, text):

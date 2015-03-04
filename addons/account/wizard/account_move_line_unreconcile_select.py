@@ -1,6 +1,7 @@
 from openerp import models, fields, api
 
-class account_move_line_unreconcile_select(models.TransientModel):
+
+class AccountMoveLineUnreconcileSelect(models.TransientModel):
     _name = "account.move.line.unreconcile.select"
     _description = "Unreconciliation"
 

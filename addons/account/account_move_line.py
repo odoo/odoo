@@ -8,7 +8,8 @@ from openerp.report import report_sxw
 from openerp.tools import float_is_zero
 from openerp.tools.safe_eval import safe_eval
 
-class account_move_line(models.Model):
+
+class AccountMoveLine(models.Model):
     _name = "account.move.line"
     _description = "Journal Item"
     _order = "date desc, id desc"
@@ -69,7 +70,7 @@ class account_move_line(models.Model):
 
         journal_type = context.get('journal_type', False)
         if journal_type:
-            recs = self.env['account.journal'].search([('type','=',journal_type)])
+            recs = self.env['account.journal'].search([('type', '=', journal_type)])
             if not recs:
                 action = self.env.ref('account.action_account_journal_form')
                 msg = _("""Cannot find any account journal of "%s" type for this company, You should create one.\n Please go to Journal Configuration""") % journal_type.replace('_', ' ').title()
@@ -89,7 +90,7 @@ class account_move_line(models.Model):
             move_line.balance_cash_basis = move_line.debit_cash_basis - move_line.credit_cash_basis
 
     name = fields.Char(required=True)
-    quantity = fields.Float(digits=(16,2),
+    quantity = fields.Float(digits=(16, 2),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
     product_id = fields.Many2one('product.product', string='Product')
@@ -101,7 +102,7 @@ class account_move_line(models.Model):
     debit_cash_basis = fields.Float(digits=0, default=0.0, compute='_compute_cash_basis', store=True)
     credit_cash_basis = fields.Float(digits=0, default=0.0, compute='_compute_cash_basis', store=True)
     balance_cash_basis = fields.Float(compute='_compute_cash_basis', store=True, digits=0, default=0.0, help="Technical field holding the debit_cash_basis - credit_cash_basis in order to open meaningful graph views from reports")
-    amount_currency = fields.Float(string='Amount Currency', default=0.0, digits=0,
+    amount_currency = fields.Float(default=0.0, digits=0,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency,
         help="The optional other currency if it is a multi-currency entry.")
@@ -137,9 +138,9 @@ class account_move_line(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('account.move.line'))
 
     # TODO: put the invoice link and partner_id on the account_move
-    invoice = fields.Many2one('account.invoice', string='Invoice')
+    invoice = fields.Many2one('account.invoice')
     partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
-    user_type = fields.Many2one('account.account.type', related='account_id.user_type', string='User Type', index=True, store=True)
+    user_type = fields.Many2one('account.account.type', related='account_id.user_type', index=True, store=True)
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
@@ -177,7 +178,7 @@ class account_move_line(models.Model):
                     raise UserError(_('The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal.'))
 
     @api.multi
-    @api.constrains('currency_id','amount_currency')
+    @api.constrains('currency_id', 'amount_currency')
     def _check_currency_and_amount(self):
         for line in self:
             if (line.amount_currency and not line.currency_id):
@@ -346,7 +347,7 @@ class account_move_line(models.Model):
         """ Create domain criteria that are relevant to manual reconciliation. """
         domain = ['&', ('reconciled', '=', False), ('account_id', '=', account_id)]
         if partner_id:
-            domain = expression.AND([domain, [('partner_id','=',partner_id)]])
+            domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
         generic_domain = self.domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str)
 
         return expression.AND([generic_domain, domain])
@@ -758,7 +759,7 @@ class account_move_line(models.Model):
                     'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
                 })
 
-        new_line = super(account_move_line, self).create(vals)
+        new_line = super(AccountMoveLine, self).create(vals)
         for tax_line_vals in tax_lines_vals:
             # TODO: remove .with_context(context) once this context nonsense is solved
             self.with_context(context).create(tax_line_vals, check=False)
@@ -782,7 +783,7 @@ class account_move_line(models.Model):
             context['journal_id'] = line.journal_id.id
             context['date'] = line.date
             line.with_context(context)
-            result = super(account_move_line, line).unlink()
+            result = super(AccountMoveLine, line).unlink()
         if check and moves:
             moves.with_context(context)._post_validate()
         return result
@@ -806,7 +807,7 @@ class account_move_line(models.Model):
         #         # Do something here
 
         todo_date = vals.pop('date', False)
-        result = super(account_move_line, self).write(vals)
+        result = super(AccountMoveLine, self).write(vals)
         if check:
             done = []
             for line in self:
@@ -941,7 +942,7 @@ class account_move_line(models.Model):
         return where_clause, where_clause_params
 
 
-class account_partial_reconcile(models.Model):
+class AccountPartialReconcile(models.Model):
     _name = "account.partial.reconcile"
     _description = "Partial Reconcile"
 
@@ -999,7 +1000,7 @@ class account_partial_reconcile(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(account_partial_reconcile, self).create(vals)
+        res = super(AccountPartialReconcile, self).create(vals)
         #eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
         res.create_exchange_rate_entry()
         return res
@@ -1012,4 +1013,4 @@ class account_partial_reconcile(models.Model):
         #TODO: do the below lines as soon os the reverse entry feature/wizard is implemented
         exchange_rate_entries = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', self.ids)])
         exchange_rate_entries.reverse_moves()
-        return super(account_partial_reconcile, self).unlink()
+        return super(AccountPartialReconcile, self).unlink()
