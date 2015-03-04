@@ -38,7 +38,6 @@ class account_bank_statement(models.Model):
                 return journals[0]
         return False
 
-    _order = "date desc, id desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _order = "date desc, id desc"
