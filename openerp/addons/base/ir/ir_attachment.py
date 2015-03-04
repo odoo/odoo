@@ -108,7 +108,9 @@ class ir_attachment(osv.osv):
         return fname
 
     def _file_delete(self, cr, uid, location, fname):
-        count = self.search(cr, 1, [('store_fname','=',fname)], count=True)
+        # using SQL to include files hidden through unlink or due to record rules
+        cr.execute("SELECT COUNT(*) FROM ir_attachment WHERE store_fname = %s", (fname,))
+        count = cr.fetchone()[0]
         if count <= 1:
             full_path = self._full_path(cr, uid, location, fname)
             try:
