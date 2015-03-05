@@ -4377,18 +4377,25 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
 
 instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
     init: function(parent, dataset, views, flags) {
-        // Only display the ControlPanel when there are several views to display
+        // By default, render buttons and pager in O2M fields, but no sidebar
         var flags = _.extend({}, flags, {
+            headless: false,
+            search_view: false,
             action_buttons: true,
-            $sidebar: false, 
-            headless: (views.length <= 1)
+            pager: true,
+            sidebar: false,
         });
-        this._super(parent, dataset, views, flags);  
+        this.control_panel = new instance.web.ControlPanel(parent, "One2ManyControlPanel");
+        this._super(parent, dataset, views, flags, null, this.control_panel.bus);
         this.registry = instance.web.views.extend({
             list: 'instance.web.form.One2ManyListView',
             form: 'instance.web.form.One2ManyFormView',
         });
         this.__ignore_blur = false;
+    },
+    start: function() {
+        this.control_panel.prependTo(this.$el);
+        this._super();
     },
     switch_mode: function(mode, unused) {
         if (mode !== 'form') {
