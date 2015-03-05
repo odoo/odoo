@@ -152,7 +152,7 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
         click_item : function(event) {
             this.gui.close_popup();
             if (this.options.confirm) {
-                var item = self.list[parseInt($(event.target).data('item-index'))];
+                var item = this.list[parseInt($(event.target).data('item-index'))];
                 item = item ? item.item : item;
             }
         }
