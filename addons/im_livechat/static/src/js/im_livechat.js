@@ -229,6 +229,7 @@
             this.conversation = parent;
             this.reason = false;
             this.rating = false;
+            this.server_origin = openerp.session.origin;
         },
         start: function(){
             this._super.apply(this.arguments);
