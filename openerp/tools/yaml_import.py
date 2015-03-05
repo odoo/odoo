@@ -300,14 +300,18 @@ class YamlInterpreter(object):
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
+            module = self.module
+            record_id = record.id
+            if '.' in record_id:
+                module, record_id = record_id.split('.',1)
             try:
-                self.pool['ir.model.data']._get_id(self.cr, SUPERUSER_ID, self.module, record.id)
+                self.pool['ir.model.data']._get_id(self.cr, SUPERUSER_ID, module, record_id)
                 default = False
             except ValueError:
                 default = True
 
             if self.isnoupdate(record) and self.mode != 'init':
-                id = self.pool['ir.model.data']._update_dummy(self.cr, SUPERUSER_ID, record.model, self.module, record.id)
+                id = self.pool['ir.model.data']._update_dummy(self.cr, SUPERUSER_ID, record.model, module, record_id)
                 # check if the resource already existed at the last update
                 if id:
                     self.id_map[record] = int(id)
@@ -328,7 +332,7 @@ class YamlInterpreter(object):
 
             record_dict = self._create_record(model, fields, view_info, default=default, context=context)
             id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, record.model, \
-                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
+                    module, record_dict, record_id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
