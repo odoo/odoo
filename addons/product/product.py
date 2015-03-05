@@ -1150,8 +1150,6 @@ class product_product(osv.osv):
         ctx = dict(context or {}, create_product_product=True)
         return super(product_product, self).create(cr, uid, vals, context=ctx)
 
-
-
     def need_procurement(self, cr, uid, ids, context=None):
         return False
 
