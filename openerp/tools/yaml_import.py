@@ -280,7 +280,7 @@ class YamlInterpreter(object):
     def create_osv_memory_record(self, record, fields):
         model = self.get_model(record.model)
         context = self.get_context(record, self.eval_context)
-        record_dict = self._create_record(model, fields)
+        record_dict = self._create_record(model, fields, context=context)
         id_new = model.create(self.cr, self.uid, record_dict, context=context)
         self.id_map[record.id] = int(id_new)
         return record_dict
@@ -300,14 +300,18 @@ class YamlInterpreter(object):
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
+            module = self.module
+            record_id = record.id
+            if '.' in record_id:
+                module, record_id = record_id.split('.',1)
             try:
-                self.pool['ir.model.data']._get_id(self.cr, SUPERUSER_ID, self.module, record.id)
+                self.pool['ir.model.data']._get_id(self.cr, SUPERUSER_ID, module, record_id)
                 default = False
             except ValueError:
                 default = True
 
             if self.isnoupdate(record) and self.mode != 'init':
-                id = self.pool['ir.model.data']._update_dummy(self.cr, SUPERUSER_ID, record.model, self.module, record.id)
+                id = self.pool['ir.model.data']._update_dummy(self.cr, SUPERUSER_ID, record.model, module, record_id)
                 # check if the resource already existed at the last update
                 if id:
                     self.id_map[record] = int(id)
@@ -326,14 +330,14 @@ class YamlInterpreter(object):
                 if view_id is True: varg = False
                 view_info = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
 
-            record_dict = self._create_record(model, fields, view_info, default=default)
+            record_dict = self._create_record(model, fields, view_info, default=default, context=context)
             id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, record.model, \
-                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
+                    module, record_dict, record_id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
 
-    def _create_record(self, model, fields, view_info=None, parent={}, default=True):
+    def _create_record(self, model, fields, view_info=None, parent={}, default=True, context=None):
         """This function processes the !record tag in yalm files. It simulates the record creation through an xml
             view (either specified on the !record tag or the default one for this object), including the calls to
             on_change() functions, and sending only values for fields that aren't set as readonly.
@@ -345,6 +349,13 @@ class YamlInterpreter(object):
             :return: dictionary mapping the field names and their values, ready to use when calling the create() function
             :rtype: dict
         """
+        class dotdict(dict):
+            """ Dictionary class that allow to access a dictionary value by using '.'. This is needed to eval correctly
+                statements like 'parent.fieldname' in context.
+            """
+            def __getattr__(self, attr):
+                return self.get(attr)
+
         def _get_right_one2many_view(fg, field_name, view_type):
             one2many_view = fg[field_name]['views'].get(view_type)
             # if the view is not defined inline, we call fields_view_get()
@@ -386,6 +397,8 @@ class YamlInterpreter(object):
 
             return val
 
+        if context is None:
+            context = {}
         if view_info:
             arch = etree.fromstring(view_info['arch'].decode('utf-8'))
             view = arch if len(arch) else False
@@ -397,11 +410,14 @@ class YamlInterpreter(object):
             onchange_spec = model._onchange_spec(self.cr, SUPERUSER_ID, view_info, context=self.context)
             # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
             # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-            defaults = default and model._add_missing_default_values(self.cr, self.uid, {}, context=self.context) or {}
+            missing_default_ctx = self.context.copy()
+            missing_default_ctx.update(context)
+            defaults = default and model._add_missing_default_values(self.cr, self.uid, {}, context=missing_default_ctx) or {}
 
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
-            # the other default values will be added later on by the create().
-            record_dict = dict([(key, val) for key, val in defaults.items() if key in fg])
+            # the other default values will be added later on by the create(). The other fields in the view that haven't any
+            # default value are set to False because we may have references to them in other field's context
+            record_dict = default and {key: defaults.get(key, False) for key in fg} or {}
 
             # Process all on_change calls
             nodes = [view]
@@ -415,8 +431,14 @@ class YamlInterpreter(object):
                         if (view is not False) and (fg[field_name]['type']=='one2many'):
                             # for one2many fields, we want to eval them using the inline form view defined on the parent
                             one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
+                        ctx = context.copy()
+                        if default and el.get('context'):
+                            browsable_parent = dotdict(parent)
+                            ctx_env = dict(parent=browsable_parent)
+                            evaluated_ctx = eval(el.get('context'), globals_dict=ctx_env, locals_dict=record_dict)
+                            ctx.update(evaluated_ctx)
 
-                        field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default)
+                        field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default, context=ctx)
 
                         #call process_val to not update record_dict if values were given for readonly fields
                         val = process_val(field_name, field_value)
@@ -476,9 +498,9 @@ class YamlInterpreter(object):
             record_dict = {}
 
         for field_name, expression in fields.items():
-            if field_name in record_dict:
+            if record_dict.get(field_name):
                 continue
-            field_value = self._eval_field(model, field_name, expression, default=False)
+            field_value = self._eval_field(model, field_name, expression, parent=record_dict, default=False, context=context)
             record_dict[field_name] = field_value
         return record_dict
 
@@ -508,7 +530,7 @@ class YamlInterpreter(object):
     def process_eval(self, node):
         return eval(node.expression, self.eval_context)
 
-    def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True):
+    def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True, context=None):
         # TODO this should be refactored as something like model.get_field() in bin/osv
         if field_name not in model._fields:
             raise KeyError("Object '%s' does not contain field '%s'" % (model, field_name))
@@ -527,7 +549,7 @@ class YamlInterpreter(object):
             value = self.get_id(expression)
         elif field.type == "one2many":
             other_model = self.get_model(field.comodel_name)
-            value = [(0, 0, self._create_record(other_model, fields, view_info, parent, default=default)) for fields in expression]
+            value = [(0, 0, self._create_record(other_model, fields, view_info, parent=parent, default=default, context=context)) for fields in expression]
         elif field.type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]

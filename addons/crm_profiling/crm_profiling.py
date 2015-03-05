@@ -198,7 +198,6 @@ class partner(osv.osv):
         self.write(cr, uid, [partner_id], {'answers_ids': [[6, 0, answers]]}, context=context)
         return {}
 
-
     def write(self, cr, uid, ids, vals, context=None):
         """
             @param self: The object pointer
@@ -206,12 +205,9 @@ class partner(osv.osv):
             @param uid: the current user’s ID for security checks,
             @param ids: List of crm profiling’s IDs
             @param context: A standard dictionary for contextual values """
-
-        if 'answers_ids' in vals:
-            vals['category_id']=[[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
-
+        if vals.get('answer_ids'):
+            vals['category_id'] = [[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
         return super(partner, self).write(cr, uid, ids, vals, context=context)
-
 
 
 class crm_segmentation(osv.osv):
