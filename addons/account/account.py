@@ -285,6 +285,15 @@ class AccountJournal(models.Model):
     ]
 
     @api.one
+    @api.constrains('inbound_payment_methods', 'outbound_payment_methods')
+    def _check_payment_methods(self):
+        # TODO: or allow to set no payment method in which case the journal can't be used for the corresponding payment operation ?
+        if not self.inbound_payment_methods:
+            raise UserError(_('Configuration error!\nYou must enable at least an inbound payment method.'))
+        if not self.outbound_payment_methods:
+            raise UserError(_('Configuration error!\nYou must enable at least an outbound payment method.'))
+
+    @api.one
     @api.constrains('currency', 'default_credit_account_id', 'default_debit_account_id')
     def _check_currency(self):
         if self.currency:

@@ -1060,17 +1060,17 @@ class AccountInvoice(models.Model):
     def pay_and_reconcile(self, pay_amount, date, pay_journal, writeoff_acc=None):
         assert len(self) == 1, "Can only pay one invoice at a time."
         ref = self.type in ('in_invoice', 'in_refund') and self.reference or self.number
-        self.env['account.payment'].create({
+        payment = self.env['account.payment'].create({
             'invoice_id': self.id,
             'partner_id': self.partner_id.id,
-            'payment_amount': pay_amount,
-            'payment_type': self.type,
-            'date_paid': date,
+            'amount': pay_amount,
+            'date': date,
             'reference': ref,
             'journal_id': pay_journal.id,
             'payment_difference_handling': 'open' if writeoff_acc == None else 'reconcile',
             'writeoff_account': writeoff_acc.id if writeoff_acc else False,
         })
+        payment.post()
 
     @api.v7
     def pay_and_reconcile(self, cr, uid, ids, pay_amount, date, pay_journal_id, writeoff_acc_id=None, context=None):

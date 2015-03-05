@@ -110,14 +110,14 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-    <record model="ir.rule" id="account_operation_template_comp_rule">
+    <record model="ir.rule" id="account_payment_method_comp_rule">
         <field name="name">Account payment method company rule</field>
         <field name="model_id" ref="model_account_payment_method"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-    <record model="ir.rule" id="account_operation_template_comp_rule">
+    <record model="ir.rule" id="account_payment_comp_rule">
         <field name="name">Account payment company rule</field>
         <field name="model_id" ref="model_account_payment"/>
         <field name="global" eval="True"/>

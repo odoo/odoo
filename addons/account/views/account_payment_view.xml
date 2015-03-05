@@ -11,11 +11,11 @@
                     <field name="state" invisible="1"/>
                     <field name="journal_id"/>
                     <field name="payment_type"/>
-                    <field name="payment_amount"/>
+                    <field name="amount"/>
                     <field name="payment_method"/>
                     <field name="partner_id"/>
                     <field name="destination_journal_id"/>
-                    <field name="date_paid"/>
+                    <field name="date"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -34,8 +34,8 @@
                     <filter string="Transfers" domain="[('payment_type','=','transfer')]"/>
                     <separator />
                     <filter string="Draft" domain="[('state','=','draft')]" name='state_draft'/>
-                    <filter string="To Process" domain="[('payment_state','in',('todo', 'failed'))]" name='state_todo'/>
-                    <filter string="Processed" domain="[('payment_state','=','done')]"/>
+                    <filter string="To Process" domain="[('state','!=','draft'), ('payment_state','in',('todo', 'failed'))]" name='state_todo'/>
+                    <filter string="Processed" domain="[('state','!=','draft'), ('payment_state','=','done')]"/>
                 </search>
             </field>
         </record>
@@ -43,7 +43,6 @@
         <record id="view_account_payment_form" model="ir.ui.view">
             <field name="name">account.payment.form</field>
             <field name="model">account.payment</field>
-            <field name="priority">5</field>
             <field name="arch" type="xml">
                 <form string="Register Payment" version="7">
                     <header>
@@ -59,9 +58,9 @@
                                 <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                             </group>
                             <group>
-                                <field name="date_paid" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="date" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="partner_id" attrs="{'required': [('payment_type', '!=', 'transfer')], 'invisible': [('payment_type', 'in', ('transfer', False))], 'readonly': [('state', '=', 'confirmed')]}"/>
-                                <field name="payment_amount" widget="monetary" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="amount" widget="monetary" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
@@ -100,23 +99,37 @@
         <record id="view_account_payment_invoice_form" model="ir.ui.view">
             <field name="name">account.payment.invoice.form</field>
             <field name="model">account.payment</field>
-            <field name="inherit_id" ref="view_account_payment_form"/>
-            <field name="mode">primary</field>
-            <field name="priority">10</field>
             <field name="arch" type="xml">
-                <!-- TODO: since everything in the group on the left is hidden, it is ugly. Move some fields ? Remove first group ? Make a new view ? -->
-                <header position="attributes"><attribute name="invisible">1</attribute></header>
-                <field name="invoice_id" position="attributes"><attribute name="invisible">1</attribute></field>
-                <field name="partner_id" position="attributes"><attribute name="invisible">1</attribute></field>
-                <field name="partner_type" position="attributes"><attribute name="invisible">1</attribute></field>
-                <field name="payment_type" position="attributes"><attribute name="invisible">1</attribute></field>
-                <xpath expr="//form" position="inside">
+                <form string="Register Payment" version="7">
+                    <sheet>
+                        <group>
+                            <field name="payment_type" invisible="1"/>
+                            <field name="partner_type" invisible="1"/>
+                            <field name="invoice_id" invisible="1"/>
+                            <field name="partner_id" invisible="1"/>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                                <field name="date"/>
+                                <field name="amount" widget="monetary"/>
+                                <field name="journal_id" widget="selection"/>
+                                <field name="hide_payment_method" invisible="1"/>
+                                <!-- domain just serves to prevent a visual glitch and is overrident via onchanges -->
+                                <field name="payment_method" widget="radio" create="false" class="oe_no_button" attrs="{'invisible': ['|', ('journal_id', '=', False), ('hide_payment_method', '=', True)]}" domain="[('type', 'not in', ['inbound', 'outbound'])]"/>
+                                <field name="reference"/>
+                            </group>
+                            <group>
+                                <field name="payment_difference" attrs="{'invisible': ['|', ('invoice_id', '=', False), ('payment_difference', '&lt;=', 0.0)]}"/>
+                                <field name="payment_difference_handling" widget="radio" attrs="{'required': [('invoice_id', '!=', False)], 'invisible': ['|', ('invoice_id', '=', False), '|', ('payment_difference', '&lt;=', 0.0)]}"/>
+                                <field name="writeoff_account" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')], 'invisible': ['|', ('invoice_id', '=', False), '|', ('payment_difference', '&lt;=', 0.0), ('payment_difference_handling', '!=', 'reconcile')]}"/>
+                            </group>
+                        </group>
+                    </sheet>
                     <footer>
                         <button string='Register Payment' name="button_create_and_post" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
-                </xpath>
+                </form>
             </field>
         </record>
 
@@ -141,12 +154,11 @@
                     <group>
                         <group>
                             <field name="journal_id" widget="selection"/>
-                            <field name="payment_type" invisible="1"/>
                             <field name="hide_payment_method" invisible="1"/>
                             <field name="payment_method" widget="radio" create="false" class="oe_no_button" attrs="{'invisible': ['|', ('journal_id', '=', False), ('hide_payment_method', '=', True)]}"/>
                         </group>
                         <group>
-                            <field name="date_paid"/>
+                            <field name="date"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
