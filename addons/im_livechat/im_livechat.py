@@ -25,7 +25,7 @@ import random
 import re
 
 from openerp.osv import osv, fields
-from openerp import tools
+from openerp import api, models, tools
 
 
 class im_livechat_channel(osv.Model):
@@ -293,3 +293,26 @@ class im_chat_session(osv.Model):
             else:
                 return super(im_chat_session, self).quit_user(cr, uid, session.id, context=context)
 
+
+    def cron_remove_empty_session(self, cr, uid, context=None):
+        groups = self.pool['im_chat.message'].read_group(cr, uid, [], ['to_id'], ['to_id'], context=context)
+        not_empty_session_ids = [group['to_id'][0] for group in groups]
+        empty_session_ids = self.search(cr, uid, [('id', 'not in', not_empty_session_ids), ('channel_id', '!=', False)], context=context)
+        self.unlink(cr, uid, empty_session_ids, context=context)
+
+
+
+class Rating(models.Model):
+
+    _inherit = "rating.rating"
+
+    @api.one
+    @api.depends('res_model', 'res_id')
+    def _compute_res_name(self):
+        # cannot change the rec_name of session since it is use to create the bus channel
+        # so, need to override this method to set the same alternative rec_name as in reporting
+        if self.res_model == 'im_chat.session':
+            current_object = self.env[self.res_model].sudo().browse(self.res_id)
+            self.res_name = ('%s / %s') % (current_object.channel_id.name, current_object.id)
+        else:
+            super(Rating, self)._compute_res_name()

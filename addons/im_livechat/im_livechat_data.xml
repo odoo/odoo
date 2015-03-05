@@ -13,6 +13,19 @@
             <field name="action_id" ref="action_client_livechat_menu"/>
             <field name="state">open</field>
         </record>
+
+        <!-- Remove automatically the empty anonoymous sessions -->
+        <record id="ir_cron_remove_empty_session" model="ir.cron">
+            <field name="name">[im_livechat] Remove empty anonymous sessions</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model">im_chat.session</field>
+            <field name="function">cron_remove_empty_session</field>
+            <field name="active" eval="True"/>
+        </record>
+
     </data>
 
     <data>
