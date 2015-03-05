@@ -14,13 +14,16 @@
 
         openerp.website.EditorBar.include({
             start: function () {
+                var self = this;
                 var res = this._super.apply(this, arguments);
                 if (location.search.indexOf("enable_editor") !== -1) {
                     this.on('rte:ready', this, function () {
                         $("#website-top-edit").hide();
-                        if (window.top.openerp[callback+"_editor"]) {
-                            window.top.openerp[callback+"_editor"](this);
-                        }
+                        setTimeout(function () {
+                            if (window.top.openerp[callback+"_editor"]) {
+                                window.top.openerp[callback+"_editor"](this);
+                            }
+                        },0);
 
                         var $editable = $("#wrapwrap .o_editable:first");
                         setTimeout(function () {
@@ -31,6 +34,15 @@
                         this.rte.on('change', this, function () {
                             window.top.openerp[callback+"_downup"]($editable.prop('innerHTML'));
                         });
+
+
+                        $(window).on('keydown', function (event) {
+                            if(event.keyCode === 27 && $("body", window.top.document).hasClass("o_form_FieldTextHtml_fullscreen")) {
+                                $(".o_fullscreen").trigger("click");
+                            }
+                            $(window).trigger('resize');
+                        });
+
                     });
 
                     var style = document.createElement("style");
@@ -45,6 +57,9 @@
                     window.top.openerp[callback+"_editor"](this);
                 }
                 return res;
+            },
+            cancel: function () {
+                return;
             }
         });
 
