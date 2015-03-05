@@ -93,7 +93,7 @@ class FinancialReportController(http.Controller):
             context_all_id.write({'valuemax': context_all_id.valuenow + len(partners)})
         if context_all_id.partner_filter == 'all':
             partners = request.env['res.partner'].get_partners_with_overdue()
-        for partner in partners[((page - 1) * 15):(page * 15)]:
+        for partner in partners[((page - 1) * 3):(page * 3)]:
             context_id = context_obj.sudo(uid).search([('partner_id', '=', partner.id)], limit=1)
             if not context_id:
                 context_id = context_obj.with_context(lang=partner.lang).create({'partner_id': partner.id})
@@ -106,6 +106,7 @@ class FinancialReportController(http.Controller):
             'reports': reports,
             'report': report_obj,
             'mode': 'display',
+            'last_page': (len(partners) - 1) / 3 == page - 1,
             'page': page,
             'context_all': context_all_id,
             'just_arrived': 'partner_done' not in kw and 'partner_skipped' not in kw,

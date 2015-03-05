@@ -239,7 +239,8 @@
         <div t-if="len(reports) != 0 or page > 1">
             <t t-if="page == 1"><i class="fa fa-fw fa-chevron-circle-left fa-2x disabled"></i></t>
             <t t-if="page > 1"><a t-att-href="'/account/followup_report/all/page/' + str(page - 1)"><i class="fa fa-fw fa-chevron-circle-left fa-2x"></i></a></t>
-            <a t-att-href="'/account/followup_report/all/page/' + str(page + 1)"><i class="fa fa-fw fa-chevron-circle-right fa-2x"></i></a>
+            <t t-if="not last_page"><a t-att-href="'/account/followup_report/all/page/' + str(page + 1)"><i class="fa fa-fw fa-chevron-circle-right fa-2x"></i></a></t>
+            <t t-if="last_page"><i class="fa fa-fw fa-chevron-circle-right fa-2x disabled"></i></t>
             <t t-foreach="context_all.get_alerts()" t-as="alert">
                 <div class="alert alert-info alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&amp;times;</span></button>
