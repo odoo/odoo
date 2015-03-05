@@ -134,14 +134,10 @@ class account_report_context_common(models.TransientModel):
             quarter = (dt_to.month - 1) / 3 + 1
             return dt_to.strftime('Quarter #' + str(quarter) + ' %Y')
         if 'year' in self.date_filter:
-            domain = [('company_id', '=', self.company_id.id), ('date_stop', '=', dt_to.strftime('%Y-%m-%d'))]
-            if dt_from:
-                domain.append(('date_start', '=', dt_from.strftime('%Y-%m-%d')))
-            fy_ids = self.env['account.fiscalyear'].search(domain, limit=1)
-            if fy_ids:
-                return fy_ids.name
-            else:
+            if self.company_id.fiscalyear_last_day == 31 and self.company_id.fiscalyear_last_month == 12:
                 return dt_to.strftime('%Y')
+            else:
+                return str(dt_to.year - 1) + ' - ' + str(dt_to.year)
         if not dt_from:
             return dt_to.strftime('(as at %d %b %Y)')
         return dt_from.strftime('(From %d %b %Y <br />') + dt_to.strftime('to %d %b %Y)')
@@ -241,44 +237,20 @@ class account_report_context_common(models.TransientModel):
                             dt_from = dt_from.replace(month=10, year=dt_from.year - 1)
                         columns += [(dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d"))]
         elif 'year' in self.date_filter:
-            domain = [('company_id', '=', self.company_id.id), ('date_stop', '=', self.date_to)]
-            if self.get_report_obj().get_report_type() != 'no_date_range':
-                domain.append(('date_start', '=', self.date_from))
-            fy_ids = self.env['account.fiscalyear'].search(domain, limit=1)
-            with_fy = False
-            if fy_ids:
-                dt_from = datetime.strptime(fy_ids.date_start, "%Y-%m-%d")
-                dt_to = datetime.strptime(fy_ids.date_stop, "%Y-%m-%d")
-                with_fy = True
+            dt_to = datetime.strptime(self.date_to, "%Y-%m-%d")
             for k in xrange(0, self.periods_number):
-                if with_fy:
-                    dt = dt_from - timedelta(days=1)
-                    domain = [('company_id', '=', self.company_id.id),
-                              ('date_stop', '=', dt.strftime("%Y-%m-%d"))]
-                    fy_ids = self.env['account.fiscalyear'].search(domain, limit=1)
-                    if fy_ids:
-                        dt_from = datetime.strptime(fy_ids.date_start, "%Y-%m-%d")
-                        dt_to = datetime.strptime(fy_ids.date_stop, "%Y-%m-%d")
-                        if display:
-                            columns.append(fy_ids.name)
-                        else:
-                            if self.get_report_obj().get_report_type() == 'no_date_range':
-                                columns += [(False, dt_to.strftime("%Y-%m-%d"))]
-                            else:
-                                columns += [(dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d"))]
-                    else:
-                        with_fy = False
-                if not with_fy:
-                    if display:
-                        dt_to = dt_to.replace(year=dt_to.year - 1)
+                dt_to = dt_to.replace(year=dt_to.year - 1)
+                if display:
+                    if dt_to.strftime("%m-%d") == '12-31':
                         columns += [dt_to.year]
                     else:
-                        dt_to = dt_to.replace(year=dt_to.year - 1)
-                        if self.get_report_obj().get_report_type() == 'no_date_range':
-                            columns += [(False, dt_to.strftime("%Y-%m-%d"))]
-                        else:
-                            dt_from = dt_from.replace(year=dt_from.year - 1)
-                            columns += [(dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d"))]
+                        columns += [str(dt_to.year - 1) + ' - ' + str(dt_to.year)]
+                else:
+                    if self.get_report_obj().get_report_type() == 'no_date_range':
+                        columns += [(False, dt_to.strftime("%Y-%m-%d"))]
+                    else:
+                        dt_from = dt_to.replace(year=dt_to.year - 1) + timedelta(days=1)
+                        columns += [(dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d"))]
         else:
             if self.get_report_obj().get_report_type() != 'no_date_range':
                 dt_from = datetime.strptime(self.date_from, "%Y-%m-%d")

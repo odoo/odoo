@@ -125,34 +125,23 @@
                             var contextObj = new openerp.Model(result);
                             contextObj.query(['company_id'])
                             .filter([['id', '=', context_id]]).first().then(function (context) {
-                                var fyObj = new openerp.Model('account.fiscalyear');
+                                var compObj = new openerp.Model('res.company');
                                 var today = new Date();
-                                var today_last_year = today
-                                today_last_year.setFullYear(today.getFullYear() - 1);
-                                today_last_year = today_last_year.toISOString().substr(0, 10);
-                                fyObj.query(['date_start', 'date_stop'])
-                                .filter([['company_id', '=', context.company_id[1]], ['date_start', '<', today_last_year], ['date_stop', '>', today_last_year]]).all().then(function (fy) {
-                                    if (fy.length == 0) {
-                                        var dt = new Date();
-                                        dt.setMonth(0);
-                                        dt.setDate(0);
-                                        $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
-                                        $(".form-group").prepend(openerp.qweb.render("fiscalYearAlert"));
-                                        if (!no_date_range) {
-                                            dt.setDate(1);
-                                            dt.setMonth(0);
-                                            $("input[name='date_from']").val(dt.toISOString().substr(0, 10)); 
-                                        }
+                                compObj.query(['fiscalyear_last_day', 'fiscalyear_last_month'])
+                                .filter([['id', '=', context.company_id[0]]]).first().then(function (fy) {
+                                    if (today.getMonth() + 1 < fy.fiscalyear_last_month || (today.getMonth() + 1 == fy.fiscalyear_last_month && today.getDate() <= fy.fiscalyear_last_day)) {
+                                        var dt = new Date(today.getFullYear() - 1, fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
                                     }
                                     else {
-                                        fy = fy[0];
-                                        $("input[name='date_to']").val(fy.date_stop);
-                                        if (!no_date_range) {
-                                            $("input[name='date_from']").val(fy.date_start); 
-                                        }
+                                        var dt = new Date(today.getFullYear(), fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
+                                    }
+                                    $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
+                                    if (!no_date_range) {
+                                        dt.setDate(dt.getDate() + 1);
+                                        dt.setFullYear(dt.getFullYear() - 1)
+                                        $("input[name='date_from']").val(dt.toISOString().substr(0, 10));
                                     }
                                 });
-
                             });
                             
                         });
@@ -173,28 +162,23 @@
                             var contextObj = new openerp.Model(result);
                             contextObj.query(['company_id'])
                             .filter([['id', '=', context_id]]).first().then(function (context) {
-                                var fyObj = new openerp.Model('account.fiscalyear');
+                                var compObj = new openerp.Model('res.company');
                                 var today = new Date();
-                                today = today.toISOString().substr(0, 10);
-                                fyObj.query(['date_start', 'date_stop'])
-                                .filter([['company_id', '=', context.company_id[1]], ['date_start', '<', today], ['date_stop', '>', today]]).all().then(function (fy) {
-                                    if (fy.length == 0) {
-                                        var dt = new Date();
-                                        dt.setDate(1);
-                                        dt.setMonth(0);
-                                        $("input[name='date_from']").val(dt.toISOString().substr(0, 10)); 
-                                        dt.setDate(31);
-                                        dt.setMonth(11);
-                                        $("input[name='date_to']").val(dt.toISOString().substr(0, 10)); 
-                                        $(".form-group").prepend(openerp.qweb.render("fiscalYearAlert"));
+                                compObj.query(['fiscalyear_last_day', 'fiscalyear_last_month'])
+                                .filter([['id', '=', context.company_id[0]]]).first().then(function (fy) {
+                                    if (today.getMonth() + 1 < fy.fiscalyear_last_month || (today.getMonth() + 1 == fy.fiscalyear_last_month && today.getDate() <= fy.fiscalyear_last_day)) {
+                                        var dt = new Date(today.getFullYear(), fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
                                     }
                                     else {
-                                        fy = fy[0];
-                                        $("input[name='date_to']").val(fy.date_stop);
-                                        $("input[name='date_from']").val(fy.date_start);
+                                        var dt = new Date(today.getFullYear() + 1, fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
+                                    }
+                                    $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
+                                    if (!no_date_range) {
+                                        dt.setDate(dt.getDate() + 1);
+                                        dt.setFullYear(dt.getFullYear() - 1);
+                                        $("input[name='date_from']").val(dt.toISOString().substr(0, 10));
                                     }
                                 });
-
                             });
                         });
                         break;

@@ -420,20 +420,3 @@ class account_financial_report_context(models.TransientModel):
         if self.report_id.report_type == 'date_range_extended':
             columns += ['Older', 'Total']
         return columns
-
-    def render_html(self, data=None):
-        report_obj = self.env['report']
-        module_report = report_obj._get_report_from_name('account.report_financial')
-        docargs = {
-            'doc_ids': self.ids,
-            'doc_model': module_report.model,
-            'docs': self,
-            'data': data,
-            'get_start_date': self._get_start_date,
-            'get_end_date': self._get_end_date,
-            'get_account': self._get_account,
-            'get_fiscalyear': self._get_fiscalyear,
-            'get_target_move': self._get_target_move,
-            'get_lines': self._get_lines
-        }
-        return report_obj.render('account.report_financial', docargs)
