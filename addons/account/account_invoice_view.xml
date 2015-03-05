@@ -202,7 +202,7 @@
                     </group>
                     <notebook>
                         <page string="Invoice">
-                            <field context="{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type}" name="invoice_line">
+                            <field context="{'partner_id': partner_id, 'type': type}" name="invoice_line">
                                 <tree string="Invoice lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
                                     <field name="product_id"
