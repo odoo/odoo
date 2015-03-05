@@ -370,7 +370,7 @@ class stock_move(osv.osv):
             })
             sale_line_obj = self.pool.get('sale.order.line')
             invoice_line_obj = self.pool.get('account.invoice.line')
-            sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', '=', move.procurement_id.sale_line_id.order_id.id), ('product_id.type', '=', 'service'), ('invoiced', '=', False)], context=context)
+            sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', '=', move.procurement_id.sale_line_id.order_id.id), ('invoiced', '=', False), '|', ('product_id', '=', False), ('product_id.type', '=', 'service')], context=context)
             if sale_line_ids:
                 created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
                 invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_line_vals['invoice_id']}, context=context)
