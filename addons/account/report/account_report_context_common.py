@@ -133,14 +133,6 @@ class AccountReportContextCommon(models.TransientModel):
     def get_columns_names(self):
         raise Warning(_('get_columns_names not implemented'))
 
-    @api.multi
-    def add_footnote(self, type, target_id, column, number, text):
-        raise Warning(_('add_footnote not implemented'))
-
-    @api.multi
-    def edit_footnote(self, number, text):
-        raise Warning(_('edit_footnote not implemented'))
-
     def get_full_date_names(self, dt_to, dt_from=None):
         dt_to = datetime.strptime(dt_to, "%Y-%m-%d")
         if dt_from:
