@@ -84,7 +84,7 @@
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject.oe_tl_small_subject {
-            width: 490px;
+            width: 491px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject .oe_tl_subject {
@@ -96,7 +96,7 @@
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject.oe_tl_small_subject .oe_tl_subject {
-            max-width: 460px;
+            max-width: 461px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject .oe_tl_nb_unread_msg {
@@ -152,7 +152,7 @@
             text-decoration: none;
             color: #AAA;
             font-size: 1.2em;
-            padding-top: 1px;
+            padding-top: 2px;
             cursor: pointer;
             /*text-shadow: 0px 1px blue,0px -1px green, -1px 0px red, 1px 0px black, 0px 3px 3px rgba(0,0,0,0.1);*/
             -webkit-transition: all 0.2s linear;
@@ -599,18 +599,19 @@
 
     /* ------------ expandable message ------------ */ 
 
-        .openerp .oe_timeline .oe_tl_thread_expendable {  
+        .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_expandable {  
             color: #A4A4A4;
             padding-bottom: 10px;
             cursor: pointer; 
         }
 
-        .openerp .oe_timeline .oe_tl_thread_expendable span {
+        .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_expandable span {
             display: inline-block;
             border-left: dashed 2px #A4A4A4;
-            margin-left: 1px;
-            padding-left: 290px;
-            text-align: center;
+            /*margin-left: 1px;
+            padding-left: 290px;*/
+            text-align: right;
+            padding-left: 28%;
         }
 
     /* ----------------- message ----------------- */

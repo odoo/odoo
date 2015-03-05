@@ -8,141 +8,182 @@
         <field name="arch" type="xml">
             <timeline string="Mail Timeline">
                 <templates>
-                <t t-name="message_content">
+                <t t-name="message_content"> 
                     <div t-attf-class="row oe_tl_msg oe_tl_msg_#{widget.type} 
                                        #{widget.subtype ? '' : 'oe_tl_msg_nobody'}">
 
-                        <div class="col-md-2"> <!-- *** date *** -->
-                            <div class="oe_tl_msg_date">
-                                <span> <field name="date"/> </span>
-                            </div>
-                        </div> <!-- *** date *** -->
+                        <t t-if="widget.type == 'expandable'">
+                            <div class="col-md-2"> </div>
+                            <span> - - - - - - - - - - - See more messages - - - - - - - - - - - </span>
+                        </t>
 
-                        <div class="col-md-10 oe_tl_msg_message">
-                            <div class='oe_tl_msg_left'> <!-- *** avatar *** -->
-                                <a t-if="options.show_link" 
-                                   t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
-                                   t-att-title="widget.author_id[1]">
-                                       <img class="oe_tl_msg_icon" t-att-src="widget.avatar"/>
-                                </a>
-                                <img t-if="!options.show_link" class="oe_tl_msg_icon" t-att-src="widget.avatar"/>
-                            </div> <!-- *** avatar *** -->
-                
-                            <div class="oe_tl_msg_center"> <!-- *** msg_center *** -->           
-                                <div class="oe_tl_msg_content"> <!-- *** msg_content *** -->
+                        <t t-if="widget.type != 'expandable'">
+                            <div class="col-md-2"> 
+                                <div class="oe_tl_msg_date">
+                                    <span> <field name="date"/> </span>
+                                </div>
+                            </div> 
 
-                                    <div class="oe_tl_header"> <!-- *** msg_header *** -->
-                                        <!-- *** header when tracking values *** -->
-                                        <div t-if="widget.tracking_values" class="oe_tl_tracking_value_header">
-                                            <span t-if="!widget.subtype" class="oe_grey oe_tl_no_subtype">
-                                                Update </span>
-                                            <span t-if="widget.subtype" class="oe_tl_subtype"> 
-                                                 <field name="subtype_id"/>
-                                            </span>
-                                            <t t-if="options.show_record_name">
-                                                <span t-attf-class="oe_grey #{!widget.subtype ? 'oe_grey oe_tl_no_subtype' : ''}"> 
-                                                    in </span>
-                                                <span t-if="widget.model_desc"
-                                                      t-attf-class="#{!widget.subtype ? 'oe_grey oe_tl_no_subtype' : ''}">
-                                                    <field name="model"/>
+                            <div class="col-md-10 oe_tl_msg_message">
+                                <div class='oe_tl_msg_left'> <!-- *** avatar *** -->
+                                    <a t-if="options.show_link" 
+                                       t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
+                                       t-att-title="widget.author_id[1]">
+                                           <img class="oe_tl_msg_icon" 
+                                                t-att-src="thread.format_avatar(widget.author_avatar, widget.author_id, widget.type)"/>
+                                                
+                                    </a>
+                                    <img t-if="!options.show_link" class="oe_tl_msg_icon" 
+                                         t-att-src="thread.format_avatar(widget.author_avatar, widget.author_id, widget.type)"/>
+                                </div> <!-- *** avatar *** -->
+                    
+                                <div class="oe_tl_msg_center"> <!-- *** msg_center *** -->           
+                                    <div class="oe_tl_msg_content"> <!-- *** msg_content *** -->
+
+                                        <div class="oe_tl_header"> <!-- *** msg_header *** -->
+                                            <!-- *** header when tracking values *** -->
+                                            <div t-if="widget.tracking_values" class="oe_tl_tracking_value_header">
+                                                <span t-if="!widget.subtype" class="oe_grey oe_tl_no_subtype">
+                                                    Update </span>
+                                                <span t-if="widget.subtype" class="oe_tl_subtype"> 
+                                                     <field name="subtype_id"/>
                                                 </span>
-                                                <span t-attf-class="#{!widget.subtype ? 'oe_grey oe_tl_no_subtype' : ''}">
-                                                    "<field name="res_id"/>"
+                                                <span t-attf-class="oe_tl_by oe_grey #{!widget.subtype ? 'oe_tl_no_subtype' : ''}"> 
+                                                    by </span>
+                                                <span t-attf-class="#{!widget.subtype ? 'oe_grey oe_tl_no_subtype' : ''}"> 
+                                                    <a t-if="options.show_link"
+                                                       class="oe_timeline_action_author oe_tl_by"
+                                                       t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
+                                                       t-att-data-partner="widget.author_id[0]"> 
+                                                           <field name="author_id"/> 
+                                                    </a>
+                                                    <a t-if="!options.show_link"
+                                                       class="oe_timeline_action_author oe_tl_by">
+                                                           <field name="author_id"/>
+                                                    </a>
                                                 </span>
-                                            </t>
-                                            <span t-attf-class="oe_tl_by oe_grey #{!widget.subtype ? 'oe_tl_no_subtype' : ''}"> 
-                                                by </span>
-                                            <span t-attf-class="#{!widget.subtype ? 'oe_grey oe_tl_no_subtype' : ''}"> 
-                                                <a t-if="options.show_link"
-                                                   class="oe_timeline_action_author oe_tl_by"
-                                                   t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
-                                                   t-att-data-partner="widget.author_id[0]"> 
-                                                       <field name="author_id"/> 
-                                                </a>
-                                                <a t-if="!options.show_link"
-                                                   class="oe_timeline_action_author oe_tl_by">
-                                                       <field name="author_id"/>
-                                                </a>
-                                            </span>
-                                        </div>
-    
-                                        <!-- *** header when no tracking value *** -->
-                                        <span t-if="!widget.tracking_values" class="oe_tl_msg_header">
-                                            <span t-if="widget.author_id and !(widget.type == 'notification')"
-                                                 class="oe_grey"> 
-                                                <t t-if="widget.subtype and widget.type == 'comment'"> Message </t> 
-                                                <t t-if="widget.subtype and widget.type == 'email'"> Email </t>
-                                                <t t-if="!widget.subtype"> Note </t>                             
-                                                from
-                                                <a t-if="options.show_link and widget.author_id[0]"
-                                                   t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
-                                                   t-att-data-partner="widget.author_id[0]" class="oe_timeline_action_author">
-                                                     <field name="author_id"/>
-                                                </a>
-                                                <a t-if="widget.author_id and (!options.show_link or !widget.author_id[0])"
-                                                   class="oe_timeline_action_author">
-                                                     <field name="author_id"/>
-                                                </a>
-                                            </span>
-                                            
-                                            <span t-if="!options.readonly and !(widget.type == 'notification')" 
-                                                  class='oe_subtle oe_sep oe_grey'>•</span>
-                                            <span t-if="!options.readonly and !(widget.type == 'notification')" 
-                                                  class="oe_tl_vote"> </span>
-                                        </span>
-
-                                        <div t-attf-class="oe_tl_msg_icons #{widget.tracking_values ? 
-                                                          'oe_tl_msg_icons_track' : ''}" 
-                                             t-if="!options.readonly"> <!-- *** icons *** -->
-                                            <span class='oe_read' t-if="options.show_read">
-                                                <i title="Done" class="fa fa-check"/>
-                                            </span>
-                                            <span class='oe_unread' t-if="widget.is_favorite and options.show_unread">
-                                                <i title="Set back to Todo" class="fa fa-inbox"/>
-                                            </span>
-                                            <span class='oe_unread' t-if="!widget.is_favorite and options.show_unread">
-                                                <i title="Move to Inbox" class="fa fa-inbox"/>
-                                            </span>
-                                            <!--<span class='oe_reply' t-if="options.show_reply_button">
-                                                <i title="Reply" class="fa fa-reply"/>
-                                            </span>-->
-                                            <span t-attf-class="oe_star #{widget.is_favorite ? 'oe_starred':''}">
-                                                <i title="Mark as Todo" class="fa fa-star"/>
-                                            </span>
-                                        </div> <!-- *** icons *** -->
-                                    </div> <!-- *** msg_header *** -->
-
-                                    <div t-attf-class="oe_tl_msg_body"> <!-- *** msg_body *** -->
-                                        <t t-if="widget.tracking_values">
-                                            <ul class="oe_timeline_tracking_value_list"> </ul> 
-                                        </t>
-                                        <t t-if="!widget.tracking_values">
-                                            <field name="body"/>
-                                            <t t-if="!widget.body and widget.subject">
-                                                <field name="subject"/>
-                                            </t>
-                                        </t>
-                                    </div> <!-- *** msg_body *** --> 
-
-                                    <div class="oe_tl_msg_footer"> <!-- *** msg_footer *** -->
-                                        <t t-if="widget.attachments">
-                                            <div class="oe_tl_msg_attachment_list"> </div>
-                                        </t>
-
-                                        <t t-if="(widget.type == 'comment' or widget.type == 'email') and
-                                                 (widget.subtype and widget.partners)">
-                                            <div t-if="widget.partners" class="oe_tl_partners_followers">
-	                                            <span class="oe_grey">
-	                                                To </span>
-                                                <span class = "oe_tl_partners_list"> </span>
                                             </div>
-                                        </t>
-                                    </div> <!-- *** msg_footer *** -->
+        
+                                            <!-- *** header when no tracking value *** -->
+                                            <span t-if="!widget.tracking_values" class="oe_tl_msg_header">
+                                                <span t-if="widget.author_id and !(widget.type == 'notification')"
+                                                     class="oe_grey"> 
+                                                    <t t-if="widget.subtype and widget.type == 'comment'"> Message </t> 
+                                                    <t t-if="widget.subtype and widget.type == 'email'"> Email </t>
+                                                    <t t-if="!widget.subtype"> Note </t>                             
+                                                    from
+                                                    <a t-if="options.show_link and widget.author_id[0]"
+                                                       t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
+                                                       t-att-data-partner="widget.author_id[0]" t-att-data-record="widget.record_name"
+                                                       class="oe_timeline_action_author">
+                                                         <field name="author_id"/>
+                                                    </a>
+                                                    <a t-if="widget.author_id and (!options.show_link or !widget.author_id[0])"
+                                                       class="oe_timeline_action_author">
+                                                         <field name="author_id"/>
+                                                    </a>
+                                                </span>
+                                                
+                                                <span t-if="!options.readonly and !(widget.type == 'notification')" 
+                                                      class='oe_subtle oe_sep oe_grey'>•</span>
+                                                <span t-if="!options.readonly and !(widget.type == 'notification')" 
+                                                      class="oe_tl_vote"> 
+                                                        <span class="oe_timeline_vote_count" t-att-data-msg_id="widget.id" t-if='widget.vote_nb > 0'>
+                                                            <t t-esc='widget.vote_nb' />
+                                                            <i class="fa fa-thumbs-o-up"></i>
+                                                        </span>
+                                                        <a href='#' class="oe_tl_msg_vote" t-att-data-msg_id="widget.id">
+                                                            <t t-if="!widget.has_voted">Like</t>
+                                                            <t t-if="widget.has_voted">Unlike</t>
+                                                        </a>
+                                                </span>
+                                            </span>
 
-                                </div> <!-- *** msg_content *** -->
-                            </div> <!-- *** msg_center *** -->
-                        </div>
-                    </div>        
+                                            <div t-attf-class="oe_tl_msg_icons #{widget.tracking_values ? 
+                                                              'oe_tl_msg_icons_track' : ''}" 
+                                                 t-if="!options.readonly"> <!-- *** icons *** -->
+                                                <span class='oe_read' t-if="options.show_read">
+                                                    <i title="Done" class="fa fa-check" t-att-data-msg_id="widget.id"/>
+                                                </span>
+                                                <span class='oe_unread' t-if="widget.is_favorite and options.show_unread">
+                                                    <i title="Set back to Todo" class="fa fa-inbox" t-att-data-msg_id="widget.id"/>
+                                                </span>
+                                                <span class='oe_unread' t-if="!widget.is_favorite and options.show_unread">
+                                                    <i title="Move to Inbox" class="fa fa-inbox" t-att-data-msg_id="widget.id"/>
+                                                </span>
+                                                <!--<span class='oe_reply' t-if="options.show_reply_button">
+                                                    <i title="Reply" class="fa fa-reply"/>
+                                                </span>-->
+                                                <span t-attf-class="oe_star #{widget.is_favorite ? 'oe_starred':''}">
+                                                    <i title="Mark as Todo" class="fa fa-star" t-att-data-msg_id="widget.id"/>
+                                                </span>
+                                            </div> <!-- *** icons *** -->
+                                        </div> <!-- *** msg_header *** -->
+
+                                        <div t-attf-class="oe_tl_msg_body"> <!-- *** msg_body *** -->
+                                            <t t-if="widget.tracking_values">
+                                                <ul class="oe_timeline_tracking_value_list">
+                                                    <t t-foreach='widget.tracking_value_ids' t-as='value'>
+                                                        <li>
+                                                            <t t-esc="value.changed_field"/>
+                                                            <span> : </span>
+                                                            <t t-if="value.old_value">
+                                                                <span class="oe_tl_tracking_value"> <t t-esc="value.old_value"/> </span>
+                                                                <span class="arrow glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                                                            </t>
+                                                            <span class="oe_tl_tracking_value"> <t t-esc="value.new_value"/> </span>
+                                                        </li>
+                                                    </t>
+                                                </ul> 
+                                            </t>
+                                            <t t-if="!widget.tracking_values">
+                                                <field name="body"/>
+                                                <t t-if="!widget.body and widget.subject">
+                                                    <field name="subject"/>
+                                                </t>
+                                            </t>
+                                        </div> <!-- *** msg_body *** --> 
+
+                                        <div class="oe_tl_msg_footer"> <!-- *** msg_footer *** -->
+                                            <t t-if="widget.attachments">
+                                                <div class="oe_tl_msg_attachment_list">
+                                                    <t t-raw="widget.attachments_content"/>
+                                                </div>
+                                            </t>
+
+                                            <t t-if="(widget.type == 'comment' or widget.type == 'email') and
+                                                     (widget.subtype and widget.partners)">
+                                                <div t-if="widget.partners" class="oe_tl_partners_followers">
+                                                    <span class="oe_grey">
+                                                        To </span>
+                                                    <span class="oe_tl_partners_list">
+                                                        <t t-foreach="widget.partner_ids.slice(0, 3)" t-as="partner">
+                                                            <span t-attf-class="oe_tl_partner_follower">
+                                                                <a t-if="options.show_link" 
+                                                                   t-attf-href="#model=res.partner&amp;id=#{partner[0]}" 
+                                                                   t-att-data-partner="partner[0]" 
+                                                                   class="oe_timeline_action_author">
+                                                                      <t t-esc="partner[1]"/>
+                                                                </a>
+                                                                <t t-if="!options.show_link" t-esc="partner[1]"/>
+                                                            </span>
+                                                            <t t-if="!partner_last">,</t>
+                                                        </t>
+                                                        <t t-if="widget.partner_ids.length > 3">
+                                                            <span t-att-title="thread.format_partners_str(widget.partner_ids)">
+                                                                 and <t t-esc="thread.format_partners_nb(widget.partner_ids)"/> more
+                                                            </span>
+                                                        </t>
+                                                    </span>
+                                                </div>
+                                            </t>
+                                        </div> <!-- *** msg_footer *** -->
+
+                                    </div> <!-- *** msg_content *** -->
+                                </div> <!-- *** msg_center *** -->
+                            </div>
+                        </t>
+                    </div>  
 				</t>
 				</templates>
 			</timeline>
@@ -164,20 +205,27 @@
             'default_model': 'res.users',
             'default_res_id': uid,
             'thread_model': 'res.partner',
-            'needaction_menu_ref': ['web_timeline.timeline_tomefeeds', 'web_timeline.timeline_starfeeds'],
             'options' : {'view_mailbox': True,
                          'view_inbox': True,
                          'read_action': 'read',
                          'show_compose_message': False}
         }</field>
         <field name="domain">[
+            '|',
+             ('notification_ids.partner_id.user_ids', 'in', [uid]),
+             ('author_id.user_ids', 'in', [uid]),
+        ]</field>
+        <!--
+        'needaction_menu_ref': ['web_timeline.timeline_tomefeeds', 
+                                'web_timeline.timeline_starfeeds'],
+        <field name="domain">[
             ('to_read', '=', True),
             ('starred', '=', False),
         ]</field>
-        <!--('author_id.user_ids', 'not in', [uid]),-->
+        ('author_id.user_ids', 'not in', [uid]),-->
     </record>
 
-    <record model="ir.actions.act_window" id="action_timeline_to_me">
+    <!--<record model="ir.actions.act_window" id="action_timeline_to_me">
         <field name="name">To me</field>
         <field name="res_model">mail.message</field>
         <field name="view_type">form</field>
@@ -187,7 +235,8 @@
             'default_res_id': uid,
             'thread_model': 'res.partner',
             'search_default_message_unread': True,
-            'needaction_menu_ref': ['web_timeline.timeline_starfeeds', 'web_timeline.timeline_inboxfeeds'],
+            'needaction_menu_ref': ['web_timeline.timeline_starfeeds', 
+                                    'web_timeline.timeline_inboxfeeds'],
             'options' : {'view_inbox': True,
                          'read_action': 'read',
                          'to_me': True,
@@ -196,9 +245,9 @@
         <field name="domain">[
             ('partner_ids.user_ids', 'in', [uid]),
         ]</field>
-    </record>
+    </record>-->
 
-    <record model="ir.actions.act_window" id="action_timeline_to_do">
+    <!--<record model="ir.actions.act_window" id="action_timeline_to_do">
         <field name="name">To do</field>
         <field name="res_model">mail.message</field>
         <field name="view_type">form</field>
@@ -215,9 +264,9 @@
         <field name="domain">[
             ('starred', '=', True),
         ]</field>
-    </record>
+    </record>-->
 
-    <record model="ir.actions.act_window" id="action_timeline_archives">
+    <!--<record model="ir.actions.act_window" id="action_timeline_archives">
         <field name="name">Archives</field>
         <field name="res_model">mail.message</field>
         <field name="view_type">form</field>
@@ -238,7 +287,7 @@
              ('notification_ids.partner_id.user_ids', 'in', [uid]),
              ('author_id.user_ids', 'in', [uid]),
         ]</field>
-    </record> 
+    </record>-->
 
     <record id="timeline_inboxfeeds" model="ir.ui.menu">
         <field name="name">Inbox</field>
@@ -247,41 +296,40 @@
         <field name="parent_id" ref="web_timeline.mail_feeds"/>
     </record>
 
-    <record id="timeline_tomefeeds" model="ir.ui.menu">
+    <!--<record id="timeline_tomefeeds" model="ir.ui.menu">
         <field name="name">To me</field>
         <field name="sequence" eval="11"/>
         <field name="action" ref="action_timeline_to_me"/>
         <field name="parent_id" ref="web_timeline.mail_feeds"/>
-    </record>
+    </record>-->
 
-    <record id="timeline_starfeeds" model="ir.ui.menu">
+    <!--<record id="timeline_starfeeds" model="ir.ui.menu">
         <field name="name">To do</field>
         <field name="sequence" eval="14"/>
         <field name="action" ref="action_timeline_to_do"/>
         <field name="parent_id" ref="web_timeline.mail_feeds"/>
-    </record> 
+    </record>--> 
 
-    <record id="timeline_archivesfeeds" model="ir.ui.menu">
+    <!--<record id="timeline_archivesfeeds" model="ir.ui.menu">
         <field name="name">Archives</field>
         <field name="sequence" eval="16"/>
         <field name="action" ref="action_timeline_archives"/>
         <field name="parent_id" ref="web_timeline.mail_feeds"/>
-    </record> 
+        <field name="needaction_enabled">False</field>
+    </record>--> 
 
-    <!--<record model="ir.ui.view" id="mail_tree_view">
+    <record model="ir.ui.view" id="mail_tree_view">
         <field name="name">mail.message.tree</field>
         <field name="model">mail.message</field>
         <field name="priority">4</field>
         <field name="arch" type="xml">
             <tree string="treeMail">
                 <field name="id"/>
-                <field name="type"/>
                 <field name="body"/>
                 <field name="parent_id"/>
                 <field name="res_id"/>
                 <field name="model"/>
-                <field name="notified_partner_ids"/>
-                <field name="has_attachment"/>
+                <field name="child_ids"/>
             </tree>
         </field>
     </record>
@@ -294,8 +342,7 @@
     </record>
 
     <menuitem id="timeline_menu_all" name="All"
-        parent="web_timeline.mail_feeds" action="test_action_all"/>-->
-
+        parent="web_timeline.mail_feeds" action="test_action_all"/>
 
 </data>
 </openerp>

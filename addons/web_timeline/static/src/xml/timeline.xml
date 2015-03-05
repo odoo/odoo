@@ -58,7 +58,7 @@
                 </button>
                 <button type="button" class="oe_tl_compose_post btn btn-primary" 
                         t-if="!widget.options.compose_placeholder and !widget.options.view_inbox"
-                	    title="Send a message. Followers will be notified.">
+                        title="Send a message. Followers will be notified.">
                         New message
                 </button>
                 </div>
@@ -98,41 +98,6 @@
             </t>
         </span>
     </span>
-</t>
-
-<!--
-    mail.thread.message.attachments template
-    Template used to display attachments in a mail.message
-    -->
-<t t-name="ThreadMessageAttachments">
-    <t t-foreach='widget.attachment_ids' t-as='attachment'>
-        <t t-if="attachment.file_type_icon !== 'webimage'">
-            <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
-                <a t-att-href='attachment.url' target="_blank">
-                    <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type_icon + '.png'"></img>
-                    <div class='oe_name'><t t-raw='attachment.name' /></div>
-                </a>
-                <div class='oe_delete oe_e'>
-                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
-                </div>
-                <div class='oe_progress_bar'>
-                    uploading
-                </div>
-            </div>
-        </t>
-        <t t-if="attachment.file_type_icon === 'webimage'">
-            <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
-                <a t-att-href='attachment.url' target="_blank">
-                    <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
-                    <div class='oe_name'><t t-raw='attachment.name' /></div>
-                </a>
-                <div class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
-                <div class='oe_progress_bar'>
-                    uploading
-                </div>
-            </div>
-        </t>
-    </t>
 </t>
 
 <!--
@@ -195,6 +160,49 @@
             Note that users reading the document can read internal notes.
         </span>
     </div>
+</t>
+
+<div t-name="MailThread" class="oe_thread">
+    <t t-foreach='widget.messages' t-as='msg'>
+        <t t-raw="msg.content"/>
+    </t>
+</div>
+
+<!--
+    mail.thread.message.attachments template
+    Template used to display attachments in a mail.message
+    -->
+<t t-name="ThreadMessageAttachments">
+    <t t-foreach='thread.format_attachments(widget.attachment_ids)' t-as='attachment'>
+        <t t-if="attachment.file_type_icon !== 'webimage'">
+            <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
+                <a t-att-href='attachment.url' target="_blank">
+                    <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type_icon + '.png'"></img>
+                    <div class='oe_name'><t t-raw='attachment.name' /></div>
+                </a>
+                <div class='oe_delete oe_e'>
+                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
+                </div>
+                <div class='oe_progress_bar'>
+                    uploading
+                </div>
+            </div>
+        </t>
+        <t t-if="attachment.file_type_icon === 'webimage'">
+            <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
+                <a t-att-href='attachment.url' target="_blank">
+                    <img t-att-src="thread.attachments_resize_image(attachment.id, [100,80])"></img>
+                    <div class='oe_name'><t t-raw='attachment.name' /></div>
+                </a>
+                <div class='oe_delete oe_e'>
+                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
+                </div>
+                <div class='oe_progress_bar'>
+                    uploading
+                </div>
+            </div>
+        </t>
+    </t>
 </t>
 
 <div t-name="ThreadParent" class="oe_tl_thread_parent">
@@ -272,75 +280,8 @@
     </div>
 </div>
 
-<t t-name="ThreadExpendable">
-    <div class="oe_tl_thread_expendable"> 
-        <div class="col-md-2"> </div>
-        <span t-if="widget.nb_messages &lt; 1"> 
-            - - - - - - - - - - - See more messages - - - - - - - - - - -  
-        </span>
-        <span t-if="widget.nb_messages > 1"> 
-            - - - - - - - - - - See <t t-esc="widget.nb_messages"/> more messages - - - - - - - - - -  
-        </span>
-        <span t-if="widget.nb_messages == 1"> 
-            - - - - - - - - - - See one more message - - - - - - - - - - 
-        </span>
-    </div>
-</t>
-
-<t t-name="MessageContent">
-    <t t-raw="content"/>
-</t>
-
 <t t-name="NoMessage">
     <div class="oe_view_nocontent">No messages.</div>
-</t>
-
-<t t-name="ThreadMessage.TrackingValues">
-    <t t-foreach='widget.tracking_value_ids' t-as='value'>
-        <li>
-            <t t-esc="value.changed_field"/>
-            <span>:</span>
-            <t t-if="value.old_value">
-                <span class="oe_tl_tracking_value"> <t t-esc="value.old_value"/> </span>
-                <span class="arrow glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-            </t>
-            <span class="oe_tl_tracking_value"> <t t-esc="value.new_value"/> </span>
-        </li>
-    </t>
-</t>
-
-<!-- ThreadMessage.Vote
-     Template used to display Like/Unlike in a mail.message
-    -->
-<t t-name="ThreadMessage.Vote">
-    <span class="oe_timeline_vote_count" t-if='widget.vote_nb > 0'>
-        <t t-esc='widget.vote_nb' />
-        <i class="fa fa-thumbs-o-up"></i>
-    </span>
-    <a href='#' class="oe_tl_msg_vote">
-        <t t-if="!widget.has_voted">Like</t>
-        <t t-if="widget.has_voted">Unlike</t>
-    </a>
-</t>
-
-<t t-name="ThreadMessage.PartnersList">
-    <t t-foreach="widget.partner_ids.slice(0, 3)" t-as="partner">
-        <span t-attf-class="oe_tl_partner_follower">
-            <a t-if="widget.options.show_link" 
-               t-attf-href="#model=res.partner&amp;id=#{partner[0]}" 
-               t-att-data-partner="partner[0]" 
-               class="oe_timeline_action_author">
-                  <t t-esc="partner[1]"/>
-            </a>
-            <t t-if="!widget.options.show_link" t-esc="partner[1]"/>
-        </span>
-        <t t-if="!partner_last">,</t>
-    </t>
-    <t t-if="widget.partner_ids.length > 3">
-        <span t-att-title="widget.extra_partners_str">
-             and <t t-esc="widget.extra_partners_nbr"/> more
-        </span>
-    </t>
 </t>
 
 <!--
@@ -354,5 +295,5 @@
         </a>
     </li>
 </t>
- 
+
 </templates>

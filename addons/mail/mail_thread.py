@@ -567,6 +567,7 @@ class mail_thread(osv.AbstractModel):
 
     def _needaction_domain_get(self, cr, uid, context=None):
         if self._needaction:
+            print "need action"
             return [('message_unread', '=', True)]
         return []
 
@@ -1589,7 +1590,6 @@ class mail_thread(osv.AbstractModel):
         # if we're processing a message directly coming from the gateway, the destination model was
         # set in the context.
         model = False
-        model_desc = False
 
         if thread_id:
             model = context.get('thread_model', False) if self._name == 'mail.thread' else self._name
@@ -1598,11 +1598,7 @@ class mail_thread(osv.AbstractModel):
                 return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, 
                                                      subtype=subtype, tracking_values=tracking_values, 
                                                      parent_id=parent_id, attachments=attachments, 
-                                                     context=context, content_subtype=content_subtype, **kwargs)
-
-        if model:
-            model_desc = self._description 
-            
+                                                     context=context, content_subtype=content_subtype, **kwargs)            
 
         #0: Find the message's author, because we need it for private discussion
         author_id = kwargs.get('author_id')
@@ -1679,7 +1675,6 @@ class mail_thread(osv.AbstractModel):
         values.update({
             'author_id': author_id,
             'model': model,
-            'model_desc': model_desc,
             'res_id': model and thread_id or False,
             'body': body,
             'subject': subject or False,
