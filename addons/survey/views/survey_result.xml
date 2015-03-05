@@ -274,7 +274,7 @@
             <li class="active">
                 <a t-att-href="'#most_common_%d' % question.id" data-toggle="tab">
                     <i class="fa fa-list-ol"></i>
-                    Most Common <span t-esc="len(number_result['most_comman'])"></span>
+                    Most Common <span t-esc="len(number_result['most_common'])"></span>
                 </a>
             </li>
             <li>
@@ -294,7 +294,7 @@
                          </tr>
                      </thead>
                      <tbody>
-                         <tr t-foreach="number_result['most_comman']" t-as="row">
+                         <tr t-foreach="number_result['most_common']" t-as="row">
                              <td>
                                  <span t-esc="row[0]"></span>
                              </td>
