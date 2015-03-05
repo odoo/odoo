@@ -61,8 +61,6 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         model.call('write', [[parseInt(target_id)], {'blocked': checkbox}])
     },
     onKeyPress: function(e) {
-        e.stopPropagation();
-        e.preventDefault();
         var report_name = $("div.page").attr("class").split(/\s+/)[2];
         if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey) && report_name == 'followup_report') {
             $('a.btn-primary.followup-email').trigger('click');
