@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import base64
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website.controllers.main import Website
-from openerp.addons.website_sale.controllers.main import WebsiteSale
 from cStringIO import StringIO
 from werkzeug.utils import redirect
 
+from openerp.addons.web import http
+from openerp.addons.web.http import request
+from openerp.addons.website_sale.controllers.main import WebsiteSale
 
-class website_sale_digital(WebsiteSale):
+
+class WebsiteSaleDigital(WebsiteSale):
 
     orders_page = '/shop/orders'
 
@@ -17,7 +17,7 @@ class website_sale_digital(WebsiteSale):
         '/shop/confirmation',
     ], type='http', auth="public", website=True)
     def payment_confirmation(self, **post):
-        response = super(website_sale_digital, self).payment_confirmation(**post)
+        response = super(WebsiteSaleDigital, self).payment_confirmation(**post)
         order_lines = response.qcontext['order'].order_line
         digital_content = map(lambda x: x.product_id.digital_content, order_lines)
         response.qcontext.update(digital=any(digital_content))
@@ -28,7 +28,7 @@ class website_sale_digital(WebsiteSale):
         '/shop/orders/page/<int:page>',
     ], type='http', auth='user', website=True)
     def orders_followup(self, page=1, **post):
-        response = super(website_sale_digital, self).orders_followup(**post)
+        response = super(WebsiteSaleDigital, self).orders_followup(**post)
 
         order_products_attachments = {}
         for o in response.qcontext['orders']:
@@ -42,10 +42,9 @@ class website_sale_digital(WebsiteSale):
                     continue
 
                 # Search for product attachments
-                A = request.env['ir.attachment']
                 p_id = p_obj.id
                 template = p_obj.product_tmpl_id
-                att = A.search_read(
+                att = request.env['ir.attachment'].search_read(
                     domain=['|', '&', ('res_model', '=', p_obj._name), ('res_id', '=', p_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id)],
                     fields=['name', 'write_date'],
                     order='write_date desc',
@@ -91,8 +90,8 @@ class website_sale_digital(WebsiteSale):
 
         # Also check for attachments in the product templates
         elif res_model == 'product.template':
-            P = request.env['product.product']
-            template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, purchased_products)
+            Product = request.env['product.product']
+            template_ids = map(lambda x: Product.browse(x).product_tmpl_id.id, purchased_products)
             if res_id not in template_ids:
                 return redirect(self.orders_page)
 
