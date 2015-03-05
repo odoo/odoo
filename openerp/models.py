@@ -603,11 +603,17 @@ class BaseModel(object):
 
         # determine all the classes the model should inherit from
         bases = [cls]
+        hierarchy = cls
         for parent in parents:
             if parent not in pool:
                 raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
                     'You may need to add a dependency on the parent class\' module.' % (name, parent))
-            bases += type(pool[parent]).__bases__
+            parent_class = type(pool[parent])
+            bases += parent_class.__bases__
+            hierarchy = type(name, (hierarchy, parent_class), {'_register': False})
+
+        # order bases following the mro of class hierarchy
+        bases = [base for base in hierarchy.mro() if base in bases]
 
         # determine the attributes of the model's class
         inherits = {}
