@@ -245,12 +245,15 @@ class website_sale(http.Controller):
         return request.website.render("website_sale.products", values)
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
-    def product(self, product, category='', search='', **kwargs):
+    def product(self, product, category='', search='', variant_id='', **kwargs):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         category_obj = pool['product.public.category']
         template_obj = pool['product.template']
 
         context.update(active_id=product.id)
+
+        if variant_id:
+            variant_obj = request.env['product.product'].browse(int(variant_id))
 
         if category:
             category = category_obj.browse(cr, uid, int(category), context=context)
@@ -285,7 +288,8 @@ class website_sale(http.Controller):
             'categories': categs,
             'main_object': product,
             'product': product,
-            'get_attribute_value_ids': self.get_attribute_value_ids
+            'get_attribute_value_ids': self.get_attribute_value_ids,
+            'variant': variant_obj if variant_id else product.product_variant_ids[0]
         }
         return request.website.render("website_sale.product", values)
 
