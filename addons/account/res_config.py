@@ -10,13 +10,13 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp import api, fields, models, _
 
 
-class account_config_settings(models.TransientModel):
+class AccountConfigSettings(models.TransientModel):
     _name = 'account.config.settings'
     _inherit = 'res.config.settings'
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
-    has_default_company = fields.Boolean(string='Has default company', readonly=True,
+    has_default_company = fields.Boolean(readonly=True,
         default=lambda self: self._default_has_default_company())
     expects_chart_of_accounts = fields.Boolean(related='company_id.expects_chart_of_accounts',
         string='This company has its own chart of accounts',
@@ -108,10 +108,8 @@ class account_config_settings(models.TransientModel):
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")
-    default_sale_tax = fields.Many2one('account.tax', string='Default sale tax',
-        help="This sale tax will be assigned by default on new products.")
-    default_purchase_tax = fields.Many2one('account.tax', string='Default purchase tax',
-        help="This purchase tax will be assigned by default on new products.")
+    default_sale_tax = fields.Many2one('account.tax', help="This sale tax will be assigned by default on new products.")
+    default_purchase_tax = fields.Many2one('account.tax', help="This purchase tax will be assigned by default on new products.")
     decimal_precision = fields.Integer(string='Decimal precision on journal entries',
         help="""As an example, a decimal precision of 2 will allow journal entries  like: 9.99 EUR,
              whereas a decimal precision of 4 will allow journal  entries like: 0.0231 EUR.""")
@@ -168,7 +166,7 @@ class account_config_settings(models.TransientModel):
 
     @api.model
     def create(self, values):
-        rec = super(account_config_settings, self).create(values)
+        rec = super(AccountConfigSettings, self).create(values)
         # Hack: to avoid some nasty bug, related fields are not written upon record creation.
         # Hence we write on those fields here.
         vals = {}
@@ -320,7 +318,7 @@ class account_config_settings(models.TransientModel):
             if not fiscalyear_count:
                 name = self.date_start[:4]
                 if int(name) != int(self.date_stop[:4]):
-                    name = self.date_start[:4] +'-'+ self.date_stop[:4]
+                    name = self.date_start[:4] + '-' + self.date_stop[:4]
                 vals = {
                     'name': name,
                     'date_start': self.date_start,

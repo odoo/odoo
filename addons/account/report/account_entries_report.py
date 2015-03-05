@@ -5,22 +5,23 @@ import openerp.addons.decimal_precision as dp
 from openerp import models, fields, api
 import time
 
-class account_entries_report(models.Model):
+
+class AccountEntriesReport(models.Model):
     _name = "account.entries.report"
     _description = "Journal Items Analysis"
     _auto = False
     _rec_name = 'date'
 
     date = fields.Date(string='Effective Date', readonly=True)  # TDE FIXME master: rename into date_effective
-    date_created = fields.Date(string='Date Created', readonly=True)
-    date_maturity = fields.Date(string='Date Maturity', readonly=True)
+    date_created = fields.Date(readonly=True)
+    date_maturity = fields.Date(readonly=True)
     ref = fields.Char(string='Reference', readonly=True)
     nbr = fields.Integer(string='# of Items', readonly=True)
-    debit = fields.Float(string='Debit', readonly=True)
-    credit = fields.Float(string='Credit', readonly=True)
-    balance = fields.Float(string='Balance', readonly=True)
+    debit = fields.Float(readonly=True)
+    credit = fields.Float(readonly=True)
+    balance = fields.Float(readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
-    amount_currency = fields.Float(string='Amount Currency', digits=0, readonly=True)
+    amount_currency = fields.Float(digits=0, readonly=True)
     account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', readonly=True)
@@ -30,7 +31,7 @@ class account_entries_report(models.Model):
     reconciled = fields.Boolean('Is reconciled')
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', readonly=True)
-    quantity = fields.Float(string='Products Quantity', digits=(16,2), readonly=True)  # TDE FIXME master: rename into product_quantity
+    quantity = fields.Float(string='Products Quantity', digits=(16, 2), readonly=True)  # TDE FIXME master: rename into product_quantity
     user_type = fields.Many2one('account.account.type', string='Account Type', readonly=True)
     type = fields.Selection([
         ('receivable', 'Receivable'),
@@ -62,7 +63,7 @@ class account_entries_report(models.Model):
         for a in [['date', '=', 'current_period_date']]:
             if a in args:
                 args.remove(a)
-        return super(account_entries_report, self).search(args=args, offset=offset, limit=limit, order=order, count=count)
+        return super(AccountEntriesReport, self).search(args=args, offset=offset, limit=limit, order=order, count=count)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -73,7 +74,7 @@ class account_entries_report(models.Model):
             domain.append(['date', '=', current_period_date])
         elif self._context.get('year', False) == 'current_year':
             domain.append([('date', '>=', fiscalyear.date_start), ('date', '<=', fiscalyear.date_stop)])
-        return super(account_entries_report, self).read_group(domain=domain, fields=fields, groupby=groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        return super(AccountEntriesReport, self).read_group(domain=domain, fields=fields, groupby=groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')

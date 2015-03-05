@@ -26,7 +26,7 @@ from datetime import timedelta, datetime
 import calendar
 
 
-class account_report_context_common(models.TransientModel):
+class AccountReportContextCommon(models.TransientModel):
     _name = "account.report.context.common"
     _description = "A particular context for a financial report"
 
@@ -76,7 +76,7 @@ class account_report_context_common(models.TransientModel):
     company_id = fields.Many2one('res.company', 'Company', default=lambda s: s.env.user.company_id)
     date_filter = fields.Char('Date filter used', default=None)
     next_footnote_number = fields.Integer(default=1, required=True)
-    summary = fields.Char('Summary', default='')
+    summary = fields.Char(default='')
     comparison = fields.Boolean(compute='_get_comparison', string='Enable comparison', default=False)
     date_from_cmp = fields.Date("Start date for comparison",
                                 default=lambda s: datetime.today() + timedelta(days=-395))
@@ -303,7 +303,7 @@ class account_report_context_common(models.TransientModel):
 
     @api.model
     def create(self, vals):
-        res = super(account_report_context_common, self).create(vals)
+        res = super(AccountReportContextCommon, self).create(vals)
         report_type = res.get_report_obj().get_report_type()
         if report_type == 'date_range':
             dt = datetime.today()
@@ -432,7 +432,7 @@ class account_report_context_common(models.TransientModel):
         book.save(response.stream)
 
 
-class account_report_footnote(models.TransientModel):
+class AccountReportFootnote(models.TransientModel):
     _name = "account.report.footnote"
     _description = "Footnote for reports"
 

@@ -4,7 +4,8 @@ from openerp import models, fields, api, _
 from openerp.tools.float_utils import float_round
 import openerp.addons.decimal_precision as dp
 
-class account_move_line_reconcile(models.TransientModel):
+
+class AccountMoveLineReconcile(models.TransientModel):
     """
     Account move line reconcile wizard, it checks for the write off the reconcile entry or directly reconcile.
     """
@@ -19,17 +20,16 @@ class account_move_line_reconcile(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        context = self._context or {}
-        res = super(account_move_line_reconcile, self).default_get(fields)
+        res = super(AccountMoveLineReconcile, self).default_get(fields)
         data = self.trans_rec_get()
         if 'trans_nbr' in fields:
-            res.update({'trans_nbr':data['trans_nbr']})
+            res.update({'trans_nbr': data['trans_nbr']})
         if 'credit' in fields:
-            res.update({'credit':data['credit']})
+            res.update({'credit': data['credit']})
         if 'debit' in fields:
-            res.update({'debit':data['debit']})
+            res.update({'debit': data['debit']})
         if 'writeoff' in fields:
-            res.update({'writeoff':data['writeoff']})
+            res.update({'writeoff': data['writeoff']})
         return res
 
     @api.multi
@@ -62,7 +62,7 @@ class account_move_line_reconcile(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
-class account_move_line_reconcile_writeoff(models.TransientModel):
+class AccountMoveLineReconcileWriteoff(models.TransientModel):
     """
     It opens the write off wizard form, in that user can define the journal, account, analytic account for reconcile
     """
@@ -71,8 +71,8 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
 
     journal_id = fields.Many2one('account.journal', string='Write-Off Journal', required=True)
     writeoff_acc_id = fields.Many2one('account.account', string='Write-Off account', required=True, domain=[('deprecated', '=', False)])
-    date_p = fields.Date(string='Date', default=lambda self:time.strftime('%Y-%m-%d'))
-    comment = fields.Char(string='Comment', required=True, default='Write-off')
+    date_p = fields.Date(string='Date', default=fields.Date.context_today)
+    comment = fields.Char(required=True, default='Write-off')
     analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('parent_id', '!=', False)])
 
     @api.multi

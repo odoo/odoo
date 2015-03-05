@@ -6,7 +6,8 @@ from openerp import models, fields, api, _
 from openerp.osv.orm import setup_modifiers
 from openerp.exceptions import UserError
 
-class account_common_report(models.TransientModel):
+
+class AccountCommonReport(models.TransientModel):
     _name = "account.common.report"
     _description = "Account Common Report"
 
@@ -19,18 +20,18 @@ class account_common_report(models.TransientModel):
             self.fiscalyear_id = fiscalyear and fiscalyear.id or False
             self.company_id = self.chart_account_id.company_id.id
 
-    chart_account_id = fields.Many2one('account.account', string='Chart of Account', 
+    chart_account_id = fields.Many2one('account.account', string='Chart of Account',
         help='Select Charts of Accounts', default=lambda self: self._get_account(),
         required=True, domain = [('deprecated', '=', False)])
     company_id = fields.Many2one('res.company', related='chart_account_id.company_id',
         string='Company', readonly=True, default=lambda self: self.env['res.company']._company_default_get('account.common.report'))
-    fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', 
+    fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year',
         help='Keep empty for all open fiscal year', default=lambda self: self._get_fiscalyear())
-    filter = fields.Selection([('filter_no', 'Do not apply filter'), ('filter_date', 'Filter by date'), ('filter_period', 'Filter by period')], 
+    filter = fields.Selection([('filter_no', 'Do not apply filter'), ('filter_date', 'Filter by date'), ('filter_period', 'Filter by period')],
         string='Filter by', required=True, default='filter_no')
     period_from = fields.Date(string='Start Period', default=fields.Date.context_today)
     period_to = fields.Date(string='End Period', default=fields.Date.context_today)
-    journal_ids = fields.Many2many('account.journal', string='Journals', required=True, 
+    journal_ids = fields.Many2many('account.journal', string='Journals', required=True,
         default=lambda self: self._get_all_journal())
     date_from = fields.Date(string='Start Date')
     date_to = fields.Date(string='End Date')
@@ -38,7 +39,7 @@ class account_common_report(models.TransientModel):
         string='Target Moves', required=True, default='posted')
 
     @api.multi
-    @api.constrains('chart_account_id','fiscalyear_id','period_from','period_to')
+    @api.constrains('chart_account_id', 'fiscalyear_id', 'period_from', 'period_to')
     def _check_company_id(self):
         for wiz in self:
             company_id = wiz.company_id.id
@@ -53,7 +54,7 @@ class account_common_report(models.TransientModel):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         context = dict(self._context or {})
-        res = super(account_common_report, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
+        res = super(AccountCommonReport, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
         if context.get('active_model', False) == 'account.account':
             doc = etree.XML(res['arch'])
             nodes = doc.xpath("//field[@name='chart_account_id']")
@@ -130,4 +131,3 @@ class account_common_report(models.TransientModel):
         data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
         data['form']['used_context'] = dict(used_context, lang = context.get('lang', 'en_US'))
         return self._print_report(data)
-

@@ -1,7 +1,7 @@
 from openerp import models, fields, api
 
 
-class account_partner_ledger(models.TransientModel):
+class AccountPartnerLedger(models.TransientModel):
     """
     This wizard will provide the partner Ledger report by periods, between any two dates.
     """
@@ -21,7 +21,7 @@ class account_partner_ledger(models.TransientModel):
 
     @api.onchange('filter', 'fiscalyear_id')
     def onchange_filter(self):
-        res = super(account_partner_ledger, self).onchange_filter()
+        res = super(AccountPartnerLedger, self).onchange_filter()
         if self.filter in ['filter_no', 'unreconciled']:
             if self.filter == 'unreconciled':
                 self.fiscalyear_id = False

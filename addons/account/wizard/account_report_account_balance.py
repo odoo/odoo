@@ -1,7 +1,7 @@
 from openerp import models, fields, api
 
 
-class account_balance_report(models.TransientModel):
+class AccountBalanceReport(models.TransientModel):
     _inherit = "account.common.account.report"
     _name = 'account.balance.report'
     _description = 'Trial Balance Report'
@@ -12,4 +12,3 @@ class account_balance_report(models.TransientModel):
     def _print_report(self, data):
         data = self.pre_print_report(data)
         return self.env['report'].get_action(self.env['account.balance.report'], 'account.report_trialbalance', data=data)
-

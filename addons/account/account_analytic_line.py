@@ -4,7 +4,7 @@ from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 
 
-class account_analytic_line(models.Model):
+class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
     _order = 'date desc'
@@ -14,10 +14,10 @@ class account_analytic_line(models.Model):
     general_account_id = fields.Many2one('account.account', string='Financial Account', required=True, ondelete='restrict', domain=[('deprecated', '=', False)])
     move_id = fields.Many2one('account.move.line', string='Move Line', ondelete='cascade', index=True)
     journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', required=True, ondelete='restrict', index=True)
-    code = fields.Char(string='Code', size=8)
+    code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
     currency_id = fields.Many2one('res.currency', related='move_id.currency_id', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True)
-    amount_currency = fields.Float(related='move_id.amount_currency', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
+    amount_currency = fields.Float(related='move_id.amount_currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
     partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True)
 
     # Compute the cost based on the price type define into company
@@ -25,15 +25,15 @@ class account_analytic_line(models.Model):
     @api.v7
     def on_change_unit_amount(self, cr, uid, id, prod_id, quantity, company_id,
             unit=False, journal_id=False, context=None):
-        if context==None:
-            context={}
+        if context is None:
+            context = {}
         if not journal_id:
-            j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=','purchase')])
+            j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type', '=', 'purchase')])
             journal_id = j_ids and j_ids[0] or False
         if not journal_id or not prod_id:
             return {}
         product_obj = self.pool.get('product.product')
-        analytic_journal_obj =self.pool.get('account.analytic.journal')
+        analytic_journal_obj = self.pool.get('account.analytic.journal')
         product_price_type_obj = self.pool.get('product.price.type')
         product_uom_obj = self.pool.get('product.uom')
         j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
@@ -64,15 +64,15 @@ class account_analytic_line(models.Model):
                 raise UserError(_('There is no income account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod_id,))
- 
+
         flag = False
         # Compute based on pricetype
-        product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context=context)
+        product_price_type_ids = product_price_type_obj.search(cr, uid, [('field', '=', 'standard_price')], context=context)
         pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
         if journal_id:
             journal = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
             if journal.type == 'sale':
-                product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context=context)
+                product_price_type_ids = product_price_type_obj.search(cr, uid, [('field', '=', 'list_price')], context=context)
                 if product_price_type_ids:
                     pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
         # Take the company currency as the reference one
@@ -131,9 +131,9 @@ class account_analytic_line(models.Model):
 
         # Compute based on pricetype
         if journal_id.type == 'sale':
-            pricetype = product_price_type_obj.search([('field','=','list_price')], limit=1)
+            pricetype = product_price_type_obj.search([('field', '=', 'list_price')], limit=1)
         else:
-            pricetype = product_price_type_obj.search([('field','=','standard_price')], limit=1)
+            pricetype = product_price_type_obj.search([('field', '=', 'standard_price')], limit=1)
 
         ctx = dict(self._context or {})
         if unit:

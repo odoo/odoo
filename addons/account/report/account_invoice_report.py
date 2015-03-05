@@ -4,7 +4,8 @@ from openerp import tools
 import openerp.addons.decimal_precision as dp
 from openerp import models, fields, api
 
-class account_invoice_report(models.Model):
+
+class AccountInvoiceReport(models.Model):
     _name = "account.invoice.report"
     _description = "Invoices Statistics"
     _auto = False
@@ -28,12 +29,12 @@ class account_invoice_report(models.Model):
             record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average, user_currency_id)
             record.user_currency_residual = base_currency_id.with_context(ctx).compute(record.residual, user_currency_id)
 
-    date = fields.Date(string='Date', readonly=True)
+    date = fields.Date(readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_qty = fields.Float(string='Product Quantity', readonly=True)
     uom_name = fields.Char(string='Reference Unit of Measure', readonly=True)
-    payment_term = fields.Many2one('account.payment.term', string='Payment Term', readonly=True)
-    fiscal_position = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
+    payment_term = fields.Many2one('account.payment.term', readonly=True)
+    fiscal_position = fields.Many2one('account.fiscal.position', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
@@ -52,7 +53,7 @@ class account_invoice_report(models.Model):
         ('in_invoice', 'Supplier Invoice'),
         ('out_refund', 'Customer Refund'),
         ('in_refund', 'Supplier Refund'),
-        ],'Type', readonly=True)
+        ], readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('proforma', 'Pro-forma'),
@@ -62,7 +63,7 @@ class account_invoice_report(models.Model):
         ('cancel', 'Cancelled')
         ], string='Invoice Status', readonly=True)
     date_due = fields.Date(string='Due Date', readonly=True)
-    account_id = fields.Many2one('account.account', string='Account',readonly=True, domain=[('deprecated', '=', False)])
+    account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
     account_line_id = fields.Many2one('account.account', string='Account Line', readonly=True, domain=[('deprecated', '=', False)])
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
     residual = fields.Float(string='Total Residual', readonly=True)
