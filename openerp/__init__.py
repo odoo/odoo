@@ -26,6 +26,7 @@
 #----------------------------------------------------------
 # Is the server running with gevent.
 import sys
+boot_pid = 0
 evented = False
 if sys.modules.get("gevent") is not None:
     evented = True
