@@ -65,6 +65,8 @@
                     <field name="state"/>
                     <filter string="To Renew" name="to_renew" domain="[('state', '=', 'pending')]"/>
                     <separator />
+                    <filter string="Current Employee" name="current_employee" domain="[('employee_id.active','=',True)]"/>
+                    <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
