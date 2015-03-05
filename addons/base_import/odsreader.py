@@ -32,14 +32,11 @@ class odsreader:
         p.Parse(xmldata, True)
 
     def __iter__(self):
-        return self
+        for index, record in enumerate(self.__rows):
+            yield record
 
     def next(self):
-        if self.__iter_cnt == len(self.__rows):
-            raise StopIteration
-        else:
-            self.__iter_cnt = self.__iter_cnt + 1
-            return self.__rows[self.__iter_cnt - 1]
+        return
 
     def __start_element__(self, name, attrs):
         if name == 'table:table-row':

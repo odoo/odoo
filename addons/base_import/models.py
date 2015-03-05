@@ -192,7 +192,7 @@ class ir_import(orm.TransientModel):
         return self._read_xls(record, options)
 
     def _read_ods(self, record, options):
-        return odsreader(record.file)
+        return iter(odsreader(record.file))
 
     def _read_csv(self, record, options):
         """ Returns a CSV-parsed iterator of all empty lines in the file

@@ -219,7 +219,7 @@ var DataImport = Widget.extend({
 
     //- File & settings change section
     onfile_loaded: function () {
-        if (!(this.$('input.oe_import_file').val().split('.').pop() == "csv")) {
+        if (!(this.$('input.oe_import_file')[0].files[0].type == "text/csv")) {
             this.$el.find('.oe_import_toggle').hide();
         }else {
             this.$el.find('.oe_import_toggle').show();

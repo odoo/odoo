@@ -481,7 +481,8 @@ class test_failures(TransactionCase):
         Import = self.env['base_import.import']
         imp = Import.create({
             'res_model': 'ir.attachment',
-            'file': fout.getvalue()
+            'file': fout.getvalue(),
+            'file_type': 'text/csv'
         })
         [results] = imp.do(
             ['name', 'db_datas'],
