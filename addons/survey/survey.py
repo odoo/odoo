@@ -380,7 +380,7 @@ class survey_survey(osv.Model):
                                        'max': round(max(all_inputs), 2),
                                        'min': round(min(all_inputs), 2),
                                        'sum': sum(all_inputs),
-                                       'most_comman': Counter(all_inputs).most_common(5)})
+                                       'most_common': Counter(all_inputs).most_common(5)})
         return result_summary
 
     def get_input_summary(self, cr, uid, question, current_filters=None, context=None):
@@ -751,7 +751,7 @@ class survey_question(osv.Model):
         if question.comments_allowed:
             comment_tag = "%s_%s" % (answer_tag, 'comment')
         # Empty answer to mandatory question
-        if question.constr_mandatory and not answer_tag in post:
+        if question.constr_mandatory and answer_tag not in post:
             errors.update({answer_tag: question.constr_error_msg})
         if question.constr_mandatory and answer_tag in post and post[answer_tag].strip() == '':
             errors.update({answer_tag: question.constr_error_msg})
@@ -767,6 +767,9 @@ class survey_question(osv.Model):
             comment_flag = answer_candidates.pop(("%s_%s" % (answer_tag, -1)), None)
             if question.comments_allowed:
                 comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
+            # Preventing answers with blank value
+            if all([True if answer.strip() == '' else False for answer in answer_candidates.values()]):
+                errors.update({answer_tag: question.constr_error_msg})
             # There is no answer neither comments (if comments count as answer)
             if not answer_candidates and question.comment_count_as_answer and (not comment_flag or not comment_answer):
                 errors.update({answer_tag: question.constr_error_msg})
