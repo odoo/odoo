@@ -14,4 +14,5 @@
         'demo/partner_bank.xml',
     ],
     'installable': True,
+    'auto_install': True,
 }

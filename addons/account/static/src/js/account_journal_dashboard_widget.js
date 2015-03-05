@@ -11,23 +11,26 @@ openerp.account.journal_dashboard = function (instance)
         display_graph : function(data) {
             var self = this;
             nv.addGraph(function () {
-                self.$el.append('<svg>');
+                self.$el.append('<svg style="height:75px;">');
                 type = self.graph_type
                 switch(type) {
                     case "line":
-                        var chart = nv.models.lineChart()
-                        .x(function (d,u) { return u })
-                        // .forceY([0, 100])
-                        .width(self.$el.find('svg').width())
-                        .height(self.$el.find('svg').height())
-                        // .margin({'left': 0, 'right':0})
-                        .showLegend(data[0].show_legend || false);
+                        var chart = nv.models.lineChart();
+                        chart.dispatch.on('tooltipShow', function(){console.log(arguments);})
+                        chart.options({
+                            x: function(d,u) { return u},
+                            width: self.$el.find('svg').width(),
+                            height: self.$el.find('svg').height(),
+                            margin: {'left': 10, 'right':10, 'top':10, 'bottom': 20},
+                            showYAxis: false,
+                            showLegend: false,
+                        });
                     chart.xAxis
                         .tickFormat(function(d) {
                             var label = '';
                             $.each(data, function(el){
                                 if (data[el].values[d] && data[el].values[d].x){
-                                    label = data[el].values[d].x;
+                                    label = data[el].values[d].name;
                                 }
                             });
                             return label;

@@ -215,8 +215,17 @@
                             </div>
                         </t>
                         <t t-name="JournalBodyGraph">
-                            <div class="col-md-12">
-                                <img src="/account/static/src/img/graph.png" width="528px" style="{margin-top:20px;}"/>
+                            <div class="col-md-12 dashboard-kanban-graph">
+                                <t t-if="dashboard.show_import">
+                                    <div> No Statement Found :</div>
+                                    <button type="object" name="import_statement" class="btn btn-primary btn-sm">Import Statement</button>
+                                </t>
+                                <t t-if="!dashboard.show_import">
+                                    <div>
+                                        <field name="kanban_dashboard_graph" graph_type="line" widget="dashboard_graph"></field>
+                                    </div>
+                                    <!-- <img src="/account/static/src/img/graph.png" width="528px" style="{margin-top:20px;}"/> -->
+                                </t>
                             </div>
                         </t>
 
