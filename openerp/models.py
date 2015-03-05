@@ -3876,7 +3876,7 @@ class BaseModel(object):
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
                     if (not totranslate) or not column.translate:
-                        updates.append((field, '%s', column._symbol_set[1](vals[field])))
+                        updates.append((field, column._symbol_set[0], column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
                     upd_todo.append(field)
@@ -4189,7 +4189,7 @@ class BaseModel(object):
         for field in vals:
             current_field = self._columns[field]
             if current_field._classic_write:
-                updates.append((field, '%s', current_field._symbol_set[1](vals[field])))
+                updates.append((field, current_field._symbol_set[0], current_field._symbol_set[1](vals[field])))
 
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
@@ -4422,7 +4422,7 @@ class BaseModel(object):
                                 value[v] = value[v][0]
                             except:
                                 pass
-                        updates.append((v, '%s', column._symbol_set[1](value[v])))
+                        updates.append((v, column._symbol_set[0], column._symbol_set[1](value[v])))
                     if updates:
                         query = 'UPDATE "%s" SET %s WHERE id = %%s' % (
                             self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
@@ -4446,8 +4446,8 @@ class BaseModel(object):
                                 value = value[0]
                             except:
                                 pass
-                        query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %%s' % (
-                            self._table, f,
+                        query = 'UPDATE "%s" SET "%s"=%s WHERE id = %%s' % (
+                            self._table, f, column._symbol_set[0],
                         )
                         cr.execute(query, (column._symbol_set[1](value), id))
 
