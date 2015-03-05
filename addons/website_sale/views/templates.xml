@@ -36,21 +36,10 @@
 </template>
 
 <template id="search" name="Search hidden fields">
-  <form t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else '', search=0)" method="get" t-att-class="search_class">
-
-    <t t-if="attrib_values">
-      <t t-foreach="attrib_values" t-as="a">
-        <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])"/>
-      </t>
-    </t>
-    <div class="input-group">
-      <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
-      <span class="input-group-btn">
-        <a class="btn btn-default a-submit"><i class="fa fa-search"/></a>
-      </span>
-  </div>
-
-  </form>
+  <t t-call="website.search_bar">
+    <t t-set="category_route">/shop/product/get_categories</t>
+    <t t-set="redirect_url">/shop/category/%s?search=%s</t>
+  </t>
 </template>
 
 <template id="404">
@@ -130,8 +119,12 @@
         <div class="container oe_website_sale">
           <div class="products_pager">
             <div class="row" style="width: 100%;">
-              <t t-call="website_sale.search"><t t-set="search_class">pagination form-inline col-md-3</t></t>
-              <t t-call="website.pager"/>
+              <div class="col-md-5 pull-left pagination">
+                <t t-call="website_sale.search"/>
+              </div>
+              <div class="col-md-7 pull-right">
+                <t t-call="website.pager"/>
+              </div>
             </div>
           </div>
           <div class='row'>
@@ -292,10 +285,10 @@
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
             </div>
-            <div class="col-sm-3">
-              <t t-call="website_sale.search"><t t-set="search_class">pull-right</t></t>
+            <div class="col-sm-6">
+              <t t-call="website_sale.search"/>
             </div>
-            <div id="website_published_button" class="col-sm-4" groups="base.group_sale_manager">
+            <div id="website_published_button" class="col-sm-2" groups="base.group_sale_manager">
                 <t t-call="website.publish_management">
                   <t t-set="object" t-value="product"/>
                   <t t-set="publish_edit" t-value="True"/>

@@ -13,18 +13,25 @@ from openerp.tools.translate import _
 
 
 class website_event(http.Controller):
-    @http.route(['/event', '/event/page/<int:page>'], type='http', auth="public", website=True)
-    def events(self, page=1, **searches):
+    @http.route([
+        '/event',
+        '/event/page/<int:page>',
+        '/event/category/<model("event.type"):category>',
+        '/event/category/<model("event.type"):category>/page/<int:page>'],
+        type='http', auth="public", website=True)
+    def events(self, category=None, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
-        type_obj = request.registry['event.type']
         country_obj = request.registry['res.country']
 
         searches.setdefault('date', 'all')
-        searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
 
         domain_search = {}
+        pager_url = "/event/"
+
+        if searches.get('query'):
+            domain_search['query'] = [("name", "ilike", searches['query'])]
 
         def sdn(date):
             return date.replace(hour=23, minute=59, second=59).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
@@ -62,16 +69,16 @@ class website_event(http.Controller):
         # search domains
         # TDE note: WTF ???
         current_date = None
-        current_type = None
         current_country = None
         for date in dates:
             if searches["date"] == date[0]:
                 domain_search["date"] = date[2]
                 if date[0] != 'all':
                     current_date = date[1]
-        if searches["type"] != 'all':
-            current_type = type_obj.browse(cr, uid, int(searches['type']), context=context)
-            domain_search["type"] = [("type", "=", int(searches["type"]))]
+
+        if category:
+            pager_url += "category/%s" % category.id
+            domain_search["category"] = [("type", "=", category.id)]
 
         if searches["country"] != 'all' and searches["country"] != 'online':
             current_country = country_obj.browse(cr, uid, int(searches['country']), context=context)
@@ -93,16 +100,26 @@ class website_event(http.Controller):
                     request.cr, request.uid, dom_without('date') + date[2],
                     count=True, context=request.context)
 
-        domain = dom_without('type')
-        types = event_obj.read_group(
+        domain = dom_without('category')
+        events = event_obj.read_group(
             request.cr, request.uid, domain, ["id", "type"], groupby="type",
             orderby="type", context=request.context)
-        type_count = event_obj.search(request.cr, request.uid, domain,
+        events_count = event_obj.search(request.cr, request.uid, domain,
                                       count=True, context=request.context)
-        types.insert(0, {
-            'type_count': type_count,
-            'type': ("all", _("All Categories"))
-        })
+        categories = [{
+            'category_count': events_count,
+            'name': _("All Categories"),
+            'active': not category,
+            'url': '/event'
+        }]
+        for event in events:
+            category_id, name = event['type']
+            categories.append({
+                'category_count': event['type_count'],
+                'name': name,
+                'active': category and category_id == category.id,
+                'url': '/event/category/%s' % category_id
+            })
 
         domain = dom_without('country')
         countries = event_obj.read_group(
@@ -120,8 +137,8 @@ class website_event(http.Controller):
             request.cr, request.uid, dom_without("none"), count=True,
             context=request.context)
         pager = request.website.pager(
-            url="/event",
-            url_args={'date': searches.get('date'), 'type': searches.get('type'), 'country': searches.get('country')},
+            url=pager_url,
+            url_args={'date': searches.get('date'), 'country': searches.get('country')},
             total=event_count,
             page=page,
             step=step,
@@ -135,18 +152,16 @@ class website_event(http.Controller):
             offset=pager['offset'], order=order, context=request.context)
         events_ids = event_obj.browse(request.cr, request.uid, obj_ids,
                                       context=request.context)
-
         values = {
             'current_date': current_date,
             'current_country': current_country,
-            'current_type': current_type,
+            'current_category': category,
             'event_ids': events_ids,
             'dates': dates,
-            'types': types,
+            'categories': categories,
             'countries': countries,
             'pager': pager,
             'searches': searches,
-            'search_path': "?%s" % werkzeug.url_encode(searches),
         }
 
         return request.website.render("website_event.index", values)
@@ -162,6 +177,12 @@ class website_event(http.Controller):
             page = 'website_event.%s' % page
 
         return request.website.render(page, values)
+
+    @http.route('/event/get_categories/', type='json', auth="public", website=True)
+    def get_categories(self, query):
+        category_obj = request.registry['event.type']
+        cr, uid, context = request.cr, request.uid, request.context
+        return category_obj.search_read(cr, uid, [('name', 'ilike', query)], ['name'], limit=20, order="name asc", context=context)
 
     @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True)
     def event(self, event, **post):
