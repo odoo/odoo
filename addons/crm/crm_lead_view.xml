@@ -602,6 +602,10 @@
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]" help="No salesperson"/>
                     <separator/>
+                    <filter string="Follow-up" name="follow_up"
+                            domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d') )]"
+                            help="Show all opportunities for which the next action date is today or before"/>
+                    <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
