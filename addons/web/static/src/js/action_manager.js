@@ -493,7 +493,11 @@ var ActionManager = Widget.extend({
             });
         }
         // Do not permit popups to communicate with the main control panel
-        options.cp_bus = !popup && this.main_control_panel.get_bus();
+        if (!popup) {
+            options.cp_bus = this.main_control_panel.get_bus();
+        } else {
+            options.cp_bus = core.bus;   
+        }
 
         return this[type](action, options);
     },

@@ -495,6 +495,13 @@
     </div>
 </t>
 
+<t t-name="One2ManyControlPanel">
+    <div class="oe-o2m-control-panel container-fluid">
+        <div class="oe-cp-buttons pull-left"/>
+        <div class="oe-cp-pager pull-right"/>
+    </div>
+</t>
+
 <div t-name="ViewManager" class="oe-view-manager">
     <div class="oe-view-manager-content">
         <t t-foreach="widget.views" t-as="view">
@@ -716,13 +723,13 @@
     </tfoot>
 </table>
 <t t-name="ListView.buttons">
-    <div class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
+    <div class="oe_list_buttons">
         <button type="button" class="oe_list_add btn btn-primary btn-sm">
             <t t-esc="widget.options.addable"/>
         </button>
-    </t>
     </div>
+    </t>
 </t>
 <t t-name="ListView.pager" t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
     <span class="oe_list_pager_state"></span>
@@ -793,7 +800,7 @@
         <div class="oe_form_container"/>
     </div>
 </t>
-<div t-name="FormView.buttons">
+<div t-name="FormView.buttons" class="oe_form_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <div class="oe_form_buttons_view">
             <button t-if="widget.is_action_enabled('edit')"

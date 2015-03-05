@@ -96,14 +96,12 @@ var ViewManager = Widget.extend({
 
         this.$el.addClass("oe_view_manager_" + ((this.action && this.action.target) || 'current'));
 
-        if (this.cp_bus) {
-            this.control_elements = {};
-            if (this.flags.search_view) {
-                this.search_view_loaded = this.setup_search_view();
-            }
-            if (this.flags.views_switcher) {
-                this.render_switch_buttons();
-            }
+        this.control_elements = {};
+        if (this.flags.search_view) {
+            this.search_view_loaded = this.setup_search_view();
+        }
+        if (this.flags.views_switcher) {
+            this.render_switch_buttons();
         }
 
         // Switch to the default_view to load it
@@ -159,20 +157,18 @@ var ViewManager = Widget.extend({
         // Show the view
         this.active_view.$container.show();
         $.when(view_controller.do_show(view_options)).done(function () {
-            if (self.cp_bus) {
-                // Render the control elements of the active view (buttons, sidebar, pager)
-                var view_elements = self.render_view_control_elements();
-                var status = {
-                    active_view_selector: '.oe-cp-switch-' + self.active_view.type,
-                    breadcrumbs: self.action_manager && self.action_manager.get_breadcrumbs(),
-                    cp_content: _.extend({}, self.control_elements, view_elements),
-                    hidden: self.flags.headless,
-                    searchview: self.searchview,
-                    search_view_hidden: view_controller.searchable === false,
-                };
-                // Tell the ControlPanel to update its elements
-                self.cp_bus.trigger('update', status);
-            }
+            // Render the control elements of the active view (buttons, sidebar, pager)
+            var view_elements = self.render_view_control_elements();
+            var status = {
+                active_view_selector: '.oe-cp-switch-' + self.active_view.type,
+                breadcrumbs: self.action_manager && self.action_manager.get_breadcrumbs(),
+                cp_content: _.extend({}, self.control_elements, view_elements),
+                hidden: self.flags.headless,
+                searchview: self.searchview,
+                search_view_hidden: view_controller.searchable === false,
+            };
+            // Tell the ControlPanel to update its elements
+            self.cp_bus.trigger('update', status);
         });
     },
     create_view: function(view, view_options) {
@@ -200,7 +196,7 @@ var ViewManager = Widget.extend({
             if (self.action_manager) self.action_manager.trigger('history_back');
         });
         controller.on("change:title", this, function() {
-            if (self.cp_bus && self.action_manager) {
+            if (self.action_manager) {
                 var breadcrumbs = self.action_manager.get_breadcrumbs();
                 self.cp_bus.trigger("update_breadcrumbs", breadcrumbs);
             }
