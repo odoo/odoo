@@ -177,7 +177,9 @@
                                     </li>
                                     <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                     <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
-                                    <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                    <li t-if="record.work_phone.raw_value"><i class="fa fa-phone"></i> <field name="work_phone"/></li>
+                                    <li t-if="record.mobile_phone.raw_value"><i class="fa fa-mobile"></i> <field name="mobile_phone"/></li>
+                                    <li t-if="record.work_email.raw_value"><i class="fa fa-envelope"></i><a t-attf-href="mailto:#{record.work_email.value}"> <field name="work_email"/></a></li>
                                 </ul>
                                 <div class="oe_kanban_bottom_left">
                                     <t t-raw="record.message_summary.raw_value"/>
