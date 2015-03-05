@@ -504,9 +504,9 @@ class mail_thread(osv.AbstractModel):
 
 
             # find subtypes and post messages or log if no subtype found
-<<<<<<< HEAD
             subtype_xmlid = False
-            # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
+            # By passing this key, that allows to let the subtype empty and so don't sent email 
+            # because partners_to_notify from mail_message._notify will be empty
             if not context.get('mail_track_log_only'):
                 subtype_xmlid = browse_record._track_subtype(dict((col_name, initial[col_name]) for col_name in changes))
                 # compatibility: use the deprecated _track dict
@@ -519,46 +519,25 @@ class mail_thread(osv.AbstractModel):
                                 _logger.warning("Model %s still using deprecated _track dict; override _track_subtype method instead" % self._name)
                                 subtype_xmlid = subtype
 
+            msg_id = 0
             if subtype_xmlid:
                 subtype_rec = self.pool['ir.model.data'].xmlid_to_object(cr, uid, subtype_xmlid, context=context)
                 if not (subtype_rec and subtype_rec.exists()):
                     _logger.debug('subtype %s not found' % subtype_xmlid)
                     continue
-                message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)
-            else:
-                message = format_message('', tracked_values)
-            self.message_post(cr, uid, browse_record.id, body=message, subtype=subtype_xmlid, context=context)
-=======
-            subtypes = []
-            # By passing this key, that allows to let the subtype empty and so don't sent 
-            # email because partners_to_notify from mail_message._notify will be empty
-            if not context.get('mail_track_log_only'):
-                for field, track_info in self._track.items():
-                    if field not in changes:
-                        continue
-                    for subtype, method in track_info.items():
-                        if method(self, cr, uid, browse_record, context):
-                            subtypes.append(subtype)
-          
-            msg_id = 0
-            if subtypes:
-                subtype_rec = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, subtypes[0], context=context)
-                if not (subtype_rec and subtype_rec.exists()):
-                    _logger.debug('subtype %s not found' % subtypes[0])
-                    continue
                 msg_id = self.message_post(cr, uid, browse_record.id,  
-                                           subtype=subtypes[0], 
+                                           subtype=subtype_xmlid, 
                                            tracking_values=tracking_values,
                                            context=context)
             else:
                 msg_id = self.message_post(cr, uid, browse_record.id, 
                                            tracking_values=tracking_values,
                                            context=context)
-
+            
             tracks_to_update = track_obj.browse(cr, uid, tracking_values, context=context)
             tracks_to_update.update_message_id(msg_id)  
 
->>>>>>> [ADD] mail: timeline view
+
         return True
 
     #------------------------------------------------------
