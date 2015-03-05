@@ -429,9 +429,14 @@ openerp.web_timeline = function (session) {
         },
 
         start: function () {
+
             if (this.options.show_compose_message) {
                 this.instantiate_compose_message();
                 this.compose_message.do_show_compact();
+            }
+
+            if (!this.messages.length && !this.root) {
+                this.no_message();
             }
 
             return this._super.apply(this, arguments);
@@ -486,12 +491,11 @@ openerp.web_timeline = function (session) {
             var self = this;
             
             _.each(records.threads, function (record) {
-                console.log("records", records);
                 self.create_thread(record[1]);
             });
-            
-            if (!records.threads.length && this.options.root_thread == this) {
-                this.no_message();
+
+            if (!records.threads.length) {
+                self.create_thread([]);
             }
         },
 

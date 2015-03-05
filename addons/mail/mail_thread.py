@@ -537,7 +537,6 @@ class mail_thread(osv.AbstractModel):
             tracks_to_update = track_obj.browse(cr, uid, tracking_values, context=context)
             tracks_to_update.update_message_id(msg_id)  
 
-
         return True
 
     #------------------------------------------------------
