@@ -82,6 +82,7 @@ class FollowupReportController(addons.account.controllers.main.FinancialReportCo
             'report': report_obj,
             'mode': 'display',
             'page': page,
+            'last_page': (len(partners) - 1) / 3 == page - 1,
             'context_all': context_all_id,
             'just_arrived': 'partner_done' not in kw and 'partner_skipped' not in kw,
             'action_contexts': action_contexts,
