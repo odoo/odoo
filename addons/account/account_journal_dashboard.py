@@ -8,13 +8,19 @@ class account_journal(models.Model):
 
     @api.one
     def _kanban_dashboard(self):
-        # if self.show_on_dashboard:
         self.kanban_dashboard = json.dumps(self.get_journal_dashboard_datas())
-        # else:
-            # self.kanban_dashboard = json.dumps({'display': False})
+
+    @api.one
+    def _kanban_dashboard_graph(self):
+        self.kanban_dashboard_graph = json.dumps(self.get_graph_datas())
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
+    kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=False)
+
+    @api.multi
+    def get_graph_datas(self):
+        return [{'values': [{'x':1,'y':10},{'x':2,'y':20},{'x':4,'y':15}], 'color': '#ff7f0e'}]
 
     @api.multi
     def get_journal_dashboard_datas(self):
@@ -54,6 +60,7 @@ class account_journal(models.Model):
             'sum_waiting': sum_waiting,
             'sum_late': sum_late,
             'currency_id': self.currency and self.currency.id or self.company_id.currency_id.id,
+            'show_import': True if self.type in ['bank', 'cash'] and len(ac_bnk_stmt) == 0 and last_balance == 0 else False,
         	}
 
     @api.multi
@@ -136,11 +143,17 @@ class account_journal(models.Model):
         model = 'account.bank.statement'
         if self.type == 'cash':
             model = 'account.cash.statement'
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'import',
-            'params': {
-                'model': model,
-                'context': self._context,
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'import',
+                'params': {
+                    'model': model,
+                    'context': self._context,
+                    }
                 }
-            }
+        else:
+            action_name = 'action_account_bank_statement_import'
+            ir_model_obj = self.pool['ir.model.data']
+            model, action_id = ir_model_obj.get_object_reference(self._cr, self._uid, 'account_bank_statement_import', action_name)
+            action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
+            return action

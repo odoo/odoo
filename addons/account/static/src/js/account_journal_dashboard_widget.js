@@ -10,6 +10,7 @@ openerp.account.journal_dashboard = function (instance)
         },
         display_graph : function(data) {
             var self = this;
+            debugger;
             nv.addGraph(function () {
                 self.$el.append('<svg>');
                 type = self.graph_type
@@ -19,9 +20,10 @@ openerp.account.journal_dashboard = function (instance)
                         .x(function (d,u) { return u })
                         // .forceY([0, 100])
                         .width(self.$el.find('svg').width())
-                        .height(self.$el.find('svg').height())
-                        // .margin({'left': 0, 'right':0})
-                        .showLegend(data[0].show_legend || false);
+                        .height(75)
+                        .margin({'left': 10, 'right':10, 'top':5, 'bottom': 20})
+                        .showYAxis(false)
+                        .showLegend(false); //data[0].show_legend || 
                     chart.xAxis
                         .tickFormat(function(d) {
                             var label = '';
