@@ -480,7 +480,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var fields = _.find(this.models,function(model){ return model.model === 'res.partner'; }).fields;
             new instance.web.Model('res.partner')
                 .query(fields)
-                .filter([['write_date','>',this.db.get_partner_write_date()]])
+                .filter([['customer','=',true],['write_date','>',this.db.get_partner_write_date()]])
                 .all({'timeout':3000, 'shadow': true})
                 .then(function(partners){
                     if (self.db.add_partners(partners)) {   // check if the partners we got were real updates
