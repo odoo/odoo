@@ -2958,9 +2958,7 @@ instance.web.form.CompletionFieldMixin = {
                 values.push({
                     label: _t("Search More..."),
                     action: function() {
-                        dataset.name_search(search_val, self.build_domain(), 'ilike', 160).done(function(data) {
-                            self._search_create_popup("search", data);
-                        });
+                        self._search_create_popup("search", undefined, undefined, search_val ? [['name', 'ilike', search_val]] : undefined);
                     },
                     classname: 'oe_m2o_dropdown_option'
                 });
@@ -3010,7 +3008,7 @@ instance.web.form.CompletionFieldMixin = {
             slow_create();
     },
     // all search/create popup handling
-    _search_create_popup: function(view, ids, context) {
+    _search_create_popup: function(view, ids, context, domain) {
         var self = this;
         var pop = new instance.web.form.SelectCreatePopup(this);
         pop.select_element(
@@ -3021,7 +3019,7 @@ instance.web.form.CompletionFieldMixin = {
                 initial_view: view,
                 disable_multiple_selection: true
             },
-            self.build_domain(),
+            new instance.web.CompoundDomain(self.build_domain(), domain || []),
             new instance.web.CompoundContext(self.build_context(), context || {})
         );
         pop.on("elements_selected", self, function(element_ids) {
