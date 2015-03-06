@@ -37,7 +37,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
                 {
                     'product_id': self.env.ref('product.product_product_5').id,
                     'quantity': 10.0,
-                    'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_sales').id)]).id,
+                    'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_sales').id)])[0].id,
                     'name': 'product test 5',
                     'price_unit': 100.00,
                 }
