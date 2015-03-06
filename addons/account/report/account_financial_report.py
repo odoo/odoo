@@ -301,7 +301,7 @@ class AccountFinancialReportLine(models.Model):
                 domain_ids.update(set(r.keys()))
 
             res = self._put_columns_together(res, domain_ids)
-            if line.hide_if_zero and sum([k == 0 or [] for k in res['line']], []):
+            if line.hide_if_zero and sum([k == 0 and [True] or [] for k in res['line']], []):
                 continue
 
             # Post-processing ; creating line dictionnary, building comparison, computing total for extended, formatting
