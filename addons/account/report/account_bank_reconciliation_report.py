@@ -69,7 +69,7 @@ class account_bank_reconciliation(models.AbstractModel):
             'level': 2,
         }
 
-    def add_bank_statement_line(self, line):
+    def add_bank_statement_line(self, line, amount):
         self.line_number += 1
         return {
             'id': self.line_number,
@@ -77,7 +77,7 @@ class account_bank_reconciliation(models.AbstractModel):
             'type': 'bank_statement_id',
             'name': line.name,
             'footnotes': self._get_footnotes('bank_statement_id', self.line_number),
-            'columns': [line.date, line.ref, line.amount],
+            'columns': [line.date, line.ref, amount],
             'level': 3,
         }
 
@@ -103,7 +103,7 @@ class account_bank_reconciliation(models.AbstractModel):
         if not_reconcile_plus:
             lines.append(self.add_subtitle_line(_("Plus Outstanding Payment")))
             for line in not_reconcile_plus:
-                lines.append(self.add_bank_statement_line(line))
+                lines.append(self.add_bank_statement_line(line, line.amount))
                 outstanding_plus_tot += line.amount
             lines.append(self.add_total_line(outstanding_plus_tot))
 
@@ -116,7 +116,7 @@ class account_bank_reconciliation(models.AbstractModel):
         if not_reconcile_less:
             lines.append(self.add_subtitle_line(_("Less outstanding receipt")))
             for line in not_reconcile_less:
-                lines.append(self.add_bank_statement_line(abs(line.amount)))
+                lines.append(self.add_bank_statement_line(line, abs(line.amount)))
                 outstanding_less_tot += abs(line.amount)
             lines.append(self.add_total_line(outstanding_less_tot))
 
