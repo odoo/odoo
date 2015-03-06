@@ -18,8 +18,6 @@
                 'click span.user_type': 'displayMoveLinesByType',
                 'click span.partner_id': 'displayMoveLinesByPartner',
                 'click span.aml': 'displayMoveLine',
-                'mouseleave td': 'rmPencil',
-                'mouseleave .footnote': 'rmPencil',
                 'click .fa-trash-o': 'rmContent',
                 'click .closeSummary': 'rmContent',
                 'click .oe-account-saved-summary > span': 'editSummary',
@@ -48,7 +46,6 @@
                         curFootNoteTarget.append(openerp.qweb.render("supFootNoteSeqNum", {footNoteSeqNum: footNoteSeqNum}));
                         contextModel.query(['footnotes_manager_id'])
                         .filter([['id', '=', context_id]]).first().then(function (context) {
-                            debugger;
                             var managerModel = new openerp.Model('account.report.footnotes.manager');
                             managerModel.call('add_footnote', [[parseInt(context.footnotes_manager_id[0])], $("#type").val(), $("#target_id").val(), $("#column").val(), footNoteSeqNum, note]);
                             $('#footnoteModal').find('form')[0].reset();
@@ -320,6 +317,7 @@
                 if ($(e.target).parents("div.oe-account-summary, p.footnote").length > 0) {
                     var num = 0;
                     if ($(e.target).parent().parent().is("p.footnote")) {
+                        $(e.target).parent().parent().attr('class', 'footnoteEdit')
                         var $el = $(e.target).parent().parent().find('span.text');
                         var text = $el.html().replace(/\s+/g, ' ').replace(/\r?\n/g, '').replace(/<br>/g, '\n').replace(/(\n\s*)+$/g, '');
                         text = text.split('.');
@@ -359,8 +357,9 @@
                 var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
                 var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
                 var text = $(e.target).siblings('textarea').val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
-                var footNoteSeqNum = $(e.target).parents('p.footnote').text().split('.')[0];
-                if ($(e.target).parents("p.footnote").length > 0) {
+                var footNoteSeqNum = $(e.target).parents('p.footnoteEdit').text().split('.')[0];
+                if ($(e.target).parents("p.footnoteEdit").length > 0) {
+                    $(e.target).parents("p.footnoteEdit").attr('class', 'footnote')
                     $(e.target).siblings('textarea').replaceWith(text);
                     var model = new openerp.Model('account.report.context.common');
                     model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
