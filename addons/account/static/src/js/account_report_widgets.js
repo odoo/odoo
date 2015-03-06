@@ -208,7 +208,7 @@
                 this.onChangeCmpDateFilter();
             },
             onChangeCmpDateFilter: function() {
-		if ($(".date_bank_reconciliation")) return;
+		if ($(".date_bank_reconciliation").length > 0) return;
                 var date_filter = this.$("select[name='date_filter']").val();
                 var cmp_filter = this.$("select[name='date_filter_cmp']").val();
                 var no_date_range = this.$("input[name='date_from']").length == 0;
