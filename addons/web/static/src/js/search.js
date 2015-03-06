@@ -436,7 +436,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     set_default_filters: function () {
         var self = this,
             default_custom_filter = this.$buttons && this.favorite_menu.get_default_filter();
-        if (default_custom_filter) {
+        if (!self.options.disable_custom_filters && default_custom_filter) {
             return this.favorite_menu.toggle_filter(default_custom_filter, true);
         }
         if (!_.isEmpty(this.defaults)) {
