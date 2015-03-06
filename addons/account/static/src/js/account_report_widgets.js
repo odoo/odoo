@@ -46,10 +46,15 @@
                     var contextModel = new openerp.Model(result);
                     contextModel.call('get_next_footnote_number', [[parseInt(context_id)]]).then(function (footNoteSeqNum) {
                         curFootNoteTarget.append(openerp.qweb.render("supFootNoteSeqNum", {footNoteSeqNum: footNoteSeqNum}));
-                        contextModel.call('add_footnote', [[parseInt(context_id)], $("#type").val(), $("#target_id").val(), $("#column").val(), footNoteSeqNum, note]);
-                        $('#footnoteModal').find('form')[0].reset();
-                        $('#footnoteModal').modal('hide');
-                        $("div.page").append(openerp.qweb.render("savedFootNote", {num: footNoteSeqNum, note: note}));
+                        contextModel.query(['footnotes_manager_id'])
+                        .filter([['id', '=', context_id]]).first().then(function (context) {
+                            debugger;
+                            var managerModel = new openerp.Model('account.report.footnotes.manager');
+                            managerModel.call('add_footnote', [[parseInt(context.footnotes_manager_id[0])], $("#type").val(), $("#target_id").val(), $("#column").val(), footNoteSeqNum, note]);
+                            $('#footnoteModal').find('form')[0].reset();
+                            $('#footnoteModal').modal('hide');
+                            $("div.page").append(openerp.qweb.render("savedFootNote", {num: footNoteSeqNum, note: note}));
+                        });
                     });
                 });
             },
@@ -360,7 +365,11 @@
                     var model = new openerp.Model('account.report.context.common');
                     model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                         var contextModel = new openerp.Model(result);
-                        contextModel.call('edit_footnote', [[parseInt(context_id)], parseInt(footNoteSeqNum), text]);
+                        contextModel.query(['footnotes_manager_id'])
+                        .filter([['id', '=', context_id]]).first().then(function (context) {
+                            var managerModel = new openerp.Model('account.report.footnotes.manager');
+                            managerModel.call('edit_footnote', [[parseInt(context.footnotes_manager_id[0])], parseInt(footNoteSeqNum), text]);
+                        });
                     });
                 }
                 else {
@@ -395,7 +404,11 @@
                     var model = new openerp.Model('account.report.context.common');
                     model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                         var contextModel = new openerp.Model(result);
-                        contextModel.call('remove_footnote', [[parseInt(context_id)], parseInt(num)]);
+                        contextModel.query(['footnotes_manager_id'])
+                        .filter([['id', '=', context_id]]).first().then(function (context) {
+                            var managerModel = new openerp.Model('account.report.footnotes.manager');
+                            managerModel.call('remove_footnote', [[parseInt(context.footnotes_manager_id[0])], parseInt(num)]);
+                        });
                     });
                 }
             },

@@ -26,11 +26,27 @@ from datetime import timedelta, datetime
 import calendar
 
 
-class AccpitReportFootnotesManager(models.TransientModel):
+class AccountReportFootnotesManager(models.TransientModel):
     _name = 'account.report.footnotes.manager'
     _description = 'manages footnotes'
 
     footnotes = fields.One2many('account.report.footnote', 'manager_id')
+
+    @api.multi
+    def add_footnote(self, type, target_id, column, number, text):
+        self.env['account.report.footnote'].create(
+            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text, 'manager_id': self.id}
+        )
+
+    @api.multi
+    def edit_footnote(self, number, text):
+        footnote = self.footnotes.filtered(lambda s: s.number == number)
+        footnote.write({'text': text})
+
+    @api.multi
+    def remove_footnote(self, number):
+        footnotes = self.footnotes.filtered(lambda s: s.number == number)
+        self.write({'footnotes': [(3, footnotes.id)]})
 
 
 class AccountReportContextCommon(models.TransientModel):
@@ -94,22 +110,6 @@ class AccountReportContextCommon(models.TransientModel):
     date_filter_cmp = fields.Char('Comparison date filter used', default='no_comparison')
     periods_number = fields.Integer('Number of periods', default=1)
     footnotes_manager_id = fields.Many2one('account.report.footnotes.manager', string='Footnotes Manager', required=True, ondelete='cascade')
-
-    @api.multi
-    def add_footnote(self, type, target_id, column, number, text):
-        self.env['account.report.footnote'].create(
-            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text, 'manager_id': self.footnotes_manager_id.id}
-        )
-
-    @api.multi
-    def edit_footnote(self, number, text):
-        footnote = self.footnotes_manager_id.footnotes.filtered(lambda s: s.number == number)
-        footnote.write({'text': text})
-
-    @api.multi
-    def remove_footnote(self, number):
-        footnotes = self.footnotes_manager_id.footnotes.filtered(lambda s: s.number == number)
-        self.write({'footnotes': [(3, footnotes.id)]})
 
     @api.multi
     def edit_summary(self, text):
