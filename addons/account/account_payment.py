@@ -88,7 +88,7 @@ class account_payment(models.Model):
         if self.invoice_id:
             self.destination_account_id = self.invoice_id.account_id.id
         elif self.payment_type == 'transfer':
-            self.destination_account_id = self.env.user.company_id.transfer_account
+            self.destination_account_id = self.env.user.company_id.transfer_account.id
         elif self.partner_id:
             if self.partner_type == 'customer':
                 self.destination_account_id = self.partner_id.property_account_receivable.id
@@ -253,11 +253,29 @@ class account_payment(models.Model):
                 and self.journal_id.default_debit_account_id.id \
                 or self.journal_id.default_credit_account_id.id,
             'journal_id': self.journal_id.id,
-            'payment_method': self.payment_method.id,
         }
 
     @api.model
     def create(self, vals):
+        # TODO: all this logic is managed by the onchanges, there should be a way to have the same behavious server-side and client-side
+        invoice_id = self.env['account.invoice'].browse(vals['invoice_id'])
+        if not 'amount' in vals:
+            vals['amount'] = invoice_id.residual
+        if not 'payment_type' in vals:
+            vals['payment_type'] = invoice_id.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
+        if not 'partner_type' in vals:
+            vals['partner_type'] = invoice_id.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier'
+        if not 'partner_id' in vals:
+            vals['partner_id'] = invoice_id.partner_id.id
+        if not 'payment_method' in vals:
+            journal_id = self.env['account.journal'].browse(vals['journal_id'])
+            payment_methods = vals['payment_type'] == 'inbound' and journal_id.inbound_payment_methods or journal_id.outbound_payment_methods
+            if payment_methods:
+                vals['payment_method'] = payment_methods[0].id
+            else:
+                # TODO
+                raise UserError(_('No %s payment method enabled on journal %s') % vals['payment_type'], journal_id.name)
+
         # Use the right sequence to get the name and create the record
         if self.payment_type == 'transfer':
             sequence = 'sequence_payment_transfer'
@@ -266,10 +284,6 @@ class account_payment(models.Model):
                     ['sequence_payment_customer_refund', 'sequence_payment_customer_invoice']]
             sequence = seqs[bool(vals['partner_type'] == 'customer')][bool(vals['payment_type'] == 'inbound')]
         vals['name'] = self.env.ref('account.'+sequence).with_context(ir_sequence_date=self.date).next_by_id()
-
-        # Make sure everything is consistent
-        if self.payment_type == 'transfer':
-            self.invoice_id = False
 
         return super(account_payment, self).create(vals)
 
@@ -301,9 +315,10 @@ class account_payment(models.Model):
 
             # Reconcile the invoice, if present
             if res.invoice_id:
-                writeoff_account = res.payment_difference_handling == 'reconcile' and res.writeoff_account or False
-                writeoff_journal = res.payment_difference_handling == 'reconcile' and res.journal_id or False
-                res.invoice_id.register_payment(counterpart_aml, writeoff_account, writeoff_journal)
+                if res.payment_difference != 0.0 and res.payment_difference_handling == 'reconcile':
+                    res.invoice_id.register_payment(counterpart_aml, res.writeoff_account, res.journal_id)
+                else:
+                    res.invoice_id.register_payment(counterpart_aml)
 
             # In case of a transfer, the first journal entry created debited the source liquidity account and credited
             # the transfer account. Now we debit the transfer account and credit the destination liquidity account.
@@ -327,7 +342,7 @@ class account_payment(models.Model):
                 (counterpart_aml + transfer_debit_aml).reconcile()
 
             res.state = 'confirmed'
-            if res.payment_method == 'manual':
+            if res.payment_method.code == 'manual':
                 res.payment_state = 'done'
 
     @api.multi

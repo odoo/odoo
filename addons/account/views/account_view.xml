@@ -26,7 +26,7 @@
                                     <field name="tax_ids" widget="many2many_tags"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="currency_id" groups="base.group_multi_currency"/>
-                                    <field name="child_consol_ifds" widget="many2many_tags"/>
+                                    <field name="child_consol_ids" widget="many2many_tags"/>
                                     <field name="internal_type" invisible="1"/>
                                     <field name="last_time_entries_checked" readonly="1" attrs="{'invisible':['|','|',('reconcile','=',False),('internal_type','in',('payable', 'receivable')),('last_time_entries_checked','=',False)]}"/>
                                     <button colspan="2" string="Invoices &amp; payments matching" type="action" class="oe_highlight oe_read_only" name="%(action_reconcile_account)d" attrs="{'invisible':['|',('reconcile','=',False),('internal_type','in',('payable', 'receivable'))]}" />

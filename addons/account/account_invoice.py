@@ -1062,7 +1062,6 @@ class AccountInvoice(models.Model):
         ref = self.type in ('in_invoice', 'in_refund') and self.reference or self.number
         payment = self.env['account.payment'].create({
             'invoice_id': self.id,
-            'partner_id': self.partner_id.id,
             'amount': pay_amount,
             'date': date,
             'reference': ref,
