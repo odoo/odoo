@@ -1291,8 +1291,8 @@ class pos_order_line(osv.osv):
 
     def _order_line_fields(self, cr, uid, line, context=None):
         if 'tax_ids' not in line:
-            product = self.pool['product.product'].browse(cr, uid, line['product_id'], context=context)
-            line['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
+            product = self.pool['product.product'].browse(cr, uid, line[2]['product_id'], context=context)
+            line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
         return line
 
     def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
