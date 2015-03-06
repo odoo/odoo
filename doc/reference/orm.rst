@@ -310,7 +310,12 @@ value::
     a_field = fields.Char(default=compute_default_value)
     def compute_default_value(self):
         return self.get_value()
+        
+The default value can also be set by the context directly,
+using default_FIELDNAME as key and the value to set as its value::
 
+    context={'default_a_field': 'value'}
+    
 Computed fields
 ---------------
 
