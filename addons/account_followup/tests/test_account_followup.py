@@ -41,7 +41,7 @@ class TestAccountFollowup(TransactionCase):
                                                                             'name': "LCD Screen", 
                                                                             'product_id': self.product_id, 
                                                                             'quantity': 5, 
-                                                                            'price_unit':200
+                                                                            'price_unit':200,
                                                                             'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_sales').id)])[0].id,
                                                                                  })]})
         self.registry('account.invoice').signal_workflow(cr, uid, [self.invoice_id], 'invoice_open')
