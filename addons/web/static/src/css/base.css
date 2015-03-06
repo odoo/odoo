@@ -35,7 +35,7 @@
   border: 0;
 }
 
-.oe_indicator{
+.oe_indicator {
   z-index: 99999;
   position: absolute;
   top: 10px;
@@ -541,7 +541,7 @@
   background-image: -webkit-radial-gradient(circle, #eee 0%, #ccc 40%, #bbb 100%);
   background-image: -moz-radial-gradient(#eee 0%, #ccc 40%, #bbb 100%);
   background-image: -ms-radial-gradient(#eee 0%, #ccc 40%, #bbb 100%);
-  background-image: radial-gradient(circle, #eee 0%, #ccc 40%, #bbb 100%);
+  background-image: radial-gradient(circle, #eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
 }
 .openerp .oe_kanban_status_green {
   background: green;
@@ -1092,7 +1092,8 @@
 }
 .openerp .oe-view-manager-header .oe-view-manager-sidebar .oe_sidebar_delete_item {
   padding: 0;
-  display: inline-block;
+  position: absolute;
+  right: 10px;
 }
 .openerp .oe-view-manager-header .oe-view-manager-sidebar .dropdown-menu li a {
   width: 100%;

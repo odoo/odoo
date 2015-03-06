@@ -299,14 +299,18 @@ class YamlInterpreter(object):
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
+            module = self.module
+            record_id = record.id
+            if '.' in record_id:
+                module, record_id = record_id.split('.',1)
             try:
-                self.pool['ir.model.data']._get_id(self.cr, SUPERUSER_ID, self.module, record.id)
+                self.pool['ir.model.data']._get_id(self.cr, SUPERUSER_ID, module, record_id)
                 default = False
             except ValueError:
                 default = True
 
             if self.isnoupdate(record) and self.mode != 'init':
-                id = self.pool['ir.model.data']._update_dummy(self.cr, SUPERUSER_ID, record.model, self.module, record.id)
+                id = self.pool['ir.model.data']._update_dummy(self.cr, SUPERUSER_ID, record.model, module, record_id)
                 # check if the resource already existed at the last update
                 if id:
                     self.id_map[record] = int(id)
@@ -327,7 +331,7 @@ class YamlInterpreter(object):
 
             record_dict = self._create_record(model, fields, view_info, default=default, context=context)
             id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, record.model, \
-                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
+                    module, record_dict, record_id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
@@ -403,14 +407,16 @@ class YamlInterpreter(object):
         if view is not False:
             fg = view_info['fields']
             onchange_spec = model._onchange_spec(self.cr, SUPERUSER_ID, view_info, context=self.context)
-            # gather the default values on the object
+            # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
+            # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
             missing_default_ctx = self.context.copy()
             missing_default_ctx.update(context)
             defaults = default and model._add_missing_default_values(self.cr, self.uid, {}, context=missing_default_ctx) or {}
 
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
-            # the other default values will be added later on by the create().
-            record_dict = {key: defaults.get(key, False) for key in fg}
+            # the other default values will be added later on by the create(). The other fields in the view that haven't any
+            # default value are set to False because we may have references to them in other field's context
+            record_dict = default and {key: defaults.get(key, False) for key in fg} or {}
 
             # Process all on_change calls
             nodes = [view]
@@ -425,7 +431,7 @@ class YamlInterpreter(object):
                             # for one2many fields, we want to eval them using the inline form view defined on the parent
                             one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
                         ctx = context.copy()
-                        if el.get('context'):
+                        if default and el.get('context'):
                             browsable_parent = dotdict(parent)
                             ctx_env = dict(parent=browsable_parent)
                             evaluated_ctx = eval(el.get('context'), globals_dict=ctx_env, locals_dict=record_dict)
@@ -491,7 +497,7 @@ class YamlInterpreter(object):
             record_dict = {}
 
         for field_name, expression in fields.items():
-            if field_name in record_dict:
+            if record_dict.get(field_name):
                 continue
             field_value = self._eval_field(model, field_name, expression, parent=record_dict, default=False, context=context)
             record_dict[field_name] = field_value

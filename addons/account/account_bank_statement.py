@@ -2,7 +2,6 @@
 
 from openerp import api, fields, models, _
 from openerp.osv import osv, expression
-import openerp.addons.decimal_precision as dp
 from openerp.report import report_sxw
 from openerp.tools import float_compare, float_round
 from openerp.exceptions import UserError, ValidationError

@@ -41,7 +41,7 @@
                 content:   _t("Click <em>Continue</em> to create the event."),
             },
             {
-                waitFor:   'body:has(button[data-action=save]:visible):has(.js_event)',
+                waitFor:   '#o_scroll .oe_snippet',
                 title:     _t("New Event Created"),
                 content:   _t("This is your new event page. We will edit the event presentation page."),
                 popover:   { next: _t("Continue") },

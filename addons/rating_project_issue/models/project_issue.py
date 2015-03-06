@@ -28,6 +28,7 @@ class Project(models.Model):
     def _compute_percentage_satisfaction_project(self):
         super(Project, self)._compute_percentage_satisfaction_project()
         Rating = self.env['rating.rating']
+        Issue = self.env['project.issue']
         for record in self.filtered(lambda record: record.use_tasks or record.use_issues):
             if record.use_tasks or record.use_issues:
                 # built the domain according the project parameters (use tasks and/or issues)
@@ -37,8 +38,10 @@ class Project(models.Model):
                     res_models.append('project.task')
                     domain += ['&', ('res_model', '=', 'project.task'), ('res_id', 'in', record.tasks.ids)]
                 if record.use_issues:
+                    # TODO: if performance issue, compute the satisfaction with a custom request joining rating and task/issue.
+                    issues = Issue.search([('project_id', '=', record.id)])
                     res_models.append('project.issue')
-                    domain += ['&', ('res_model', '=', 'project.issue'), ('res_id', 'in', record.issue_ids.ids)]
+                    domain += ['&', ('res_model', '=', 'project.issue'), ('res_id', 'in', issues.ids)]
                 if len(res_models) == 2:
                     domain = ['|'] + domain
                 domain = ['&', ('rating', '>=', 0)] + domain
