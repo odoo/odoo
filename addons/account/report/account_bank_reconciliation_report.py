@@ -26,6 +26,8 @@ class account_bank_reconciliation(models.AbstractModel):
     _name = 'account.bank.reconciliation'
     _description = 'Bank reconciliation report'
 
+    line_number = 0
+
     @api.model
     def get_lines(self, context_id, line_id=None):
         return self.with_context(
@@ -34,112 +36,114 @@ class account_bank_reconciliation(models.AbstractModel):
             context_id=context_id,
         )._lines()
 
-    def add_title_line(self, lines, line_id, title, amount):
-        lines.append({
-            'id': line_id,
+    def add_title_line(self, title, amount):
+        self.line_number += 1
+        return {
+            'id': self.line_number,
             'type': 'line',
             'name': title,
-            'footnotes': self._get_footnotes('line', line_id),
+            'footnotes': self._get_footnotes('line', self.line_number),
             'columns': [self.env.context['date_from'], '', amount],
             'level': 0,
-        })
-        return line_id + 1
+        }
 
-    def add_subtitle_line(self, lines, line_id, title):
-        lines.append({
-            'id': line_id,
+    def add_subtitle_line(self, title):
+        self.line_number += 1
+        return {
+            'id': self.line_number,
             'type': 'line',
             'name': title,
-            'footnotes': self._get_footnotes('line', line_id),
+            'footnotes': self._get_footnotes('line', self.line_number),
             'columns': [self.env.context['date_from'], '', ''],
             'level': 1,
-        })
-        return line_id + 1
+        }
 
-    def add_total_line(self, lines, line_id, amount):
-        lines.append({
-            'id': line_id,
+    def add_total_line(self, amount):
+        self.line_number += 1
+        return {
+            'id': self.line_number,
             'type': 'line',
             'name': '',
-            'footnotes': self._get_footnotes('line', line_id),
+            'footnotes': self._get_footnotes('line', self.line_number),
             'columns': [self.env.context['date_from'], "", _("Total : ") + str(amount)],
             'level': 2,
-        })
-        return line_id + 1
-        
-    def add_bank_statement_line(self, lines, line, amount):
-        lines.append({
-            'id': line.id,
+        }
+
+    def add_bank_statement_line(self, line):
+        self.line_number += 1
+        return {
+            'id': self.line_number,
             'statement_id': line.statement_id.id,
             'type': 'bank_statement_id',
             'name': line.name,
-            'footnotes': self._get_footnotes('bank_statement_id', line.id),
-            'columns': [line.date, line.ref, amount],
+            'footnotes': self._get_footnotes('bank_statement_id', self.line_number),
+            'columns': [line.date, line.ref, line.amount],
             'level': 3,
-        })
+        }
 
     @api.model
     def _lines(self):
         lines = []
-        line_id = 1
         #Start amount
-        reconcile_lines = self.env['account.bank.statement.line'].search([['statement_id.journal_id', '=', self.env.context['journal_id'].id],
-                                                                     ['date', '<=', self.env.context['date_from']],
-                                                                     ['journal_entry_ids', '!=', False]])
-        start_amount = sum([line.amount for line in reconcile_lines])
-        line_id = self.add_title_line(lines, line_id, _("Initial balance"), start_amount)
+        account_ids = list(set([self.env.context['journal_id'].default_debit_account_id.id, self.env.context['journal_id'].default_credit_account_id.id]))
+        lines_already_accounted = self.env['account.move.line'].search(['|', ('move_id.journal_id.type', '=', 'general'),
+                                                                        '&', ('move_id.journal_id', '=', self.env.context['journal_id'].id),
+                                                                             ('move_id.statement_line_id', '!=', False),
+                                                                        ('account_id', 'in', account_ids),
+                                                                        ('date', '<=', self.env.context['date_from'])])
+        start_amount = sum([line.balance for line in lines_already_accounted])
+        lines.append(self.add_title_line(_("Initial balance"), start_amount))
 
-        #Outstanding
-        not_reconcile_plus = self.env['account.bank.statement.line'].search([['statement_id.journal_id', '=', self.env.context['journal_id'].id],
-                                                                             ['date', '<=', self.env.context['date_from']],
-                                                                             ['journal_entry_ids', '=', False],
-                                                                             ['amount', '>=', 0]])
         # Outstanding plus
+        not_reconcile_plus = self.env['account.bank.statement.line'].search([('statement_id.journal_id', '=', self.env.context['journal_id'].id),
+                                                                             ('date', '<=', self.env.context['date_from']),
+                                                                             ('journal_entry_ids', '=', False),
+                                                                             ('amount', '>', 0)])
         outstanding_plus_tot = 0
-        if len(not_reconcile_plus) > 0:
-            line_id = self.add_subtitle_line(lines, line_id, _("Plus Outstanding Payment"))
+        if not_reconcile_plus:
+            lines.append(self.add_subtitle_line(_("Plus Outstanding Payment")))
             for line in not_reconcile_plus:
-                self.add_bank_statement_line(lines, line, line.amount)
+                lines.append(self.add_bank_statement_line(line))
                 outstanding_plus_tot += line.amount
-            line_id = self.add_total_line(lines, line_id, outstanding_plus_tot)
+            lines.append(self.add_total_line(outstanding_plus_tot))
+
         # Outstanding less
-        not_reconcile_less = self.env['account.bank.statement.line'].search([['statement_id.journal_id', '=', self.env.context['journal_id'].id],
-                                                                             ['date', '<=', self.env.context['date_from']],
-                                                                             ['journal_entry_ids', '=', False],
-                                                                             ['amount', '<', 0]])
+        not_reconcile_less = self.env['account.bank.statement.line'].search([('statement_id.journal_id', '=', self.env.context['journal_id'].id),
+                                                                             ('date', '<=', self.env.context['date_from']),
+                                                                             ('journal_entry_ids', '=', False),
+                                                                             ('amount', '<', 0)])
         outstanding_less_tot = 0
-        if len(not_reconcile_less) > 0:
-            line_id = self.add_subtitle_line(lines, line_id, _("Less outstanding receipt"))
+        if not_reconcile_less:
+            lines.append(self.add_subtitle_line(_("Less outstanding receipt")))
             for line in not_reconcile_less:
-                self.add_bank_statement_line(lines, line, abs(line.amount))
+                lines.append(self.add_bank_statement_line(abs(line.amount)))
                 outstanding_less_tot += abs(line.amount)
-            line_id = self.add_total_line(lines, line_id, outstanding_less_tot)
+            lines.append(self.add_total_line(outstanding_less_tot))
 
         # Un-reconcilied bank statement lines
-        move_lines = self.env['account.move.line'].search([['move_id.journal_id', '=', self.env.context['journal_id'].id],
-                                                           ['move_id.statement_line_id', '=', False],
-                                                           ['user_type.type', '!=', 'liquidity'],
-                                                           ['date', '<=', self.env.context['date_from']]])
+        move_lines = self.env['account.move.line'].search([('move_id.journal_id', '=', self.env.context['journal_id'].id),
+                                                           ('move_id.statement_line_id', '=', False),
+                                                           ('user_type.type', '!=', 'liquidity'),
+                                                           ('date', '<=', self.env.context['date_from'])])
         unrec_tot = 0
-        if len(move_lines) > 0:
-            line_id = self.add_subtitle_line(lines, line_id, _("Un-Reconciled bank-statement lines"))
+        if move_lines:
+            lines.append(self.add_subtitle_line(_("Un-Reconciled bank-statement lines")))
             for line in move_lines:
-                amount = -line.debit if (line.debit > 0) else line.credit
+                self.line_number += 1
                 lines.append({
-                    'id': line.id,
+                    'id': self.line_number,
                     'move_id': line.move_id.id,
                     'type': 'move_line_id',
                     'name': line.name,
-                    'footnotes': self._get_footnotes('move_line_id', line.id),
-                    'columns': [line.date, line.ref, amount],
+                    'footnotes': self._get_footnotes('move_line_id', self.line_number),
+                    'columns': [line.date, line.ref, -line.balance],
                     'level': 3,
                 })
-                unrec_tot += amount
-            line_id = self.add_total_line(lines, line_id, unrec_tot)
-        
+                unrec_tot += -line.balance
+            lines.append(self.add_total_line(unrec_tot))
+
         # Final
-        self.add_title_line(lines, line_id, _("Final balance"), start_amount + outstanding_plus_tot - outstanding_less_tot + unrec_tot)
-        
+        lines.append(self.add_title_line(_("Final balance"), start_amount + outstanding_plus_tot - outstanding_less_tot + unrec_tot))
         return lines
 
     @api.model
@@ -170,7 +174,7 @@ class account_report_context_bank_reconciliation(models.TransientModel):
 
     def _get_bank_journals(self):
         self.journals = self.env['account.journal'].search([['type', '=', 'bank']])
-        
+
     footnotes = fields.Many2many('account.report.footnote', 'account_context_footnote_bank_reconciliation', string=_("Footnotes"))
     journal_id = fields.Many2one('account.journal', string=_("Bank account"))
     journals = fields.One2many('account.journal', string=_("Bank Accounts"), compute=_get_bank_journals)
