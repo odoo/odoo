@@ -415,6 +415,15 @@ openerp.pos_loyalty = function(instance){
                 $loypoints.empty();
                 $loypoints.addClass('oe_hidden');
             }
+
+            if (this.pos.loyalty &&
+                order.get_client() &&
+                this.getParent().action_buttons &&
+                this.getParent().action_buttons.loyalty) {
+                
+                var rewards = order.get_available_rewards();
+                this.getParent().action_buttons.loyalty.highlight(!!rewards.length);
+            }
         },
     });
 };
