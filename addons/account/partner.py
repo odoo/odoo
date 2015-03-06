@@ -174,13 +174,12 @@ class ResPartner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        ctx = dict(self._context or {})
-        ctx['all_fiscalyear'] = True
-        query = self.env['account.move.line'].with_context(ctx)._query_get()
+        where_clause, where_params = self.env['account.move.line']._query_get()
         if not self.ids:
             self.debit = 0
             self.credit = 0
             return True
+        where_params = [tuple(self.ids)] + where_params
         self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
@@ -188,16 +187,16 @@ class ResPartner(models.Model):
                       WHERE act.type IN ('receivable','payable')
                       AND l.partner_id IN %s
                       AND l.reconciled IS FALSE
-                      """ + query + """
+                      """ + where_clause + """
                       GROUP BY l.partner_id, act.type
-                      """,
-                   (tuple(self.ids),))
+                      """, where_params)
         maps = {'receivable': 'credit', 'payable': 'debit'}
         for partner in self:
             partner.debit = 0
             partner.credit = 0
         for pid, type, val in self._cr.fetchall():
-            if val is None: val=0
+            if val is None:
+                val = 0
             value = {maps[type]: (type == 'receivable') and val or -val}
             self.browse(pid).write(value)
 
