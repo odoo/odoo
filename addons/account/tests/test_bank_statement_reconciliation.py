@@ -63,7 +63,7 @@ class TestBankStatementReconciliation(TransactionCase):
             'price_unit': amount,
             'invoice_id': invoice.id,
             'name': '.',
-            'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_sales'))])[0].id,
+            'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_sales').id)]).id,
         })
         invoice.signal_workflow('invoice_open')
 

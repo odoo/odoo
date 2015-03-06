@@ -24,7 +24,7 @@ class TestAccountSupplierInvoice(TestMail):
             'price_unit': 100.0,
             'invoice_id': invoice.id,
             'name': 'product that cost 100',
-            'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_expenses'))])[0].id,
+            'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_expenses').id)]).id,
             'invoice_line_tax_id':[(6, 0, [tax.id])],
         })
 
