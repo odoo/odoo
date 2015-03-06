@@ -28,9 +28,9 @@ import os
 from os.path import join as opj
 
 import openerp
-import openerp.release as release
 import openerp.tools as tools
 from openerp.tools.parse_version import parse_version
+from openerp.modules.module import adapt_version
 
 
 _logger = logging.getLogger(__name__)
@@ -93,11 +93,6 @@ class MigrationManager(object):
         if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade') or pkg.state == 'to install':
             return
 
-        def convert_version(version):
-            if version.count('.') >= 2:
-                return version  # the version number already containt the server version
-            return "%s.%s" % (release.major_version, version)
-
         def _get_migration_versions(pkg):
             def __get_dir(tree):
                 return [d for d in tree if tree[d] is not None]
@@ -106,7 +101,7 @@ class MigrationManager(object):
                 __get_dir(self.migrations[pkg.name]['module']) +
                 __get_dir(self.migrations[pkg.name]['maintenance'])
             ))
-            versions.sort(key=lambda k: parse_version(convert_version(k)))
+            versions.sort(key=lambda k: parse_version(adapt_version(k)))
             return versions
 
         def _get_migration_files(pkg, version, stage):
@@ -132,12 +127,12 @@ class MigrationManager(object):
             return lst
 
         parsed_installed_version = parse_version(pkg.installed_version or '')
-        current_version = parse_version(convert_version(pkg.data['version']))
+        current_version = parse_version(adapt_version(pkg.data['version']))
 
         versions = _get_migration_versions(pkg)
 
         for version in versions:
-            if parsed_installed_version < parse_version(convert_version(version)) <= current_version:
+            if parsed_installed_version < parse_version(adapt_version(version)) <= current_version:
 
                 strfmt = {'addon': pkg.name,
                           'stage': stage,
