@@ -493,7 +493,7 @@ class project(osv.Model):
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
-                                     domain=[('date_closed', '!=', False)]),
+                                    domain=[('stage_id.fold', '=', False)]),
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
@@ -580,7 +580,7 @@ class res_partner(osv.osv):
             partner_id: Issue.search_count(cr,uid, [('partner_id', '=', partner_id)])
             for partner_id in ids
         }
-    
+
     """ Inherits partner and adds Issue information in the partner form """
     _inherit = 'res.partner'
     _columns = {

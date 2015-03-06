@@ -89,6 +89,23 @@ class AccountReportContextCommon(models.TransientModel):
     cash_basis = fields.Boolean('Enable cash basis columns', default=False)
     date_filter_cmp = fields.Char('Comparison date filter used', default='no_comparison')
     periods_number = fields.Integer('Number of periods', default=1)
+    footnotes = fields.One2many('account.report.footnote', 'context')
+
+    @api.multi
+    def add_footnote(self, type, target_id, column, number, text):
+        self.env['account.report.footnote'].create(
+            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text, 'context': self.id}
+        )
+
+    @api.multi
+    def edit_footnote(self, number, text):
+        footnote = self.footnotes.filtered(lambda s: s.number == number)
+        footnote.write({'text': text})
+
+    @api.multi
+    def remove_footnote(self, number):
+        footnotes = self.footnotes.filtered(lambda s: s.number == number)
+        self.write({'footnotes': [(3, footnotes.id)]})
 
     @api.multi
     def edit_summary(self, text):
@@ -119,14 +136,6 @@ class AccountReportContextCommon(models.TransientModel):
 
     def get_columns_names(self):
         raise Warning(_('get_columns_names not implemented'))
-
-    @api.multi
-    def add_footnote(self, type, target_id, column, number, text):
-        raise Warning(_('add_footnote not implemented'))
-
-    @api.multi
-    def edit_footnote(self, number, text):
-        raise Warning(_('edit_footnote not implemented'))
 
     def get_full_date_names(self, dt_to, dt_from=None):
         dt_to = datetime.strptime(dt_to, "%Y-%m-%d")
@@ -445,3 +454,4 @@ class AccountReportFootnote(models.TransientModel):
     column = fields.Integer()
     number = fields.Integer()
     text = fields.Char()
+    context = fields.Many2one('account.report.context.common')

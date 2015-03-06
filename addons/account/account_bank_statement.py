@@ -2,7 +2,6 @@
 
 from openerp import api, fields, models, _
 from openerp.osv import osv, expression
-import openerp.addons.decimal_precision as dp
 from openerp.report import report_sxw
 from openerp.tools import float_compare, float_round
 from openerp.exceptions import UserError, ValidationError
@@ -431,8 +430,9 @@ class AccountBankStatementLine(models.Model):
         return ret
 
     def get_reconciliation_proposition(self, excluded_ids=None):
-        """ Returns move lines that constitute the best guess to reconcile a statement line """
-
+        """ Returns move lines that constitute the best guess to reconcile a statement line
+            Note: it only looks for move lines in the same currency as the statement line.
+        """
         # Look for structured communication match
         if self.name:
             overlook_partner = not self.partner_id  # If the transaction has no partner, look for match in payable and receivable account anyway
@@ -471,7 +471,7 @@ class AccountBankStatementLine(models.Model):
 
     def _get_move_lines_for_auto_reconcile(self):
         """ Returns the move lines that the method auto_reconcile cann use to try to reconcile the statement line """
-        self.ensure_one()
+        pass
 
     def auto_reconcile(self):
         """ Try to automatically reconcile the statement.line ; return the counterpart journal entry/ies if the automatic reconciliation succeeded, False otherwise.
@@ -511,10 +511,11 @@ class AccountBankStatementLine(models.Model):
             if aml.account_id.internal_type == 'liquidity':
                 payment_aml_rec = (payment_aml_rec | aml)
             else:
+                amount = aml.currency_id and aml.amount_residual_currency or aml.amount_residual
                 counterpart_aml_dicts.append({
                     'name': aml.name if aml.name != '/' else aml.move_id.name,
-                    'debit': aml.credit,
-                    'credit': aml.debit,
+                    'debit': amount < 0 and amount or 0,
+                    'credit': amount > 0 and amount or 0,
                     'move_line': aml
                 })
 
