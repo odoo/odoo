@@ -37,13 +37,12 @@ class TestAccountCustomerInvoive(AccountTestUsers):
                 {
                     'product_id': self.env.ref('product.product_product_5').id,
                     'quantity': 10.0,
-                    #'account_id': self.env.ref('account.a_sale').id,
+                    'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_sales'))])[0].id,
                     'name': 'product test 5',
                     'price_unit': 100.00,
                 }
              )
         ]
-
 
         self.account_invoice_customer0 = self.account_invoice_obj.sudo(self.account_user.id).create(dict(
         #Do product_id_change
