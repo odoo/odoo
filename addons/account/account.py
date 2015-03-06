@@ -1363,7 +1363,11 @@ class account_move(osv.osv):
         c = context.copy()
         c['novalidate'] = True
         result = super(account_move, self).write(cr, uid, ids, vals, c)
-        self.validate(cr, uid, ids, context=context)
+        tmp = self.validate(cr, uid, ids, context)
+        if vals.get('line_id') and tmp:
+            for move in self.browse(cr, uid, tmp, context=context):
+                if move.journal_id.entry_posted:
+                    self.button_validate(cr,uid, [move.id], context)
         return result
 
     def create(self, cr, uid, vals, context=None):
@@ -1395,7 +1399,7 @@ class account_move(osv.osv):
             tmp = self.validate(cr, uid, [result], context)
             journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context)
             if journal.entry_posted and tmp:
-                self.button_validate(cr,uid, [result], context)
+                self.button_validate(cr, uid, tmp, context)
         else:
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
