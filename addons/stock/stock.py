@@ -3044,8 +3044,8 @@ class stock_warehouse(osv.osv):
     def _location_used(self, cr, uid, location_id, warehouse, context=None):
         pull_obj = self.pool['procurement.rule']
         push_obj = self.pool['stock.location.path']
-        pulls = pull_obj.search(cr, uid, ['&', ('route_id', 'not in ', [x.id for x in warehouse.route_ids]), '|', ('location_src_id', '=', location_id), ('location_id', '=', location_id)], context=context)
-        pushs = push_obj.search(cr, uid, ['&', ('route_id', 'not in ', [x.id for x in warehouse.route_ids]), '|', ('location_from_id', '=', location_id), ('location_dest_id', '=', location_id)], context=context)
+        pulls = pull_obj.search(cr, uid, ['&', ('route_id', 'not in', [x.id for x in warehouse.route_ids]), '|', ('location_src_id', '=', location_id), ('location_id', '=', location_id)], context=context)
+        pushs = push_obj.search(cr, uid, ['&', ('route_id', 'not in', [x.id for x in warehouse.route_ids]), '|', ('location_from_id', '=', location_id), ('location_dest_id', '=', location_id)], context=context)
         if pulls or pushs:
             return True
         return False
