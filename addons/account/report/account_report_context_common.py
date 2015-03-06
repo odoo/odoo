@@ -26,9 +26,17 @@ from datetime import timedelta, datetime
 import calendar
 
 
+class AccpitReportFootnotesManager(models.TransientModel):
+    _name = 'account.report.footnotes.manager'
+    _description = 'manages footnotes'
+
+    footnotes = fields.One2many('account.report.footnote', 'manager_id')
+
+
 class AccountReportContextCommon(models.TransientModel):
     _name = "account.report.context.common"
     _description = "A particular context for a financial report"
+    _inherits = {'account.report.footnotes.manager': 'footnotes_manager_id'}
 
     @api.model
     def get_context_by_report_name(self, name):
@@ -85,22 +93,22 @@ class AccountReportContextCommon(models.TransientModel):
     cash_basis = fields.Boolean('Enable cash basis columns', default=False)
     date_filter_cmp = fields.Char('Comparison date filter used', default='no_comparison')
     periods_number = fields.Integer('Number of periods', default=1)
-    footnotes = fields.One2many('account.report.footnote', 'context')
+    footnotes_manager_id = fields.Many2one('account.report.footnotes.manager', string='Footnotes Manager', required=True, ondelete='cascade')
 
     @api.multi
     def add_footnote(self, type, target_id, column, number, text):
         self.env['account.report.footnote'].create(
-            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text, 'context': self.id}
+            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text, 'manager_id': self.footnotes_manager_id.id}
         )
 
     @api.multi
     def edit_footnote(self, number, text):
-        footnote = self.footnotes.filtered(lambda s: s.number == number)
+        footnote = self.footnotes_manager_id.footnotes.filtered(lambda s: s.number == number)
         footnote.write({'text': text})
 
     @api.multi
     def remove_footnote(self, number):
-        footnotes = self.footnotes.filtered(lambda s: s.number == number)
+        footnotes = self.footnotes_manager_id.footnotes.filtered(lambda s: s.number == number)
         self.write({'footnotes': [(3, footnotes.id)]})
 
     @api.multi
@@ -450,4 +458,4 @@ class AccountReportFootnote(models.TransientModel):
     column = fields.Integer()
     number = fields.Integer()
     text = fields.Char()
-    context = fields.Many2one('account.report.context.common')
+    manager_id = fields.Many2one('account.report.footnotes.manager')
