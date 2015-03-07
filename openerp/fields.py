@@ -1076,16 +1076,21 @@ class Text(_String):
 class Html(_String):
     type = 'html'
     sanitize = True                     # whether value must be sanitized
+    strip_style = False                 # whether to strip style attributes
 
     _column_sanitize = property(attrgetter('sanitize'))
     _related_sanitize = property(attrgetter('sanitize'))
     _description_sanitize = property(attrgetter('sanitize'))
 
+    _column_strip_style = property(attrgetter('strip_style'))
+    _related_strip_style = property(attrgetter('strip_style'))
+    _description_strip_style = property(attrgetter('strip_style'))
+
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return False
         if validate and self.sanitize:
-            return html_sanitize(value)
+            return html_sanitize(value, strip_style=self.strip_style)
         return value
 
 
