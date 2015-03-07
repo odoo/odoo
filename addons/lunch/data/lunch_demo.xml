@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <data noupdate="1">
 
         <record id="base.user_demo" model="res.users">
-            <field name="groups_id" eval="[(4,ref('lunch.group_lunch_user'))]"/> 
+            <field name="groups_id" eval="[(4, ref('lunch.group_lunch_user'))]"/>
         </record>
 
         <record model="lunch.product.category" id="categ_sandwich">
@@ -167,7 +167,7 @@
             <field name="note">+Salad +Tomatoes +Eggs</field>
             <field name="order_id" ref="order_3"/>
         </record>
-    
+
         <record model="lunch.cashmove" id="cashmove_1">
             <field name="user_id" ref="base.user_demo"/>
             <field name="date" eval="time.strftime('2012-10-23')"/>
@@ -199,4 +199,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>
