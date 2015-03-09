@@ -1,5 +1,5 @@
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <record id="action_dummy" model="ir.actions.server">
             <field name="name">Dummy Python Code</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
@@ -8,10 +8,8 @@
             <field eval="5" name="sequence"/>
             <field eval="True" name="condition"/>
         </record>
-    </data>
-    <data>
 
-        <!-- Email tempalte -->
+        <!-- Email template -->
         <record id="email_template_1" model="mail.template">
             <field name="subject">Thanks for showing interest in Odoo</field>
             <field name="email_to">info@openerp.com</field>
@@ -155,7 +153,7 @@
             <field name="name">Propose Odoo Book</field>
         </record>
 
-    <!-- Campaign -->
+        <!-- Campaign -->
         <record id="marketing_campaign_openerpondemandfreetrial0" model="marketing.campaign">
             <field name="name">Odoo OnDemand Free Trial 2015</field>
             <field name="object_id" ref="crm.model_crm_lead"/>
@@ -163,8 +161,7 @@
             <field name="partner_field_id" ref="crm.field_crm_lead_partner_id"/>
         </record>
 
-            <!-- Activity -->
-
+        <!-- Activity -->
         <record id="marketing_campaign_activity_0" model="marketing.campaign.activity">
             <field name="name">Propose a 1 month free trial for an OnDemand offer</field>
             <field name="server_action_id" ref="action_dummy"/>
@@ -232,7 +229,7 @@
         <field name="email_template_id" ref="email_template_8"/>
         </record>
 
-    <!-- Tranisition -->
+        <!-- Tranisition -->
         <record id="marketing_campaign_transition_0" model="marketing.campaign.transition">
             <field name="activity_from_id" ref="marketing_campaign_activity_0"/>
             <field name="activity_to_id" ref="marketing_campaign_activity_1"/>
@@ -279,7 +276,7 @@
             <field name="activity_to_id" ref="marketing_campaign_activity_1"/>
         </record>
 
-    <!-- Segment -->
+        <!-- Segment -->
         <record id="marketing_campaign_segment_bosslistusassociationslist0" model="marketing.campaign.segment">
             <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="date_run"/>
             <field name="name">BossList US Associations List-0/90</field>
@@ -288,5 +285,4 @@
             <field name="state">draft</field>
         </record>
 
-    </data>
-</openerp>
+</odoo>
