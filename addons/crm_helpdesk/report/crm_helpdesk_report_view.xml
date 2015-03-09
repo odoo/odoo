@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
 <!-- Helpdesk report after Sales Services Pivot View -->
 
@@ -12,7 +11,7 @@
                     <field name="date" type="row"/>
                     <field name="team_id" type="row"/>
                     <field name="state" type="col"/>
-                    <field name="nbr" type="measure"/>
+                    <field name="nbr_requests" type="measure"/>
                 </pivot>
             </field>
         </record>
@@ -26,7 +25,7 @@
                 <graph string="Helpdesk">
                     <field name="date" interval="month" type="col"/>
                     <field name="team_id"/>
-                    <field name="nbr" type="measure"/>
+                    <field name="nbr_requests" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -84,5 +83,4 @@
         <menuitem name="Helpdesk Analysis" action="action_report_crm_helpdesk"
             id="menu_report_crm_helpdesks_tree" parent="base.next_id_64" sequence="20"/>
 
-    </data>
-</openerp>
+</odoo>

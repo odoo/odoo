@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
        <!-- Helpdesk Support Categories Configuration Menu-->
        <menuitem id="menu_config_helpdesk" name="Helpdesk"
         groups="base.group_no_one"
@@ -68,8 +68,7 @@
                         <page string="General">
                             <group>
                                 <group string="Communication">
-                                    <field name="partner_id"
-                                        on_change="on_change_partner_id(partner_id)"/>
+                                    <field name="partner_id"/>
                                     <field name="email_from"/>
                                 </group>
                                 <group string="Categorization">
@@ -178,5 +177,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>
