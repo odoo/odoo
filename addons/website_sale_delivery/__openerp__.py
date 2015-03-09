@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'eCommerce Delivery',
     'category': 'Website',
@@ -8,14 +9,12 @@
 Delivery Costs
 ==============
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_sale', 'delivery'],
     'data': [
         'views/website_sale_delivery.xml',
         'views/website_sale_delivery_view.xml',
         'security/ir.model.access.csv',
     ],
-    'demo': [],
-    'qweb': [],
     'installable': True,
 }

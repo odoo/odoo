@@ -1,28 +1,24 @@
 # -*- coding: utf-8 -*-
-import openerp
 from openerp import http
 from openerp.http import request
-import openerp.addons.website_sale.controllers.main
+from openerp.addons.website_sale.controllers.main import WebsiteSale
 
 
-class website_sale(openerp.addons.website_sale.controllers.main.WebsiteSale):
+class WebsiteSale(WebsiteSale):
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True)
     def payment(self, **post):
-        cr, uid, context = request.cr, request.uid, request.context
         order = request.website.sale_get_order()
         carrier_id = post.get('carrier_id')
         if carrier_id:
             carrier_id = int(carrier_id)
         if order:
-            request.registry['sale.order']._check_carrier_quotation(cr, uid, order, force_carrier_id=carrier_id, context=context)
+            order._check_carrier_quotation(force_carrier_id=carrier_id)
             if carrier_id:
                 return request.redirect("/shop/payment")
-
-        res = super(website_sale, self).payment(**post)
-        return res
+        return super(WebsiteSale, self).payment(**post)
 
     def order_lines_2_google_api(self, order_lines):
         """ Transforms a list of order lines into a dict for google analytics """
         order_lines_not_delivery = [line for line in order_lines if not line.is_delivery]
-        return super(website_sale, self).order_lines_2_google_api(order_lines_not_delivery)
+        return super(WebsiteSale, self).order_lines_2_google_api(order_lines_not_delivery)
