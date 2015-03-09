@@ -1,12 +1,16 @@
+odoo.define('web.DataExport', ['web.core', 'web.crash_manager', 'web.data', 'web.Dialog', 'web.framework'], function (require) {
+"use strict";
 
-(function() {
+var core = require('web.core');
+var crash_manager = require('web.crash_manager');
+var data = require('web.data');
+var Dialog = require('web.Dialog');
+var framework = require('web.framework');
 
-var instance = openerp;
-openerp.web.data_export = {};
+var QWeb = core.qweb;
+var _t = core._t;
 
-var QWeb = instance.web.qweb,
-      _t = instance.web._t;
-instance.web.DataExport = instance.web.Dialog.extend({
+var DataExport = Dialog.extend({
     template: 'ExportTreeView',
     dialog_title: {toString: function () { return _t("Export Data"); }},
     events: {
@@ -42,7 +46,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
         this._super(parent, options);
         this.records = {};
         this.dataset = dataset;
-        this.exports = new instance.web.DataSetSearch(
+        this.exports = new data.DataSetSearch(
             this, 'ir.exports', this.dataset.get_context());
     },
     start: function() {
@@ -82,16 +86,16 @@ instance.web.DataExport = instance.web.Dialog.extend({
             this.show_exports_list());
     },
     on_click_move_up: function () {
-        var prev_row = this.$el.find('#fields_list option:selected').first().prev();
+        var prev_row = this.$('#fields_list option:selected').first().prev();
         if(prev_row.length){
-            var selected_rows = self.$('#fields_list option:selected').detach();
+            var selected_rows = this.$('#fields_list option:selected').detach();
             prev_row.before(selected_rows);
         }
     },
     on_click_move_down: function () {
-        var next_row = this.$el.find('#fields_list option:selected').last().next();
+        var next_row = this.$('#fields_list option:selected').last().next();
         if(next_row.length){
-            var selected_rows = self.$('#fields_list option:selected').detach();
+            var selected_rows = this.$('#fields_list option:selected').detach();
             next_row.after(selected_rows);
         }
     },
@@ -413,9 +417,8 @@ instance.web.DataExport = instance.web.Dialog.extend({
         exported_fields.unshift({name: 'id', label: 'External ID'});
 
         var export_format = this.$el.find("#export_format").val();
-        var c = instance.webclient.crashmanager;
 
-        instance.web.blockUI();
+        framework.blockUI();
         this.session.get_file({
             url: '/web/export/' + export_format,
             data: {data: JSON.stringify({
@@ -426,8 +429,8 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 context: this.dataset.context,
                 import_compat: !!this.$el.find("#import_compat").val(),
             })},
-            complete: instance.web.unblockUI,
-            error: c.rpc_error.bind(c),
+            complete: framework.unblockUI,
+            error: crash_manager.rpc_error.bind(crash_manager),
         });
     },
     close: function() {
@@ -435,4 +438,5 @@ instance.web.DataExport = instance.web.Dialog.extend({
     }
 });
 
-})();
+return DataExport;
+});

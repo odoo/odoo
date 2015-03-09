@@ -1,12 +1,26 @@
-(function() {
 
-var instance = openerp;
-openerp.web.list = {};
-var _t = instance.web._t,
-    _lt = instance.web._lt;
-var QWeb = instance.web.qweb;
-instance.web.views.add('list', 'instance.web.ListView');
-instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListView# */ {
+odoo.define('web.ListView', ['web.core', 'web.data', 'web.DataExport', 'web.formats', 'web.list_common', 'web.Model', 'web.pyeval', 'web.session', 'web.Sidebar', 'web.utils', 'web.View'], function (require) {
+"use strict";
+
+var core = require('web.core');
+var data = require('web.data');
+var DataExport = require('web.DataExport');
+var formats = require('web.formats');
+var common = require('web.list_common');
+var Model = require('web.Model');
+var pyeval = require('web.pyeval');
+var session = require('web.session');
+var Sidebar = require('web.Sidebar');
+var utils = require('web.utils');
+var View = require('web.View');
+
+var Class = core.Class;
+var _t = core._t;
+var _lt = core._lt;
+var QWeb = core.qweb;
+var list_widget_registry = core.list_widget_registry;
+
+var ListView = View.extend( /** @lends instance.web.ListView# */ {
     _template: 'ListView',
     display_name: _lt('List'),
     defaults: {
@@ -68,11 +82,11 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.columns = [];
 
-        this.records = new Collection();
+        this.records = new common.Collection();
 
         this.set_groups(new (this.options.GroupsType)(this));
 
-        if (this.dataset instanceof instance.web.DataSetStatic) {
+        if (this.dataset instanceof data.DataSetStatic) {
             this.groups.datagroup = new StaticDataGroup(this.dataset);
         } else {
             this.groups.datagroup = new DataGroup(
@@ -100,8 +114,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     set_default_options: function (options) {
         this._super(options);
         _.defaults(this.options, {
-            GroupsType: instance.web.ListView.Groups,
-            ListType: instance.web.ListView.List
+            GroupsType: ListView.Groups,
+            ListType: ListView.List
         });
     },
 
@@ -170,7 +184,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         var len, style= '';
 
         var context = _.extend({}, record.attributes, {
-            uid: this.session.uid,
+            uid: session.uid,
             current_date: moment().format('YYYY-MM-DD')
             // TODO: time, datetime, relativedelta
         });
@@ -347,7 +361,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         // Sidebar
         if (!this.sidebar && this.options.$sidebar) {
-            this.sidebar = new instance.web.Sidebar(this);
+            this.sidebar = new Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
             this.sidebar.add_items('other', _.compact([
                 { label: _t("Export"), callback: this.on_sidebar_export },
@@ -433,16 +447,15 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Boolean} [grouped] Should the grouping columns (group and count) be displayed
      */
     setup_columns: function (fields, grouped) {
-        var registry = instance.web.list.columns;
         this.columns.splice(0, this.columns.length);
         this.columns.push.apply(this.columns,
             _(this.fields_view.arch.children).map(function (field) {
                 var id = field.attrs.name;
-                return registry.for_(id, fields[id], field);
+                return for_(id, fields[id], field);
         }));
         if (grouped) {
             this.columns.unshift(
-                new instance.web.list.MetaColumn('_group', _t("Group")));
+                new ListView.MetaColumn('_group', _t("Group")));
         }
 
         this.visible_columns = _.filter(this.columns, function (column) {
@@ -495,7 +508,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Boolean} [grouped] Should the list be displayed grouped
      * @param {Object} [context] context to send the server while loading the view
      */
-    reload_view: function (grouped, context, initial) {
+    reload_view: function (grouped, context) {
         return this.load_view(context);
     },
     /**
@@ -513,7 +526,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
-                if (self.dataset.index == null) {
+                if (self.dataset.index === null) {
                     if (self.records.length) {
                         self.dataset.index = 0;
                     }
@@ -575,6 +588,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (reload) {
             this.reload_content();
         }
+    },
+    on_sidebar_export: function() {
+        new DataExport(this, this.dataset).open();
     },
     /**
      * Handler for the result of eval_domain_and_context, actually perform the
@@ -689,7 +705,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             return;
         }
 
-        var c = new instance.web.CompoundContext();
+        var c = new data.CompoundContext();
         c.set_eval_context(_.extend({
             active_id: id,
             active_ids: [id],
@@ -808,7 +824,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.display_aggregates(aggregates);
     },
     display_aggregates: function (aggregation) {
-        var self = this;
         var $footer_cells = this.$el.find('.oe_list_footer');
         _(this.aggregate_columns).each(function (column) {
             if (!column['function']) {
@@ -833,13 +848,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (this.$('.oe_list_record_selector').prop('checked')) {
             var search_view = this.getParent().searchview;
             var search_data = search_view.build_search_data();
-            return instance.web.pyeval.eval_domains_and_contexts({
+            return pyeval.eval_domains_and_contexts({
                 domains: search_data.domains,
                 contexts: search_data.contexts,
                 group_by_seq: search_data.groupbys || []
             }).then(function (results) {
                 var domain = self.dataset.domain.concat(results.domain || []);
-                return domain
+                return domain;
             });
         }
         else {
@@ -906,7 +921,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
     }
 });
-instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.ListView.List# */{
+core.view_registry.add('list', ListView);
+
+ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
     /**
      * List display for the ListView, handles basic DOM events and transforms
      * them in the relevant higher-level events, to which the list view (or
@@ -1073,7 +1090,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 // to get a correctly displayable value in the field
                 var model = ref_match[1],
                     id = parseInt(ref_match[2], 10);
-                new instance.web.DataSet(this.view, model).name_get([id]).done(function(names) {
+                new data.DataSet(this.view, model).name_get([id]).done(function(names) {
                     if (!names.length) { return; }
                     record.set(column.id + '__display', names[0][1]);
                 });
@@ -1088,7 +1105,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 // fetch the name, set it on the record (in the right field)
                 // and let the various registered events handle refreshing the
                 // row
-                new instance.web.DataSet(this.view, column.relation)
+                new data.DataSet(this.view, column.relation)
                         .name_get([value]).done(function (names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0]);
@@ -1112,7 +1129,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     // 2. an array of ids
                     ids = value;
                 }
-                new instance.web.Model(column.relation)
+                new Model(column.relation)
                     .call('name_get', [ids, this.dataset.context]).done(function (names) {
                         // FIXME: nth horrible hack in this poor listview
                         record.set(column.id + '__display',
@@ -1129,6 +1146,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         });
     },
     render: function () {
+        var self = this;
         this.$current.empty().append(
             QWeb.render('ListView.rows', _.extend({
                     render_cell: function () {
@@ -1234,7 +1252,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         });
     }
 });
-instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.web.ListView.Groups# */{
+
+ListView.Groups = Class.extend( /** @lends instance.web.ListView.Groups# */{
     passthrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
@@ -1683,19 +1702,20 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
  * having concurrent list views becomes possible and common.
  */
 function synchronized(fn) {
-    var fn_mutex = new $.Mutex();
+    var fn_mutex = new utils.Mutex();
     return function () {
         var obj = this;
         var args = _.toArray(arguments);
         return fn_mutex.exec(function () {
             if (obj.isDestroyed()) { return $.when(); }
-            return fn.apply(obj, args)
+            return fn.apply(obj, args);
         });
     };
 }
-var DataGroup =  instance.web.Class.extend({
+
+var DataGroup =  Class.extend({
    init: function(parent, model, domain, context, group_by, level) {
-       this.model = new instance.web.Model(model, context, domain);
+       this.model = new Model(model, context, domain);
        this.group_by = group_by;
        this.context = context;
        this.domain = domain;
@@ -1712,7 +1732,7 @@ var DataGroup =  instance.web.Class.extend({
        $.when(query).done(function (querygroups) {
            // leaf node
            if (!querygroups) {
-               var ds = new instance.web.DataSetSearch(self, self.model.name, self.model.context(), self.model.domain());
+               var ds = new data.DataSetSearch(self, self.model.name, self.model.context(), self.model.domain());
                ds._sort = self.sort;
                ifRecords(ds);
                return;
@@ -1741,6 +1761,7 @@ var DataGroup =  instance.web.Class.extend({
        });
    }
 });
+
 var StaticDataGroup = DataGroup.extend({
    init: function (dataset) {
        this.dataset = dataset;
@@ -1750,436 +1771,7 @@ var StaticDataGroup = DataGroup.extend({
    }
 });
 
-/**
- * @mixin Events
- */
-var Events = /** @lends Events# */{
-    /**
-     * @param {String} event event to listen to on the current object, null for all events
-     * @param {Function} handler event handler to bind to the relevant event
-     * @returns this
-     */
-    bind: function (event, handler) {
-        var calls = this['_callbacks'] || (this._callbacks = {});
-
-        if (event in calls) {
-            calls[event].push(handler);
-        } else {
-            calls[event] = [handler];
-        }
-        return this;
-    },
-    /**
-     * @param {String} event event to unbind on the current object
-     * @param {function} [handler] specific event handler to remove (otherwise unbind all handlers for the event)
-     * @returns this
-     */
-    unbind: function (event, handler) {
-        var calls = this._callbacks || {};
-        if (!(event in calls)) { return this; }
-        if (!handler) {
-            delete calls[event];
-        } else {
-            var handlers = calls[event];
-            handlers.splice(
-                _(handlers).indexOf(handler),
-                1);
-        }
-        return this;
-    },
-    /**
-     * @param {String} event
-     * @returns this
-     */
-    trigger: function (event) {
-        var calls;
-        if (!(calls = this._callbacks)) { return this; }
-        var callbacks = (calls[event] || []).concat(calls[null] || []);
-        for(var i=0, length=callbacks.length; i<length; ++i) {
-            callbacks[i].apply(this, arguments);
-        }
-        return this;
-    }
-};
-var Record = instance.web.Class.extend(/** @lends Record# */{
-    /**
-     * @constructs Record
-     * @extends instance.web.Class
-     * 
-     * @mixes Events
-     * @param {Object} [data]
-     */
-    init: function (data) {
-        this.attributes = data || {};
-    },
-    /**
-     * @param {String} key
-     * @returns {Object}
-     */
-    get: function (key) {
-        return this.attributes[key];
-    },
-    /**
-     * @param key
-     * @param value
-     * @param {Object} [options]
-     * @param {Boolean} [options.silent=false]
-     * @returns {Record}
-     */
-    set: function (key, value, options) {
-        options = options || {};
-        var old_value = this.attributes[key];
-        if (old_value === value) {
-            return this;
-        }
-        this.attributes[key] = value;
-        if (!options.silent) {
-            this.trigger('change:' + key, this, value, old_value);
-            this.trigger('change', this, key, value, old_value);
-        }
-        return this;
-    },
-    /**
-     * Converts the current record to the format expected by form views:
-     *
-     * .. code-block:: javascript
-     *
-     *    data: {
-     *         $fieldname: {
-     *             value: $value
-     *         }
-     *     }
-     *
-     *
-     * @returns {Object} record displayable in a form view
-     */
-    toForm: function () {
-        var form_data = {}, attrs = this.attributes;
-        for(var k in attrs) {
-            form_data[k] = {value: attrs[k]};
-        }
-
-        return {data: form_data};
-    },
-    /**
-     * Converts the current record to a format expected by context evaluations
-     * (identical to record.attributes, except m2o fields are their integer
-     * value rather than a pair)
-     */
-    toContext: function () {
-        var output = {}, attrs = this.attributes;
-        for(var k in attrs) {
-            var val = attrs[k];
-            if (typeof val !== 'object') {
-                output[k] = val;
-            } else if (val instanceof Array) {
-                output[k] = val[0];
-            } else {
-                throw new Error(_.str.sprintf(_t("Can't convert value %s to context"), val));
-            }
-        }
-        return output;
-    }
-});
-Record.include(Events);
-var Collection = instance.web.Class.extend(/** @lends Collection# */{
-    /**
-     * Smarter collections, with events, very strongly inspired by Backbone's.
-     *
-     * Using a "dumb" array of records makes synchronization between the
-     * various serious 
-     *
-     * @constructs Collection
-     * @extends instance.web.Class
-     * 
-     * @mixes Events
-     * @param {Array} [records] records to initialize the collection with
-     * @param {Object} [options]
-     */
-    init: function (records, options) {
-        options = options || {};
-        _.bindAll(this, '_onRecordEvent');
-        this.length = 0;
-        this.records = [];
-        this._byId = {};
-        this._proxies = {};
-        this._key = options.key;
-        this._parent = options.parent;
-
-        if (records) {
-            this.add(records);
-        }
-    },
-    /**
-     * @param {Object|Array} record
-     * @param {Object} [options]
-     * @param {Number} [options.at]
-     * @param {Boolean} [options.silent=false]
-     * @returns this
-     */
-    add: function (record, options) {
-        options = options || {};
-        var records = record instanceof Array ? record : [record];
-
-        for(var i=0, length=records.length; i<length; ++i) {
-            var instance_ = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
-            instance_.bind(null, this._onRecordEvent);
-            this._byId[instance_.get('id')] = instance_;
-            if (options.at === undefined || options.at === null) {
-                this.records.push(instance_);
-                if (!options.silent) {
-                    this.trigger('add', this, instance_, this.records.length-1);
-                }
-            } else {
-                var insertion_index = options.at + i;
-                this.records.splice(insertion_index, 0, instance_);
-                if (!options.silent) {
-                    this.trigger('add', this, instance_, insertion_index);
-                }
-            }
-            this.length++;
-        }
-        return this;
-    },
-
-    /**
-     * Get a record by its index in the collection, can also take a group if
-     * the collection is not degenerate
-     *
-     * @param {Number} index
-     * @param {String} [group]
-     * @returns {Record|undefined}
-     */
-    at: function (index, group) {
-        if (group) {
-            var groups = group.split('.');
-            return this._proxies[groups[0]].at(index, groups.join('.'));
-        }
-        return this.records[index];
-    },
-    /**
-     * Get a record by its database id
-     *
-     * @param {Number} id
-     * @returns {Record|undefined}
-     */
-    get: function (id) {
-        if (!_(this._proxies).isEmpty()) {
-            var record = null;
-            _(this._proxies).detect(function (proxy) {
-                record = proxy.get(id);
-                return record;
-            });
-            return record;
-        }
-        return this._byId[id];
-    },
-    /**
-     * Builds a proxy (insert/retrieve) to a subtree of the collection, by
-     * the subtree's group
-     *
-     * @param {String} section group path section
-     * @returns {Collection}
-     */
-    proxy: function (section) {
-        this._proxies[section] = new Collection(null, {
-            parent: this,
-            key: section
-        }).bind(null, this._onRecordEvent);
-        return this._proxies[section];
-    },
-    /**
-     * @param {Array} [records]
-     * @returns this
-     */
-    reset: function (records, options) {
-        options = options || {};
-        _(this._proxies).each(function (proxy) {
-            proxy.reset();
-        });
-        this._proxies = {};
-        _(this.records).invoke('unbind', null, this._onRecordEvent);
-        this.length = 0;
-        this.records = [];
-        this._byId = {};
-        if (records) {
-            this.add(records);
-        }
-        if (!options.silent) {
-            this.trigger('reset', this);
-        }
-        return this;
-    },
-    /**
-     * Removes the provided record from the collection
-     *
-     * @param {Record} record
-     * @returns this
-     */
-    remove: function (record) {
-        var index = this.indexOf(record);
-        if (index === -1) {
-            _(this._proxies).each(function (proxy) {
-                proxy.remove(record);
-            });
-            return this;
-        }
-
-        record.unbind(null, this._onRecordEvent);
-        this.records.splice(index, 1);
-        delete this._byId[record.get('id')];
-        this.length--;
-        this.trigger('remove', record, this);
-        return this;
-    },
-
-    _onRecordEvent: function (event) {
-        switch(event) {
-        // don't propagate reset events
-        case 'reset': return;
-        case 'change:id':
-            var record = arguments[1];
-            var new_value = arguments[2];
-            var old_value = arguments[3];
-            // [change:id, record, new_value, old_value]
-            if (this._byId[old_value] === record) {
-                delete this._byId[old_value];
-                this._byId[new_value] = record;
-            }
-            break;
-        }
-        this.trigger.apply(this, arguments);
-    },
-
-    // underscore-type methods
-    find: function (callback) {
-        var record;
-        for(var section in this._proxies) {
-            if (!this._proxies.hasOwnProperty(section)) {
-                continue;
-            }
-            if ((record = this._proxies[section].find(callback))) {
-                return record;
-            }
-        }
-        for(var i=0; i<this.length; ++i) {
-            record = this.records[i];
-            if (callback(record)) {
-                return record;
-            }
-        }
-    },
-    each: function (callback) {
-        for(var section in this._proxies) {
-            if (this._proxies.hasOwnProperty(section)) {
-                this._proxies[section].each(callback);
-            }
-        }
-        for(var i=0; i<this.length; ++i) {
-            callback(this.records[i]);
-        }
-    },
-    map: function (callback) {
-        var results = [];
-        this.each(function (record) {
-            results.push(callback(record));
-        });
-        return results;
-    },
-    pluck: function (fieldname) {
-        return this.map(function (record) {
-            return record.get(fieldname);
-        });
-    },
-    indexOf: function (record) {
-        return _(this.records).indexOf(record);
-    },
-    succ: function (record, options) {
-        options = options || {wraparound: false};
-        var result;
-        for(var section in this._proxies) {
-            if (!this._proxies.hasOwnProperty(section)) {
-                continue;
-            }
-            if ((result = this._proxies[section].succ(record, options))) {
-                return result;
-            }
-        }
-        var index = this.indexOf(record);
-        if (index === -1) { return null; }
-        var next_index = index + 1;
-        if (options.wraparound && (next_index === this.length)) {
-            return this.at(0);
-        }
-        return this.at(next_index);
-    },
-    pred: function (record, options) {
-        options = options || {wraparound: false};
-
-        var result;
-        for (var section in this._proxies) {
-            if (!this._proxies.hasOwnProperty(section)) {
-                continue;
-            }
-            if ((result = this._proxies[section].pred(record, options))) {
-                return result;
-            }
-        }
-
-        var index = this.indexOf(record);
-        if (index === -1) { return null; }
-        var next_index = index - 1;
-        if (options.wraparound && (next_index === -1)) {
-            return this.at(this.length - 1);
-        }
-        return this.at(next_index);
-    }
-});
-Collection.include(Events);
-instance.web.list = {
-    Events: Events,
-    Record: Record,
-    Collection: Collection
-};
-/**
- * Registry for column objects used to format table cells (and some other tasks
- * e.g. aggregation computations).
- *
- * Maps a field or button to a Column type via its ``$tag.$widget``,
- * ``$tag.$type`` or its ``$tag`` (alone).
- *
- * This specific registry has a dedicated utility method ``for_`` taking a
- * field (from fields_get/fields_view_get.field) and a node (from a view) and
- * returning the right object *already instantiated from the data provided*.
- *
- * @type {instance.web.Registry}
- */
-instance.web.list.columns = new instance.web.Registry({
-    'field': 'instance.web.list.Column',
-    'field.boolean': 'instance.web.list.Boolean',
-    'field.binary': 'instance.web.list.Binary',
-    'field.char': 'instance.web.list.Char',
-    'field.progressbar': 'instance.web.list.ProgressBar',
-    'field.handle': 'instance.web.list.Handle',
-    'button': 'instance.web.list.Button',
-    'field.many2onebutton': 'instance.web.list.Many2OneButton',
-    'field.reference': 'instance.web.list.Reference',
-    'field.many2many': 'instance.web.list.Many2Many',
-    'field.url': 'instance.web.list.Url',
-    'button.toggle_button': 'instance.web.list.toggle_button',
-});
-instance.web.list.columns.for_ = function (id, field, node) {
-    var description = _.extend({tag: node.tag}, field, node.attrs);
-    var tag = description.tag;
-    var Type = this.get_any([
-        tag + '.' + description.widget,
-        tag + '.'+ description.type,
-        tag
-    ]);
-    return new Type(id, node.tag, description);
-};
-
-instance.web.list.Column = instance.web.Class.extend({
+var Column = Class.extend({
     init: function (id, tag, attrs) {
         _.extend(attrs, {
             id: id,
@@ -2196,7 +1788,7 @@ instance.web.list.Column = instance.web.Class.extend({
     },
     modifiers_for: function (fields) {
         var out = {};
-        var domain_computer = instance.web.form.compute_domain;
+        var domain_computer = data.compute_domain;
 
         for (var attr in this.modifiers) {
             if (!this.modifiers.hasOwnProperty(attr)) { continue; }
@@ -2259,17 +1851,21 @@ instance.web.list.Column = instance.web.Class.extend({
      * @private
      */
     _format: function (row_data, options) {
-        return _.escape(instance.web.format_value(
+        return _.escape(formats.format_value(
             row_data[this.id].value, this, options.value_if_empty));
     }
 });
-instance.web.list.MetaColumn = instance.web.list.Column.extend({
+
+var MetaColumn = Column.extend({
     meta: true,
     init: function (id, string) {
         this._super(id, '', {string: string});
     }
 });
-instance.web.list.Button = instance.web.list.Column.extend({
+// to do: do this in a better way (communicate with view_list_editable)
+ListView.MetaColumn = MetaColumn;  
+
+var ColumnButton = Column.extend({
     /**
      * Return an actual ``<button>`` tag
      */
@@ -2283,14 +1879,15 @@ instance.web.list.Button = instance.web.list.Column.extend({
         var template = this.icon && 'ListView.row.button' || 'ListView.row.text_button';
         return QWeb.render(template, {
             widget: this,
-            prefix: instance.session.prefix,
+            prefix: session.prefix,
             disabled: attrs.readonly
                 || isNaN(row_data.id.value)
-                || instance.web.BufferedDataSet.virtual_id_regex.test(row_data.id.value)
+                || data.BufferedDataSet.virtual_id_regex.test(row_data.id.value)
         });
     }
 });
-instance.web.list.Boolean = instance.web.list.Column.extend({
+
+var ColumnBoolean = Column.extend({
     /**
      * Return a potentially disabled checkbox input
      *
@@ -2301,7 +1898,8 @@ instance.web.list.Boolean = instance.web.list.Column.extend({
                  row_data[this.id].value ? 'checked="checked"' : '');
     }
 });
-instance.web.list.Binary = instance.web.list.Column.extend({
+
+var ColumnBinary = Column.extend({
     /**
      * Return a link to the binary data as a file
      *
@@ -2318,23 +1916,24 @@ instance.web.list.Binary = instance.web.list.Column.extend({
         if (value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
-            download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
+            download_url = session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
             if (this.filename) {
                 download_url += '&filename_field=' + this.filename;
             }
         }
         if (this.filename && row_data[this.filename]) {
-            text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
+            text = _.str.sprintf(_t("Download \"%s\""), formats.format_value(
                     row_data[this.filename].value, {type: 'char'}));
         }
         return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)', {
             text: text,
             href: download_url,
-            size: instance.web.binary_to_binsize(value),
+            size: utils.binary_to_binsize(value),
         });
     }
 });
-instance.web.list.Char = instance.web.list.Column.extend({
+
+var ColumnChar = Column.extend({
     replacement: '*',
     /**
      * If password field, only display replacement characters (if value is
@@ -2348,7 +1947,8 @@ instance.web.list.Char = instance.web.list.Column.extend({
         return this._super(row_data, options);
     }
 });
-instance.web.list.ProgressBar = instance.web.list.Column.extend({
+
+var ColumnProgressBar = Column.extend({
     /**
      * Return a formatted progress bar display
      *
@@ -2361,7 +1961,8 @@ instance.web.list.ProgressBar = instance.web.list.Column.extend({
             });
     }
 });
-instance.web.list.Handle = instance.web.list.Column.extend({
+
+var ColumnHandle = Column.extend({
     init: function () {
         this._super.apply(this, arguments);
         // Handle overrides the field to not be form-editable.
@@ -2376,18 +1977,20 @@ instance.web.list.Handle = instance.web.list.Column.extend({
         return '<i class="oe_list_handle fa fa-circle"/>';
     }
 });
-instance.web.list.Many2OneButton = instance.web.list.Column.extend({
+
+var ColumnMany2OneButton = Column.extend({
     _format: function (row_data, options) {
         this.has_value = !!row_data[this.id].value;
         this.icon = this.has_value ? 'gtk-yes' : 'gtk-no';
         this.string = this.has_value ? _t('View') : _t('Create');
         return QWeb.render('Many2OneButton.cell', {
             'widget': this,
-            'prefix': instance.session.prefix,
+            'prefix': session.prefix,
         });
     },
 });
-instance.web.list.Many2Many = instance.web.list.Column.extend({
+
+var ColumnMany2Many = Column.extend({
     _format: function (row_data, options) {
         if (!_.isEmpty(row_data[this.id].value)) {
             // If value, use __display version for printing
@@ -2396,7 +1999,8 @@ instance.web.list.Many2Many = instance.web.list.Column.extend({
         return this._super(row_data, options);
     }
 });
-instance.web.list.Reference = instance.web.list.Column.extend({
+
+var ColumnReference = Column.extend({
     _format: function (row_data, options) {
         if (!_.isEmpty(row_data[this.id].value)) {
             // If value, use __display version for printing
@@ -2409,7 +2013,8 @@ instance.web.list.Reference = instance.web.list.Column.extend({
         return this._super(row_data, options);
     }
 });
-instance.web.list.Url = instance.web.list.Column.extend({
+
+var ColumnUrl = Column.extend({
     /**
      * Regex checking if a URL has a scheme
      */
@@ -2435,7 +2040,8 @@ instance.web.list.Url = instance.web.list.Column.extend({
         return this._super(row_data, options);
     }
 });
-instance.web.list.toggle_button = instance.web.list.Column.extend({
+
+var ColumnToggleButton = Column.extend({
     format: function (row_data, options) {
         this._super(row_data, options);
         var button_tips = JSON.parse(this.options);
@@ -2445,8 +2051,50 @@ instance.web.list.toggle_button = instance.web.list.Column.extend({
         this.string = has_value ? _t(button_tips ? button_tips['active']: ''): _t(button_tips ? button_tips['inactive']: '');
         return QWeb.render('toggle_button', {
             widget: this,
-            prefix: instance.session.prefix,
+            prefix: session.prefix,
         });
     },
 });
-})();
+
+/**
+ * Registry for column objects used to format table cells (and some other tasks
+ * e.g. aggregation computations).
+ *
+ * Maps a field or button to a Column type via its ``$tag.$widget``,
+ * ``$tag.$type`` or its ``$tag`` (alone).
+ *
+ * This specific registry has a dedicated utility method ``for_`` taking a
+ * field (from fields_get/fields_view_get.field) and a node (from a view) and
+ * returning the right object *already instantiated from the data provided*.
+ *
+ * @type {instance.web.Registry}
+ */
+list_widget_registry
+    .add('field', Column)
+    .add('field.boolean', ColumnBoolean)
+    .add('field.binary', ColumnBinary)
+    .add('field.char', ColumnChar)
+    .add('field.progressbar', ColumnProgressBar)
+    .add('field.handle', ColumnHandle)
+    .add('button', ColumnButton)
+    .add('field.many2onebutton', ColumnMany2OneButton)
+    .add('field.reference', ColumnReference)
+    .add('field.many2many', ColumnMany2Many)
+    .add('field.url', ColumnUrl)
+    .add('button.toggle_button', ColumnToggleButton);
+
+function for_ (id, field, node) {
+    var description = _.extend({tag: node.tag}, field, node.attrs);
+    var tag = description.tag;
+    var Type = list_widget_registry.get_any([
+        tag + '.' + description.widget,
+        tag + '.'+ description.type,
+        tag
+    ]);
+    return new Type(id, node.tag, description);
+}
+
+return ListView;
+});
+
+

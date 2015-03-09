@@ -1,8 +1,14 @@
+odoo.define('web.data', ['web.core', 'web.Model', 'web.session', 'web.pyeval'], function (require) {
+"use strict";
 
-(function() {
+var core = require('web.core');
+var Model = require('web.Model');
+var session = require('web.session');
+var pyeval = require('web.pyeval');
 
-var instance = openerp;
-openerp.web.data = {};
+var Class = core.Class;
+var mixins = core.mixins;
+var _t = core._t;
 
 /**
  * Serializes the sort criterion array of a dataset into a form which can be
@@ -11,7 +17,7 @@ openerp.web.data = {};
  * @param {Array} criterion array of fields, from first to last criteria, prefixed with '-' for reverse sorting
  * @returns {String} SQL-like sorting string (``ORDER BY``) clause
  */
-instance.web.serialize_sort = function (criterion) {
+function serialize_sort(criterion) {
     return _.map(criterion,
         function (criteria) {
             if (criteria[0] === '-') {
@@ -19,20 +25,20 @@ instance.web.serialize_sort = function (criterion) {
             }
             return criteria + ' ASC';
         }).join(', ');
-};
+}
 
 /**
  * Reverse of the serialize_sort function: convert an array of SQL-like sort 
  * descriptors into a list of fields prefixed with '-' if necessary.
  */
- instance.web.deserialize_sort = function (criterion) {
+function deserialize_sort(criterion) {
     return _.map(criterion, function (criteria) {
         var split = _.without(criteria.split(' '), '');
         return (split[1] && split[1].toLowerCase() === 'desc' ? '-' : '') + split[0];
     });
-};
+}
 
-instance.web.Query = instance.web.Class.extend({
+var Query = Class.extend({
     init: function (model, fields) {
         this._model = model;
         this._fields = fields;
@@ -45,7 +51,7 @@ instance.web.Query = instance.web.Class.extend({
     },
     clone: function (to_set) {
         to_set = to_set || {};
-        var q = new instance.web.Query(this._model, this._fields);
+        var q = new Query(this._model, this._fields);
         q._context = this._context;
         q._filter = this._filter;
         q._lazy = this._lazy;
@@ -57,11 +63,11 @@ instance.web.Query = instance.web.Class.extend({
             if (!to_set.hasOwnProperty(key)) { continue; }
             switch(key) {
             case 'filter':
-                q._filter = new instance.web.CompoundDomain(
+                q._filter = new CompoundDomain(
                         q._filter, to_set.filter);
                 break;
             case 'context':
-                q._context = new instance.web.CompoundContext(
+                q._context = new CompoundContext(
                         q._context, to_set.context);
                 break;
             case 'lazy':
@@ -76,16 +82,16 @@ instance.web.Query = instance.web.Class.extend({
     _execute: function (options) {
         var self = this;
         options = options || {};
-        return instance.session.rpc('/web/dataset/search_read', {
+        return session.rpc('/web/dataset/search_read', {
             model: this._model.name,
             fields: this._fields || false,
-            domain: instance.web.pyeval.eval('domains',
+            domain: pyeval.eval('domains',
                     [this._model.domain(this._filter)]),
-            context: instance.web.pyeval.eval('contexts',
+            context: pyeval.eval('contexts',
                     [this._model.context(this._context)]),
             offset: this._offset,
             limit: this._limit,
-            sort: instance.web.serialize_sort(this._order_by)
+            sort: serialize_sort(this._order_by)
         }, options).then(function (results) {
             self._count = results.length;
             return results.records;
@@ -132,7 +138,7 @@ instance.web.Query = instance.web.Class.extend({
      * @returns {jQuery.Deferred<Array<openerp.web.QueryGroup>> | null}
      */
     group_by: function (grouping) {
-        var ctx = instance.web.pyeval.eval(
+        var ctx = pyeval.eval(
             'context', this._model.context(this._context));
 
         // undefined passed in explicitly (!)
@@ -143,7 +149,7 @@ instance.web.Query = instance.web.Class.extend({
         if (!(grouping instanceof Array)) {
             grouping = _.toArray(arguments);
         }
-        if (_.isEmpty(grouping) && !ctx['group_by_no_leaf']) {
+        if (_.isEmpty(grouping) && !ctx.group_by_no_leaf) {
             return null;
         }
         var raw_fields = _.map(grouping.concat(this._fields || []), function (field) {
@@ -159,7 +165,7 @@ instance.web.Query = instance.web.Class.extend({
             offset: this._offset,
             lazy: this._lazy,
             limit: this._limit,
-            orderby: instance.web.serialize_sort(this._order_by) || false
+            orderby: serialize_sort(this._order_by) || false
         }).then(function (results) {
             return _(results).map(function (result) {
                 // FIX: querygroup initialization
@@ -167,7 +173,7 @@ instance.web.Query = instance.web.Class.extend({
                 result.__context.group_by = result.__context.group_by || [];
                 _.defaults(result.__context, ctx);
                 var grouping_fields = self._lazy ? [grouping[0]] : grouping;
-                return new instance.web.QueryGroup(
+                return new QueryGroup(
                     self._model.name, grouping_fields, result);
             });
         });
@@ -243,7 +249,7 @@ instance.web.Query = instance.web.Class.extend({
     }
 });
 
-instance.web.QueryGroup = instance.web.Class.extend({
+var QueryGroup = Class.extend({
     init: function (model, grouping_fields, read_group_group) {
         // In cases where group_by_no_leaf and no group_by, the result of
         // read_group has aggregate fields but no __context or __domain.
@@ -263,7 +269,7 @@ instance.web.QueryGroup = instance.web.Class.extend({
             aggregates[key] = value || 0;
         });
 
-        this.model = new instance.web.Model(
+        this.model = new Model(
             model, fixed_group.__context, fixed_group.__domain);
 
         var group_size = fixed_group[count_key] || fixed_group.__count || 0;
@@ -282,7 +288,7 @@ instance.web.QueryGroup = instance.web.Class.extend({
             length: group_size,
             value: value,
             // A group is open-able if it's not a leaf in group_by_no_leaf mode
-            has_children: !(leaf_group && fixed_group.__context['group_by_no_leaf']),
+            has_children: !(leaf_group && fixed_group.__context.group_by_no_leaf),
 
             aggregates: aggregates
         };
@@ -298,136 +304,7 @@ instance.web.QueryGroup = instance.web.Class.extend({
     }
 });
 
-instance.web.Model.include({
-    /**
-    new openerp.web.Model([session,] model_name[, context[, domain]])
-
-    @constructs instance.web.Model
-    @extends instance.web.Class
-    
-    @param {openerp.web.Session} [session] The session object used to communicate with
-    the server.
-    @param {String} model_name name of the OpenERP model this object is bound to
-    @param {Object} [context]
-    @param {Array} [domain]
-    */
-    init: function() {
-        var session, model_name, context, domain;
-        var args = _.toArray(arguments);
-        args.reverse();
-        session = args.pop();
-        if (session && ! (session instanceof openerp.web.Session)) {
-            model_name = session;
-            session = null;
-        } else {
-            model_name = args.pop();
-        }
-        context = args.length > 0 ? args.pop() : null;
-        domain = args.length > 0 ? args.pop() : null;
-
-        this._super(session, model_name, context, domain);
-        this._context = context || {};
-        this._domain = domain || [];
-    },
-    session: function() {
-        if (! this._session)
-            return instance.session;
-        return this._super();
-    },
-    /**
-     * @deprecated does not allow to specify kwargs, directly use call() instead
-     */
-    get_func: function (method_name) {
-        var self = this;
-        return function () {
-            return self.call(method_name, _.toArray(arguments));
-        };
-    },
-    /**
-     * Call a method (over RPC) on the bound OpenERP model.
-     *
-     * @param {String} method name of the method to call
-     * @param {Array} [args] positional arguments
-     * @param {Object} [kwargs] keyword arguments
-     * @param {Object} [options] additional options for the rpc() method
-     * @returns {jQuery.Deferred<>} call result
-     */
-    call: function (method, args, kwargs, options) {
-        args = args || [];
-        kwargs = kwargs || {};
-        if (!_.isArray(args)) {
-            // call(method, kwargs)
-            kwargs = args;
-            args = [];
-        }
-        instance.web.pyeval.ensure_evaluated(args, kwargs);
-        return this._super(method, args, kwargs, options);
-    },
-    /**
-     * Fetches a Query instance bound to this model, for searching
-     *
-     * @param {Array<String>} [fields] fields to ultimately fetch during the search
-     * @returns {instance.web.Query}
-     */
-    query: function (fields) {
-        return new instance.web.Query(this, fields);
-    },
-    /**
-     * Executes a signal on the designated workflow, on the bound OpenERP model
-     *
-     * @param {Number} id workflow identifier
-     * @param {String} signal signal to trigger on the workflow
-     */
-    exec_workflow: function (id, signal) {
-        return this.session().rpc('/web/dataset/exec_workflow', {
-            model: this.name,
-            id: id,
-            signal: signal
-        });
-    },
-    /**
-     * Fetches the model's domain, combined with the provided domain if any
-     *
-     * @param {Array} [domain] to combine with the model's internal domain
-     * @returns {instance.web.CompoundDomain} The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
-     */
-    domain: function (domain) {
-        if (!domain) { return this._domain; }
-        return new instance.web.CompoundDomain(
-            this._domain, domain);
-    },
-    /**
-     * Fetches the combination of the user's context and the domain context,
-     * combined with the provided context if any
-     *
-     * @param {Object} [context] to combine with the model's internal context
-     * @returns {instance.web.CompoundContext} The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
-     */
-    context: function (context) {
-        return new instance.web.CompoundContext(
-            instance.session.user_context, this._context, context || {});
-    },
-    /**
-     * Button action caller, needs to perform cleanup if an action is returned
-     * from the button (parsing of context and domain, and fixup of the views
-     * collection for act_window actions)
-     *
-     * FIXME: remove when evaluator integrated
-     */
-    call_button: function (method, args) {
-        instance.web.pyeval.ensure_evaluated(args, {});
-        return this.session().rpc('/web/dataset/call_button', {
-            model: this.name,
-            method: method,
-            // Should not be necessary anymore. Integrate remote in this?
-            domain_id: null,
-            context_id: args.length - 1,
-            args: args || []
-        });
-    },
-});
-
-instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, {
+var DataSet =  Class.extend(mixins.PropertiesMixin, {
     /**
      * Collection of OpenERP records, used to share records and the current selection between views.
      *
@@ -436,12 +313,12 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      * @param {String} model the OpenERP model this dataset will manage
      */
     init: function(parent, model, context) {
-        instance.web.PropertiesMixin.init.call(this);
+        mixins.PropertiesMixin.init.call(this);
         this.model = model;
         this.context = context || {};
         this.index = null;
         this._sort = [];
-        this._model = new instance.web.Model(model, context);
+        this._model = new Model(model, context);
     },
     previous: function () {
         this.index -= 1;
@@ -500,7 +377,7 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
         if (options.check_access_rule === true){
             method = 'search_read';
             ids_arg = [['id', 'in', ids]];
-            context = new instance.web.CompoundContext(context, {active_test: false});
+            context = new CompoundContext(context, {active_test: false});
         }
         return this._model.call(method,
                 [ids_arg, fields || false],
@@ -689,7 +566,7 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      */
     sort: function (field, force_reverse) {
         if (!field) {
-            return instance.web.serialize_sort(this._sort);
+            return serialize_sort(this._sort);
         }
         var reverse = force_reverse || (this._sort[0] === field);
         this._sort.splice.apply(
@@ -706,7 +583,7 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      * Odoo's ORM (such as 'name desc', 'product_id', 'order_date asc')
      */
     set_sort: function (fields_list) {
-        this._sort = instance.web.deserialize_sort(fields_list);
+        this._sort = deserialize_sort(fields_list);
     },
     size: function () {
         return this.ids.length;
@@ -729,10 +606,10 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      */
     resequence: function (ids, options) {
         options = options || {};
-        return instance.session.rpc('/web/dataset/resequence', {
+        return session.rpc('/web/dataset/resequence', {
             model: this.model,
             ids: ids,
-            context: instance.web.pyeval.eval(
+            context: pyeval.eval(
                 'context', this.get_context(options.context)),
         }).then(function (results) {
             return results;
@@ -740,9 +617,8 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
     },
 });
 
-instance.web.DataSetStatic =  instance.web.DataSet.extend({
+var DataSetStatic =  DataSet.extend({
     init: function(parent, model, context, ids) {
-        var self = this;
         this._super(parent, model, context);
         // all local records
         this.ids = ids || [];
@@ -770,7 +646,7 @@ instance.web.DataSetStatic =  instance.web.DataSet.extend({
     },
 });
 
-instance.web.DataSetSearch =  instance.web.DataSet.extend({
+var DataSetSearch = DataSet.extend({
     /**
      * @constructs instance.web.DataSetSearch
      * @extends instance.web.DataSet
@@ -785,7 +661,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
         this.domain = domain || [];
         this._length = null;
         this.ids = [];
-        this._model = new instance.web.Model(model, context, domain);
+        this._model = new Model(model, context, domain);
     },
     /**
      * Read a slice of the records represented by this DataSet, based on its
@@ -833,7 +709,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
-        return this._super(ids).done(function(result) {
+        return this._super(ids).done(function() {
             self.remove_ids( ids);
             self.trigger("dataset_changed", ids, callback, error_callback);
         });
@@ -846,7 +722,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
     }
 });
 
-instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
+var BufferedDataSet = DataSetStatic.extend({
     virtual_id_prefix: "one2many_v_id_",
     debug_mode: true,
     init: function() {
@@ -969,8 +845,8 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                             sign = -1;
                             field = field.slice(1);
                         }
-                        if(!a[field] && a[field] !== 0){ return sign}
-                        if(!b[field] && b[field] !== 0){ return (sign == -1) ? 1 : -1}
+                        if(!a[field] && a[field] !== 0){ return sign; }
+                        if(!b[field] && b[field] !== 0){ return (sign == -1) ? 1 : -1; }
                         //m2o should be searched based on value[1] not based whole value(i.e. [id, value])
                         if(_.isArray(a[field]) && a[field].length == 2 && _.isString(a[field][1])){
                             return sign * compare(a[field][1], b[field][1]);
@@ -1051,9 +927,10 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.trigger("dataset_changed", n_ids);
     },
 });
-instance.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
 
-instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
+BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
+
+var ProxyDataSet = DataSetSearch.extend({
     init: function() {
         this._super.apply(this, arguments);
         this.create_function = null;
@@ -1099,7 +976,7 @@ instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
     },
 });
 
-instance.web.CompoundContext = instance.web.Class.extend({
+var CompoundContext = Class.extend({
     init: function () {
         this.__ref = "compound_context";
         this.__contexts = [];
@@ -1121,11 +998,11 @@ instance.web.CompoundContext = instance.web.Class.extend({
         return this.__eval_context;
     },
     eval: function() {
-        return instance.web.pyeval.eval('context', this, undefined, {no_user_context: true});
+        return pyeval.eval('context', this, undefined, {no_user_context: true});
     },
 });
 
-instance.web.CompoundDomain = instance.web.Class.extend({
+var CompoundDomain = Class.extend({
     init: function () {
         this.__ref = "compound_domain";
         this.__domains = [];
@@ -1147,198 +1024,94 @@ instance.web.CompoundDomain = instance.web.Class.extend({
         return this.__eval_context;
     },
     eval: function() {
-        return instance.web.pyeval.eval('domain', this);
+        return pyeval.eval('domain', this);
     },
 });
 
-instance.web.DropMisordered = instance.web.Class.extend({
-    /**
-     * @constructs instance.web.DropMisordered
-     * @extends instance.web.Class
-     *
-     * @param {Boolean} [failMisordered=false] whether mis-ordered responses should be failed or just ignored
-     */
-    init: function (failMisordered) {
-        // local sequence number, for requests sent
-        this.lsn = 0;
-        // remote sequence number, seqnum of last received request
-        this.rsn = -1;
-        this.failMisordered = failMisordered || false;
-    },
-    /**
-     * Adds a deferred (usually an async request) to the sequencer
-     *
-     * @param {$.Deferred} deferred to ensure add
-     * @returns {$.Deferred}
-     */
-    add: function (deferred) {
-        var res = $.Deferred();
-
-        var self = this, seq = this.lsn++;
-        deferred.done(function () {
-            if (seq > self.rsn) {
-                self.rsn = seq;
-                res.resolve.apply(res, arguments);
-            } else if (self.failMisordered) {
-                res.reject();
+function compute_domain (expr, fields) {
+    if (! (expr instanceof Array))
+        return !! expr;
+    var stack = [];
+    for (var i = expr.length - 1; i >= 0; i--) {
+        var ex = expr[i];
+        if (ex.length == 1) {
+            var top = stack.pop();
+            switch (ex) {
+                case '|':
+                    stack.push(stack.pop() || top);
+                    continue;
+                case '&':
+                    stack.push(stack.pop() && top);
+                    continue;
+                case '!':
+                    stack.push(!top);
+                    continue;
+                default:
+                    throw new Error(_.str.sprintf(
+                        _t("Unknown operator %s in domain %s"),
+                        ex, JSON.stringify(expr)));
             }
-        }).fail(function () {
-            res.reject.apply(res, arguments);
-        });
-
-        return res.promise();
-    }
-});
-
-instance.web.SimpleIndexedDB = instance.web.Class.extend({
-    /** 
-     * A simple wrapper around IndexedDB that provides an asynchronous 
-     * localStorage-like Key-Value api that persists between browser 
-     * restarts.
-     *
-     * It will not work if the browser doesn't support a recent version 
-     * of IndexedDB, and it may fail if the user refuses db access.
-     *
-     * All instances of SimpleIndexedDB will by default refer to the same
-     * IndexedDB database, if you want to pick another one, use the 'name'
-     * option on instanciation.
-     */
-    init: function(opts){
-        var self = this;
-        var opts = opts || {};
-
-        this.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-        this.db = undefined;
-        this._ready = new $.Deferred();
-
-        if(this.indexedDB && this.indexedDB.open){
-            var request = this.indexedDB.open( opts.name || "SimpleIndexedDB" ,1);
-
-            request.onerror = function(event){
-                self.db = null;
-                self._ready.reject(event.target.error);
-            };
-
-            request.onsuccess = function(event){
-                self.db = request.result;
-                self._ready.resolve();
-            };
-
-            request.onupgradeneeded = function(event){
-                self.db = event.target.result;
-
-                var objectStore = self.db.createObjectStore("keyvals", { keyPath:"key" });
-                self._ready.resolve();
-            };
-        }else{
-            this.db = null;
-            this._ready.reject({type:'UnknownError', message:'IndexedDB is not supported by your Browser'});
         }
-    },
 
-    /**
-     * returns true if the browser supports the necessary IndexedDB API 
-     * (but doesn't tell if the db can be created, check ready() for that) 
-     */
-    isSupportedByBrowser: function(){
-        return this.indexedDB && this.indexedDB.open;
-    },
+        var field = fields[ex[0]];
+        if (!field) {
+            throw new Error(_.str.sprintf(
+                _t("Unknown field %s in domain %s"),
+                ex[0], JSON.stringify(expr)));
+        }
+        var field_value = field.get_value ? field.get_value() : field.value;
+        var op = ex[1];
+        var val = ex[2];
 
-    /**
-     * returns a deferred that resolves when the db has been successfully
-     * initialized. done/failed callbacks are optional.
-     */
-    ready: function(done,failed){
-        this._ready.then(done,failed);
-        return this._ready.promise();
-    },
+        switch (op.toLowerCase()) {
+            case '=':
+            case '==':
+                stack.push(_.isEqual(field_value, val));
+                break;
+            case '!=':
+            case '<>':
+                stack.push(!_.isEqual(field_value, val));
+                break;
+            case '<':
+                stack.push(field_value < val);
+                break;
+            case '>':
+                stack.push(field_value > val);
+                break;
+            case '<=':
+                stack.push(field_value <= val);
+                break;
+            case '>=':
+                stack.push(field_value >= val);
+                break;
+            case 'in':
+                if (!_.isArray(val)) val = [val];
+                stack.push(_(val).contains(field_value));
+                break;
+            case 'not in':
+                if (!_.isArray(val)) val = [val];
+                stack.push(!_(val).contains(field_value));
+                break;
+            default:
+                console.warn(
+                    _t("Unsupported operator %s in domain %s"),
+                    op, JSON.stringify(expr));
+        }
+    }
+    return _.all(stack, _.identity);
+}
 
-    /**
-     * fetches the value associated to 'key' in the db. if the key doesn't
-     * exists, it returns undefined. The returned value is provided as a 
-     * deferred, or as the first parameter of the optional 'done' callback.
-     */
-    getItem: function(key,done,failed){
-        var self = this;
-        var def = new $.Deferred();
-            def.then(done,failed);
 
-        this._ready.then(function(){
-                var request = self.db.transaction(["keyvals"],"readwrite")
-                                     .objectStore("keyvals")
-                                     .get(key);
+return {
+    Query: Query,
+    DataSet: DataSet,
+    DataSetStatic: DataSetStatic,
+    DataSetSearch: DataSetSearch,
+    BufferedDataSet: BufferedDataSet,
+    ProxyDataSet: ProxyDataSet,
+    CompoundContext: CompoundContext,
+    CompoundDomain: CompoundDomain,
+    compute_domain: compute_domain,
+};
 
-                request.onsuccess = function(){
-                    def.resolve(request.result ? request.result.value : undefined);
-                };
-
-                request.onerror = function(event){ 
-                    def.reject(event.target.error);
-                };
-            },function(){
-                def.reject({type:'UnknownError', message:'Could not initialize the IndexedDB database'});
-            });
-
-        return def.promise();
-    },
-    
-    /**
-     * Associates a value to 'key' in the db, overwriting previous value if
-     * necessary. Contrary to localStorage, the value is not limited to strings and
-     * can be any javascript object, even with cyclic references !
-     *
-     * Be sure to check for failure as the user may refuse to have data localy stored.
-     */
-    setItem: function(key,value,done,failed){
-        var self = this;
-        var def = new $.Deferred();
-            def.then(done,failed);
-
-        this._ready.then(function(){
-                var request = self.db.transaction(["keyvals"],"readwrite")
-                                     .objectStore("keyvals")
-                                     .put( {key:key, value:value} );
-
-                request.onsuccess = function(){
-                    def.resolve();
-                };
-
-                request.onerror = function(event){ 
-                    def.reject(event.target.error);
-                };
-            },function(){
-                def.reject({type:'UnknownError', message:'Could not initialize the IndexedDB database'});
-            });
-
-        return def.promise();
-    },
-
-    /**
-     * Removes the value associated with 'key' from the db. 
-     */
-    removeItem: function(key,done,failed){
-        var self = this;
-        var def = new $.Deferred();
-            def.then(done,failed);
-
-        this._ready.then(function(){
-                var request = self.db.transaction(["keyvals"],"readwrite")
-                                  .objectStore("keyvals")
-                                  .delete(key);
-
-                request.onsuccess = function(){
-                    def.resolve();
-                };
-
-                request.onerror = function(event){ 
-                    def.reject(event.target.error);
-                };
-            },function(){
-                def.reject({type:'UnknownError', message:'Could not initialize the IndexedDB database'});
-            });
-
-        return def.promise();
-    },
 });
-
-})();

@@ -1,20 +1,25 @@
+odoo.define('web.PivotView', ['web.core', 'web.crash_manager', 'web.formats', 'web.framework', 'web.Model', 'web.session', 'web.Sidebar', 'web.utils', 'web.View'], function (require) {
+"use strict";
 /*---------------------------------------------------------
  * Odoo Pivot Table view
  *---------------------------------------------------------*/
 
-(function () {
-'use strict';
+var core = require('web.core');
+var crash_manager = require('web.crash_manager');
+var formats = require('web.formats');
+var framework = require('web.framework');
+var Model = require('web.Model');
+var session = require('web.session');
+var Sidebar = require('web.Sidebar');
+var utils = require('web.utils');
+var View = require('web.View');
 
-var instance = openerp,
-    _lt = instance.web._lt,
-    _t = instance.web._t,
-    QWeb = instance.web.qweb,
-    format_value = instance.web.format_value,
-    total = _t("Total");
+var _lt = core._lt;
+var _t = core._t;
+var QWeb = core.qweb;
+var total = _t("Total");
 
-instance.web.views.add('pivot', 'instance.web.PivotView');
-
-instance.web.PivotView = instance.web.View.extend({
+var PivotView = View.extend({
     template: 'PivotView',
     display_name: _lt('Pivot'),
     view_type: 'pivot',
@@ -28,7 +33,7 @@ instance.web.PivotView = instance.web.View.extend({
 
     init: function(parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, options);
-        this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
+        this.model = new Model(dataset.model, {group_by_no_leaf: true});
 
         this.$sidebar = options.$sidebar;
         this.fields = {};
@@ -65,9 +70,9 @@ instance.web.PivotView = instance.web.View.extend({
                 .then(this.prepare_fields.bind(this));
 
         if (this.$sidebar) {
-            openerp.session.rpc('/web/pivot/check_xlwt').then(function (result) {
+            this.rpc('/web/pivot/check_xlwt').then(function (result) {
                 if (result) {
-                    self.sidebar = new instance.web.Sidebar(self);
+                    self.sidebar = new Sidebar(self);
                     self.sidebar.appendTo(self.$sidebar);
                     self.sidebar.add_items('other', [{
                         label: _t("Download xls"),
@@ -90,7 +95,7 @@ instance.web.PivotView = instance.web.View.extend({
         var another_ctx = {fields: _.chain(this.groupable_fields).pairs().sortBy(function(f){return f[1].string;}).value()};
         this.$field_selection = this.$('.o-field-selection');
         this.$field_selection.html(QWeb.render('PivotView.FieldSelection', another_ctx));
-        openerp.web.bus.on('click', self, function () {
+        core.bus.on('click', self, function () {
             self.$field_selection.find('ul').first().hide();
         });
         this.$buttons.find('button').tooltip();
@@ -284,7 +289,6 @@ instance.web.PivotView = instance.web.View.extend({
         }
     },
     on_field_menu_selection: function (event) {
-        var self = this;
         var field = $(event.target).parent().data('field'),
             interval = $(event.target).data('interval'),
             header = this.headers[this.last_header_selected];
@@ -299,7 +303,6 @@ instance.web.PivotView = instance.web.View.extend({
         var self = this;
 
         var other_root = header.root.other_root,
-            this_groupbys = header.root.groupbys,
             other_groupbys = header.root.other_root.groupbys,
             fields = [].concat(field, other_groupbys, this.active_measures),
             groupbys = [];
@@ -481,7 +484,7 @@ instance.web.PivotView = instance.web.View.extend({
             parent = value.length ? find_path_in_tree(root, path) : null;
         } 
         var header = {
-            id: generate_id(),
+            id: utils.generate_id(),
             expanded: false,
             domain: data_pt.model._domain,
             children: [],
@@ -531,8 +534,7 @@ instance.web.PivotView = instance.web.View.extend({
     },
     draw_headers: function ($thead, headers) {
         var self = this,
-            i, j, cell, $row, $cell,
-            display_total = this.main_col.width > 1;
+            i, j, cell, $row, $cell;
 
         var groupby_labels = _.map(this.main_col.groupbys, function (gb) {
             return self.groupable_fields[gb.split(':')[0]].string;
@@ -593,7 +595,7 @@ instance.web.PivotView = instance.web.View.extend({
             if (rows[i].indent > 0) $header.attr('title', groupby_labels[rows[i].indent - 1]);
             $header.appendTo($row);
             for (j = 0; j < length; j++) {
-                value = format_value(rows[i].values[j], {type: measure_types[j % nbr_measures]});
+                value = formats.format_value(rows[i].values[j], {type: measure_types[j % nbr_measures]});
                 $cell = $('<td>')
                             .data('id', rows[i].id)
                             .data('col_id', rows[i].col_ids[Math.floor(j / nbr_measures)])
@@ -678,8 +680,7 @@ instance.web.PivotView = instance.web.View.extend({
     compute_rows: function () {
         var self = this,
             aggregates, i,
-            result = [],
-            nbr_measures = this.active_measures.length;
+            result = [];
         traverse_tree(this.main_row.root, function (header) {
             var values = [],
                 col_ids = [];
@@ -732,7 +733,7 @@ instance.web.PivotView = instance.web.View.extend({
         }
     },
     download_table: function () {
-        openerp.web.blockUI();
+        framework.blockUI();
         var nbr_measures = this.active_measures.length,
             headers = this.compute_headers(),
             measure_row = nbr_measures > 1 ? _.last(headers) : [],
@@ -760,22 +761,14 @@ instance.web.PivotView = instance.web.View.extend({
             nbr_measures: nbr_measures,
             title: this.title,
         };
-        var c = openerp.webclient.crashmanager;
-        this.session.get_file({
+        session.get_file({
             url: '/web/pivot/export_xls',
             data: {data: JSON.stringify(table)},
-            complete: openerp.web.unblockUI,
-            error: c.rpc_error.bind(c)
+            complete: framework.unblockUI,
+            error: crash_manager.rpc_error.bind(crash_manager)
         });    
     },
 });
-
-// helpers
-var id = -1;
-
-function generate_id () {
-    return ++id;
-}
 
 function traverse_tree(root, f, arg1, arg2, arg3) {
     f(root, arg1, arg2, arg3);
@@ -799,4 +792,9 @@ function find_path_in_tree(root, path) {
     return null;
 }
 
-})();
+core.view_registry.add('pivot', PivotView);
+
+return PivotView;
+
+});
+
