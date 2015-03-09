@@ -503,10 +503,8 @@ class AccountBankStatementLine(models.Model):
             return False
 
         # Now reconcile
-
         counterpart_aml_dicts = []
         payment_aml_rec = self.env['account.move.line']
-
         for aml in match_recs:
             if aml.account_id.internal_type == 'liquidity':
                 payment_aml_rec = (payment_aml_rec | aml)
@@ -724,11 +722,11 @@ class AccountBankStatementLine(models.Model):
             # Create the move line for the statement line using the total credit/debit of the counterpart
             # This leaves out the amount already reconciled and avoids rounding errors from currency conversion
             st_line_amount = sum(aml_dict['credit'] - aml_dict['debit'] for aml_dict in to_create)
-            aml_obj.create(self._prepare_reconciliation_move_line(move, st_line_amount), check=False)
+            aml_obj.with_context(check_move_validity=False).create(self._prepare_reconciliation_move_line(move, st_line_amount))
 
             # Create write-offs
             for aml_dict in new_aml_dicts:
-                aml_obj.create(aml_dict, check=False)
+                aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:
@@ -740,7 +738,8 @@ class AccountBankStatementLine(models.Model):
                 if counterpart_move_line.currency_id and counterpart_move_line.currency_id != company_currency and not aml_dict.get('currency_id'):
                     aml_dict['currency_id'] = counterpart_move_line.currency_id.id
                     aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], counterpart_move_line.currency_id)
-                new_aml = aml_obj.create(aml_dict, check=False)
+                new_aml = aml_obj.with_context(check_move_validity=False).create(aml_dict)
                 (new_aml | counterpart_move_line).reconcile()
 
+        counterpart_moves.assert_balanced()
         return counterpart_moves

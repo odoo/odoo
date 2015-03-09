@@ -24,7 +24,6 @@
                     <field name="has_default_company" invisible="1" />
                     <field name="has_chart_of_accounts" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
-                    <field name="has_fiscal_year" invisible="1"/>
                     <separator string="Chart of Accounts" groups="base.group_multi_company"/>
                     <group groups="base.group_multi_company">
                         <label for="id" string="Chart of Accounts"/>
@@ -83,15 +82,24 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="No Fiscal Year Defined for This Company" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_fiscal_year','=',True)]}"/>
-                    <group attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_fiscal_year','=',True)]}">
-                        <label for="id" string="Fiscal Year"/>
+                    <group string="Fiscal Year">
+                        <label for="id" string="Financial Year End"/>
                         <div>
                             <div>
-                                <label for="date_start" string="Date Range"/>
-                                <field name="date_start"
-                                    class="oe_inline"/> -
-                                <field name="date_stop" class="oe_inline"/>
+                                <label for="fiscalyear_last_day" string="Last Day"/>
+                                <field name="fiscalyear_last_day" class="oe_inline"/>
+                                <field name="fiscalyear_last_month" class="oe_inline"/>
+                            </div>
+                        </div>
+                        <label for="id" string="Lock Dates"/>
+                        <div>
+                            <div>
+                                <label for="period_lock_date"/>
+                                <field name="period_lock_date" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="fiscalyear_lock_date"/>
+                                <field name="fiscalyear_lock_date" class="oe_inline"/>
                             </div>
                         </div>
                     </group>

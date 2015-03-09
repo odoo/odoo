@@ -11,7 +11,6 @@
         'account_import_tip_data.xml'
     ],
     'demo': [
-        'demo/fiscalyear_period.xml',
         'demo/partner_bank.xml',
     ],
     'installable': True,
