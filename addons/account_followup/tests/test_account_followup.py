@@ -46,9 +46,6 @@ class TestAccountFollowup(TransactionCase):
                                                                                  })]})
         self.registry('account.invoice').signal_workflow(cr, uid, [self.invoice_id], 'invoice_open')
         
-        self.voucher = self.registry("account.voucher")
-        
-        
     def test_00_send_followup_after_3_days(self):
         """ Send follow up after 3 days and check nothing is done (as first follow-up level is only after 15 days)"""
         cr, uid = self.cr, self.uid
