@@ -118,7 +118,7 @@ class account_invoice(osv.osv):
         invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date, date,
                                                                     description, journal_id, context=context)
         #for anglo-saxon accounting
-        if self.company_id.anglo_saxon_accounting and invoice.type == 'in_invoice':
+        if invoice.company_id.anglo_saxon_accounting and invoice.type == 'in_invoice':
             fiscal_position = self.pool.get('account.fiscal.position')
             for dummy, dummy, line_dict in invoice_data['invoice_line']:
                 if line_dict.get('product_id'):
