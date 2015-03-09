@@ -300,12 +300,12 @@ class sale_order_line(osv.osv):
             return res
 
         # set product uom in context to get virtual stock in current uom
-        if res.get('value', {}).get('product_uom'):
+        if 'product_uom' in res.get('value', {}):
             # use the uom changed by super call
-            context.update({'uom': res['value']['product_uom']})
+            context = dict(context, uom=res['value']['product_uom'])
         elif uom:
             # fallback on selected
-            context.update({'uom': uom})
+            context = dict(context, uom=uom)
 
         #update of result obtained in super function
         product_obj = product_obj.browse(cr, uid, product, context=context)
