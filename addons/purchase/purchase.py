@@ -148,6 +148,19 @@ class purchase_order(osv.osv):
                                                 limit=1)
         return res and res[0] or False  
 
+    def _has_non_stockable_item(self, cr, uid, ids, *args):
+        res = dict.fromkeys(ids, False)
+        for order in self.browse(cr, uid, ids):
+            for order_line in order.order_line:
+                if (
+                    not order_line.product_id
+                    or
+                    order_line.product_id
+                    and order_line.product_id.type not in ('product', 'consu')
+                ):
+                    res[order.id] = True
+        return res
+
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
         ('sent', 'RFQ Sent'),
@@ -224,6 +237,7 @@ class purchase_order(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal'),
+        'has_non_stockable_item': fields.function(_has_non_stockable_item, method=True, type='boolean', string='Contains a non-stockable item'),
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -408,6 +422,7 @@ class purchase_order(osv.osv):
         })
         return action
 
+
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
@@ -473,6 +488,10 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
+            if po.invoice_method == 'picking' and po.has_non_stockable_item is True:
+                raise osv.except_osv(
+                    _('Error!'),
+                    _("You cannot confirm a purchase order with Invoice Control Method 'Based on incoming shipments' that contains non-stockable items."))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
