@@ -12,16 +12,16 @@
                             <h1><field name="program_name" class="oe_title" placeholder="Promotion Rule Name..." height="20px"/></h1>
                         </div>
                         <div class="oe_right">
-                            <button class="oe_stat_button" type="action" string="Generated Coupon" icon="fa-xing" attrs="{'invisible': [('program_type', '!=', 'generated coupon')]}"/>
+                            <button class="oe_stat_button" type="action" string="Generated Coupon" icon="fa-xing" attrs="{'invisible': [('program_type', '!=', 'generated_coupon')]}"/>
                             <button class="oe_inline oe_stat_button" type="action" string="Sale Order" icon="fa fa-strikethrough fa-fw"/>
                         </div>
                         <group>
                             <group>
                                 <field name="program_type"/>
-                                <field name="program_code" />
+                                <field name="program_code" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}"  />
                             </group>
                             <group>
-                                    <field name="is_program_active"/>
+                                    <field name="active"/>
                                     <field name="program_sequence"/>
                             </group>
                         </group>
@@ -99,7 +99,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="program_name"/>
-                    <field name="is_program_active"/>
+                    <field name="active"/>
                 </tree>
             </field>
         </record>
@@ -113,15 +113,16 @@
                     key2="client_action_multi"/>
 
 
-        <record model="ir.ui.view" id="sale_coupon_tree">
-             <field name="name">sale.coupon.tree</field>
+        <record model="ir.ui.view" id="sale_coupon_form">
+             <field name="name">sale.coupon.form</field>
              <field name="model">sale.order</field>
              <field name="inherit_id" ref="sale.view_order_form" />
              <field name="arch" type="xml">
                 <xpath expr="//field[@name='note']" position="before">
                     <group style="width: 100px">
-                        <h2><input type="text" name="txt_typed_coupon"/></h2>
-                        <button name="apply_coupon('Hello')" string="Apply"/>
+                        <!-- <h2><input type="text" name="txt_typed_coupon"/></h2> -->
+                        <field name="typed_code"/>
+                       <button name="apply_coupon" string="Apply" type="object"/>
                     </group>
                 </xpath>
              </field>

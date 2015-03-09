@@ -82,23 +82,28 @@ class SaleCouponProgram(models.Model):
     _name = 'sale.couponprogram'
     _description = "Sales Coupon Program"
     _inherits = {'sale.applicability': 'applicability_id', 'sale.coupon.reward': 'reward_id'}
-
     program_name = fields.Char(help="Program name", required=True)
     program_code = fields.Text(string="Code", help="Unique code to provide the reward", readonly="True")
-    program_type = fields.Selection([('apply immediately', 'Apply Immediately'), ('public unique code',
-                                     'Public Unique Code'), ('generated coupon', 'Generated Coupon')],
+    program_type = fields.Selection([('apply_immediately', 'Apply Immediately'), ('public_unique_code',
+                                     'Public Unique Code'), ('generated_coupon', 'Generated Coupon')],
                                     string="Program Type", help="The type of the coupon program")
-    is_program_active = fields.Boolean(string="Active", default=True, help="Coupon program is active or inactive")
+    active = fields.Boolean(string="Active", default=True, help="Coupon program is active or inactive")
     program_sequence = fields.Integer(string="Sequence", help="According to sequence, one rule is selected from multiple defined rules to apply")
     coupon_ids = fields.One2many('sale.coupon', 'program_id', string="Coupon Id")
     applicability_id = fields.Many2one('sale.applicability', string="Applicability Id")
     reward_id = fields.Many2one('sale.coupon.reward', string="Reward Id")
 
+    # @api.onchange('program_type')
+    # def generate_public_unique_code(self):
+    #     if self.program_type == 'public_uniquecode':
+    #         coupon = self.env['sale.coupon'].create({'program_id': self.id})
+    #         self.program_code = coupon.coupon_code
+
     @api.onchange('program_type')
-    def _compute_generate_coupon(self):
-        if self.program_type == 'public unique code':
+    def generate_coupon_code(self):
+        if self.program_type == 'generated_coupon':
             coupon = self.env['sale.coupon'].create({'program_id': self.id})
-            self.program_code = coupon.coupon_code
+            print "coupon is :", coupon
 
 
 class SaleOrderLine(models.Model):
@@ -107,16 +112,56 @@ class SaleOrderLine(models.Model):
 
     coupon_id = fields.Many2one('sale.coupon', string="Coupon")
 
+    @api.multi
+    def button_confirm(self):
+        res = super(SaleOrderLine, self).button_confirm()
+        # self._generate_coupon()
+        # list_product = []
+        # for line in self:
+        #     print "------------", line['product_uom_qty']
+        #     list_product = list_product + [(line['product_id'], line['product_uom_qty'])]
+        # print "-----", list_product
+        # dict_product = {}
+        # for k, v in list_product:
+        #     try:
+        #         dict_product[k] += v
+        #     except KeyError:
+        #         dict_product[k] = v
+        # print "-----", dict_product
+        print "---------", self.read_group(fields=["product_id", "product_uom_qty"], groupby=["product_uom_qty"])
+        return res
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
-    _name = "sale.order"
 
-    def apply_coupon(self, code):
-        print "---------------- i  am   here"
+    typed_code = fields.Char(string="Coupon", help="Please enter the coupon code")
+
+    @api.one
+    def apply_coupon(self):
+        print "------------- ", self.typed_code
+       # print self.order_line.read_group(fields=["product_id", "product_uom_qty"], groupby=["product_uom_qty"])
+        # for line in self.order_line:
+        #     print "==========================", line['product_uom_qty']
+        # list_product = []
+        # for line in self.order_line:
+        #     print "------------", line['product_uom_qty']
+        #     list_product = list_product + [(line['product_id'], line['product_uom_qty'])]
+        # print "-----", list_product
+        # dict_product = {}
+        # for k, v in list_product:
+        #     try:
+        #         dict_product[k] += v
+        #     except KeyError:
+        #         dict_product[k] = v
+        # print "-----", dict_product.keys()
+        expense_data = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
+        print "-----------", expense_data
+        result = dict((data['product_id'][0], data['product_uom_qty']) for data in expense_data)
+        print"------", result
 
 
 class GenerateManualCoupon(models.TransientModel):
     _name = 'sale.manual.coupon'
 
-    nbr_coupons = fields.Integer("Nimber of coupons")
+    nbr_coupons = fields.Integer("Number of coupons")
