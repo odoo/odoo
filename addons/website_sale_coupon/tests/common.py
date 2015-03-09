@@ -43,6 +43,11 @@ class TestSaleCouponCommon(common.TransactionCase):
             'price_unit': 1500,
         })
 
+        self.product_event = self.Product.create({
+            'name': 'Event',
+            'type': 'service',
+            'price_unit': 700,
+        })
         # create coupon program
         self.couponprogram_1 = self.CouponProgram.create({
             'program_name': 'Buy 2 Get 1 Free',
@@ -156,4 +161,18 @@ class TestSaleCouponCommon(common.TransactionCase):
             'minimum_amount': 2000,
             'reward_type': 'coupon',
             'reward_gift_coupon_id': self.couponprogram_7.id,
+        })
+
+        self.couponprogram_9 = self.CouponProgram.create({
+            'program_name': "Free Shipping",
+            'program_type': 'apply_immediately',
+            'program_sequence': 6,
+            'purchase_type': 'amount',
+            'validity_type': 'day',
+            'validity_duration': 10,
+            'minimum_amount': 500,
+            'reward_type': 'product',
+            'reward_shipping_free': 'yes',
+            'reward_product_product_id': self.product_event.id,
+            'reward_quantity': 1,
         })
