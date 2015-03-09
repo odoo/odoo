@@ -46,7 +46,10 @@ class account_invoice(models.Model):
         context = self._context.copy()
         context['force_company'] = company.id
         origin_partner_id = self.company_id.partner_id
-        invoice_line_ids = []
+        # create invoice, as the intercompany user
+        invoice_vals = self.with_context(context).sudo()._prepare_invoice_data(inv_type, journal_type, company)[0]
+        invoice = self.with_context(context).sudo(intercompany_uid).create(invoice_vals)
+        context['journal_id'] = invoice_vals['journal_id']
         for line in self.invoice_line:
             # get invoice line data from product onchange
             product_uom_id = line.product_id.uom_id and line.product_id.uom_id.id or False
@@ -60,14 +63,12 @@ class account_invoice(models.Model):
                                                 company_id=company.id)
             # create invoice line, as the intercompany user
             inv_line_data = self.sudo()._prepare_invoice_line_data(line_data, line)
-            inv_line_id = line.with_context(context).sudo(intercompany_uid).create(inv_line_data)
-            invoice_line_ids.append(inv_line_id.id)
-        # create invoice, as the intercompany user
-        invoice_vals = self.with_context(context).sudo()._prepare_invoice_data(invoice_line_ids, inv_type, journal_type, company)[0]
-        return self.with_context(context).sudo(intercompany_uid).create(invoice_vals)
+            inv_line_data['invoice_id'] = invoice.id
+            line.with_context(context).sudo(intercompany_uid).create(inv_line_data)
+        return invoice.id
 
     @api.one
-    def _prepare_invoice_data(self, invoice_line_ids, inv_type, journal_type, company):
+    def _prepare_invoice_data(self, inv_type, journal_type, company):
         """ Generate invoice values
             :param invoice_line_ids : the ids of the invoice lines
             :rtype invoice_line_ids : array of integer
@@ -97,7 +98,6 @@ class account_invoice(models.Model):
             'account_id': partner_data['value'].get('account_id', False),
             'partner_id': self.company_id.partner_id.id,
             'journal_id': journal.id,
-            'invoice_line': [(6, 0, invoice_line_ids)],
             'currency_id': self.currency_id and self.currency_id.id,
             'fiscal_position': partner_data['value'].get('fiscal_position', False),
             'payment_term': partner_data['value'].get('payment_term', False),
