@@ -779,7 +779,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.move_id.id not in move_ids:
                 move_ids.add(line.move_id.id)
-        result = super(account_move_line, self).unlink()
+        result = super(AccountMoveLine, self).unlink()
         if self._context.get('check_move_validity', True) and move_ids:
             self.env['account.move'].browse(list(move_ids))._post_validate()
         return result
@@ -793,7 +793,7 @@ class AccountMoveLine(models.Model):
         if any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit', 'amount_currency', 'currency_id')):
             self._update_check()
 
-        result = super(account_move_line, self).write(vals)
+        result = super(AccountMoveLine, self).write(vals)
         if self._context.get('check_move_validity', True):
             move_ids = set()
             for line in self:

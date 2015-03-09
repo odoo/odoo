@@ -416,17 +416,17 @@ class AccountMove(models.Model):
 
     @api.model
     def create(self, vals):
-        move = super(account_move, self.with_context(check_move_validity=False)).create(vals)
+        move = super(AccountMove, self.with_context(check_move_validity=False)).create(vals)
         move.assert_balanced()
         return move
 
     @api.multi
     def write(self, vals):
         if 'line_id' in vals:
-            res = super(account_move, self.with_context(check_move_validity=False)).write(vals)
+            res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
             self.assert_balanced()
         else:
-            res = super(account_move, self).write(vals)
+            res = super(AccountMove, self).write(vals)
         return res
 
     @api.multi
