@@ -250,8 +250,10 @@ class QWeb(orm.AbstractModel):
         stack.append(id_or_xml_id)
         qwebcontext['__stack__'] = stack
         qwebcontext['xmlid'] = str(stack[0]) # Temporary fix
-        return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext,
-            generated_attributes=qwebcontext.pop('generated_attributes', ''))
+
+        element = self.get_template(id_or_xml_id, qwebcontext)
+        element.attrib.pop("name", False)
+        return self.render_node(element, qwebcontext, generated_attributes=qwebcontext.pop('generated_attributes', ''))
 
     def render_node(self, element, qwebcontext, generated_attributes=''):
         t_render = None
