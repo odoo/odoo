@@ -222,7 +222,7 @@
                                 </t>
                                 <t t-if="!dashboard.show_import">
                                     <div>
-                                        <field name="kanban_dashboard_graph" graph_type="line" widget="dashboard_graph"></field>
+                                        <field name="kanban_dashboard_graph" t-att-graph_type="_.contains(['cash','bank'],journal_type) ? 'line' : 'bar'" widget="dashboard_graph"></field>
                                     </div>
                                     <!-- <img src="/account/static/src/img/graph.png" width="528px" style="{margin-top:20px;}"/> -->
                                 </t>

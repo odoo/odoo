@@ -11,7 +11,7 @@ openerp.account.journal_dashboard = function (instance)
         display_graph : function(data) {
             var self = this;
             nv.addGraph(function () {
-                self.$el.append('<svg style="height:75px;">');
+                self.$el.append('<svg style="height:75px; overflow:visible;">');
                 type = self.graph_type
                 switch(type) {
                     case "line":
@@ -21,31 +21,48 @@ openerp.account.journal_dashboard = function (instance)
                             x: function(d,u) { return u},
                             width: self.$el.find('svg').width(),
                             height: self.$el.find('svg').height(),
-                            margin: {'left': 10, 'right':10, 'top':10, 'bottom': 20},
+                            margin: {'left': 15, 'right':0, 'top':10, 'bottom': 20},
                             showYAxis: false,
                             showLegend: false,
+                            tooltips: true,
+                            tooltipContent: function(key, x, y, e, graph) {
+                                var header = "";
+                                $.each(e.series.values, function(k,v){
+                                    if (v.x === x){
+                                        header = v.name;
+                                    }
+                                });
+                                return '<h3>' + header + '</h3> <p> Balance ' +  y + '</p>'},
                         });
-                    chart.xAxis
+                        chart.xAxis
                         .tickFormat(function(d) {
                             var label = '';
                             $.each(data, function(el){
                                 if (data[el].values[d] && data[el].values[d].x){
-                                    label = data[el].values[d].name;
+                                    label = data[el].values[d].x;
                                 }
                             });
                             return label;
                         })
                         .showMaxMin(false);
-                        break
+                        break;
                     case "bar":
-                        var chart = nv.models.multiBarChart()
+                        var chart = nv.models.discreteBarChart()
+                        .x(function(d) { return d.label })
+                        .y(function(d) { return d.value })
                         .width(self.$el.find('svg').width())
                         .height(self.$el.find('svg').height())
-                        .showControls(false)
-                        // .forceY([0, 100])
-                        .reduceXTicks(false)
-                        .showLegend(data[0].show_legend || false);
-                        break
+                        .showValues(false)
+                        .showYAxis(false)
+                        .color(function(item){
+                            if (item.color){
+                                return item.color;
+                            }
+                            return nv.utils.getColor()})
+                        .margin({'left': 15, 'right':0, 'top':10, 'bottom': 25})
+                        .tooltips(true);
+                        chart.xAxis.axisLabel(data[0].title);
+                        break;
                 }
                 self.svg = self.$el.find('svg')[0];
                 d3.select(self.svg)

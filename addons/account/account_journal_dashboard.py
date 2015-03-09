@@ -1,6 +1,9 @@
 import json
 from datetime import datetime, date, timedelta
+
+from babel.dates import format_datetime, format_date
 from dateutil.relativedelta import relativedelta
+
 from openerp import models, api, _, fields
 
 class account_journal(models.Model):
@@ -12,20 +15,52 @@ class account_journal(models.Model):
 
     @api.one
     def _kanban_dashboard_graph(self):
-        self.kanban_dashboard_graph = json.dumps(self.get_graph_datas())
+        if (self.type in ['sale', 'purchase']):
+            self.kanban_dashboard_graph = json.dumps(self.get_bar_graph_datas())
+        else:
+            self.kanban_dashboard_graph = json.dumps(self.get_line_graph_datas())
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=False)
 
     @api.multi
-    def get_graph_datas(self):
+    def get_line_graph_datas(self):
         data = []
         today = datetime.today()
         for i in range(0,30):
-            today = today + timedelta(days=1)
-            data.append({'name':today.strftime('%d %b'),'y':i*2, 'x':today.strftime('%d %B %Y')})
-        return [{'values': data, 'color': '#ff7f0e', 'area': True, 'key': 'Value'}]
+            show_date = today + timedelta(days=-30+i)
+            #get date in locale format
+            name = format_date(show_date, 'd LLLL Y', locale=self._context.get('lang', 'en_US'))
+            short_name = format_date(show_date, 'd MMM', locale=self._context.get('lang', 'en_US'))
+            data.append({'x':short_name,'y':i*2, 'name':name})#today.strftime('%d %B %Y')
+        return [{'values': data, 'color': '#ff7f0e', 'area': True}]
+
+    @api.multi
+    def get_bar_graph_datas(self):
+        data = []
+        title = _('Invoices owed to you')
+        if self.type == 'purchase':
+            title = _('Bills you need to pay')
+        today = datetime.today()
+        data.append({'label': _('Past'), 'value':10, 'color': '#ff0000'})
+        day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang', 'en_US')))
+        first_day_of_week = today + timedelta(days=-day_of_week)
+        for i in range(-1,4):
+            if i==0:
+                label = _('This Week')
+            elif i==3:
+                label = _('Future')
+            else:
+                start_week = first_day_of_week + timedelta(days=i*7)
+                end_week = start_week + timedelta(days=6)
+                if start_week.month == end_week.month:
+                    label = str(start_week.day) + '-' +str(end_week.day)+ ' ' + format_date(end_week, 'MMM', locale=self._context.get('lang', 'en_US'))
+                else:
+                    label = format_date(start_week, 'd MMM', locale=self._context.get('lang', 'en_US'))+'-'+format_date(end_week, 'd MMM', locale=self._context.get('lang', 'en_US'))
+            data.append({'label':label,'value':abs(i*20), 'color': '#ff0000' if i<0 else '#ff7f0e'})
+        return [{'values': data, 'title': title}]
+
 
     @api.multi
     def get_journal_dashboard_datas(self):
