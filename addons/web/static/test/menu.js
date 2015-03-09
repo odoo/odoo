@@ -1,5 +1,8 @@
-(function () {
-    'use strict';
+odoo.define('web.test.menu', ['web.Tour'], function (require) {
+    "use strict";
+
+    var Tour = require('web.Tour');
+
 
 
     function openmenu () {
@@ -9,7 +12,7 @@
         },3000);
     }
 
-    openerp.Tour.register({
+    Tour.register({
         id:   'test_menu',
         name: "Test all menu items",
         path: '/web',
@@ -292,4 +295,4 @@
         ]
     });
 
-}());
+});
