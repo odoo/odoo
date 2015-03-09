@@ -148,21 +148,23 @@
                 <div t-if="mode == 'print' and context.summary != ''" class="alert alert-info alert-dismissible oe-account-saved-summary" role="alert">
                     <span><t t-raw="context.summary" /></span>
                 </div>
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <t t-foreach="context.get_columns_names()" t-as="column_name">
-                                <th class="text-right" t-raw="column_name" />
+                <div class="table-responsive">
+                    <table class="table-condensed" width='100%' style='white-space: nowrap;'>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <t t-foreach="context.get_columns_names()" t-as="column_name">
+                                    <th class="text-right" t-raw="column_name" width='1%'/>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="a">
+                                <t t-call="account.report_financial_line" />
                             </t>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="lines" t-as="a">
-                            <t t-call="account.report_financial_line" />
-                        </t>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
                 <t t-foreach="context.footnotes" t-as="footnote">
                     <p class="footnote" t-att-id="'footnote' + str(footnote.number)">
                         <span class='text'><t t-raw="str(footnote.number) + '. ' + footnote.text"/></span>
