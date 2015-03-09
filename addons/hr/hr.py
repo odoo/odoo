@@ -369,11 +369,21 @@ class hr_department(osv.osv):
         # An update of the limited behavior should come, but not currently done.
         if isinstance(ids, (int, long)):
             ids = [ids]
-        manager_id = vals.get("manager_id")
-        if manager_id:
-            employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
-            if employee.user_id:
-                self.message_subscribe_users(cr, uid, ids, user_ids=[employee.user_id.id], context=context)
+        employee_ids = []
+        if 'manager_id' in vals:
+            manager_id = vals.get("manager_id")
+            if manager_id:
+                employee = self.pool['hr.employee'].browse(cr, uid, manager_id, context=context)
+                if employee.user_id:
+                    self.message_subscribe_users(cr, uid, ids, user_ids=[employee.user_id.id], context=context)
+            for department in self.browse(cr, uid, ids, context=context):
+                employee_ids += self.pool['hr.employee'].search(
+                    cr, uid, [
+                        ('id', '!=', manager_id),
+                        ('department_id', '=', department.id),
+                        ('parent_id', '=', department.manager_id.id)
+                    ], context=context)
+            self.pool['hr.employee'].write(cr, uid, employee_ids, {'parent_id': manager_id}, context=context)
         return super(hr_department, self).write(cr, uid, ids, vals, context=context)
 
 
