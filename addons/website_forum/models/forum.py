@@ -222,7 +222,7 @@ class Post(osv.Model):
     def _get_post_karma_rights(self, cr, uid, ids, field_name, arg, context=None):
         user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         res = dict.fromkeys(ids, False)
-        for post in self.browse(cr, uid, ids, context=context):
+        for post in self.browse(cr, SUPERUSER_ID, ids, context=context):
             res[post.id] = {
                 'karma_ask': post.forum_id.karma_ask,
                 'karma_answer': post.forum_id.karma_answer,
@@ -246,13 +246,16 @@ class Post(osv.Model):
                 'can_downvote': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_downvote'],
                 'can_comment': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_comment'],
                 'can_comment_convert': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_comment_convert'],
+                'can_view': (uid == SUPERUSER_ID or
+                                user.karma >= res[post.id]['karma_close'] or
+                                    post.create_uid.karma > 0),
             })
         return res
 
     _columns = {
         'name': fields.char('Title'),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
-        'content': fields.html('Content'),
+        'content': fields.html('Content', strip_style=True),
         'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tags'),
         'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status'),
         'views': fields.integer('Number of Views'),
@@ -335,6 +338,7 @@ class Post(osv.Model):
         'can_downvote': fields.function(_get_post_karma_rights, string='Can Downvote', type='boolean', multi='_get_post_karma_rights'),
         'can_comment': fields.function(_get_post_karma_rights, string='Can Comment', type='boolean', multi='_get_post_karma_rights'),
         'can_comment_convert': fields.function(_get_post_karma_rights, string='Can Convert to Comment', type='boolean', multi='_get_post_karma_rights'),
+        'can_view': fields.function(_get_post_karma_rights, string='Can View', type='boolean', multi='_get_post_karma_rights'),
     }
 
     _defaults = {

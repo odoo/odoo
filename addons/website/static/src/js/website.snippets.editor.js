@@ -972,7 +972,7 @@
                 self.$target.carousel(+$(this).data('slide-to')); });
 
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('.oe_structure, .content.row, [data-slide]').attr('contentEditable', 'true');
+            this.$target.find('.oe_structure, .content.row, [data-slide], .row > blockquote').attr('contentEditable', 'true');
         },
         clean_for_save: function () {
             this._super();

@@ -1056,9 +1056,10 @@
     <ul style="list-style: none; padding-left: 2px; display: inline-block;">
         <t t-foreach="widget.priorities" t-as="rec" >
             <li t-att-data-value="rec.click_value" style="display: inline-block;">
-                <a href="#" t-att-title="rec.name">
+                <a t-if="!widget.get('readonly')" href="#" t-att-title="rec.name">
                     <span t-att-class="widget.get('value') gte rec.value and 'oe_e oe_star_on' or 'oe_e oe_star_off'">7</span>
                 </a>
+                <span t-if="widget.get('readonly')" t-att-title="rec.name" t-att-class="widget.get('value') gte rec.value and 'oe_e oe_star_on' or 'oe_e oe_star_off'">7</span>
             </li>
         </t>
     </ul>
