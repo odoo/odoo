@@ -887,7 +887,7 @@ class mrp_production(osv.osv):
                         else:
                             dicts[product_id][lot_id] = quant_qty
                         qty -= quant_qty
-            if qty > 0:
+            if float_compare(qty, 0, self.pool['decimal.precision'].precision_get(cr, uid, 'Product Unit of Measure')) == 1:
                 if dicts[product_id].get(False):
                     dicts[product_id][False] += qty
                 else:
