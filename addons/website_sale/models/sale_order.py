@@ -123,6 +123,8 @@ class website(orm.Model):
             type='many2one', relation='product.pricelist', string='Default Pricelist'),
         'currency_id': fields.related('pricelist_id','currency_id',
             type='many2one', relation='res.currency', string='Default Currency'),
+         'salesperson_id': fields.many2one('res.users', 'Salesperson'),
+         'salesteam_id': fields.many2one('crm.team', 'Sales Team'),
     }
 
     def sale_product_domain(self, cr, uid, ids, context=None):
@@ -135,17 +137,19 @@ class website(orm.Model):
         # create so if needed
         if not sale_order_id and (force_create or code):
             # TODO cache partner_id session
-            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
-
+            user_obj = self.pool['res.users']
+            partner = user_obj.browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+            affiliate_id = request.session.get('affiliate_id')
+            salesperson_id = affiliate_id if user_obj.exists(cr, SUPERUSER_ID, affiliate_id, context=context) else request.website.salesperson_id.id
             for w in self.browse(cr, uid, ids):
                 values = {
-                    'user_id': w.user_id.id,
                     'partner_id': partner.id,
                     'pricelist_id': partner.property_product_pricelist.id,
-                    'team_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website', 'salesteam_website_sales')[1],
+                    'team_id': w.salesteam_id.id,
                 }
                 sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
                 values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']
+                values.update({'user_id': salesperson_id or w.salesperson_id.id})
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
                 request.session['sale_order_id'] = sale_order_id
         if sale_order_id:
