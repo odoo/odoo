@@ -178,6 +178,9 @@
             <t t-raw="msg.content"/>
         </t>
     </t>
+    <t t-if="!widget.messages.length and !widget.root">
+        <t t-call="NoMessage" />
+    </t>
 </div>
 
 <!--
@@ -218,7 +221,7 @@
 </t>
 
 <t t-name="NoMessage">
-    <div class="oe_view_nocontent">No messages.</div>
+    <div class="oe_view_nocontent">No message.</div>
 </t>
 
 <!--

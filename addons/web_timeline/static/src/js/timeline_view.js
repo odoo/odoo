@@ -191,7 +191,6 @@ openerp.web_timeline = function (session) {
         init: function (parent, dataset, view_id, options) {
             this._super(parent, dataset, view_id, options);
 
-            this.dataset = dataset;
             this.model = dataset.model;
             this.domain = dataset.domain || [];
             this.context = dataset.context || {};
@@ -203,7 +202,7 @@ openerp.web_timeline = function (session) {
                 'show_link': true,
                 'show_reply_button': true,
                 'show_read_unread_button': true,
-                'fetch_limit': 2,
+                'fetch_limit': 30,
                 'fetch_child_limit': 2,
                 }, this.options);
 
@@ -230,10 +229,10 @@ openerp.web_timeline = function (session) {
                 this.$buttons = $(QWeb.render("TimelineView.buttons", {'widget': this}));
                 this.$buttons.appendTo(this.options.$buttons);
                 this.$buttons
-                    .on('click', 'button.oe_timeline_button_new', this.on_compose_message);
-                    /*.on('click', '.oe_timeline_share', function(event) {
+                    .on('click', 'button.oe_timeline_button_new', this.on_compose_message)
+                    .on('click', '.oe_timeline_share', function(event) {
                         self.write_to_followers(event, self);
-                    });*/
+                    });
             } 
 
             this.has_been_loaded.resolve();
@@ -247,7 +246,7 @@ openerp.web_timeline = function (session) {
         do_search: function (dom, cxt, group_by) {
             var self = this;
 
-            var domain = dom || [];
+            var domain = this.domain.concat(dom || []);
             var context = _.clone(this.context);
                 context = _.extend(context, (cxt || {}));
             var ds = {
@@ -343,6 +342,10 @@ openerp.web_timeline = function (session) {
             session.client.action_manager.do_action(action);
         },
 
+        write_to_followers: function (event, view) {
+
+        },
+
         set_message_ids: function (val) {
             this.options.message_ids = val;
         },
@@ -380,10 +383,11 @@ openerp.web_timeline = function (session) {
         template: 'MailThread',
 
         events: {
-            'click .oe_read':'on_message_read',
-            'click .oe_unread':'on_message_unread',
-            'click .oe_star':'on_star',
-            'click .oe_reply':'on_message_reply',
+            'click .oe_tl_msg .oe_read':'on_message_read',
+            'click .oe_tl_msg .oe_unread':'on_message_unread',
+            'click .oe_tl_msg .oe_star':'on_star',
+            'click .oe_tl_parent_message .oe_reply':'on_message_reply',
+            'click .oe_tl_parent_message .oe_read':'on_thread_read',
             'click .oe_tl_msg_vote':'on_vote',
             'mouseenter .oe_timeline_vote_count':'on_hover',
             'click .oe_timeline_action_author':'on_record_author_clicked',
@@ -406,10 +410,9 @@ openerp.web_timeline = function (session) {
             this.view = parent instanceof openerp.web_timeline.TimelineView ? parent : parent.view;
 
             this.is_ready = $.Deferred();
-            this.threads = [];
             this.messages = dataset.messages ? dataset.messages[1] || [dataset.messages] : [];
-            this.type = dataset.messages ? dataset.messages.type || 'parent' : false;
             this.parent_message = this.messages.length ? this.messages[this.messages.length - 1] : false;
+            this.type = dataset.messages ? dataset.messages.type || 'parent' : false;
             
             this.id = this.parent_message.id || false;
             this.parent_id = this.parent_message.id || false;
@@ -426,39 +429,22 @@ openerp.web_timeline = function (session) {
             }
 
             this.context = _.extend(this.context, {
-                default_model: this.parent_message.model,
-                default_res_id: this.parent_message.res_id,
+                'default_model': this.parent_message.model,
+                'default_res_id': this.parent_message.res_id,
             });
 
             this.options.root_thread = this.options.root_thread != undefined ? this.options.root_thread : this;
             this.options.show_compose_message = this.root ? false : this.options.root_thread.view.options.show_compose_message;
-
             this.options.is_folded = this.options.view_inbox ? true : false;
-            this.options.show_read = false;
-            this.options.show_unread = false;
-
-            if (this.options.show_read_unread_button) {
-                if (this.options.read_action == 'read') {
-                    this.options.show_read = true;
-                }
-                else if (this.options.read_action == 'unread') {
-                    this.options.show_unread = true;
-                }
-                else {
-                    this.options.show_read = this.to_read;
-                    this.options.show_unread = !this.to_read;
-                }
-                this.options.rerender = true;
-                this.options.toggle_read = true;
-            }
-
+            this.options.rerender = true;
+            this.options.toggle_read = true;
+            
             _.each(this.messages, function (msg) {
                 msg = self.format_message(msg);
             });
 
             if (this.options.view_inbox && this.messages.length) {
-                this.format_thread()
-                    .then(function () {
+                this.format_thread().then(function () {
                         self.is_ready.resolve();
                     });
             }
@@ -470,8 +456,6 @@ openerp.web_timeline = function (session) {
 
             this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
-
-            console.log("thread", this);
         },
 
         start: function () {
@@ -484,10 +468,6 @@ openerp.web_timeline = function (session) {
                     self.instantiate_compose_message();
                     self.compose_message.do_show_compact();
                 }
-
-                if (!self.messages.length && !self.root) {
-                    self.no_message();
-                }
             });
         },
 
@@ -496,7 +476,6 @@ openerp.web_timeline = function (session) {
          * The compose message is display in compact form.
          */
         instantiate_compose_message: function () {
-            // add message composition form view
             if (!this.compose_message) {
                 this.context = this.options.compose_as_todo ? 
                     _.extend({'default_starred': true}, this.context) : this.context;
@@ -561,23 +540,16 @@ openerp.web_timeline = function (session) {
             });
 
             if (!records.threads.length) {
-                self.create_thread([]);
+                self.create_thread();
             }
         },
 
         create_thread: function (record) {
             var thread = new openerp.web_timeline.MailThread(this, _.extend(this, {
                     'messages': record, 
-                    'domain': this.domain,
-                    'context': {
-                        'default_model': this.model,
-                        'default_res_id': this.res_id,
-                        'default_parent_id': this.id
-                    }}), this.options);
+                    }), this.options);
 
-            this.threads.push(thread);
             thread.appendTo(this.$el);
-
             return thread;
         },
 
@@ -585,7 +557,7 @@ openerp.web_timeline = function (session) {
             event.stopPropagation();
             var msg_id = $(event.target).data('msg_id');
             var msg = _.findWhere(this.messages, {id: msg_id});
-            this.on_message_read_unread([msg], true);
+            this.on_message_read_unread([msg], true, false);
             return false;
         },
 
@@ -593,7 +565,14 @@ openerp.web_timeline = function (session) {
             event.stopPropagation();
             var msg_id = $(event.target).data('msg_id');
             var msg = _.findWhere(this.messages, {id: msg_id});
-            this.on_message_read_unread([msg], false);
+            this.on_message_read_unread([msg], false, false);
+            return false;
+        },
+
+        on_thread_read: function (event) {
+            event.stopPropagation();
+            this.on_message_read_unread(
+                _.filter(this.messages, function (val) {return val.type != 'expandable'}), true, true);
             return false;
         },
 
@@ -603,7 +582,7 @@ openerp.web_timeline = function (session) {
          * @param {boolean} read_value
          * @param {messages} array of messages
          */
-        on_message_read_unread: function (messages, read_value) {
+        on_message_read_unread: function (messages, read_value, thread) {
             var self = this; 
 
             // inside the inbox, when the user mark a message as read/done, don't apply this value
@@ -622,7 +601,7 @@ openerp.web_timeline = function (session) {
                     // apply modification
                     _.each(messages, function (msg) {
                         msg.to_read = !read_value;
-                        if (msg.options.toggle_read) {
+                        if (self.options.toggle_read) {
                             msg.options.show_read = msg.to_read;
                             msg.options.show_unread = !msg.to_read;
                         }
@@ -800,22 +779,11 @@ openerp.web_timeline = function (session) {
             var self = this;
             var msg = this.messages.pop();
 
-            console.log("msg", msg);
-
-            //msg.parent_thread.destroy();
-            //self.check_for_rerender();
-
             this.options.root_thread.message_fetch(msg.domain, this.context, false, 'inbox')
                 .then(function () {
                     self.$el.remove();
                     self.destroy();
                 });
-                //console.log("data", data);
-                /*var messages = data.threads[0][1];
-                _.each(messages, function (message) {
-                    self.add_message(message, true);
-                });
-                self.check_for_rerender();*/
         },
 
         on_parent_message: function (event) {
@@ -867,6 +835,7 @@ openerp.web_timeline = function (session) {
                     thread: self,
                     options: msg.options,
                 };
+                console.log("options", msg.options);
                 msg.content = self.view.qweb.render("message_content", qweb_context);
             });
 
@@ -951,10 +920,25 @@ openerp.web_timeline = function (session) {
             if (msg.attachments) msg.attachments_content = this.display_attachments(msg);
 
             msg.parent_thread = this;
+
             msg.options = _.clone(this.options);
+            msg.options.show_read = false;
+            msg.options.show_unread = false;
+
+            if (this.options.show_read_unread_button) {
+                if (this.options.read_action == 'read') {
+                    msg.options.show_read = true;
+                }
+                else if (this.options.read_action == 'unread') {
+                    msg.options.show_unread = true;
+                }
+                else {
+                    msg.options.show_read = msg.to_read;
+                    msg.options.show_unread = !msg.to_read;
+                }
+            }
 
             var qweb_context = {
-                session: session,
                 widget: msg,
                 thread: this,
                 options: msg.options,
@@ -1020,21 +1004,6 @@ openerp.web_timeline = function (session) {
                 }
 
                 return extra_partners_str;
-            }
-        },
-
-        /**
-         * display the message "there are no message" on the thread
-         */
-        no_message: function () {
-            console.log("no message", this);
-            var no_message = $(session.web.qweb.render('NoMessage', {}));
-
-            if (this.options.help) {
-                no_message.html(this.options.help);
-            }
-            if (!this.$el.find(".oe_view_nocontent").length) {
-                no_message.appendTo(this.$el);
             }
         },
     });
