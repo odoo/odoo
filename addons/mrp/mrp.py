@@ -20,10 +20,12 @@
 ##############################################################################
 
 import time
-import openerp.addons.decimal_precision as dp
 from collections import OrderedDict
+
+import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 from openerp import tools, SUPERUSER_ID
 from openerp.addons.product import _common
