@@ -2,10 +2,6 @@
 
 <templates>
 
-<div t-name="TimelineWall" class="oe_timeline">
-    <div class="oe_timeline-placeholder"> </div>
-</div>
-
 <div t-name="TimelineView.buttons" class="oe_timeline_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <!--<t t-if="">-->
@@ -20,6 +16,10 @@
             </span>
         <!--</t>-->
     </t>
+</div>
+
+<div t-name="TimelineWall" class="oe_timeline">
+    <div class="oe_timeline-placeholder"> </div>
 </div>
 
 <t t-name="ComposeMessage">
@@ -163,8 +163,20 @@
 </t>
 
 <div t-name="MailThread" class="oe_thread">
-    <t t-foreach='widget.messages' t-as='msg'>
-        <t t-raw="msg.content"/>
+    <t t-if="widget.options.view_inbox">
+        <div class="oe_tl_thread_parent">
+            <t t-raw="widget.content"/>
+            <t t-if="!widget.options.is_folded">
+                <t t-foreach='widget.messages' t-as='msg'>
+                    <t t-raw="msg.content"/>
+                </t>
+            </t>
+        </div>
+    </t>
+    <t t-if="!widget.options.view_inbox">
+        <t t-foreach='widget.messages' t-as='msg'>
+            <t t-raw="msg.content"/>
+        </t>
     </t>
 </div>
 
@@ -205,26 +217,43 @@
     </t>
 </t>
 
+<t t-name="NoMessage">
+    <div class="oe_view_nocontent">No messages.</div>
+</t>
+
+<!--
+    ComposeMessage.ButtonTopBar
+    render of the button on the user bar for open wizard compose message
+    -->
+<t t-name="ComposeMessageTopButton">
+    <li title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
+        <a href="#">
+            <i class="fa fa-envelope-o fa-fw"></i>
+        </a>
+    </li>
+</t>
+
+
 <div t-name="ThreadParent" class="oe_tl_thread_parent">
 
-    <span class="col-md-2"> <!-- *** date *** -->
+    <!--<span class="col-md-2"> 
         <div class="oe_tl_msg_date default">
             <span> 
                 <t t-raw="widget.date"/>
             </span>
         </div>
-    </span> <!-- *** date *** -->
+    </span> -->
 
     <div class="oe_tl_parent_message">
         <div class="oe_tl_msg_icons" t-if="!widget.options.readonly"> 
-            <span class='oe_read' t-if="widget.options.show_read">
+            <!--<span class='oe_read' t-if="widget.options.show_read">
                 <i title="Done" class="fa fa-check"/>
-            </span>
+            </span>-->
             <span class='oe_unread' t-if="widget.options.show_unread">
                 <i title="Set back to Todo" class="fa fa-inbox"/>
             </span>
         </div>
-        <span t-attf-class="oe_tl_parent_subject default 
+        <!--<span t-attf-class="oe_tl_parent_subject default 
                             #{widget.model and widget.res_id and widget.options.show_link ? 'oe_tl_small_subject' : ''}">
             <span class="oe_tl_subject">
                 <t t-if="widget.record_name and widget.subject">
@@ -241,21 +270,21 @@
                 </t>
             </span>
             (<span class="oe_tl_nb_unread_msg"><t t-raw="widget.nb_messages"/></span>)
-        </span>
-        <span class="oe_tl_go_to_doc" t-if="widget.res_id and widget.model and widget.options.show_link">
+        </span>-->
+        <!--<span class="oe_tl_go_to_doc" t-if="widget.res_id and widget.model and widget.options.show_link">
             <a t-attf-href="#action=mail.action_mail_redirect&amp;model=#{widget.model}&amp;res_id=#{widget.res_id}">
                 <i class="fa fa-arrow-circle-right" title="Go to document"></i>
             </a>
-        </span>
-        <span class="oe_tl_parent_avatar">
+        </span>-->
+        <!--<span class="oe_tl_parent_avatar">
             <a t-if="widget.options.show_link" 
                t-attf-href="#model=res.partner&amp;id=#{widget.last_author_id[0]}" 
                t-att-title="widget.last_author_id[1]">
                    <img class="oe_tl_msg_icon" t-att-src="widget.last_avatar"/>
             </a>
             <img t-if="!widget.options.show_link" class="oe_tl_msg_icon" t-att-src="widget.last_avatar"/>
-        </span>
-        <span class="oe_tl_parent_author">
+        </span>-->
+        <!--<span class="oe_tl_parent_author">
             <a t-if="widget.options.show_link and widget.last_author_id[0]"
                t-attf-href="#model=res.partner&amp;id=#{widget.last_author_id[0]}" 
                t-att-data-partner="widget.last_author_id[0]" class="oe_timeline_action_author"
@@ -267,33 +296,17 @@
                title="Last sender">
                  <t t-raw="widget.last_author_id[2]"/>
             </a>
-        </span>
-        <span class="oe_tl_msg_icons" t-if="!widget.options.readonly"> 
+        </span>-->
+        <!--<span class="oe_tl_msg_icons" t-if="!widget.options.readonly"> 
              <span class='oe_reply' t-if="widget.options.show_reply_button">
                 <i title="Reply" class="fa fa-reply"/>
             </span>
-        </span>
-        <span class="oe_tl_parent_followers" t-if="widget.nb_followers > 0">
+        </span>-->
+        <!--<span class="oe_tl_parent_followers" t-if="widget.nb_followers > 0">
             <span title="Number of followers"> <t t-raw="widget.nb_followers"/> </span>
             <i class="oe_follwrs fa fa-users"></i>
-        </span>
+        </span>-->
     </div>
 </div>
-
-<t t-name="NoMessage">
-    <div class="oe_view_nocontent">No messages.</div>
-</t>
-
-<!--
-    ComposeMessage.ButtonTopBar
-    render of the button on the user bar for open wizard compose message
-    -->
-<t t-name="ComposeMessageTopButton">
-    <li title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
-        <a href="#">
-            <i class="fa fa-envelope-o fa-fw"></i>
-        </a>
-    </li>
-</t>
 
 </templates>

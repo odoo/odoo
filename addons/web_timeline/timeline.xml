@@ -11,7 +11,6 @@
                 <t t-name="message_content"> 
                     <div t-attf-class="row oe_tl_msg oe_tl_msg_#{widget.type} 
                                        #{widget.subtype ? '' : 'oe_tl_msg_nobody'}">
-
                         <t t-if="widget.type == 'expandable'">
                             <div class="col-md-2"> </div>
                             <span> - - - - - - - - - - - See more messages - - - - - - - - - - - </span>
@@ -185,6 +184,91 @@
                         </t>
                     </div>  
 				</t>
+                <t t-name="thread_content">
+                    <div t-attf-class="oe_tl_thread_content oe_tl_parent_#{thread.type}"> 
+                        <t t-if="thread.type == 'expandable'">
+                            <div class="col-md-2"> </div>
+                            <span> - - - - - - - - - - - See more messages - - - - - - - - - - - </span>
+                        </t>
+
+                        <t t-if="thread.type != 'expandable'">
+                            <span class="col-md-2"> 
+                                <t t-if="thread.options.is_folded">
+                                    <div class="oe_tl_msg_date">
+                                        <span> <field name="date"/> </span>
+                                    </div>
+                                </t>
+                            </span>
+
+                            <div class="oe_tl_parent_message">
+
+                                <div class="oe_tl_msg_icons" t-if="!options.readonly"> <!-- *** read *** -->
+                                    <span class='oe_read'> <i title="Done" class="fa fa-check"/> </span>
+                                </div> <!-- *** read *** -->
+
+                                <span t-attf-class="oe_tl_parent_subject #{widget.model and widget.res_id 
+                                                    and widget.options.show_link ? 'oe_tl_small_subject' : ''}"> <!-- *** subject *** -->
+                                    <span class="oe_tl_subject">
+                                        <t t-if="thread.res_id and thread.subject">
+                                            <t t-raw="thread.record_name"/> : <t t-raw="thread.subject"/> 
+                                        </t>
+                                        <t t-if="thread.res_id and !thread.subject">
+                                            <t t-raw="thread.record_name"/>
+                                        </t>
+                                        <t t-if="!thread.res_id and thread.subject">
+                                            <t t-raw="thread.subject"/> 
+                                        </t>
+                                        <t t-if="!thread.res_id and !thread.subject">
+                                            No subject
+                                        </t>
+                                    </span>
+                                </span> <!-- *** subject *** -->
+
+                                <span class="oe_tl_go_to_doc" t-if="widget.res_id and widget.model and options.show_link"> <!-- *** Go to doc *** -->
+                                    <a t-attf-href="#action=mail.action_mail_redirect&amp;model=#{widget.model}&amp;res_id=#{widget.res_id}">
+                                        <i class="fa fa-arrow-circle-right" title="Go to document"></i>
+                                    </a>
+                                </span> <!-- *** Go to doc *** -->
+
+                                <span class="oe_tl_parent_avatar"> <!-- *** avatar *** -->
+                                    <a t-if="options.show_link" 
+                                       t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
+                                       t-att-title="widget.author_id[1]">
+                                           <img class="oe_tl_msg_icon" 
+                                                t-att-src="thread.format_avatar(widget.author_avatar, widget.author_id, widget.type)"/>
+                                    </a>
+                                    <img t-if="!options.show_link" class="oe_tl_msg_icon" 
+                                         t-att-src="thread.format_avatar(widget.author_avatar, widget.author_id, widget.type)"/>
+                                </span> <!-- *** avatar *** -->
+
+                                <span class="oe_tl_parent_author"> <!-- *** author *** -->
+                                    <a t-if="options.show_link and widget.author_id[0]"
+                                       t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
+                                       t-att-data-partner="widget.author_id[0]" class="oe_timeline_action_author"
+                                       title="Last sender">
+                                         <field name="author_id"/>
+                                    </a>
+                                    <a t-if="widget.author_id and (!options.show_link or !widget.author_id[0])"
+                                       class="oe_timeline_action_author"
+                                       title="Last sender">
+                                         <field name="author_id"/>
+                                    </a>
+                                </span> <!-- *** author *** -->
+
+                                <span class="oe_tl_msg_icons" t-if="!options.readonly"> <!-- *** repy *** -->
+                                     <span class='oe_reply' t-if="options.show_reply_button">
+                                        <i title="Reply" class="fa fa-reply"/>
+                                    </span>
+                                </span> <!-- *** reply *** -->
+
+                                <span class="oe_tl_parent_followers" t-if="thread.nb_followers > 0"> <!-- *** followers *** -->
+                                    <span title="Number of followers"> <t t-raw="thread.nb_followers"/> </span>
+                                    <i class="oe_follwrs fa fa-users"></i>
+                                </span> <!-- *** followers *** -->
+                            </div>
+                        </t>
+                    </div>
+                </t>
 				</templates>
 			</timeline>
 		</field>
@@ -338,7 +422,7 @@
         <field name="name">All</field>
         <field name="res_model">mail.message</field>
         <field name="view_type">form</field>
-        <field name="view_mode">timeline,tree</field>
+        <field name="view_mode">tree</field>
     </record>
 
     <menuitem id="timeline_menu_all" name="All"

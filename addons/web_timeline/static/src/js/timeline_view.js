@@ -103,10 +103,10 @@ openerp.web_timeline = function (session) {
             return out;
         },
 
-        bindTooltipTo: function ($el, value) {
+        bindTooltipTo: function ($el, value, position) {
             $el.tooltip({
                 'title': value,
-                'placement': 'top',
+                'placement': position,
                 'html': true,
                 'trigger': 'manual',
                 'animation': false,
@@ -139,7 +139,7 @@ openerp.web_timeline = function (session) {
                 'compose_as_todo' : false,
                 'view_inbox': false,
                 'emails_from_on_composer': true,
-                'fetch_limit': 20,
+                'fetch_limit': 2,
                 'readonly': this.node.attrs.readonly || false,
                 'compose_placeholder' : this.node.attrs.placeholder || false,
                 'display_log_button' : this.options.display_log_button || true,
@@ -200,8 +200,11 @@ openerp.web_timeline = function (session) {
             this.options = options || {};
             this.options = _.extend(this.options, (opt || {}));
             this.options = _.extend({
-                'fetch_limit': 5,
-                'fetch_child_limit': 5,
+                'show_link': true,
+                'show_reply_button': true,
+                'show_read_unread_button': true,
+                'fetch_limit': 2,
+                'fetch_child_limit': 2,
                 }, this.options);
 
             this.fields_view = {};
@@ -222,6 +225,16 @@ openerp.web_timeline = function (session) {
             this.fields_keys = _.keys(this.fields_view.fields);
     
             this.add_qweb_template(); 
+
+            if (this.options.$buttons) {
+                this.$buttons = $(QWeb.render("TimelineView.buttons", {'widget': this}));
+                this.$buttons.appendTo(this.options.$buttons);
+                this.$buttons
+                    .on('click', 'button.oe_timeline_button_new', this.on_compose_message);
+                    /*.on('click', '.oe_timeline_share', function(event) {
+                        self.write_to_followers(event, self);
+                    });*/
+            } 
 
             this.has_been_loaded.resolve();
         },
@@ -316,6 +329,20 @@ openerp.web_timeline = function (session) {
             }
         },
 
+        on_compose_message: function (event) {
+            event.preventDefault();
+            var action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.compose.message',
+                view_mode: 'form',
+                view_type: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: {},
+            };
+            session.client.action_manager.do_action(action);
+        },
+
         set_message_ids: function (val) {
             this.options.message_ids = val;
         },
@@ -356,10 +383,15 @@ openerp.web_timeline = function (session) {
             'click .oe_read':'on_message_read',
             'click .oe_unread':'on_message_unread',
             'click .oe_star':'on_star',
+            'click .oe_reply':'on_message_reply',
             'click .oe_tl_msg_vote':'on_vote',
             'mouseenter .oe_timeline_vote_count':'on_hover',
             'click .oe_timeline_action_author':'on_record_author_clicked',
-            'click .oe_tl_msg_expandable':'on_expandable',
+            'click .oe_tl_msg_expandable':'on_message_expandable',
+            'click .oe_tl_parent_expandable':'on_thread_expandable',
+            'click .oe_tl_parent_subject':'on_parent_message',
+            'click .oe_tl_go_to_doc':'on_record_clicked',
+            'mouseenter .oe_follwrs':'on_display_followers',
         },
 
         init: function (parent, dataset, options) {
@@ -367,24 +399,41 @@ openerp.web_timeline = function (session) {
             var self = this;
 
             this.domain = dataset.domain || [];
-            this.context = dataset.context || {};
+            this.context = _.clone(dataset.context) || {};
             this.options = _.clone(options);
             
             this.root = parent instanceof openerp.web_timeline.TimelineView ? parent : false;
             this.view = parent instanceof openerp.web_timeline.TimelineView ? parent : parent.view;
 
+            this.is_ready = $.Deferred();
             this.threads = [];
-            this.messages = dataset.message_list || [];
+            this.messages = dataset.messages ? dataset.messages[1] || [dataset.messages] : [];
+            this.type = dataset.messages ? dataset.messages.type || 'parent' : false;
+            this.parent_message = this.messages.length ? this.messages[this.messages.length - 1] : false;
+            
+            this.id = this.parent_message.id || false;
+            this.parent_id = this.parent_message.id || false;
+            this.author_id = this.parent_message.author_id || false;
+            this.user_pid = this.parent_message.user_pid || false;
+            this.is_private = this.parent_message.is_private || false;
+            this.record_name = this.parent_message.record_name || false;
+            this.subject = this.parent_message.subject || false;
+            this.partner_ids = this.parent_message.partner_ids || [];
+            if (this.parent_message.author_id 
+                && !_.contains(_.flatten(this.parent_message.partner_ids),this.parent_message.author_id[0]) 
+                && this.parent_message.author_id[0]) {
+                this.partner_ids.push(this.parent_message.author_id);
+            }
+
+            this.context = _.extend(this.context, {
+                default_model: this.parent_message.model,
+                default_res_id: this.parent_message.res_id,
+            });
 
             this.options.root_thread = this.options.root_thread != undefined ? this.options.root_thread : this;
+            this.options.show_compose_message = this.root ? false : this.options.root_thread.view.options.show_compose_message;
 
-            if (this.root) {
-                this.options.show_compose_message = false;
-            }
-            else {
-                this.options.show_compose_message = this.options.root_thread.view.options.show_compose_message;
-            }
-
+            this.options.is_folded = this.options.view_inbox ? true : false;
             this.options.show_read = false;
             this.options.show_unread = false;
 
@@ -407,39 +456,39 @@ openerp.web_timeline = function (session) {
                 msg = self.format_message(msg);
             });
 
-            this.compose_message = false;
-            this.parent_message = parent.thread != undefined ? parent : false ;
-            
-            this.id = dataset.id || false;
-            this.parent_id = dataset.parent_id || false;
-            this.last_id = this.id;
-            this.author_id = dataset.author_id || false;
-            this.user_pid = dataset.user_pid || false;
-            this.is_private = dataset.is_private || false;
-            dataset.partner_ids = dataset.partner_ids || [];
-            if (dataset.author_id 
-                && !_.contains(_.flatten(dataset.partner_ids),dataset.author_id[0]) 
-                && dataset.author_id[0]) {
-                dataset.partner_ids.push(dataset.author_id);
+            if (this.options.view_inbox && this.messages.length) {
+                this.format_thread()
+                    .then(function () {
+                        self.is_ready.resolve();
+                    });
             }
-            this.partner_ids = dataset.partner_ids;
+            else {
+                self.is_ready.resolve();
+            }
+
+            this.compose_message = false;
 
             this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
+
+            console.log("thread", this);
         },
 
         start: function () {
+            var self = this;
+            return this.is_ready.then(function () {
+                var $el = $(session.web.qweb.render('MailThread', {'widget': self}));
+                self.replaceElement($el);
 
-            if (this.options.show_compose_message) {
-                this.instantiate_compose_message();
-                this.compose_message.do_show_compact();
-            }
+                if (self.options.show_compose_message) {
+                    self.instantiate_compose_message();
+                    self.compose_message.do_show_compact();
+                }
 
-            if (!this.messages.length && !this.root) {
-                this.no_message();
-            }
-
-            return this._super.apply(this, arguments);
+                if (!self.messages.length && !self.root) {
+                    self.no_message();
+                }
+            });
         },
 
         /**
@@ -453,8 +502,23 @@ openerp.web_timeline = function (session) {
                     _.extend({'default_starred': true}, this.context) : this.context;
                 this.compose_message = new openerp.web_timeline.ThreadComposeMessage(this, this, this.options);
 
-                this.compose_message.insertBefore(this.$el);
+                if (this.options.view_inbox) {
+                    this.compose_message.insertAfter(this.$('.oe_tl_thread_content'));
+                }
+                else {
+                    this.compose_message.insertBefore(this.$el);
+                }
             }
+        },
+
+        on_compose_message: function (event) {
+            if (this.compose_message) {
+                this.compose_message.destroy();
+            }
+            this.compose_message = false;
+
+            this.instantiate_compose_message();
+            return this.compose_message.on_toggle_quick_composer(event);
         },
 
         /**
@@ -489,9 +553,11 @@ openerp.web_timeline = function (session) {
 
         treat_threads: function (records) {
             var self = this;
+
+            console.log("records", records);
             
             _.each(records.threads, function (record) {
-                self.create_thread(record[1]);
+                self.create_thread(record);
             });
 
             if (!records.threads.length) {
@@ -499,15 +565,15 @@ openerp.web_timeline = function (session) {
             }
         },
 
-        create_thread: function (msg_list) {
-            var thread = new openerp.web_timeline.MailThread(this, _.extend({
-                    'message_list': msg_list, 
+        create_thread: function (record) {
+            var thread = new openerp.web_timeline.MailThread(this, _.extend(this, {
+                    'messages': record, 
                     'domain': this.domain,
                     'context': {
                         'default_model': this.model,
                         'default_res_id': this.res_id,
                         'default_parent_id': this.id
-                    }}, this), this.options);
+                    }}), this.options);
 
             this.threads.push(thread);
             thread.appendTo(this.$el);
@@ -598,6 +664,12 @@ openerp.web_timeline = function (session) {
             return false;
         },
 
+        on_message_reply:function (event) {
+            event.stopPropagation();
+            this.on_compose_message(event);
+            return false;
+        },
+
         /**
          * Add or remove a vote for a message and display the result
          */
@@ -630,7 +702,7 @@ openerp.web_timeline = function (session) {
             if ($target.data('liker-list'))
             {
                 voter = $target.data('liker-list');
-                openerp.web_timeline.ChatterUtils.bindTooltipTo($target, voter);
+                openerp.web_timeline.ChatterUtils.bindTooltipTo($target, voter, 'top');
                 $target.tooltip('hide').tooltip('show');
                 $(".tooltip").on("mouseleave", function () {
                     $(this).remove();
@@ -646,7 +718,7 @@ openerp.web_timeline = function (session) {
                         }
                     });
                     $target.data('liker-list', voter);
-                    openerp.web_timeline.ChatterUtils.bindTooltipTo($target, voter);
+                    openerp.web_timeline.ChatterUtils.bindTooltipTo($target, voter, 'top');
                     $target.tooltip('hide').tooltip('show');
                     $(".tooltip").on("mouseleave", function () {
                         $(this).remove();
@@ -678,9 +750,37 @@ openerp.web_timeline = function (session) {
             this.do_action(action);
         },
 
-        on_expandable: function (event) {
+        on_record_clicked: function (event) {
+            event.preventDefault();
+
+            var self = this;
+            var state = {
+                'model': this.context.default_model,
+                'id': this.context.default_res_id,
+                'title': this.record_name,
+            };
+
+            session.webclient.action_manager.do_push_state(state);
+
+            this.context.params = {
+                model: this.context.default_model,
+                res_id: this.context.default_res_id,
+            };
+
+            console.log("thus.context", this.context);
+
+            this.ds_thread.call("message_redirect_action", {context: this.context})
+                .then(function(action){
+                    self.do_action(action); 
+                });
+        },
+
+        on_message_expandable: function (event) {
             event.stopPropagation();
             var self = this;
+            if (this.options.view_inbox) {
+                var parent_message = this.messages.pop();
+            }
             var msg = this.messages.pop();
 
             this.message_fetch(msg.domain, this.context, false, 'default', function (arg, data) {
@@ -688,9 +788,74 @@ openerp.web_timeline = function (session) {
                 _.each(messages, function (message) {
                     self.add_message(message, true);
                 });
+                if (this.options.view_inbox) {
+                    this.messages.push(parent_message);
+                }
                 self.check_for_rerender();
             });
         },
+
+        on_thread_expandable: function (event) {
+            event.stopPropagation();
+            var self = this;
+            var msg = this.messages.pop();
+
+            console.log("msg", msg);
+
+            //msg.parent_thread.destroy();
+            //self.check_for_rerender();
+
+            this.options.root_thread.message_fetch(msg.domain, this.context, false, 'inbox')
+                .then(function () {
+                    self.$el.remove();
+                    self.destroy();
+                });
+                //console.log("data", data);
+                /*var messages = data.threads[0][1];
+                _.each(messages, function (message) {
+                    self.add_message(message, true);
+                });
+                self.check_for_rerender();*/
+        },
+
+        on_parent_message: function (event) {
+            event.stopPropagation();
+            this.options.is_folded = !this.options.is_folded;
+            this.check_for_rerender();
+        },
+
+        on_display_followers: function (event) {
+            event.stopPropagation();
+
+            var self = this;
+            var $target = $(event.target);
+
+            if (this.followers_data) {
+                openerp.web_timeline.ChatterUtils.bindTooltipTo($target, this.followers_data, 'right');
+                $target.tooltip('hide').tooltip('show');
+                $(".tooltip").on("mouseleave", function () {
+                    $(this).remove();
+                });
+            }
+            else {
+                var ds_model = new session.web.DataSetSearch(this, this.model, this.context);
+                ds_model.call('read_followers_data', [this.follower_ids.slice(0, this.options.followers_limit)])
+                .then(function (records) {
+                    self.followers_data = [];
+                    _.each(records, function(f) {
+                        self.followers_data.push(f[1] + '</br>');
+                    });
+                    if (self.nb_followers - self.followers_limit > 0) {
+                        self.followers_data.push('and ' + self.nb_followers - self.followers_limit + 'more ... </br>');  
+                    } 
+                    openerp.web_timeline.ChatterUtils.bindTooltipTo($target, self.followers_data, 'right');
+                    $target.tooltip('hide').tooltip('show');
+                    $(".tooltip").on("mouseleave", function () {
+                        $(this).remove();
+                    });
+                });
+            }
+        }, 
 
         check_for_rerender: function () {
             var self = this; 
@@ -704,6 +869,10 @@ openerp.web_timeline = function (session) {
                 };
                 msg.content = self.view.qweb.render("message_content", qweb_context);
             });
+
+            if (this.options.view_inbox && this.messages.length) {
+                this.format_thread();
+            }
 
             var $el = $(session.web.qweb.render('MailThread', {'widget': this}));
             this.replaceElement($el);
@@ -724,7 +893,46 @@ openerp.web_timeline = function (session) {
 
         insert_message: function (message) {
             this.$('.oe_view_nocontent').remove();
-            $(message.content).prependTo(this.$el);
+            if (this.options.view_inbox) {
+                $(message.content).appendTo(this.$('.oe_tl_thread_content'));
+            }
+            else {
+                $(message.content).prependTo(this.$el);
+            } 
+        },
+
+        format_thread: function () {
+            var self = this;
+
+            this.model = this.context.default_model;
+            this.res_id = this.context.default_res_id;
+
+            this.followers_loaded = $.Deferred();
+
+            if ((! this.nb_followers || !this.follower_ids)
+                && (this.model && this.res_id)) {
+                this.nb_followers = 0;
+                this.follower_ids = [];
+
+                this.ds_res = new session.web.DataSetSearch(this, this.model, this.context, [['id', '=', this.res_id]]);
+                this.ds_res.read_slice().then(function (data) {
+                    self.follower_ids = data[0].message_follower_ids;
+                    self.nb_followers = data[0].message_follower_ids.length;
+                    self.followers_loaded.resolve();
+                });
+            }
+            else {    
+                this.followers_loaded.resolve();
+            }
+
+            return this.followers_loaded.then(function () {
+                var qweb_context = {
+                    widget: self.messages[0],
+                    thread: self,
+                    options: self.options,
+                };
+                self.content = self.view.qweb.render("thread_content", qweb_context);
+            });
         },
 
         format_message: function (msg) {
@@ -778,7 +986,7 @@ openerp.web_timeline = function (session) {
             else if (type == 'email' && (!author || !author[0])) {
                 avt = ('/mail/static/src/img/email_icon.png');
             } 
-            else if (author && this.template != 'mail.compose_message') {
+            else if (author) {
                 avt  = openerp.web_timeline.ChatterUtils.get_image(
                     this.session, 'res.partner', 'image_small', author[0]);
             } 
@@ -819,6 +1027,7 @@ openerp.web_timeline = function (session) {
          * display the message "there are no message" on the thread
          */
         no_message: function () {
+            console.log("no message", this);
             var no_message = $(session.web.qweb.render('NoMessage', {}));
 
             if (this.options.help) {
@@ -854,7 +1063,7 @@ openerp.web_timeline = function (session) {
             this._super(parent, dataset, options);
 
             this.domain = dataset.domain || [];
-            this.context = dataset.context || {};
+            this.context = _.clone(dataset.context) || {};
             this.options = _.clone(options);
 
             this.show_compact_message = false;
@@ -862,7 +1071,9 @@ openerp.web_timeline = function (session) {
             this.is_log = false;
 
             this.id = dataset.id || false;
+            this.user_pid = dataset.user_pid || false;
             this.parent_id = dataset.parent_id || false;
+            this.is_private = dataset.is_private || false;
             this.partner_ids = dataset.partner_ids || [];
             this.recipients = [];
             this.recipient_ids = [];
@@ -919,25 +1130,7 @@ openerp.web_timeline = function (session) {
 
         compute_emails_from: function () {
             var self = this;
-            var messages = [];
-
-            /*if (this.parent_thread.parent_message) {
-                // go to the parented message
-                var message = this.parent_thread.parent_message;
-                var parent_message = message.parent_id ? message.parent_thread.parent_message : message;
-                if (parent_message) {
-                    var messages = parent_message.get_childs();
-                    if (!messages.length) {
-                        messages = [this];
-                    }
-                }
-            } 
-            else if (this.options.emails_from_on_composer) {*/
-            if (this.options.emails_from_on_composer) {
-                messages = this.parent_thread.messages;
-            }
-
-            console.log("messages", messages);
+            var messages = this.parent_thread.messages;
 
             _.each(messages, function (thread) {
                 if (thread.author_id && !thread.author_id[0] &&
@@ -951,8 +1144,6 @@ openerp.web_timeline = function (session) {
                                         });
                 }
             });
-
-            console.log("self.recipients", self.recipients);
 
             return self.recipients;
         },

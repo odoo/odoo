@@ -667,6 +667,7 @@ class mail_message(osv.Model):
         message_tree = {}
         parent_tree = {}
         child_ids = []
+        parent_ids = []
         exp_domain = []
 
         # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
@@ -696,53 +697,57 @@ class mail_message(osv.Model):
             parent_tree.setdefault(tree_parent_id, [])
 
         for parent_id in parent_tree:
+            parent_ids.append(parent_id)
+
             if not parent_id:
                 child_ids = ids;
                 exp_domain = domain + [('id', '<', min(child_ids))]
             else:
                 child_ids = [msg.id for msg in self.browse(cr, uid, parent_id, context=context).child_ids][0:child_limit]
-                exp_domain = [('parent_id', '=', parent_id), ('id', '<', min(child_ids))]
+                exp_domain = [('parent_id', '=', parent_id)]
+                if len(child_ids):
+                    exp_domain += [('id', '<', min(child_ids))]
 
             for cid in child_ids:
                 if cid not in message_tree:
                     message_tree[cid] = self.browse(cr, uid, cid, context=context)
                 parent_tree[parent_id].append(self._message_read_dict(cr, uid, message_tree[cid], parent_id=parent_id, context=context))
-    
+
             if parent_id:
                 parent_tree[parent_id].sort(key=lambda item: item['date'])
-                parent_tree[parent_id].insert(0, self._message_read_dict(cr, uid, message_tree[parent_id], context=context))
+                parent_tree[parent_id].reverse();
+                parent_tree[parent_id].append(self._message_read_dict(cr, uid, message_tree[parent_id], context=context))
 
             self._message_read_dict_postprocess(cr, uid, parent_tree[parent_id], message_tree, context=context)
 
             more_count = self.search_count(cr, uid, exp_domain, context=context)
             if more_count:
-                parent_tree[parent_id].append({'type':'expandable',
-                                               'domain': exp_domain,
-                                               'nb_messages': more_count,
-                                               'parent_id': parent_id,
-                                               'id': min(child_ids)});
+                exp = {'type':'expandable',
+                       'domain': exp_domain,
+                       'nb_messages': more_count,
+                       'parent_id': parent_id}
+                if parent_id : 
+                    parent_tree[parent_id].insert(len(parent_tree[parent_id])-1, exp)
+                else :
+                    parent_tree[parent_id].append(exp)
+
 
         # create final ordered parent_list based on parent_tree
         parent_list = parent_tree.items()
         parent_list = sorted(parent_list, key=lambda item: max([msg.get('date') for msg in item[1]]), reverse=True)
 
         if mode != 'default':
-            exp_domain = domain + [('id', '<', min(ids))]
+            exp_domain = domain + [('id', '<', min(ids)), ('id', 'not in', parent_ids), ('parent_id', 'not in', parent_ids)]
             more_count = self.search_count(cr, uid, exp_domain, context=context)
             if more_count:
                 parent_list.append({'type':'expandable',
                                     'domain': exp_domain,
                                     'nb_messages': more_count,
-                                    'parent_id': parent_id,
-                                    'id': min(ids)});
+                                    'parent_id': parent_id});
 
         nb_read = 0
         if 'mail_read_set_read' in context and context['mail_read_set_read']: 
             nb_read = self.set_message_read(cr, uid, ids, True, create_missing=False, get_childs=False, context=context)   
-                                     
-        # get the child expandable messages for the tree
-        # self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
-        # thread_level=0, message_unload_ids=[], domain=domain, parent_id=parent_id, context=context)
         
         return {'nb_read': nb_read, 'threads': parent_list}
 

@@ -79,25 +79,25 @@
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject {
             display: inline-block;
-            width: 525px;
+            width: 505px;
             cursor: pointer;
             vertical-align: middle;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject.oe_tl_small_subject {
-            width: 491px;
+            width: 471px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject .oe_tl_subject {
             display: inline-block;
-            max-width: 495px;
+            max-width: 475px;
             overflow: hidden;
             text-overflow: ellipsis;
             vertical-align: middle;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject.oe_tl_small_subject .oe_tl_subject {
-            max-width: 461px;
+            max-width: 441px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject .oe_tl_nb_unread_msg {
@@ -130,6 +130,7 @@
             bottom: 0; 
             width: 30px;
             overflow: hidden;
+            padding-right: 3px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_avatar img {
@@ -147,6 +148,7 @@
             display: inline-block;
             width: 20px;
             text-align: left;
+            margin-left: 10px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc i  {
@@ -163,7 +165,7 @@
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc i:hover {
-            font-size: 1.5em;
+            font-size: 1.4em;
         }
 
         /* followers */
@@ -179,25 +181,13 @@
             text-decoration: none;
             color: #FFF;
             font-size: 1.1em;
-            padding-left: 2px;
+            padding-left: 5px;
             cursor: pointer;
             text-shadow: 0px 1px #AAA,0px -1px #AAA, -1px 0px #AAA, 1px 0px #AAA, 0px 3px 3px rgba(0,0,0,0.1);
             -webkit-transition: all 0.2s linear;
                -moz-transition: all 0.2s linear;
                  -o-transition: all 0.2s linear;
                     transition: all 0.2s linear;
-        }
-
-        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc {
-            margin-left: 10px;
-        }
-
-        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc i {
-            font-size: 1.2em;
-        }
-
-        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc i:hover {
-            font-size: 1.3em;
         }
 
         /* icons */
@@ -600,19 +590,22 @@
 
     /* ------------ expandable message ------------ */ 
 
-        .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_expandable {  
+        .openerp .oe_timeline .oe_tl_msg_expandable, 
+        .openerp .oe_timeline .oe_tl_parent_expandable {  
             color: #A4A4A4;
             padding-bottom: 10px;
             cursor: pointer; 
         }
 
-        .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_expandable span {
+        .openerp .oe_timeline .oe_tl_msg_expandable span,
+        .openerp .oe_timeline .oe_tl_parent_expandable span {
             display: inline-block;
-            border-left: dashed 2px #A4A4A4;
-            /*margin-left: 1px;
-            padding-left: 290px;*/
             text-align: right;
             padding-left: 28%;
+        }
+
+        .openerp .oe_timeline .oe_tl_msg_expandable span {
+            border-left: dashed 2px #A4A4A4;
         }
 
     /* ----------------- message ----------------- */
