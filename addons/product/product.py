@@ -22,7 +22,9 @@
 import math
 import re
 import time
+from collections import OrderedDict
 from _common import ceiling
+
 
 from openerp import SUPERUSER_ID
 from openerp import tools
@@ -659,7 +661,7 @@ class product_template(osv.osv):
                 temp_variants = []
                 for variant in all_variants:
                     for value_id in variant_id.value_ids:
-                        temp_variants.append(variant + [int(value_id)])
+                        temp_variants.append(sorted(variant + [int(value_id)]))
                 if temp_variants:
                     all_variants = temp_variants
 
@@ -677,7 +679,7 @@ class product_template(osv.osv):
             variants_active_ids = []
             variants_inactive = []
             for product_id in tmpl_id.product_variant_ids:
-                variants = map(int,product_id.attribute_value_ids)
+                variants = sorted(map(int,product_id.attribute_value_ids))
                 if variants in all_variants:
                     variants_active_ids.append(product_id.id)
                     all_variants.pop(all_variants.index(variants))
@@ -797,9 +799,16 @@ class product_template(osv.osv):
             pass
         return super(product_template, self).name_get(cr, user, ids, context)
 
-
-
-
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        product_product = self.pool['product.product']
+        results = product_product.name_search(
+            cr, user, name, args, operator=operator, context=context, limit=limit)
+        product_ids = [p[0] for p in results]
+        template_ids = [p.product_tmpl_id.id
+                            for p in product_product.browse(
+                                cr, user, product_ids, context=context)]
+        uniq_ids = OrderedDict.fromkeys(template_ids).keys()
+        return self.name_get(cr, user, uniq_ids, context=context)
 
 class product_product(osv.osv):
     _name = "product.product"
@@ -1075,12 +1084,11 @@ class product_product(osv.osv):
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                ids = set(self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context))
+                ids = self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context)
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(ids)) if limit else False
-                    ids.update(self.search(cr, user, args + [('name', operator, name), ('id', 'not in', list(ids))], limit=limit2, context=context))
-                ids = list(ids)
+                    ids += self.search(cr, user, args + [('name', operator, name), ('id', 'not in', ids)], limit=limit2, context=context)
             elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
                 ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
             if not ids and operator in positive_operators:

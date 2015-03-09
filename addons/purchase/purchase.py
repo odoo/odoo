@@ -146,6 +146,19 @@ class purchase_order(osv.osv):
                                                 limit=1)
         return res and res[0] or False  
 
+    def _has_non_stockable_item(self, cr, uid, ids, *args):
+        res = dict.fromkeys(ids, False)
+        for order in self.browse(cr, uid, ids):
+            for order_line in order.order_line:
+                if (
+                    not order_line.product_id
+                    or
+                    order_line.product_id
+                    and order_line.product_id.type not in ('product', 'consu')
+                ):
+                    res[order.id] = True
+        return res
+
     def _get_picking_in(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
         type_obj = self.pool.get('stock.picking.type')
@@ -194,6 +207,13 @@ class purchase_order(osv.osv):
         ('done', 'Done'),
         ('cancel', 'Cancelled')
     ]
+
+    READONLY_STATES = {
+        'confirmed': [('readonly', True)],
+        'approved': [('readonly', True)],
+        'done': [('readonly', True)]
+    }
+
     _track = {
         'state': {
             'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirmed',
@@ -222,16 +242,16 @@ class purchase_order(osv.osv):
                                  copy=False),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, copy=False,
                                    help="Date on which purchase order has been approved"),
-        'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
+        'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states=READONLY_STATES,
             change_default=True, track_visibility='always'),
         'dest_address_id':fields.many2one('res.partner', 'Customer Address (Direct Delivery)',
-            states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
+            states=READONLY_STATES,
             help="Put an address if you want to deliver directly from the supplier to the customer. " \
                 "Otherwise, keep empty to deliver to your own company."
         ),
-        'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage','<>','view')], states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]} ),
-        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
-        'currency_id': fields.many2one('res.currency','Currency', readonly=True, required=True,states={'draft': [('readonly', False)],'sent': [('readonly', False)]}),
+        'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage','<>','view')], states=READONLY_STATES),
+        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states=READONLY_STATES, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
+        'currency_id': fields.many2one('res.currency','Currency', required=True, states=READONLY_STATES),
         'state': fields.selection(STATE_SELECTION, 'Status', readonly=True,
                                   help="The status of the purchase order or the quotation request. "
                                        "A request for quotation is a purchase order in a 'Draft' status. "
@@ -288,6 +308,7 @@ class purchase_order(osv.osv):
         'create_uid': fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal'),
+        'has_non_stockable_item': fields.function(_has_non_stockable_item, method=True, type='boolean', string='Contains a non-stockable item'),
         'bid_date': fields.date('Bid Received On', readonly=True, help="Date on which the bid was received"),
         'bid_validity': fields.date('Bid Valid Until', help="Date on which the bid expired"),
         'picking_type_id': fields.many2one('stock.picking.type', 'Deliver To', help="This will determine picking type of incoming shipment", required=True,
@@ -477,6 +498,7 @@ class purchase_order(osv.osv):
             action['res_id'] = pick_ids and pick_ids[0] or False
         return action
 
+
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
@@ -535,6 +557,10 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
+            if po.invoice_method == 'picking' and po.has_non_stockable_item is True:
+                raise osv.except_osv(
+                    _('Error!'),
+                    _("You cannot confirm a purchase order with Invoice Control Method 'Based on incoming shipments' that contains non-stockable items."))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)        
