@@ -21,6 +21,7 @@
 
 import time
 import openerp.addons.decimal_precision as dp
+from collections import OrderedDict
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
@@ -851,7 +852,7 @@ class mrp_production(osv.osv):
             product_qty = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.product_id.uom_id.id) - produced_qty
         production_qty = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.product_id.uom_id.id)
 
-        scheduled_qty = {}
+        scheduled_qty = OrderedDict()
         for scheduled in production.product_lines:
             if scheduled.product_id.type == 'service':
                 continue
@@ -860,7 +861,7 @@ class mrp_production(osv.osv):
                 scheduled_qty[scheduled.product_id.id] += qty
             else:
                 scheduled_qty[scheduled.product_id.id] = qty
-        dicts = {}
+        dicts = OrderedDict()
         # Find product qty to be consumed and consume it
         for product_id in scheduled_qty.keys():
 
@@ -903,7 +904,7 @@ class mrp_production(osv.osv):
                         else:
                             dicts[product_id][lot_id] = quant_qty
                         qty -= quant_qty
-            if qty > 0:
+            if float_compare(qty, 0, self.pool['decimal.precision'].precision_get(cr, uid, 'Product Unit of Measure')) == 1:
                 if dicts[product_id].get(False):
                     dicts[product_id][False] += qty
                 else:

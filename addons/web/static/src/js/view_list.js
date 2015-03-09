@@ -299,21 +299,24 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.$pager
                 .on('click', 'a[data-pager-action]', function () {
                     var $this = $(this);
-                    var max_page = Math.floor(self.dataset.size() / self.limit());
+                    var max_page_index = Math.ceil(self.dataset.size() / self.limit()) - 1;
                     switch ($this.data('pager-action')) {
                         case 'first':
-                            self.page = 0; break;
+                            self.page = 0;
+                            break;
                         case 'last':
-                            self.page = max_page - 1;
+                            self.page = max_page_index;
                             break;
                         case 'next':
-                            self.page += 1; break;
+                            self.page += 1;
+                            break;
                         case 'previous':
-                            self.page -= 1; break;
+                            self.page -= 1;
+                            break;
                     }
                     if (self.page < 0) {
-                        self.page = max_page;
-                    } else if (self.page > max_page) {
+                        self.page = max_page_index;
+                    } else if (self.page > max_page_index) {
                         self.page = 0;
                     }
                     self.reload_content();
