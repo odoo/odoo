@@ -169,9 +169,7 @@ class pos_config(osv.osv):
         return False
 
     def _get_default_company(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        print company_id
-        return company_id
+        return self.pool.get('res.users')._get_company(cr, uid, context=context)
 
     def _get_default_nomenclature(self, cr, uid, context=None):
         nom_obj = self.pool.get('barcode.nomenclature')
@@ -584,6 +582,7 @@ class pos_order(osv.osv):
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'pos_reference':ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
+            'fiscal_position': ui_order['fiscal_position_id'] or False,
         }
 
     def _payment_fields(self, cr, uid, ui_paymentline, context=None):
@@ -673,11 +672,17 @@ class pos_order(osv.osv):
                 raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
-    def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
-        if not part:
-            return {'value': {}}
-        pricelist = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_product_pricelist.id
-        return {'value': {'pricelist_id': pricelist}}
+    def onchange_partner_id(self, cr, uid, ids, partner_id=False, context=None):
+        if not partner_id:
+            return {'value': {'fiscal_position': False}}
+        res_partner = self.pool.get('res.partner')
+
+        partner = res_partner.browse(cr, uid, partner_id, context=context)
+        partner_delivery_id = partner.address_get(['delivery'])['delivery']
+
+        pricelist_id = partner.property_product_pricelist and partner.property_product_pricelist.id or False
+        fiscal_position_id = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, False, partner.id, partner_delivery_id, context=context)
+        return {'value': {'pricelist_id': pricelist_id, 'fiscal_position': fiscal_position_id}}
 
     def _amount_all(self, cr, uid, ids, name, args, context=None):
         cur_obj = self.pool.get('res.currency')
@@ -738,6 +743,7 @@ class pos_order(osv.osv):
         'nb_print': fields.integer('Number of Print', readonly=True, copy=False),
         'pos_reference': fields.char('Receipt Ref', readonly=True, copy=False),
         'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='account.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
     }
 
     def _default_session(self, cr, uid, context=None):
@@ -985,10 +991,13 @@ class pos_order(osv.osv):
                 'partner_id': order.partner_id.id,
                 'comment': order.note or '',
                 'currency_id': order.pricelist_id.currency_id.id, # considering partner's sale pricelist's currency
+                'fiscal_position': order.fiscal_position.id,
             }
             inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', order.partner_id.id)['value'])
             if not inv.get('account_id', None):
                 inv['account_id'] = acc
+            if not inv.get('fiscal_position', None):
+                inv['fiscal_position'] = order.fiscal_position.id
             inv_id = inv_ref.create(cr, uid, inv, context=context)
 
             self.write(cr, uid, [order.id], {'invoice_id': inv_id, 'state': 'invoiced'}, context=context)
@@ -1004,7 +1013,7 @@ class pos_order(osv.osv):
                                                                line.product_id.id,
                                                                line.product_id.uom_id.id,
                                                                line.qty, partner_id = order.partner_id.id,
-                                                               fposition_id=order.partner_id.property_account_position.id)['value'])
+                                                               fposition_id = order.fiscal_position.id or order.partner_id.property_account_position.id)['value'])
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name
@@ -1305,7 +1314,7 @@ class pos_order_line(osv.osv):
         account_tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            taxes_ids = [ tax for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
+            taxes_ids = [ tax for tax in line.tax_ids if tax.company_id.id == line.order_id.company_id.id ]
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = account_tax_obj.compute_all(cr, uid, taxes_ids, price, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
 
@@ -1314,37 +1323,56 @@ class pos_order_line(osv.osv):
             res[line.id]['price_subtotal_incl'] = cur_obj.round(cr, uid, cur, taxes['total_included'])
         return res
 
-    def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
-       context = context or {}
-       if not product_id:
+    def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, discount=0.0, price_unit=0.0, partner_id=False, fiscal_position=False, context=None):
+        result = {}
+        context = context or {}
+
+        if not product_id:
             return {}
-       if not pricelist:
+        if not pricelist:
            raise UserError(
                _('You have to select a pricelist in the sale form !\n' \
                'Please set one before choosing a product.'))
 
-       price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+        price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                product_id, qty or 1.0, partner_id)[pricelist]
 
-       result = self.onchange_qty(cr, uid, ids, product_id, 0.0, qty, price, context=context)
-       result['value']['price_unit'] = price
-       return result
+        Partner = self.pool['res.partner']
+        Product = self.pool['product.product']
+        AccountTax = self.pool['account.tax']
+        AccountFiscalPosition = self.pool['account.fiscal.position']
 
-    def onchange_qty(self, cr, uid, ids, product, discount, qty, price_unit, context=None):
-        result = {}
-        if not product:
-            return result
-        account_tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
+        partner = False
+        if partner_id:
+            partner = Partner.browse(cr, uid, partner_id, context=context)
 
-        prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        fpos = False
+        if not fiscal_position:
+            fpos = partner and partner.property_account_position or False
+        else:
+            fpos = AccountFiscalPosition.browse(cr, uid, fiscal_position)
 
-        price = price_unit * (1 - (discount or 0.0) / 100.0)
-        taxes = account_tax_obj.compute_all(cr, uid, prod.taxes_id, price, qty, product=prod, partner=False)
+        product = Product.browse(cr, uid, product_id, context=context)
+
+        tax_ids = AccountFiscalPosition.map_tax(cr, uid, fpos, product.taxes_id)
+
+        account_tax = AccountTax.browse(cr, uid, tax_ids, context=context)
+
+        price = price_unit or price * (1 - (discount or 0.0) / 100.0)
+
+        taxes = AccountTax.compute_all(cr, uid, account_tax, price, qty, product=product_id)
 
         result['price_subtotal'] = taxes['total']
         result['price_subtotal_incl'] = taxes['total_included']
+        result['tax_ids'] = tax_ids
+        result['price_unit'] = price
         return {'value': result}
+
+    def onchange_qty(self, cr, uid, ids, pricelist, product_id, qty=0, discount=0.0, price_unit=0.0, partner_id=False, fiscal_position=False, context=None):
+        result = {}
+        if not product_id:
+            return result
+        return self.onchange_product_id(cr, uid, ids, pricelist, product_id, qty, discount, price_unit, partner_id, fiscal_position, context=context)
 
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -1358,7 +1386,7 @@ class pos_order_line(osv.osv):
         'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Account')),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'tax_ids': fields.many2many('account.tax', string='Taxes', readonly=True),
+        'tax_ids': fields.many2many('account.tax', string='Taxes'),
     }
 
     _defaults = {
