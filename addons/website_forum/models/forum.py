@@ -323,15 +323,6 @@ class Post(models.Model):
                 or (self.post_type == 'link' and not self.forum_id.allow_link):
             raise UserError(_('This forum does not allow %s' % self.post_type))
 
-    def name_get(self, cr, uid, ids, context=None):
-        result = []
-        for post in self.browse(cr, uid, ids, context=context):
-            if post.parent_id and not post.name:
-                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
-            else:
-                result.append((post.id, '%s' % (post.name)))
-        return result
-
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
         if content and self.env.user.karma < forum.karma_dofollow:
