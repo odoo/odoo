@@ -1480,6 +1480,10 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             }
         },
         click_numpad: function(button) {
+            if (!this.pos.get_order().get_paymentlines().length) {
+                this.pos.get_order().add_paymentline( this.pos.cashregisters[0]);
+                this.render_paymentlines();
+            }
             this.payment_input(button.data('action'));
         },
         render_numpad: function() {
