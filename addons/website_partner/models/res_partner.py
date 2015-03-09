@@ -25,7 +25,8 @@ class WebsiteResPartner(osv.Model):
             _get_private, fnct_inv=_set_private, fnct_search=_search_private,
             type='boolean', string='Private Profile'),
         'website_description': fields.html(
-            'Website Partner Full Description'
+            'Website Partner Full Description',
+            strip_style=True
         ),
         'website_short_description': fields.text(
             'Website Partner Short Description'

@@ -317,11 +317,12 @@ class html(text):
             return None
         if not self._sanitize:
             return value
-        return html_sanitize(value)
+        return html_sanitize(value, strip_style=self._strip_style)
 
-    def __init__(self, string='unknown', sanitize=True, **args):
+    def __init__(self, string='unknown', sanitize=True, strip_style=False, **args):
         super(html, self).__init__(string=string, **args)
         self._sanitize = sanitize
+        self._strip_style = strip_style
         # symbol_set redefinition because of sanitize specific behavior
         self._symbol_f = self._symbol_set_html
         self._symbol_set = (self._symbol_c, self._symbol_f)

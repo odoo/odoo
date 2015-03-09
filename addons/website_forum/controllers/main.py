@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 import simplejson
@@ -188,6 +189,11 @@ class WebsiteForum(http.Controller):
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
+
+        # Hide posts from abusers (negative karma), except for moderators
+        if not question.can_view:
+            raise werkzeug.exceptions.NotFound()
+
         # increment view counter
         question.sudo().set_viewed()
         if question.parent_id:
