@@ -1,7 +1,8 @@
 import time
 from openerp import models, fields, api, _
 
-class account_statement_from_invoice_lines(models.TransientModel):
+
+class AccountStatementFromInvoiceLines(models.TransientModel):
     """
     Generate Entries by Statement from Invoices
     """

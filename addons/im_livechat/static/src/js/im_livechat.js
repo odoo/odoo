@@ -60,6 +60,7 @@
                 this.feedback.on("feedback_sent", this, this.click_close);
             }else{
                 this._super.apply(this, arguments);
+                openerp.set_cookie(im_livechat.COOKIE_NAME, "", -1);
             }
         },
     });
@@ -99,7 +100,7 @@
             this.load_template(db, channel, options, rule);
         },
         _get_template_list: function(){
-            return ['/im_chat/static/src/xml/im_chat.xml', '/im_livechat/static/src/xml/im_livechat.xml'];
+            return ['/im_livechat/static/src/xml/im_livechat.xml', '/im_chat/static/src/xml/im_chat.xml'];
         },
         load_template: function(db, channel, options, rule){
             var self = this;

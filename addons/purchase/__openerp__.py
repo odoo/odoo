@@ -73,7 +73,7 @@ Dashboard / Reports for Purchase Management will include:
         'test/process/run_scheduler.yml',
         'test/fifo_price.yml',
         'test/fifo_returns.yml',
-        #'test/costmethodchange.yml',
+        # 'test/costmethodchange.yml',
         'test/process/cancel_order.yml',
         'test/process/rfq2order2done.yml',
         'test/process/generate_invoice_from_reception.yml',
@@ -83,6 +83,8 @@ Dashboard / Reports for Purchase Management will include:
         'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',
         'test/average_price.yml',
+        'test/anglo_saxon.yml',
+        'test/anglo_saxon_avg_fifo.yml',
     ],
     'demo': [
         'purchase_order_demo.yml',

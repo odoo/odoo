@@ -194,7 +194,7 @@
                     </group>
                     <notebook>
                         <page string="Invoice">
-                            <field context="{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type}" name="invoice_line">
+                            <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line">
                                 <tree string="Invoice lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
                                     <field name="product_id"
@@ -212,8 +212,7 @@
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
-                                        domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]"/>
-                                    <!-- ??? type_tax_use should not be purchase? -->
+                                        domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>
@@ -328,7 +327,7 @@
                     <field name="sent" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Invoice Lines">
-                            <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}">
+                            <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type, 'journal_id': journal_id}">
                                 <tree string="Invoice Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"
@@ -346,7 +345,7 @@
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
-                                        domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]"/>
+                                        domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>

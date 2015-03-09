@@ -1,6 +1,7 @@
 from openerp import models, fields, api
 
-class account_move_reversal(models.TransientModel):
+
+class AccountMoveReversal(models.TransientModel):
     """
     Account move reversal wizard, it cancel an account move by reversing it.
     """
@@ -12,6 +13,6 @@ class account_move_reversal(models.TransientModel):
 
     @api.multi
     def reverse_moves(self):
-        ac_move_ids = self._context.get('active_ids',False)
+        ac_move_ids = self._context.get('active_ids', False)
         self.env['account.move'].browse(ac_move_ids).reverse_moves(self.date, self.journal_id or False)
         return {'type': 'ir.actions.act_window_close'}

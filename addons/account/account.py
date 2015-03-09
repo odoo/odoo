@@ -13,7 +13,7 @@ import openerp.addons.decimal_precision as dp
 from openerp import api, fields, models, _
 
 
-class res_company(models.Model):
+class ResCompany(models.Model):
     _inherit = "res.company"
 
     currency_exchange_journal_id = fields.Many2one('account.journal', string="Currency Adjustments Journal", domain=[('type', '=', 'general')])
@@ -21,16 +21,16 @@ class res_company(models.Model):
         string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
 
 
-class account_payment_term(models.Model):
+class AccountPaymentTerm(models.Model):
     _name = "account.payment.term"
     _description = "Payment Term"
     _order = "name"
 
     name = fields.Char(string='Payment Term', translate=True, required=True)
-    active = fields.Boolean(string='Active', default=True,
-        help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
+    active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
     note = fields.Text(string='Description', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
@@ -58,7 +58,7 @@ class account_payment_term(models.Model):
                 result.append((next_date.strftime('%Y-%m-%d'), amt))
                 amount -= amt
 
-        amount = reduce(lambda x,y: x + y[1], result, 0.0)
+        amount = reduce(lambda x, y: x + y[1], result, 0.0)
         dist = round(value - amount, prec)
         if dist:
             last_date = result and result[-1][0] or time.strftime('%Y-%m-%d')
@@ -66,7 +66,7 @@ class account_payment_term(models.Model):
         return result
 
 
-class account_payment_term_line(models.Model):
+class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
     _order = "days"
@@ -93,7 +93,7 @@ class account_payment_term_line(models.Model):
             raise UserError(_('Percentages for Payment Term Line must be between 0 and 100.'))
 
 
-class account_account_type(models.Model):
+class AccountAccountType(models.Model):
     _name = "account.account.type"
     _description = "Account Type"
 
@@ -103,9 +103,9 @@ class account_account_type(models.Model):
         ('other', 'Regular'),
         ('receivable', 'Receivable'),
         ('payable', 'Payable'),
-        ('liquidity','Liquidity'),
+        ('liquidity', 'Liquidity'),
         ('consolidation', 'Consolidation'),
-        ], string='Type', required=True, default='other',
+    ], required=True, default='other',
         help="The 'Internal Type' is used for features available on "\
         "different types of accounts: consolidation are accounts that "\
         "can have children accounts for multi-company consolidations, payable/receivable are for "\
@@ -113,7 +113,7 @@ class account_account_type(models.Model):
     note = fields.Text(string='Description')
 
 
-class account_account_tag(models.Model):
+class AccountAccountTag(models.Model):
     _name = 'account.account.tag'
     _description = 'Account Tag'
 
@@ -123,7 +123,8 @@ class account_account_tag(models.Model):
 # Accounts
 #----------------------------------------------------------
 
-class account_account(models.Model):
+
+class AccountAccount(models.Model):
     _name = "account.account"
     _description = "Account"
 
@@ -136,7 +137,7 @@ class account_account(models.Model):
                 args.append(('id', 'in', map(lambda x: x.id, jour.account_control_ids)))
             if jour.type_control_ids:
                 args.append(('user_type', 'in', map(lambda x: x.id, jour.type_control_ids)))
-        return super(account_account, self).search(args, offset, limit, order, count=count)
+        return super(AccountAccount, self).search(args, offset, limit, order, count=count)
 
     @api.multi
     def _get_children_and_consol(self):
@@ -199,7 +200,7 @@ class account_account(models.Model):
     def copy(self, default=None):
         default = dict(default or {})
         default.update(code=_("%s (copy)") % (self.code or ''))
-        return super(account_account, self).copy(default)
+        return super(AccountAccount, self).copy(default)
 
     @api.multi
     def write(self, vals):
@@ -209,7 +210,7 @@ class account_account(models.Model):
             for account in self:
                 if (account.company_id.id <> vals['company_id']) and move_lines:
                     raise UserError(_('You cannot change the owner company of an account that already contains journal items.'))
-        return super(account_account, self).write(vals)
+        return super(AccountAccount, self).write(vals)
 
     @api.multi
     def unlink(self):
@@ -217,31 +218,30 @@ class account_account(models.Model):
             raise UserError(_('You cannot do that on an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
         values = ['account.account,%s' % (account_id,) for account_id in self.ids]
-        partner_prop_acc = self.env['ir.property'].search([('value_reference','in', values)], limit=1)
+        partner_prop_acc = self.env['ir.property'].search([('value_reference', 'in', values)], limit=1)
         if partner_prop_acc:
             raise UserError(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
-        return super(account_account, self).unlink()
+        return super(AccountAccount, self).unlink()
 
     @api.multi
     def mark_as_reconciled(self):
         return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
 
-class account_journal(models.Model):
+class AccountJournal(models.Model):
     _name = "account.journal"
     _description = "Journal"
     _order = 'sequence, code'
 
     name = fields.Char(string='Journal Name', required=True)
-    code = fields.Char(string='Code', size=5, required=True, help="The code will be displayed on reports.")
+    code = fields.Char(size=5, required=True, help="The code will be displayed on reports.")
     type = fields.Selection([
             ('sale', 'Sale'),
             ('purchase', 'Purchase'),
             ('cash', 'Cash'),
-            ('bank', 'Bank and Checks'),
+            ('bank', 'Bank'),
             ('general', 'General'),
-            ('situation', 'Opening/Closing Situation')
-        ], string='Type', required=True,
+        ], required=True,
         help="Select 'Sale' for customer invoices journals."\
         " Select 'Purchase' for supplier invoices journals."\
         " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
@@ -262,10 +262,10 @@ class account_journal(models.Model):
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
     refund_sequence_id = fields.Many2one('ir.sequence', string='Refund Entry Sequence',
         help="This field contains the information related to the numbering of the refund entries of this journal.", copy=False)
-    sequence= fields.Integer(string='Sequence', help='Used to order Journals')
+    sequence = fields.Integer(help='Used to order Journals')
 
     groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
-    currency = fields.Many2one('res.currency', string='Currency', help='The currency used to enter statement')
+    currency = fields.Many2one('res.currency', help='The currency used to enter statement')
     entry_posted = fields.Boolean(string='Autopost Created Moves',
         help="Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the "
             "source document is validated (Invoices), whatever the status of this field.")
@@ -294,7 +294,7 @@ class account_journal(models.Model):
         default.update(
             code=_("%s (copy)") % (self.code or ''),
             name=_("%s (copy)") % (self.name or ''))
-        return super(account_journal, self).copy(default)
+        return super(AccountJournal, self).copy(default)
 
     @api.multi
     def write(self, vals):
@@ -302,7 +302,7 @@ class account_journal(models.Model):
             if 'company_id' in vals and journal.company_id.id != vals['company_id']:
                 if self.env['account.move.line'].search([('journal_id', 'in', self.ids)], limit=1):
                     raise UserError(_('This journal already contains items, therefore you cannot modify its company field.'))
-        return super(account_journal, self).write(vals)
+        return super(AccountJournal, self).write(vals)
 
     @api.model
     def _create_sequence(self, vals, refund=False):
@@ -331,7 +331,7 @@ class account_journal(models.Model):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
         if vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
             vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
-        return super(account_journal, self).create(vals)
+        return super(AccountJournal, self).create(vals)
 
     @api.multi
     @api.depends('name', 'currency', 'company_id', 'company_id.currency_id')
@@ -348,7 +348,8 @@ class account_journal(models.Model):
 # Entries
 #----------------------------------------------------------
 
-class account_move(models.Model):
+
+class AccountMove(models.Model):
     _name = "account.move"
     _description = "Account Entry"
     _order = 'id desc'
@@ -366,7 +367,7 @@ class account_move(models.Model):
         return result
 
     @api.multi
-    @api.depends('line_id.debit','line_id.credit')
+    @api.depends('line_id.debit', 'line_id.credit')
     def _amount_compute(self):
         for move in self:
             total = 0.0
@@ -392,7 +393,7 @@ class account_move(models.Model):
 
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
-    date = fields.Date(string='Date', required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
+    date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]})
     rate_diff_partial_rec_id = fields.Many2one('account.partial.reconcile', string='Exchange Rate Entry of')
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
@@ -405,7 +406,7 @@ class account_move(models.Model):
     line_id = fields.One2many('account.move.line', 'move_id', string='Journal Items',
         states={'posted': [('readonly', True)]}, copy=True)
     partner_id = fields.Many2one('res.partner', related='line_id.partner_id', string="Partner", store=True)
-    amount = fields.Float(compute='_amount_compute', string='Amount', digits=0, store=True)
+    amount = fields.Float(compute='_amount_compute', digits=0, store=True)
     narration = fields.Text(string='Internal Note')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
@@ -435,7 +436,7 @@ class account_move(models.Model):
 
         for move in self:
             move.line_id.create_analytic_lines()
-            if move.name =='/':
+            if move.name == '/':
                 new_name = False
                 journal = move.journal_id
 
@@ -483,7 +484,7 @@ class account_move(models.Model):
             #check the lock date + check if some entries are reconciled
             move.line_id._update_check()
             move.line_id.unlink()
-        return super(account_move, self).unlink()
+        return super(AccountMove, self).unlink()
 
     @api.multi
     def _post_validate(self):
@@ -543,7 +544,8 @@ class account_move(models.Model):
 # Tax
 #----------------------------------------------------------
 
-class account_tax(models.Model):
+
+class AccountTax(models.Model):
     _name = 'account.tax'
     _description = 'Tax'
     _order = 'sequence'
@@ -583,7 +585,7 @@ class account_tax(models.Model):
     @api.one
     def copy(self, default=None):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
-        return super(account_tax, self).copy(default=default)
+        return super(AccountTax, self).copy(default=default)
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=80):
@@ -613,7 +615,7 @@ class account_tax(models.Model):
             if journal.type in ('sale', 'purchase'):
                 args += [('type_tax_use', '=', journal.type)]
 
-        return super(account_tax, self).search(args, offset, limit, order, count=count)
+        return super(AccountTax, self).search(args, offset, limit, order, count=count)
 
     @api.multi
     @api.depends('name', 'description')
@@ -635,7 +637,7 @@ class account_tax(models.Model):
 
     @api.onchange('price_include')
     def onchange_price_include(self):
-        if self.price_include == True:
+        if self.price_include:
             self.include_base_amount = True
 
     @api.multi
@@ -734,20 +736,21 @@ class account_tax(models.Model):
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
 #  ---------------------------------------------------------------
 
-class account_account_template(models.Model):
+
+class AccountAccountTemplate(models.Model):
     _name = "account.account.template"
-    _description ='Templates for Accounts'
+    _description = 'Templates for Accounts'
     _order = "code"
 
-    name = fields.Char(string='Name', required=True, index=True)
+    name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Secondary Currency', help="Forces all moves for this account to have this secondary currency.")
-    code = fields.Char(string='Code', size=64, required=True, index=True)
+    code = fields.Char(size=64, required=True, index=True)
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
     reconcile = fields.Boolean(string='Allow Invoices & payments Matching', default=False,
         help="Check this option if you want the user to reconcile entries in this account.")
-    note = fields.Text(string='Note')
+    note = fields.Text()
     tax_ids = fields.Many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', string='Default Taxes')
     nocreate = fields.Boolean(string='Optional Create', default=False,
         help="If checked, the new chart of accounts will not contain this by default.")
@@ -766,7 +769,8 @@ class account_account_template(models.Model):
             res.append((record.id, name))
         return res
 
-class account_add_tmpl_wizard(models.TransientModel):
+
+class AccountAddTmplWizard(models.TransientModel):
     """Add one more account from the template.
 
     With the 'nocreate' option, some accounts may not be created. Use this to add them later."""
@@ -806,20 +810,20 @@ class account_add_tmpl_wizard(models.TransientModel):
             'note': account_template.note,
             'parent_id': data['cparent_id'][0],
             'company_id': company_id,
-            }
+        }
         AccountObj.create(vals)
-        return {'type':'state', 'state': 'end' }
+        return {'type': 'state', 'state': 'end'}
 
     @api.multi
     def action_cancel(self):
-        return { 'type': 'state', 'state': 'end' }
+        return {'type': 'state', 'state': 'end'}
 
 
-class account_chart_template(models.Model):
-    _name="account.chart.template"
-    _description= "Templates for Account Chart"
+class AccountChartTemplate(models.Model):
+    _name = "account.chart.template"
+    _description = "Templates for Account Chart"
 
-    name = fields.Char(string='Name', required=True)
+    name = fields.Char(required=True)
     company_id = fields.Many2one('res.company', string='Root Tax Code')
     parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
     code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
@@ -827,6 +831,7 @@ class account_chart_template(models.Model):
         help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from "
             "templates, this is useful when you want to generate accounts of this template only when loading its child template.")
     currency_id = fields.Many2one('res.currency', string='Currency')
+    use_anglo_saxon = fields.Boolean(string="Use Anglo-Saxon accounting", default=False)
     complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
         help="This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list "
             "of taxes. This last choice assumes that the set of tax defined on this template is complete")
@@ -861,7 +866,6 @@ class account_chart_template(models.Model):
             cash_account = acc_obj.create(vals)
             vals = wiz_obj._prepare_bank_journal(company, line, cash_account.id)
             self.env['account.journal'].create(vals)
-
 
     @api.model
     def check_created_journals(self, vals_journal, company):
@@ -912,29 +916,22 @@ class account_chart_template(models.Model):
                 default_account = acc_template_ref.get(self.property_account_income_categ.id)
             elif journal_type == 'purchase':
                 default_account = acc_template_ref.get(self.property_account_expense_categ.id)
-            elif journal_type == 'situation':
-                if type == 'debit':
-                    default_account = acc_template_ref.get(self.property_account_expense_opening.id)
-                else:
-                    default_account = acc_template_ref.get(self.property_account_income_opening.id)
             return default_account
 
         journal_names = {
             'sale': _('Sales Journal'),
             'purchase': _('Purchase Journal'),
             'general': _('Miscellaneous Journal'),
-            'situation': _('Opening Entries Journal'),
         }
         journal_codes = {
             'sale': _('SAJ'),
             'purchase': _('EXJ'),
             'general': _('MISC'),
-            'situation': _('OPEJ'),
         }
 
         self.ensure_one()
         journal_data = []
-        for journal_type in ['sale', 'purchase', 'general', 'situation']:
+        for journal_type in ['sale', 'purchase', 'general']:
             vals = {
                 'type': journal_type,
                 'name': journal_names[journal_type],
@@ -961,12 +958,12 @@ class account_chart_template(models.Model):
         self.ensure_one()
         PropertyObj = self.env['ir.property']
         todo_list = [
-            ('property_account_receivable', 'res.partner','account.account'),
-            ('property_account_payable', 'res.partner','account.account'),
-            ('property_account_expense_categ', 'product.category','account.account'),
-            ('property_account_income_categ', 'product.category','account.account'),
-            ('property_account_expense', 'product.template','account.account'),
-            ('property_account_income', 'product.template','account.account'),
+            ('property_account_receivable', 'res.partner', 'account.account'),
+            ('property_account_payable', 'res.partner', 'account.account'),
+            ('property_account_expense_categ', 'product.category', 'account.account'),
+            ('property_account_income_categ', 'product.category', 'account.account'),
+            ('property_account_expense', 'product.template', 'account.account'),
+            ('property_account_income', 'product.template', 'account.account'),
         ]
         for record in todo_list:
             account = getattr(self, record[0])
@@ -979,10 +976,10 @@ class account_chart_template(models.Model):
                     'fields_id': field.id,
                     'value': value,
                 }
-                property_ids = PropertyObj.search([('name','=', record[0]), ('company_id', '=', company.id)])
-                if property_ids:
+                properties = PropertyObj.search([('name', '=', record[0]), ('company_id', '=', company.id)])
+                if properties:
                     #the property exist: modify it
-                    property_ids.write(vals)
+                    properties.write(vals)
                 else:
                     #create the property
                     PropertyObj.create(vals)
@@ -1091,14 +1088,14 @@ class account_chart_template(models.Model):
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
-            vals={
+            vals = {
                 'name': account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': account_template.reconcile,
                 'note': account_template.note,
-                'tax_ids': [(6,0,tax_ids)],
+                'tax_ids': [(6, 0, tax_ids)],
                 'company_id': company.id,
             }
             new_account = self.env['account.account'].create(vals)
@@ -1133,7 +1130,8 @@ class account_chart_template(models.Model):
                 })
         return True
 
-class account_tax_template(models.Model):
+
+class AccountTaxTemplate(models.Model):
     _name = 'account.tax.template'
     _description = 'Templates for Taxes'
     _order = 'id'
@@ -1223,7 +1221,7 @@ class account_tax_template(models.Model):
 
 # Fiscal Position Templates
 
-class account_fiscal_position_template(models.Model):
+class AccountFiscalPositionTemplate(models.Model):
     _name = 'account.fiscal.position.template'
     _description = 'Template for Fiscal Position'
 
@@ -1234,7 +1232,7 @@ class account_fiscal_position_template(models.Model):
     note = fields.Text(string='Notes')
 
 
-class account_fiscal_position_tax_template(models.Model):
+class AccountFiscalPositionTaxTemplate(models.Model):
     _name = 'account.fiscal.position.tax.template'
     _description = 'Template Tax Fiscal Position'
     _rec_name = 'position_id'
@@ -1244,7 +1242,7 @@ class account_fiscal_position_tax_template(models.Model):
     tax_dest_id = fields.Many2one('account.tax.template', string='Replacement Tax')
 
 
-class account_fiscal_position_account_template(models.Model):
+class AccountFiscalPositionAccountTemplate(models.Model):
     _name = 'account.fiscal.position.account.template'
     _description = 'Template Account Fiscal Mapping'
     _rec_name = 'position_id'
@@ -1257,7 +1255,8 @@ class account_fiscal_position_account_template(models.Model):
 # Account generation from template wizards
 # ---------------------------------------------------------
 
-class wizard_multi_charts_accounts(models.TransientModel):
+
+class WizardMultiChartsAccounts(models.TransientModel):
     """
     Create a new account chart for a company.
     Wizards ask for:
@@ -1271,7 +1270,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         * generates all accounting properties and assigns them correctly
     """
 
-    _name='wizard.multi.charts.accounts'
+    _name = 'wizard.multi.charts.accounts'
     _inherit = 'res.config'
 
     company_id = fields.Many2one('res.company', string='Company', required=True)
@@ -1284,6 +1283,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
     sale_tax = fields.Many2one('account.tax.template', string='Default Sale Tax')
     purchase_tax = fields.Many2one('account.tax.template', string='Default Purchase Tax')
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
+    use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
     purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
     complete_tax_set = fields.Boolean('Complete Set of Taxes',
         help="This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use "
@@ -1337,7 +1337,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
     @api.model
     def default_get(self, fields):
         context = self._context or {}
-        res = super(wizard_multi_charts_accounts, self).default_get(fields)
+        res = super(WizardMultiChartsAccounts, self).default_get(fields)
         tax_templ_obj = self.env['account.tax.template']
         account_chart_template = self.env['account.chart.template']
 
@@ -1382,7 +1382,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         context = self._context or {}
-        res = super(wizard_multi_charts_accounts, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
+        res = super(WizardMultiChartsAccounts, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
         cmp_select = []
         CompanyObj = self.env['res.company']
 
@@ -1415,11 +1415,11 @@ class wizard_multi_charts_accounts(models.TransientModel):
         # create tax templates from purchase_tax_rate and sale_tax_rate fields
         if not self.chart_template_id.complete_tax_set:
             value = self.sale_tax_rate
-            ref_tax_ids = obj_tax_temp.search([('type_tax_use','=','sale'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
-            ref_tax_ids.write({'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
+            ref_taxs = obj_tax_temp.search([('type_tax_use', '=', 'sale'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
+            ref_taxs.write({'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
             value = self.purchase_tax_rate
-            ref_tax_ids = obj_tax_temp.search([('type_tax_use','=','purchase'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
-            ref_tax_ids.write({'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
+            ref_taxs = obj_tax_temp.search([('type_tax_use', '=', 'purchase'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
+            ref_taxs.write({'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
         return True
 
     @api.multi
@@ -1435,10 +1435,11 @@ class wizard_multi_charts_accounts(models.TransientModel):
         company = self.company_id
         self.company_id.write({'currency_id': self.currency_id.id,
                                'accounts_code_digits': self.code_digits,
+                               'anglo_saxon_accounting': self.use_anglo_saxon,
                                'bank_account_code_char': self.bank_account_code_char})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
-        if company.id==1:
+        if company.id == 1:
             for reference in ['product.list_price', 'product.standard_price', 'product.list0', 'purchase.list0']:
                 try:
                     tmp2 = self.env.ref(reference).write({'currency_id': self.currency_id.id})
@@ -1562,7 +1563,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         for line in journal_data:
             # Create the default debit/credit accounts for this bank journal
             vals = self._prepare_bank_account(company, line, acc_template_ref, ref_acc_bank)
-            default_account  = self.env['account.account'].create(vals)
+            default_account = self.env['account.account'].create(vals)
 
             #create the bank journal
             vals_journal = self._prepare_bank_journal(company, line, default_account.id)
@@ -1570,17 +1571,17 @@ class wizard_multi_charts_accounts(models.TransientModel):
         return True
 
 
-class account_bank_accounts_wizard(models.TransientModel):
-    _name='account.bank.accounts.wizard'
+class AccountBankAccountsWizard(models.TransientModel):
+    _name = 'account.bank.accounts.wizard'
 
     acc_name = fields.Char(string='Account Name.', required=True)
     bank_account_id = fields.Many2one('wizard.multi.charts.accounts', string='Bank Account', required=True, ondelete='cascade')
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
         help="Forces all moves for this account to have this secondary currency.")
-    account_type = fields.Selection([('cash', 'Cash'), ('check', 'Check'), ('bank', 'Bank')], string='Account Type')
+    account_type = fields.Selection([('cash', 'Cash'), ('check', 'Check'), ('bank', 'Bank')])
 
 
-class account_operation_template(models.Model):
+class AccountOperationTemplate(models.Model):
     _name = "account.operation.template"
     _description = "Preset to create journal entries during a invoices and payments matching"
 
@@ -1598,12 +1599,12 @@ class account_operation_template(models.Model):
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of amount')
-        ], string='Amount type', required=True, default='percentage')
+        ], required=True, default='percentage')
     amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use','=','purchase')])
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state','not in',('close','cancelled'))])
+    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state', 'not in', ('close', 'cancelled'))])
 
-    second_account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False), ('internal_type','!=','consolidation')])
+    second_account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False), ('internal_type', '!=', 'consolidation')])
     second_journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
     second_label = fields.Char(string='Journal Item Label')
     second_amount_type = fields.Selection([
@@ -1611,5 +1612,5 @@ class account_operation_template(models.Model):
         ('percentage', 'Percentage of amount')
         ], string='Amount type', required=True, default='percentage')
     second_amount = fields.Float(string='Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    second_tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use','=','purchase')])
-    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state','not in',('close','cancelled'))])
+    second_tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
+    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state', 'not in', ('close', 'cancelled'))])

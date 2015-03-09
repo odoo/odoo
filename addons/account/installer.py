@@ -21,7 +21,7 @@ from openerp.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-class account_installer(models.TransientModel):
+class AccountInstaller(models.TransientModel):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
 
@@ -60,8 +60,7 @@ class account_installer(models.TransientModel):
              "country.")
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id or False)
-    has_default_company = fields.Boolean(string='Has Default Company',
-        readonly=True, default=lambda self: self._default_has_default_company())
+    has_default_company = fields.Boolean(readonly=True, default=lambda self: self._default_has_default_company())
 
     @api.model
     def _default_has_default_company(self):
@@ -85,7 +84,7 @@ class account_installer(models.TransientModel):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(account_installer, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
+        res = super(AccountInstaller, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
         cmp_select = []
         CompanyObj = self.env['res.company']
         # display in the widget selection only the companies that haven't been configured yet
@@ -101,10 +100,11 @@ class account_installer(models.TransientModel):
 
     @api.multi
     def execute(self):
-        return super(account_installer, self).execute()
+        self.execute_simple()
+        return super(AccountInstaller, self).execute()
 
     @api.multi
     def modules_to_install(self):
-        modules = super(account_installer, self).modules_to_install()
+        modules = super(AccountInstaller, self).modules_to_install()
         _logger.debug('Installing chart of accounts %s', self.charts)
         return (modules | set([self.charts])) - set(['has_default_company', 'configurable'])

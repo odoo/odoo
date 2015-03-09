@@ -32,7 +32,7 @@ class pos_order_report(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
-        'state': fields.selection([('draft', 'New'), ('paid', 'Closed'), ('done', 'Synchronized'), ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
+        'state': fields.selection([('draft', 'New'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
                                   'Status'),
         'user_id':fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),

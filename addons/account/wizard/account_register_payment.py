@@ -13,13 +13,14 @@ TYPE2PREFIX = {
     'in_refund': 'Refund to ',
 }
 
-class account_register_payment(models.TransientModel):
+
+class AccountRegisterPayment(models.TransientModel):
     _name = "account.register.payment"
     _description = "Register payment"
-    
+
     invoice_id = fields.Many2one('account.invoice', String="Related invoice", required=True)
     payment_amount = fields.Float(String='Amount paid', required=True, digits=0)
-    date_paid = fields.Date(String='Date paid', default=fields.Date.context_today, required=True)
+    date_paid = fields.Date(default=fields.Date.context_today, required=True)
     reference = fields.Char('Ref #', help="Transaction reference number.")
     journal_id = fields.Many2one('account.journal', String='Payment Method', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True,
@@ -37,7 +38,7 @@ class account_register_payment(models.TransientModel):
     @api.model
     def default_get(self, fields):
         context = self._context or {}
-        res = super(account_register_payment, self).default_get(fields)
+        res = super(AccountRegisterPayment, self).default_get(fields)
         if context.get('active_id'):
             invoice = self.env['account.invoice'].browse(context.get('active_id'))
             res.update({

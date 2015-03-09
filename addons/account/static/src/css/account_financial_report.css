@@ -5,7 +5,7 @@
 .ui-dialog-titlebar {
     display:none
 }
-input#summary, div.dropdown, i.fa, div.savedSummary span, td.unfoldable, td.foldable {
+input#summary, div.dropdown, i.fa, div.oe-account-saved-summary span, td.oe-account-unfoldable, td.oe-account-foldable {
     cursor: pointer; cursor: hand;
 }
 td i.fa-pencil-square{
@@ -14,13 +14,13 @@ td i.fa-pencil-square{
 td:hover i.fa-pencil-square {
     visibility: visible;
 }
-p.footnote i.fa {
+p.footnote i.fa, p.footnoteEdit i.fa {
     visibility: hidden;
 }
 p.footnote:hover i.fa {
     visibility: visible;
 }
-tr.emptyLine {
+tr.oe-account-empty-line {
     border-width: 2px;
     border-style: solid;
     border-left-style: hidden;
@@ -30,16 +30,16 @@ span.footnoteIcons {
     position: absolute;
     margin-left: 3px;
 }
-div.exportDropdown {
+div.oe-account-export-dropdown {
     float: right;
     margin-bottom: 250px;
 }
-b.footnoteSup {
+b.oe-account-footnote-sup {
     position: absolute;
     margin-top: 6px;
     color: black;
 }
-span.caretIcon {
+span.oe-account-caret-icon {
     position: absolute;
     margin-left: 3px;
 }
@@ -48,27 +48,27 @@ span.pencilIcon {
     margin-left: -15px;
     color: black;
 }
-span.domainLine {
+span.oe-account-domain-line {
     font-style: italic;
     margin-left: 70px;
 }
-ul.domainDropdown {
+ul.oe-account-domain-dropdown {
     margin-left: 70px
 }
-tr.level0 {
+tr.oe-account-level0 {
     border-width: 2px;
     border-style: solid;
     background-color:#eee;
     border-left-style: hidden;
     border-right-style: hidden;
 }
-tr.level1 {
+tr.oe-account-evel1 {
     border-width: 2px;
     border-style: solid;
     border-left-style: hidden;
     border-right-style: hidden;
 }
-tr.level2 {
+tr.oe-account-level2 {
     border-width: 1px;
     border-style: solid;
     border-left-style: hidden;

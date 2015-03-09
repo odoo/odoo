@@ -1,7 +1,8 @@
 from openerp import models, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
-class account_state_open(models.TransientModel):
+
+class AccountStateOpen(models.TransientModel):
     _name = 'account.state.open'
     _description = 'Account State Open'
 

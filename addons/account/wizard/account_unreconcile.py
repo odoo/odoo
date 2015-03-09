@@ -1,6 +1,7 @@
 from openerp import models, api
 
-class account_unreconcile(models.TransientModel):
+
+class AccountUnreconcile(models.TransientModel):
     _name = "account.unreconcile"
     _description = "Account Unreconcile"
 

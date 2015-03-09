@@ -83,7 +83,7 @@ def report_safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", noc
     return res
 
 
-class report_account_financial_report(models.Model):
+class ReportAccountFinancialReport(models.Model):
     _name = "account.financial.report"
     _description = "Account Report"
 
@@ -124,7 +124,7 @@ class report_account_financial_report(models.Model):
         return self.report_type
 
 
-class account_financial_report_line(models.Model):
+class AccountFinancialReportLine(models.Model):
     _name = "account.financial.report.line"
     _description = "Account Report Line"
     _order = "sequence"
@@ -134,26 +134,18 @@ class account_financial_report_line(models.Model):
     financial_report_id = fields.Many2one('account.financial.report', 'Financial Report')
     parent_id = fields.Many2one('account.financial.report.line', string='Parent')
     children_ids = fields.One2many('account.financial.report.line', 'parent_id', string='Children')
-    sequence = fields.Integer('Sequence')
+    sequence = fields.Integer()
 
-    domain = fields.Char('Domain', default=None)
-    formulas = fields.Char('Formulas')
-    groupby = fields.Char('Group By', default=False)
+    domain = fields.Char(default=None)
+    formulas = fields.Char()
+    groupby = fields.Char(default=False)
     figure_type = fields.Selection([('float', 'Float'), ('percents', 'Percents'), ('no_unit', 'No Unit')],
                                    'Type of the figure', default='float', required=True)
     green_on_positive = fields.Boolean('Is growth good when positive', default=True)
     level = fields.Integer(required=True)
     special_date_changer = fields.Selection([('from_beginning', 'From the beginning'), ('to_beginning_of_fy', 'At the beginning of the Year'), ('normal', 'Use given dates')], default='normal')
     show_domain = fields.Selection([('always', 'Always'), ('never', 'Never'), ('foldable', 'Foldable')], default='foldable')
-    hide_if_zero = fields.Boolean('Hide if zero', default=False)
-
-    @api.model
-    def _ids_to_sql(self, ids):
-        if len(ids) == 0:
-            return '()'
-        if len(ids) == 1:
-            return '(' + str(ids[0]) + ')'
-        return str(tuple(ids))
+    hide_if_zero = fields.Boolean(default=False)
 
     def get_sum(self, field_names=None):
         ''' Returns the sum of the amls in the domain '''
@@ -309,7 +301,7 @@ class account_financial_report_line(models.Model):
                 domain_ids.update(set(r.keys()))
 
             res = self._put_columns_together(res, domain_ids)
-            if line.hide_if_zero and sum([k == 0 or [] for k in res['line']], []):
+            if line.hide_if_zero and sum([k == 0 and [True] or [] for k in res['line']], []):
                 continue
 
             # Post-processing ; creating line dictionnary, building comparison, computing total for extended, formatting
@@ -363,7 +355,7 @@ class account_financial_report_line(models.Model):
         return final_result_table
 
 
-class account_financial_report_context(models.TransientModel):
+class AccountFinancialReportContext(models.TransientModel):
     _name = "account.financial.report.context"
     _description = "A particular context for a financial report"
     _inherit = "account.report.context.common"
@@ -373,24 +365,6 @@ class account_financial_report_context(models.TransientModel):
 
     report_id = fields.Many2one('account.financial.report', 'Linked financial report', help='Only if financial report')
     unfolded_lines = fields.Many2many('account.financial.report.line', 'context_to_line', string='Unfolded lines')
-    footnotes = fields.Many2many('account.report.footnote', 'account_context_footnote_financial', string='Footnotes')
-
-    @api.multi
-    def add_footnote(self, type, target_id, column, number, text):
-        footnote = self.env['account.report.footnote'].create(
-            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text}
-        )
-        self.write({'footnotes': [(4, footnote.id)]})
-
-    @api.multi
-    def edit_footnote(self, number, text):
-        footnote = self.footnotes.filtered(lambda s: s.number == number)
-        footnote.write({'text': text})
-
-    @api.multi
-    def remove_footnote(self, number):
-        footnotes = self.footnotes.filtered(lambda s: s.number == number)
-        self.write({'footnotes': [(3, footnotes.id)]})
 
     @api.multi
     def remove_line(self, line_id):

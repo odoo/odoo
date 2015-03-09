@@ -661,7 +661,6 @@ class sale_order(osv.osv):
             'product_uos': (line.product_uos and line.product_uos.id) or line.product_uom.id,
             'company_id': order.company_id.id,
             'group_id': group_id,
-            'invoice_state': (order.order_policy == 'picking') and '2binvoiced' or 'none',
             'sale_line_id': line.id
         }
 
@@ -693,7 +692,7 @@ class sale_order(osv.osv):
 
         :return: True
         """
-        context = dict(context)
+        context = context or {}
         context['lang'] = self.pool['res.users'].browse(cr, uid, uid).lang
         procurement_obj = self.pool.get('procurement.order')
         sale_line_obj = self.pool.get('sale.order.line')
@@ -717,7 +716,9 @@ class sale_order(osv.osv):
                     if (line.state == 'done') or not line.product_id:
                         continue
                     vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=order.procurement_group_id.id, context=context)
-                    proc_id = procurement_obj.create(cr, uid, vals, context=context)
+                    ctx = context.copy()
+                    ctx['procurement_autorun_defer'] = True
+                    proc_id = procurement_obj.create(cr, uid, vals, context=ctx)
                     proc_ids.append(proc_id)
             #Confirm procurement order such that rules will be applied on it
             #note that the workflow normally ensure proc_ids isn't an empty list

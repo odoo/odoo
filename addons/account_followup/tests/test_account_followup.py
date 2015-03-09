@@ -26,6 +26,7 @@ class TestAccountFollowup(TransactionCase):
                                                 context=None)
         self.followup_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account_followup", "demo_followup1")[1]
         self.account_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "a_recv")[1]
+        self.sale_journal_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "sales_journal")[1]
         self.journal_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "bank_journal")[1]
         self.pay_account_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "cash")[1]
         self.date = time.strftime("%Y/%m/%d")
@@ -35,12 +36,13 @@ class TestAccountFollowup(TransactionCase):
         self.product_id = self.registry("ir.model.data").get_object_reference(cr, uid, "product", "product_product_6")[1]
         self.invoice_id = self.invoice.create(cr, uid, {'partner_id': self.partner_id, 
                                                         'account_id': self.account_id, 
-                                                        'journal_id': self.journal_id, 
+                                                        'journal_id': self.sale_journal_id, 
                                                         'invoice_line': [(0, 0, {
                                                                             'name': "LCD Screen", 
                                                                             'product_id': self.product_id, 
                                                                             'quantity': 5, 
-                                                                            'price_unit':200
+                                                                            'price_unit':200,
+                                                                            'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_sales').id)])[0].id,
                                                                                  })]})
         self.registry('account.invoice').signal_workflow(cr, uid, [self.invoice_id], 'invoice_open')
         

@@ -26,9 +26,33 @@ from datetime import timedelta, datetime
 import calendar
 
 
-class account_report_context_common(models.TransientModel):
+class AccountReportFootnotesManager(models.TransientModel):
+    _name = 'account.report.footnotes.manager'
+    _description = 'manages footnotes'
+
+    footnotes = fields.One2many('account.report.footnote', 'manager_id')
+
+    @api.multi
+    def add_footnote(self, type, target_id, column, number, text):
+        self.env['account.report.footnote'].create(
+            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text, 'manager_id': self.id}
+        )
+
+    @api.multi
+    def edit_footnote(self, number, text):
+        footnote = self.footnotes.filtered(lambda s: s.number == number)
+        footnote.write({'text': text})
+
+    @api.multi
+    def remove_footnote(self, number):
+        footnotes = self.footnotes.filtered(lambda s: s.number == number)
+        self.write({'footnotes': [(3, footnotes.id)]})
+
+
+class AccountReportContextCommon(models.TransientModel):
     _name = "account.report.context.common"
     _description = "A particular context for a financial report"
+    _inherits = {'account.report.footnotes.manager': 'footnotes_manager_id'}
 
     @api.model
     def get_context_by_report_name(self, name):
@@ -76,7 +100,7 @@ class account_report_context_common(models.TransientModel):
     company_id = fields.Many2one('res.company', 'Company', default=lambda s: s.env.user.company_id)
     date_filter = fields.Char('Date filter used', default=None)
     next_footnote_number = fields.Integer(default=1, required=True)
-    summary = fields.Char('Summary', default='')
+    summary = fields.Char(default='')
     comparison = fields.Boolean(compute='_get_comparison', string='Enable comparison', default=False)
     date_from_cmp = fields.Date("Start date for comparison",
                                 default=lambda s: datetime.today() + timedelta(days=-395))
@@ -85,6 +109,7 @@ class account_report_context_common(models.TransientModel):
     cash_basis = fields.Boolean('Enable cash basis columns', default=False)
     date_filter_cmp = fields.Char('Comparison date filter used', default='no_comparison')
     periods_number = fields.Integer('Number of periods', default=1)
+    footnotes_manager_id = fields.Many2one('account.report.footnotes.manager', string='Footnotes Manager', required=True, ondelete='cascade')
 
     @api.multi
     def edit_summary(self, text):
@@ -115,14 +140,6 @@ class account_report_context_common(models.TransientModel):
 
     def get_columns_names(self):
         raise Warning(_('get_columns_names not implemented'))
-
-    @api.multi
-    def add_footnote(self, type, target_id, column, number, text):
-        raise Warning(_('add_footnote not implemented'))
-
-    @api.multi
-    def edit_footnote(self, number, text):
-        raise Warning(_('edit_footnote not implemented'))
 
     def get_full_date_names(self, dt_to, dt_from=None):
         dt_to = datetime.strptime(dt_to, "%Y-%m-%d")
@@ -275,7 +292,7 @@ class account_report_context_common(models.TransientModel):
 
     @api.model
     def create(self, vals):
-        res = super(account_report_context_common, self).create(vals)
+        res = super(AccountReportContextCommon, self).create(vals)
         report_type = res.get_report_obj().get_report_type()
         if report_type == 'date_range':
             dt = datetime.today()
@@ -404,7 +421,7 @@ class account_report_context_common(models.TransientModel):
         book.save(response.stream)
 
 
-class account_report_footnote(models.TransientModel):
+class AccountReportFootnote(models.TransientModel):
     _name = "account.report.footnote"
     _description = "Footnote for reports"
 
@@ -413,3 +430,4 @@ class account_report_footnote(models.TransientModel):
     column = fields.Integer()
     number = fields.Integer()
     text = fields.Char()
+    manager_id = fields.Many2one('account.report.footnotes.manager')

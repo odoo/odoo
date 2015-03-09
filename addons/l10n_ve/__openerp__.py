@@ -52,7 +52,7 @@ This module give you.
 - Have basic data to run tests with community localization.
 - Start a company from 0 if your needs are basic from an accounting PoV.
 
-We recomend install account_anglo_saxon if you want valued your 
+We recomend use of account_anglo_saxon if you want valued your 
 stocks as Venezuela does with out invoices.
 
 If you install this module, and select Custom chart a basic chart will be proposed, 

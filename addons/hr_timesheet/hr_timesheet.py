@@ -186,9 +186,9 @@ class hr_analytic_timesheet(osv.osv):
         ename = ''
         if emp_id:
             ename = emp_obj.browse(cr, uid, emp_id[0], context=context).name
-        if not vals.get('journal_id',False):
+        if not vals.get('journal_id'):
            raise UserError(_('No \'Analytic Journal\' is defined for employee %s \nDefine an employee for the selected user and assign an \'Analytic Journal\'!') % (ename,))
-        if not vals.get('account_id',False):
+        if not vals.get('account_id'):
            raise UserError(_('No analytic account is defined on the project.\nPlease set one or we cannot automatically fill the timesheet.'))
         return super(hr_analytic_timesheet, self).create(cr, uid, vals, context=context)
 

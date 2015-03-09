@@ -4,7 +4,7 @@ from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 
 
-class product_category(models.Model):
+class ProductCategory(models.Model):
     _inherit = "product.category"
 
     property_account_income_categ = fields.Many2one('account.account', company_dependent=True,
@@ -16,11 +16,10 @@ class product_category(models.Model):
         domain=[('deprecated', '=', False)],
         help="This account will be used for invoices to value expenses.")
 
-
 #----------------------------------------------------------
 # Products
 #----------------------------------------------------------
-class product_template(models.Model):
+class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', string='Customer Taxes',
@@ -42,7 +41,7 @@ class product_template(models.Model):
         if check:
             self._cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(self.ids)])
             uoms = dict(self._cr.fetchall())
-        res = super(product_template, self).write(vals)
+        res = super(ProductTemplate, self).write(vals)
         if check:
             self._cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(self.ids)])
             if dict(self._cr.fetchall()) != uoms:
