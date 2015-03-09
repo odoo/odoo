@@ -100,7 +100,6 @@ class AccountInstaller(models.TransientModel):
 
     @api.multi
     def execute(self):
-        self.execute_simple()
         return super(AccountInstaller, self).execute()
 
     @api.multi
