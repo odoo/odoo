@@ -1,7 +1,7 @@
 /*global _:false */
 /*global openerp:false */
 
-openerp.account = function (instance) {
+openerp.account.reconciliation = function (instance) {
     'use strict';
 
     var _t = instance.web._t,
