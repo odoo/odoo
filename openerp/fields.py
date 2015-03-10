@@ -253,8 +253,9 @@ class Field(object):
     """
     __metaclass__ = MetaField
 
-    _attrs = None               # dictionary with all field attributes
-    _free_attrs = None          # list of semantic-free attribute names
+    _attrs = None               # dictionary of field attributes; it contains:
+                                #  - all attributes after __init__()
+                                #  - free attributes only after set_class_name()
 
     automatic = False           # whether the field is automatically created ("magic" field)
     inherited = False           # whether the field is inherited (_inherits)
@@ -295,7 +296,6 @@ class Field(object):
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
         self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
-        self._free_attrs = []
 
         # self._triggers is a set of pairs (field, path) that represents the
         # computed fields that depend on `self`. When `self` is modified, it
@@ -337,9 +337,10 @@ class Field(object):
         if not isinstance(attrs.get('column'), (NoneType, fields.function)):
             attrs.pop('store', None)
 
+        self._attrs = {}
         for attr, value in attrs.iteritems():
             if not hasattr(self, attr):
-                self._free_attrs.append(attr)
+                self._attrs[attr] = value
             setattr(self, attr, value)
 
         if not self.string and not self.related:
@@ -478,10 +479,10 @@ class Field(object):
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
-        for attr in field._free_attrs:
-            if attr not in self._free_attrs:
-                self._free_attrs.append(attr)
-                setattr(self, attr, getattr(field, attr))
+        for attr, value in field._attrs.iteritems():
+            if attr not in self._attrs:
+                self._attrs[attr] = value
+                setattr(self, attr, value)
 
         # special case for states: copy it only for inherited fields
         if not self.states and self.inherited:
@@ -648,8 +649,8 @@ class Field(object):
         args = {}
         for attr, prop in self.column_attrs:
             args[attr] = getattr(self, prop)
-        for attr in self._free_attrs:
-            args[attr] = getattr(self, attr)
+        for attr, value in self._attrs.iteritems():
+            args[attr] = value
 
         if self.company_dependent:
             # company-dependent fields are mapped to former property fields
