@@ -203,8 +203,13 @@ var ActionManager = Widget.extend({
         this.inner_action = new_action;
         this.inner_widget = widget;
 
-        // Append the inner_widget and hide the old one
-        return $.when(this.inner_widget.appendTo(this.$el)).done(function () {
+        // render the inner_widget in a fragment, and append it to the
+        // document only when it's ready
+        var new_widget_fragment = document.createDocumentFragment();
+        return $.when(this.inner_widget.appendTo(new_widget_fragment)).done(function() {
+            self.$el.append(new_widget_fragment);
+            // Hide the old_widget as it will be removed from the DOM when it
+            // is destroyed
             if (old_widget) {
                 old_widget.$el.hide();
             }

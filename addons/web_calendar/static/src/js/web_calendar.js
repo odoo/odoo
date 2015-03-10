@@ -688,6 +688,12 @@ var CalendarView = View.extend({
         }
         this.event_source = {
             events: function(start, end, callback) {
+                // catch invalid dates (start/end dates not parseable yet)
+                // => ignore request
+                if (isNaN(start) || isNaN(end)) {
+                    return;
+                }
+
                 var current_event_source = self.event_source;
                 self.dataset.read_slice(_.keys(self.fields), {
                     offset: 0,
