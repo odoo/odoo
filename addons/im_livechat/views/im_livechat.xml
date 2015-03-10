@@ -118,8 +118,9 @@
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Javascript initializing the LiveSupport">
-            (function() {
-                window.livesupport = new openerp.im_livechat.LiveSupport(
+            odoo.define('im_livechat.livesupport', ['im_livechat.im_livechat'], function (require) {
+                var im_livechat = require('im_livechat.im_livechat');
+                window.livesupport = new im_livechat.LiveSupport(
                     "<t t-esc="url"/>",
                     "<t t-esc="dbname"/>",
                     <t t-esc="channel"/>,
@@ -132,7 +133,8 @@
                     },
                     <t t-raw="rule"/>
                 );
-            })();
+            });
+                
         </template>
 
     </data>
