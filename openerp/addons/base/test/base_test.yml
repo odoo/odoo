@@ -47,7 +47,7 @@
             with mute_logger('openerp.tools.safe_eval'):
                 safe_eval('open("/etc/passwd","r")')
             assert False, "safe_eval should not allow calling open() builtin"
-        except NameError:
+        except ValueError:
             pass
 
 -
