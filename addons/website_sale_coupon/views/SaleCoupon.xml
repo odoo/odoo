@@ -34,19 +34,18 @@
                                         <field name="validity_duration" class="oe_inline"/>
                                         <field name="validity_type" class="oe_inline"/>
                                     </div>
-                                    <label string="Amount"/>
-                                    <div>
-                                        <field name="minimum_amount" attrs="{'invisible': [('purchase_type', '!=', 'amount')]}" class="oe_inline"/>
-                                        <field name="currency_id" attrs="{'invisible': [('purchase_type', '!=', 'amount')]}" class="oe_inline"/>
-                                        <field name="tax" attrs="{'invisible': [('purchase_type', '!=', 'amount')]}" class="oe_inline"/>
+                                    <label string="Amount" for="minimum_amount" attrs="{'invisible': [('purchase_type', '!=', 'amount')]}" />
+                                    <div attrs="{'invisible': [('purchase_type', '!=', 'amount')]}">
+                                        <field name="minimum_amount" class="oe_inline"/>
+                                        <field name="currency_id" class="oe_inline"/>
+                                        <field name="tax"/>
                                      </div>
                                     <field name="product_id" attrs="{'invisible': [('purchase_type', '!=', 'product')]}"/>
-                                    <field name="product_quantity" attrs="{'invisible': [('purchase_type', '!=', 'product')]}"/>
                                     <field name="product_category_id" attrs="{'invisible': [('purchase_type', '!=', 'category')]}"/>
+                                    <field name="product_quantity" attrs="{'invisible': [('purchase_type', '=', 'amount')]}"/>
                                     <field name="partner_id"/>
                                     <field name="company_id"/>
                                 </group>
-                                <group/>
                             </page>
                             <page string="Rewards" name="rewards">
                                 <form>
@@ -60,11 +59,9 @@
                                         <field name="reward_discount_type" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
 
                                         <field name="reward_discount_on" attrs="{'invisible': 
-                                            [('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount')]}" widget="radio"/>
-
-                                        <field name="reward_discount_percentage" attrs="{'invisible': [('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount') ]}"/>
-                                        <field name="reward_discount_on_product_id" attrs="{'invisible': [('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}"/>
-
+                                            ['|', ('reward_discount_type', '!=', 'percentage'),('reward_type', '!=', 'discount')]}" widget="radio"/>
+                                        <field name="reward_discount_on_product_id" attrs="{'invisible': ['|', ('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}"/>
+                                        <field name="reward_discount_percentage" attrs="{'invisible': ['|', ('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount') ]}"/>
                                         <field name="reward_discount_amount" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}"/>
                                         <field name="reward_tax" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}"/>
                                         <field name="reward_partial_use" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}" widget="radio"/>
