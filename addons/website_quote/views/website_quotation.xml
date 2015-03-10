@@ -123,7 +123,7 @@
       <h1 class="page-header hidden-print">History</h1>
       <ul class="media-list hidden-print" id="comments-list">
           <t t-foreach="quotation.message_ids" t-as="message">
-              <li class="media" t-if="message.type &lt;&gt; 'comment' or message.subtype_id">
+              <li class="media" t-if="message.type not in ['comment', 'notification'] or message.subtype_id">
                   <div class="media-body">
                       <img class="media-object pull-left" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                       <div class="media-body">
