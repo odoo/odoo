@@ -435,6 +435,14 @@ class res_partner(osv.osv):
                 partners.add(aml.partner_id.id)
         return list(partners)
 
+    def _get_partners_from_partial_rec(self, cr, uid, ids, context=None):
+        #this function search for the partners linked to all account.move.line 'ids' that have been changed
+        partners = set()
+        for partial_rec in self.browse(cr, uid, ids, context=context):
+            if partial_rec.debit_move_id.partner_id:
+                partners.add(partial_rec.debit_move_id.partner_id.id)
+        return list(partners)
+
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
@@ -461,6 +469,7 @@ class res_partner(osv.osv):
             store={
                 'res.partner': (lambda self, cr, uid, ids, c: ids,[],10),
                 'account.move.line': (_get_partners, ['reconciled', 'followup_line_id'], 10),
+                'account.partial.reconcile': (_get_partners_from_partial_rec, [], 10),
             }, 
             multi="latest"), 
         'latest_followup_level_id_without_lit':fields.function(_get_latest, method=True, 

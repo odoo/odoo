@@ -19,19 +19,12 @@
 #
 ##############################################################################
 
-import account_report_common
-import account_report_common_partner
-import account_report_common_journal
-import account_report_common_account
 
 import account_move_line_reconcile_select
 import account_move_line_unreconcile_select
 import account_reconcile
 import account_unreconcile
 import account_invoice_refund
-import account_report_aged_partner_balance
-import account_report_partner_ledger
-import account_report_partner_balance
 
 import account_invoice_state
 #TODO: remove this file no moe used
@@ -39,8 +32,6 @@ import account_invoice_state
 
 import account_validate_account_move
 import account_state_open
-import account_report_general_ledger
-import account_report_account_balance
 
 import pos_box
 import account_statement_from_invoice

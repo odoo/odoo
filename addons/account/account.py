@@ -21,6 +21,7 @@ class ResCompany(models.Model):
         string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
 
 
 class AccountPaymentTerm(models.Model):
@@ -343,24 +344,6 @@ class AccountJournal(models.Model):
         return res
 
 
-class AccountFiscalyear(models.Model):
-    _name = "account.fiscalyear"
-    _description = "Fiscal Year"
-    _order = "date_start, id"
-
-    name = fields.Char(string='Fiscal Year', required=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
-    date_start = fields.Date(string='Start Date', required=True)
-    date_stop = fields.Date(string='End Date', required=True)
-    state = fields.Selection([('draft', 'Open'), ('done', 'Closed')], string='Status', readonly=True, copy=False, default='draft')
-    freeze_date = fields.Date()
-
-    @api.one
-    @api.constrains('date_start', 'date_stop')
-    def _check_duration(self):
-        if self.date_stop < self.date_start:
-            raise UserError(_('Error!\nThe start date of a fiscal year must precede its end date.'))
-
 #----------------------------------------------------------
 # Entries
 #----------------------------------------------------------
@@ -431,6 +414,21 @@ class AccountMove(models.Model):
     statement_line_id = fields.Many2one('account.bank.statement.line', string='Bank statement line reconciled with this entry', copy=False, readonly=True)
     to_check = fields.Boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.')
 
+    @api.model
+    def create(self, vals):
+        move = super(AccountMove, self.with_context(check_move_validity=False)).create(vals)
+        move.assert_balanced()
+        return move
+
+    @api.multi
+    def write(self, vals):
+        if 'line_id' in vals:
+            res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
+            self.assert_balanced()
+        else:
+            res = super(AccountMove, self).write(vals)
+        return res
+
     @api.multi
     def post(self):
         invoice = self._context.get('invoice', False)
@@ -481,15 +479,13 @@ class AccountMove(models.Model):
         return True
 
     @api.multi
-    def unlink(self, check=True):
+    def unlink(self):
         for move in self:
-            if move['state'] != 'draft':
-                raise UserError(_('You cannot delete a posted journal entry "%s".') % move['name'])
+            #check the lock date + check if some entries are reconciled
             move.line_id._update_check()
             move.line_id.unlink()
         return super(AccountMove, self).unlink()
 
-    # TODO: check if date is not closed, otherwise raise exception
     @api.multi
     def _post_validate(self):
         for move in self:
@@ -499,28 +495,33 @@ class AccountMove(models.Model):
                 if line.account_id.currency_id and line.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
                         raise UserError(_("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
+        self.assert_balanced()
+        return self._check_lock_date()
+
+    @api.multi
+    def _check_lock_date(self):
+        for move in self:
+            lock_date = move.company_id.period_lock_date
+            if self.user_has_groups('account.group_account_manager'):
+                lock_date = move.company_id.fiscalyear_lock_date
+            if move.date <= lock_date:
+                raise UserError(_("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role" % (lock_date)))
         return True
 
-    @api.model
-    def account_assert_balanced(self):
+    @api.multi
+    def assert_balanced(self):
+        if not self.ids:
+            return True
         self._cr.execute("""\
             SELECT      move_id
             FROM        account_move_line
+            WHERE       move_id in %s
             GROUP BY    move_id
             HAVING      abs(sum(debit) - sum(credit)) > 0.00001
-            """)
-        assert len(self._cr.fetchall()) == 0, \
-            "For all Journal Items, the state is valid implies that the sum " \
-            "of credits equals the sum of debits"
+            """, (tuple(self.ids),))
+        if len(self._cr.fetchall()) != 0:
+            raise UserError(_("Cannot create unbalanced journal entry."))
         return True
-
-    @api.model
-    def get_centralisation_move(self, period, journal):
-        """ We use a single centralisation move by period - journal couple """
-        # TODO : Since we remove the concept of period in favor of a freezing date, this
-        # method will have to be written while doing this task. It probably should :
-        # - return the move (of course)
-        # - raise a warning if the centralisation move is posted (and offer to create it ?)
 
     @api.multi
     def reverse_moves(self, date=None, journal_id=None):
@@ -530,11 +531,11 @@ class AccountMove(models.Model):
                 'journal_id': journal_id.id if journal_id else ac_move.journal_id.id,
                 'ref': _('reversal of: ') + ac_move.name})
             for acm_line in reversed_move.line_id:
-                acm_line.write({
+                acm_line.with_context(check_move_validity=False).write({
                     'debit': acm_line.credit,
                     'credit': acm_line.debit,
                     'amount_currency': -acm_line.amount_currency
-                    }, check=False)
+                    })
             reversed_move._post_validate()
             reversed_move.post()
         return True
@@ -830,6 +831,7 @@ class AccountChartTemplate(models.Model):
         help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from "
             "templates, this is useful when you want to generate accounts of this template only when loading its child template.")
     currency_id = fields.Many2one('res.currency', string='Currency')
+    use_anglo_saxon = fields.Boolean(string="Use Anglo-Saxon accounting", default=False)
     complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
         help="This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list "
             "of taxes. This last choice assumes that the set of tax defined on this template is complete")
@@ -1281,6 +1283,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
     sale_tax = fields.Many2one('account.tax.template', string='Default Sale Tax')
     purchase_tax = fields.Many2one('account.tax.template', string='Default Purchase Tax')
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
+    use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
     purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
     complete_tax_set = fields.Boolean('Complete Set of Taxes',
         help="This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use "
@@ -1432,6 +1435,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
         company = self.company_id
         self.company_id.write({'currency_id': self.currency_id.id,
                                'accounts_code_digits': self.code_digits,
+                               'anglo_saxon_accounting': self.use_anglo_saxon,
                                'bank_account_code_char': self.bank_account_code_char})
 
         # When we install the CoA of first company, set the currency to price types and pricelists

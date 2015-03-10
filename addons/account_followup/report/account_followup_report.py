@@ -47,7 +47,7 @@ class account_followup_stat(osv.osv):
                 context=None, count=False):
         for arg in args:
             if arg[0] == 'date' and arg[2] == 'current_year':
-                current_year = self.pool.get('account.fiscalyear').find(cr, uid)
+                #current_year = self.pool.get('account.fiscalyear').find(cr, uid)
                 # TODO account.period is now removed
                 # ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
                 # args.append(['period_id','in',ids])
@@ -58,7 +58,7 @@ class account_followup_stat(osv.osv):
     def read_group(self, cr, uid, domain, *args, **kwargs):
         for arg in domain:
             if arg[0] == 'date' and arg[2] == 'current_year':
-                current_year = self.pool.get('account.fiscalyear').find(cr, uid)
+                #current_year = self.pool.get('account.fiscalyear').find(cr, uid)
                 # TODO account.period is now removed
                 # ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
                 # domain.append(['period_id','in',ids])

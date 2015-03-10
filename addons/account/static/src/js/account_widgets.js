@@ -1,7 +1,7 @@
 /*global _:false */
 /*global openerp:false */
 
-openerp.account = function (instance) {
+openerp.account.reconciliation = function (instance) {
     'use strict';
 
     var _t = instance.web._t,
@@ -1329,8 +1329,8 @@ openerp.account = function (instance) {
 
             // Update children if needed
             _.each(self.getChildren(), function(child) {
-                if (child === source_child || child.line === undefined) return;
-                if (child.partner_id === partner_id || child.line.has_no_partner) {
+                if (child === source_child || child.st_line === undefined) return;
+                if (child.partner_id === partner_id || child.st_line.has_no_partner) {
                     if (contains_lines(child.get("mv_lines_selected"), line_ids)) {
                         child.set("mv_lines_selected", _.filter(child.get("mv_lines_selected"), function(o){ return line_ids.indexOf(o.id) === -1 }));
                     } else if (contains_lines(child.mv_lines_deselected, line_ids)) {
@@ -1354,10 +1354,10 @@ openerp.account = function (instance) {
 
             // Update children if needed
             _.each(self.getChildren(), function(child) {
-                if (child.line === undefined) return;
+                if (child.st_line === undefined) return;
                 if (child.partner_id === partner_id && child !== source_child && (child.get("mode") === "match" || child.$el.hasClass("no_match")))
                     child.updateMatches();
-                if (child.line.has_no_partner && child.get("mode") === "match" || child.$el.hasClass("no_match"))
+                if (child.st_line.has_no_partner && child.get("mode") === "match" || child.$el.hasClass("no_match"))
                     child.updateMatches();
             });
         },

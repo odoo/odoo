@@ -46,10 +46,14 @@
                     var contextModel = new openerp.Model(result);
                     contextModel.call('get_next_footnote_number', [[parseInt(context_id)]]).then(function (footNoteSeqNum) {
                         curFootNoteTarget.append(openerp.qweb.render("supFootNoteSeqNum", {footNoteSeqNum: footNoteSeqNum}));
-                        contextModel.call('add_footnote', [[parseInt(context_id)], $("#type").val(), $("#target_id").val(), $("#column").val(), footNoteSeqNum, note]);
-                        $('#footnoteModal').find('form')[0].reset();
-                        $('#footnoteModal').modal('hide');
-                        $("div.page").append(openerp.qweb.render("savedFootNote", {num: footNoteSeqNum, note: note}));
+                        contextModel.query(['footnotes_manager_id'])
+                        .filter([['id', '=', context_id]]).first().then(function (context) {
+                            var managerModel = new openerp.Model('account.report.footnotes.manager');
+                            managerModel.call('add_footnote', [[parseInt(context.footnotes_manager_id[0])], $("#type").val(), $("#target_id").val(), $("#column").val(), footNoteSeqNum, note]);
+                            $('#footnoteModal').find('form')[0].reset();
+                            $('#footnoteModal').modal('hide');
+                            $("div.page").append(openerp.qweb.render("savedFootNote", {num: footNoteSeqNum, note: note}));
+                        });
                     });
                 });
             },
@@ -125,34 +129,23 @@
                             var contextObj = new openerp.Model(result);
                             contextObj.query(['company_id'])
                             .filter([['id', '=', context_id]]).first().then(function (context) {
-                                var fyObj = new openerp.Model('account.fiscalyear');
+                                var compObj = new openerp.Model('res.company');
                                 var today = new Date();
-                                var today_last_year = today
-                                today_last_year.setFullYear(today.getFullYear() - 1);
-                                today_last_year = today_last_year.toISOString().substr(0, 10);
-                                fyObj.query(['date_start', 'date_stop'])
-                                .filter([['company_id', '=', context.company_id[1]], ['date_start', '<', today_last_year], ['date_stop', '>', today_last_year]]).all().then(function (fy) {
-                                    if (fy.length == 0) {
-                                        var dt = new Date();
-                                        dt.setMonth(0);
-                                        dt.setDate(0);
-                                        $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
-                                        $(".form-group").prepend(openerp.qweb.render("fiscalYearAlert"));
-                                        if (!no_date_range) {
-                                            dt.setDate(1);
-                                            dt.setMonth(0);
-                                            $("input[name='date_from']").val(dt.toISOString().substr(0, 10)); 
-                                        }
+                                compObj.query(['fiscalyear_last_day', 'fiscalyear_last_month'])
+                                .filter([['id', '=', context.company_id[0]]]).first().then(function (fy) {
+                                    if (today.getMonth() + 1 < fy.fiscalyear_last_month || (today.getMonth() + 1 == fy.fiscalyear_last_month && today.getDate() <= fy.fiscalyear_last_day)) {
+                                        var dt = new Date(today.getFullYear() - 1, fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
                                     }
                                     else {
-                                        fy = fy[0];
-                                        $("input[name='date_to']").val(fy.date_stop);
-                                        if (!no_date_range) {
-                                            $("input[name='date_from']").val(fy.date_start); 
-                                        }
+                                        var dt = new Date(today.getFullYear(), fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
+                                    }
+                                    $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
+                                    if (!no_date_range) {
+                                        dt.setDate(dt.getDate() + 1);
+                                        dt.setFullYear(dt.getFullYear() - 1)
+                                        $("input[name='date_from']").val(dt.toISOString().substr(0, 10));
                                     }
                                 });
-
                             });
                             
                         });
@@ -173,28 +166,23 @@
                             var contextObj = new openerp.Model(result);
                             contextObj.query(['company_id'])
                             .filter([['id', '=', context_id]]).first().then(function (context) {
-                                var fyObj = new openerp.Model('account.fiscalyear');
+                                var compObj = new openerp.Model('res.company');
                                 var today = new Date();
-                                today = today.toISOString().substr(0, 10);
-                                fyObj.query(['date_start', 'date_stop'])
-                                .filter([['company_id', '=', context.company_id[1]], ['date_start', '<', today], ['date_stop', '>', today]]).all().then(function (fy) {
-                                    if (fy.length == 0) {
-                                        var dt = new Date();
-                                        dt.setDate(1);
-                                        dt.setMonth(0);
-                                        $("input[name='date_from']").val(dt.toISOString().substr(0, 10)); 
-                                        dt.setDate(31);
-                                        dt.setMonth(11);
-                                        $("input[name='date_to']").val(dt.toISOString().substr(0, 10)); 
-                                        $(".form-group").prepend(openerp.qweb.render("fiscalYearAlert"));
+                                compObj.query(['fiscalyear_last_day', 'fiscalyear_last_month'])
+                                .filter([['id', '=', context.company_id[0]]]).first().then(function (fy) {
+                                    if (today.getMonth() + 1 < fy.fiscalyear_last_month || (today.getMonth() + 1 == fy.fiscalyear_last_month && today.getDate() <= fy.fiscalyear_last_day)) {
+                                        var dt = new Date(today.getFullYear(), fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
                                     }
                                     else {
-                                        fy = fy[0];
-                                        $("input[name='date_to']").val(fy.date_stop);
-                                        $("input[name='date_from']").val(fy.date_start);
+                                        var dt = new Date(today.getFullYear() + 1, fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
+                                    }
+                                    $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
+                                    if (!no_date_range) {
+                                        dt.setDate(dt.getDate() + 1);
+                                        dt.setFullYear(dt.getFullYear() - 1);
+                                        $("input[name='date_from']").val(dt.toISOString().substr(0, 10));
                                     }
                                 });
-
                             });
                         });
                         break;
@@ -316,6 +304,7 @@
                 if ($(e.target).parents("div.oe-account-summary, p.footnote").length > 0) {
                     var num = 0;
                     if ($(e.target).parent().parent().is("p.footnote")) {
+                        $(e.target).parent().parent().attr('class', 'footnoteEdit')
                         var $el = $(e.target).parent().parent().find('span.text');
                         var text = $el.html().replace(/\s+/g, ' ').replace(/\r?\n/g, '').replace(/<br>/g, '\n').replace(/(\n\s*)+$/g, '');
                         text = text.split('.');
@@ -355,13 +344,18 @@
                 var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
                 var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
                 var text = $(e.target).siblings('textarea').val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
-                var footNoteSeqNum = $(e.target).parents('p.footnote').text().split('.')[0];
-                if ($(e.target).parents("p.footnote").length > 0) {
+                var footNoteSeqNum = $(e.target).parents('p.footnoteEdit').text().split('.')[0];
+                if ($(e.target).parents("p.footnoteEdit").length > 0) {
+                    $(e.target).parents("p.footnoteEdit").attr('class', 'footnote')
                     $(e.target).siblings('textarea').replaceWith(text);
                     var model = new openerp.Model('account.report.context.common');
                     model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                         var contextModel = new openerp.Model(result);
-                        contextModel.call('edit_footnote', [[parseInt(context_id)], parseInt(footNoteSeqNum), text]);
+                        contextModel.query(['footnotes_manager_id'])
+                        .filter([['id', '=', context_id]]).first().then(function (context) {
+                            var managerModel = new openerp.Model('account.report.footnotes.manager');
+                            managerModel.call('edit_footnote', [[parseInt(context.footnotes_manager_id[0])], parseInt(footNoteSeqNum), text]);
+                        });
                     });
                 }
                 else {
@@ -396,7 +390,11 @@
                     var model = new openerp.Model('account.report.context.common');
                     model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                         var contextModel = new openerp.Model(result);
-                        contextModel.call('remove_footnote', [[parseInt(context_id)], parseInt(num)]);
+                        contextModel.query(['footnotes_manager_id'])
+                        .filter([['id', '=', context_id]]).first().then(function (context) {
+                            var managerModel = new openerp.Model('account.report.footnotes.manager');
+                            managerModel.call('remove_footnote', [[parseInt(context.footnotes_manager_id[0])], parseInt(num)]);
+                        });
                     });
                 }
             },

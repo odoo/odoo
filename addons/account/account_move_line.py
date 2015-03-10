@@ -528,6 +528,8 @@ class AccountMoveLine(models.Model):
             can find a debit and a credit to reconcile together. It returns the recordset of the
             account move lines that were not reconciled during the process.
         """
+        if not self.ids:
+            return self
         field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
         sm_debit_move, sm_credit_move = self._get_pair_to_reconcile()
         #there is no more pair to reconcile so return what move_line are left
@@ -539,7 +541,7 @@ class AccountMoveLine(models.Model):
         #Remove from recordset the one(s) that will be totally reconciled
         if amount_reconcile == sm_debit_move[field]:
             self -= sm_debit_move
-        if amount_reconcile == sm_credit_move[field]:
+        if amount_reconcile == -sm_credit_move[field]:
             self -= sm_credit_move
 
         #Check for the currency and amount_currency we can set
@@ -663,13 +665,14 @@ class AccountMoveLine(models.Model):
     ####################################################
 
     @api.model
-    def create(self, vals, check=True, apply_taxes=True):
-        """ :param check: check data consistency after move line creation. Eg. set to false to disable verification that the move
-                debit-credit == 0 while creating the move lines composing the move.
-
-            :param apply_taxes: set to False if you don't want vals['tax_ids'] to result in the creation of move lines for taxes and eventual
+    def create(self, vals, apply_taxes=True):
+        """ :param apply_taxes: set to False if you don't want vals['tax_ids'] to result in the creation of move lines for taxes and eventual
                 adjustment of the line amount (in case of a tax included in price). This is useful for use cases where you don't want to
                 apply taxes in the default fashion (eg. taxes). You can also pass 'dont_create_taxes' in context.
+
+            :context's key `check_move_validity`: check data consistency after move line creation. Eg. set to false to disable verification that the move
+                debit-credit == 0 while creating the move lines composing the move.
+
         """
         AccountObj = self.env['account.account']
         MoveObj = self.env['account.move']
@@ -697,7 +700,6 @@ class AccountMoveLine(models.Model):
             context['journal_id'] = context.get('search_default_journal_id')
         if 'date' not in context:
             context['date'] = fields.Date.context_today(self)
-        self.with_context(context)._update_journal_check(context['journal_id'], context['date'])
         move_id = vals.get('move_id', False)
         journal = self.env['account.journal'].browse(context['journal_id'])
         vals['journal_id'] = vals.get('journal_id') or context.get('journal_id')
@@ -775,9 +777,9 @@ class AccountMoveLine(models.Model):
         new_line = super(AccountMoveLine, self).create(vals)
         for tax_line_vals in tax_lines_vals:
             # TODO: remove .with_context(context) once this context nonsense is solved
-            self.with_context(context).create(tax_line_vals, check=False)
+            self.with_context(context).create(tax_line_vals)
 
-        if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):
+        if self._context.get('check_move_validity', True):
             move = MoveObj.browse(vals['move_id'])
             move.with_context(context)._post_validate()
             if journal.entry_posted:
@@ -786,83 +788,48 @@ class AccountMoveLine(models.Model):
         return new_line
 
     @api.multi
-    def unlink(self, check=True):
+    def unlink(self):
         self._update_check()
-        result = False
-        moves = self.env['account.move']
-        context = dict(self._context or {})
+        move_ids = set()
         for line in self:
-            moves += line.move_id
-            context['journal_id'] = line.journal_id.id
-            context['date'] = line.date
-            line.with_context(context)
-            result = super(AccountMoveLine, line).unlink()
-        if check and moves:
-            moves.with_context(context)._post_validate()
+            if line.move_id.id not in move_ids:
+                move_ids.add(line.move_id.id)
+        result = super(AccountMoveLine, self).unlink()
+        if self._context.get('check_move_validity', True) and move_ids:
+            self.env['account.move'].browse(list(move_ids))._post_validate()
         return result
 
     @api.multi
-    def write(self, vals, check=True, update_check=True):
+    def write(self, vals):
         if vals.get('tax_line_id') or vals.get('tax_ids'):
             raise UserError(_('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
             raise UserError(_('You cannot use deprecated account.'))
-        if update_check and any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
+        if any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit', 'amount_currency', 'currency_id')):
             self._update_check()
 
-        # Check for centralisation
-        # TODO : what happened with journal.centralisation ?
-        # for line in self:
-        #     journal = line.move_id and line.move_id.journal_id or line.journal_id
-        #     journal = self._context.get('journal_id') and self.env['account.journal'].browse(self._context.get('journal_id')) or journal # Legacy
-        #     if journal.centralisation:
-        #         pass
-        #         # Do something here
-
-        todo_date = vals.pop('date', False)
         result = super(AccountMoveLine, self).write(vals)
-        if check:
-            done = []
+        if self._context.get('check_move_validity', True):
+            move_ids = set()
             for line in self:
-                if line.move_id.id not in done:
-                    done.append(line.move_id.id)
-                    line.move_id._post_validate()
-                    if todo_date:
-                        line.move_id.write({'date': todo_date})
+                if line.move_id.id not in move_ids:
+                    move_ids.add(line.move_id.id)
+            self.env['account.move'].browse(list(move_ids))._post_validate()
         return result
 
     @api.multi
     def _update_check(self):
-        """ Raise Warning to cause rollback if self is in a correct state """
-        done = {}
+        """ Raise Warning to cause rollback if the move is posted, some entries are reconciled or the move is older than the lock date"""
+        move_ids = set()
         for line in self:
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
-            if line.move_id.state != 'draft' and (not line.journal_id.entry_posted):
-                raise UserError(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
+            if line.move_id.state != 'draft':
+                raise UserError(_('You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n%s.') % err_msg)
             if line.reconciled:
                 raise UserError(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
-            t = (line.journal_id.id, line.date)
-            if t not in done:
-                self._update_journal_check(line.journal_id.id, line.date)
-                done[t] = True
-        return True
-
-    @api.model
-    def _update_journal_check(self, journal_id, date):
-        # TODO : since account_journal_period have been removed, how to check date is not in a closed period ?
-        # self._cr.execute('SELECT state FROM account_journal_period WHERE journal_id = %s AND period_id = %s', (journal_id, period_id))
-        # result = self._cr.fetchall()
-        # journal = self.env['account.journal'].browse(journal_id)
-        # period = self.env['account.period'].browse(period_id)
-        # for (state,) in result:
-        #     if state == 'done':
-        #         raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))
-        # if not result:
-        #     self.env['account.journal.period'].create({
-        #         'name': (journal.code or journal.name)+':'+(period.name or ''),
-        #         'journal_id': journal.id,
-        #         'period_id': period.id
-        #     })
+            if line.move_id.id not in move_ids:
+                move_ids.add(line.move_id.id)
+            self.env['account.move'].browse(list(move_ids))._check_lock_date()
         return True
 
     ####################################################
@@ -987,7 +954,7 @@ class AccountPartialReconcile(models.Model):
                         raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
                     amount_diff = rec.company_id.currency_id.round(rec.amount_currency * rate_diff)
                     move = rec.env['account.move'].create({'journal_id': rec.company_id.currency_exchange_journal_id.id, 'rate_diff_partial_rec_id': rec.id})
-                    line_to_reconcile = rec.env['account.move.line'].with_context(novalidate=True).create({
+                    line_to_reconcile = rec.env['account.move.line'].with_context(check_move_validity=False).create({
                         'name': _('Currency exchange rate difference'),
                         'debit': amount_diff < 0 and -amount_diff or 0.0,
                         'credit': amount_diff > 0 and amount_diff or 0.0,

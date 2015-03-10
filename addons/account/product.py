@@ -16,7 +16,6 @@ class ProductCategory(models.Model):
         domain=[('deprecated', '=', False)],
         help="This account will be used for invoices to value expenses.")
 
-
 #----------------------------------------------------------
 # Products
 #----------------------------------------------------------

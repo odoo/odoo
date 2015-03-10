@@ -6,7 +6,7 @@
             <field name="journal_id" ref="account.bank_journal"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
             <field name="name">BNK/2014/001</field>
-            <field name="balance_end" eval="7245.78"/>
+            <field name="balance_end_real" eval="8998.2"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="balance_start" eval="5103.0"/>
         </record>
@@ -15,43 +15,53 @@
             <field name="statement_id" ref="demo_bank_statement_1"/>
             <field name="sequence" eval="1"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="name">First 2000 € of SAJ/2014/001</field>
+            <field name="name">SAJ/2014/002 and SAJ/2014/003</field>
             <field name="journal_id" ref="account.bank_journal"/>
-            <field name="amount" eval="2000.0"/>
+            <field name="amount" eval="1175.0"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="partner_id" ref="base.res_partner_9"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
         </record>
         <record id="demo_bank_statement_line_2" model="account.bank.statement.line">
             <field name="ref"></field>
             <field name="statement_id" ref="demo_bank_statement_1"/>
             <field name="sequence" eval="2"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="name">SAJ/2014/002</field>
+            <field name="name">Bank fees</field>
             <field name="journal_id" ref="account.bank_journal"/>
-            <field name="amount" eval="650.0"/>
+            <field name="amount" eval="-32.58"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="partner_id" ref="base.res_partner_9"/>
         </record>
         <record id="demo_bank_statement_line_3" model="account.bank.statement.line">
             <field name="ref"></field>
             <field name="statement_id" ref="demo_bank_statement_1"/>
             <field name="sequence" eval="3"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="name">Bank fees</field>
+            <field name="name">Prepayment</field>
             <field name="journal_id" ref="account.bank_journal"/>
-            <field name="amount" eval="32.58"/>
+            <field name="amount" eval="650.0"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="partner_id" ref="base.res_partner_9"/>
         </record>
         <record id="demo_bank_statement_line_4" model="account.bank.statement.line">
             <field name="ref"></field>
             <field name="statement_id" ref="demo_bank_statement_1"/>
             <field name="sequence" eval="4"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="name">SAJ/2014/003 and SAJ/2014/004</field>
+            <field name="name">First 2000 € of SAJ/2014/001</field>
             <field name="journal_id" ref="account.bank_journal"/>
-            <field name="amount" eval="1025.0"/>
+            <field name="amount" eval="2000.0"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="partner_id" ref="base.res_partner_9"/>
+        </record>
+        <record id="demo_bank_statement_line_5" model="account.bank.statement.line">
+            <field name="ref"></field>
+            <field name="statement_id" ref="demo_bank_statement_1"/>
+            <field name="sequence" eval="5"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="name">Last Year Interests</field>
+            <field name="journal_id" ref="account.bank_journal"/>
+            <field name="amount" eval="102.78"/>
+            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
         </record>
         
         <!-- Statement operation templates -->

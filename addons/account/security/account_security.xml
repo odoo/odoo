@@ -54,13 +54,6 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-    <record id="fiscal_year_comp_rule" model="ir.rule">
-        <field name="name">Fiscal year multi-company</field>
-        <field name="model_id" ref="model_account_fiscalyear"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
     <record id="account_comp_rule" model="ir.rule">
         <field name="name">Account multi-company</field>
         <field name="model_id" ref="model_account_account"/>
@@ -78,27 +71,6 @@
     <record id="invoice_comp_rule" model="ir.rule">
         <field name="name">Invoice multi-company</field>
         <field name="model_id" ref="model_account_invoice"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
-    <record id="invoice_analysis_comp_rule" model="ir.rule">
-        <field name="name">Invoice Analysis multi-company</field>
-        <field name="model_id" ref="model_account_invoice_report"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
-    <record id="entry_analysis_comp_rule" model="ir.rule">
-        <field name="name">Entries Analysis multi-company</field>
-        <field name="model_id" ref="model_account_entries_report"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
-    <record id="analytic_entry_analysis_comp_rule" model="ir.rule">
-        <field name="name">Analytic Entries Analysis multi-company</field>
-        <field name="model_id" ref="model_analytic_entries_report"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>

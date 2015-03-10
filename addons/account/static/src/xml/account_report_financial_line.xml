@@ -64,8 +64,8 @@
                         <t t-call="supFootNoteSeqNum" />
                     </t>
                     <ul class="dropdown-menu domainDropdowm" role="menu" aria-labelledby="dLabel">
-                        <li role="presentation" t-if="l.type != 'move_line_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-graph">Graph</a></li>
-                        <li role="presentation" t-if="l.type != 'move_line_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-amls">Account Move Lines</a></li>
+                        <li role="presentation" t-if="l.type == 'account_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-graph">Graph</a></li>
+                        <li role="presentation" t-if="l.type == 'account_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-amls">Account Move Lines</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" class="oe-account-add-footnote">Add Footnote</a></li>
                         <li role="presentation" t-if="l.type == 'tax_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-net">See net move lines</a></li>
                         <li role="presentation" t-if="l.type == 'tax_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-tax">See tax move lines</a></li>
