@@ -451,7 +451,7 @@
             <field name="sequence" eval="2"/>
             <field name="parent_id" ref='account_financial_report_executivesummary_cash0'/>
             <field name="domain" eval="[('account_id.user_type.type', '=', 'liquidity')]" />
-            <field name="formulas">balance = sum.credit</field>
+            <field name="formulas">balance = -sum.credit</field>
             <field name="show_domain">never</field>
             <field name="green_on_positive" eval="False"/>
             <field name="level" eval="2" />
@@ -460,14 +460,15 @@
             <field name="name">Cash surplus</field>
             <field name="sequence" eval="3"/>
             <field name="parent_id" ref='account_financial_report_executivesummary_cash0'/>
-            <field name="formulas">balance = CR.balance - CS.balance</field>
+            <field name="formulas">balance = CR.balance + CS.balance</field>
             <field name="level" eval="2" />
         </record>
         <record id="account_financial_report_executivesummary_closing_bank_balance0" model="account.financial.report.line">
             <field name="name">Closing bank balance</field>
             <field name="sequence" eval="4"/>
             <field name="parent_id" ref='account_financial_report_executivesummary_cash0'/>
-            <field name="formulas">balance = CR.balance - CS.balance</field>
+            <field name="domain" eval="[('account_id.internal_type', '=', 'liquidity')]" />
+            <field name="formulas">balance = sum.balance</field>
             <field name="level" eval="2" />
         </record>
         <record id="account_financial_report_executivesummary_profitability0" model="account.financial.report.line">
@@ -570,7 +571,7 @@
             <field name="level" eval="2" />
         </record>
         <record id="account_financial_report_executivesummary_return_investment0" model="account.financial.report.line">
-            <field name="name">Return on investment</field>
+            <field name="name">Return on investments</field>
             <field name="sequence" eval="3"/>
             <field name="parent_id" ref='account_financial_report_executivesummary_performance0'/>
             <field name="formulas">balance = NEP.balance / TA.balance</field>
@@ -612,7 +613,7 @@
             <field name="name">Current assets to liabilities</field>
             <field name="sequence" eval="4"/>
             <field name="parent_id" ref='account_financial_report_executivesummary_position0'/>
-            <field name="formulas">balance = TA.balance / L.balance</field>
+            <field name="formulas">balance = CA.balance / L.balance</field>
             <field name="figure_type">no_unit</field>
             <field name="level" eval="2" />
         </record>
