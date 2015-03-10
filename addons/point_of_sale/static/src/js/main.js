@@ -1,27 +1,10 @@
 
-openerp.point_of_sale = function(openerp) {
-    "use strict";
+odoo.define('point_of_sale.main', ['point_of_sale.chrome', 'web.core'], function (require) {
+"use strict";
 
-    var module = openerp.point_of_sale;
+var chrome = require('point_of_sale.chrome');
+var core = require('web.core');
 
-    openerp.point_of_sale.load_db(openerp,module);
+core.action_registry.add('pos.ui', chrome.Chrome);
 
-    openerp.point_of_sale.load_models(openerp,module);
-
-    openerp.point_of_sale.load_basewidget(openerp,module);
-
-    openerp.point_of_sale.load_keyboard(openerp,module);
-
-    openerp.point_of_sale.load_gui(openerp,module);
-
-    openerp.point_of_sale.load_popups(openerp,module);
-
-    openerp.point_of_sale.load_screens(openerp,module);
-
-    openerp.point_of_sale.load_devices(openerp,module);
-
-    openerp.point_of_sale.load_chrome(openerp,module);
-
-    openerp.web.client_actions.add('pos.ui', 'openerp.point_of_sale.Chrome');
-};
-
+});

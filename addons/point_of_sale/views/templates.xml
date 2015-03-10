@@ -31,17 +31,22 @@
         <t t-call-assets="point_of_sale.assets"/>
 
         <script type="text/javascript" id="loading-script" t-raw="init">
-            $(function() {
-                var s = new openerp.init();
-                var wc = new s.web.WebClient();
+            odoo.define('web.web_client', ['point_of_sale.main', 'web.WebClient'], function (require) {
+                var WebClient = require('web.WebClient');
+                var web_client = new WebClient();
 
-                wc.show_application = function() {
-                    wc.action_manager.do_action("pos.ui");
+                web_client.show_application = function() {
+                    web_client.action_manager.do_action("pos.ui");
                 };
 
-                wc.setElement($(document.body));
-                wc.start();
+                $(function () {
+                    web_client.setElement($(document.body));
+                    web_client.start();
+                });
+                return web_client;
             });
+            odoo.init();
+
         </script>
 
     </head>
