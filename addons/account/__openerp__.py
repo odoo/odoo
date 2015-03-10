@@ -74,8 +74,8 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/report_configurator.xml',
         'views/account.xml',
         'views/report_invoice.xml',
-        'views/account_journal_dashboard_view.xml',
         'report/account_invoice_report_view.xml'
+        'views/account_journal_dashboard_view.xml',
     ],
     'qweb' : [
         "static/src/xml/account_reconciliation.xml",
