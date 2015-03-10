@@ -1,9 +1,16 @@
-openerp.mail_tip = function(session) {
-    session.mail.Thread.include({
-        message_fetch: function() {
-            return this._super.apply(this, arguments).done(function() {
-                openerp.web.bus.trigger('chatter_messages_fetched');
-            });
-        }
-    });
-};
+odoo.define(['mail.mail', 'web.core'], function (require) {
+"use strict";
+
+var mail = require('mail.mail');
+var core = require('web.core');
+
+mail.Thread.include({
+    message_fetch: function() {
+        return this._super.apply(this, arguments).done(function() {
+            core.bus.trigger('chatter_messages_fetched');
+        });
+    }
+});    
+
+});
+
