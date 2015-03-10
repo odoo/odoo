@@ -1,12 +1,19 @@
-openerp_FieldMany2ManyTagsEmail = function(instance) {
-var _t = instance.web._t;
+odoo.define('mail.many2manytags', ['web.core', 'web.form_common', 'web.form_relational', 'web.Model'], function (require) {
+"use strict";
+
+var core = require('web.core');
+var form_common = require('web.form_common');
+var form_relational = require('web.form_relational');
+var Model = require('web.Model');
+
+var _t = core._t;
 
 /**
  * Extend of FieldMany2ManyTags widget method.
  * When the user add a partner and the partner don't have an email, open a popup to purpose to add an email.
  * The user can choose to add an email or cancel and close the popup.
  */
-instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags.extend({
+var FieldMany2ManyTagsEmail = form_relational.FieldMany2ManyTags.extend({
 
     start: function() {
         this.values = [];
@@ -41,7 +48,7 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
 
     _check_email_popup: function (ids) {
         var self = this;
-        new instance.web.Model('res.partner').call("search", [[
+        new Model('res.partner').call("search", [[
                 ["id", "in", ids], 
                 ["email", "=", false], 
                 ["notify_email", "=", 'always'] ]], 
@@ -54,7 +61,7 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
 
                 // unvalid partner
                 _.each(record_ids, function (id) {
-                    var pop = new instance.web.form.FormOpenPopup(self);
+                    var pop = new form_common.FormOpenPopup(self);
                     pop.show_element(
                         'res.partner',
                         id,
@@ -81,6 +88,6 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
 /**
  * Registry of form fields
  */
-instance.web.form.widgets.add('many2many_tags_email', 'instance.web.form.FieldMany2ManyTagsEmail');
+core.form_widget_registry.add('many2many_tags_email', FieldMany2ManyTagsEmail);
 
-};
+});
