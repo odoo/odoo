@@ -62,7 +62,8 @@
                                         <field name="reward_discount_on" attrs="{'invisible': 
                                             [('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount')]}" widget="radio"/>
 
-                                        <field name="reward_discount_percentage" attrs="{'invisible': [('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount') ]}"/>
+                                        <field name="reward_discount_percentage" attrs="{'invisible': [('reward_discount_type', '!=', 'percentage')]}"/>
+
                                         <field name="reward_discount_on_product_id" attrs="{'invisible': [('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}"/>
 
                                         <field name="reward_discount_amount" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}"/>
