@@ -2375,12 +2375,20 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 }
                 return;
             }
-            if (!self.searching) {
-                self.searching = true;
-                return;
+            var search_string = self.get_search_string();
+            if (self.search_string !== search_string) {
+                if (search_string.length) {
+                    self.search_string = search_string;
+                    setTimeout(function () { self.initiate_search(search_string);}, self.delay);
+                } else {
+                    self.close();
+                }
             }
-            self.search_string = self.get_search_string();
+        });
+        this.$input.on('keypress', function (ev) {
+            self.search_string = self.get_search_string() + String.fromCharCode(ev.which);
             if (self.search_string.length) {
+                self.searching = true;
                 var search_string = self.search_string;
                 setTimeout(function () { self.initiate_search(search_string);}, self.delay);
             } else {
