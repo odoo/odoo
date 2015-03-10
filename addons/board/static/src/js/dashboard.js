@@ -1,13 +1,20 @@
-openerp.board = function(instance) {
-var QWeb = instance.web.qweb,
-    _t = instance.web._t;
+odoo.define('board.dashboard', ['web.ActionManager', 'web.core', 'web.data', 'web.Dialog', 'web.FavoriteMenu', 'web.form_common', 'web.Model', 'web.pyeval', 'web.ViewManager'], function (require) {
+"use strict";
 
-if (!instance.board) {
-    /** @namespace */
-    instance.board = {};
-}
+var ActionManager = require('web.ActionManager');
+var core = require('web.core');
+var data = require('web.data');
+var Dialog = require('web.Dialog');
+var FavoriteMenu = require('web.FavoriteMenu');
+var form_common = require('web.form_common');
+var Model = require('web.Model');
+var pyeval = require('web.pyeval');
+var ViewManager = require('web.ViewManager');
 
-instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
+var _t = core._t;
+var QWeb = core.qweb;
+
+var DashBoard = form_common.FormWidget.extend({
     events: {
         'click .oe_dashboard_link_change_layout': 'on_change_layout',
         'click h2.oe_header span.oe_header_txt': function (ev) {
@@ -64,7 +71,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 span.text(new_name).show();
                 input.css('visibility','hidden');
                 self.do_save_dashboard();
-        }
+        };
         input.unbind()
         .val(span.text())
         .change(function(event){
@@ -83,7 +90,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var qdict = {
             current_layout : this.$el.find('.oe_dashboard').attr('data-layout')
         };
-        var $dialog = new instance.web.Dialog(this, {
+        var $dialog = new Dialog(this, {
                             title: _t("Edit Layout"),
                         }, QWeb.render('DashBoard.layouts', qdict)).open();
         $dialog.$el.find('li').click(function() {
@@ -134,7 +141,6 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         }
     },
     do_save_dashboard: function() {
-        var self = this;
         var board = {
                 form_title : this.view.fields_view.arch.attrs.string,
                 style : this.$el.find('.oe_dashboard').attr('data-layout'),
@@ -170,21 +176,21 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
 
         // evaluate action_attrs context and domain
         action_attrs.context_string = action_attrs.context;
-        action_attrs.context = instance.web.pyeval.eval(
+        action_attrs.context = pyeval.eval(
             'context', action_attrs.context || {});
         action_attrs.domain_string = action_attrs.domain;
-        action_attrs.domain = instance.web.pyeval.eval(
+        action_attrs.domain = pyeval.eval(
             'domain', action_attrs.domain || [], action_attrs.context);
         if (action_attrs.context['dashboard_merge_domains_contexts'] === false) {
             // TODO: replace this 6.1 workaround by attribute on <action/>
             action.context = action_attrs.context || {};
             action.domain = action_attrs.domain || [];
         } else {
-            action.context = instance.web.pyeval.eval(
+            action.context = pyeval.eval(
                 'contexts', [action.context || {}, action_attrs.context]);
-            action.domain = instance.web.pyeval.eval(
+            action.domain = pyeval.eval(
                 'domains', [action_attrs.domain, action.domain || []],
-                action.context)
+                action.context);
         }
 
         var action_orig = _.extend({ flags : {} }, action);
@@ -210,7 +216,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 selectable: false
             }
         };
-        var am = new instance.web.ActionManager(this),
+        var am = new ActionManager(this),
             // FIXME: ideally the dashboard view shall be refactored like kanban.
             $action = $('#' + this.view.element_id + '_action_' + index);
         $action.parent().data('action_attrs', action_attrs);
@@ -293,7 +299,8 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         action_manager.do_action(view_manager.action);
     }
 });
-instance.web.form.DashBoardLegacy = instance.web.form.DashBoard.extend({
+
+var DashBoardLegacy = DashBoard.extend({
     renderElement: function() {
         if (this.node.tag == 'hpaned') {
             this.node.attrs.layout = '2-1';
@@ -302,7 +309,7 @@ instance.web.form.DashBoardLegacy = instance.web.form.DashBoard.extend({
         }
         this.node.tag = 'board';
         _.each(this.node.children, function(child) {
-            if (child.tag.indexOf('child') == 0) {
+            if (child.tag.indexOf('child') === 0) {
                 child.tag = 'column';
                 var actions = [], first_child = child.children[0];
                 if (first_child && first_child.tag == 'vpaned') {
@@ -317,12 +324,13 @@ instance.web.form.DashBoardLegacy = instance.web.form.DashBoard.extend({
     }
 });
 
-instance.web.form.tags.add('hpaned', 'instance.web.form.DashBoardLegacy');
-instance.web.form.tags.add('vpaned', 'instance.web.form.DashBoardLegacy');
-instance.web.form.tags.add('board', 'instance.web.form.DashBoard');
+core.form_tag_registry
+    .add('hpaned', DashBoardLegacy)
+    .add('vpaned', DashBoardLegacy)
+    .add('board', DashBoard);
 
 
-instance.web.search.FavoriteMenu.include({
+FavoriteMenu.include({
     prepare_dropdown_menu: function (filters) {
         var self = this;
         this._super(filters);
@@ -355,24 +363,24 @@ instance.web.search.FavoriteMenu.include({
     add_dashboard: function () {
         var self = this,
             view_manager = this.findAncestor(function (a) {
-                return a instanceof instance.web.ViewManager
+                return a instanceof ViewManager;
             });
         if (!view_manager.action) {
             this.do_warn(_t("Can't find dashboard action"));
             return;
         }
         var searchview = view_manager.searchview,
-            data = searchview.build_search_data(),
-            context = new instance.web.CompoundContext(searchview.dataset.get_context() || []),
-            domain = new instance.web.CompoundDomain(searchview.dataset.get_domain() || []);
-        _.each(data.contexts, context.add, context);
-        _.each(data.domains, domain.add, domain);
+            search_data = searchview.build_search_data(),
+            context = new data.CompoundContext(searchview.dataset.get_context() || []),
+            domain = new data.CompoundDomain(searchview.dataset.get_domain() || []);
+        _.each(search_data.contexts, context.add, context);
+        _.each(search_data.domains, domain.add, domain);
 
         context.add({
-            group_by: instance.web.pyeval.eval('groupbys', data.groupbys || [])
+            group_by: pyeval.eval('groupbys', search_data.groupbys || [])
         });
         context.add(view_manager.active_view.controller.get_context());
-        var c = instance.web.pyeval.eval('context', context);
+        var c = pyeval.eval('context', context);
         for(var k in c) {
             if (c.hasOwnProperty(k) && /^search_default_/.test(k)) {
                 delete c[k];
@@ -380,8 +388,8 @@ instance.web.search.FavoriteMenu.include({
         }
         this.toggle_dashboard_menu(false);
         c.dashboard_merge_domains_contexts = false;
-        var d = instance.web.pyeval.eval('domain', domain),
-            board = new instance.web.Model('board.board'),
+        var d = pyeval.eval('domain', domain),
+            board = new Model('board.board'),
             name = self.$add_dashboard_input.val();
         
         board.call('list', [board.context()])
@@ -404,4 +412,4 @@ instance.web.search.FavoriteMenu.include({
     },
 });
 
-};
+});
