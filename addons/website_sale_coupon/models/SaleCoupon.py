@@ -123,7 +123,7 @@ class SaleOrderLine(models.Model):
     def button_confirm(self):
         res = super(SaleOrderLine, self).button_confirm()
         if self[0]['order_id']['coupon_program_id']:
-            print "----", self[0]['order_id']['coupon_program_id']
+            print "----", self[0]['order_id']['coupon_program_id'].name
             coupon = self.env['sale.coupon'].create({'program_id': self[0]['order_id']['coupon_program_id']['id']})
             print "------coupon ---", coupon['coupon_code']
             exit
@@ -171,8 +171,10 @@ class SaleOrder(models.Model):
         if self.typed_code:
             print "====== typed code", self.typed_code
             program_id = self.env['sale.couponprogram'].search([('program_code', '=', self.typed_code)])
+            if not program_id:
+                program_id = self.env['sale.coupon'].search([('coupon_code', '=', self.typed_code)]).program_id
             if program_id:
-                print "----", program_id
+                print "------>>>>", program_id.reward_discount_percentage,program_id.name
                 order_data = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
                     #if reward is product
                 for data in order_data:
@@ -226,14 +228,12 @@ class SaleOrder(models.Model):
                             #coupon = self.env['sale.coupon'].create({'program_id': program_id['id']})
                             #print "---------", coupon['coupon_code']
                             print "------ Reward coupon"
-                            self.coupon_program_id = program_id['id']
+                            self.coupon_program_id = program_id.reward_gift_coupon_id
                     exit
             else:
-                program_id = self.env['sale.coupon'].search([('coupon_code', '=', self.typed_code)])
-                if program_id:
-                    pass
-                else:
-                    pass
+                # program_id = self.env['sale.coupon'].search([('coupon_code', '=', self.typed_code)])
+                # if program_id:
+                pass
                 # invalid code
         else:
             order_data = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
@@ -293,8 +293,8 @@ class SaleOrder(models.Model):
                         elif program_id['reward_id']['reward_type'] == 'coupon':
                             #coupon = self.env['sale.coupon'].create({'program_id': program_id['id']})
                             #print "---------", coupon['coupon_code']
-                            print "------ Reward coupon"
-                            self.coupon_program_id = program_id['id']
+                            print "------ Reward coupon",program_id.reward_gift_coupon_id.name
+                            self.coupon_program_id = program_id.reward_gift_coupon_id
                 exit
             else:
                 exit
