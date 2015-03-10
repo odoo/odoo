@@ -1,4 +1,6 @@
-/*global $, _, PDFJS, PDFSlidesViewer, Bootstrap */
+/*global $, _, PDFSlidesViewer*/
+odoo.define('website_slides.slides_embed', [], function (require) {
+
 
 /**
 This file is a minimal version of the PDFViewer widget.
@@ -25,7 +27,7 @@ $(document).ready(function () {
             this.pdf_viewer.loadDocument().then(function(file_content){
                 self.on_loaded_file();
             });
-        }
+        };
         EmbeddedViewer.prototype.__proto__ = {
             // jquery inside the object (like openerp.Widget)
             $: function(selector){
@@ -50,7 +52,7 @@ $(document).ready(function () {
             render_page: function (page_number) {
                 this.pdf_viewer.renderPage(page_number).then(this.on_rendered_page);
             },
-            change_page: function (ev) {
+            change_page: function () {
                 var page_asked = parseInt(this.$('#page_number').val(), 10);
                 if(1 <= page_asked && page_asked <= this.pdf_viewer.pdf_page_total){
                     this.pdf_viewer.changePage(page_asked).then(this.on_rendered_page);
@@ -59,7 +61,7 @@ $(document).ready(function () {
                     this.$('#page_number').val(this.pdf_viewer.pdf_page_current);
                 }
             },
-            next: function (ev) {
+            next: function () {
                 var self = this;
                 this.pdf_viewer.nextPage().then(function(page_num){
                     if(page_num){
@@ -105,7 +107,7 @@ $(document).ready(function () {
         };
 
         // embedded pdf viewer
-        embedded_viewer = new EmbeddedViewer($('#PDFViewer'));
+        var embedded_viewer = new EmbeddedViewer($('#PDFViewer'));
 
         // bind the actions
         $('#previous').on('click', function(){
@@ -181,7 +183,7 @@ $(document).ready(function () {
                     url: '/slides/slide/send_share_email',
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify({'jsonrpc': "2.0", 'method': "call", "params": {'slide_id': slide_id, 'email': input.val()}}),
-                    success: function (data) {
+                    success: function () {
                         widget.html($('<div class="alert alert-info" role="alert"><strong>Thank you!</strong> Mail has been sent.</div>'));
                     },
                     error: function(data){
@@ -194,4 +196,6 @@ $(document).ready(function () {
             }
         });
     }
+});
+
 });

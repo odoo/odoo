@@ -1,18 +1,23 @@
-/*global $, openerp, _, PDFJS */
+/*global $, _, PDFJS */
+odoo.define('website_slides.slides', ['web.ajax', 'web.core', 'web.time', 'web.Widget'], function (require) {
+"use strict";
+
+var ajax = require('web.ajax');
+var core = require('web.core');
+var time = require('web.time');
+var Widget = require('web.Widget');
+
+var _t = core._t;
+var page_widgets = {};
+
 $(document).ready(function () {
 
-    "use strict";
-
-    var website = openerp.website;
-    var _t = openerp._t;
     var widget_parent = $('body');
 
-    website.slide =  {};
-    website.slide.page_widgets = {};
 
     $("timeago.timeago").each(function (index, el) {
         var datetime = $(el).attr('datetime'),
-            datetime_obj = openerp.str_to_datetime(datetime),
+            datetime_obj = time.str_to_datetime(datetime),
             // if presentation 7 days, 24 hours, 60 min, 60 second, 1000 millis old(one week)
             // then return fix formate string else timeago
             display_str = "";
@@ -27,7 +32,7 @@ $(document).ready(function () {
     /*
      * Like/Dislike Buttons Widget
      */
-    website.slide.LikeButton = openerp.Widget.extend({
+     var LikeButton = Widget.extend({
         setElement: function($el){
             this._super.apply(this, arguments);
             this.$el.on('click', this, _.bind(this.apply_action, this));
@@ -43,7 +48,7 @@ $(document).ready(function () {
             }else{
                 var target = button.find('.fa');
                 if (localStorage['slide_vote_' + slide_id] !== user_id.toString()) {
-                    openerp.jsonRpc(href, 'call', {slide_id: slide_id}).then(function (data) {
+                    ajax.jsonRpc(href, 'call', {slide_id: slide_id}).then(function (data) {
                         target.text(data);
                         localStorage['slide_vote_' + slide_id] = user_id;
                     });
@@ -65,13 +70,13 @@ $(document).ready(function () {
         },
     });
 
-    website.slide.page_widgets['likeButton'] = new website.slide.LikeButton(widget_parent).setElement($('.oe_slide_js_like'));
-    website.slide.page_widgets['dislikeButton'] = new website.slide.LikeButton(widget_parent).setElement($('.oe_slide_js_unlike'));
+    page_widgets['likeButton'] = new LikeButton(widget_parent).setElement($('.oe_slide_js_like'));
+    page_widgets['dislikeButton'] = new LikeButton(widget_parent).setElement($('.oe_slide_js_unlike'));
 
     /*
      * Embedded Code Widget
      */
-    website.slide.SlideSocialEmbed = openerp.Widget.extend({
+     var SlideSocialEmbed = Widget.extend({
         events: {
             'change input' : 'change_page',
         },
@@ -99,24 +104,24 @@ $(document).ready(function () {
         // TODO : make it work. For now, once the iframe is loaded, the value of #page_count is
         // still now set (the pdf is still loading)
         var max_page = $('iframe').contents().find('#page_count').val();
-        var slide_social_embed = new website.slide.SlideSocialEmbed($(this), max_page).setElement($('.oe_slide_js_embed_code_widget'));
+        new SlideSocialEmbed($(this), max_page).setElement($('.oe_slide_js_embed_code_widget'));
     });
 
 
     /*
      * Send by email Widget
      */
-    website.slide.ShareMail = openerp.Widget.extend({
+     var ShareMail = Widget.extend({
         events: {
             'click button' : 'send_mail',
         },
-        send_mail: function(ev){
+        send_mail: function(){
             var self = this;
             var input = this.$('input');
             var slide_id = this.$('button').data('slide-id');
             if(input.val() && input[0].checkValidity()){
                 this.$el.removeClass('has-error');
-                openerp.jsonRpc('/slides/slide/send_share_email', 'call', {
+                ajax.jsonRpc('/slides/slide/send_share_email', 'call', {
                     slide_id: slide_id,
                     email: input.val(),
                 }).then(function () {
@@ -129,7 +134,7 @@ $(document).ready(function () {
         },
     });
 
-    website.slide.page_widgets['share_mail'] = new website.slide.ShareMail(widget_parent).setElement($('.oe_slide_js_share_email'));
+    page_widgets['share_mail'] = new ShareMail(widget_parent).setElement($('.oe_slide_js_share_email'));
 
     /*
      * Social Sharing Statistics Widget
@@ -181,4 +186,10 @@ $(document).ready(function () {
             },
         });
     }
+});
+
+return {
+    page_widgets: page_widgets,
+};
+
 });

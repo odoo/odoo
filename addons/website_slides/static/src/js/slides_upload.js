@@ -1,14 +1,20 @@
-/*global $, openerp, _, PDFJS */
+/*global $, _, PDFJS */
+odoo.define('website_slides.upload', ['web.ajax', 'web.core', 'web.Widget', 'website.website', 'website_slides.slides'], function (require) {
+"use strict";
+
+var ajax = require('web.ajax');
+var core = require('web.core');
+var Widget = require('web.Widget');
+var website = require('website.website');
+var slides = require('website_slides.slides');
+
+var _t = core._t;
+
 $(document).ready(function () {
 
-    "use strict";
+    website.add_template_file('/website_slides/static/src/xml/website_slides.xml');
 
-    var website = openerp.website;
-    var _t = openerp._t;
-
-    website.slide.template = website.add_template_file('/website_slides/static/src/xml/website_slides.xml');
-
-    website.slide.Dialog = openerp.Widget.extend({
+    var SlideDialog = Widget.extend({
         template: 'website.slide.upload',
         events: {
             'hidden.bs.modal': 'destroy',
@@ -43,7 +49,7 @@ $(document).ready(function () {
             this.$('.alert-warning').remove();
             this.is_valid_url = false;
             this.$('.save').button('loading');
-            openerp.jsonRpc('/slides/dialog_preview/', 'call', value).then(function (data) {
+            ajax.jsonRpc('/slides/dialog_preview/', 'call', value).then(function (data) {
                 self.$('.save').button('reset');
                 if (data.error) {
                     self.display_alert(data.error);
@@ -57,7 +63,7 @@ $(document).ready(function () {
         },
         check_unique_slide: function (file_name) {
             var self = this;
-            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+            return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'slide.slide',
                 method: 'search_count',
                 args: [[['channel_id', '=', self.channel_id], ['name', '=', file_name]]],
@@ -235,7 +241,7 @@ $(document).ready(function () {
             var self =  this;
             $('#category_id').select2(this.select2_wrapper(_t('Category'), false,
                 function () {
-                    return openerp.jsonRpc("/web/dataset/call_kw", 'call', {
+                    return ajax.jsonRpc("/web/dataset/call_kw", 'call', {
                         model: 'slide.category',
                         method: 'search_read',
                         args: [],
@@ -257,7 +263,7 @@ $(document).ready(function () {
         // Tags management from select2
         set_tag_ids: function () {
             $('#tag_ids').select2(this.select2_wrapper(_t('Tags'), true, function () {
-                return openerp.jsonRpc("/web/dataset/call_kw", 'call', {
+                return ajax.jsonRpc("/web/dataset/call_kw", 'call', {
                     model: 'slide.tag',
                     method: 'search_read',
                     args: [],
@@ -331,7 +337,7 @@ $(document).ready(function () {
                 }
                 this.$('.oe_slides_upload_loading').show();
                 this.$('.modal-footer, .modal-body').hide();
-                openerp.jsonRpc("/slides/add_slide", 'call', values).then(function (data) {
+                ajax.jsonRpc("/slides/add_slide", 'call', values).then(function (data) {
                     if (data.error) {
                         self.display_alert(data.error);
                         self.$('.oe_slides_upload_loading').hide();
@@ -351,7 +357,9 @@ $(document).ready(function () {
     // bind the event to the button
     $('.oe_slide_js_upload').on('click', function () {
         var channel_id = $(this).attr('channel_id');
-        website.slide.page_widgets['upload_dialog'] = new website.slide.Dialog(this, channel_id).appendTo(document.body);
+        slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
     });
+
+});
 
 });
