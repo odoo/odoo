@@ -23,7 +23,7 @@ class SaleApplicability(models.Model):
                                       ('amount', 'Amount')], string="Type", required=True)
     product_id = fields.Many2one('product.product', string="Product")
     product_category_id = fields.Many2one('product.category', string="Product Categoy")
-    product_quantity = fields.Integer("Quantity")
+    product_quantity = fields.Integer("Quantity", default=1)
     product_uom_id = fields.Many2one('product.uom', string="UoM")
     minimum_amount = fields.Float(string="Amount", help="Alteast amount, for that customer have to purchase to get the reward")
     tax = fields.Selection([('tax_included', 'Tax included'), ('tax_excluded', 'Tax excluded')], default="tax_excluded")
@@ -44,7 +44,7 @@ class SaleReward(models.Model):
     reward_product_uom_id = fields.Many2one('product.uom', string="UoM")
     reward_gift_coupon_id = fields.Many2one('sale.couponprogram', string="Coupon Id")
     reward_discount_type = fields.Selection([('no', 'No'), ('percentage', 'Percentage'),
-                                             ('amount', 'Amount')], string="Apply a discount")
+                                             ('amount', 'Amount')], string="Apply a discount", default="no")
     reward_discount_percentage = fields.Float("Discount", help='The discount in percentage')
     reward_discount_amount = fields.Float("Discount", help='The discount in fixed amount')
     reward_discount_on = fields.Selection([('cart', 'On cart'), ('cheapest_product', 'On cheapest product'),
@@ -82,28 +82,31 @@ class SaleCouponProgram(models.Model):
     _name = 'sale.couponprogram'
     _description = "Sales Coupon Program"
     _inherits = {'sale.applicability': 'applicability_id', 'sale.coupon.reward': 'reward_id'}
-    program_name = fields.Char(help="Program name", required=True)
-    program_code = fields.Text(string="Code", help="Unique code to provide the reward", readonly="True")
+    name = fields.Char(help="Program name", required=True)
+    program_code = fields.Text(string="Code", help="Unique code to provide the reward", readonly="True", store=True)
     program_type = fields.Selection([('apply_immediately', 'Apply Immediately'), ('public_unique_code',
                                      'Public Unique Code'), ('generated_coupon', 'Generated Coupon')],
-                                    string="Program Type", help="The type of the coupon program")
+                                    string="Program Type", help="The type of the coupon program", required=True, default="apply_immediately")
     active = fields.Boolean(string="Active", default=True, help="Coupon program is active or inactive")
     program_sequence = fields.Integer(string="Sequence", help="According to sequence, one rule is selected from multiple defined rules to apply")
     coupon_ids = fields.One2many('sale.coupon', 'program_id', string="Coupon Id")
-    applicability_id = fields.Many2one('sale.applicability', string="Applicability Id")
-    reward_id = fields.Many2one('sale.coupon.reward', string="Reward Id")
-
-    # @api.onchange('program_type')
-    # def generate_public_unique_code(self):
-    #     if self.program_type == 'public_uniquecode':
-    #         coupon = self.env['sale.coupon'].create({'program_id': self.id})
-    #         self.program_code = coupon.coupon_code
+    applicability_id = fields.Many2one('sale.applicability', string="Applicability Id", ondelete='cascade')
+    reward_id = fields.Many2one('sale.coupon.reward', string="Reward", ondelete='cascade')
 
     @api.onchange('program_type')
-    def generate_coupon_code(self):
-        if self.program_type == 'generated_coupon':
+    def generate_public_unique_code(self):
+        if self.program_type == 'public_unique_code':
             coupon = self.env['sale.coupon'].create({'program_id': self.id})
-            print "coupon is :", coupon
+            self.program_code = coupon.coupon_code
+
+    # @api.onchange('program_type')
+    # def generate_coupon_code(self):
+    #     if self.program_type == 'generated_coupon':
+    #         coupon = self.env['sale.coupon'].create({'program_id': self.id})
+    #         print "coupon is :", coupon
+
+    def generate_coupon(self):
+        pass
 
 
 class SaleOrderLine(models.Model):
@@ -112,34 +115,35 @@ class SaleOrderLine(models.Model):
 
     coupon_id = fields.Many2one('sale.coupon', string="Coupon")
 
-    @api.multi
-    def button_confirm(self):
-        res = super(SaleOrderLine, self).button_confirm()
-        # self._generate_coupon()
-        # list_product = []
-        # for line in self:
-        #     print "------------", line['product_uom_qty']
-        #     list_product = list_product + [(line['product_id'], line['product_uom_qty'])]
-        # print "-----", list_product
-        # dict_product = {}
-        # for k, v in list_product:
-        #     try:
-        #         dict_product[k] += v
-        #     except KeyError:
-        #         dict_product[k] = v
-        # print "-----", dict_product
-        print "---------", self.read_group(fields=["product_id", "product_uom_qty"], groupby=["product_uom_qty"])
-        return res
+    # @api.multi
+    # def button_confirm(self):
+    #     res = super(SaleOrderLine, self).button_confirm()
+    #     # self._generate_coupon()
+    #     # list_product = []
+    #     # for line in self:
+    #     #     print "------------", line['product_uom_qty']
+    #     #     list_product = list_product + [(line['product_id'], line['product_uom_qty'])]
+    #     # print "-----", list_product
+    #     # dict_product = {}
+    #     # for k, v in list_product:
+    #     #     try:
+    #     #         dict_product[k] += v
+    #     #     except KeyError:
+    #     #         dict_product[k] = v
+    #     # print "-----", dict_product
+    #     print "---------", self.read_group(fields=["product_id", "product_uom_qty"], groupby=["product_uom_qty"])
+    #     return res
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     typed_code = fields.Char(string="Coupon", help="Please enter the coupon code")
+    coupon_program_id = fields.Many2one('sale.couponprogram', string="Coupon program")
 
     @api.one
     def apply_coupon(self):
-        print "------------- ", self.typed_code
+        #print "------------- ", self.typed_code
        # print self.order_line.read_group(fields=["product_id", "product_uom_qty"], groupby=["product_uom_qty"])
         # for line in self.order_line:
         #     print "==========================", line['product_uom_qty']
@@ -155,10 +159,54 @@ class SaleOrder(models.Model):
         #     except KeyError:
         #         dict_product[k] = v
         # print "-----", dict_product.keys()
-        expense_data = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
-        print "-----------", expense_data
-        result = dict((data['product_id'][0], data['product_uom_qty']) for data in expense_data)
-        print"------", result
+        order_data = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
+        var_applicability = self.env['sale.applicability']
+        for data in order_data:
+            result = var_applicability.search([('product_id', '=', data['product_id'][0]), ('product_quantity', '<', data['product_uom_qty'])])
+            if result:
+                print "----im here"
+                program_id = self.env['sale.couponprogram'].search([('applicability_id', '=', result[0]['id'])])
+                print "=========", program_id['id'], program_id['reward_id']['reward_type']
+                # Apply immediately
+                if program_id['program_type'] == 'apply_immediately':
+                    #if reward is product
+                    if program_id['reward_id']['reward_type'] == 'product':
+                        # to get unit price of product
+                        for line in self.order_line:
+                            if line['product_id'] == program_id['reward_id']['reward_product_product_id']:
+                                self.env['sale.order.line'].create({'name': program_id['reward_id']['reward_product_product_id']['name'], 'order_id': self.id, 'price_unit': -line['price_unit']})
+                                exit
+                            else:
+                                exit
+                    #if reward is discount
+                    elif program_id['reward_id']['reward_type'] == 'discount':
+                        if program_id['reward_id']['reward_discount_type'] == 'no':
+                            pass
+                        elif program_id['reward_id']['reward_discount_type'] == 'amount':
+                                self.env['sale.order.line'].create({'name': 'Reward discount amount', 'order_id': self.id, 'price_unit': -program_id['reward_id']['reward_discount_amount']})
+                        elif program_id['reward_id']['reward_discount_type'] == 'percentage':
+                            if program_id['reward_id']['reward_discount_on'] == 'cart':
+                                self.env['sale.order.line'].create({'name': 'Reward discount on cart', 'order_id': self.id, 'price_unit': -(self.amount_total * (program_id['reward_id']['reward_discount_percentage'])/100)})
+                            elif program_id['reward_id']['reward_discount_on'] == 'cheapest_product':
+                                list_cost = []
+                                for min_cost in self.order_line:
+                                    list_cost.append(min_cost['price_unit'])
+                                    self.env['sale.order.line'].create({'name': 'Reward discount on cheapest product', 'order_id': self.id, 'price_unit': -(min(list_cost) * (program_id['reward_id']['reward_discount_percentage'])/100)})
+                            elif program_id['reward_id']['reward_discount_on'] == 'specific_product':
+                                for line in self.order_line:
+                                    if line['product_id'] == program_id['reward_id']['reward_discount_on_product_id']:
+                                        self.env['sale.order.line'].create({'name': 'discount on ' + program_id['reward_id']['reward_discount_on_product_id']['name'], 'order_id': self.id, 'price_unit': -(line['price_unit'] * program_id['reward_id']['reward_discount_percentage'])/100})
+                                        exit
+                                    else:
+                                        exit
+                    #if reward is coupon
+                    elif program_id['reward_id']['reward_type'] == 'coupon':
+                        #coupon = self.env['sale.coupon'].create({'program_id': program_id['id']})
+                        #print "---------", coupon['coupon_code']
+                        self.coupon_program_id = program_id['id']
+            exit
+        else:
+            exit
 
 
 class GenerateManualCoupon(models.TransientModel):
