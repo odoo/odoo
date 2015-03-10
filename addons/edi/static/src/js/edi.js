@@ -1,9 +1,15 @@
-openerp.edi = function(instance) {
-var _t = instance.web._t;
-instance.edi = {};
+odoo.define('edi.EdiImport', ['web.core', 'web.Dialog', 'web.framework', 'web.Widget'], function (require) {
+"use strict";
 
+var core = require('web.core');
+var Dialog = require('web.Dialog');
+var framework = require('web.framework');
+var Widget = require('web.Widget');
 
-instance.edi.EdiImport = instance.web.Widget.extend({
+var _t = core._t;
+var QWeb = core.qweb;
+
+var EdiImport = Widget.extend({
 
     init: function(parent,url) {
         this._super();
@@ -11,7 +17,7 @@ instance.edi.EdiImport = instance.web.Widget.extend({
     },
     start: function() {
         if (!this.session.session_is_valid()) {
-            instance.redirect('/web/login?redir=' + encodeURIComponent(window.location));
+            framework.redirect('/web/login?redir=' + encodeURIComponent(window.location));
         } else {
             this.show_import();
         }
@@ -39,7 +45,7 @@ instance.edi.EdiImport = instance.web.Widget.extend({
             });
         }
         else {
-            new instance.web.Dialog(this,{
+            new Dialog(this,{
                     title: 'Import Successful!',
                     buttons: {
                         Ok: function() {
@@ -57,19 +63,15 @@ instance.edi.EdiImport = instance.web.Widget.extend({
             msg += "\n " + _t("Reason:") + response.data.message;
         }
         var params = {error: response, message: msg};
-        new instance.web.Dialog(this,{
+        new Dialog(this,{
                 title: _t("Document Import Notification"),
                 buttons: {
                     Ok: function() { this.parents('.modal').modal('hide');}
                 }
-            },$(instance.web.qweb.render("CrashManager.warning", params))).open();
+            },$(QWeb.render("CrashManager.warning", params))).open();
     }
 });
 
-instance.edi.edi_import = function (url) {
-    instance.session.session_bind().done(function () {
-        new instance.edi.EdiImport(null,url).appendTo($("body").addClass('openerp'));
-    });
-}
+return EdiImport;
 
-};
+});
