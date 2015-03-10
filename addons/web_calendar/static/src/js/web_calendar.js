@@ -144,6 +144,7 @@ openerp.web_calendar = function(instance) {
             this.$el.addClass(attrs['class']);
 
             this.name = fv.name || attrs.string;
+            this.string = attrs.string || fv.name;
             this.view_id = fv.view_id;
 
             this.mode = attrs.mode;                 // one of month, week or day
