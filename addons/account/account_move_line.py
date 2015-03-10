@@ -515,6 +515,8 @@ class AccountMoveLine(models.Model):
             can find a debit and a credit to reconcile together. It returns the recordset of the
             account move lines that were not reconciled during the process.
         """
+        if not self.ids:
+            return self
         field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
         sm_debit_move, sm_credit_move = self._get_pair_to_reconcile()
         #there is no more pair to reconcile so return what move_line are left
@@ -526,7 +528,7 @@ class AccountMoveLine(models.Model):
         #Remove from recordset the one(s) that will be totally reconciled
         if amount_reconcile == sm_debit_move[field]:
             self -= sm_debit_move
-        if amount_reconcile == sm_credit_move[field]:
+        if amount_reconcile == -sm_credit_move[field]:
             self -= sm_credit_move
 
         #Check for the currency and amount_currency we can set
