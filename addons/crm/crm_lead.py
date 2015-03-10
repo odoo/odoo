@@ -313,6 +313,7 @@ class crm_lead(format_address, osv.osv):
             values = {
                 'partner_name': partner.parent_id.name if partner.parent_id else partner.name,
                 'contact_name': partner.name if partner.parent_id else False,
+                'title': partner.title and partner.title.id or False,
                 'street': partner.street,
                 'street2': partner.street2,
                 'city': partner.city,
@@ -323,6 +324,7 @@ class crm_lead(format_address, osv.osv):
                 'mobile': partner.mobile,
                 'fax': partner.fax,
                 'zip': partner.zip,
+                'function': partner.function,
             }
         return {'value': values}
 

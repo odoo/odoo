@@ -313,7 +313,7 @@ class project(osv.osv):
         return True
 
     _constraints = [
-        (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
+        (_check_dates, 'Error! project start-date must be lower than project end-date.', ['date_start', 'date'])
     ]
 
     def set_template(self, cr, uid, ids, context=None):
@@ -836,7 +836,7 @@ class task(osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids']),
-        (_check_dates, 'Error ! Task end-date must be greater then task start-date', ['date_start','date_end'])
+        (_check_dates, 'Error ! Task end-date must be greater than task start-date', ['date_start','date_end'])
     ]
 
     # Override view according to the company definition

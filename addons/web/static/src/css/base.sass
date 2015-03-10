@@ -1962,6 +1962,11 @@ $sheet-padding: 16px
         input
             padding-right: 13px
     &.ui-autocomplete
+        // http://bugs.jqueryui.com/ticket/8749
+        // https://github.com/jquery/jquery-ui/commit/d693ce5324f6f3be8479ef083e4eaf3c705ef043
+        // Odoo 8.0 currently uses JQuery 1.9.1, and the above fix, that we need, is in 1.9.2.
+        top: 0
+        left: 0
         li.oe_m2o_dropdown_option a
             font-style: italic
             padding-left: 2em
