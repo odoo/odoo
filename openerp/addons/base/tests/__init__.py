@@ -6,6 +6,7 @@ import test_ir_values
 import test_menu
 import test_search
 import test_views
+import test_ir_sequence
 
 checks = [
     test_base,
@@ -16,4 +17,5 @@ checks = [
     test_menu,
     test_search,
     test_views,
+    test_ir_sequence,
 ]
