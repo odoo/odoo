@@ -1,8 +1,11 @@
-(function () {
+odoo.define('website_links.code_editor', ['web.ajax', 'website.website'], function (require) {
 'use strict';
 
-openerp.website.ready().done(function() {
-openerp.website.if_dom_contains('.o_website_links_edit_code', function() {
+var ajax = require('web.ajax');
+var website = require('website.website');
+
+website.ready().done(function() {
+website.if_dom_contains('.o_website_links_edit_code', function() {
 
     // Edit the short URL code
     $('.o_website_links_edit_code').on('click', function(e) {
@@ -45,7 +48,7 @@ openerp.website.if_dom_contains('.o_website_links_edit_code', function() {
                 $('#o_website_links_code').html(new_code);
 
                 // Update button copy to clipboard
-                $('.copy-to-clipboard').attr('data-clipboard-text', host + new_code)
+                $('.copy-to-clipboard').attr('data-clipboard-text', host + new_code);
                 
                 // Show action again
                 $('.o_website_links_edit_code').show();
@@ -57,16 +60,16 @@ openerp.website.if_dom_contains('.o_website_links_edit_code', function() {
                 show_new_code(new_code);
             }
             else {
-                openerp.jsonRpc('/website_links/add_code', 'call', {'init_code':init_code, 'new_code':new_code})
+                ajax.jsonRpc('/website_links/add_code', 'call', {'init_code':init_code, 'new_code':new_code})
                     .then(function(result) {
                         show_new_code(result[0].code);
                     })
-                    .fail(function(error) {
+                    .fail(function() {
                         $('.o_website_links_code_error').show();
                     $('.o_website_links_code_error').html("This code is already taken");
                     }) ;
             }
-        };
+        }
 
         $('#edit-code-form').submit(function(e) {
             e.preventDefault();
@@ -78,6 +81,7 @@ openerp.website.if_dom_contains('.o_website_links_edit_code', function() {
             submit_code();
         });
     });
+
 });
 });
-})();
+});

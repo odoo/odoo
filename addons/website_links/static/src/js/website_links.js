@@ -1,16 +1,21 @@
-(function () {
-   'use strict';
+odoo.define('website_links.website_links', ['web.ajax', 'web.core', 'web.Widget', 'website.website'], function (require) {
+'use strict';
 
-openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', function() {
+var ajax = require('web.ajax');
+var core = require('web.core');
+var Widget = require('web.Widget');
+var website = require('website.website');
 
-    var QWeb = openerp.qweb;
-    var _t = openerp._t;
+var _t = core._t;
+var ZeroClipboard = window.ZeroClipboard;
 
-    openerp.website_links = {};
+var exports = {};
 
-    openerp.website_links.SelectBox = openerp.Widget.extend({
+website.if_dom_contains('div.o_website_links_create_tracked_url', function() {
+
+    var SelectBox = Widget.extend({
         init: function(obj) {
-            this.obj = openerp.website.session.model(obj);
+            this.obj = website.session.model(obj);
         },
         start: function(element, placeholder) {
             var self = this;
@@ -23,7 +28,7 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
                 element.select2({
                     placeholder: self.placeholder,
                     allowClear: true,
-                    createSearchChoice:function(term, data) {
+                    createSearchChoice:function(term) {
                         if(self.object_exists(term)) { return null; }
 
                         return {id:term, text:_.str.sprintf("Create '%s'", term)};
@@ -42,13 +47,13 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
             return this.obj.call('search_read', [[]]).then(function(result) {
                 return _.map(result, function(val) {
                     return {id: val.id, text:val.name};
-                })  
+                });
             });
         },
         object_exists: function(query) {
             return _.find(this.objects, function(val) {
-                return val.text.toLowerCase() == query.toLowerCase();
-            }) != undefined;
+                return val.text.toLowerCase() === query.toLowerCase();
+            }) !== undefined;
         },
         on_change: function(e) {
             if(e.added && _.isString(e.added.id)) {
@@ -61,11 +66,11 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
             return this.obj.call('create', [{name:name}]).then(function(record) {
                 self.element.attr('value', record);
                 self.objects.push({'id': record, 'text': name});
-            })
+            });
         },
     });
     
-    openerp.website_links.RecentLinkBox = openerp.Widget.extend({
+    var RecentLinkBox = Widget.extend({
         template: 'website_links.RecentLink',
         events: {
             'click .btn_shorten_url_clipboard':'toggle_copy_button',
@@ -132,7 +137,7 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
             this.$('.o_website_links_edit_code').show();
             this.$('.copy-to-clipboard').show();
             this.$('.o_website_links_edit_tools').hide();
-            self.$('.o_website_links_code_error').hide();
+            this.$('.o_website_links_code_error').hide();
 
             var old_code = this.$('#o_website_links_edit_code_form #init_code').val();
             this.$('#o_website_links_code').html(old_code);
@@ -157,7 +162,7 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
                 self.$('#o_website_links_code').html(new_code);
 
                 // Update button copy to clipboard
-                self.$('.btn_shorten_url_clipboard').attr('data-clipboard-text', host + new_code)
+                self.$('.btn_shorten_url_clipboard').attr('data-clipboard-text', host + new_code);
                 
                 // Show action again
                 self.$('.o_website_links_edit_code').show();
@@ -169,11 +174,11 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
                 show_new_code(new_code);
             }
             else {
-                openerp.jsonRpc('/website_links/add_code', 'call', {'init_code':init_code, 'new_code':new_code})
+                ajax.jsonRpc('/website_links/add_code', 'call', {'init_code':init_code, 'new_code':new_code})
                     .then(function(result) {
                         show_new_code(result[0].code);
                     })
-                    .fail(function(error) {
+                    .fail(function() {
                         self.$('.o_website_links_code_error').show();
                         self.$('.o_website_links_code_error').html("This code is already taken");
                     }) ;
@@ -181,15 +186,14 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
         },
     });
 
-    openerp.website_links.RecentLinks = openerp.Widget.extend({
-        init: function($element) {
+    var RecentLinks = Widget.extend({
+        init: function() {
             this._super();
         },
         get_recent_links: function(filter) {
             var self = this;
-            var nb_links = this.getChildren().length;
 
-            openerp.jsonRpc('/website_links/recent_links', 'call', {'filter':filter, 'limit':20})
+            ajax.jsonRpc('/website_links/recent_links', 'call', {'filter':filter, 'limit':20})
                 .then(function(result) {
                     _.each(result.reverse(), function(link) {
                         self.add_link(link);
@@ -205,11 +209,11 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
         add_link: function(link) {
             var nb_links = this.getChildren().length;
 
-            var recent_link_box = new openerp.website_links.RecentLinkBox(this, link);
+            var recent_link_box = new RecentLinkBox(this, link);
             recent_link_box.prependTo(this.$el);
             $('.link-tooltip').tooltip();
 
-            if(nb_links == 0) {
+            if(nb_links === 0) {
                 this.update_notification();
             }
         },
@@ -220,7 +224,7 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
             link.destroy();
         },
         update_notification: function() {
-            if(this.getChildren().length == 0) {
+            if(this.getChildren().length === 0) {
                 var message = _t("You don't have any recent links.");
                 $('.o_website_links_recent_links_notification').html("<div class='alert alert-info'>" + message + "</div>");
             }
@@ -230,25 +234,25 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
         },
     });
 
-    openerp.website.ready().done(function() {
+    website.ready().done(function() {
 
         ZeroClipboard.config({swfPath: location.origin + "/website_links/static/lib/zeroclipboard/ZeroClipboard.swf" });
 
         // UTMS selects widgets
-        var campaign_select = new openerp.website_links.SelectBox('utm.campaign');
+        var campaign_select = new SelectBox('utm.campaign');
         campaign_select.start($("#campaign-select"), _t('e.g. Promotion of June, Winter Newsletter, ..'));
 
-        var medium_select = new openerp.website_links.SelectBox('utm.medium');
+        var medium_select = new SelectBox('utm.medium');
         medium_select.start($("#channel-select"), _t('e.g. Newsletter, Social Network, ..'));
 
-        var source_select = new openerp.website_links.SelectBox('utm.source');
+        var source_select = new SelectBox('utm.source');
         source_select.start($("#source-select"), _t('e.g. Search Engine, Website page, ..'));
 
         // Recent Links Widgets
         var recent_links;
-        openerp.website.add_template_file('/website_links/static/src/xml/recent_link.xml')
+        website.add_template_file('/website_links/static/src/xml/recent_link.xml')
             .then(function() {
-                recent_links = new openerp.website_links.RecentLinks();
+                recent_links = new RecentLinks();
                 recent_links.appendTo($("#o_website_links_recent_links"));
                 recent_links.get_recent_links('newest');
 
@@ -309,7 +313,7 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
                         });
                 }
             }
-        })
+        });
         
         // Add the RecentLinkBox widget and send the form when the user generate the link
         $("#o_website_links_link_tracker_form").submit(function(event) {
@@ -330,20 +334,20 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
 
             var params = {};
             params.url = $("#url").val();
-            if(campaign_id != '') { params.campaign_id = parseInt(campaign_id); }
-            if(medium_id != '') { params.medium_id = parseInt(medium_id); }
-            if(source_id != '') { params.source_id = parseInt(source_id); }
+            if(campaign_id !== '') { params.campaign_id = parseInt(campaign_id); }
+            if(medium_id !== '') { params.medium_id = parseInt(medium_id); }
+            if(source_id !== '') { params.source_id = parseInt(source_id); }
 
             $('#btn_shorten_url').text(_t('Generating link...'));
 
-            openerp.jsonRpc("/website_links/new", 'call', params)
+            ajax.jsonRpc("/website_links/new", 'call', params)
                 .then(function (result) {
                     if('error' in result) {
                         // Handle errors
-                        if(result['error'] == 'empty_url')  {
+                        if(result.error === 'empty_url')  {
                             $('.notification').html("<div class='alert alert-danger'>The URL is empty.</div>");
                         }
-                        else if(result['error'] == 'url_not_found') {
+                        else if(result.error == 'url_not_found') {
                             $('.notification').html("<div class='alert alert-danger'>URL not found (404)</div>");
                         }
                         else {
@@ -374,8 +378,14 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
         });
 
         $(function () {
-          $('[data-toggle="tooltip"]').tooltip()
-        })
+          $('[data-toggle="tooltip"]').tooltip();
+        });
     });
+
+    exports.SelectBox = SelectBox;
+    exports.RecentLinkBox = RecentLinkBox;
+    exports.RecentLinks = RecentLinks;
 });
-})();
+
+return exports;
+});
