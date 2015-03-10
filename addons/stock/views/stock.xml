@@ -33,18 +33,21 @@
         <t t-call-assets="web.assets_backend" t-css="false" />
 
         <script type="text/javascript" id="loading-script" t-raw="init">
-            $(function() {
-                var s = new openerp.init();
-                var wc = new s.web.WebClient();
-
-                wc.show_application = function() {
-                    wc.action_manager.do_action("stock.ui", {});
-                };
-
-                wc.do_push_state = function(state){};
-                wc.setElement($(document.body));
-                wc.start();
+            odoo.define('web.web_client', ['web.WebClient'], function (require) {
+                var WebClient = require('web.WebClient');
+                var web_client = new WebClient();
+                web_client.do_push_state = function (){};
+                $(function () {
+                    web_client.setElement($(document.body));
+                    web_client.show_application = function () {
+                        web_client.action_manager.do_action("stock.ui", {});
+                    };
+                    web_client.start();
+                });
+                return web_client;
             });
+            odoo.init();
+
         </script>
 
     </head>
