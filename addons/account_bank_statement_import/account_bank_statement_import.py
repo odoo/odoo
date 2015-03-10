@@ -145,7 +145,7 @@ class AccountBankStatementImport(models.TransientModel):
 
         # If there is no journal, create one (and its account)
         if not journal_id and account_number:
-            journal_id = self._create_journal(currency_id, account_number)
+            journal_id = self.env.user.company_id._create_bank_account_and_journal(account_number, currency_id)
             if bank_account_id:
                 bank_account.write({'journal_id': journal_id})
 
@@ -153,19 +153,6 @@ class AccountBankStatementImport(models.TransientModel):
         if not journal_id:
             raise UserError(_('Cannot find in which journal import this statement. Please manually select a journal.'))
         return journal_id
-
-    def _create_journal(self, currency_id, account_number):
-        """ Create a journal and its account """
-        MultiChartsAccounts = self.env['wizard.multi.charts.accounts']
-        company = self.env.user.company_id
-
-        vals_account = {'currency_id': currency_id, 'acc_name': account_number, 'account_type': 'bank', 'currency_id': currency_id}
-        vals_account = MultiChartsAccounts._prepare_bank_account(company, vals_account)
-        account_id = self.env['account.account'].create(vals_account).id
-
-        vals_journal = {'currency_id': currency_id, 'acc_name': _('Bank') + ' ' + account_number, 'account_type': 'bank'}
-        vals_journal = MultiChartsAccounts._prepare_bank_journal(company, vals_journal, account_id)
-        return self.env['account.journal'].create(vals_journal).id
 
     def _create_bank_account(self, account_number, journal_id=False, partner_id=False):
         try:
