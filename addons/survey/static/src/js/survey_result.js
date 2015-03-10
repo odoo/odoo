@@ -1,3 +1,8 @@
+odoo.define('survey.result', ['website.website'], function (require) {
+'use strict';
+
+var website = require('website.website');
+
 /*
  *    OpenERP, Open Source Management Solution
  *    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
@@ -16,9 +21,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function () {
-'use strict';
-openerp.website.if_dom_contains('.js_surveyresult', function () {
+website.if_dom_contains('.js_surveyresult', function () {
     console.debug("[survey] Survey Result JS is loading...");
 
     //Script For Pagination
@@ -52,7 +55,7 @@ openerp.website.if_dom_contains('.js_surveyresult', function () {
             .staggerLabels(true);
 
         // Replacing Library's Default Tooltip with our Custom One
-        chart.tooltip(function(key, x, y, e, graph) {
+        chart.tooltip(function(key, x, y, e) {
             return '<h5 class="panel-primary"><div class="panel-heading">' + x + '</div></h5>' +
             '<p>' + '<b>Responses : </b>' + key + '</p>' +
             '<p>' + "<b>Total Vote : </b>" + y + '</p>';
@@ -176,4 +179,5 @@ openerp.website.if_dom_contains('.js_surveyresult', function () {
 
     console.debug("[survey] Survey Result JS loaded!");
 });
-})();
+
+});
