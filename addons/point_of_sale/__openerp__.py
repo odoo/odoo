@@ -47,7 +47,7 @@ Main Features
 * Refund previous sales
     """,
     'author': 'OpenERP SA',
-    'depends': ['sale_stock', 'barcodes'],
+    'depends': ['sale_stock', 'barcodes', 'request_cache'],
     'data': [
         'data/report_paperformat.xml',
         'data/default_barcode_patterns.xml',

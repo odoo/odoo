@@ -1440,6 +1440,10 @@ class pos_category(osv.osv):
                  "Use this field anywhere a small image is required."),
     }
 
+class product_product(osv.osv):
+    _inherit = 'product.product'
+    _cache_dependencies = ['product.product', 'product.pricelist']
+    
 class product_template(osv.osv):
     _inherit = 'product.template'
 
