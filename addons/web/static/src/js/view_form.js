@@ -2850,6 +2850,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
             this.$textarea = this.$el.find('textarea');
             this.auto_sized = false;
             this.default_height = this.$textarea.css('height');
+            if (this.default_height === '0px') this.default_height = '90px';
             if (this.get("effective_readonly")) {
                 this.$textarea.attr('disabled', 'disabled');
             }
@@ -4392,8 +4393,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
 
         this.records
             .bind('add', this.proxy("changed_records"))
-            .bind('edit', this.proxy("changed_records"))
             .bind('remove', this.proxy("changed_records"));
+        this.on('save:after', this, this.proxy("changed_records"));
     },
     start: function () {
         var ret = this._super();
@@ -4410,7 +4411,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         if (!this.fields_view || !this.editable()){
             return true;
         }
-        var r;
         if (_.isEmpty(this.records.records)){
             return true;
         }
@@ -4421,9 +4421,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             current_values[field.name] = field.get('value');
         });
         var valid = _.every(this.records.records, function(record){
-            r = record;
             _.each(self.editor.form.fields, function(field){
-                field.set_value(r.attributes[field.name]);
+                field.set_value(record.attributes[field.name]);
             });
             return _.every(self.editor.form.fields, function(field){
                 field.process_modifiers();

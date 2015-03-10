@@ -1583,7 +1583,7 @@ class stock_production_lot(osv.osv):
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, ref, product_id)', 'The combination of serial number, internal reference and product must be unique !'),
+        ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
     ]
 
     def action_traceability(self, cr, uid, ids, context=None):
@@ -1950,7 +1950,7 @@ class stock_move(osv.osv):
 
     def _create_procurement(self, cr, uid, move, context=None):
         """ This will create a procurement order """
-        return self.pool.get("procurement.order").create(cr, uid, self._prepare_procurement_from_move(cr, uid, move, context=context))
+        return self.pool.get("procurement.order").create(cr, uid, self._prepare_procurement_from_move(cr, uid, move, context=context), context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
@@ -2831,7 +2831,8 @@ class stock_inventory_line(osv.osv):
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
         'theoretical_qty': fields.function(_get_theoretical_qty, type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
-                                           store=True, readonly=True, string="Theoretical Quantity"),
+                                           store={'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['location_id', 'product_id', 'package_id', 'product_uom_id', 'company_id', 'prod_lot_id', 'partner_id'], 20),},
+                                           readonly=True, string="Theoretical Quantity"),
         'partner_id': fields.many2one('res.partner', 'Owner'),
         'product_name': fields.related('product_id', 'name', type='char', string='Product Name', store={
                                                                                             'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
@@ -3064,20 +3065,43 @@ class stock_warehouse(osv.osv):
             raise UserError(_('Can\'t find any customer or supplier location.'))
         return location_obj.browse(cr, uid, [customer_loc, supplier_loc], context=context)
 
+    def _location_used(self, cr, uid, location_id, warehouse, context=None):
+        pull_obj = self.pool['procurement.rule']
+        push_obj = self.pool['stock.location.path']
+
+        domain = ['&', ('route_id', 'not in', [x.id for x in warehouse.route_ids]),
+                       '|', ('location_src_id', '=', location_id),                      # noqa
+                            ('location_id', '=', location_id)
+                  ]
+        pulls = pull_obj.search_count(cr, uid, domain, context=context)
+
+        domain = ['&', ('route_id', 'not in', [x.id for x in warehouse.route_ids]),
+                       '|', ('location_from_id', '=', location_id),                     # noqa
+                            ('location_dest_id', '=', location_id)
+                  ]
+        pushs = push_obj.search_count(cr, uid, domain, context=context)
+        if pulls or pushs:
+            return True
+        return False
+
     def switch_location(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
         location_obj = self.pool.get('stock.location')
 
         new_reception_step = new_reception_step or warehouse.reception_steps
         new_delivery_step = new_delivery_step or warehouse.delivery_steps
         if warehouse.reception_steps != new_reception_step:
-            location_obj.write(cr, uid, [warehouse.wh_input_stock_loc_id.id, warehouse.wh_qc_stock_loc_id.id], {'active': False}, context=context)
+            if not self._location_used(cr, uid, warehouse.wh_input_stock_loc_id.id, warehouse, context=context):
+                location_obj.write(cr, uid, [warehouse.wh_input_stock_loc_id.id, warehouse.wh_qc_stock_loc_id.id], {'active': False}, context=context)
             if new_reception_step != 'one_step':
                 location_obj.write(cr, uid, warehouse.wh_input_stock_loc_id.id, {'active': True}, context=context)
             if new_reception_step == 'three_steps':
                 location_obj.write(cr, uid, warehouse.wh_qc_stock_loc_id.id, {'active': True}, context=context)
 
         if warehouse.delivery_steps != new_delivery_step:
-            location_obj.write(cr, uid, [warehouse.wh_output_stock_loc_id.id, warehouse.wh_pack_stock_loc_id.id], {'active': False}, context=context)
+            if not self._location_used(cr, uid, warehouse.wh_output_stock_loc_id.id, warehouse, context=context):
+                location_obj.write(cr, uid, [warehouse.wh_output_stock_loc_id.id], {'active': False}, context=context)
+            if not self._location_used(cr, uid, warehouse.wh_pack_stock_loc_id.id, warehouse, context=context):
+                location_obj.write(cr, uid, [warehouse.wh_pack_stock_loc_id.id], {'active': False}, context=context)
             if new_delivery_step != 'ship_only':
                 location_obj.write(cr, uid, warehouse.wh_output_stock_loc_id.id, {'active': True}, context=context)
             if new_delivery_step == 'pick_pack_ship':

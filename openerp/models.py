@@ -3155,17 +3155,20 @@ class BaseModel(object):
         fields = self.check_field_access_rights('read', fields)
 
         # split fields into stored and computed fields
-        stored, computed = [], []
+        stored, inherited, computed = [], [], []
         for name in fields:
             if name in self._columns:
                 stored.append(name)
             elif name in self._fields:
                 computed.append(name)
+                field = self._fields[name]
+                if field.inherited and field.base_field.column:
+                    inherited.append(name)
             else:
                 _logger.warning("%s.read() with unknown field '%s'", self._name, name)
 
         # fetch stored fields from the database to the cache
-        self._read_from_database(stored)
+        self._read_from_database(stored, inherited)
 
         # retrieve results from records; this takes values from the cache and
         # computes remaining fields
@@ -3234,50 +3237,61 @@ class BaseModel(object):
                 self._cache[field] = FailedValue(e)
 
     @api.multi
-    def _read_from_database(self, field_names):
+    def _read_from_database(self, field_names, inherited_field_names=[]):
         """ Read the given fields of the records in `self` from the database,
             and store them in cache. Access errors are also stored in cache.
+
+            :param field_names: list of column names of model `self`; all those
+                fields are guaranteed to be read
+            :param inherited_field_names: list of column names from parent
+                models; some of those fields may not be read
         """
         env = self.env
         cr, user, context = env.args
 
-        # FIXME: The query construction needs to be rewritten using the internal Query
-        # object, as in search(), to avoid ambiguous column references when
-        # reading/sorting on a table that is auto_joined to another table with
-        # common columns (e.g. the magical columns)
+        # make a query object for selecting ids, and apply security rules to it
+        query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [])
+        self._apply_ir_rules(query, 'read')
+        order_str = self._generate_order_by(None, query)
 
-        # Construct a clause for the security rules.
-        # 'tables' holds the list of tables necessary for the SELECT, including
-        # the ir.rule clauses, and contains at least self._table.
-        rule_clause, rule_params, tables = env['ir.rule'].domain_get(self._name, 'read')
+        # determine the fields that are stored as columns in tables;
+        # for the sake of simplicity, discard inherited translated fields
+        fields = map(self._fields.get, field_names + inherited_field_names)
+        fields_pre = [
+            field
+            for field in fields
+            if field.base_field.column._classic_write
+            if not (field.inherited and field.base_field.column.translate)
+        ]
 
-        # determine the fields that are stored as columns in self._table
-        fields_pre = [f for f in field_names if self._columns[f]._classic_write]
-
-        # we need fully-qualified column names in case len(tables) > 1
-        def qualify(f):
-            if isinstance(self._columns.get(f), fields.binary) and \
-                    context.get('bin_size_%s' % f, context.get('bin_size')):
-                # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast 
-                return 'pg_size_pretty(length(%s."%s")::bigint) as "%s"' % (self._table, f, f)
+        # the query may involve several tables: we need fully-qualified names
+        def qualify(field):
+            col = field.name
+            if field.inherited:
+                res = self._inherits_join_calc(field.name, query)
             else:
-                return '%s."%s"' % (self._table, f)
-        qual_names = map(qualify, set(fields_pre + ['id']))
+                res = '"%s"."%s"' % (self._table, col)
+            if field.type == 'binary' and (context.get('bin_size') or context.get('bin_size_' + col)):
+                # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
+                res = 'pg_size_pretty(length(%s)::bigint) as "%s"' % (res, col)
+            return res
 
-        query = """ SELECT %(qual_names)s FROM %(tables)s
-                    WHERE %(table)s.id IN %%s AND (%(extra)s)
-                    ORDER BY %(order)s
-                """ % {
-                    'qual_names': ",".join(qual_names),
-                    'tables': ",".join(tables),
-                    'table': self._table,
-                    'extra': " OR ".join(rule_clause) if rule_clause else "TRUE",
-                    'order': self._parent_order or self._order,
-                }
+        qual_names = map(qualify, set(fields_pre + [self._fields['id']]))
+
+        # determine the actual query to execute
+        from_clause, where_clause, where_params = query.get_sql()
+        query_str = """ SELECT %(qual_names)s FROM %(from_clause)s
+                        WHERE %(where_clause)s %(order_str)s
+                    """ % {
+                        'qual_names': ",".join(qual_names),
+                        'from_clause': from_clause,
+                        'where_clause': where_clause,
+                        'order_str': order_str,
+                    }
 
         result = []
         for sub_ids in cr.split_for_in_conditions(self.ids):
-            cr.execute(query, [tuple(sub_ids)] + rule_params)
+            cr.execute(query_str, [tuple(sub_ids)] + where_params)
             result.extend(cr.dictfetchall())
 
         ids = [vals['id'] for vals in result]
@@ -3286,8 +3300,9 @@ class BaseModel(object):
             # translate the fields if necessary
             if context.get('lang'):
                 ir_translation = env['ir.translation']
-                for f in fields_pre:
-                    if self._columns[f].translate:
+                for field in fields_pre:
+                    if not field.inherited and field.column.translate:
+                        f = field.name
                         #TODO: optimize out of this loop
                         res_trans = ir_translation._get_ids(
                             '%s,%s' % (self._name, f), 'model', context['lang'], ids)
@@ -3295,9 +3310,10 @@ class BaseModel(object):
                             vals[f] = res_trans.get(vals['id'], False) or vals[f]
 
             # apply the symbol_get functions of the fields we just read
-            for f in fields_pre:
-                symbol_get = self._columns[f]._symbol_get
+            for field in fields_pre:
+                symbol_get = field.base_field.column._symbol_get
                 if symbol_get:
+                    f = field.name
                     for vals in result:
                         vals[f] = symbol_get(vals[f])
 
@@ -3306,7 +3322,8 @@ class BaseModel(object):
                 record = self.browse(vals['id'])
                 record._cache.update(record._convert_to_cache(vals, validate=False))
 
-            # determine the fields that must be processed now
+            # determine the fields that must be processed now;
+            # for the sake of simplicity, we ignore inherited fields
             fields_post = [f for f in field_names if not self._columns[f]._classic_write]
 
             # Compute POST fields, grouped by multi

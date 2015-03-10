@@ -154,7 +154,7 @@ class Post(models.Model):
 
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
-    content = fields.Html('Content')
+    content = fields.Html('Content', strip_style=True)
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
 
     @api.one
@@ -287,17 +287,21 @@ class Post(models.Model):
     can_downvote = fields.Boolean('Can Downvote', compute='_get_post_karma_rights')
     can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
     can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
+    can_view = fields.Boolean('Can View', compute='_get_post_karma_rights')
 
     @api.one
     def _get_post_karma_rights(self):
         user = self.env.user
+        post = self.sudo()
 
-        self.karma_accept = self.parent_id and self.parent_id.create_uid.id == self._uid and self.forum_id.karma_answer_accept_own or self.forum_id.karma_answer_accept_all
-        self.karma_edit = self.create_uid.id == self._uid and self.forum_id.karma_edit_own or self.forum_id.karma_edit_all
-        self.karma_close = self.create_uid.id == self._uid and self.forum_id.karma_close_own or self.forum_id.karma_close_all
-        self.karma_unlink = self.create_uid.id == self._uid and self.forum_id.karma_unlink_own or self.forum_id.karma_unlink_all
-        self.karma_comment = self.create_uid.id == self._uid and self.forum_id.karma_comment_own or self.forum_id.karma_comment_all
-        self.karma_comment_convert = self.create_uid.id == self._uid and self.forum_id.karma_comment_convert_own or self.forum_id.karma_comment_convert_all
+        is_creator = post.create_uid.id == self._uid
+
+        self.karma_accept = self.forum_id.karma_answer_accept_own if post.parent_id and post.parent_id.create_uid.id == self._uid else self.forum_id.karma_answer_accept_all
+        self.karma_edit = self.forum_id.karma_edit_own if is_creator else self.forum_id.karma_edit_all
+        self.karma_close = self.forum_id.karma_close_own if is_creator else self.forum_id.karma_close_all
+        self.karma_unlink = self.forum_id.karma_unlink_own if is_creator else self.forum_id.karma_unlink_all
+        self.karma_comment = self.forum_id.karma_comment_own if is_creator else self.forum_id.karma_comment_all
+        self.karma_comment_convert = self.forum_id.karma_comment_convert_own if is_creator else self.forum_id.karma_comment_convert_all
 
         self.can_ask = user.karma >= self.forum_id.karma_ask
         self.can_answer = user.karma >= self.forum_id.karma_answer
@@ -309,6 +313,7 @@ class Post(models.Model):
         self.can_downvote = user.karma >= self.forum_id.karma_downvote
         self.can_comment = user.karma >= self.karma_comment
         self.can_comment_convert = user.karma >= self.karma_comment_convert
+        self.can_view = user.karma >= self.karma_close or post.create_uid.karma > 0
 
     @api.one
     @api.constrains('post_type', 'forum_id')
@@ -317,15 +322,6 @@ class Post(models.Model):
                 or (self.post_type == 'discussion' and not self.forum_id.allow_discussion) \
                 or (self.post_type == 'link' and not self.forum_id.allow_link):
             raise UserError(_('This forum does not allow %s' % self.post_type))
-
-    def name_get(self, cr, uid, ids, context=None):
-        result = []
-        for post in self.browse(cr, uid, ids, context=context):
-            if post.parent_id and not post.name:
-                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
-            else:
-                result.append((post.id, '%s' % (post.name)))
-        return result
 
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
@@ -510,7 +506,7 @@ class Post(models.Model):
         # post the message
         question = self.parent_id
         values = {
-            'author_id': self.create_uid.partner_id.id,
+            'author_id': self.sudo().create_uid.partner_id.id,  # use sudo here because of access to res.users model
             'body': tools.html2plaintext(self.content),
             'type': 'comment',
             'subtype': 'mail.mt_comment',

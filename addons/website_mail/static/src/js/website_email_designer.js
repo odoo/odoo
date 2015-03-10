@@ -394,23 +394,43 @@
         }
     });
 
-    window.top.openerp[callback+"_set_value"] = function (value, fields_values) {
+    window.top.openerp[callback+"_set_value"] = function (value, fields_values, field_name) {
         var $editable = $("#wrapwrap .o_editable:first");
+        var editor_enable = $('body').hasClass('editor_enable');
+        var _val = $editable.prop("innerHTML");
         value = value || "";
-        if (value.indexOf('on_change_model_and_list') === -1 && value !== $editable.html()) {
-            openerp.website.editor_bar.rte.historyRecordUndo($editable, true);
-            openerp.website.editor_bar.snippets.make_active(false);
-            
-            $editable.html(value);
 
-            openerp.website.editor_bar.snippets.img_to_font();
-            openerp.website.editor_bar.snippets.style_to_class();
-            openerp.website.editor_bar.display_theme_from_html();
-        } else {
-            $editable.trigger("content_changed");
+        if(value !== _val) {
+            if (editor_enable) {
+                if (value !== fields_values[field_name]) {
+                    openerp.website.editor_bar.rte.historyRecordUndo($editable, true);
+                }
+                openerp.website.editor_bar.snippets.make_active(false);
+            }
+            
+            if (value.indexOf('on_change_model_and_list') === -1) {
+
+                $editable.html(value);
+
+                if (editor_enable) {
+                    openerp.website.editor_bar.snippets.img_to_font();
+                    openerp.website.editor_bar.snippets.style_to_class();
+                    if (fields_values.mailing_model) {
+                        openerp.website.editor_bar.display_theme_from_html();
+                    }
+
+                    if (value !== fields_values[field_name]) {
+                        $editable.trigger("content_changed");
+                    }
+                }
+            }
         }
+
         if (fields_values.mailing_model) {
             openerp.website.editor_bar.get_snippet_template(fields_values.mailing_model);
+            if (value.indexOf('on_change_model_and_list') !== -1) {
+                window.top.openerp[callback+"_downup"](_val);
+            }
         }
     };
 

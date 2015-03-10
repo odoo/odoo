@@ -2205,6 +2205,8 @@
         select_record: function (li) {
             var self = this;
 
+            this.BuildingBlock.parent.rte.historyRecordUndo(this.$target);
+
             self.ID = +$(li).data("id");
             self.$target.attr('data-oe-many2one-id', self.ID).data('oe-many2one-id', self.ID);
 

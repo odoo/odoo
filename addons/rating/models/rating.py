@@ -12,12 +12,11 @@ class Rating(models.Model):
         ('rating_range', 'check(rating >= -1 and rating <= 10)', 'Rating should be between -1 to 10'),
     ]
 
-    @api.multi
+    @api.one
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
-        for record in self:
-            name = self.env[record.res_model].sudo().browse(record.res_id).name_get()
-            record.res_name = name and name[0][1] or ('%s/%s') % (record.res_model, record.res_id)
+        name = self.env[self.res_model].sudo().browse(self.res_id).name_get()
+        self.res_name = name and name[0][1] or ('%s/%s') % (self.res_model, self.res_id)
 
     @api.model
     def new_access_token(self):

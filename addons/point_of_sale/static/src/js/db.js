@@ -298,7 +298,7 @@ openerp.point_of_sale.load_db = function load_db(instance, module){
             return updated_count;
         },
         get_partner_write_date: function(){
-            return this.partner_write_date;
+            return this.partner_write_date || "1970-01-01 00:00:00";
         },
         get_partner_by_id: function(id){
             return this.partner_by_id[id];

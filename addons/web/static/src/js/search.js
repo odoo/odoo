@@ -436,7 +436,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     set_default_filters: function () {
         var self = this,
             default_custom_filter = this.$buttons && this.favorite_menu.get_default_filter();
-        if (default_custom_filter) {
+        if (!self.options.disable_custom_filters && default_custom_filter) {
             return this.favorite_menu.toggle_filter(default_custom_filter, true);
         }
         if (!_.isEmpty(this.defaults)) {
@@ -2153,12 +2153,20 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 }
                 return;
             }
-            if (!self.searching) {
-                self.searching = true;
-                return;
+            var search_string = self.get_search_string();
+            if (self.search_string !== search_string) {
+                if (search_string.length) {
+                    self.search_string = search_string;
+                    setTimeout(function () { self.initiate_search(search_string);}, self.delay);
+                } else {
+                    self.close();
+                }
             }
-            self.search_string = self.get_search_string();
+        });
+        this.$input.on('keypress', function (ev) {
+            self.search_string = self.get_search_string() + String.fromCharCode(ev.which);
             if (self.search_string.length) {
+                self.searching = true;
                 var search_string = self.search_string;
                 setTimeout(function () { self.initiate_search(search_string);}, self.delay);
             } else {

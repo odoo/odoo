@@ -2010,6 +2010,9 @@
   float: right;
   margin: 4px 7px;
 }
+.openerp .oe_form .oe-view-manager-content {
+  overflow: visible;
+}
 .openerp .oe_form_editable .oe_form .oe_form_field_integer input {
   width: 6em;
 }
@@ -2164,6 +2167,10 @@
 }
 .openerp .oe_form_field_many2one input {
   padding-right: 13px;
+}
+.openerp.ui-autocomplete {
+  top: 0;
+  left: 0;
 }
 .openerp.ui-autocomplete li.oe_m2o_dropdown_option a {
   font-style: italic;
@@ -2863,7 +2870,7 @@ div.ui-widget-overlay {
 }
 .ui-menu .ui-state-focus, .ui-menu .ui-state-active {
   background: #7c7bad !important;
-  border: 0 !important;
+  border: 1px solid #7c7bad !important;
 }
 .ui-menu .ui-state-focus a, .ui-menu .ui-state-active a {
   color: #ffffff !important;

@@ -484,6 +484,7 @@ class purchase_order(osv.osv):
             action['res_id'] = pick_ids and pick_ids[0] or False
         return action
 
+
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
@@ -542,6 +543,10 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
                 raise UserError(_('You cannot confirm a purchase order without any purchase order line.'))
+            if po.invoice_method == 'picking' and not any([l.product_id and l.product_id.type in ('product', 'consu') for l in po.order_line]):
+                raise osv.except_osv(
+                    _('Error!'),
+                    _("You cannot confirm a purchase order with Invoice Control Method 'Based on incoming shipments' that doesn't contain any stockable item."))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)        

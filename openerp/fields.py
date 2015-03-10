@@ -528,7 +528,7 @@ class Field(object):
     @property
     def base_field(self):
         """ Return the base field of an inherited field, or `self`. """
-        return self.related_field if self.inherited else self
+        return self.related_field.base_field if self.inherited else self
 
     #
     # Setup of field triggers
@@ -1076,16 +1076,21 @@ class Text(_String):
 class Html(_String):
     type = 'html'
     sanitize = True                     # whether value must be sanitized
+    strip_style = False                 # whether to strip style attributes
 
     _column_sanitize = property(attrgetter('sanitize'))
     _related_sanitize = property(attrgetter('sanitize'))
     _description_sanitize = property(attrgetter('sanitize'))
 
+    _column_strip_style = property(attrgetter('strip_style'))
+    _related_strip_style = property(attrgetter('strip_style'))
+    _description_strip_style = property(attrgetter('strip_style'))
+
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return False
         if validate and self.sanitize:
-            return html_sanitize(value)
+            return html_sanitize(value, strip_style=self.strip_style)
         return value
 
 
@@ -1482,7 +1487,11 @@ class Many2one(_Relational):
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             try:
-                return value.sudo().name_get()[0]
+                value_sudo = value.sudo()
+                # performance trick: make sure that all records of the same
+                # model as value in value.env will be prefetched in value_sudo.env
+                value_sudo.env.prefetch[value._name].update(value.env.prefetch[value._name])
+                return value_sudo.name_get()[0]
             except MissingError:
                 # Should not happen, unless the foreign key is missing.
                 return False

@@ -20,7 +20,13 @@ openerp.web_calendar = function(instance) {
     }
 
     function get_fc_defaultOptions() {
-        shortTimeformat = moment._locale._longDateFormat.LT;
+        var converter = {
+            A: 'TT',
+            a: 'tt',
+        };
+        var shortTimeformat = moment._locale._longDateFormat.LT.replace(/([a-zA-Z])\1*/g, function (s) {
+            return converter[s] || s;
+        });
         var dateFormat = instance.web.normalize_format(_t.database.parameters.date_format);
 
         // adapt format for fullcalendar v1.
@@ -144,6 +150,7 @@ openerp.web_calendar = function(instance) {
             this.$el.addClass(attrs['class']);
 
             this.name = fv.name || attrs.string;
+            this.string = attrs.string || fv.name;
             this.view_id = fv.view_id;
 
             this.mode = attrs.mode;                 // one of month, week or day
@@ -952,8 +959,6 @@ openerp.web_calendar = function(instance) {
      * @type {*}
      */
     instance.web_calendar.QuickCreate = instance.web.Widget.extend({
-        template: 'CalendarView.quick_create',
-        
         init: function(parent, dataset, buttons, options, data_template) {
             this._super(parent);
             this.dataset = dataset;
@@ -977,53 +982,44 @@ openerp.web_calendar = function(instance) {
             var self = this;
 
             if (this.options.disable_quick_create) {
-                this.$el.hide();
                 this.slow_create();
                 return;
             }
+            self.on('added', self, function() {
+                self.trigger('close');
+            });
 
-            self.$input = this.$el.find('input');
-            self.$input.keyup(function enterHandler (event) {
+            this.$dialog = new instance.web.Dialog(this, {
+                title: this.get_title(),
+                size: 'small',
+                buttons: this._buttons ? [
+                    {text: _t("Create event"), oe_link_class: 'oe_highlight', click: function (e) {
+                        if (!self.quick_add()) {
+                            self.focus();
+                        }
+                    }},
+                    {text: _t("Edit event"), oe_link_class: 'oe_link', click: function (e) {
+                        self.slow_add();
+                    }}
+                ] : []
+            }, QWeb.render('CalendarView.quick_create', {widged: this}))
+            .on('closed', self, function() {
+                self.trigger('close');
+            })
+            .open();
+            this.$input = this.$dialog.$('input').keyup(function enterHandler (e) {
                 if(event.keyCode == 13){
                     self.$input.off('keyup', enterHandler);
                     if (!self.quick_add()){
                         self.$input.on('keyup', enterHandler);
                     }
-                }
-            });
-            
-            var submit = this.$el.find(".oe_calendar_quick_create_add");
-            submit.click(function clickHandler() {
-                submit.off('click', clickHandler);
-                if (!self.quick_add()){
-                   submit.on('click', clickHandler);                }
-                self.focus();
-            });
-            this.$el.find(".oe_calendar_quick_create_edit").click(function () {
-                self.slow_add();
-                self.focus();
-            });
-            this.$el.find(".oe_calendar_quick_create_close").click(function (ev) {
-                ev.preventDefault();
-                self.trigger('close');
-            });
-            self.$input.keyup(function enterHandler (e) {
-                if (e.keyCode == 27 && self._buttons) {
+                } else if (e.keyCode == 27 && self._buttons) {
                     self.trigger('close');
                 }
             });
-            self.$el.dialog({ title: this.get_title()});
-            self.on('added', self, function() {
-                self.trigger('close');
-            });
-            
-            self.$el.on('dialogclose', self, function() {
-                self.trigger('close');
-            });
-
         },
         focus: function() {
-            this.$el.find('input').focus();
+            this.$input.focus();
         },
 
         /**

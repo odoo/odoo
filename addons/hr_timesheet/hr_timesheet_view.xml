@@ -131,7 +131,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_on_timesheets','=', True)]</field>
-            <field name="context">{'invoice_on_timesheets':1}</field>
+            <field name="context">{'default_invoice_on_timesheets':1}</field>
         </record>
 
         <menuitem parent="hr.menu_hr_configuration_timesheets_attendances" id="menu_timesheet_accounts" action="act_hr_timesheet_accounts_form" sequence="2" groups="base.group_hr_manager"/>
