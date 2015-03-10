@@ -78,8 +78,7 @@ class report_account_general_ledger(models.AbstractModel):
                 'type': 'line',
                 'name': account.code + " " + account.name,
                 'footnotes': self._get_footnotes('line', account.id),
-                'columns': [debit, credit, debit-credit, amount_currency],
-                'colspan-name': 7,
+                'columns': ['', '', '', '', debit, credit, debit-credit, amount_currency],
                 'level': 2,
                 'unfoldable': True,
                 'unfolded': account in context['context_id']['unfolded_account']
@@ -100,13 +99,15 @@ class report_account_general_ledger(models.AbstractModel):
                         name.append(line.move_id.name)
                     if line.name != "/":
                         name.append(line.name) 
+                    name = ",".join(name)
+                    if len(name) > 45:
+                        name = name[:42] + "..."
 
                     lines.append({
                         'id': line.id,
                         'type': 'move_line_id',
                         'move_id': line.move_id.id,
-                        'name': ", ".join(name),
-                        'colspan-name': 3,
+                        'name': name,
                         'footnotes': self._get_footnotes('move_line_id', line.id),
                         'columns': [line.date, line.journal_id.code, line.partner_id.name, line.counterpart, line_debit, line_credit, progress, currency],
                         'level': 3,
@@ -153,6 +154,6 @@ class account_context_general_ledger(models.TransientModel):
         self.write({'unfolded_account': [(4, line_id)]})
 
     def get_columns_names(self):
-        columns = ["", "", _("date"), _("JRNL"), _("Partner"), _("Counterpart"), _("Debit"), _("Credit"), _("Progress"), _("Currency")]
+        columns = [_("date"), _("JRNL"), _("Partner"), _("Counterpart"), _("Debit"), _("Credit"), _("Progress"), _("Currency")]
         return columns
                                        

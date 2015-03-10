@@ -89,7 +89,7 @@
         <t t-set="tdclass" t-value="''" />
         <t t-if="a.get('unfoldable') and a.get('unfolded')"><t t-set="tdclass" t-value="' '.join(['oe-account-foldable', str(a.get('id'))])" /></t>
         <t t-if="a.get('unfoldable') and not a.get('unfolded')"><t t-set="tdclass" t-value="' '.join(['oe-account-unfoldable', str(a.get('id'))])" /></t>
-        <td t-att-class="tdclass" t-att-colspan="a.get('colspan-name') or 0">
+        <td t-att-class="tdclass">
             <t t-if="mode != 'print'">
                 <t t-if="a.get('unfoldable') and a.get('unfolded')">
                     <span t-att-class="' '.join(['oe-account-foldable', str(a.get('id')), 'oe-account-caret-icon'])"><i class="fa fa-caret-down"></i></span>

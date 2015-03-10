@@ -175,26 +175,8 @@ class account_report_context_bank_reconciliation(models.TransientModel):
     def _get_bank_journals(self):
         self.journals = self.env['account.journal'].search([['type', '=', 'bank']])
 
-    footnotes = fields.Many2many('account.report.footnote', 'account_context_footnote_bank_reconciliation', string=_("Footnotes"))
     journal_id = fields.Many2one('account.journal', string=_("Bank account"))
     journals = fields.One2many('account.journal', string=_("Bank Accounts"), compute=_get_bank_journals)
-
-    @api.multi
-    def add_footnote(self, type, target_id, column, number, text):
-        footnote = self.env['account.report.footnote'].create(
-            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text}
-        )
-        self.write({'footnotes': [(4, footnote.id)]})
-
-    @api.multi
-    def edit_footnote(self, number, text):
-        footnote = self.footnotes.filtered(lambda s: s.number == number)
-        footnote.write({'text': text})
-
-    @api.multi
-    def remove_footnote(self, number):
-        footnotes = self.footnotes.filtered(lambda s: s.number == number)
-        self.write({'footnotes': [(3, footnotes.id)]})
 
     def get_report_obj(self):
         return self.env['account.bank.reconciliation']
