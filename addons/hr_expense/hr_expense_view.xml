@@ -161,7 +161,8 @@
                     <filter domain="[('state','=','confirm')]" string="To Approve" name="confirm" help="Confirmed Expenses"/>
                     <filter domain="[('state','=','accepted')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
                     <separator />
-                    <filter domain="[('user_id', '=', uid)]" string="My Expenses"/>
+                    <filter string="My Expenses" domain="[('employee_id.user_id', '=', uid)]"/>
+                    <filter string="My Team Expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="base.group_hr_manager" help="Expenses of Your Team Member"/>
                     <separator />
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">

@@ -22,19 +22,18 @@
                 <search string="Search Leave">
                     <field name="name"/>
                     <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
-                    <filter domain="[('state','=','validate')]" string="Validated" name="validated"/>
+                    <filter string="Approved Leaves" domain="[('state', '=', 'validate')]" name="validated"/>
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
-                    <filter string="Approved Leaves" name="validated" domain="[('state','=','validate')]"/>
+                    <filter string="My Department Leaves" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Leaves"/>
+                    <filter string="My Team Leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="base.group_hr_manager" help="Leaves of Your Team Member"/>
                     <separator/>
                     <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="base.group_hr_manager"/>
                     <separator/>
                     <filter name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                     <separator/>
                     <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
-                    <separator/>
-                    <filter string="My Department Leaves" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                     <field name="employee_id"/>
                     <field name="department_id" groups="hr.group_multi_departments"/>
                     <field name="holiday_status_id"/>
