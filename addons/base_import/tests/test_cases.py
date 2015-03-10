@@ -26,9 +26,10 @@ def sorted_fields(fields):
     recursed = [dict(field, fields=sorted_fields(field['fields'])) for field in fields]
     return sorted(recursed, key=lambda field: field['id'])
 
-def test_module_installed(module_name):
+def test_module_not_installed(module_name):
     try:
         __import__(module_name)
+        return None
     except ImportError:
         return True
 
@@ -259,7 +260,7 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
-    @unittest2.skipIf(test_module_installed('xlrd'), "Skipping XLS file test, module XLRD not found")
+    @unittest2.skipIf(test_module_not_installed('xlrd'), "Skipping XLS file test, module XLRD not found")
     def test_xls_success(self):
 
         Import = self.registry('base_import.import')
@@ -290,7 +291,7 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
-    @unittest2.skipIf(test_module_installed('xlrd'), "Skipping XLSX file test, module XLRD not found")
+    @unittest2.skipIf(test_module_not_installed('xlrd'), "Skipping XLSX file test, module XLRD not found")
     def test_xlsx_success(self):
         Import = self.registry('base_import.import')
         xlsx_file_path = get_module_resource('base_import', 'tests', 'test.xlsx')
@@ -323,7 +324,7 @@ class test_preview(TransactionCase):
     def test_ods_success(self):
         Import = self.registry('base_import.import')
         ods_file_path = get_module_resource('base_import', 'tests', 'test.ods')
-        file_content = zipfile.ZipFile(ods_file_path).read('content.xml')
+        file_content = open(ods_file_path, 'rb').read()
         id = Import.create(self.cr, self.uid, {
             'res_model': 'base_import.tests.models.preview',
             'file': file_content,

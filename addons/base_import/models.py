@@ -24,6 +24,14 @@ from openerp.exceptions import UserError
 FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
 _logger = logging.getLogger(__name__)
+
+FILE_TYPE_DICT = {
+    'text/csv': 'csv',
+    'application/vnd.ms-excel': 'xls',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+    'application/vnd.oasis.opendocument.spreadsheet': 'ods'
+}
+
 class ir_import(orm.TransientModel):
     _name = 'base_import.import'
     # allow imports to survive for 12h in case user is slow
@@ -135,61 +143,41 @@ class ir_import(orm.TransientModel):
         return fields
 
     def _file_type_handler(self, file_type, record, options):
-        file_type_dict = {'text/csv': 'csv',
-                    'application/vnd.ms-excel': 'xls',
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':'xlsx',
-                    'application/vnd.oasis.opendocument.spreadsheet':'ods'
-                    }
-        file_extension = file_type_dict.get(file_type)
+        file_extension = FILE_TYPE_DICT.get(file_type)
         if file_extension:
             return getattr(self, '_read_' + file_extension)(record, options)
         else:
-            raise UserError(_("Not a compatible file format. It should be XLS, XLSX or ODS file"))
+            raise UserError(_("Not a compatible file format. It should be CSV, XLS, XLSX or ODS file"))
 
     def _read_xls(self, record, options):
-        cell_type_index = {'XL_CELL_EMPTY': 0,
-                            'XL_CELL_TEXT': 1,
-                            'XL_CELL_NUMBER': 2,
-                            'XL_CELL_DATE': 3,
-                            'XL_CELL_BOOLEAN': 4,
-                            'XL_CELL_ERROR': 5,
-                            'XL_CELL_BLANK': 6}
         if not xlrd:
             raise UserError(_(" XLRD library not found. XLS/XLSX file would not import."))
         book = xlrd.open_workbook(file_contents=record.file)
         bk = book.sheet_by_index(0)
-        rows = []
         for row_index in range(bk.nrows):
             keys = []
             for col_index in range(bk.ncols):
-                if bk.cell_type(row_index, col_index) == cell_type_index['XL_CELL_NUMBER']:
+                if bk.cell_type(row_index, col_index) == xlrd.XL_CELL_NUMBER:
                     keys.append(str(bk.cell_value(row_index, col_index)))
-                elif bk.cell_type(row_index, col_index) == cell_type_index['XL_CELL_DATE']:
+                elif bk.cell_type(row_index, col_index) == xlrd.XL_CELL_DATE:
                     date_decimal = bk.cell_value(row_index, col_index) % 1
                     if date_decimal == 0.0:
-                        keys.append(datetime.datetime(* \
-                        (xlrd.xldate_as_tuple(bk.cell_value(row_index, col_index), \
-                            book.datemode))).strftime('%Y-%m-%d'))
+                        keys.append(xlrd.xldate.xldate_as_datetime(bk.cell_value(row_index, col_index), book.datemode).strftime('%Y-%m-%d'))
                     else:
-                        keys.append(datetime.datetime(* \
-                        (xlrd.xldate_as_tuple(bk.cell_value(row_index, col_index), \
-                            book.datemode))).strftime('%Y-%m-%d %H:%M:%S'))
-                elif bk.cell_type(row_index, col_index) == cell_type_index['XL_CELL_BOOLEAN']:
+                        keys.append(xlrd.xldate.xldate_as_datetime(bk.cell_value(row_index, col_index), book.datemode).strftime('%Y-%m-%d %H:%M:%S'))
+                elif bk.cell_type(row_index, col_index) == xlrd.XL_CELL_BOOLEAN:
                     if bk.cell_value(row_index, col_index) == 1:
                         keys.append('True')
                     elif bk.cell_value(row_index, col_index) == 0:
                         keys.append('False')
-                elif bk.cell_type(row_index, col_index) == cell_type_index['XL_CELL_ERROR']:
+                elif bk.cell_type(row_index, col_index) == xlrd.XL_CELL_ERROR:
                     if bk.cell_value(row_index, col_index) in xlrd.error_text_from_code:
-                        return "Error: (%s)" % xlrd.error_text_from_code[bk.cell_value(row_index, col_index)]
-                    return "Unknown Erro: (%r)" % bk.cell_value(row_index, col_index)
+                        raise UserError(_("Error during reading XLS/XLSX file. Error Code: %s"% xlrd.error_text_from_code[bk.cell_value(row_index, col_index)] ))
                 else:
                     keys.append(bk.cell_value(row_index, col_index))
-            rows.append(keys)
-        return iter(rows)
+            yield keys
 
-    def _read_xlsx(self, record, options):
-        return self._read_xls(record, options)
+    _read_xlsx = _read_xls
 
     def _read_ods(self, record, options):
         return iter(odsreader(record.file))

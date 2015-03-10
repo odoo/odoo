@@ -13,13 +13,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # 
 import xml.parsers.expat
+import zipfile
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 
 class odsreader:
     def __init__(self, file):
-        xmldata = file
 
-        self.__iter_cnt = 0
+        xmldata = zipfile.ZipFile(StringIO(file)).read('content.xml')
+
         self.__rows = []
         self.__working_row = []
 
@@ -32,11 +38,7 @@ class odsreader:
         p.Parse(xmldata, True)
 
     def __iter__(self):
-        for index, record in enumerate(self.__rows):
-            yield record
-
-    def next(self):
-        return
+        return iter(self.__rows)
 
     def __start_element__(self, name, attrs):
         if name == 'table:table-row':
