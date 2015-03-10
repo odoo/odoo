@@ -20,7 +20,13 @@ openerp.web_calendar = function(instance) {
     }
 
     function get_fc_defaultOptions() {
-        shortTimeformat = moment._locale._longDateFormat.LT;
+        var converter = {
+            A: 'TT',
+            a: 'tt',
+        };
+        var shortTimeformat = moment._locale._longDateFormat.LT.replace(/([a-zA-Z])\1*/g, function (s) {
+            return converter[s] || s;
+        });
         var dateFormat = instance.web.normalize_format(_t.database.parameters.date_format);
 
         // adapt format for fullcalendar v1.
