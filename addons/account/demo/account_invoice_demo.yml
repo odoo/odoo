@@ -139,17 +139,8 @@
   !workflow {model: account.invoice, action: invoice_open, ref: demo_invoice_equipment_purchase}
 -
   !python {model: account.bank.statement.line} : |
-      import time
-      account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_sales')), ('tag_ids', 'in', [ref('account_tag_financing')])])
-      line_vals = {
-          'statement_id': ref('demo_bank_statement_1'),
-          'name': "Last Year Interests",
-          'amount': 102.78,
-          'sequence': 10,
-          'date': time.strftime('%Y') + '-01-01'
-      }
-      if account_id:
-          line_vals['account_id'] = account_id[0]
-      line_id = self.create(cr, uid, line_vals)
-      line = self.browse(cr, uid, line_id)
-      line.fast_counterpart_creation()
+      account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_sales')), ('tag_ids', 'in', [ref('account_tag_financing')])])
+      line = self.browse(cr, uid, ref('demo_bank_statement_line_5'))
+      if not line.journal_entry_ids and account_ids:
+          line.write({'account_id': account_ids[0]})
+          line.fast_counterpart_creation()
