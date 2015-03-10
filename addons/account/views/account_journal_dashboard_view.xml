@@ -34,9 +34,15 @@
                                             </div>
                                         </t>
                                     </div>
-                                    <div class="row">
-                                        <t t-call="JournalBodyGraph"/>
-                                    </div>
+                                    <t t-if="journal_type == 'bank' || journal_type == 'cash' || journal_type == 'sale' || journal_type == 'purchase'">
+                                        <div class="row">
+                                            <t t-call="JournalBodyGraph"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="journal_type == 'general' || journal_type == 'situation'">
+                                        <div class="row" style="margin-bottom:75px;">
+                                        </div>
+                                    </t>  
                                     
                                 </div>
                             </div>

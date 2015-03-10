@@ -62,6 +62,7 @@ openerp.account.journal_dashboard = function (instance)
                         .margin({'left': 15, 'right':0, 'top':10, 'bottom': 25})
                         .tooltips(true);
                         chart.xAxis.axisLabel(data[0].title);
+                        chart.yAxis.tickFormat(d3.format(',.2f'));
                         break;
                 }
                 self.svg = self.$el.find('svg')[0];
