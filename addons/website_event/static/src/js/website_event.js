@@ -1,3 +1,7 @@
+odoo.define('website_event.website_event', ['web.ajax'], function (require) {
+
+var ajax = require('web.ajax');
+
 $(document).ready(function () {
 
     // Catch registration form event, because of JS for attendee details
@@ -12,12 +16,14 @@ $(document).ready(function () {
             $("select").each(function() {
                 post[$(this)[0].name] = $(this).val();
             });
-            openerp.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
+            ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
                 var $modal = $(modal);
-                $modal.appendTo($form).modal()
+                $modal.appendTo($form).modal();
                 $modal.on('click', '.js_goto_event', function () {
                     $modal.modal('hide');
                 });
             });
         });
+});
+
 });
