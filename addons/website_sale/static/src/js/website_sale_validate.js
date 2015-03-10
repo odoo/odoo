@@ -1,3 +1,8 @@
+odoo.define('website_sale.validate', ['web.ajax'], function(require) {
+"use strict";
+
+var ajax = require('web.ajax');
+
 $(document).ready(function () {
 
     var _poll_nbr = 0;
@@ -8,7 +13,7 @@ $(document).ready(function () {
             return;
         }
         var order_id = order_node.data('order-id');
-        return openerp.jsonRpc('/shop/payment/get_status/' + order_id, 'call', {
+        return ajax.jsonRpc('/shop/payment/get_status/' + order_id, 'call', {
         }).then(function (result) {
             _poll_nbr += 1;
             if(result.recall && _poll_nbr <= 5){
@@ -19,4 +24,6 @@ $(document).ready(function () {
     }
 
     payment_transaction_poll_status();
+});
+
 });

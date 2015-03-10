@@ -1,9 +1,14 @@
+odoo.define('website_sale.website_sale', ['web.ajax'], function (require) {
+"use strict";
+
+var ajax = require('web.ajax');
+
 $(document).ready(function () {
 $('.oe_website_sale').each(function () {
     var oe_website_sale = this;
 
     var $shippingDifferent = $("select[name='shipping_id']", oe_website_sale);
-    $shippingDifferent.change(function (event) {
+    $shippingDifferent.change(function () {
         var value = +$shippingDifferent.val();
         var data = $shippingDifferent.find("option:selected").data();
         var $snipping = $(".js_shipping", oe_website_sale);
@@ -29,7 +34,7 @@ $('.oe_website_sale').each(function () {
         var value = parseInt($input.val(), 10);
         var line_id = parseInt($input.data('line-id'),10);
         if (isNaN(value)) value = 0;
-        openerp.jsonRpc("/shop/cart/update_json", 'call', {
+        ajax.jsonRpc("/shop/cart/update_json", 'call', {
             'line_id': line_id,
             'product_id': parseInt($input.data('product-id'),10),
             'set_qty': value})
@@ -47,7 +52,7 @@ $('.oe_website_sale').each(function () {
                 $("#cart_total").replaceWith(data['website_sale.total']);
                 if (data.warning) {
                     var cart_alert = $('.oe_cart').parent().find('#data_warning');
-                    if (cart_alert.length == 0) {
+                    if (cart_alert.length === 0) {
                         $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
                                 '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
                     }
@@ -81,7 +86,7 @@ $('.oe_website_sale').each(function () {
     });
 
     // change price when they are variants
-    $('form.js_add_cart_json label', oe_website_sale).on('mouseup touchend', function (ev) {
+    $('form.js_add_cart_json label', oe_website_sale).on('mouseup touchend', function () {
         var $label = $(this);
         var $price = $label.parents("form:first").find(".oe_price .oe_currency_value");
         if (!$price.data("price")) {
@@ -92,7 +97,7 @@ $('.oe_website_sale').each(function () {
         $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
     });
     // hightlight selected color
-    $('.css_attribute_color input', oe_website_sale).on('change', function (ev) {
+    $('.css_attribute_color input', oe_website_sale).on('change', function () {
         $('.css_attribute_color').removeClass("active");
         $('.css_attribute_color:has(input:checked)').addClass("active");
     });
@@ -103,7 +108,7 @@ $('.oe_website_sale').each(function () {
         return price + (dec ? '' : '.0') + (dec%10 ? '' : '0');
     }
 
-    $(oe_website_sale).on('change', 'input.js_product_change', function (ev) {
+    $(oe_website_sale).on('change', 'input.js_product_change', function () {
         var $parent = $(this).closest('.js_product');
         $parent.find(".oe_default_price:first .oe_currency_value").html( price_to_str(+$(this).data('lst_price')) );
         $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(this).data('price')) );
@@ -112,7 +117,7 @@ $('.oe_website_sale').each(function () {
         $img.attr("src", "/website/image/product.product/" + $(this).val() + "/image");
     });
 
-    $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change', function (ev) {
+    $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change', function () {
         var $ul = $(this).parents('ul.js_add_cart_variants:first');
         var $parent = $ul.closest('.js_product');
         var $product_id = $parent.find('input.product_id').first();
@@ -196,4 +201,6 @@ $('.oe_website_sale').each(function () {
     });
     $(oe_website_sale).find("select[name='shipping_country_id']").change();
 });
+});
+
 });

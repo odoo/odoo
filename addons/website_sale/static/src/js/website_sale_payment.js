@@ -1,3 +1,8 @@
+odoo.define('website_sale.payment', ['web.ajax'], function (require) {
+"use strict";
+
+var ajax = require('web.ajax');
+
 $(document).ready(function () {
 
     // When choosing an acquirer, display its Pay Now button
@@ -18,9 +23,11 @@ $(document).ready(function () {
       if (! acquirer_id) {
         return false;
       }
-      openerp.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function (data) {
+      ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function () {
         $form.submit();
       });
    });
+
+});
 
 });
