@@ -1,11 +1,17 @@
-openerp.web_kanban_sparkline = function (instance) {
+odoo.define(['web_kanban.common'], function (require) {
+"use strict";
+
+var kanban_common = require('web_kanban.common');
+
+var AbstractField = kanban_common.AbstractField;
+var fields_registry = kanban_common.registry;
 
 /**
  * Kanban widgets: Sparkline
  *
  */
 
-instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.extend({
+var SparklineBarWidget = AbstractField.extend({
     className: "oe_sparkline_bar",
     start: function() {
         var self = this;
@@ -15,10 +21,9 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
             var value = _.pluck(field_value, 'value');
             var tooltips = _.pluck(field_value, 'tooltip');
             var suffix = self.options.tooltip_suffix || "";
-            var tooltipFormat = self.options.type == 'tristate' && '{{offset:offset}}' + suffix || '{{offset:offset}} {{value:value}}' + suffix
+            var tooltipFormat = self.options.type == 'tristate' && '{{offset:offset}}' + suffix || '{{offset:offset}} {{value:value}}' + suffix;
             var sparkline_options = _.extend({
                     type: 'bar',
-                    barWidth: 5,
                     height: '20px',
                     barWidth: 4,
                     barSpacing: 1,
@@ -30,12 +35,12 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
                     }
                 }, self.options);
             self.$el.sparkline(value, sparkline_options);
-            self.$el.tooltip({delay: {show: self.options.delayIn || 0, hide: 0}, title: function(){return title}});
+            self.$el.tooltip({delay: {show: self.options.delayIn || 0, hide: 0}, title: function(){return title;}});
         }, 0);
     },
 });
 
-instance.web_kanban.fields_registry.add("sparkline_bar", "instance.web_kanban.SparklineBarWidget");
+fields_registry.add("sparkline_bar", SparklineBarWidget);
 
 
-}
+});

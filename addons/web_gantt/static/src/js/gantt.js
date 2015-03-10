@@ -1,18 +1,25 @@
+odoo.define('web_gantt.GanttView', ['web.core', 'web.form_common', 'web.formats', 'web.Model', 'web.time', 'web.View'], function (require) {
+"use strict";
 /*---------------------------------------------------------
- * OpenERP web_gantt
+ * Odoo web_gantt
  *---------------------------------------------------------*/
-openerp.web_gantt = function (instance) {
-var _t = instance.web._t,
-   _lt = instance.web._lt;
-var QWeb = instance.web.qweb;
-instance.web.views.add('gantt', 'instance.web_gantt.GanttView');
 
-instance.web_gantt.GanttView = instance.web.View.extend({
+var core = require('web.core');
+var form_common = require('web.form_common');
+var formats = require('web.formats');
+var Model = require('web.Model');
+var time = require('web.time');
+var View = require('web.View');
+
+var _lt = core._lt;
+var QWeb = core.qweb;
+
+
+var GanttView = View.extend({
     display_name: _lt('Gantt'),
     template: "GanttView",
     view_type: "gantt",
     init: function() {
-        var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.chart_id = _.uniqueId();
@@ -24,7 +31,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         var self = this;
         this.fields_view = fields_view_get;
         this.$el.addClass(this.fields_view.arch.attrs['class']);
-        return self.alive(new instance.web.Model(this.dataset.model)
+        return self.alive(new Model(this.dataset.model)
             .call('fields_get')).then(function (fields) {
                 self.fields = fields;
                 self.has_been_loaded.resolve();
@@ -81,7 +88,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
             group_bys = [group_bys[0]];
         }
         // if there is no group by, simulate it
-        if (group_bys.length == 0) {
+        if (group_bys.length === 0) {
             group_bys = ["_pseudo_group_by"];
             _.each(tasks, function(el) {
                 el._pseudo_group_by = "Gantt View";
@@ -107,7 +114,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 group.tasks = split_groups(group.tasks, _.rest(group_bys));
             });
             return groups;
-        }
+        };
         var groups = split_groups(tasks, group_bys);
         
         // track ids of task items for context menu
@@ -124,7 +131,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 var task_infos = _.compact(_.map(task.tasks, function(sub_task) {
                     return generate_task_info(sub_task, level + 1);
                 }));
-                if (task_infos.length == 0)
+                if (task_infos.length === 0)
                     return;
                 var task_start = _.reduce(_.pluck(task_infos, "task_start"), function(date, memo) {
                     return memo === undefined || date < memo ? date : memo;
@@ -133,8 +140,8 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                     return memo === undefined || date > memo ? date : memo;
                 }, undefined);
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
-                var group_name = task.name ? instance.web.format_value(task.name, self.fields[group_bys[level]]) : "-";
-                if (level == 0) {
+                var group_name = task.name ? formats.format_value(task.name, self.fields[group_bys[level]]) : "-";
+                if (level === 0) {
                     var group = new GanttProjectInfo(_.uniqueId("gantt_project_"), group_name, task_start);
                     _.each(task_infos, function(el) {
                         group.addTask(el.task_info);
@@ -150,20 +157,20 @@ instance.web_gantt.GanttView = instance.web.View.extend({
             } else {
                 var task_name = task.__name;
                 var duration_in_business_hours = false;
-                var task_start = instance.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_start]);
+                var task_start = time.auto_str_to_date(task[self.fields_view.arch.attrs.date_start]);
                 if (!task_start)
                     return;
                 var task_stop;
                 if (self.fields_view.arch.attrs.date_stop) {
-                    task_stop = instance.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_stop]);
+                    task_stop = time.auto_str_to_date(task[self.fields_view.arch.attrs.date_stop]);
                     if (!task_stop)
                         task_stop = task_start;
                 } else { // we assume date_duration is defined
-                    var tmp = instance.web.format_value(task[self.fields_view.arch.attrs.date_delay],
+                    var tmp = formats.format_value(task[self.fields_view.arch.attrs.date_delay],
                         self.fields[self.fields_view.arch.attrs.date_delay]);
                     if (!tmp)
                         return;
-                    var m_task_start = moment(task_start).add(instance.web.parse_value(tmp, {type:"float"}), 'hours');
+                    var m_task_start = moment(task_start).add(formats.parse_value(tmp, {type:"float"}), 'hours');
                     task_stop = m_task_start.toDate();
                 }
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
@@ -176,7 +183,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 task_ids[id] = task_info;
                 return {task_info: task_info, task_start: task_start, task_stop: task_stop};
             }
-        }
+        };
         var gantt = new GanttChart();
         _.each(_.compact(_.map(groups, function(e) {return generate_task_info(e, 0);})), function(project) {
             gantt.addProject(project);
@@ -220,10 +227,10 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         var end = moment(start).add(duration, 'hours').toDate();
         var data = {};
         data[self.fields_view.arch.attrs.date_start] =
-            instance.web.auto_date_to_str(start, self.fields[self.fields_view.arch.attrs.date_start].type);
+            time.auto_date_to_str(start, self.fields[self.fields_view.arch.attrs.date_start].type);
         if (self.fields_view.arch.attrs.date_stop) {
             data[self.fields_view.arch.attrs.date_stop] = 
-                instance.web.auto_date_to_str(end, self.fields[self.fields_view.arch.attrs.date_stop].type);
+                time.auto_date_to_str(end, self.fields[self.fields_view.arch.attrs.date_stop].type);
         } else { // we assume date_duration is defined
             data[self.fields_view.arch.attrs.date_delay] = duration;
         }
@@ -231,7 +238,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     },
     on_task_display: function(task) {
         var self = this;
-        var pop = new instance.web.form.FormOpenPopup(self);
+        var pop = new form_common.FormOpenPopup(self);
         pop.on('write_completed',self,self.reload);
         pop.show_element(
             self.dataset.model,
@@ -242,7 +249,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     },
     on_task_create: function() {
         var self = this;
-        var pop = new instance.web.form.SelectCreatePopup(this);
+        var pop = new form_common.SelectCreatePopup(this);
         pop.on("elements_selected", self, function() {
             self.reload();
         });
@@ -255,4 +262,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     },
 });
 
-};
+core.view_registry.add('gantt', GanttView);
+
+return GanttView;
+});

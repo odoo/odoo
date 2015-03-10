@@ -1,13 +1,27 @@
-openerp.web_view_editor = function(instance) {
-var _t = instance.web._t;
-var QWeb = instance.web.qweb;
-instance.web.ViewManager.include({
+odoo.define(['web.ActionManager', 'web.core', 'web.data', 'web.Dialog', 'web.formats', 'web.Registry', 'web.session', 'web.utils', 'web.ViewManager', 'web.Widget'], function (require) {
+"use strict";
+
+var ActionManager = require('web.ActionManager');
+var core = require('web.core');
+var data = require('web.data');
+var Dialog = require('web.Dialog');
+var formats = require('web.formats');   
+var Registry = require('web.Registry');
+var session = require('web.session');
+var utils = require('web.utils');
+var ViewManager = require('web.ViewManager');
+var Widget = require('web.Widget');
+
+var QWeb = core.qweb;
+var _t = core._t;
+
+ViewManager.include({
     on_debug_changed:function(evt){
         var val = $(evt.target).data('action'),
             current_view = this.active_view.controller;
         if(val === "manage_views"){
             if (current_view.fields_view && current_view.fields_view.arch) {
-                    var view_editor = new instance.web_view_editor.ViewEditor(current_view, current_view.$el, this.dataset, current_view.fields_view.arch);
+                    var view_editor = new ViewEditor(current_view, current_view.$el, this.dataset, current_view.fields_view.arch);
                     view_editor.start();
                 } else {
                     this.do_warn(_t("Manage Views"),
@@ -18,14 +32,15 @@ instance.web.ViewManager.include({
         }
     }
 });
-instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
-    init: function(parent, element_id, dataset, view, options) {
+
+var ViewEditor = Widget.extend({
+    init: function(parent, element_id, dataset) {
         this._super(parent);
         this.parent = parent;
-        this.dataset = new instance.web.DataSetSearch(this, 'ir.ui.view', null, null),
+        this.dataset = new data.DataSetSearch(this, 'ir.ui.view', null, null);
         this.model = dataset.model;
         this.xml_element_id = 0;
-        this.property = instance.web_view_editor.ViewEditor.property_widget;
+        this.property = ViewEditor.property_widget;
         this.one_object = false;
     },
     start: function() {
@@ -36,7 +51,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             action_title = _.str.sprintf(_t("Manage Views (%s)"), this.model);
         var action = {
             name: action_title,
-            context: this.session.user_context,
+            context: session.user_context,
             domain: [["model", "=", this.model]],
             res_model: 'ir.ui.view',
             views: [[false, 'list']],
@@ -56,7 +71,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 select_view_id: self.parent.fields_view.view_id
             }
         };
-        this.view_edit_dialog = new instance.web.Dialog(this, {
+        this.view_edit_dialog = new Dialog(this, {
             title: action_title,
             buttons: [
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
@@ -67,13 +82,13 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         }).open();
         this.view_edit_dialog.on("closing", this, function(){window.location.reload();});
         this.main_view_id = this.parent.fields_view.view_id;
-        this.action_manager = new instance.web.ActionManager(this);
+        this.action_manager = new ActionManager(this);
         this.action_manager.appendTo(this.view_edit_dialog.$el);
         $.when(this.action_manager.do_action(action)).done(function() {
             var viewmanager = self.action_manager.inner_widget;
             var controller = viewmanager.active_view.controller;
             $(controller.groups).bind({
-                'selected': function (e, ids, records, deselected) {
+                'selected': function (e, ids) {
                         self.main_view_id = ids[0];
                 }
             });
@@ -81,7 +96,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     },
     on_create_view: function() {
         var self = this;
-        this.create_view_dialog = new instance.web.Dialog(this, {
+        this.create_view_dialog = new Dialog(this, {
             title: _.str.sprintf(_t("Create a view (%s)"), self.model),
             buttons: [
                 {text: _t("Save"), click: function () {
@@ -128,9 +143,9 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         });
     },
     do_save_view: function(values) {
-        def = $.Deferred();
-        var field_dataset = new instance.web.DataSetSearch(this, this.model, null, null);
-        var model_dataset = new instance.web.DataSetSearch(this, 'ir.model', null, null);
+        var def = $.Deferred();
+        var field_dataset = new data.DataSetSearch(this, this.model, null, null);
+        var model_dataset = new data.DataSetSearch(this, 'ir.model', null, null);
         var view_string = "", field_name = false, self = this;
         field_dataset.call( 'fields_get', []).done(function(fields) {
             _.each(['name', 'x_name'], function(value) {
@@ -186,7 +201,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         }
     },
     create_View_Node: function(node){
-        ViewNode = {
+        var ViewNode = {
             'level': ($(node).parents()).length + 1,
             'id': this.xml_element_id += 1,
             'att_list': [],
@@ -230,7 +245,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     },
     parse_xml: function(arch, view_id) {
         //First element of att_list must be element tagname.
-        main_object = {
+        var main_object = {
             'level': 0,
             'id': this.xml_element_id +=1,
             'att_list': ["view"],
@@ -265,7 +280,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     parent_child_list : function(one_object, parent_list) {
         var self = this;
         _.each(one_object , function(element) {
-            if (element.child_id.length != 0) {
+            if (element.child_id.length !== 0) {
                 parent_list.push({"key": element.id, "value": _.pluck(element.child_id, 'id')});
                 self.parent_child_list(element.child_id, parent_list);
             }
@@ -299,13 +314,15 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     },
     inherit_apply: function(expr_list ,arch_object ,xpath_arch_object) {
         var self = this;
+        var temp_list;
+
         if (xpath_arch_object.length) {
             var check = expr_list[0], obj = false;
             switch (check.length) {
                 case 2:
                     if (parseInt(check[1])) {
                         //for field[3]
-                        var temp_list = _.select(arch_object, function(element) {
+                        temp_list = _.select(arch_object, function(element) {
                             return _.include(_.flatten(element.att_list), check[0]);
                         });
                         obj = arch_object[_.indexOf(arch_object, temp_list[parseInt(check[1]) - 1])];
@@ -326,11 +343,11 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     break;
                 case 1:
                     //for /form/notebook
-                    var temp_list = _.select(arch_object, function(element) {
+                    temp_list = _.select(arch_object, function(element) {
                         return _.include(_.flatten(element.att_list), check[0]);
                     });
-                    if (temp_list.length != 0) {
-                        expr_list.length == 1 ? obj = temp_list[0] : expr_list.shift();
+                    if (temp_list.length !== 0) {
+                        expr_list.length === 1 ? obj = temp_list[0] : expr_list.shift();
                     }
                     break;
             }
@@ -353,7 +370,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     increase_level: function(val, level) {
         var self = this;
         val.level = level;
-        _.each(val.child_id, function(val, key) {
+        _.each(val.child_id, function(val) {
             self.increase_level(val, level + 1);
         });
     },
@@ -373,7 +390,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     edit_view: function(one_object) {
         var self = this;
         this.one_object = one_object;
-        this.edit_xml_dialog = new instance.web.Dialog(this, {
+        this.edit_xml_dialog = new Dialog(this, {
             title: _.str.sprintf(_t("View Editor %d - %s"), self.main_view_id, self.model),
             buttons: [
                 {text: _t("Inherited View"), click: function(){
@@ -404,7 +421,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                             action_buttons: false
                         }
                     };
-                    var action_manager = new instance.web.ActionManager(self);
+                    var action_manager = new ActionManager(self);
                     action_manager.do_action(action);
                 }},
                 {text: _t("Close"), click: function(){
@@ -417,7 +434,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         _.each(_PROPERTIES, function(val, key) {
             if (! val.length) no_property_att.push(key);
         });
-        this.edit_xml_dialog.$el.html(QWeb.render('view_editor', {'data': one_object['main_object'], 'no_properties': no_property_att}));
+        this.edit_xml_dialog.$el.html(QWeb.render('view_editor', {'data': one_object.main_object, 'no_properties': no_property_att}));
         this.edit_xml_dialog.$el.find("tr[id^='viewedit-']").click(function() {
             self.do_select_row(this.id.split('-')[1]);
         });
@@ -431,14 +448,14 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     inherited_view: function(selected_row){
         var self = this;
         var row_id = parseInt((selected_row.attr('id')).split('-')[1]);
-        var obj = self.get_object_by_id(row_id,self.one_object['main_object'], [])[0];
+        var obj = self.get_object_by_id(row_id,self.one_object.main_object, [])[0];
         var view_name = this.model + '.inherit_' + Math.round(Math.random() * 1000);
         var view_find = selected_row;
         var view_id;
         var min_level = parseInt(selected_row.attr('level'));
         while (1) {
             view_find = view_find.prev();
-            if (view_find.length == 0 ||
+            if (view_find.length === 0 ||
                     self.edit_xml_dialog.$el.find(view_find).find('a').text().search("view_id") != -1 &&
                     parseInt(view_find.attr('level')) < min_level ) {
                 view_id = parseInt($(view_find).find('a').text().replace(/[^0-9]+/g, ''));
@@ -449,14 +466,14 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             }
         }
         var val = _.detect(obj.att_list, function(val) {return val[0] == "name";});
-        var priority = _.detect(self.one_object['arch'], function(val) {return val.view_id == view_id;});
+        var priority = _.detect(self.one_object.arch, function(val) {return val.view_id === view_id;});
         var arch = _.str.sprintf("<?xml version='1.0'?>\n\t <field name='%s' position='after'> </field>", val[1]);
         var vals = {'model': self.model, 'name': view_name, 'priority': priority.priority + 1, 'type': "form", 'arch': arch,'inherit_id':self.main_view_id};
         this.dataset.create(vals).done(function(id) {
             var arch_to_obj = self.parse_xml(arch,id);
             obj.child_id.push(arch_to_obj[0]);
-            self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
-            self.one_object['arch'].push({'view_id':id,"arch":arch,'priority': priority.priority + 1});
+            self.one_object.parent_child_id = self.parent_child_list(self.one_object.main_object,[]);
+            self.one_object.arch.push({'view_id':id,"arch":arch,'priority': priority.priority + 1});
             self.increase_level(arch_to_obj[0],obj.level+1);
             self.render_inherited_view(selected_row,arch_to_obj[0]);
         });
@@ -464,7 +481,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     render_inherited_view: function(selected_row,obj){
         var self = this,row_id = parseInt((selected_row.attr('id')).split('-')[1]);
         var clone = this.create_clone(selected_row.clone(),obj);
-        if (selected_row.find("img[id^='parentimg-']").length == 0) {
+        if (selected_row.find("img[id^='parentimg-']").length === 0) {
             ($(selected_row.find('a').parent()).siblings('td'))
             .append($('<img width="16" height="16"></img>').attr('src', '/web/static/src/img/collapse.gif').
              attr('id','parentimg-'+ row_id).click(function(){
@@ -492,8 +509,8 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         }else{
             while (1) {
                 view_find = view_find.prev();
-                if (view_find.length == 0 ||
-                    (self.edit_xml_dialog.$el.find(view_find).find('a').text()).search("view_id") != -1
+                if (view_find.length === 0 ||
+                    (self.edit_xml_dialog.$el.find(view_find).find('a').text()).search("view_id") !== -1
                         && parseInt(view_find.attr('level')) < min_level ) {
                     view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
                     view_xml_id = parseInt((view_find.attr('id')).split('-')[1]);
@@ -526,18 +543,20 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         }
     },
     do_node_add: function(side){
-        var self = this,property_to_check = [];
-        var tr = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object['main_object'], [])[0].att_list[0];
+        var self = this;
+        var property_to_check = [];
+        var tr = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object.main_object, [])[0].att_list[0];
         var parent_tr = ($(side).prevAll("tr[level=" + String(this.one_object.clicked_tr_level - 1) + "]"))[0];
-        var field_dataset = new instance.web.DataSetSearch(this, this.model, null, null);
-        parent_tr = self.get_object_by_id(parseInt($(parent_tr).attr('id').replace(/[^0-9]+/g, '')), this.one_object['main_object'], [])[0].att_list[0];
+        var field_dataset = new data.DataSetSearch(this, this.model, null, null);
+        parent_tr = self.get_object_by_id(parseInt($(parent_tr).attr('id').replace(/[^0-9]+/g, '')), this.one_object.main_object, [])[0].att_list[0];
         _.each([tr, parent_tr],function(element) {
             var value = _.has(_CHILDREN, element) ? element : _.str.include(html_tag, element)?"html_tag":false;
             property_to_check.push(value);
         });
         field_dataset.call( 'fields_get', []).done(function(result) {
             var fields = _.keys(result);
-            fields.push(" "),fields.sort();
+            fields.push(" ");
+            fields.sort();
             self.on_add_node(property_to_check, fields, self.inject_position(parent_tr,tr));
         });
     },
@@ -548,21 +567,22 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             return ['After','Before'];
         return ['After','Before','Inside'];
     },
-    do_node_edit: function(side) {
+    do_node_edit: function() {
         var self = this;
-        var result = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object['main_object'], []);
+        var result = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object.main_object, []);
         if (result.length && result[0] && result[0].att_list) {
             var properties = _PROPERTIES[result[0].att_list[0]];
             self.on_edit_node(properties);
         }
     },
     do_node_down: function(cur_tr, img) {
-        var self = this, next_tr, last_tr, tr_to_move = [];
+        var self = this;
+        var next_tr, last_tr, tr_to_move = [];
         tr_to_move.push(cur_tr);
         if (img) {
             while (1) {
                 next_tr = cur_tr.next();
-                if ( parseInt(next_tr.attr('level')) <= this.one_object.clicked_tr_level || next_tr.length == 0) {
+                if ( parseInt(next_tr.attr('level')) <= this.one_object.clicked_tr_level || next_tr.length === 0) {
                     last_tr = next_tr;
                     break;
                 } else {
@@ -576,15 +596,15 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         if ((self.edit_xml_dialog.$el.find(last_tr).find('a').text()).search("view_id") != -1) {
             return false;
         }
-        if (last_tr.length != 0 &&  parseInt(last_tr.attr('level')) == this.one_object.clicked_tr_level) {
+        if (last_tr.length !== 0 &&  parseInt(last_tr.attr('level')) == this.one_object.clicked_tr_level) {
             var last_tr_id = (last_tr.attr('id')).split('-')[1];
             img = last_tr.find("img[id='parentimg-" + last_tr_id + "']").attr('src');
             if (img) {
                 self.edit_xml_dialog.$el.find("img[id='parentimg-" + last_tr_id + "']").
                                                 attr('src', '/web/static/src/img/expand.gif');
                 while (1) {
-                    var next_tr = last_tr.next();
-                    if (next_tr.attr('level') <= this.one_object.clicked_tr_level || next_tr.length == 0) break;
+                    next_tr = last_tr.next();
+                    if (next_tr.attr('level') <= this.one_object.clicked_tr_level || next_tr.length === 0) break;
                     next_tr.hide();
                     last_tr = next_tr;
                 }
@@ -597,11 +617,16 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         }
     },
     do_node_up: function(cur_tr, img) {
-        var self = this, side = cur_tr, tr_to_move = [];
+        var self = this;
+        var side = cur_tr;
+        var tr_to_move = [];
+        var last_tr;
+        var next_tr;
+
         tr_to_move.push(side);
         while (1) {
             var prev_tr = cur_tr.prev();
-            if (this.one_object.clicked_tr_level >= parseInt(prev_tr.attr('level')) || prev_tr.length == 0) {
+            if (this.one_object.clicked_tr_level >= parseInt(prev_tr.attr('level')) || prev_tr.length === 0) {
                last_tr = prev_tr;
                break;
             }
@@ -612,7 +637,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 attr('src', '/web/static/src/img/expand.gif');
             while (1) {
                 next_tr = side.next();
-                if (parseInt(next_tr.attr('level')) <= this.one_object.clicked_tr_level || next_tr.length == 0) {
+                if (parseInt(next_tr.attr('level')) <= this.one_object.clicked_tr_level || next_tr.length === 0) {
                     break;
                 } else {
                     next_tr.hide();
@@ -621,8 +646,8 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 }
             }
         }
-        if (last_tr.length != 0 && parseInt(last_tr.attr('level')) == this.one_object.clicked_tr_level &&
-                (self.edit_xml_dialog.$el.find(last_tr).find('a').text()).search("view_id") == -1) {
+        if (last_tr.length !== 0 && parseInt(last_tr.attr('level')) == this.one_object.clicked_tr_level &&
+                (self.edit_xml_dialog.$el.find(last_tr).find('a').text()).search("view_id") === -1) {
             _.each(tr_to_move, function(rec) {
                  $(last_tr).before(rec);
             });
@@ -631,9 +656,9 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     },
     do_save_update_arch: function(move_direct, update_values) {
         var self = this;
-        var arch = _.detect(self.one_object['arch'], function(element)
-            {return element.view_id == self.one_object.clicked_tr_view[0]});
-        var obj = self.get_object_by_id(this.one_object.clicked_tr_view[1],this.one_object['main_object'], []);
+        var arch = _.detect(self.one_object.arch, function(element)
+            {return element.view_id === self.one_object.clicked_tr_view[0];});
+        var obj = self.get_object_by_id(this.one_object.clicked_tr_view[1],this.one_object.main_object, []);
         //for finding xpath tag from inherit view
         var xml_arch = QWeb.load_xml(arch.arch);
         if (xml_arch.childNodes[0].tagName == "data") {
@@ -646,15 +671,15 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     insert = _.intersection(_.flatten(temp_obj.att_list),_.uniq(check_list));
                 if (insert.length == _.uniq(check_list).length ) {return xml_child;}
             });
-            xml_arch = QWeb.load_xml(instance.web.xml_to_str(inherited_view));
+            xml_arch = QWeb.load_xml(utils.xml_to_str(inherited_view));
         }
         return self.do_save_xml(xml_arch.documentElement, obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
     },
     get_object_by_id: function(id, one_object, result) {
         var self = this;
-        if (result.length == 0 ) {
+        if (result.length === 0 ) {
             var check = _.detect(one_object , function(obj) {
-                return id == obj.id;
+                return id === obj.id;
             });
             if (check) {result.push(check);}
             _.each(one_object, function(obj) {
@@ -679,21 +704,26 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         return clone;
     },
     do_save_xml: function(arch1, obj, child_list, move_direct, update_values, arch){
-        var self = this, children_list =  $(arch1).children(),list_obj_xml;
+        var self = this;  // blame this line if something terribly wrong happens
+        var children_list =  $(arch1).children();
+        var list_obj_xml;
+        var re_insert_obj;
+
         try{list_obj_xml = _.zip(children_list, obj.child_id);}catch(err){return;}
         if (this.one_object.clicked_tr_id) {
             if (obj.id == this.one_object.clicked_tr_id) {
-                var parent = false, index = _.indexOf(child_list, obj);
+                var parent = false,
+                    index = _.indexOf(child_list, obj);
                 if (move_direct == "down") {
                     var next = $(arch1).next();
                     $(next).after(arch1);
-                    var re_insert_obj = child_list.splice(index, 1);
+                    re_insert_obj = child_list.splice(index, 1);
                     child_list.splice(index+1, 0, re_insert_obj[0]);
                     parent = $(arch1).parents();
                 } else if (move_direct == "up") {
                     var prev = $(arch1).prev();
                     $(prev).before(arch1);
-                    var re_insert_obj = child_list.splice(index, 1);
+                    re_insert_obj = child_list.splice(index, 1);
                     child_list.splice(index-1, 0, re_insert_obj[0]);
                     parent = $(arch1).parents();
                 } else if (move_direct == "update_node") {
@@ -714,7 +744,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                         object_xml = self.create_View_Node(temp_xml.childNodes[0]);
                     (update_values[1] == "Inside")? object_xml.level = obj.level + 1:object_xml.level = obj.level;
                     var clone = self.create_clone(tr_click.clone(),object_xml),
-                        after_append = _.detect(self.one_object['parent_child_id'],function(ele){
+                        after_append = _.detect(self.one_object.parent_child_id,function(ele){
                             return self.one_object.clicked_tr_id == ele.key;
                     });
                     after_append = (after_append)?_.last(after_append.value):self.one_object.clicked_tr_id;
@@ -731,7 +761,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                             child_list.splice(index - 1, 0, object_xml);
                             break;
                         case "Inside":
-                            if (tr_click.find("img[id^='parentimg-']").length == 0) {
+                            if (tr_click.find("img[id^='parentimg-']").length === 0) {
                                 ($(tr_click.find('a').parent()).siblings('td'))
                                     .append($('<img width="16" height="16"></img>').attr('src', '/web/static/src/img/collapse.gif').
                                     attr('id','parentimg-'+ self.one_object.clicked_tr_id).click(function(){
@@ -749,10 +779,10 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     parent = $(arch1).parents();
                 } else if (move_direct == "remove_node") {
                     parent = $(arch1).parents();
-                    if (parent.length == 0 || (parent[0].tagName.toLowerCase() == "data")) {
+                    if (parent.length === 0 || (parent[0].tagName.toLowerCase() == "data")) {
                         self.one_object.clicked_tr_id = self.one_object.clicked_tr_id -1;
                         self.one_object.clicked_tr_level = self.one_object.clicked_tr_level - 1;
-                        (parent.length == 0)?parent.push("remove_view"):false;
+                        (parent.length === 0)?parent.push("remove_view"):false;
                     }
                     $(arch1).remove();
                     child_list.splice(index,1);
@@ -762,7 +792,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                         tr_element.remove();
                     });
                     cur_tr.remove();
-                    var parent_img = _.detect(self.one_object['parent_child_id'],function(element){
+                    var parent_img = _.detect(self.one_object.parent_child_id,function(element){
                         return _.include(element.value, self.one_object.clicked_tr_id);
                     });
                     if(parent_img.value.length == 1){
@@ -770,9 +800,9 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                             find("tr[id='viewedit-"+parent_img.key+"']").
                             find("img[id^='parentimg-']").remove();
                     }
-                    self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
+                    self.one_object.parent_child_id = self.parent_child_list(self.one_object.main_object,[]);
                 }
-                var convert_to_utf = (parent.length != 0)? parent[parent.length-1]: arch1;
+                var convert_to_utf = (parent.length !== 0)? parent[parent.length-1]: arch1;
                 if (convert_to_utf != "remove_view") {
                     convert_to_utf = QWeb.tools.xml_node_to_string(convert_to_utf);
                     convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
@@ -782,10 +812,10 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 } else {
                     this.dataset.unlink([this.one_object.clicked_tr_view[0]]);
                 }
-                if(move_direct == "add_node"){
+                if(move_direct === "add_node"){
                     self.add_node_dialog.close();
                     self.on_select_img(clone.find("img[id='side-edit']")[0]);
-                    self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
+                    self.one_object.parent_child_id = self.parent_child_list(self.one_object.main_object,[]);
                 }
             }
             if (obj.level <= this.one_object.clicked_tr_level) {
@@ -803,7 +833,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         });
     },
     get_list_tr: function(cur_tr,level){
-        tr_list = [];
+        var tr_list = [];
         while (1) {
             var nxt_tr = cur_tr.next();
             if (parseInt(nxt_tr.attr('level')) > level) {
@@ -814,7 +844,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     },
     on_collapse: function(collapse_img) {
         var self = this, id = collapse_img.id.split('-')[1];
-        var datas = _.detect(self.one_object['parent_child_id'] , function(res) {
+        var datas = _.detect(self.one_object.parent_child_id , function(res) {
             return res.key == id;
         });
         _.each(datas.value, function (rec) {
@@ -825,7 +855,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     },
     on_edit_node: function(properties){
         var self = this;
-        this.edit_node_dialog = new instance.web.Dialog(this,{
+        this.edit_node_dialog = new Dialog(this,{
             title: _t("Properties"),
             size: 'medium',
             buttons: [
@@ -891,19 +921,19 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             'groups' : {'name':'groups', 'string': 'Groups', 'type': 'selection_multi'},
             'fonts' : {'name':'fonts', 'string': 'fonts', 'type': 'char'},
         };
-        var arch_val = self.get_object_by_id(this.one_object.clicked_tr_id,this.one_object['main_object'], []);
+        var arch_val = self.get_object_by_id(this.one_object.clicked_tr_id,this.one_object.main_object, []);
         this.edit_node_dialog.$el.append('<table id="rec_table"  style="width:400px" class="oe_form"></table>');
         this.edit_widget = [];
         self.ready  = $.when(self.on_groups(properties)).done(function () {
-            _PROPERTIES_ATTRIBUTES['groups']['selection'] = self.groups;
-            var values = _.keys( instance.web.form.widgets.map);
+            _PROPERTIES_ATTRIBUTES.groups.selection = self.groups;
+            var values = _.keys(core.form_widget_registry.map);
             values.push('');
             values.sort();
-            _PROPERTIES_ATTRIBUTES['widget']['selection'] = values;
-            var widgets = _.filter(_PROPERTIES_ATTRIBUTES, function (property) { return _.include(properties, property.name)});
+            _PROPERTIES_ATTRIBUTES.widget.selection = values;
+            var widgets = _.filter(_PROPERTIES_ATTRIBUTES, function (property) { return _.include(properties, property.name);});
             _.each(widgets, function(widget) {
                 var type_widget =  new (self.property.get_any([widget.type])) (self.edit_node_dialog, widget);
-                var value = _.detect(arch_val[0]['att_list'],function(res) {
+                var value = _.detect(arch_val[0].att_list,function(res) {
                     return res instanceof Array? _.include(res, widget.name): false;
                 });
 
@@ -924,8 +954,8 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             def.resolve();
         }
         var group_ids = [], group_names = {}, groups = [];
-        var res_groups = new instance.web.DataSetSearch(this,'res.groups', null, null),
-            model_data = new instance.web.DataSetSearch(self,'ir.model.data', null, null);
+        var res_groups = new data.DataSetSearch(this,'res.groups', null, null),
+            model_data = new data.DataSetSearch(self,'ir.model.data', null, null);
             res_groups.read_slice([], {}).done(function (res_grp) {
                 _.each(res_grp, function (res) {
                     var key = res.id;
@@ -951,7 +981,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                             {'name': 'field_value','selection': fields, 'value': false, 'string': '','type': 'selection'},
                             {'name': 'position','selection': position, 'value': false, 'string': 'Position','type': 'selection'}];
         this.add_widget = [];
-        this.add_node_dialog = new instance.web.Dialog(this,{
+        this.add_node_dialog = new Dialog(this,{
             title: _t("Properties"),
             size: 'medium',
             buttons: [
@@ -981,7 +1011,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         this.add_node_dialog.$el.append('<table id="rec_table"  style="width:420px" class="oe_form"><tbody><tr></tbody></table>');
         var table_selector = self.add_node_dialog.$el.find('table[id=rec_table] tbody');
         _.each(render_list, function(node) {
-            type_widget = new (self.property.get_any([node.type])) (self.add_node_dialog, node);
+            var type_widget = new (self.property.get_any([node.type])) (self.add_node_dialog, node);
             if (node.name == "position") {
                 table_selector.append('</tr><tr><td align="right" width="100px">' + node.string + '</td>' + type_widget.render() + '</tr>');
             } else {
@@ -996,7 +1026,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         });
         table_selector.find("td[id^=]").attr("width","100px");
         self.add_node_dialog.$el.find('#new_field').click(function() {
-            model_data = new instance.web.DataSetSearch(self,'ir.model', null, null);
+            var model_data = new data.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}).done(function(result) {
                 self.render_new_field(result[0]);
             });
@@ -1014,9 +1044,9 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 action_buttons: true
             }
         };
-        var action_manager = new instance.web.ActionManager(self);
+        var action_manager = new ActionManager(self);
         $.when(action_manager.do_action(action)).done(function() {
-            var controller = action_manager.dialog_widget.views['form'].controller;
+            var controller = action_manager.dialog_widget.views.form.controller;
             controller.on("on_button_cancel", self, function(){
                 action_manager.destroy();
             });
@@ -1024,14 +1054,15 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 action_manager.destroy();
                 var value =controller.fields.name.get('value');
                 self.add_node_dialog.$el.find('select[id=field_value]').append($("<option selected></option>").attr("value",value).text(value));
-                    _.detect(self.add_widget,function(widget){
-                        widget.name == "field_value"? widget.selection.push(value): false;
+                    _.detect(self.add_widget, function(widget){
+                        widget.name === "field_value" ? widget.selection.push(value): false;
                     });
             });
         });
     }
 });
-instance.web_view_editor.ViewEditor.Field = instance.web.Class.extend({
+
+ViewEditor.Field = core.Class.extend({
     init: function(view, widget) {
         this.$el = view.$el;
         this.dirty = false;
@@ -1057,17 +1088,18 @@ instance.web_view_editor.ViewEditor.Field = instance.web.Class.extend({
     validate: function() {
         this.is_invalid = false;
         try {
-            var value = instance.web.parse_value(this.get_value(), this, '');
+            var value = formats.parse_value(this.get_value(), this, '');
             this.is_invalid = this.required && value === '';
         } catch(e) {
             this.is_invalid = true;
         }
     },
     render: function() {
-        return _.str.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}))
+        return _.str.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}));
     }
 });
-instance.web_view_editor.ViewEditor.FieldBoolean = instance.web_view_editor.ViewEditor.Field.extend({
+
+ViewEditor.FieldBoolean = ViewEditor.Field.extend({
     template : "vieweditor_boolean",
     start: function() {
         var self = this;
@@ -1085,7 +1117,8 @@ instance.web_view_editor.ViewEditor.FieldBoolean = instance.web_view_editor.View
         return  this.$el.find("input[id=" + this.name + "]").is(':checked')? "1" : null;
     }
 });
-instance.web_view_editor.ViewEditor.FieldChar = instance.web_view_editor.ViewEditor.Field.extend({
+
+ViewEditor.FieldChar = ViewEditor.Field.extend({
     template : "vieweditor_char",
     start: function () {
         var self = this;
@@ -1101,7 +1134,8 @@ instance.web_view_editor.ViewEditor.FieldChar = instance.web_view_editor.ViewEdi
         return this.$el.find("input[id=" + this.name + "]").val();
     }
 });
-instance.web_view_editor.ViewEditor.FieldSelect = instance.web_view_editor.ViewEditor.Field.extend({
+
+ViewEditor.FieldSelect = ViewEditor.Field.extend({
     template : "vieweditor_selection",
     start: function () {
         var self = this;
@@ -1131,7 +1165,8 @@ instance.web_view_editor.ViewEditor.FieldSelect = instance.web_view_editor.ViewE
         return this.$el.find("select[id=" + this.name + "]").val();
     }
 });
-instance.web_view_editor.ViewEditor.FieldSelectMulti = instance.web_view_editor.ViewEditor.FieldSelect.extend({
+
+ViewEditor.FieldSelectMulti = ViewEditor.FieldSelect.extend({
     start: function () {
         this._super();
         this.$el.find("select[id=" + this.name + "]").css('height', '100px').attr("multiple", true);
@@ -1142,12 +1177,13 @@ instance.web_view_editor.ViewEditor.FieldSelectMulti = instance.web_view_editor.
         if (!value) return false;
         _.each(this.selection, function(item) {
             if (_.include(value.split(','), item[0])) {
-                self.$el.find("select[id="+self.name+"] option[value='" + item[0] +"']").attr("selected",1)
+                self.$el.find("select[id="+self.name+"] option[value='" + item[0] +"']").attr("selected",1);
             }
         });
     }
 });
-instance.web_view_editor.ViewEditor.FieldFloat = instance.web_view_editor.ViewEditor.FieldChar.extend({
+
+ViewEditor.FieldFloat = ViewEditor.FieldChar.extend({
 });
 
 var _PROPERTIES = {
@@ -1169,6 +1205,7 @@ var _PROPERTIES = {
     'graph' : ['string', 'type'],
     'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode']
 };
+
 var _CHILDREN = {
     'form': ['notebook', 'group', 'field', 'label', 'button','board', 'newline', 'separator'],
     'tree': ['field'],
@@ -1189,6 +1226,7 @@ var _CHILDREN = {
     'html_tag':['notebook', 'group', 'field', 'label', 'button','board', 'newline', 'separator']
 //e.g.:xyz 'td' : ['field']
 };
+
 // Generic html_tag list and can be added html tag in future. It's support above _CHILDREN dict's *html_tag* by default.
 // For specific child node one has to define tag above and specify children tag in list. Like above xyz example.
 var html_tag = ['div','h1','h2','h3','h4','h5','h6','td','tr'];
@@ -1220,11 +1258,13 @@ var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
             'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
             'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph'
 ];
-instance.web_view_editor.ViewEditor.property_widget = new instance.web.Registry({
-    'boolean' : 'instance.web_view_editor.ViewEditor.FieldBoolean',
-    'selection_multi' : 'instance.web_view_editor.ViewEditor.FieldSelectMulti',
-    'selection' : 'instance.web_view_editor.ViewEditor.FieldSelect',
-    'char' : 'instance.web_view_editor.ViewEditor.FieldChar',
-    'float' : 'instance.web_view_editor.ViewEditor.FieldFloat'
+
+ViewEditor.property_widget = new Registry({
+    'boolean' : ViewEditor.FieldBoolean,
+    'selection_multi' : ViewEditor.FieldSelectMulti,
+    'selection' : ViewEditor.FieldSelect,
+    'char' : ViewEditor.FieldChar,
+    'float' : ViewEditor.FieldFloat
 });
-};
+
+});

@@ -1,13 +1,19 @@
+odoo.define('web_diagram.DiagramView', ['web.core', 'web.data', 'web.form_common', 'web.View'], function (require) {
 /*---------------------------------------------------------
  * OpenERP diagram library
  *---------------------------------------------------------*/
+"use strict";
 
-openerp.web_diagram = function (instance) {
-var QWeb = instance.web.qweb,
-      _t = instance.web._t,
-     _lt = instance.web._lt;
-instance.web.views.add('diagram', 'instance.web.DiagramView');
-instance.web.DiagramView = instance.web.View.extend({
+var core = require('web.core');
+var data = require('web.data');
+var form_common = require('web.form_common');
+var View = require('web.View');
+
+var _t = core._t;
+var _lt = core._lt;
+var QWeb = core.qweb;
+
+var DiagramView = View.extend({
     display_name: _lt('Diagram'),
     view_type: 'diagram',
     searchable: false,
@@ -54,9 +60,9 @@ instance.web.DiagramView = instance.web.View.extend({
         this.$el.addClass(this.fields_view.arch.attrs['class']);
 
         _.each(self.labels,function(label){
-            html_label = '<p style="padding: 4px;">' + label.attrs.string + "</p>";
+            var html_label = '<p style="padding: 4px;">' + label.attrs.string + "</p>";
             self.$el.find('.oe_diagram_header').append(html_label);
-        })
+        });
 
         this.init_pager();
 
@@ -90,16 +96,16 @@ instance.web.DiagramView = instance.web.View.extend({
 
         _.each(this.nodes.children, function(child) {
             if(child.attrs.invisible == '1')
-                params['invisible_nodes'].push(child.attrs.name);
+                params.invisible_nodes.push(child.attrs.name);
             else {
-                params['visible_nodes'].push(child.attrs.name);
-                params['node_fields'].push(self.fields[child.attrs.name]['string']|| this.toTitleCase(child.attrs.name));
+                params.visible_nodes.push(child.attrs.name);
+                params.node_fields.push(self.fields[child.attrs.name]['string']|| this.toTitleCase(child.attrs.name));
             }
         });
 
         _.each(this.connectors.children, function(conn) {
-            params['connectors_fields'].push(self.fields[conn.attrs.name]['string']|| this.toTitleCase(conn.attrs.name));
-            params['connectors'].push(conn.attrs.name);
+            params.connectors_fields.push(self.fields[conn.attrs.name]['string']|| this.toTitleCase(conn.attrs.name));
+            params.connectors.push(conn.attrs.name);
         });
         this.rpc(
             '/web_diagram/diagram/get_diagram_info',params).done(function(result) {
@@ -209,7 +215,7 @@ instance.web.DiagramView = instance.web.View.extend({
             if(!confirm(_t("Deleting this node cannot be undone.\nIt will also delete all connected transitions.\n\nAre you sure ?"))){
                 return $.Deferred().reject().promise();
             }
-            return new instance.web.DataSet(self,self.node).unlink([cutenode.id]);
+            return new data.DataSet(self,self.node).unlink([cutenode.id]);
         };
         CuteEdge.double_click_callback = function(cuteedge){
             self.edit_connector(cuteedge.id);
@@ -227,7 +233,7 @@ instance.web.DiagramView = instance.web.View.extend({
             if(!confirm(_t("Deleting this transition cannot be undone.\n\nAre you sure ?"))){
                 return $.Deferred().reject().promise();
             }
-            return new instance.web.DataSet(self,self.connector).unlink([cuteedge.id]);
+            return new data.DataSet(self,self.connector).unlink([cuteedge.id]);
         };
 
     },
@@ -236,7 +242,7 @@ instance.web.DiagramView = instance.web.View.extend({
     edit_node: function(node_id){
         var self = this;
         var title = _t('Activity');
-        var pop = new instance.web.form.FormOpenPopup(self);
+        var pop = new form_common.FormOpenPopup(self);
 
         pop.show_element(
                 self.node,
@@ -270,7 +276,7 @@ instance.web.DiagramView = instance.web.View.extend({
     add_node: function(){
         var self = this;
         var title = _t('Activity');
-        var pop = new instance.web.form.SelectCreatePopup(self);
+        var pop = new form_common.SelectCreatePopup(self);
         pop.select_element(
             self.node,
             {
@@ -302,7 +308,7 @@ instance.web.DiagramView = instance.web.View.extend({
     edit_connector: function(connector_id){
         var self = this;
         var title = _t('Transition');
-        var pop = new instance.web.form.FormOpenPopup(self);
+        var pop = new form_common.FormOpenPopup(self);
         pop.show_element(
             self.connector,
             parseInt(connector_id,10),      //FIXME Isn't connector_id supposed to be an int ?
@@ -321,7 +327,7 @@ instance.web.DiagramView = instance.web.View.extend({
     add_connector: function(node_source_id, node_dest_id, dummy_cuteedge){
         var self = this;
         var title = _t('Transition');
-        var pop = new instance.web.form.SelectCreatePopup(self);
+        var pop = new form_common.SelectCreatePopup(self);
 
         pop.select_element(
             self.connector,
@@ -420,4 +426,9 @@ instance.web.DiagramView = instance.web.View.extend({
         return $.when(this._super(), this.execute_pager_action('reload'));
     }
 });
-};
+
+core.view_registry.add('diagram', DiagramView);
+
+return DiagramView;
+
+});
