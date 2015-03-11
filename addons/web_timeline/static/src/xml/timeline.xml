@@ -8,12 +8,14 @@
             <button type="button" class="oe_timeline_button_new btn btn-primary btn-sm">
                 New message
             </button>
-            <span class="oe_alternative">
-                <span class="oe_fade">or</span>
-                <div class="oe_bounce_container">
-                    <a class="oe_timeline_share text-info">Write to my followers</a>
-                </div>
-            </span>
+            <t t-if="!widget.options.readonly">
+                <span class="oe_alternative">
+                    <span class="oe_fade">or</span>
+                    <div class="oe_bounce_container">
+                        <a class="oe_timeline_share text-info">Write to my followers</a>
+                    </div>
+                </span>
+            </t>
         <!--</t>-->
     </t>
 </div>

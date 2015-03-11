@@ -202,9 +202,11 @@ openerp.web_timeline = function (session) {
                 'show_link': true,
                 'show_reply_button': true,
                 'show_read_unread_button': true,
-                'fetch_limit': 30,
+                'fetch_limit': 5,
                 'fetch_child_limit': 2,
                 }, this.options);
+
+            console.log("option timeline", this.options);
 
             this.fields_view = {};
             this.fields_keys = [];
@@ -343,7 +345,7 @@ openerp.web_timeline = function (session) {
         },
 
         write_to_followers: function (event, view) {
-
+            view.thread.instantiate_write_to_followers(event);
         },
 
         set_message_ids: function (val) {
@@ -419,8 +421,6 @@ openerp.web_timeline = function (session) {
             this.author_id = this.parent_message.author_id || false;
             this.user_pid = this.parent_message.user_pid || false;
             this.is_private = this.parent_message.is_private || false;
-            this.record_name = this.parent_message.record_name || false;
-            this.subject = this.parent_message.subject || false;
             this.partner_ids = this.parent_message.partner_ids || [];
             if (this.parent_message.author_id 
                 && !_.contains(_.flatten(this.parent_message.partner_ids),this.parent_message.author_id[0]) 
@@ -428,10 +428,12 @@ openerp.web_timeline = function (session) {
                 this.partner_ids.push(this.parent_message.author_id);
             }
 
-            this.context = _.extend(this.context, {
-                'default_model': this.parent_message.model,
-                'default_res_id': this.parent_message.res_id,
-            });
+            if (!this.root) {
+                this.context = _.extend(this.context, {
+                    'default_model': this.parent_message.model,
+                    'default_res_id': this.parent_message.res_id,
+                });
+            }
 
             this.options.root_thread = this.options.root_thread != undefined ? this.options.root_thread : this;
             this.options.show_compose_message = this.root ? false : this.options.root_thread.view.options.show_compose_message;
@@ -442,6 +444,9 @@ openerp.web_timeline = function (session) {
             _.each(this.messages, function (msg) {
                 msg = self.format_message(msg);
             });
+
+            this.record_name = this.parent_message.record_name || false;
+            this.subject = this.parent_message.subject || false;
 
             if (this.options.view_inbox && this.messages.length) {
                 this.format_thread().then(function () {
@@ -456,6 +461,8 @@ openerp.web_timeline = function (session) {
 
             this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
+
+            console.log("thread", this);
         },
 
         start: function () {
@@ -475,14 +482,17 @@ openerp.web_timeline = function (session) {
          * instantiate the compose message object and insert this on the DOM.
          * The compose message is display in compact form.
          */
-        instantiate_compose_message: function () {
+        instantiate_compose_message: function (ev) {
             if (!this.compose_message) {
                 this.context = this.options.compose_as_todo ? 
                     _.extend({'default_starred': true}, this.context) : this.context;
                 this.compose_message = new openerp.web_timeline.ThreadComposeMessage(this, this, this.options);
 
-                if (this.options.view_inbox) {
+                if (this.options.view_inbox && ev == 'reply') {
                     this.compose_message.insertAfter(this.$('.oe_tl_thread_content'));
+                }
+                else if (this.options.view_inbox && ev == 'write_to_followers') {
+                    this.compose_message.prependTo(this.$el);
                 }
                 else {
                     this.compose_message.insertBefore(this.$el);
@@ -490,14 +500,22 @@ openerp.web_timeline = function (session) {
             }
         },
 
-        on_compose_message: function (event) {
+        on_compose_message: function (event, ev) {
             if (this.compose_message) {
                 this.compose_message.destroy();
             }
             this.compose_message = false;
 
-            this.instantiate_compose_message();
+            this.instantiate_compose_message(ev);
             return this.compose_message.on_toggle_quick_composer(event);
+        },
+
+        instantiate_write_to_followers: function (event) {
+            var self = this;
+            return this.on_compose_message(event, 'write_to_followers')
+                .then(function () {
+                    self.$('.oe_tl_msg_composer').addClass('oe_tl_write_to_followers');
+                });
         },
 
         /**
@@ -532,20 +550,20 @@ openerp.web_timeline = function (session) {
 
         treat_threads: function (records) {
             var self = this;
-
-            console.log("records", records);
             
+            console.log("records", records)
+
             _.each(records.threads, function (record) {
                 self.create_thread(record);
             });
 
             if (!records.threads.length) {
-                self.create_thread();
+                this.create_thread();
             }
         },
 
         create_thread: function (record) {
-            var thread = new openerp.web_timeline.MailThread(this, _.extend(this, {
+            var thread = new openerp.web_timeline.MailThread(this, _.extend(_.clone(this), {
                     'messages': record, 
                     }), this.options);
 
@@ -558,22 +576,19 @@ openerp.web_timeline = function (session) {
             var msg_id = $(event.target).data('msg_id');
             var msg = _.findWhere(this.messages, {id: msg_id});
             this.on_message_read_unread([msg], true, false);
-            return false;
         },
 
         on_message_unread: function (event) {
             event.stopPropagation();
             var msg_id = $(event.target).data('msg_id');
             var msg = _.findWhere(this.messages, {id: msg_id});
-            this.on_message_read_unread([msg], false, false);
-            return false;
+            this.on_message_read_unread([msg], false);
         },
 
         on_thread_read: function (event) {
             event.stopPropagation();
             this.on_message_read_unread(
-                _.filter(this.messages, function (val) {return val.type != 'expandable'}), true, true);
-            return false;
+                _.filter(this.messages, function (val) {return val.type != 'expandable'}), true);
         },
 
         /** 
@@ -582,7 +597,7 @@ openerp.web_timeline = function (session) {
          * @param {boolean} read_value
          * @param {messages} array of messages
          */
-        on_message_read_unread: function (messages, read_value, thread) {
+        on_message_read_unread: function (messages, read_value) {
             var self = this; 
 
             // inside the inbox, when the user mark a message as read/done, don't apply this value
@@ -645,7 +660,7 @@ openerp.web_timeline = function (session) {
 
         on_message_reply:function (event) {
             event.stopPropagation();
-            this.on_compose_message(event);
+            this.on_compose_message(event, 'reply');
             return false;
         },
 
@@ -731,6 +746,7 @@ openerp.web_timeline = function (session) {
 
         on_record_clicked: function (event) {
             event.preventDefault();
+            event.stopPropagation();
 
             var self = this;
             var state = {
@@ -746,7 +762,8 @@ openerp.web_timeline = function (session) {
                 res_id: this.context.default_res_id,
             };
 
-            console.log("thus.context", this.context);
+            console.log("this.context", this.context);
+            console.log("ds_thread", this.ds_thread);
 
             this.ds_thread.call("message_redirect_action", {context: this.context})
                 .then(function(action){
@@ -852,6 +869,8 @@ openerp.web_timeline = function (session) {
         add_message: function (message, to_end) {
             message = this.format_message(message);
 
+            console.log("this.messages", this.messages);
+
             if (to_end) {
                 this.messages.push(message);
             }
@@ -862,8 +881,11 @@ openerp.web_timeline = function (session) {
 
         insert_message: function (message) {
             this.$('.oe_view_nocontent').remove();
-            if (this.options.view_inbox) {
+            if (this.options.view_inbox && !this.root) {
                 $(message.content).appendTo(this.$('.oe_tl_thread_content'));
+            }
+            else if (this.options.view_inbox && this.root) {
+                $(message.content).appendTo(this.$('.oe_tl_thread_parent:first'));
             }
             else {
                 $(message.content).prependTo(this.$el);
@@ -1061,6 +1083,8 @@ openerp.web_timeline = function (session) {
                     }
                 }
             });
+
+            console.log("composer message", this);
         },
 
         start: function () {
@@ -1118,6 +1142,7 @@ openerp.web_timeline = function (session) {
         },
 
         on_toggle_quick_composer: function (event) {
+            console.log("on toggle quick composer");
             var self = this;
             var $input = $(event.target);
 
@@ -1164,6 +1189,8 @@ openerp.web_timeline = function (session) {
                 if (!self.stay_open && self.show_composer && (!event || event.type != 'blur')) {
                     self.$('textarea:not(.oe_tl_compact):first').focus();
                 }
+                console.log("partners_ids", self.partner_ids);
+                console.log("recipient_ids", self.recipient_ids);
             });
 
             return suggested_partners;
@@ -1332,6 +1359,7 @@ openerp.web_timeline = function (session) {
                 recipient_done = this.check_recipient_partners();
 
             $.when(recipient_done).done(function (partner_ids) {
+                console.log("fullmail partners", partner_ids);
                 var context = {
                     'default_parent_id': self.id,
                     'default_body': openerp.web_timeline.ChatterUtils.get_text2html(
@@ -1348,6 +1376,7 @@ openerp.web_timeline = function (session) {
                     context.default_model = self.context.default_model;
                     context.default_res_id = self.context.default_res_id;
                 }
+                console.log("fullmail context", context);
 
                 var action = {
                     type: 'ir.actions.act_window',

@@ -63,7 +63,7 @@
     /* -------------- parent message -------------- */
 
         .openerp .oe_timeline .oe_tl_thread_parent {
-            width: 950px;
+            width: 870px;
             margin-top: 10px;
             vertical-align: middle;
         }
@@ -79,25 +79,25 @@
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject {
             display: inline-block;
-            width: 505px;
+            width: 455px;
             cursor: pointer;
             vertical-align: middle;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject.oe_tl_small_subject {
-            width: 471px;
+            width: 421px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject .oe_tl_subject {
             display: inline-block;
-            max-width: 475px;
+            max-width: 425px;
             overflow: hidden;
             text-overflow: ellipsis;
             vertical-align: middle;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject.oe_tl_small_subject .oe_tl_subject {
-            max-width: 441px;
+            max-width: 391px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject .oe_tl_nb_unread_msg {
@@ -109,7 +109,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             vertical-align: middle;
-            width: 123px;
+            width: 122px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_timeline_action_author {
@@ -155,7 +155,7 @@
             text-decoration: none;
             color: #AAA;
             font-size: 1.2em;
-            padding-top: 2px;
+            padding-top: 1px;
             cursor: pointer;
             /*text-shadow: 0px 1px blue,0px -1px green, -1px 0px red, 1px 0px black, 0px 3px 3px rgba(0,0,0,0.1);*/
             -webkit-transition: all 0.2s linear;
@@ -172,7 +172,7 @@
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_followers {
             float: right;
-            margin-right: 17px; 
+            margin-right: 15px; 
             margin-top: 3px;
             color: #337ab7;
         }
@@ -266,8 +266,14 @@
             border-left: dashed 2px #A4A4A4;
         }
 
-        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg.oe_tl_msg_composer,
         .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_composer.oe_tl_write_to_followers {
+            width: 715px;
+            margin-top: 0px;
+            margin-left: 13%;
+            border-bottom: none;
+        }
+
+        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg.oe_tl_msg_composer {
             margin-left: 16.8%;
             margin-top: 0px;
             border-bottom: none;
@@ -590,18 +596,20 @@
 
     /* ------------ expandable message ------------ */ 
 
-        .openerp .oe_timeline .oe_tl_msg_expandable, 
+        .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_expandable, 
         .openerp .oe_timeline .oe_tl_parent_expandable {  
             color: #A4A4A4;
-            padding-bottom: 10px;
             cursor: pointer; 
+            margin-bottom: 0px;
+            min-height: 30px;
+            height: 30px;
         }
 
         .openerp .oe_timeline .oe_tl_msg_expandable span,
         .openerp .oe_timeline .oe_tl_parent_expandable span {
             display: inline-block;
             text-align: right;
-            padding-left: 28%;
+            padding-left: 27%;
         }
 
         .openerp .oe_timeline .oe_tl_msg_expandable span {

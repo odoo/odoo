@@ -285,6 +285,7 @@
         <field name="res_model">mail.message</field>
         <field name="view_type">form</field>
         <field name="view_mode">timeline</field>
+        <field name="priority">8</field>
         <field name="context">{
             'default_model': 'res.users',
             'default_res_id': uid,
@@ -401,7 +402,7 @@
         <field name="needaction_enabled">False</field>
     </record>--> 
 
-    <record model="ir.ui.view" id="mail_tree_view">
+    <!--<record model="ir.ui.view" id="mail_tree_view">
         <field name="name">mail.message.tree</field>
         <field name="model">mail.message</field>
         <field name="priority">4</field>
@@ -425,7 +426,7 @@
     </record>
 
     <menuitem id="timeline_menu_all" name="All"
-        parent="web_timeline.mail_feeds" action="test_action_all"/>
+        parent="web_timeline.mail_feeds" action="test_action_all"/>-->
 
 </data>
 </openerp>
