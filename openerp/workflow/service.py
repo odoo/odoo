@@ -85,16 +85,15 @@ class WorkflowService(object):
         if not wkf_ids:
             self.cr.execute('select id from wkf where osv=%s and on_create=True', (self.record.model,))
             wkf_ids = self.cr.fetchall()
-
-            if len(wkf_ids) > 0:
-                self.cr.execute("select module, res_id from ir_model_data "
-                                "where model='workflow' and res_id in %s",
-                                wkf_ids)
-                modules = self.cr.fetchall()
-                modules = filter(check_module, modules)
-                wkf_ids = map(to_record, modules)
-
             WorkflowService.CACHE[self.cr.dbname][self.record.model] = wkf_ids
+
+        if wkf_ids:
+            self.cr.execute("select module, res_id from ir_model_data "
+                            "where model='workflow' and res_id in %s",
+                            wkf_ids)
+            modules = self.cr.fetchall()
+            modules = filter(check_module, modules)
+            wkf_ids = map(to_record, modules)
 
         for (wkf_id, ) in wkf_ids:
             WorkflowInstance.create(self.session, self.record, wkf_id)
