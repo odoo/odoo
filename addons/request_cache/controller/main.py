@@ -12,7 +12,7 @@ class RequestCacheController(DataSet):
 
     def get_data(self, model, *args):
 
-        self.hashkey = request.env['cache.store'].get_hash(model, model, args)
+        self.hashkey = request.env['cache.store'].get_hash(model, request.session.uid, model, args)
 
         if not hasattr(request.env[model], '_cache_dependencies'):
             return False
