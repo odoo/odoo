@@ -20,6 +20,7 @@
 ##############################################################################
 from helpers import Session
 from helpers import Record
+import sys
 
 from openerp.workflow.instance import WorkflowInstance
 # import instance
@@ -68,6 +69,15 @@ class WorkflowService(object):
         WorkflowInstance(self.session, self.record, {}).delete()
 
     def create(self):
+
+        def check_module(module):
+            """Check if the module is loaded"""
+            return sys.modules.get('openerp.addons.%s' % module[0])
+
+        def to_record(module_record):
+            """Return the resource id"""
+            return (module_record[1], )
+
         WorkflowService.CACHE.setdefault(self.cr.dbname, {})
 
         wkf_ids = WorkflowService.CACHE[self.cr.dbname].get(self.record.model, None)
@@ -75,6 +85,15 @@ class WorkflowService(object):
         if not wkf_ids:
             self.cr.execute('select id from wkf where osv=%s and on_create=True', (self.record.model,))
             wkf_ids = self.cr.fetchall()
+
+            if len(wkf_ids) > 0:
+                self.cr.execute("select module, res_id from ir_model_data "
+                                "where model='workflow' and res_id in %s",
+                                wkf_ids)
+                modules = self.cr.fetchall()
+                modules = filter(check_module, modules)
+                wkf_ids = map(to_record, modules)
+
             WorkflowService.CACHE[self.cr.dbname][self.record.model] = wkf_ids
 
         for (wkf_id, ) in wkf_ids:
