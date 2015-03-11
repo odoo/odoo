@@ -75,8 +75,8 @@ class MetaField(type):
 
     def __init__(cls, name, bases, attrs):
         super(MetaField, cls).__init__(name, bases, attrs)
-        if cls.type:
-            cls.by_type[cls.type] = cls
+        if cls.type and cls.type not in MetaField.by_type:
+            MetaField.by_type[cls.type] = cls
 
         # compute class attributes to avoid calling dir() on fields
         cls.column_attrs = []
@@ -1784,15 +1784,15 @@ class Serialized(Field):
 
 class Id(Field):
     """ Special case for field 'id'. """
+    type = 'integer'
+
+    string = 'ID'
     store = True
     #: Can't write this!
     readonly = True
 
-    def __init__(self, string=None, **kwargs):
-        super(Id, self).__init__(type='integer', string=string, **kwargs)
-
     def to_column(self):
-        self.column = fields.integer('ID')
+        self.column = fields.integer(self.string)
         return self.column
 
     def __get__(self, record, owner):
