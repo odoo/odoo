@@ -1,4 +1,5 @@
 from openerp import models, fields, api
+from dateutil.relativedelta import relativedelta
 import random
 import hashlib
 
@@ -20,7 +21,7 @@ class SaleApplicability(models.Model):
     validity_duration = fields.Integer("Validity Duration", help="Validity duration can be set according to validity type")
     expiration_use = fields.Integer("Expiration use", default="1", help="Number of Times coupon can be Used")
     purchase_type = fields.Selection([('product', 'Product'), ('category', 'Category'),
-                                      ('amount', 'Amount')], string="Type", required=True)
+                                      ('amount', 'Amount')], string="Type", required=True, default="product")
     product_id = fields.Many2one('product.product', string="Product")
     product_category_id = fields.Many2one('product.category', string="Product Categoy")
     product_quantity = fields.Integer("Quantity", default=1)
@@ -29,6 +30,16 @@ class SaleApplicability(models.Model):
     tax = fields.Selection([('tax_included', 'Tax included'), ('tax_excluded', 'Tax excluded')], default="tax_excluded")
     company_id = fields.Many2one('res.company', string="Company")
     currency_id = fields.Many2one("res.currency", readonly=True)
+
+    def get_expiration_date(self, start_date):
+        if self.validity_type == 'day':
+            return start_date + relativedelta(days=(self.duration))
+        if self.validity_type == 'month':
+            return start_date + relativedelta(months=self.duration)
+        if self.validity_type == 'week':
+            return start_date + relativedelta(days=(self.duration * 7))
+        if self.validity_type == 'year':
+            return start_date + relativedelta(months=(self.duration * 12))
 
 
 class SaleReward(models.Model):
@@ -40,9 +51,9 @@ class SaleReward(models.Model):
                                     ('coupon', 'Coupon')], string="Free gift", help="Type of reward to give to customer", default="product")
     reward_shipping_free = fields.Selection([('yes', 'Yes'), ('no', 'No')], string="Free Shipping", default="no", help="Shipment of the order is free or not")
     reward_product_product_id = fields.Many2one('product.product', string="Product")
-    reward_quantity = fields.Integer(string="Quantity")
+    reward_quantity = fields.Integer(string="Quantity", default=1)
     reward_product_uom_id = fields.Many2one('product.uom', string="UoM")
-    reward_gift_coupon_id = fields.Many2one('sale.couponprogram', string="Coupon Id")
+    reward_gift_coupon_id = fields.Many2one('sale.couponprogram', string="Coupon program")
     reward_discount_type = fields.Selection([('no', 'No'), ('percentage', 'Percentage'),
                                              ('amount', 'Amount')], string="Apply a discount", default="no")
     reward_discount_percentage = fields.Float("Discount", help='The discount in percentage')
@@ -51,7 +62,7 @@ class SaleReward(models.Model):
                                            ('specific_product', 'On specific product')], string="Discount On", default="cart")
     reward_discount_on_product_id = fields.Many2one('product.product', string="Product")
     reward_tax = fields.Selection([('tax_included', 'Tax included'),
-                                   ('tax_excluded', 'Tax excluded')], string="Tax")
+                                   ('tax_excluded', 'Tax excluded')], string="Tax", default="tax_excluded")
     reward_partial_use = fields.Selection([('yes', 'Yes'), ('no', 'No')], default="no", string="Partial use", help="The reward can be used partially or not")
 
 
@@ -174,14 +185,31 @@ class SaleOrder(models.Model):
             if not program_id:
                 program_id = self.env['sale.coupon'].search([('coupon_code', '=', self.typed_code)]).program_id
             if program_id:
-                print "------>>>>", program_id.reward_discount_percentage,program_id.name
-                order_data = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
-                    #if reward is product
-                for data in order_data:
-                    print "-----", data['product_id'][0], program_id['applicability_id']['product_id']['id'], data['product_uom_qty'], program_id['applicability_id']['product_quantity']
-                    if data['product_id'][0] == program_id['applicability_id']['product_id']['id'] and data['product_uom_qty'] >= program_id['applicability_id']['product_quantity']:
+                #if program_id['applicability_id']['purchase_type'] == 'product':
+                    print "------>>>>", program_id.reward_discount_percentage, program_id.name
+                    order_data = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
+                        #if reward is product
+                    for data in order_data:
+                        if program_id['applicability_id']['partner_id']:
+                            print "------WWWWW", self['partner_id'], program_id['applicability_id']['partner_id']
+                            if self['partner_id']['id'] != program_id['applicability_id']['partner_id']['id']:
+                                break
+                        print "-----", data['product_id'][0], program_id['applicability_id']['product_id']['id'], data['product_uom_qty'], program_id['applicability_id']['product_quantity']
+                        # if purchase type is product
+                        if program_id['applicability_id']['purchase_type'] == 'product':
+                            print "--0000", data['product_id'][0], program_id['applicability_id']['product_id']['id'], data['product_uom_qty'], program_id['applicability_id']['product_quantity']
+                            if data['product_id'][0] != program_id['applicability_id']['product_id']['id'] or data['product_uom_qty'] < program_id['applicability_id']['product_quantity']:
+                                break
+                        # if purchase type is category
+                        elif program_id['applicability_id']['purchase_type'] == 'category':
+                            pass
+                        #if purchase type is amount
+                        elif program_id['applicability_id']['purchase_type'] == 'amount':
+                            print "999999", self['amount_total'], program_id['applicability_id']['minimum_amount']
+                            if self['amount_total'] < program_id['applicability_id']['minimum_amount']:
+                                break
                         if program_id['reward_id']['reward_type'] == 'product':
-                        # to get unit price of product
+                            # to get unit price of product
                             print"-----", program_id['reward_id']['reward_type']
                             for line in self.order_line:
                                 print "----999", line['product_id'], program_id['reward_id']['reward_product_product_id']
@@ -196,11 +224,11 @@ class SaleOrder(models.Model):
                                     print "----000", data2['product_uom_qty'], program_id['reward_id']['reward_quantity']
                                     if program_id['applicability_id']['product_id'] == program_id['reward_id']['reward_product_product_id']:
                                         if data2['product_uom_qty'] >= program_id['applicability_id']['product_quantity'] + program_id['reward_id']['reward_quantity']:
-                                            self.env['sale.order.line'].create({'name': program_id['reward_id']['reward_product_product_id']['name'], 'order_id': self.id, 'price_unit': -cost, 'product_uom_qty': program_id['reward_id']['reward_quantity']})
+                                            self.env['sale.order.line'].create({'name': 'Reward on ' + program_id['reward_id']['reward_product_product_id']['name'], 'order_id': self.id, 'price_unit': -cost, 'product_uom_qty': program_id['reward_id']['reward_quantity']})
                                             exit
                                     else:
                                         if data2['product_uom_qty'] >= program_id['reward_id']['reward_quantity']:
-                                            self.env['sale.order.line'].create({'name': program_id['reward_id']['reward_product_product_id']['name'], 'order_id': self.id, 'price_unit': -cost, 'product_uom_qty': program_id['reward_id']['reward_quantity']})
+                                            self.env['sale.order.line'].create({'name': 'Reward on ' + program_id['reward_id']['reward_product_product_id']['name'], 'order_id': self.id, 'price_unit': -cost, 'product_uom_qty': program_id['reward_id']['reward_quantity']})
                                             exit
                                 exit
                         elif program_id['reward_id']['reward_type'] == 'discount':
@@ -229,7 +257,7 @@ class SaleOrder(models.Model):
                             #print "---------", coupon['coupon_code']
                             print "------ Reward coupon"
                             self.coupon_program_id = program_id.reward_gift_coupon_id
-                    exit
+                        exit
             else:
                 # program_id = self.env['sale.coupon'].search([('coupon_code', '=', self.typed_code)])
                 # if program_id:
@@ -237,16 +265,39 @@ class SaleOrder(models.Model):
                 # invalid code
         else:
             order_data = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
-            var_applicability = self.env['sale.applicability']
+            program_obj = self.env['sale.couponprogram']
             for data1 in order_data:
-                result = var_applicability.search([('product_id', '=', data1['product_id'][0]), ('product_quantity', '<=', data1['product_uom_qty'])])
+                result = program_obj['applicability_id'].search([('product_id', '=', data1['product_id'][0]), ('product_quantity', '<=', data1['product_uom_qty'])])
+                #result = program_obj['applicability_id'].search([('minimum_amount', '<=', self['amount_total']), ('purchase_type', '=', 'amount'), ('product_id', '=', data1['product_id'][0]), ('product_quantity', '<=', data1['product_uom_qty'])])
                 if result:
-                    print "----im here"
-                    program_id = self.env['sale.couponprogram'].search([('applicability_id', '=', result[0]['id'])])
-                    print "=========", program_id['id'], program_id['reward_id']['reward_type']
-                    # Apply immediately
+                    program_id = program_obj.search([('applicability_id', '=', result[0]['id']), ('active', '=', True)])
+                    print "-----7777", program_id['name']
+                else:
+                    break
+                if program_id:
+                    print "55555 here"
+            # order_data = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
+            # var_applicability = self.env['sale.applicability']
+            # for data1 in order_data:
+            #     result = var_applicability.search([('product_id', '=', data1['product_id'][0]), ('product_quantity', '<=', data1['product_uom_qty'])])
+            #     if result:
+            #         print "----im here"
+            #         program_id = self.env['sale.couponprogram'].search([('applicability_id', '=', result[0]['id']), ('active', '=', True)])
+            #         print "=========", program_id['id'], program_id['reward_id']['reward_type']
+                    # check for customer
+                    if program_id['applicability_id']['partner_id']:
+                        print "--------vvv", self['partner_id'], program_id['applicability_id']['partner_id']
+                        if self['partner_id']['id'] != program_id['applicability_id']['partner_id']['id']:
+                            print "----not equal"
+                            break
+                    #Apply immediately
                     if program_id['program_type'] == 'apply_immediately':
-                        #if reward is product
+                        # if program_id['applicability_id']['purchase_type'] == 'product':
+                        #     pass#if reward is product
+                        # elif program_id['applicability_id']['purchase_type'] == 'category':
+                        #     pass
+                        # elif program_id['applicability_id']['purchase_type'] == 'amount':
+                        #     pass
                         if program_id['reward_id']['reward_type'] == 'product':
                             # to get unit price of product
                             for line in self.order_line:
@@ -261,11 +312,11 @@ class SaleOrder(models.Model):
                                     print "----000", data2['product_uom_qty'], program_id['reward_id']['reward_quantity']
                                     if data1['product_id'] == data2['product_id']:
                                         if data2['product_uom_qty'] >= result[0]['product_quantity'] + program_id['reward_id']['reward_quantity']:
-                                            self.env['sale.order.line'].create({'name': program_id['reward_id']['reward_product_product_id']['name'], 'order_id': self.id, 'price_unit': -cost, 'product_uom_qty': program_id['reward_id']['reward_quantity']})
+                                            self.env['sale.order.line'].create({'name': "Reward on " + program_id['reward_id']['reward_product_product_id']['name'], 'order_id': self.id, 'price_unit': -cost, 'product_uom_qty': program_id['reward_id']['reward_quantity']})
                                             exit
                                     else:
                                         if data2['product_uom_qty'] >= program_id['reward_id']['reward_quantity']:
-                                            self.env['sale.order.line'].create({'name': program_id['reward_id']['reward_product_product_id']['name'], 'order_id': self.id, 'price_unit': -cost, 'product_uom_qty': program_id['reward_id']['reward_quantity']})
+                                            self.env['sale.order.line'].create({'name': "Reward on " + program_id['reward_id']['reward_product_product_id']['name'], 'order_id': self.id, 'price_unit': -cost, 'product_uom_qty': program_id['reward_id']['reward_quantity']})
                                             exit
                                 exit
                         #if reward is discount
@@ -293,11 +344,11 @@ class SaleOrder(models.Model):
                         elif program_id['reward_id']['reward_type'] == 'coupon':
                             #coupon = self.env['sale.coupon'].create({'program_id': program_id['id']})
                             #print "---------", coupon['coupon_code']
-                            print "------ Reward coupon",program_id.reward_gift_coupon_id.name
+                            print "------ Reward coupon", program_id.reward_gift_coupon_id.name
                             self.coupon_program_id = program_id.reward_gift_coupon_id
-                exit
-            else:
-                exit
+                        exit
+                else:
+                    exit
 
 
 class GenerateManualCoupon(models.TransientModel):

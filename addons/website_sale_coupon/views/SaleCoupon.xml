@@ -29,43 +29,54 @@
                             <page string="Conditions" name="condition">
                                 <group>
                                     <field name="purchase_type"/>
-                                    <label for="validity_duration" string="Validity duration"/>
-                                    <div>
-                                        <field name="validity_duration" class="oe_inline"/>
-                                        <field name="validity_type" class="oe_inline"/>
-                                    </div>
                                     <label string="Amount" for="minimum_amount" attrs="{'invisible': [('purchase_type', '!=', 'amount')]}" />
                                     <div attrs="{'invisible': [('purchase_type', '!=', 'amount')]}">
                                         <field name="minimum_amount" class="oe_inline"/>
                                         <field name="currency_id" class="oe_inline"/>
-                                        <field name="tax"/>
+                                        <field name="tax" class="oe_inline"/>
                                      </div>
-                                    <field name="product_id" attrs="{'invisible': [('purchase_type', '!=', 'product')]}"/>
-                                    <field name="product_category_id" attrs="{'invisible': [('purchase_type', '!=', 'category')]}"/>
-                                    <field name="product_quantity" attrs="{'invisible': [('purchase_type', '=', 'amount')]}"/>
-                                    <field name="partner_id"/>
-                                    <field name="company_id"/>
+                                    <field name="product_id" attrs="{'invisible': [('purchase_type', '!=', 'product')]}" placeholder="Select product"/>
+                                    <field name="product_category_id" attrs="{'invisible': [('purchase_type', '!=', 'category')]}" placeholder="Select product category"/>
+                                    <label string="Quantity" for="product_quantity" attrs="{'invisible': [('purchase_type', '=', 'amount')]}"/>
+                                    <div attrs="{'invisible': [('purchase_type', '=', 'amount')]}">
+                                        <field name="product_quantity" attrs="{'invisible': [('purchase_type', '=', 'amount')]}" class="oe_inline"/>
+                                        <field name="product_uom_id" attrs="{'invisible': [('purchase_type', '=', 'amount')]}" class="oe_inline" placeholder="Select unit of measure"/>
+                                    </div>
+                                    <label for="validity_duration" string="Validity duration"/>
+                                    <div>
+                                        <field name="validity_duration" class="oe_inline" attrs="{'invisible': [('program_type', '=', 'public_unique_code')]}" />
+                                        <field name="validity_type" class="oe_inline" attrs="{'invisible': [('program_type', '=', 'public_unique_code')]}"/>
+                                        <field name="date_from" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}" class="oe_inline" placeholder="From"/>
+                                        <field name="date_to" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}" class="oe_inline" placeholder="To"/>
+                                    </div>
+                                    <field name="partner_id" placeholder="Select customer"/>
+                                    <field name="company_id" placeholder="Select company"/>
                                 </group>
                             </page>
                             <page string="Rewards" name="rewards">
                                 <form>
                                     <group>
                                         <field name="reward_type"/>
-                                        <field name="reward_shipping_free" widget="radio" class="oe_inline"/>
-                                        <field name="reward_product_product_id" attrs="{'invisible': [('reward_type', '!=', 'product')]}"/>
-                                        <field name="reward_product_uom_id" attrs="{'invisible': [('reward_type', '!=', 'product')]}"/>
-                                        <field name="reward_quantity" attrs="{'invisible': [('reward_type', '!=', 'product')]}"/>
-
+                                        <field name="reward_product_product_id" attrs="{'invisible': [('reward_type', '!=', 'product')]}" placeholder="Select reward product"/>
+                                        <label string="Quantity" for="reward_quantity" attrs="{'invisible': [('reward_type', '!=', 'product')]}"/>
+                                        <div attrs="{'invisible': [('reward_type', '!=', 'product')]}">
+                                            <field name="reward_quantity" attrs="{'invisible': [('reward_type', '!=', 'product')]}" class="oe_inline"/>
+                                            <field name="reward_product_uom_id" attrs="{'invisible': [('reward_type', '!=', 'product')]}" placeholder="Select unit of measure" class="oe_inline"/>
+                                        </div>
                                         <field name="reward_discount_type" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
 
                                         <field name="reward_discount_on" attrs="{'invisible': 
                                             ['|', ('reward_discount_type', '!=', 'percentage'),('reward_type', '!=', 'discount')]}" widget="radio"/>
-                                        <field name="reward_discount_on_product_id" attrs="{'invisible': ['|', ('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}"/>
+                                        <field name="reward_discount_on_product_id" attrs="{'invisible': ['|', ('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}" placeholder="Select product"/>
                                         <field name="reward_discount_percentage" attrs="{'invisible': ['|', ('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount') ]}"/>
-                                        <field name="reward_discount_amount" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}"/>
-                                        <field name="reward_tax" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}"/>
-                                        <field name="reward_partial_use" attrs="{'invisible': [('reward_discount_type', '!=', 'amount')]}" widget="radio"/>
-                                        <field name="reward_gift_coupon_id" attrs="{'invisible': [('reward_type', '!=', 'coupon')]}"/>
+                                         <label string="Amount" for="reward_discount_amount" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" />
+                                        <div attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}">
+                                            <field name="reward_discount_amount" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" class="oe_inline"/>
+                                            <field name="reward_tax" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" class="oe_inline"/>
+                                        </div>
+                                        <field name="reward_partial_use" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" widget="radio"/>
+                                        <field name="reward_gift_coupon_id" attrs="{'invisible': [('reward_type', '!=', 'coupon')]}" placeholder="Select program"/>
+                                        <field name="reward_shipping_free" widget="radio" class="oe_inline"/>
                                     </group>
                                 </form>
                             </page>
