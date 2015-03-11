@@ -1,8 +1,8 @@
 /*---------------------------------------------------------
- * Odoo Pivot Table view
+ * Odoo Graph view
  *---------------------------------------------------------*/
 
-(function (a, b, c) {
+(function () {
 'use strict';
 
 var instance = openerp,
@@ -127,7 +127,7 @@ instance.web.GraphWidget = instance.web.Widget.extend({
         this._super(parent);
         this.context = options.context;
         this.fields = options.fields;
-        this.fields.__count__ = _t("Quantity");
+        this.fields.__count__ = {string: _t("Quantity"), type: "integer"};
         this.model = new instance.web.Model(model, {group_by_no_leaf: true});
 
         this.domain = options.domain || [];
@@ -212,11 +212,12 @@ instance.web.GraphWidget = instance.web.Widget.extend({
         // prepare data for bar chart
         var data, values,
             measure = this.fields[this.measure].string;
+
         // zero groupbys
         if (this.groupbys.length === 0) {
             data = [{
                 values: [{
-                    x: this.ViewManager.title, 
+                    x: measure,
                     y: this.data[0].value}],
                 key: measure
             }];
