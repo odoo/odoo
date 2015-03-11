@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
-import hr_material
+
+import hr_equipment
 import res_config
