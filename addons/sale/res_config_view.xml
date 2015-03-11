@@ -95,10 +95,10 @@
                         <label for="id" string="Contract Features"/>
                         <div>
                             <div>
-                                <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)" class="oe_inline"/>
-                                <label for="module_account_analytic_analysis"/>
+                                <field name="module_sale_contract" on_change="onchange_timesheet(module_sale_contract)" class="oe_inline"/>
+                                <label for="module_sale_contract"/>
                             </div>
-                            <div name="module_analytic_user_function" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}">
+                            <div name="module_analytic_user_function" attrs="{'invisible':[('module_sale_contract','=',False)]}">
                                 <field name="module_analytic_user_function" class="oe_inline"/>
                                 <label for="module_analytic_user_function"/>
                             </div>

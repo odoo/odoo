@@ -33,7 +33,7 @@ with the effect of creating, editing and deleting either ways.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
-    'depends': ['resource', 'project', 'hr_timesheet', 'hr_timesheet_invoice', 'account_analytic_analysis', 'procurement'],
+    'depends': ['resource', 'project', 'hr_timesheet', 'hr_timesheet_invoice', 'sale_contract', 'procurement'],
     'data': [
         'security/ir.model.access.csv',
         'security/project_timesheet_security.xml',
