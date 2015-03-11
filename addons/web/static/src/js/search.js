@@ -1416,6 +1416,11 @@ instance.web.search.FilterMenu = instance.web.Widget.extend({
         },
         'click .oe-add-condition': 'append_proposition',
         'click .oe-apply-filter': 'commit_search',
+        'keyup .searchview_extended_prop_value': function (ev) {
+            if (ev.which === $.ui.keyCode.ENTER) { 
+                this.commit_search();
+            }
+        },
     },
     init: function (parent, filters, fields_def) {
         var self = this;
@@ -1587,6 +1592,11 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
         },
         'click .oe-save-name button': 'save_favorite',
         'hidden.bs.dropdown': 'close_menus',
+        'keyup .oe-save-name input': function (ev) {
+            if (ev.which === $.ui.keyCode.ENTER) { 
+                this.save_favorite();
+            }
+        },
     },
     init: function (parent, query, target_model, action_id) {
         this._super.apply(this,arguments);
