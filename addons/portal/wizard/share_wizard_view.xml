@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="share_step1_form_portal" model="ir.ui.view">
-            <field name="name">share.step1.form.portal</field>
+            <field name="name">share.step1.form.portal.inherit</field>
             <field name="model">share.wizard</field>
             <field name="inherit_id" ref="share.share_step1_form"/>
             <field name="arch" type="xml">
@@ -31,7 +30,7 @@
         </record>
 
         <record id="share_step2_form_portal" model="ir.ui.view">
-            <field name="name">share.step2.form.portal</field>
+            <field name="name">share.step2.form.portal.inherit</field>
             <field name="model">share.wizard</field>
             <field name="inherit_id" ref="share.share_step2_form"/>
             <field name="arch" type="xml">
@@ -47,5 +46,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

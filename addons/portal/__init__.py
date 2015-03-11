@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    Odoo, Open Source Management Solution
+#    Copyright (C) 2004-Today Odoo S.A. (<https://www.odoo.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,5 @@
 #
 ##############################################################################
 
-import portal
-import mail_thread
-import mail_mail
+import models
 import wizard

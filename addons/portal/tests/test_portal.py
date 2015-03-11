@@ -4,7 +4,7 @@ from openerp.addons.mail.tests.common import TestMail
 from openerp.tools.misc import mute_logger
 
 
-class test_portal(TestMail):
+class TestPortal(TestMail):
 
     def test_mail_compose_access_rights(self):
         port_msg_id = self.group_portal.message_post(body='Message')
@@ -69,15 +69,15 @@ class test_portal(TestMail):
         # Mail data
         mail = self.env['mail.mail'].create({'state': 'exception'})
         # Test: link for nobody -> None
-        url = self.env['mail.mail']._get_partner_access_link(mail)
+        url = mail._get_partner_access_link()
         self.assertEqual(url, None,
                          'notification email: mails not send to a specific partner should not have any URL')
         # Test: link for partner -> signup URL
-        url = self.env['mail.mail']._get_partner_access_link(mail, partner=self.partner_1)
+        url = mail._get_partner_access_link(partner=self.partner_1)
         self.assertIn(self.partner_1.signup_token, url,
                       'notification email: mails send to a not-user partner should contain the signup token')
         # Test: link for user -> signin
-        url = self.env['mail.mail']._get_partner_access_link(mail, partner=self.user_employee.partner_id)
+        url = mail._get_partner_access_link(partner=self.user_employee.partner_id)
         self.assertIn('action=mail.action_mail_redirect', url,
                       'notification email: link should contain the redirect action')
         self.assertIn('login=%s' % self.user_employee.login, url,

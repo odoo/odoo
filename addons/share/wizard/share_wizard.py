@@ -61,17 +61,20 @@ class share_wizard(osv.TransientModel):
         if not condition:
             raise UserError(error_message)
 
-    def has_group(self, cr, uid, module, group_xml_id, context=None):
+    @api.multi
+    def has_group(self, module, group_xml_id):
         """Returns True if current user is a member of the group identified by the module, group_xml_id pair."""
         # if the group was deleted or does not exist, we say NO (better safe than sorry)
         try:
-            model, group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, group_xml_id)
+            model, group_id = self.env['ir.model.data'].get_object_reference(module, group_xml_id)
         except ValueError:
             return False
-        return group_id in self.pool.get('res.users').read(cr, uid, [uid], ['groups_id'], context=context)[0]['groups_id']
+        groups_id = self.env['res.users'].browse(self._uid).groups_id
+        return group_id in [g.id for g in groups_id]
 
-    def has_share(self, cr, uid, unused_param, context=None):
-        return self.has_group(cr, uid, module='base', group_xml_id='group_no_one', context=context)
+    @api.multi
+    def has_share(self):
+        return self.has_group(module='base', group_xml_id='group_no_one')
 
     def _user_type_selection(self, cr, uid, context=None):
         """Selection values may be easily overridden/extended via inheritance"""
@@ -209,20 +212,19 @@ class share_wizard(osv.TransientModel):
         action.pop('context', '')
         return action
 
-    def _create_share_group(self, cr, uid, wizard_data, context=None):
-        group_obj = self.pool.get('res.groups')
-        share_group_name = '%s: %s (%d-%s)' %('Shared', wizard_data.name, uid, time.time())
+    def _create_share_group(self):
+        share_group_name = '%s: %s (%d-%s)' %('Shared', self.name, self._uid, time.time())
         values = {'name': share_group_name, 'share': True}
         try:
-            implied_group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'group_shared')[1]
+            implied_group_id = self.env['ir.model.data'].xmlid_to_res_id('share.group_shared')
         except ValueError:
             implied_group_id = None
         if implied_group_id:
             values['implied_ids'] = [(4, implied_group_id)]
         # create share group without putting admin in it
-        return group_obj.create(cr, UID_ROOT, values, {'noadmin': True})
+        return self.env['res.groups'].sudo().with_context({'noadmin': True}).create(values).id
 
-    def _create_new_share_users(self, cr, uid, wizard_data, group_id, context=None):
+    def _create_new_share_users(self, group_id):
         """Create one new res.users record for each email address provided in
            wizard_data.new_users, ignoring already existing users.
            Populates wizard_data.result_line_ids with one new line for
@@ -230,35 +232,35 @@ class share_wizard(osv.TransientModel):
            for the password field, so they can receive it by email.
            Returns the ids of the created users, and the ids of the
            ignored, existing ones."""
-        context = dict(context or {})
-        user_obj = self.pool.get('res.users')
-        current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
+        context = dict(self._context or {})
+        user_obj = self.env['res.users']
+        current_user = self.env.user
         # modify context to disable shortcuts when creating share users
         context['noshortcut'] = True
         context['no_reset_password'] = True
         created_ids = []
         existing_ids = []
-        if wizard_data.user_type == 'emails':
+        if self.user_type == 'emails':
             # get new user list from email data
-            new_users = (wizard_data.new_users or '').split('\n')
-            new_users += [wizard_data.email_1 or '', wizard_data.email_2 or '', wizard_data.email_3 or '']
+            new_users = (self.new_users or '').split('\n')
+            new_users += [self.email_1 or '', self.email_2 or '', self.email_3 or '']
             for new_user in new_users:
                 # Ignore blank lines
                 new_user = new_user.strip()
                 if not new_user: continue
                 # Ignore the user if it already exists.
-                if not wizard_data.invite:
-                    existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
+                if not self.invite:
+                    existing = user_obj.sudo().search([('login', '=', new_user)])
                 else:
-                    existing = user_obj.search(cr, UID_ROOT, [('email', '=', new_user)])
+                    existing = user_obj.sudo().search([('email', '=', new_user)])
                 existing_ids.extend(existing)
                 if existing:
-                    new_line = { 'user_id': existing[0],
+                    new_line = { 'user_id': existing.id,
                                  'newly_created': False}
-                    wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+                    self.write({'result_line_ids': [(0,0,new_line)]})
                     continue
                 new_pass = generate_random_pass()
-                user_id = user_obj.create(cr, UID_ROOT, {
+                user_id = user_obj.sudo().with_context(context).create({
                         'login': new_user,
                         'password': new_pass,
                         'name': new_user,
@@ -266,40 +268,38 @@ class share_wizard(osv.TransientModel):
                         'groups_id': [(6,0,[group_id])],
                         'company_id': current_user.company_id.id,
                         'company_ids': [(6, 0, [current_user.company_id.id])],
-                }, context)
-                new_line = { 'user_id': user_id,
+                })
+                new_line = { 'user_id': user_id.id,
                              'password': new_pass,
                              'newly_created': True}
-                wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+                self.write({'result_line_ids': [(0,0,new_line)]})
                 created_ids.append(user_id)
 
-        elif wizard_data.user_type == 'embedded':
+        elif self.user_type == 'embedded':
             new_login = 'embedded-%s' % (uuid.uuid4().hex,)
             new_pass = generate_random_pass()
-            user_id = user_obj.create(cr, UID_ROOT, {
+            user_id = user_obj.sudo().with_context(context).create({
                 'login': new_login,
                 'password': new_pass,
                 'name': new_login,
                 'groups_id': [(6,0,[group_id])],
                 'company_id': current_user.company_id.id,
                 'company_ids': [(6, 0, [current_user.company_id.id])],
-            }, context)
-            new_line = { 'user_id': user_id,
+            })
+            new_line = { 'user_id': user_id.id,
                          'password': new_pass,
                          'newly_created': True}
-            wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+            self.write({'result_line_ids': [(0,0,new_line)]})
             created_ids.append(user_id)
 
         return created_ids, existing_ids
 
-    def _create_action(self, cr, uid, values, context=None):
-        if context is None:
-            context = {}
-        new_context = context.copy()
-        for key in context:
+    def _create_action(self, uid, values):
+        new_context = self._context.copy()
+        for key in self._context:
             if key.startswith('default_'):
                 del new_context[key]
-        action_id = self.pool.get('ir.actions.act_window').create(cr, UID_ROOT, values, new_context)
+        action_id = self.env['ir.actions.act_window'].sudo().with_context(new_context).create(values)
         return action_id
 
     def _cleanup_action_context(self, context_str, user_id):
@@ -329,25 +329,25 @@ class share_wizard(osv.TransientModel):
                 result = context_str
         return result
 
-    def _shared_action_def(self, cr, uid, wizard_data, context=None):
-        copied_action = wizard_data.action_id
+    def _shared_action_def(self):
+        copied_action = self.action_id
 
-        if wizard_data.access_mode == 'readonly':
-            view_mode = wizard_data.view_type
-            view_id = copied_action.view_id.id if copied_action.view_id.type == wizard_data.view_type else False
+        if self.access_mode == 'readonly':
+            view_mode = self.view_type
+            view_id = copied_action.view_id.id if copied_action.view_id.type == self.view_type else False
         else:
             view_mode = copied_action.view_mode
             view_id = copied_action.view_id.id
 
 
         action_def = {
-            'name': wizard_data.name,
+            'name': self.name,
             'domain': copied_action.domain,
-            'context': self._cleanup_action_context(wizard_data.action_id.context, uid),
+            'context': self._cleanup_action_context(self.action_id.context, self._uid),
             'res_model': copied_action.res_model,
             'view_mode': view_mode,
             'view_type': copied_action.view_type,
-            'search_view_id': copied_action.search_view_id.id if wizard_data.access_mode != 'readonly' else False,
+            'search_view_id': copied_action.search_view_id.id if self.access_mode != 'readonly' else False,
             'view_id': view_id,
             'auto_search': True,
         }
@@ -356,24 +356,23 @@ class share_wizard(osv.TransientModel):
                                             'view_mode': x.view_mode,
                                             'view_id': x.view_id.id })
                                       for x in copied_action.view_ids
-                                      if (wizard_data.access_mode != 'readonly' or x.view_mode == wizard_data.view_type)
+                                      if (self.access_mode != 'readonly' or x.view_mode == self.view_type)
                                      ]
         return action_def
 
-    def _setup_action_and_shortcut(self, cr, uid, wizard_data, user_ids, make_home, context=None):
+    def _setup_action_and_shortcut(self, user_ids, make_home):
         """Create a shortcut to reach the shared data, as well as the corresponding action, for
            each user in ``user_ids``, and assign it as their home action if ``make_home`` is True.
            Meant to be overridden for special cases.
         """
-        values = self._shared_action_def(cr, uid, wizard_data, context=None)
-        user_obj = self.pool.get('res.users')
+        values = self._shared_action_def()
         for user_id in user_ids:
-            action_id = self._create_action(cr, user_id, values)
+            action_id = self._create_action(user_id, values)
             if make_home:
                 # We do this only for new share users, as existing ones already have their initial home
                 # action. Resetting to the default menu does not work well as the menu is rather empty
                 # and does not contain the shortcuts in most cases.
-                user_obj.write(cr, UID_ROOT, [user_id], {'action_id': action_id})
+                user_id.sudo().write({'action_id': action_id.id})
 
     def _get_recursive_relations(self, cr, uid, model, ttypes, relation_fields=None, suffix=None, context=None):
         """Returns list of tuples representing recursive relationships of type ``ttypes`` starting from
@@ -641,47 +640,43 @@ class share_wizard(osv.TransientModel):
             _logger.info('Failed to create share access', exc_info=True)
             raise UserError(_('Sorry, the current screen and filter you are trying to share are not supported at the moment.\nYou may want to try a simpler filter.'))
 
-    def _check_preconditions(self, cr, uid, wizard_data, context=None):
-        self._assert(wizard_data.action_id and wizard_data.access_mode,
-                     _('Action and Access Mode are required to create a shared access.'),
-                     context=context)
-        self._assert(self.has_share(cr, uid, wizard_data, context=context),
-                     _('You must be a member of the Technical group to use the share wizard.'),
-                     context=context)
-        if wizard_data.user_type == 'emails':
-            self._assert((wizard_data.new_users or wizard_data.email_1 or wizard_data.email_2 or wizard_data.email_3),
-                     _('Please indicate the emails of the persons to share with, one per line.'),
-                     context=context)
+    def _check_preconditions(self):
+        self._assert(self.action_id and self.access_mode,
+                     _('Action and Access Mode are required to create a shared access.'))
+        self._assert(self.has_share(),
+                     _('You must be a member of the Technical group to use the share wizard.'))
+        if self.user_type == 'emails':
+            self._assert((self.new_users or self.email_1 or self.email_2 or self.email_3),
+                     _('Please indicate the emails of the persons to share with, one per line.'))
 
-    def _create_share_users_group(self, cr, uid, wizard_data, context=None):
+    def _create_share_users_group(self):
         """Creates the appropriate share group and share users, and populates
            result_line_ids of wizard_data with one line for each user.
 
            :return: a tuple composed of the new group id (to which the shared access should be granted),
                 the ids of the new share users that have been created and the ids of the existing share users
         """
-        group_id = self._create_share_group(cr, uid, wizard_data, context=context)
+        group_id = self._create_share_group()
         # First create any missing user, based on the email addresses provided
-        new_ids, existing_ids = self._create_new_share_users(cr, uid, wizard_data, group_id, context=context)
+        new_ids, existing_ids = self._create_new_share_users(group_id)
         # Finally, setup the new action and shortcut for the users.
         if existing_ids:
             # existing users still need to join the new group
-            self.pool.get('res.users').write(cr, UID_ROOT, existing_ids, {
-                                                'groups_id': [(4,group_id)],
-                                             })
+            for existing in existing_ids:
+                existing.sudo().write({'groups_id': [(4,group_id)]})
             # existing user don't need their home action replaced, only a new shortcut
-            self._setup_action_and_shortcut(cr, uid, wizard_data, existing_ids, make_home=False, context=context)
+            self._setup_action_and_shortcut(existing_ids, make_home=False)
         if new_ids:
             # new users need a new shortcut AND a home action
-            self._setup_action_and_shortcut(cr, uid, wizard_data, new_ids, make_home=True, context=context)
+            self._setup_action_and_shortcut(new_ids, make_home=True)
         return group_id, new_ids, existing_ids
 
     def go_step_2(self, cr, uid, ids, context=None):
         wizard_data = self.browse(cr, uid, ids[0], context=context)
-        self._check_preconditions(cr, uid, wizard_data, context=context)
+        wizard_data._check_preconditions()
 
         # Create shared group and users
-        group_id, new_ids, existing_ids = self._create_share_users_group(cr, uid, wizard_data, context=context)
+        group_id, new_ids, existing_ids = wizard_data._create_share_users_group()
 
         current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
