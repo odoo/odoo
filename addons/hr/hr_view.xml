@@ -178,11 +178,10 @@
                                     <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                     <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
                                 </ul>
-                                <div class="oe_kanban_footer_left">
+                                <div class="oe_kanban_bottom_left">
                                     <t t-raw="record.message_summary.raw_value"/>
                                     <span title='Messages'><i class='fa fa-comments'/><t t-esc="record.message_ids.raw_value.length"/></span>
                                     <span title='Followers'><i class='fa fa-users'/><t t-esc="record.message_follower_ids.raw_value.length"/></span>
-
                                 </div>
                                 <div class="oe_followers" groups="base.group_user">
                                     <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_follower oe_following">

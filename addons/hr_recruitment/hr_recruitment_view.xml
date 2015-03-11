@@ -299,9 +299,11 @@
                                         <field name="priority" widget="priority"/>
                                     </div>
                                 </div>
-                                <div class="oe_kanban_footer_left oe_margin_top_4">
+                                <div class="oe_kanban_bottom_left oe_margin_top_4">
                                     <t t-raw="record.message_summary.raw_value"/>
                                     <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object"> <field name="attachment_number"/> Documents</a>
+                                </div>
+                                <div class="oe_kanban_footer_left oe_margin_top_4">
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
