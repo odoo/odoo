@@ -139,7 +139,7 @@ openerp.web_timeline = function (session) {
                 'compose_as_todo' : false,
                 'view_inbox': false,
                 'emails_from_on_composer': true,
-                'fetch_limit': 2,
+                'fetch_limit': 15,
                 'readonly': this.node.attrs.readonly || false,
                 'compose_placeholder' : this.node.attrs.placeholder || false,
                 'display_log_button' : this.options.display_log_button || true,
@@ -202,11 +202,9 @@ openerp.web_timeline = function (session) {
                 'show_link': true,
                 'show_reply_button': true,
                 'show_read_unread_button': true,
-                'fetch_limit': 5,
-                'fetch_child_limit': 2,
+                'fetch_limit': 15,
+                'fetch_child_limit': 5,
                 }, this.options);
-
-            console.log("option timeline", this.options);
 
             this.fields_view = {};
             this.fields_keys = [];
@@ -461,8 +459,6 @@ openerp.web_timeline = function (session) {
 
             this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
-
-            console.log("thread", this);
         },
 
         start: function () {
@@ -482,16 +478,16 @@ openerp.web_timeline = function (session) {
          * instantiate the compose message object and insert this on the DOM.
          * The compose message is display in compact form.
          */
-        instantiate_compose_message: function (ev) {
+        instantiate_compose_message: function (option) {
             if (!this.compose_message) {
                 this.context = this.options.compose_as_todo ? 
                     _.extend({'default_starred': true}, this.context) : this.context;
                 this.compose_message = new openerp.web_timeline.ThreadComposeMessage(this, this, this.options);
 
-                if (this.options.view_inbox && ev == 'reply') {
+                if (this.options.view_inbox && option == 'reply') {
                     this.compose_message.insertAfter(this.$('.oe_tl_thread_content'));
                 }
-                else if (this.options.view_inbox && ev == 'write_to_followers') {
+                else if (this.options.view_inbox && option == 'write_to_followers') {
                     this.compose_message.prependTo(this.$el);
                 }
                 else {
@@ -500,13 +496,13 @@ openerp.web_timeline = function (session) {
             }
         },
 
-        on_compose_message: function (event, ev) {
+        on_compose_message: function (event, option) {
             if (this.compose_message) {
                 this.compose_message.destroy();
             }
             this.compose_message = false;
 
-            this.instantiate_compose_message(ev);
+            this.instantiate_compose_message(option);
             return this.compose_message.on_toggle_quick_composer(event);
         },
 
@@ -526,7 +522,7 @@ openerp.web_timeline = function (session) {
          */
         message_fetch: function (replace_domain, replace_context, ids, mode, callback) {
             var self = this;
-            return this.ds_message.call('message_read3', [
+            return this.ds_message.call('message_read', [
                     // ids force to read
                     ids === false ? undefined : ids && ids.slice(0, this.options.fetch_limit),
                     // domain + additional
@@ -551,8 +547,6 @@ openerp.web_timeline = function (session) {
         treat_threads: function (records) {
             var self = this;
             
-            console.log("records", records)
-
             _.each(records.threads, function (record) {
                 self.create_thread(record);
             });
@@ -572,16 +566,16 @@ openerp.web_timeline = function (session) {
         },
 
         on_message_read: function (event) {
-            event.stopPropagation();
             var msg_id = $(event.target).data('msg_id');
             var msg = _.findWhere(this.messages, {id: msg_id});
-            this.on_message_read_unread([msg], true, false);
+            event.stopPropagation();
+            this.on_message_read_unread([msg], true);
         },
 
         on_message_unread: function (event) {
-            event.stopPropagation();
             var msg_id = $(event.target).data('msg_id');
             var msg = _.findWhere(this.messages, {id: msg_id});
+            event.stopPropagation();
             this.on_message_read_unread([msg], false);
         },
 
@@ -611,7 +605,7 @@ openerp.web_timeline = function (session) {
             }
             var message_ids = _.map(messages, function (val) {return val.id;});
 
-            this.ds_message.call('set_message_read', [message_ids, read_value, true, false, this.context])
+            this.ds_message.call('set_message_read', [message_ids, read_value, true, this.context])
                 .then(function (nb_read) {
                     // apply modification
                     _.each(messages, function (msg) {
@@ -632,11 +626,11 @@ openerp.web_timeline = function (session) {
          * add or remove a favorite (or starred) for a message and change class on the DOM
          */
         on_star: function (event) {
-            event.stopPropagation();
             var self = this;
             var msg_id = $(event.target).data('msg_id');
             var msg = _.findWhere(this.messages, {id: msg_id});
             var button = self.$('.oe_star:first');
+            event.stopPropagation();
             
             this.ds_message.call('set_message_starred', [[msg_id], !msg.is_favorite, true])
                 .then(function (star) {
@@ -649,7 +643,7 @@ openerp.web_timeline = function (session) {
                     }
 
                     if (self.options.view_inbox && msg.is_favorite) {
-                        //self.on_message_read_unread(true);
+                        self.on_message_read_unread([msg], true);
                     } 
                     else {
                         self.check_for_rerender();
@@ -668,18 +662,18 @@ openerp.web_timeline = function (session) {
          * Add or remove a vote for a message and display the result
          */
         on_vote: function (event) {
-            event.stopPropagation();
             var self = this;
             var msg_id = $(event.target).data('msg_id');
             var msg = _.findWhere(this.messages, {id: msg_id});
+            event.stopPropagation();
 
             this.ds_message.call('vote_toggle', [[msg_id]])
-                .then(
-                    _.bind(function (vote) {
-                        msg.has_voted = vote;
-                        msg.vote_nb += msg.has_voted ? 1 : -1;
-                        self.check_for_rerender();
+                .then(_.bind(function (vote) {
+                      msg.has_voted = vote;
+                      msg.vote_nb += msg.has_voted ? 1 : -1;
+                      self.check_for_rerender();
                     }, self));
+
             return false;
         },
 
@@ -719,6 +713,7 @@ openerp.web_timeline = function (session) {
                     });
                 });
             }
+
             return true;
         },
 
@@ -762,9 +757,6 @@ openerp.web_timeline = function (session) {
                 res_id: this.context.default_res_id,
             };
 
-            console.log("this.context", this.context);
-            console.log("ds_thread", this.ds_thread);
-
             this.ds_thread.call("message_redirect_action", {context: this.context})
                 .then(function(action){
                     self.do_action(action); 
@@ -773,6 +765,7 @@ openerp.web_timeline = function (session) {
 
         on_message_expandable: function (event) {
             event.stopPropagation();
+
             var self = this;
             if (this.options.view_inbox) {
                 var parent_message = this.messages.pop();
@@ -810,10 +803,9 @@ openerp.web_timeline = function (session) {
         },
 
         on_display_followers: function (event) {
-            event.stopPropagation();
-
             var self = this;
             var $target = $(event.target);
+            event.stopPropagation();
 
             if (this.followers_data) {
                 openerp.web_timeline.ChatterUtils.bindTooltipTo($target, this.followers_data, 'right');
@@ -852,25 +844,25 @@ openerp.web_timeline = function (session) {
                     thread: self,
                     options: msg.options,
                 };
-                console.log("options", msg.options);
                 msg.content = self.view.qweb.render("message_content", qweb_context);
             });
 
             if (this.options.view_inbox && this.messages.length) {
-                this.format_thread();
+                this.is_ready = $.Deferred();
+                this.format_thread().then(function () {
+                    self.is_ready.resolve();
+                });
             }
 
-            var $el = $(session.web.qweb.render('MailThread', {'widget': this}));
-            this.replaceElement($el);
-
-            this.options.root_thread.view.do_reload_menu_emails();
+            this.is_ready.then(function () {
+                var $el = $(session.web.qweb.render('MailThread', {'widget': self}));
+                self.replaceElement($el);
+                self.options.root_thread.view.do_reload_menu_emails();
+            });
         },
 
         add_message: function (message, to_end) {
             message = this.format_message(message);
-
-            console.log("this.messages", this.messages);
-
             if (to_end) {
                 this.messages.push(message);
             }
@@ -1083,8 +1075,6 @@ openerp.web_timeline = function (session) {
                     }
                 }
             });
-
-            console.log("composer message", this);
         },
 
         start: function () {
@@ -1142,7 +1132,6 @@ openerp.web_timeline = function (session) {
         },
 
         on_toggle_quick_composer: function (event) {
-            console.log("on toggle quick composer");
             var self = this;
             var $input = $(event.target);
 
@@ -1189,8 +1178,6 @@ openerp.web_timeline = function (session) {
                 if (!self.stay_open && self.show_composer && (!event || event.type != 'blur')) {
                     self.$('textarea:not(.oe_tl_compact):first').focus();
                 }
-                console.log("partners_ids", self.partner_ids);
-                console.log("recipient_ids", self.recipient_ids);
             });
 
             return suggested_partners;

@@ -16,25 +16,23 @@
         </record>-->
 
         <record model="ir.actions.act_window" id="action_timeline_to_read">
-            <field name="name">Inboxxx</field>
+            <field name="name">Inbox</field>
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">timeline</field>
-            <field name="priority">4</field>
-            <field name="context">{
+            <field name="context" eval="&quot;{
                 'default_model': 'res.users',
                 'default_res_id': uid,
                 'thread_model': 'res.partner',
                 'options' : {'view_mailbox': True,
                              'view_inbox': True,
-                             'show_compose_message': True}
-            }</field>
+                             'show_write_to_followers': True}
+            }&quot;"/>
             <field name="domain">[
                 '|',
                  ('notification_ids.partner_id.user_ids', 'in', [uid]),
                  ('author_id.user_ids', 'in', [uid]),
             ]</field>
         </record>
-
     </data>
 </openerp>

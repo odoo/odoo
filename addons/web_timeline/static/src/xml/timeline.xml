@@ -4,19 +4,17 @@
 
 <div t-name="TimelineView.buttons" class="oe_timeline_buttons">
     <t t-if="widget.options.action_buttons !== false">
-        <!--<t t-if="">-->
-            <button type="button" class="oe_timeline_button_new btn btn-primary btn-sm">
-                New message
-            </button>
-            <t t-if="!widget.options.readonly">
-                <span class="oe_alternative">
-                    <span class="oe_fade">or</span>
-                    <div class="oe_bounce_container">
-                        <a class="oe_timeline_share text-info">Write to my followers</a>
-                    </div>
-                </span>
-            </t>
-        <!--</t>-->
+        <button type="button" class="oe_timeline_button_new btn btn-primary btn-sm">
+            New message
+        </button>
+        <t t-if="!widget.options.readonly">
+            <span class="oe_alternative">
+                <span class="oe_fade">or</span>
+                <div class="oe_bounce_container">
+                    <a class="oe_timeline_share text-info">Write to my followers</a>
+                </div>
+            </span>
+        </t>
     </t>
 </div>
 
@@ -237,81 +235,5 @@
         </a>
     </li>
 </t>
-
-
-<div t-name="ThreadParent" class="oe_tl_thread_parent">
-
-    <!--<span class="col-md-2"> 
-        <div class="oe_tl_msg_date default">
-            <span> 
-                <t t-raw="widget.date"/>
-            </span>
-        </div>
-    </span> -->
-
-    <div class="oe_tl_parent_message">
-        <div class="oe_tl_msg_icons" t-if="!widget.options.readonly"> 
-            <!--<span class='oe_read' t-if="widget.options.show_read">
-                <i title="Done" class="fa fa-check"/>
-            </span>-->
-            <span class='oe_unread' t-if="widget.options.show_unread">
-                <i title="Set back to Todo" class="fa fa-inbox"/>
-            </span>
-        </div>
-        <!--<span t-attf-class="oe_tl_parent_subject default 
-                            #{widget.model and widget.res_id and widget.options.show_link ? 'oe_tl_small_subject' : ''}">
-            <span class="oe_tl_subject">
-                <t t-if="widget.record_name and widget.subject">
-                    <t t-raw="widget.record_name"/> : <t t-raw="widget.subject"/>
-                </t>
-                <t t-if="widget.record_name and !widget.subject">
-                    <t t-raw="widget.record_name"/> 
-                </t>
-                <t t-if="!widget.record_name and widget.subject">
-                    <t t-raw="widget.subject"/>
-                </t>
-                <t t-if="!widget.record_name and !widget.subject">
-                    No subject
-                </t>
-            </span>
-            (<span class="oe_tl_nb_unread_msg"><t t-raw="widget.nb_messages"/></span>)
-        </span>-->
-        <!--<span class="oe_tl_go_to_doc" t-if="widget.res_id and widget.model and widget.options.show_link">
-            <a t-attf-href="#action=mail.action_mail_redirect&amp;model=#{widget.model}&amp;res_id=#{widget.res_id}">
-                <i class="fa fa-arrow-circle-right" title="Go to document"></i>
-            </a>
-        </span>-->
-        <!--<span class="oe_tl_parent_avatar">
-            <a t-if="widget.options.show_link" 
-               t-attf-href="#model=res.partner&amp;id=#{widget.last_author_id[0]}" 
-               t-att-title="widget.last_author_id[1]">
-                   <img class="oe_tl_msg_icon" t-att-src="widget.last_avatar"/>
-            </a>
-            <img t-if="!widget.options.show_link" class="oe_tl_msg_icon" t-att-src="widget.last_avatar"/>
-        </span>-->
-        <!--<span class="oe_tl_parent_author">
-            <a t-if="widget.options.show_link and widget.last_author_id[0]"
-               t-attf-href="#model=res.partner&amp;id=#{widget.last_author_id[0]}" 
-               t-att-data-partner="widget.last_author_id[0]" class="oe_timeline_action_author"
-               title="Last sender">
-                 <t t-raw="widget.last_author_id[2]"/>
-            </a>
-            <a t-if="widget.author_id and (!widget.options.show_link or !widget.last_author_id[0])"
-               class="oe_timeline_action_author"
-               title="Last sender">
-                 <t t-raw="widget.last_author_id[2]"/>
-            </a>
-        </span>-->
-        <!--<span class="oe_tl_msg_icons" t-if="!widget.options.readonly"> 
-             <span class='oe_reply' t-if="widget.options.show_reply_button">
-                <i title="Reply" class="fa fa-reply"/>
-            </span>
-        </span>-->
-        <!--<span class="oe_tl_parent_followers" t-if="widget.nb_followers > 0">
-            <span title="Number of followers"> <t t-raw="widget.nb_followers"/> </span>
-            <i class="oe_follwrs fa fa-users"></i>
-        </span>-->
-    </div>
-</div>
 
 </templates>

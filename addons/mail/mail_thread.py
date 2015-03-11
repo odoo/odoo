@@ -545,7 +545,6 @@ class mail_thread(osv.AbstractModel):
 
     def _needaction_domain_get(self, cr, uid, context=None):
         if self._needaction:
-            print "need action"
             return [('message_unread', '=', True)]
         return []
 
