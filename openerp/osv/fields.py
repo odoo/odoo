@@ -48,10 +48,11 @@ from psycopg2 import Binary
 import openerp
 import openerp.tools as tools
 from openerp.tools.translate import _
-from openerp.tools import float_round, float_repr
-from openerp.tools import html_sanitize
+from openerp.tools import float_repr, float_round, frozendict, html_sanitize
 import simplejson
 from openerp import SUPERUSER_ID, registry
+
+EMPTY_DICT = frozendict()
 
 _logger = logging.getLogger(__name__)
 
@@ -136,7 +137,7 @@ class _column(object):
             if val:
                 setattr(self, key, val)
 
-        self._args = args
+        self._args = args or EMPTY_DICT
         for key, val in args.iteritems():
             setattr(self, key, val)
 

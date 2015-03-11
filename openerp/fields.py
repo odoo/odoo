@@ -30,12 +30,13 @@ import logging
 import pytz
 import xmlrpclib
 
-from openerp.tools import float_round, ustr, html_sanitize
+from openerp.tools import float_round, frozendict, html_sanitize, ustr
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
+EMPTY_DICT = frozendict()
 
 _logger = logging.getLogger(__name__)
 
@@ -295,7 +296,8 @@ class Field(object):
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
-        self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
+        attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
+        self._attrs = attrs or EMPTY_DICT
 
         # self._triggers is a set of pairs (field, path) that represents the
         # computed fields that depend on `self`. When `self` is modified, it
@@ -303,6 +305,15 @@ class Field(object):
         # recompute based on `path`. See method `modified` below for details.
         self._triggers = set()
         self.inverse_fields = []
+
+    def _set_attr(self, name, value):
+        """ Set the given field attribute, and add it to `_attrs` if necessary. """
+        object.__setattr__(self, name, value)
+        if not hasattr(type(self), name):
+            if self._attrs:
+                self._attrs[name] = value
+            else:
+                self._attrs = {name: value}     # replace EMPTY_DICT
 
     def new(self, **kwargs):
         """ Return a field of the same type as `self`, with its own parameters. """
@@ -337,11 +348,9 @@ class Field(object):
         if not isinstance(attrs.get('column'), (NoneType, fields.function)):
             attrs.pop('store', None)
 
-        self._attrs = {}
+        self._attrs = EMPTY_DICT
         for attr, value in attrs.iteritems():
-            if not hasattr(self, attr):
-                self._attrs[attr] = value
-            setattr(self, attr, value)
+            self._set_attr(attr, value)
 
         if not self.string and not self.related:
             # related fields get their string from their parent field
@@ -481,8 +490,7 @@ class Field(object):
 
         for attr, value in field._attrs.iteritems():
             if attr not in self._attrs:
-                self._attrs[attr] = value
-                setattr(self, attr, value)
+                self._set_attr(attr, value)
 
         # special case for states: copy it only for inherited fields
         if not self.states and self.inherited:
