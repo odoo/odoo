@@ -71,12 +71,31 @@ class WorkflowService(object):
     def create(self):
 
         def check_module(module):
-            """Check if the module is loaded"""
+            """
+            Check if the module is loaded.
+
+            Has the modules are addons, we have to check if
+            the module is present in sys.modules using the form:
+
+                openerp.addons.module_name
+
+            :param module: The name of the openerp module
+            :type module: tuple (module_name, res_id)
+            :returns: python module or None
+            """
             return sys.modules.get('openerp.addons.%s' % module[0])
 
         def to_record(module_record):
-            """Return the resource id"""
-            return (module_record[1], )
+            """
+            Convert a module record to the same format that is used in
+            wkf_ids. We have to convert the tuple of format
+            (id,...) to (id, 0).
+            
+            :param module_record: A tuple containing a pair (module, res_id)
+            :type module_record: tuple (module_name, res_id)
+            :returns: tuple (id, )
+            """
+            return (module_record[0], )
 
         WorkflowService.CACHE.setdefault(self.cr.dbname, {})
 
@@ -88,15 +107,15 @@ class WorkflowService(object):
             WorkflowService.CACHE[self.cr.dbname][self.record.model] = wkf_ids
 
         if wkf_ids:
-            self.cr.execute("select module, res_id from ir_model_data "
+            self.cr.execute("select res_id, module from ir_model_data "
                             "where model='workflow' and res_id in %s",
                             wkf_ids)
             modules = self.cr.fetchall()
 
-            all_ids = set(map(lambda x: x[0], wkf_ids))
-            static_ids = set(map(lambda x: x[1], modules))
+            all_ids = set(wkf_ids)
+            static_ids = set(map(to_record, modules))
             # Created on the system programmatically or manually
-            dynamic_ids = map(lambda x: (x, ), all_ids - static_ids)
+            dynamic_ids = list(all_ids - static_ids)
 
             filtered_modules = filter(check_module, modules)
             wkf_ids = map(to_record, filtered_modules) + dynamic_ids
