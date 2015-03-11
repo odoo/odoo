@@ -18,7 +18,7 @@ class account_journal(models.Model):
     def _kanban_dashboard_graph(self):
         if (self.type in ['sale', 'purchase']):
             self.kanban_dashboard_graph = json.dumps(self.get_bar_graph_datas())
-        else:
+        elif (self.type in ['cash', 'bank']):
             self.kanban_dashboard_graph = json.dumps(self.get_line_graph_datas())
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
@@ -29,12 +29,44 @@ class account_journal(models.Model):
     def get_line_graph_datas(self):
         data = []
         today = datetime.today()
-        for i in range(0,30):
-            show_date = today + timedelta(days=-30+i)
-            #get date in locale format
-            name = format_date(show_date, 'd LLLL Y', locale=self._context.get('lang', 'en_US'))
-            short_name = format_date(show_date, 'd MMM', locale=self._context.get('lang', 'en_US'))
-            data.append({'x':short_name,'y':i*2, 'name':name})
+        last_month = today + timedelta(days=-30)
+        bank_stmt = ac_bnk_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '>=', last_month.strftime(DEFAULT_SERVER_DATE_FORMAT)),('date', '<=', today.strftime(DEFAULT_SERVER_DATE_FORMAT))], order="date asc")
+        last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '<=', last_month.strftime(DEFAULT_SERVER_DATE_FORMAT))], order="date desc", limit=1)
+        start_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
+        locale = self._context.get('lang', 'en_US')
+        show_date = last_month
+        #get date in locale format
+        name = format_date(show_date, 'd LLLL Y', locale=locale)
+        short_name = format_date(show_date, 'd MMM', locale=locale)
+        data.append({'x':short_name,'y':start_balance, 'name':name})
+
+        for stmt in bank_stmt:
+            if stmt.date == show_date.strftime(DEFAULT_SERVER_DATE_FORMAT):
+                #add value to last data
+                data[len(data)-1]['y'] += stmt.balance_end
+            else:
+                #we are above, fill the gap between date and add new one
+                number_day_to_add = (datetime.strptime(stmt.date, DEFAULT_SERVER_DATE_FORMAT) - show_date).days
+                last_balance = data[len(data)-1]['y']
+                for day in range(0,number_day_to_add+1):
+                    show_date = show_date + timedelta(days=1)
+                    #get date in locale format
+                    name = format_date(show_date, 'd LLLL Y', locale=locale)
+                    short_name = format_date(show_date, 'd MMM', locale=locale)
+                    data.append({'x': short_name, 'y':last_balance, 'name': name})
+                #add new stmt value
+                data[len(data)-1]['y'] = stmt.balance_end
+
+        if show_date != today:
+            number_day_to_add = (today - show_date).days
+            last_balance = data[len(data)-1]['y']
+            for day in range(0,number_day_to_add):
+                show_date = show_date + timedelta(days=1)
+                #get date in locale format
+                name = format_date(show_date, 'd LLLL Y', locale=locale)
+                short_name = format_date(show_date, 'd MMM', locale=locale)
+                data.append({'x': short_name, 'y':last_balance, 'name': name})
+
         return [{'values': data, 'color': '#ff7f0e', 'area': True}]
 
     @api.multi
@@ -121,14 +153,17 @@ class account_journal(models.Model):
         ctx = self._context.copy()
         model = 'account.invoice'
         if self.type == 'sale':
+            ctx.update({'journal_type': self.type, 'default_type': 'out_invoice', 'type': 'out_invoice', 'default_journal_id': self.id})
             if ctx.get('refund'):
-                ctx.update({'default_type':'out_refund', 'type':'out_refund', 'journal_type': 'sale'})
+                ctx.update({'default_type':'out_refund', 'type':'out_refund'})
             view_id = self.env.ref('account.invoice_form').id
         elif self.type == 'purchase':
+            ctx.update({'journal_type': self.type, 'default_type': 'in_invoice', 'type': 'in_invoice', 'default_journal_id': self.id})
             if ctx.get('refund'):
-                ctx.update({'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase'})
+                ctx.update({'default_type': 'in_refund', 'type': 'in_refund'})
             view_id = self.env.ref('account.invoice_supplier_form').id
         else:
+            ctx.update({'default_journal_id': self.id})
             view_id = self.env.ref('account.view_move_form').id
             model = 'account.move'
         return {

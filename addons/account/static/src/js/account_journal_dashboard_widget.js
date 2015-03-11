@@ -21,7 +21,7 @@ openerp.account.journal_dashboard = function (instance)
                             x: function(d,u) { return u},
                             width: self.$el.find('svg').width(),
                             height: self.$el.find('svg').height(),
-                            margin: {'left': 15, 'right':0, 'top':10, 'bottom': 20},
+                            margin: {'left': 15, 'right':10, 'top':10, 'bottom': 20},
                             showYAxis: false,
                             showLegend: false,
                             tooltips: true,
@@ -59,7 +59,7 @@ openerp.account.journal_dashboard = function (instance)
                                 return item.color;
                             }
                             return nv.utils.getColor()})
-                        .margin({'left': 15, 'right':0, 'top':10, 'bottom': 25})
+                        .margin({'left': 15, 'right':10, 'top':10, 'bottom': 25})
                         .tooltips(true);
                         chart.xAxis.axisLabel(data[0].title);
                         chart.yAxis.tickFormat(d3.format(',.2f'));
