@@ -354,8 +354,8 @@ openerp.web_calendar = function(instance) {
 
         init_calendar: function() {
             var self = this;
-             
-            if (!this.sidebar && this.options.$sidebar) {
+
+            if (!this.sidebar) {
                 translate = get_fc_defaultOptions();
                 this.sidebar = new instance.web_calendar.Sidebar(this);
                 this.sidebar.appendTo(this.$el.find('.oe_calendar_sidebar_container'));
