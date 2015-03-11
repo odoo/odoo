@@ -1539,8 +1539,8 @@
 </t>
 
 <t t-name="One2Many.viewmanager" t-extend="ViewManager">
-    <t t-jquery=".oe-view-manager-header">
-        this.attr('t-if', 'views.length != 1');
+    <t t-jquery=".oe_view_manager_header">
+        this.attr('t-if', 'widget.views_src.length != 1');
     </t>
 </t>
 <t t-name="One2Many.formview" t-extend="FormView">
