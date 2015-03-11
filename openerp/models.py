@@ -3393,13 +3393,14 @@ class BaseModel(object):
                     * write_uid: last user who changed the record
                     * write_date: date of the last change to the record
                     * xmlid: XML ID to use to refer to this record (if there is one), in format ``module.name``
+                    * noupdate: A boolean telling if the record will be updated or not
         """
         fields = ['id']
         if self._log_access:
             fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
         quoted_table = '"%s"' % self._table
         fields_str = ",".join('%s.%s' % (quoted_table, field) for field in fields)
-        query = '''SELECT %s, __imd.module, __imd.name
+        query = '''SELECT %s, __imd.noupdate, __imd.module, __imd.name
                    FROM %s LEFT JOIN ir_model_data __imd
                        ON (__imd.model = %%s and __imd.res_id = %s.id)
                    WHERE %s.id IN %%s''' % (fields_str, quoted_table, quoted_table, quoted_table)
