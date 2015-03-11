@@ -153,7 +153,7 @@ class mail_thread(osv.AbstractModel):
         for id in ids:
             if res[id]['message_unread_count']:
                 title = res[id]['message_unread_count'] > 1 and _("You have %d unread messages") % res[id]['message_unread_count'] or _("You have one unread message")
-                res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><i class='fa fa-comments'/> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
+                res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><i class='fa fa-comments'/> %d</span>" % (title, res[id].pop('message_unread_count'))
             res[id].pop('message_unread_count', None)
         return res
 
