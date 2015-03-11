@@ -64,6 +64,10 @@ class AccountReportContextCommon(models.TransientModel):
             return 'account.financial.report.context'
         if name == 'generic_tax_report':
             return 'account.report.context.tax'
+        if name == 'bank_reconciliation':
+            return 'account.report.context.bank.reconciliation'
+        if name == 'general_ledger':
+            return 'account.context.general.ledger'
 
     @api.model
     def get_full_report_name_by_report_name(self, name):
@@ -71,6 +75,10 @@ class AccountReportContextCommon(models.TransientModel):
             return 'account.financial.report'
         if name == 'generic_tax_report':
             return 'account.generic.tax.report'
+        if name == 'bank_reconciliation':
+            return 'account.bank.reconciliation.report'
+        if name == 'general_ledger':
+            return 'account.general.ledger'
 
     def get_report_obj(self):
         raise Warning(_('get_report_obj not implemented'))

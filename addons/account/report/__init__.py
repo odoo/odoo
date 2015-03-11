@@ -23,3 +23,5 @@ import account_report_context_common
 import account_financial_report
 import account_generic_tax_report
 import account_invoice_report
+import account_bank_reconciliation_report
+import account_general_ledger

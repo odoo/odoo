@@ -89,6 +89,17 @@ class AccountMoveLine(models.Model):
                 move_line.credit_cash_basis = move_line.credit
             move_line.balance_cash_basis = move_line.debit_cash_basis - move_line.credit_cash_basis
 
+    @api.one
+    @api.depends('move_id.line_id')
+    def _get_counterpart(self):
+        counterpart = set()
+        for line in self.move_id.line_id:
+            if (line.account_id.code != self.account_id.code):
+                counterpart.add(line.account_id.code)
+        if len(counterpart) > 2:
+            counterpart = counterpart[0:2] + ["..."]
+        self.counterpart = ",".join(counterpart)
+        
     name = fields.Char(required=True)
     quantity = fields.Float(digits=(16, 2),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
@@ -136,6 +147,8 @@ class AccountMoveLine(models.Model):
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True,
         default=lambda self: self.env['res.company']._company_default_get('account.move.line'))
+
+    counterpart = fields.Char("Counterpart", compute='_get_counterpart')
 
     # TODO: put the invoice link and partner_id on the account_move
     invoice = fields.Many2one('account.invoice')
