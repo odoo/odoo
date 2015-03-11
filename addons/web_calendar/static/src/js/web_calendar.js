@@ -335,8 +335,8 @@ var CalendarView = View.extend({
 
     init_calendar: function() {
         var self = this;
-         
-        if (!this.sidebar && this.options.$sidebar) {
+
+        if (!this.sidebar) {
             var translate = get_fc_defaultOptions();
             this.sidebar = new widgets.Sidebar(this);
             this.sidebar.appendTo(this.$el.find('.oe_calendar_sidebar_container'));
