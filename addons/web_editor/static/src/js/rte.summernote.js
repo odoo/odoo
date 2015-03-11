@@ -427,7 +427,10 @@ var fn_visible = $.summernote.pluginEvents.visible;
 $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     var res = fn_visible.call(this, event, editor, layoutInfo);
     var $node = $(dom.node(range.create().sc));
-    if (($node.is('[data-oe-type="html"]') || $node.is('[data-oe-field="arch"]')) && $node.hasClass("o_editable") && !$node[0].children.length) {
+    if (($node.is('[data-oe-type="html"]') || $node.is('[data-oe-field="arch"]')) &&
+        $node.hasClass("o_editable") &&
+        !$node[0].children.length &&
+        "h1 h2 h3 h4 h5 h6 p b bold i u code sup strong small pre th td".toUpperCase().indexOf($node[0].nodeName) === -1) {
         var p = $('<p><br/></p>')[0];
         $node.append( p );
         range.createFromNode(p.firstChild).select();
