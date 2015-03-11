@@ -268,7 +268,6 @@ class Field(object):
     relational = False          # whether the field is a relational one
     model_name = None           # name of the model of this field
     comodel_name = None         # name of the model of values (if relational)
-    inverse_fields = None       # list of inverse fields (objects)
 
     store = True                # whether the field is stored in database
     index = False               # whether the field is indexed in database
@@ -294,17 +293,14 @@ class Field(object):
     change_default = None       # whether the field may trigger a "user-onchange"
     deprecated = None           # whether the field is ... deprecated
 
+    inverse_fields = ()         # collection of inverse fields (objects)
+    computed_fields = ()        # fields computed with the same method as self
+    _triggers = ()              # invalidation and recomputation triggers
+
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
         attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
         self._attrs = attrs or EMPTY_DICT
-
-        # self._triggers is a set of pairs (field, path) that represents the
-        # computed fields that depend on `self`. When `self` is modified, it
-        # invalidates the cache of each `field`, and registers the records to
-        # recompute based on `path`. See method `modified` below for details.
-        self._triggers = set()
-        self.inverse_fields = []
 
     def _set_attr(self, name, value):
         """ Set the given field attribute, and add it to `_attrs` if necessary. """
@@ -542,6 +538,16 @@ class Field(object):
     #
     # Setup of field triggers
     #
+    # The triggers is a collection of pairs (field, path) of computed fields
+    # that depend on `self`. When `self` is modified, it invalidates the cache
+    # of each `field`, and registers the records to recompute based on `path`.
+    # See method `modified` below for details.
+    #
+
+    def add_trigger(self, trigger):
+        """ Add a recomputation trigger on `self`. """
+        if trigger not in self._triggers:
+            self._triggers += (trigger,)
 
     def setup_triggers(self, env):
         """ Add the necessary triggers to invalidate/recompute `self`. """
@@ -570,12 +576,12 @@ class Field(object):
                 continue
 
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
-            field._triggers.add((self, '.'.join(path0 or ['id'])))
+            field.add_trigger((self, '.'.join(path0 or ['id'])))
 
             # add trigger on inverse fields, too
             for invf in field.inverse_fields:
                 #_logger.debug("Add trigger on %s to recompute %s", invf, self)
-                invf._triggers.add((self, '.'.join(path0 + [head])))
+                invf.add_trigger((self, '.'.join(path0 + [head])))
 
             # recursively traverse the dependency
             if tail:
@@ -1684,8 +1690,8 @@ class One2many(_RelationalMulti):
             # (res_model/res_id pattern). Only inverse the field if this is
             # a `Many2one` field.
             if isinstance(invf, Many2one):
-                self.inverse_fields.append(invf)
-                invf.inverse_fields.append(self)
+                self.inverse_fields += (invf,)
+                invf.inverse_fields += (self,)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -1756,8 +1762,8 @@ class Many2many(_RelationalMulti):
             # if inverse field has already been setup, it is present in m2m
             invf = m2m.get((self.relation, self.column2, self.column1))
             if invf:
-                self.inverse_fields.append(invf)
-                invf.inverse_fields.append(self)
+                self.inverse_fields += (invf,)
+                invf.inverse_fields += (self,)
             else:
                 # add self in m2m, so that its inverse field can find it
                 m2m[(self.relation, self.column1, self.column2)] = self

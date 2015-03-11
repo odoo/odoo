@@ -2992,14 +2992,15 @@ class BaseModel(object):
             if column:
                 cls._columns[name] = column
 
-        # group fields by compute to determine field.computed_fields
-        fields_by_compute = defaultdict(list)
+        # determine field.computed_fields
+        computed_fields = defaultdict(list)
         for field in cls._fields.itervalues():
             if field.compute:
-                field.computed_fields = fields_by_compute[field.compute]
-                field.computed_fields.append(field)
-            else:
-                field.computed_fields = []
+                computed_fields[field.compute].append(field)
+
+        for fields in computed_fields.itervalues():
+            for field in fields:
+                field.computed_fields = fields
 
     @api.model
     def _setup_complete(self):
@@ -3017,7 +3018,7 @@ class BaseModel(object):
                 model = self.env[model_name]
                 for field_name in field_names:
                     field = model._fields[field_name]
-                    field._triggers.update(triggers)
+                    map(field.add_trigger, triggers)
 
         # determine old-api structures about inherited fields
         cls._inherits_reload()
