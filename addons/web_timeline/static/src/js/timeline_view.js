@@ -436,7 +436,6 @@ openerp.web_timeline = function (session) {
             this.options.root_thread = this.options.root_thread != undefined ? this.options.root_thread : this;
             this.options.show_compose_message = this.root ? false : this.options.root_thread.view.options.show_compose_message;
             this.options.is_folded = this.options.view_inbox ? true : false;
-            this.options.rerender = true;
             this.options.toggle_read = true;
             
             _.each(this.messages, function (msg) {
