@@ -34,9 +34,15 @@
                                             </div>
                                         </t>
                                     </div>
-                                    <div class="row">
-                                        <t t-call="JournalBodyGraph"/>
-                                    </div>
+                                    <t t-if="journal_type == 'bank' || journal_type == 'cash' || journal_type == 'sale' || journal_type == 'purchase'">
+                                        <div class="row">
+                                            <t t-call="JournalBodyGraph"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="journal_type == 'general' || journal_type == 'situation'">
+                                        <div class="row" style="margin-bottom:75px;">
+                                        </div>
+                                    </t>  
                                     
                                 </div>
                             </div>
@@ -215,27 +221,19 @@
                             </div>
                         </t>
                         <t t-name="JournalBodyGraph">
-                            <div class="col-md-12">
+                            <div class="col-md-12 dashboard-kanban-graph">
                                 <t t-if="dashboard.show_import">
                                     <div> No Statement Found :</div>
-                                    <button type="object" name="import_statement" class="btn btn-primary btn-sm" style="margin-bottom:79px;">Import Statement</button>
+                                    <button type="object" name="import_statement" class="btn btn-primary btn-sm">Import Statement</button>
                                 </t>
                                 <t t-if="!dashboard.show_import">
-                                    <!-- <div class="dashboard-kanban-graph">
-                                        <field name="kanban_dashboard_graph" graph_type="line" widget="dashboard_graph"></field>
-                                    </div> -->
-                                    <img src="/account/static/src/img/graph.png" width="528px" style="{margin-top:20px;}"/>
+                                    <div>
+                                        <field name="kanban_dashboard_graph" t-att-graph_type="_.contains(['cash','bank'],journal_type) ? 'line' : 'bar'" widget="dashboard_graph"></field>
+                                    </div>
+                                    <!-- <img src="/account/static/src/img/graph.png" width="528px" style="{margin-top:20px;}"/> -->
                                 </t>
                             </div>
                         </t>
-
-                        <!-- <t t-name="JournalDetails">
-                            <div class="col-md-12">
-                                <div class="oe_graph">
-                                    <field name="kanban_graph" t-att-graph_type="_.contains(['cash','bank','sale','purchase'],journal_type) ? 'line' : 'bar'" widget="dashboard_graph"></field>
-                                </div>
-                            </div>
-                        </t> -->
                 </templates>
                 </kanban>
             </field>
