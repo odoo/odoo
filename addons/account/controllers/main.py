@@ -11,7 +11,7 @@ class FinancialReportController(http.Controller):
         if name == 'generic_tax_report':
             return request.env['account.generic.tax.report'].sudo(uid)
         if name == 'bank_reconciliation':
-            return request.env['account.bank.reconciliation'].sudo(uid)
+            return request.env['account.bank.reconciliation.report'].sudo(uid)
         if name == 'general_ledger':
             return request.env['account.general.ledger'].sudo(uid)
 

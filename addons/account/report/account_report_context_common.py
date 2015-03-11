@@ -76,7 +76,7 @@ class AccountReportContextCommon(models.TransientModel):
         if name == 'generic_tax_report':
             return 'account.generic.tax.report'
         if name == 'bank_reconciliation':
-            return 'account.bank.reconciliation'
+            return 'account.bank.reconciliation.report'
         if name == 'general_ledger':
             return 'account.general.ledger'
 

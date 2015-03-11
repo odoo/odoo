@@ -22,8 +22,8 @@
 from openerp import models, fields, api, _
 
 
-class account_bank_reconciliation(models.AbstractModel):
-    _name = 'account.bank.reconciliation'
+class account_bank_reconciliation_report(models.AbstractModel):
+    _name = 'account.bank.reconciliation.report'
     _description = 'Bank reconciliation report'
 
     line_number = 0
@@ -179,7 +179,7 @@ class account_report_context_bank_reconciliation(models.TransientModel):
     journals = fields.One2many('account.journal', string=_("Bank Accounts"), compute=_get_bank_journals)
 
     def get_report_obj(self):
-        return self.env['account.bank.reconciliation']
+        return self.env['account.bank.reconciliation.report']
 
     def get_columns_names(self):
         columns = [_("Date"), _("Reference"), _("Amount")]
