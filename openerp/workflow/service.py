@@ -92,8 +92,14 @@ class WorkflowService(object):
                             "where model='workflow' and res_id in %s",
                             wkf_ids)
             modules = self.cr.fetchall()
-            modules = filter(check_module, modules)
-            wkf_ids = map(to_record, modules)
+
+            all_ids = set(map(lambda x: x[0], wkf_ids))
+            static_ids = set(map(lambda x: x[1], modules))
+            # Created on the system programmatically or manually
+            dynamic_ids = map(lambda x: (x, ), all_ids - static_ids)
+
+            filtered_modules = filter(check_module, modules)
+            wkf_ids = map(to_record, filtered_modules) + dynamic_ids
 
         for (wkf_id, ) in wkf_ids:
             WorkflowInstance.create(self.session, self.record, wkf_id)
