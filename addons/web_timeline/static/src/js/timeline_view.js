@@ -203,7 +203,7 @@ openerp.web_timeline = function (session) {
                 'show_reply_button': true,
                 'show_read_unread_button': true,
                 'fetch_limit': 15,
-                'fetch_child_limit': 5,
+                'fetch_child_limit': 2,
                 }, this.options);
 
             this.fields_view = {};

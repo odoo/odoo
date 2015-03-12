@@ -727,6 +727,7 @@ class mail_message(osv.Model):
                        'domain': exp_domain,
                        'nb_messages': more_count,
                        'parent_id': parent_id}
+
                 if parent_id : 
                     parent_tree[parent_id].insert(len(parent_tree[parent_id])-1, exp)
                 else :
@@ -749,7 +750,7 @@ class mail_message(osv.Model):
         nb_read = 0
         if 'mail_read_set_read' in context and context['mail_read_set_read']: 
             nb_read = self.set_message_read(cr, uid, ids, True, create_missing=False, context=context)
-        
+
         return {'nb_read': nb_read, 'threads': parent_list}
 
     def get_likers_list(self, cr, uid, ids, limit=10, context=None):
