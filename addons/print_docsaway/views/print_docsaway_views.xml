@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="print_provider_view_form_inherit_print_docsaway" model="ir.ui.view">
+            <field name="name">print.provider.form.inherit</field>
+            <field name="model">print.provider</field>
+            <field name="inherit_id" ref="print.print_provider_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//notebook' position='inside'>
+                    <page string="Docsaway Configuration" attrs="{'invisible': [('provider', '!=', 'docsaway')]}">
+                        <group>
+                            <field name="docsaway_email"/>
+                            <field name="docsaway_key"/>
+                        </group>
+                    </page>
+                    <page string="Docsaway Account" attrs="{'invisible': [('provider', '!=', 'docsaway')]}">
+                        <group>
+                            <field name="docsaway_volume"/>
+                            <field name="docsaway_reference"/>
+                            <field name="docsaway_name"/>
+                            <p>The 'Update' button will update this field, once your Docsaway Configuration is set up.</p>
+                        </group>
+                    </page>
+                    <page string="Docsaway Help" attrs="{'invisible': [('provider', '!=', 'docsaway')]}">
+                        <p>Go to <a href="https://www.docsaway.com/index_m.php" target="_blank">www.docsaway.com</a>, and create an account. Once you are logged in, click on 'Login', then go to 'My Account'.</p>
+                        <ul>
+                            <li>In General > Preference, you will find your Docsaway email and Docsaway key. Copy/paste them to the 'DocsAway Details' tab of the postal provider you want to configure.</li>
+                            <li>In General > Add funds, you can add money on your provider credit. Note that docsaway only use Australian dollar as currency.</li>
+                            <li>In Email Document > Settings, setup your account : Active must be set on 'ON' to receive document, and the Module Mode should be in LIVE to really send the document. Check TEST to use docsaway as a sandbox.</li>
+                            <li>In History, you can find the sent document in TEST or LIVE environment. This can help you to test your account. Be carfull to correctly setup the environment in your postal provider in Odoo.</li>
+                        </ul>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="print_order_view_form_inherit_print_docsaway" model="ir.ui.view">
+            <field name="name">print.order.form.inherit</field>
+            <field name="model">print.order</field>
+            <field name="inherit_id" ref="print.print_order_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//notebook' position='inside'>
+                    <page string="DocsAway Details">
+                        <group>
+                            <field name="docsaway_station"/>
+                            <field name="docsaway_courier"/>
+                            <field name="docsaway_zone"/>
+                            <field name="docsaway_reference"/>
+                            <field name="docsaway_status"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

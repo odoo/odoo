@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Add entry action in the 'More' Menu -->
+        <record id="print_order_wizard_action_multi_print_sale" model="ir.actions.act_window">
+            <field name="name">Send by post</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">print.order.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="print.print_order_wizard_view_form"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+
+        <record id="sale_order_action_multi_print_sale" model="ir.values">
+            <field name="model_id" ref="sale.model_sale_order" />
+            <field name="name">Send by post</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('print_order_wizard_action_multi_print_sale'))" />
+            <field name="key">action</field>
+            <field name="model">sale.order</field>
+        </record>
+
+
+        <!-- Add button on invoice form view -->
+        <record id="print_order_wizard_action_print_sale" model="ir.actions.act_window">
+            <field name="name">Send by Post</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">print.order.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="print.print_order_wizard_view_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="sale_order_view_form_inherit_print_sale" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <button name="print_quotation" position="before">
+                    <button name="%(print_order_wizard_action_print_sale)d" string="Send Letter" type="action" states="draft" class="oe_highlight" groups="base.group_user"/>
+                    <button name="%(print_order_wizard_action_print_sale)d" string="Send Letter" type="action" states="sent,progress,manual" groups="base.group_user"/>
+                </button>
+            </field>
+        </record>
+
+
+        <!-- Add entry action in the 'More' Menu for print.document.partner.wizard -->
+        <record id="print_document_partner_action_multi" model="ir.actions.act_window">
+            <field name="name">Send Documents by post</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">print.document.partner.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="print_document_partner_wizard_view_form"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+
+        <record id="print_document_partner_client_action_multi"  model="ir.values">
+            <field name="model">res.partner</field>
+            <field name="model_id" ref="base.model_res_partner" />
+            <field name="name">Send Document by post</field>
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('print_document_partner_action_multi'))" />
+        </record>
+
+    </data>
+</odoo>

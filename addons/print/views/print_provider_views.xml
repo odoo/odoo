@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- print.provider views -->
+        <record id="print_provider_view_form" model="ir.ui.view">
+            <field name="name">print.provider.form</field>
+            <field name="model">print.provider</field>
+            <field name="arch" type="xml">
+                <form string="Postal Provider">
+                    <sheet>
+                        <group name="provider_base" string="Provider Information">
+                            <field name="name"/>
+                            <field name="provider"/>
+                            <field name="environment"/>
+                            <label for="balance"/>
+                            <div>
+                                <field name="balance" readonly="1" class="oe_inline"/>
+                                <button name="update_account_data"
+                                        string="Update"
+                                        type="object"
+                                        colspan="1"/>
+                            </div>
+                        </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="print_provider_view_tree" model="ir.ui.view">
+            <field name="name">print.provider.tree</field>
+            <field name="model">print.provider</field>
+            <field name="arch" type="xml">
+                <tree string="Postal Provider">
+                    <field name="name"/>
+                    <field name="provider"/>
+                    <field name="environment"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="print_provider_action" model="ir.actions.act_window">
+            <field name="name">Print Provider</field>
+            <field name="res_model">print.provider</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+
+        <!-- print.order views -->
+        <record id="print_order_view_form" model="ir.ui.view">
+            <field name="name">print.order.form</field>
+            <field name="model">print.order</field>
+            <field name="arch" type="xml">
+                <form string="Postal Order">
+                    <header>
+                        <button name="action_reset_draft" states="error" string="Reset to Draft" type="object" class="oe_highlight"/>
+                        <button name="action_send_now" states="draft,ready" string="Send Now" type="object" class="oe_highlight"/>
+                        <button name="action_compute_price" states="draft,ready" string="Compute price" type="object"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <div class="alert alert-danger" attrs="{'invisible':[('state','!=', 'error')]}">
+                                <field name="error_message" class="oe_inline"/>
+                                When the error is resolved, please click on 'Reset to draft'.
+                            </div>
+                        </group>
+                        <group>
+                            <group string="Order Information">
+                                <field name="provider_id"/>
+                                <field name="user_id"/>
+                                <field name="create_date"/>
+                                <field name="sent_date"/>
+                                <field name="state"/>
+                            </group>
+                            <group string="Recipient Address">
+                                <field name="partner_id"/>
+                                <field name="partner_name"/>
+                                <field name="partner_street"/>
+                                <field name="partner_street2"/>
+                                <field name="partner_zip"/>
+                                <field name="partner_state_id"/>
+                                <field name="partner_city"/>
+                                <field name="partner_country_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Printing Detail">
+                                <field name="paper_weight"/>
+                                <field name="ink"/>
+                                <field name="price"/>
+                                <field name="currency_id"/>
+                            </group>
+                            <group string="Document Detail">
+                                <field name="attachment_id"/>
+                                <field name="nbr_pages"/>
+                            </group>
+                        </group>
+                        <notebook>
+                             <page string="Technical Informations">
+                                <group>
+                                    <field name="res_id"/>
+                                    <field name="res_model"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="print_order_view_tree" model="ir.ui.view">
+            <field name="name">print.order.tree</field>
+            <field name="model">print.order</field>
+            <field name="arch" type="xml">
+                <tree string="Print Orders" colors="red:state == 'error';gray:state == 'sent'">
+                    <field name="state"/>
+                    <field name="provider_id"/>
+                    <field name="partner_id"/>
+                    <field name="ink"/>
+                    <field name="create_date"/>
+                    <field name="sent_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="print_order_view_search" model="ir.ui.view">
+            <field name="name">print.order.search</field>
+            <field name="model">print.order</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="partner_name" filter_domain="[('partner_name', 'ilike', self)]"/>
+                    <filter name="my_orders" string="My Print Orders" domain="[('user_id','=', uid)]"/>
+                    <filter name="state_error" string="Orders Failed" domain="[('state','=', 'error')]"/>
+                    <filter name="waiting" string="Orders Waiting" domain="[('state','in', ['ready', 'draft'])]"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_by_state" string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter name="group_by_provider" string="Provider" domain="[]" context="{'group_by':'provider_id'}"/>
+                        <filter name="group_by_partner" string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="print_order_action" model="ir.actions.act_window">
+            <field name="name">Print Orders</field>
+            <field name="res_model">print.order</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+
+
+        <!-- Menu items -->
+        <menuitem
+            name='Postal Printings'
+            id='root_print_menu'
+            parent='base.menu_administration'/>
+
+        <menuitem
+            action='print_provider_action'
+            id='print_provider_menu'
+            parent='root_print_menu'
+            sequence='10' />
+
+        <menuitem
+            action='print_order_action'
+            id='print_order_menu'
+            parent='root_print_menu'
+            sequence='15' />
+
+        <!-- Add entry action in the 'More' Menu -->
+        <record id="print_order_sendnow_action_multi" model="ir.actions.act_window">
+            <field name="name">Send Now by post</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">print.order.sendnow.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="print_order_sendnow_wizard_view_form"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+
+        <record id="print_order_sendnow_client_action_multi" model="ir.values">
+            <field name="model">print.order</field>
+            <field name="model_id" ref="print.model_print_order" />
+            <field name="name">Send Now by post</field>
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('print_order_sendnow_action_multi'))" />
+        </record>
+
+    </data>
+</odoo>
