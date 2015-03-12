@@ -1456,10 +1456,6 @@ instance.web.search.FilterMenu = instance.web.Widget.extend({
             prop.$el.hide();
         });
     },
-    update_max_height: function () {
-        var max_height = $(window).height() - this.$menu[0].getBoundingClientRect().top - 10;
-        this.$menu.css('max-height', max_height);
-    },
     toggle_custom_filter_menu: function (is_open) {
         this.$add_filter
             .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
@@ -1469,7 +1465,6 @@ instance.web.search.FilterMenu = instance.web.Widget.extend({
             this.append_proposition();
         }
         this.$('.oe-filter-condition').toggle(is_open);
-        this.update_max_height();
     },
     append_proposition: function () {
         var self = this;
@@ -1478,7 +1473,6 @@ instance.web.search.FilterMenu = instance.web.Widget.extend({
             self.propositions.push(prop);
             prop.insertBefore(self.$add_filter_menu);
             self.$apply_filter.prop('disabled', false);
-            self.update_max_height();
             return prop;
         });
     },
@@ -1664,7 +1658,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
                 .contains(filter_name).value()) {
             this.do_warn(_t("Error"), _t("Filter with same name already exists."));
             this.$inputs.first().focus();
-            return;            
+            return;
         }
         var search = this.searchview.build_search_data(),
             view_manager = this.findAncestor(function (a) {

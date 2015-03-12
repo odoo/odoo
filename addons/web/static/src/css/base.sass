@@ -852,6 +852,9 @@ $sheet-padding: 16px
         .oe-button-column
             height: 30px
         .dropdown-menu
+            max-height: calc(100vh - 125px)
+            overflow: auto
+            overflow-x: hidden
             li
                 position: relative
                 a
@@ -1116,8 +1119,6 @@ $sheet-padding: 16px
         .divider
             display: none
         .filters-menu
-            overflow: auto
-            overflow-x: hidden
             .divider
                 display: list-item
         .closed-menu
