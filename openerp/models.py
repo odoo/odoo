@@ -336,13 +336,6 @@ class BaseModel(object):
     #                   field_column_obj, origina_parent_model), ... }
     _inherit_fields = {}
 
-    # Mapping field name/column_info object
-    # This is similar to _inherit_fields but:
-    # 1. includes self fields,
-    # 2. uses column_info instead of a triple.
-    # Warning: _all_columns is deprecated, use _fields instead
-    # _all_columns = {}
-
     _table = None
     _log_create = False
     _sql_constraints = []
@@ -2907,9 +2900,9 @@ class BaseModel(object):
 
     @property
     def _all_columns(self):
-        """ Returns a dict mapping all fields names (direct fields and inherited
-        field via _inherits) to a ``column_info`` struct giving detailed columns.
-        Deprecated.
+        """ Returns a dict mapping all fields names (self fields and inherited
+        field via _inherits) to a ``column_info`` object giving detailed column
+        information. This property is deprecated, use ``_fields`` instead.
         """
         result = {}
         # do not inverse for loops, since local fields may hide inherited ones!
