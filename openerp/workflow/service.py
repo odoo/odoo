@@ -79,20 +79,22 @@ class WorkflowService(object):
 
                 openerp.addons.module_name
 
-            :param module: The name of the openerp module
-            :type module: tuple (module_name, res_id)
+            :param module: The id of the workflow with the module that
+                           created it.
+            :type module: tuple (res_id, module_name)
             :returns: python module or None
             """
-            return sys.modules.get('openerp.addons.%s' % module[0])
+            return sys.modules.get('openerp.addons.%s' % module[1])
 
         def to_record(module_record):
             """
             Convert a module record to the same format that is used in
             wkf_ids. We have to convert the tuple of format
-            (id,...) to (id, 0).
+            (id, ...) to (id,).
             
-            :param module_record: A tuple containing a pair (module, res_id)
-            :type module_record: tuple (module_name, res_id)
+            :param module_record: A tuple containing a pair
+                                  (res_id, module_name).
+            :type module_record: tuple (res_id, module_name)
             :returns: tuple (id, )
             """
             return (module_record[0], )
