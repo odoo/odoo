@@ -1981,7 +1981,10 @@ openerp.mail = function (session) {
         load_searchview: function (defaults) {
             var self = this,
                 ds_msg = new session.web.DataSetSearch(this, 'mail.message'),
-                options = { $buttons: this.$('.oe-search-options') };
+                options = {
+                    $buttons: this.$('.oe-search-options'),
+                    action: this.action,
+                };
             this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, options);
             this.searchview.on('search_data', this, this.do_searchview_search);
             this.searchview.appendTo(this.$('.oe-view-manager-search-view')).then(function () {
