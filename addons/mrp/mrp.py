@@ -944,7 +944,6 @@ class mrp_production(osv.osv):
                 if not produced_products.get(produced_product.product_id.id, False):
                     produced_products[produced_product.product_id.id] = 0
                 produced_products[produced_product.product_id.id] += produced_product.product_qty
-
             for produce_product in production.move_created_ids:
                 subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
                 lot_id = False
@@ -957,11 +956,10 @@ class mrp_production(osv.osv):
                 remaining_qty = subproduct_factor * production_qty_uom - qty
                 if remaining_qty: # In case you need to make more than planned
                     #consumed more in wizard than previously planned
-                    extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'state': 'confirmed',
-                                                                                             'product_uom_qty': remaining_qty,
+                    extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'product_uom_qty': remaining_qty,
                                                                                              'production_id': production_id}, context=context)
-                    if extra_move_id:
-                        stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+                    stock_mov_obj.action_confirm(cr, uid, [extra_move_id], context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
                 if produce_product.product_id.id == production.product_id.id:
                     main_production_move = produce_product.id
@@ -976,6 +974,8 @@ class mrp_production(osv.osv):
             for consume in consume_lines:
                 remaining_qty = consume['product_qty']
                 for raw_material_line in production.move_lines:
+                    if raw_material_line.state in ('done', 'cancel'):
+                        continue
                     if remaining_qty <= 0:
                         break
                     if consume['product_id'] != raw_material_line.product_id.id:
@@ -988,10 +988,9 @@ class mrp_production(osv.osv):
                     #consumed more in wizard than previously planned
                     product = self.pool.get('product.product').browse(cr, uid, consume['product_id'], context=context)
                     extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, False, 0, context=context)
-                    if extra_move_id:
-                        if consume['lot_id']:
-                            stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id']}, context=context)
-                        stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+                    stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id'],
+                                                                    'consumed_for': main_production_move}, context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
         self.signal_workflow(cr, uid, [production_id], 'button_produce_done')
