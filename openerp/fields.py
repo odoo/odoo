@@ -350,8 +350,6 @@ class Field(object):
 
     def __getattr__(self, name):
         """ Access non-slot field attribute. """
-        if name == '_attrs':
-            raise AttributeError(name)
         try:
             return self._attrs[name]
         except KeyError:
