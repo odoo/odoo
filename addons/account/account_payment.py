@@ -296,7 +296,7 @@ class account_payment(models.Model):
             If an invoice is specified, it is reconciled with the payment.
             If the payment is a transfer, a second journal entry is created in the destination journal to receive money from the transfer account.
         """
-        aml_obj = self.env['account.move.line']
+        aml_obj = self.env['account.move.line'].with_context({'check_move_validity': False})
         for res in self:
             # Prepare values
             amount = res.amount * (res.payment_type == 'outbound' and 1 or -1)
