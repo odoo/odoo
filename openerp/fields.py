@@ -73,20 +73,32 @@ class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
 
+    def __new__(meta, name, bases, attrs):
+        """ Combine the ``_slots`` dict from parent classes, and determine
+        `__slots__` for them on the new class.
+        """
+        base_slots = {}
+        for base in reversed(bases):
+            base_slots.update(getattr(base, '_slots', ()))
+
+        slots = dict(base_slots)
+        slots.update(attrs.get('_slots', ()))
+
+        attrs['__slots__'] = set(slots) - set(base_slots)
+        attrs['_slots'] = slots
+        return type.__new__(meta, name, bases, attrs)
+
     def __init__(cls, name, bases, attrs):
         super(MetaField, cls).__init__(name, bases, attrs)
         if cls.type and cls.type not in MetaField.by_type:
             MetaField.by_type[cls.type] = cls
 
         # compute class attributes to avoid calling dir() on fields
-        cls.default_attrs = {}
         cls.column_attrs = []
         cls.related_attrs = []
         cls.description_attrs = []
         for attr in dir(cls):
-            if attr.startswith('_default_'):
-                cls.default_attrs[attr[9:]] = getattr(cls, attr)
-            elif attr.startswith('_column_'):
+            if attr.startswith('_column_'):
                 cls.column_attrs.append((attr[8:], attr))
             elif attr.startswith('_related_'):
                 cls.related_attrs.append((attr[9:], attr))
@@ -257,91 +269,52 @@ class Field(object):
     """
     __metaclass__ = MetaField
 
-    type = None                 # type of the field (string)
-    relational = False          # whether the field is a relational one
+    type = None                         # type of the field (string)
+    relational = False                  # whether the field is a relational one
 
-    __slots__ = [
-        '_attrs',               # dictionary of field attributes; it contains:
-                                #  - all attributes after __init__()
-                                #  - free attributes only after set_class_name()
+    _slots = {
+        '_attrs': EMPTY_DICT,           # dictionary of field attributes; it contains:
+                                        #  - all attributes after __init__()
+                                        #  - free attributes only after set_class_name()
 
-        'automatic',            # whether the field is automatically created ("magic" field)
-        'inherited',            # whether the field is inherited (_inherits)
-        'column',               # the column corresponding to the field
-        'setup_done',           # whether the field has been set up
+        'automatic': False,             # whether the field is automatically created ("magic" field)
+        'inherited': False,             # whether the field is inherited (_inherits)
+        'column': None,                 # the column corresponding to the field
+        'setup_done': False,            # whether the field has been set up
 
-        'name',                 # name of the field
-        'model_name',           # name of the model of this field
-        'comodel_name',         # name of the model of values (if relational)
+        'name': None,                   # name of the field
+        'model_name': None,             # name of the model of this field
+        'comodel_name': None,           # name of the model of values (if relational)
 
-        'store',                # whether the field is stored in database
-        'index',                # whether the field is indexed in database
-        'manual',               # whether the field is a custom field
-        'copy',                 # whether the field is copied over by BaseModel.copy()
-        'depends',              # collection of field dependencies
-        'recursive',            # whether self depends on itself
-        'compute',              # compute(recs) computes field on recs
-        'compute_sudo',         # whether field should be recomputed as admin
-        'inverse',              # inverse(recs) inverses field on recs
-        'search',               # search(recs, operator, value) searches on self
-        'related',              # sequence of field names, for related fields
-        'related_sudo',         # whether related fields should be read as admin
-        'company_dependent',    # whether `self` is company-dependent (property field)
-        'default',              # default(recs) returns the default value
+        'store': True,                  # whether the field is stored in database
+        'index': False,                 # whether the field is indexed in database
+        'manual': False,                # whether the field is a custom field
+        'copy': True,                   # whether the field is copied over by BaseModel.copy()
+        'depends': (),                  # collection of field dependencies
+        'recursive': False,             # whether self depends on itself
+        'compute': None,                # compute(recs) computes field on recs
+        'compute_sudo': False,          # whether field should be recomputed as admin
+        'inverse': None,                # inverse(recs) inverses field on recs
+        'search': None,                 # search(recs, operator, value) searches on self
+        'related': None,                # sequence of field names, for related fields
+        'related_sudo': True,           # whether related fields should be read as admin
+        'company_dependent': False,     # whether `self` is company-dependent (property field)
+        'default': None,                # default(recs) returns the default value
 
-        'string',               # field label
-        'help',                 # field tooltip
-        'readonly',             # whether the field is readonly
-        'required',             # whether the field is required
-        'states',               # set readonly and required depending on state
-        'groups',               # csv list of group xml ids
-        'change_default',       # whether the field may trigger a "user-onchange"
-        'deprecated',           # whether the field is deprecated
+        'string': None,                 # field label
+        'help': None,                   # field tooltip
+        'readonly': False,              # whether the field is readonly
+        'required': False,              # whether the field is required
+        'states': None,                 # set readonly and required depending on state
+        'groups': None,                 # csv list of group xml ids
+        'change_default': False,        # whether the field may trigger a "user-onchange"
+        'deprecated': None,             # whether the field is deprecated
 
-        'inverse_fields',       # collection of inverse fields (objects)
-        'computed_fields',      # fields computed with the same method as self
-        'related_field',        # corresponding related field
-        '_triggers',            # invalidation and recomputation triggers
-    ]
-
-    # default values for slots
-    _default_automatic = False
-    _default_inherited = False
-    _default_column = None
-    _default_setup_done = False
-
-    _default_name = None
-    _default_model_name = None
-    _default_comodel_name = None
-
-    _default_store = True
-    _default_index = False
-    _default_manual = False
-    _default_copy = True
-    _default_depends = ()
-    _default_recursive = False
-    _default_compute = None
-    _default_compute_sudo = False
-    _default_inverse = None
-    _default_search = None
-    _default_related = None
-    _default_related_sudo = True
-    _default_company_dependent = False
-    _default_default = None
-
-    _default_string = None
-    _default_help = None
-    _default_readonly = False
-    _default_required = False
-    _default_states = None
-    _default_groups = False
-    _default_change_default = None
-    _default_deprecated = None
-
-    _default_inverse_fields = ()
-    _default_computed_fields = ()
-    _default_related_field = None
-    _default__triggers = ()
+        'inverse_fields': (),           # collection of inverse fields (objects)
+        'computed_fields': (),          # fields computed with the same method as self
+        'related_field': None,          # corresponding related field
+        '_triggers': (),                # invalidation and recomputation triggers
+    }
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
@@ -378,7 +351,8 @@ class Field(object):
 
     def set_class_name(self, cls, name):
         """ Assign the model class and field name of `self`. """
-        for attr, value in self.default_attrs.iteritems():
+        self_attrs = self._attrs
+        for attr, value in self._slots.iteritems():
             setattr(self, attr, value)
 
         self.model_name = cls._name
@@ -391,7 +365,7 @@ class Field(object):
                 attrs.update(field._attrs)
             else:
                 attrs.clear()
-        attrs.update(self._attrs)       # necessary in case self is not in cls
+        attrs.update(self_attrs)        # necessary in case self is not in cls
 
         # initialize `self` with `attrs`
         if attrs.get('compute'):
@@ -408,7 +382,6 @@ class Field(object):
         if not isinstance(attrs.get('column'), (NoneType, fields.function)):
             attrs.pop('store', None)
 
-        self._attrs = EMPTY_DICT
         for attr, value in attrs.iteritems():
             setattr(self, attr, value)
 
@@ -1027,8 +1000,6 @@ class Field(object):
 class Boolean(Field):
     type = 'boolean'
 
-    __slots__ = []
-
     def convert_to_cache(self, value, record, validate=True):
         return bool(value)
 
@@ -1040,12 +1011,10 @@ class Boolean(Field):
 
 class Integer(Field):
     type = 'integer'
+    _slots = {
+        'group_operator': None,         # operator for aggregating values
+    }
 
-    __slots__ = [
-        'group_operator',       # operator for aggregating values
-    ]
-
-    _default_group_operator = None
     _related_group_operator = property(attrgetter('group_operator'))
     _column_group_operator = property(attrgetter('group_operator'))
 
@@ -1074,14 +1043,10 @@ class Float(Field):
                    cursor and returning a pair (total, decimal)
     """
     type = 'float'
-
-    __slots__ = [
-        '_digits',              # digits argument passed to class initializer
-        'group_operator',       # operator for aggregating values
-    ]
-
-    _default__digits = None
-    _default_group_operator = None
+    _slots = {
+        '_digits': None,                # digits argument passed to class initializer
+        'group_operator': None,         # operator for aggregating values
+    }
 
     def __init__(self, string=None, digits=None, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
@@ -1120,11 +1085,10 @@ class Float(Field):
 
 class _String(Field):
     """ Abstract class for string fields. """
-    __slots__ = [
-        'translate',            # whether the field is translated
-    ]
+    _slots = {
+        'translate': False,             # whether the field is translated
+    }
 
-    _default_translate = False
     _column_translate = property(attrgetter('translate'))
     _related_translate = property(attrgetter('translate'))
     _description_translate = property(attrgetter('translate'))
@@ -1138,12 +1102,10 @@ class Char(_String):
     :param bool translate: whether the values of this field can be translated
     """
     type = 'char'
+    _slots = {
+        'size': None,                   # maximum size of values (deprecated)
+    }
 
-    __slots__ = [
-        'size',                 # maximum size of values (deprecated)
-    ]
-
-    _default_size = None
     _column_size = property(attrgetter('size'))
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
@@ -1165,7 +1127,6 @@ class Text(_String):
     :param translate: whether the value of this field can be translated
     """
     type = 'text'
-    __slots__ = []
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1174,18 +1135,15 @@ class Text(_String):
 
 class Html(_String):
     type = 'html'
+    _slots = {
+        'sanitize': True,               # whether value must be sanitized
+        'strip_style': False,           # whether to strip style attributes
+    }
 
-    __slots__ = [
-        'sanitize',             # whether value must be sanitized
-        'strip_style',          # whether to strip style attributes
-    ]
-
-    _default_sanitize = True
     _column_sanitize = property(attrgetter('sanitize'))
     _related_sanitize = property(attrgetter('sanitize'))
     _description_sanitize = property(attrgetter('sanitize'))
 
-    _default_strip_style = False
     _column_strip_style = property(attrgetter('strip_style'))
     _related_strip_style = property(attrgetter('strip_style'))
     _description_strip_style = property(attrgetter('strip_style'))
@@ -1200,7 +1158,6 @@ class Html(_String):
 
 class Date(Field):
     type = 'date'
-    __slots__ = []
 
     @staticmethod
     def today(*args):
@@ -1261,7 +1218,6 @@ class Date(Field):
 
 class Datetime(Field):
     type = 'datetime'
-    __slots__ = []
 
     @staticmethod
     def now(*args):
@@ -1336,7 +1292,6 @@ class Datetime(Field):
 
 class Binary(Field):
     type = 'binary'
-    __slots__ = []
 
 
 class Selection(Field):
@@ -1352,12 +1307,9 @@ class Selection(Field):
     <field-incremental-definition>`.
     """
     type = 'selection'
-
-    __slots__ = [
-        'selection',            # [(value, string), ...], function or method name
-    ]
-
-    _default_selection = None
+    _slots = {
+        'selection': None,              # [(value, string), ...], function or method name
+    }
 
     def __init__(self, selection=None, string=None, **kwargs):
         if callable(selection):
@@ -1448,12 +1400,10 @@ class Selection(Field):
 
 class Reference(Selection):
     type = 'reference'
+    _slots = {
+        'size': None,                   # maximum size of values (deprecated)
+    }
 
-    __slots__ = [
-        'size',                 # maximum size of values (deprecated)
-    ]
-
-    _default_size = None
     _related_size = property(attrgetter('size'))
     _column_size = property(attrgetter('size'))
 
@@ -1487,14 +1437,10 @@ class Reference(Selection):
 class _Relational(Field):
     """ Abstract class for relational fields. """
     relational = True
-
-    __slots__ = [
-        'domain',               # domain for searching values
-        'context',              # context for searching values
-    ]
-
-    _default_domain = []
-    _default_context = {}
+    _slots = {
+        'domain': [],                   # domain for searching values
+        'context': {},                  # context for searching values
+    }
 
     def _setup_regular(self, env):
         super(_Relational, self)._setup_regular(env)
@@ -1562,16 +1508,11 @@ class Many2one(_Relational):
     fields or field extensions.
     """
     type = 'many2one'
-
-    __slots__ = [
-        'ondelete',             # what to do when value is deleted
-        'auto_join',            # whether joins are generated upon search
-        'delegate',             # whether self implements delegation
-    ]
-
-    _default_ondelete = 'set null'
-    _default_auto_join = False
-    _default_delegate = False
+    _slots = {
+        'ondelete': 'set null',         # what to do when value is deleted
+        'auto_join': False,             # whether joins are generated upon search
+        'delegate': False,              # whether self implements delegation
+    }
 
     def __init__(self, comodel_name=None, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
@@ -1651,7 +1592,6 @@ class UnionUpdate(SpecialValue):
 
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
-    __slots__ = []
 
     def _update(self, records, value):
         """ Update the cached value of `self` for `records` with `value`. """
@@ -1775,17 +1715,12 @@ class One2many(_RelationalMulti):
         the case of related fields or field extensions.
     """
     type = 'one2many'
-
-    __slots__ = [
-        'inverse_name',         # name of the inverse field
-        'auto_join',            # whether joins are generated upon search
-        'limit',                # optional limit to use upon read
-    ]
-
-    _default_inverse_name = None
-    _default_auto_join = False
-    _default_limit = None
-    _default_copy = False               # o2m are not copied by default
+    _slots = {
+        'inverse_name': None,           # name of the inverse field
+        'auto_join': False,             # whether joins are generated upon search
+        'limit': None,                  # optional limit to use upon read
+        'copy': False,                  # o2m are not copied by default
+    }
 
     def __init__(self, comodel_name=None, inverse_name=None, string=None, **kwargs):
         super(One2many, self).__init__(
@@ -1847,18 +1782,12 @@ class Many2many(_RelationalMulti):
 
     """
     type = 'many2many'
-
-    __slots__ = [
-        'relation',             # name of table
-        'column1',              # column of table referring to model
-        'column2',              # column of table referring to comodel
-        'limit',                # optional limit to use upon read
-    ]
-
-    _default_relation = None
-    _default_column1 = None
-    _default_column2 = None
-    _default_limit = None
+    _slots = {
+        'relation': None,               # name of table
+        'column1': None,                # column of table referring to model
+        'column2': None,                # column of table referring to comodel
+        'limit': None,                  # optional limit to use upon read
+    }
 
     def __init__(self, comodel_name=None, relation=None, column1=None, column2=None,
                  string=None, **kwargs):
@@ -1901,7 +1830,6 @@ class Many2many(_RelationalMulti):
 class Serialized(Field):
     """ Minimal support for existing sparse and serialized fields. """
     type = 'serialized'
-    __slots__ = []
 
     def convert_to_cache(self, value, record, validate=True):
         return value or {}
@@ -1910,11 +1838,11 @@ class Serialized(Field):
 class Id(Field):
     """ Special case for field 'id'. """
     type = 'integer'
-    __slots__ = []
-
-    _default_string = 'ID'
-    _default_store = True
-    _default_readonly = True
+    _slots = {
+        'string': 'ID',
+        'store': True,
+        'readonly': True,
+    }
 
     def to_column(self):
         self.column = fields.integer(self.string)
