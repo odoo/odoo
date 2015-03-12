@@ -21,7 +21,6 @@
 
 import logging
 from operator import methodcaller
-import pdb
 
 from openerp import tools
 
@@ -578,7 +577,7 @@ class mail_message(osv.Model):
 
         nb_read = 0
         if 'mail_read_set_read' in context and context['mail_read_set_read']: 
-            nb_read = self.set_message_read(cr, uid, ids, True, create_missing=False, context=context) 
+            nb_read = self.set_message_read(cr, uid, ids, True, create_missing=False, context=context)
         
         return {'nb_read': nb_read, 'threads': parent_list}
 
@@ -819,11 +818,6 @@ class mail_message(osv.Model):
         else:
             message_id = tools.generate_tracking_message_id('private')
         return message_id
-
-    def _get_has_attachment(self, cr, uid, values, context=None):
-        if 'attachment_ids' in values: 
-            return len(values['attachment_ids']) > 0
-        return False
 
     def create(self, cr, uid, values, context=None):
         context = dict(context or {})
