@@ -181,7 +181,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         _.each(_.compact(_.map(groups, function(e) {return generate_task_info(e, 0);})), function(project) {
             gantt.addProject(project);
         });
-        gantt.setEditable(true);
+        gantt.setEditable(this.is_action_enabled('edit'));
         gantt.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
         gantt.attachEvent("onTaskEndDrag", function(task) {
             self.on_task_changed(task);
