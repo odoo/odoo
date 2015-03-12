@@ -155,7 +155,6 @@ class TestMessageRead(TestMail):
         for msg in read_msg_list:
             if msg.get('type') == 'expandable':
                 new_msg_exp = msg
-
         # Do: fetch new messages, domain from expandable
         self.assertIsNotNone(new_msg_exp, 'message_read flat on the 2 last Pigs messages should have returns a new threads expandable')
         domain = new_msg_exp.get('domain', [])
