@@ -146,19 +146,6 @@ class purchase_order(osv.osv):
                                                 limit=1)
         return res and res[0] or False  
 
-    def _has_non_stockable_item(self, cr, uid, ids, *args):
-        res = dict.fromkeys(ids, False)
-        for order in self.browse(cr, uid, ids):
-            for order_line in order.order_line:
-                if (
-                    not order_line.product_id
-                    or
-                    order_line.product_id
-                    and order_line.product_id.type not in ('product', 'consu')
-                ):
-                    res[order.id] = True
-        return res
-
     def _get_picking_in(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
         type_obj = self.pool.get('stock.picking.type')
@@ -308,7 +295,6 @@ class purchase_order(osv.osv):
         'create_uid': fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal'),
-        'has_non_stockable_item': fields.function(_has_non_stockable_item, method=True, type='boolean', string='Contains a non-stockable item'),
         'bid_date': fields.date('Bid Received On', readonly=True, help="Date on which the bid was received"),
         'bid_validity': fields.date('Bid Valid Until', help="Date on which the bid expired"),
         'picking_type_id': fields.many2one('stock.picking.type', 'Deliver To', help="This will determine picking type of incoming shipment", required=True,
@@ -557,10 +543,10 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
-            if po.invoice_method == 'picking' and po.has_non_stockable_item is True:
+            if po.invoice_method == 'picking' and not any([l.product_id and l.product_id.type in ('product', 'consu') for l in po.order_line]):
                 raise osv.except_osv(
                     _('Error!'),
-                    _("You cannot confirm a purchase order with Invoice Control Method 'Based on incoming shipments' that contains non-stockable items."))
+                    _("You cannot confirm a purchase order with Invoice Control Method 'Based on incoming shipments' that doesn't contain any stockable item."))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)        
