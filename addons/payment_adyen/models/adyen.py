@@ -59,7 +59,7 @@ class AcquirerAdyen(osv.Model):
         if inout == 'in':
             keys = "paymentAmount currencyCode shipBeforeDate merchantReference skinCode merchantAccount sessionValidity shopperEmail shopperReference recurringContract allowedMethods blockedMethods shopperStatement merchantReturnData billingAddressType deliveryAddressType offset".split()
         else:
-            keys = "authResult pspReference merchantReference skinCode paymentMethod shopperLocale merchantReturnData".split()
+            keys = "authResult pspReference merchantReference skinCode merchantReturnData".split()
 
         def get_value(key):
             if values.get(key):
@@ -135,7 +135,7 @@ class TxAdyen(osv.Model):
         if shasign_check != data.get('merchantSig'):
             error_msg = 'Adyen: invalid merchantSig, received %s, computed %s' % (data.get('merchantSig'), shasign_check)
             _logger.warning(error_msg)
-            # raise ValidationError(error_msg)
+            raise ValidationError(error_msg)
 
         return tx
 
