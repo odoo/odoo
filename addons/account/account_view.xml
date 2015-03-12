@@ -607,16 +607,14 @@
                                     <field name="date" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="name" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="ref" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="partner_id" domain="[
-                                        '&amp;',
-                                            '|',('parent_id','=',False),('is_company','=',True),
-                                            '|',('customer','=',True),('supplier','=',True)]"
+                                    <field name="partner_id" domain="['|',('parent_id','=',False),('is_company','=',True)]"
                                          context="{'default_supplier': 1}"
                                          attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="currency_id" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="bank_account_id" groups="base.group_no_one"/>
+                                    <field name="bank_account_id" groups="base.group_no_one" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"
+                                        domain="['|', ('partner_id', '=', partner_id), ('partner_id', '=', False)]"/>
                                 </tree>
                             </field>
                         </page>

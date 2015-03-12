@@ -602,6 +602,10 @@ div.media_iframe_video .css_editable_mode_display {
   z-index: 2;
 }
 
+html[data-browser^="msie"] div.media_iframe_video iframe {
+  margin-left: 0;
+}
+
 /* Mobile view */
 @media (max-width: 768px) {
   img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {

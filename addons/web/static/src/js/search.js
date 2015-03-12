@@ -490,7 +490,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.autocomplete = new instance.web.search.AutoComplete(this, {
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
-            delay: 0,
             get_search_string: function () {
                 return self.$('div.oe_searchview_input').text();
             },
@@ -2337,8 +2336,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
     // options.source: function ({term:query}, callback).  This function will be called to
     //      obtain the search results corresponding to the query string.  It is assumed that
     //      options.source will call callback with the results.
-    // options.delay: delay in millisecond before calling source.  Useful if you don't want
-    //      to make too many rpc calls
     // options.select: function (ev, {item: {facet:facet}}).  Autocomplete widget will call
     //      that function when a selection is made by the user
     // options.get_search_string: function ().  This function will be called by autocomplete
@@ -2347,15 +2344,14 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         this._super(parent);
         this.$input = parent.$el;
         this.source = options.source;
-        this.delay = options.delay;
-        this.select = options.select,
+        this.select = options.select;
         this.get_search_string = options.get_search_string;
         this.width = options.width || 400;
 
         this.current_result = null;
 
         this.searching = true;
-        this.search_string = null;
+        this.search_string = '';
         this.current_search = null;
     },
     start: function () {
@@ -2367,33 +2363,41 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 ev.preventDefault();
                 return;
             }
-            // ENTER is caugth at KeyUp rather than KeyDown to avoid firing
-            // before all regular keystrokes have been processed
             if (ev.which === $.ui.keyCode.ENTER) {
-                if (self.current_result && self.get_search_string().length) {
+                if (self.search_string.length) {
                     self.select_item(ev);
                 }
                 return;
             }
-            if (!self.searching) {
-                self.searching = true;
-                return;
+            var search_string = self.get_search_string();
+            if (self.search_string !== search_string) {
+                if (search_string.length) {
+                    self.search_string = search_string;
+                    self.initiate_search(search_string);
+                } else {
+                    self.close();
+                }
             }
-            self.search_string = self.get_search_string();
+        });
+        this.$input.on('keypress', function (ev) {
+            self.search_string = self.search_string + String.fromCharCode(ev.which);
             if (self.search_string.length) {
+                self.searching = true;
                 var search_string = self.search_string;
-                setTimeout(function () { self.initiate_search(search_string);}, self.delay);
+                self.initiate_search(search_string);
             } else {
                 self.close();
             }
         });
         this.$input.on('keydown', function (ev) {
             switch (ev.which) {
+                case $.ui.keyCode.ENTER:
+
                 // TAB and direction keys are handled at KeyDown because KeyUp
                 // is not guaranteed to fire.
                 // See e.g. https://github.com/aef-/jquery.masterblaster/issues/13
                 case $.ui.keyCode.TAB:
-                    if (self.current_result && self.get_search_string().length) {
+                    if (self.search_string.length) {
                         self.select_item(ev);
                     }
                     break;
@@ -2524,7 +2528,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
     },
     close: function () {
         this.current_search = null;
-        this.search_string = null;
+        this.search_string = '';
         this.searching = true;
         this.$el.hide();
     },

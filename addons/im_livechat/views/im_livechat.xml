@@ -86,7 +86,7 @@
         <!-- Template rendering all the scripts required to execute the Livechat from a page containing Odoo -->
         <template id="internal_loader" name="All the scripts to launch the LiveSupport from an internal Web Page">
             <!-- css style -->
-            <link t-att-href="'%s/web/css/im_livechat.internal_lib' % (url)" rel="stylesheet"/>
+            <link property='stylesheet' t-att-href="'%s/web/css/im_livechat.internal_lib' % (url)" rel="stylesheet"/>
             <!-- js of all the required lib (internal and external) -->
             <script t-att-src="'%s/web/js/im_livechat.internal_lib' % (url)" type="text/javascript" />
             <!-- the loader -->

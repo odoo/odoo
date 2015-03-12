@@ -119,15 +119,22 @@ class stock_picking(osv.osv):
             'invoice_line_tax_id': [(6, 0, taxes_ids)],
         }
 
-    def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
+    def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
-        invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
-        invoice = invoice_obj.browse(cr, uid, invoice_id, context=context)
-        invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
-        if invoice_line:
-            invoice_line_obj.create(cr, uid, invoice_line)
-        return invoice_id
+        invoice_ids = super(stock_picking, self)._invoice_create_line(cr, uid, moves, journal_id, inv_type=inv_type, context=context)
+        delivey_invoices = {}
+        for move in moves:
+            for invoice in move.picking_id.sale_id.invoice_ids:
+                if invoice.id in invoice_ids:
+                    delivey_invoices[invoice] = move.picking_id
+        if delivey_invoices:
+            for invoice, picking in delivey_invoices.items():
+                invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
+                if invoice_line:
+                    invoice_line_obj.create(cr, uid, invoice_line)
+                    invoice_obj.button_compute(cr, uid, [invoice.id], context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
+        return invoice_ids
 
     def _get_default_uom(self, cr, uid, context=None):
         uom_categ_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'product.product_uom_categ_kgm')

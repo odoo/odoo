@@ -1,6 +1,18 @@
 (function() {
     "use strict";
 
+    /* --- Set the browser into the dom for css selectors --- */
+    var browser;
+    if ($.browser.webkit) browser = "webkit";
+    else if ($.browser.safari) browser = "safari";
+    else if ($.browser.opera) browser = "opera";
+    else if ($.browser.msie || ($.browser.mozilla && +$.browser.version.replace(/^([0-9]+\.[0-9]+).*/, '\$1') < 20)) browser = "msie";
+    else if ($.browser.mozilla) browser = "mozilla";
+    browser += ","+$.browser.version;
+    if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) browser += ",mobile";
+    document.documentElement.setAttribute('data-browser', browser);
+    /* ---------------------------------------------------- */
+
     var website = {};
     openerp.website = website;
 
@@ -292,12 +304,30 @@
                 if ($('html').data('website-id')) {
                     website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
-                    var modules = ['website'];
-                    return openerp._t.database.load_translations(website.session, modules, website.get_context().lang);
+                    return openerp.jsonRpc('/website/translations', 'call', {'lang': website.get_context().lang})
+                    .then(function(trans) {
+                        openerp._t.database.set_bundle(trans);});
+                }
+            }).then(function () {
+                var templates = openerp.qweb.templates;
+                var keys = _.keys(templates);
+                for (var i = 0; i < keys.length; i++){
+                    treat_node(templates[keys[i]]);
                 }
             }).promise();
         }
         return all_ready;
+    };
+
+    function treat_node(node){
+        if(node.nodeType === 3) {
+            if(node.nodeValue.match(/\S/)){
+                node.nodeValue = openerp._t($.trim(node.nodeValue));
+            }
+        }
+        else if(node.nodeType === 1 && node.hasChildNodes()) {
+            _.each(node.childNodes, function(subnode) {treat_node(subnode);});
+        }
     };
 
     website.inject_tour = function() {

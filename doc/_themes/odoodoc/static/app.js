@@ -66,22 +66,25 @@ $(function () {
             .prependTo('.switchable:not(.setup) .highlight');
         $(document).on('click', '.btn-show-setup', function (e) {
             var $target = $(e.target);
-            var target = $target.closest('.switchable:not(.setup)').get(0);
+            var switchable = $target.closest('.switchable:not(.setup)').get(0);
             // not in a switchable (???)
-            if (!target) { return; }
-            var lang = getHighlightLanguage(target);
+            if (!switchable) { return; }
+
+            var lang = getHighlightLanguage(switchable);
             if (!lang) {
                 // switchable without highlight (e.g. language-specific notes),
                 // don't munge
                 return;
             }
 
-            var $setup_code = $target.prev();
-            if ($setup_code.length) {
-                // remove existing setup code
-                $setup_code.remove();
+            var $following_siblings = $target.nextAll();
+            if ($following_siblings.length > 1) {
+                // remove all but the very last following sibling (which
+                // should be the non-setup <pre>)
+                $following_siblings.slice(0, -1).remove();
             } else {
-                $('.setupcode.highlight-' + lang + ' pre').clone().insertBefore($target);
+                // otherwise insert setupcode
+                $('.setupcode.highlight-' + lang + ' pre').clone().insertAfter($target);
             }
         });
     })(); }
@@ -103,8 +106,10 @@ $(function () {
     // programming language switcher
     function findSheet(pattern, fromSheet) {
         if (fromSheet) {
-            for(var i=0; i<fromSheet.cssRules.length; ++i) {
-                var rule = fromSheet.cssRules[i];
+            // cssRules may be `null` in iOS safari (?)
+            var rules = fromSheet.cssRules || [];
+            for(var i=0; i<rules.length; ++i) {
+                var rule = rules[i];
                 if (rule.type !== CSSRule.IMPORT_RULE) { continue; }
                 if (pattern.test(rule.href)) {
                     return rule.styleSheet;

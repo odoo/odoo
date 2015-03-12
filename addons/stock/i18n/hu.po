@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-12-09 14:37+0000\n"
+"PO-Revision-Date: 2015-02-11 10:51+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:23+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-02-12 07:09+0000\n"
+"X-Generator: Launchpad (build 17336)\n"
 
 #. module: stock
 #: help:stock.picking,state:0
@@ -823,20 +823,20 @@ msgstr "Visszamaradt tételek erről"
 #: code:addons/stock/stock.py:952
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
-msgstr ""
+msgstr "Újrarendelés <em>%s</em> <b>létrehozva</b>."
 
 #. module: stock
 #: code:addons/stock/stock.py:4193
 #, python-format
 msgid "Backorder exists"
-msgstr ""
+msgstr "Léteznek újrarendelések"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: view:stock.picking:stock.view_picking_internal_search
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders"
-msgstr ""
+msgstr "Újrarendelések"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
@@ -1202,7 +1202,7 @@ msgstr "Beszerzés létrehozása"
 #: code:addons/stock/static/src/xml/picking.xml:80
 #, python-format
 msgid "Create backorder"
-msgstr ""
+msgstr "Újrarendelés létrehozása"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -1578,7 +1578,7 @@ msgstr "Szállítás"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Delivery Address:"
-msgstr ""
+msgstr "Szállítási címek:"
 
 #. module: stock
 #: field:stock.picking,move_type:0
@@ -2944,6 +2944,8 @@ msgstr "Módszer"
 msgid ""
 "Minimum Delta for Propagation of a Date Change on moves linked together"
 msgstr ""
+"Az összevont mozgásokon végrehajtott dátum megváltozás eloszlásának minimum "
+"átlaga."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -2970,6 +2972,8 @@ msgstr "Minimum készlet szabályok"
 msgid ""
 "Minimum days to trigger a propagation of date change in pushed/pull flows."
 msgstr ""
+"Minimum napok száma a dátum változtatás eloszlásának kapcsolásához a "
+"kivételi / betevési munkafolyamatokban."
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
@@ -4335,7 +4339,7 @@ msgstr "Átvett mennyiség"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Recheck Availability"
-msgstr ""
+msgstr "Rendelkezésre állás újraellenőrzés"
 
 #. module: stock
 #. openerp-web
@@ -4395,6 +4399,8 @@ msgid ""
 "Remaining Quantity in default UoM according to operations matched with this "
 "move"
 msgstr ""
+"Visszamaradt mennyiség az alapértelmezett mértékegységben az ehhez a tétel "
+"mozgással összefüggő műveletek alapján"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -4407,6 +4413,8 @@ msgid ""
 "Remaining quantity in default UoM according to moves matched with this "
 "operation. "
 msgstr ""
+"Visszamaradt mennyiség az alapértelmezett mértékegységben az ezzel a "
+"művelettel összefüggő tételmozgások alapján. "
 
 #. module: stock
 #: view:product.removal:stock.view_removal
@@ -5341,6 +5349,9 @@ msgid ""
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
 msgstr ""
+"A mértékegységei kerekítései %s a tételmozgásoknál kontra %s a termékekre "
+"vonatkozólag nem teszi lehetővé ezeket a műveleteket vagy nem mozgatja a "
+"kiválogatásokat egyszerre. "
 
 #. module: stock
 #: code:addons/stock/stock.py:3867
@@ -6062,6 +6073,9 @@ msgid ""
 "                            the quantity of that serial number (lot) and not "
 "to the total quantity of the product."
 msgstr ""
+"Ha egy szériaszámot kiválaszt (csomag), a mennyiséget korrigálja a \n"
+"                            szériaszám (csomag) függvényében, nem pedig a "
+"termék teljes mennyiségével."
 
 #. module: stock
 #: field:stock.return.picking.line,wizard_id:0
@@ -6245,6 +6259,9 @@ msgid ""
 "'end', 'obsolete');black:virtual_available>=0 and state not in ('draft', "
 "'end', 'obsolete')"
 msgstr ""
+"piros:virtual_available<0;kék:virtual_available>=0 és az állapota "
+"('tervezet', 'vége', 'elavult');fekete:virtual_available>=0 és állapota nem "
+"('tervezet', 'vége', 'elavult')"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form

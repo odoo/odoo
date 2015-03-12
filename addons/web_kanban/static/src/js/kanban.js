@@ -1300,8 +1300,14 @@ instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
         var self = this;
         this.record_id = self.parent.id;
         this.priorities = self.prepare_priority();
+        var readonly = this.field && this.field.readonly;
+        if (readonly){
+            this.set('readonly', true);
+        }
         this.$el = $(QWeb.render("Priority", {'widget': this}));
-        this.$el.find('li').click(self.do_action.bind(self));
+        if (!readonly){
+            this.$el.find('li').click(self.do_action.bind(self));
+        }
     },
     do_action: function(e) {
         var self = this;

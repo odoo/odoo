@@ -21,6 +21,7 @@
 
 """ High-level objects for fields. """
 
+from collections import OrderedDict
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
@@ -296,6 +297,13 @@ class Field(object):
         self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
         self._free_attrs = []
 
+        # self._triggers is a set of pairs (field, path) that represents the
+        # computed fields that depend on `self`. When `self` is modified, it
+        # invalidates the cache of each `field`, and registers the records to
+        # recompute based on `path`. See method `modified` below for details.
+        self._triggers = set()
+        self.inverse_fields = []
+
     def new(self, **kwargs):
         """ Return a field of the same type as `self`, with its own parameters. """
         return type(self)(**kwargs)
@@ -394,16 +402,6 @@ class Field(object):
     #
     # Field setup
     #
-
-    def reset(self):
-        """ Prepare `self` for a new setup. """
-        self.setup_done = False
-        # self._triggers is a set of pairs (field, path) that represents the
-        # computed fields that depend on `self`. When `self` is modified, it
-        # invalidates the cache of each `field`, and registers the records to
-        # recompute based on `path`. See method `modified` below for details.
-        self._triggers = set()
-        self.inverse_fields = []
 
     def setup(self, env):
         """ Make sure that `self` is set up, except for recomputation triggers. """
@@ -530,7 +528,7 @@ class Field(object):
     @property
     def base_field(self):
         """ Return the base field of an inherited field, or `self`. """
-        return self.related_field if self.inherited else self
+        return self.related_field.base_field if self.inherited else self
 
     #
     # Setup of field triggers
@@ -639,8 +637,11 @@ class Field(object):
     #
 
     def to_column(self):
-        """ return a low-level field object corresponding to `self` """
-        assert self.store or self.column
+        """ Return a column object corresponding to `self`, or ``None``. """
+        if not self.store and self.compute:
+            # non-stored computed fields do not have a corresponding column
+            self.column = None
+            return None
 
         # determine column parameters
         #_logger.debug("Create fields._column for Field %s", self)
@@ -657,7 +658,7 @@ class Field(object):
             self.column = fields.property(**args)
         elif self.column:
             # let the column provide a valid column for the given parameters
-            self.column = self.column.new(**args)
+            self.column = self.column.new(_computed_field=bool(self.compute), **args)
         else:
             # create a fresh new column of the right type
             self.column = getattr(fields, self.type)(**args)
@@ -1075,16 +1076,21 @@ class Text(_String):
 class Html(_String):
     type = 'html'
     sanitize = True                     # whether value must be sanitized
+    strip_style = False                 # whether to strip style attributes
 
     _column_sanitize = property(attrgetter('sanitize'))
     _related_sanitize = property(attrgetter('sanitize'))
     _description_sanitize = property(attrgetter('sanitize'))
 
+    _column_strip_style = property(attrgetter('strip_style'))
+    _related_strip_style = property(attrgetter('strip_style'))
+    _description_strip_style = property(attrgetter('strip_style'))
+
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return False
         if validate and self.sanitize:
-            return html_sanitize(value)
+            return html_sanitize(value, strip_style=self.strip_style)
         return value
 
 
@@ -1269,7 +1275,9 @@ class Selection(Field):
                 if 'selection' in field._attrs:
                     selection = field._attrs['selection']
                 if 'selection_add' in field._attrs:
-                    selection = selection + field._attrs['selection_add']
+                    # use an OrderedDict to update existing values
+                    selection_add = field._attrs['selection_add']
+                    selection = OrderedDict(selection + selection_add).items()
             else:
                 selection = None
         self.selection = selection
@@ -1479,7 +1487,11 @@ class Many2one(_Relational):
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             try:
-                return value.sudo().name_get()[0]
+                value_sudo = value.sudo()
+                # performance trick: make sure that all records of the same
+                # model as value in value.env will be prefetched in value_sudo.env
+                value_sudo.env.prefetch[value._name].update(value.env.prefetch[value._name])
+                return value_sudo.name_get()[0]
             except MissingError:
                 # Should not happen, unless the foreign key is missing.
                 return False
