@@ -46,11 +46,6 @@ You can manage:
         'views/hr.xml',
     ],
     'demo': ['data/hr_demo.xml'],
-    'test': [
-        'test/hr_users.yml',
-        'test/open2recruit2close_job.yml',
-        'test/hr_demo.yml',
-    ],
     'installable': True,
     'application': True,
     'qweb': ['static/src/xml/suggestions.xml'],
