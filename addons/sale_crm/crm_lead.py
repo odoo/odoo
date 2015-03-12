@@ -1,9 +1,15 @@
-
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
 
 class crm_lead(models.Model):
     _inherit = ['crm.lead']
+
+    def __init__(self, pool, cr):
+        init_crm_lead = super(crm_lead, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        self.CRM_LEAD_FIELDS_TO_MERGE = list(self.CRM_LEAD_FIELDS_TO_MERGE)
+        self.CRM_LEAD_FIELDS_TO_MERGE.append(['quotation_ids'])
+        return init_crm_lead
 
     @api.one
     @api.depends('order_ids')
