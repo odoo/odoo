@@ -167,6 +167,7 @@ class Scanner(Thread):
                 try:
                     device.ungrab() 
                 except Exception as e:
+                    device = None
                     self.set_status('error',str(e))
             else:
                 time.sleep(5)   # wait until a suitable device is plugged
