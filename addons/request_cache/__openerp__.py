@@ -28,6 +28,8 @@
     'installable': True,
     'auto_install': False,
     'depends': ['base', 'web'],
+    'data': ['security/ir.model.access.csv',
+    ],
     'description': """
 Add a cache between RPC calls and Database
 ============================================

@@ -10,14 +10,14 @@ class request_cache_store(models.Model):
     data    = fields.Text(string='Serialized Data', required=True, readonly=True) 
     
     def init(self, cr):
-        cr.execute("CREATE FUNCTION invalid_cache() RETURNS TRIGGER AS ' BEGIN DELETE FROM cache_store WHERE model=TG_ARGV[0]; RETURN NEW; END; ' LANGUAGE 'plpgsql';");
+        cr.execute("CREATE OR REPLACE FUNCTION invalid_cache() RETURNS TRIGGER AS ' BEGIN DELETE FROM cache_store WHERE model=TG_ARGV[0]; RETURN NEW; END; ' LANGUAGE 'plpgsql';");
         
     def archive(self, hashkey, model, input_data):
         if not hasattr(self.env[model], '_cache_dependencies'):
             return False
         input_data = json.dumps(input_data)
         try:
-            return bool(self.create({'hashkey': hashkey, 'model': model, 'data': input_data}))
+            return bool(self.sudo().create({'hashkey': hashkey, 'model': model, 'data': input_data}))
         except:
             return False
 
