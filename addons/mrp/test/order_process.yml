@@ -200,12 +200,3 @@
                 assert line.journal_id.id == wc.costs_journal_id.id, "Account Journal is not correspond."
                 assert line.product_id.id == wc.product_id.id, "Product does not correspond."
                 assert line.product_uom_id.id == wc.product_id.uom_id.id, "UOM does not correspond."
--
-  I print "Work Center Load Report".
--
-  !python {model: mrp.workcenter}: |
-    ctx = context.copy()
-    ctx.update({'model': 'mrp.workcenter','active_ids': [ref('mrp_workcenter_0'),ref('mrp_workcenter_1')]})
-    data_dict = {'time_unit': 'day', 'measure_unit': 'hours'}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_mrp_workcenter_load_wizard',wiz_data=data_dict, context=ctx, our_module='mrp')

@@ -54,6 +54,3 @@ class hr_holidays_remaining_leaves_user(osv.osv):
                     rr.name,rr.user_id,hhs.name
             )
         """)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

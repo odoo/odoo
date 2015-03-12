@@ -21,6 +21,7 @@
         events: {
             'change input[data-xmlid],input[data-enable],input[data-disable]': 'change_selection',
             'click .close': 'close',
+            'click': 'click',
         },
         start: function () {
             var self = this;
@@ -31,6 +32,12 @@
             this.active_select_tags();
             this.$inputs = $("input[data-xmlid],input[data-enable],input[data-disable]");
             setTimeout(function () {self.$el.addClass('in');}, 0);
+            this.keydown_escape = function (event) {
+                if (event.keyCode === 27) {
+                    self.close();
+                }
+            };
+            $(document).on('keydown', this.keydown_escape);
             return this.load_xml_data().then(function () {
                 self.flag = true;
             });
@@ -87,13 +94,13 @@
                 });
         },
         get_inputs: function (string) {
-            return this.$inputs.filter('#'+string.split(",").join(", #"));
+            return this.$inputs.filter('#'+string.split(/\s*,\s*/).join(", #"));
         },
         get_xml_ids: function ($inputs) {
             var xml_ids = [];
             $inputs.each(function () {
                 if ($(this).data('xmlid') && $(this).data('xmlid').length) {
-                    xml_ids = xml_ids.concat($(this).data('xmlid').split(","));
+                    xml_ids = xml_ids.concat($(this).data('xmlid').split(/\s*,\s*/));
                 }
             });
             return xml_ids;
@@ -163,7 +170,7 @@
             this.$('#'+data.split(",").join(", #")).each(function () {
                 var check = $(this).prop("checked");
                 var $label = $(this).closest("label");
-                $(this).attr("checked", enable);
+                $(this).prop("checked", enable);
                 if (enable) $label.addClass("checked");
                 else $label.removeClass("checked");
                 if (check != enable) {
@@ -228,8 +235,14 @@
                 this.timer = setTimeout(function () { self.reload = false; },0);
             }
         },
+        click: function (event) {
+            if (!$(event.target).closest("#theme_customize_modal > *").length) {
+                this.close();
+            }
+        },
         close: function () {
             var self = this;
+            $(document).off('keydown', this.keydown_escape);
             $('#theme_error').remove();
             $('link[href*=".assets_"]').removeAttr('data-loading');
             this.$el.removeClass('in');

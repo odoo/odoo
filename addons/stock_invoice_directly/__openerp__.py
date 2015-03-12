@@ -33,7 +33,6 @@ wizard if the delivery is to be invoiced.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/warehouse',
-    'images': ['images/create_invoice.jpeg'],
     'depends': ['delivery', 'stock'],
     'data': [],
     'demo': [],
@@ -41,4 +40,3 @@ wizard if the delivery is to be invoiced.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -26,6 +26,7 @@ from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class account_asset_category(osv.osv):
     _name = 'account.asset.category'
@@ -78,7 +79,7 @@ class account_asset_asset(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for asset in self.browse(cr, uid, ids, context=context):
             if asset.account_move_line_ids: 
-                raise osv.except_osv(_('Error!'), _('You cannot delete an asset that contains posted depreciation lines.'))
+                raise UserError(_('You cannot delete an asset that contains posted depreciation lines.'))
         return super(account_asset_asset, self).unlink(cr, uid, ids, context=context)
 
     def _get_period(self, cr, uid, context=None):
@@ -477,6 +478,3 @@ class account_asset_history(osv.osv):
         'date': lambda *args: time.strftime('%Y-%m-%d'),
         'user_id': lambda self, cr, uid, ctx: uid
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

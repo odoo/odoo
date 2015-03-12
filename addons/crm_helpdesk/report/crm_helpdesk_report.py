@@ -50,7 +50,7 @@ class crm_helpdesk_report(osv.osv):
         'date_deadline': fields.date('Deadline', select=True),
         'priority': fields.selection([('5', 'Lowest'), ('4', 'Low'), \
                     ('3', 'Normal'), ('2', 'High'), ('1', 'Highest')], 'Priority'),
-        'channel_id': fields.many2one('crm.tracking.medium', 'Channel'),
+        'channel_id': fields.many2one('utm.medium', 'Channel'),
         'categ_id': fields.many2one('crm.helpdesk.category', 'Category'),
         'planned_cost': fields.float('Planned Costs'),
         'create_date': fields.datetime('Creation Date' , readonly=True, select=True),
@@ -96,6 +96,3 @@ class crm_helpdesk_report(osv.osv):
                      c.partner_id,c.company_id,c.date_deadline,c.create_date,c.date,c.date_closed,\
                      c.categ_id,c.channel_id,c.planned_cost,c.id
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

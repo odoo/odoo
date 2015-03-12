@@ -1,6 +1,5 @@
 (function () {
     'use strict';
-
     openerp.Tour.register({
         id:   'shop_buy_product',
         name: "Try to buy products",
@@ -25,8 +24,8 @@
             },
             {
                 title:     "click on add to cart",
-                waitFor:   'label:contains(32 GB) input[checked]',
-                element:   'form[action^="/shop/cart/update"] .btn',
+                waitFor:   'label:contains(32 GB) input:propChecked',
+                element:   '#product_detail form[action^="/shop/cart/update"] .btn',
             },
             {
                 title:     "add suggested",
@@ -40,7 +39,7 @@
             },
             {
                 title:     "remove Headphones",
-                waitFor:   '#cart_products tr:contains("32 GB") input.js_quantity[value=2]',
+                waitFor:   '#cart_products tr:contains("32 GB") input.js_quantity:propValue(2)',
                 element:   '#cart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
             },
             {
@@ -51,7 +50,7 @@
             },
             {
                 title:     "go to checkout",
-                waitFor:   '#cart_products input.js_quantity[value=1]',
+                waitFor:   '#cart_products input.js_quantity:propValue(1)',
                 element:   'a[href="/shop/checkout"]',
             },
             {

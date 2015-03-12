@@ -11,4 +11,3 @@ class TestObject(orm.TransientModel):
     _defaults = {
         'other': "bob"
     }
-

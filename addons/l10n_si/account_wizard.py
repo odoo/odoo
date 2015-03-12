@@ -1,4 +1,4 @@
-﻿# -*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
@@ -27,4 +27,3 @@ class AccountWizard_cd(osv.osv_memory):
 	_defaults = {
         'code_digits' : 6,
 	}
-

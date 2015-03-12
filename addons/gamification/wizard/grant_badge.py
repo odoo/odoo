@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class grant_badge_wizard(osv.TransientModel):
@@ -40,7 +41,7 @@ class grant_badge_wizard(osv.TransientModel):
 
         for wiz in self.browse(cr, uid, ids, context=context):
             if uid == wiz.user_id.id:
-                raise osv.except_osv(_('Warning!'), _('You can not grant a badge to yourself'))
+                raise UserError(_('You can not grant a badge to yourself'))
 
             #create the badge
             values = {

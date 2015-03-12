@@ -1,13 +1,15 @@
 <openerp>
     <data>
         <!-- Delivery Carriers -->
-        <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" groups="base.group_no_one" sequence="50"/>
+        <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" groups="stock.group_stock_manager" sequence="50"/>
+        <menuitem id="sale_menu_delivery" name="Delivery" parent="base.menu_base_config" groups="base.group_sale_manager" sequence="12"/>
 
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
             <field name="model">delivery.carrier</field>
             <field name="arch" type="xml">
                 <tree string="Carrier">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="price" invisible="'order_id' not in context"/>
@@ -109,6 +111,7 @@
         </record>
 
         <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery" sequence="1"/>
+        <menuitem action="action_delivery_carrier_form" id="sale_menu_action_delivery_carrier_form" parent="sale_menu_delivery" sequence="1"/>
 
         <!-- Delivery Grids -->
         <record id="view_delivery_grid_tree" model="ir.ui.view">
@@ -171,6 +174,7 @@
             </field>
         </record>
         <menuitem action="action_delivery_grid_form" id="menu_action_delivery_grid_form" parent="menu_delivery" sequence="2"/>
+        <menuitem action="action_delivery_grid_form" id="sale_menu_action_delivery_grid_form" parent="sale_menu_delivery" sequence="2"/>
 
         <record id="view_delivery_grid_line_form" model="ir.ui.view">
             <field name="name">delivery.grid.line.form</field>
@@ -237,9 +241,9 @@
                         <div>
                             <field name="weight" class="oe_inline"/>
                             <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                            <field name="number_of_packages"/>
                         </div>
                         <field name="weight_net" groups="base.group_no_one"/>
+                        <field name="number_of_packages"/>
                     </group>
                 </group>
                 </xpath>
@@ -276,12 +280,14 @@
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='main_grp']" position="inside">
-                    <label for="weight" string="Weight"/>
-                    <div>
-                        <field name="weight" class="oe_inline"/>
-                        <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                    </div>
-                    <field name="weight_net" groups="base.group_no_one" class="oe_inline"/>
+                    <group>
+                        <label for="weight"/>
+                        <div>
+                            <field name="weight" nolabel="1" class="oe_inline"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                        </div>
+                        <field name="weight_net" groups="base.group_no_one"/>
+                    </group>
                 </xpath>
             </field>
         </record>
@@ -295,7 +301,8 @@
                     <group style="width: 65%%">
                         <label for="carrier_id"/>
                         <div>
-                            <field name="carrier_id" context="{'order_id':active_id or False}" class="oe_inline"/>
+                            <field name="id" invisible="1"/>
+                            <field name="carrier_id" context="{'order_id': id}" class="oe_inline"/>
                             <button name="delivery_set" string="Add in Quote" type="object"
                                 class="oe_edit_only"
                                 attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
@@ -308,6 +315,5 @@
                 </xpath>
             </field>
         </record>
-
     </data>
 </openerp>

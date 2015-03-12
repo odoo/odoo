@@ -23,6 +23,8 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 import openerp.addons.decimal_precision as dp
+from openerp.tools.float_utils import float_round
+from openerp.exceptions import UserError
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -92,11 +94,29 @@ class product_product(osv.osv):
 
         operator = context.get('compute_child', True) and 'child_of' or 'in'
         domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
-        return (
-            domain + [('location_id', operator, location_ids)],
-            domain + ['&', ('location_dest_id', operator, location_ids), '!', ('location_id', operator, location_ids)],
-            domain + ['&', ('location_id', operator, location_ids), '!', ('location_dest_id', operator, location_ids)]
-        )
+        locations = location_obj.browse(cr, uid, location_ids, context=context)
+        if operator == "child_of" and locations and locations[0].parent_left != 0:
+            loc_domain = []
+            dest_loc_domain = []
+            for loc in locations:
+                if loc_domain:
+                    loc_domain = ['|'] + loc_domain  + ['&', ('location_id.parent_left', '>=', loc.parent_left), ('location_id.parent_left', '<', loc.parent_right)]
+                    dest_loc_domain = ['|'] + dest_loc_domain + ['&', ('location_dest_id.parent_left', '>=', loc.parent_left), ('location_dest_id.parent_left', '<', loc.parent_right)]
+                else:
+                    loc_domain += ['&', ('location_id.parent_left', '>=', loc.parent_left), ('location_id.parent_left', '<', loc.parent_right)]
+                    dest_loc_domain += ['&', ('location_dest_id.parent_left', '>=', loc.parent_left), ('location_dest_id.parent_left', '<', loc.parent_right)]
+
+            return (
+                domain + loc_domain,
+                domain + ['&'] + dest_loc_domain + ['!'] + loc_domain,
+                domain + ['&'] + loc_domain + ['!'] + dest_loc_domain
+            )
+        else:
+            return (
+                domain + [('location_id', operator, location_ids)],
+                domain + ['&', ('location_dest_id', operator, location_ids), '!', ('location_id', operator, location_ids)],
+                domain + ['&', ('location_id', operator, location_ids), '!', ('location_dest_id', operator, location_ids)]
+            )
 
     def _get_domain_dates(self, cr, uid, ids, context):
         from_date = context.get('from_date', False)
@@ -113,9 +133,10 @@ class product_product(osv.osv):
         field_names = field_names or []
 
         domain_products = [('product_id', 'in', ids)]
-        domain_quant, domain_move_in, domain_move_out = self._get_domain_locations(cr, uid, ids, context=context)
-        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel'))] + domain_products
-        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel'))] + domain_products
+        domain_quant, domain_move_in, domain_move_out = [], [], []
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations(cr, uid, ids, context=context)
+        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
+        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
         domain_quant += domain_products
         if context.get('lot_id') or context.get('owner_id') or context.get('package_id'):
             if context.get('lot_id'):
@@ -127,23 +148,30 @@ class product_product(osv.osv):
             moves_in = []
             moves_out = []
         else:
+            domain_move_in += domain_move_in_loc
+            domain_move_out += domain_move_out_loc
             moves_in = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
             moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
 
+        domain_quant += domain_quant_loc
         quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
         quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
 
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
         res = {}
-        for id in ids:
+        for product in self.browse(cr, uid, ids, context=context):
+            id = product.id
+            qty_available = float_round(quants.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            incoming_qty = float_round(moves_in.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            outgoing_qty = float_round(moves_out.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            virtual_available = float_round(quants.get(id, 0.0) + moves_in.get(id, 0.0) - moves_out.get(id, 0.0), precision_rounding=product.uom_id.rounding)
             res[id] = {
-                'qty_available': quants.get(id, 0.0),
-                'incoming_qty': moves_in.get(id, 0.0),
-                'outgoing_qty': moves_out.get(id, 0.0),
-                'virtual_available': quants.get(id, 0.0) + moves_in.get(id, 0.0) - moves_out.get(id, 0.0),
+                'qty_available': qty_available,
+                'incoming_qty': incoming_qty,
+                'outgoing_qty': outgoing_qty,
+                'virtual_available': virtual_available,
             }
-
         return res
 
     def _search_product_quantity(self, cr, uid, obj, name, domain, context):
@@ -157,16 +185,32 @@ class product_product(osv.osv):
             if operator == '=':
                 operator = '=='
 
-            product_ids = self.search(cr, uid, [], context=context)
             ids = []
-            if product_ids:
-                #TODO: use a query instead of this browse record which is probably making the too much requests, but don't forget
-                #the context that can be set with a location, an owner...
-                for element in self.browse(cr, uid, product_ids, context=context):
-                    if eval(str(element[field]) + operator + str(value)):
-                        ids.append(element.id)
-            res.append(('id', 'in', ids))
+            if name == 'qty_available':
+                res.append(('id', 'in', self._search_qty_available(cr, uid, operator, value, context)))
+            else:
+                product_ids = self.search(cr, uid, [], context=context)
+                if product_ids:
+                    #TODO: Still optimization possible when searching virtual quantities
+                    for element in self.browse(cr, uid, product_ids, context=context):
+                        if eval(str(element[field]) + operator + str(value)):
+                            ids.append(element.id)
+                    res.append(('id', 'in', ids))
         return res
+
+    def _search_qty_available(self, cr, uid, operator, value, context):
+        domain_quant = []
+        if context.get('lot_id'):
+            domain_quant.append(('lot_id', '=', context['lot_id']))
+        if context.get('owner_id'):
+            domain_quant.append(('owner_id', '=', context['owner_id']))
+        if context.get('package_id'):
+            domain_quant.append(('package_id', '=', context['package_id']))
+        domain_quant += self._get_domain_locations(cr, uid, [], context=context)[0]
+        quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
+        quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
+        quants = dict((k, v) for k, v in quants.iteritems() if eval(str(v) + operator + str(value)))
+        return(list(quants))
 
     def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
         res = {}
@@ -288,41 +332,35 @@ class product_template(osv.osv):
     _inherit = 'product.template'
     
     def _product_available(self, cr, uid, ids, name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = {
-                # "reception_count": sum([p.reception_count for p in product.product_variant_ids]),
-                # "delivery_count": sum([p.delivery_count for p in product.product_variant_ids]),
-                "qty_available": sum([p.qty_available for p in product.product_variant_ids]),
-                "virtual_available": sum([p.virtual_available for p in product.product_variant_ids]),
-                "incoming_qty": sum([p.incoming_qty for p in product.product_variant_ids]),
-                "outgoing_qty": sum([p.outgoing_qty for p in product.product_variant_ids]),
+        prod_available = {}
+        product_ids = self.browse(cr, uid, ids, context=context)
+        var_ids = []
+        for product in product_ids:
+            var_ids += [p.id for p in product.product_variant_ids]
+        variant_available= self.pool['product.product']._product_available(cr, uid, var_ids, context=context)
+
+        for product in product_ids:
+            qty_available = 0
+            virtual_available = 0
+            incoming_qty = 0
+            outgoing_qty = 0
+            for p in product.product_variant_ids:
+                qty_available += variant_available[p.id]["qty_available"]
+                virtual_available += variant_available[p.id]["virtual_available"]
+                incoming_qty += variant_available[p.id]["incoming_qty"]
+                outgoing_qty += variant_available[p.id]["outgoing_qty"]
+            prod_available[product.id] = {
+                "qty_available": qty_available,
+                "virtual_available": virtual_available,
+                "incoming_qty": incoming_qty,
+                "outgoing_qty": outgoing_qty,
             }
-        return res
+        return prod_available
 
     def _search_product_quantity(self, cr, uid, obj, name, domain, context):
         prod = self.pool.get("product.product")
-        res = []
-        for field, operator, value in domain:
-            #to prevent sql injections
-            assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
-            assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
-            assert isinstance(value, (float, int)), 'Invalid domain right operand'
-
-            if operator == '=':
-                operator = '=='
-
-            product_ids = prod.search(cr, uid, [], context=context)
-            ids = []
-            if product_ids:
-                #TODO: use a query instead of this browse record which is probably making the too much requests, but don't forget
-                #the context that can be set with a location, an owner...
-                for element in prod.browse(cr, uid, product_ids, context=context):
-                    if eval(str(element[field]) + operator + str(value)):
-                        ids.append(element.id)
-            res.append(('product_variant_ids', 'in', ids))
-        return res
-
+        product_variant_ids = prod.search(cr, uid, domain, context=context)
+        return [('product_variant_ids', 'in', product_variant_ids)]
 
     def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
         res = {}
@@ -366,13 +404,13 @@ class product_template(osv.osv):
         #     fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
         # 'delivery_count': fields.function(_product_available, multi='qty_available',
         #     fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
-        'qty_available': fields.function(_product_available, multi='qty_available',
+        'qty_available': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
             fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
-        'virtual_available': fields.function(_product_available, multi='qty_available',
+        'virtual_available': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
             fnct_search=_search_product_quantity, type='float', string='Quantity Available'),
-        'incoming_qty': fields.function(_product_available, multi='qty_available',
+        'incoming_qty': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
             fnct_search=_search_product_quantity, type='float', string='Incoming'),
-        'outgoing_qty': fields.function(_product_available, multi='qty_available',
+        'outgoing_qty': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
             fnct_search=_search_product_quantity, type='float', string='Outgoing'),
         
         'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
@@ -443,11 +481,20 @@ class product_template(osv.osv):
         return result
 
     def write(self, cr, uid, ids, vals, context=None):
-        if 'uom_po_id' in vals:
-            product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
-            if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', product_ids)], context=context, limit=1):
-                raise osv.except_osv(_('Error!'), _("You can not change the unit of measure of a product that has already been used in a stock move. If you need to change the unit of measure, you may deactivate this product.") % ())
-        return super(product_template, self).write(cr, uid, ids, vals, context=context)
+        check = ids and 'uom_po_id' in vals
+        if check:
+            cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(ids)])
+            uoms = dict(cr.fetchall())
+
+        result = super(product_template, self).write(cr, uid, ids, vals, context=context)
+
+        if check:
+            cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(ids)])
+            if dict(cr.fetchall()) != uoms:
+                product_ids = self.pool['product.product'].search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
+                if self.pool['stock.move'].search_count(cr, uid, [('product_id', 'in', product_ids)], context=context):
+                    raise UserError(_("You can not change the unit of measure of a product that has already been used in a stock move. If you need to change the unit of measure, you may deactivate this product."))
+        return result
 
 
 class product_removal_strategy(osv.osv):
@@ -517,6 +564,3 @@ class product_category(osv.osv):
         'removal_strategy_id': fields.many2one('product.removal', 'Force Removal Strategy', help="Set a specific removal strategy that will be used regardless of the source location for this product category"),
         'total_route_ids': fields.function(calculate_total_routes, relation='stock.location.route', type='many2many', string='Total routes', readonly=True),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

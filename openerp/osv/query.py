@@ -154,5 +154,3 @@ class Query(object):
 
     def __str__(self):
         return '<osv.Query: "SELECT ... FROM %s WHERE %s" with params: %r>' % self.get_sql()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

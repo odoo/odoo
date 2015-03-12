@@ -34,6 +34,7 @@ import openerp.exceptions
 from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
 from openerp.http import request
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -91,7 +92,7 @@ class res_groups(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
-        'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
+        'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls', copy=True),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
@@ -123,8 +124,7 @@ class res_groups(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'name' in vals:
             if vals['name'].startswith('-'):
-                raise osv.except_osv(_('Error'),
-                        _('The name of the group can not start with "-"'))
+                raise UserError(_('The name of the group can not start with "-"'))
         res = super(res_groups, self).write(cr, uid, ids, vals, context=context)
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         self.pool['res.users'].has_group.clear_cache(self.pool['res.users'])
@@ -155,7 +155,7 @@ class res_users(osv.osv):
             # To change their own password users must use the client-specific change password wizard,
             # so that the new password is immediately used for further RPC requests, otherwise the user
             # will face unexpected 'Access Denied' exceptions.
-            raise osv.except_osv(_('Operation Canceled'), _('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
+            raise UserError(_('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
         self.write(cr, uid, id, {'password': value})
 
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
@@ -344,7 +344,7 @@ class res_users(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         if 1 in ids:
-            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
+            raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         db = cr.dbname
         if db in self._uid_cache:
             for id in ids:
@@ -509,7 +509,7 @@ class res_users(osv.osv):
         self.check(cr.dbname, uid, old_passwd)
         if new_passwd:
             return self.write(cr, uid, uid, {'password': new_passwd})
-        raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
+        raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
 
     def preference_save(self, cr, uid, ids, context=None):
         return {
@@ -540,6 +540,9 @@ class res_users(osv.osv):
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
+
+    def get_company_currency_id(self, cr, uid, context=None):
+        return self.browse(cr, uid, uid, context=context).company_id.currency_id.id
 
 #----------------------------------------------------------
 # Implied groups
@@ -729,6 +732,10 @@ class groups_view(osv.osv):
         # and introduces the reified group fields
         # we have to try-catch this, because at first init the view does not exist
         # but we are already creating some basic groups
+        if not context or context.get('install_mode'):
+            # use installation/admin language for translatable names in the view
+            context = dict(context or {})
+            context.update(self.pool['res.users'].context_get(cr, uid))
         view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=context)
         if view and view.exists() and view._name == 'ir.ui.view':
             xml1, xml2 = [], []
@@ -843,7 +850,7 @@ class users_view(osv.osv):
             for group_xml_id in context["default_groups_ref"]:
                 group_split = group_xml_id.split('.')
                 if len(group_split) != 2:
-                    raise osv.except_osv(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
+                    raise UserError(_('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
                 try:
                     temp, group_id = ir_model_data.get_object_reference(cr, uid, group_split[0], group_split[1])
                 except ValueError:
@@ -886,8 +893,8 @@ class users_view(osv.osv):
                 selected = [gid for gid in get_selection_groups(f) if gid in gids]
                 values[f] = selected and selected[-1] or False
 
-    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
-        res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access)
+    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, attributes=None):
+        res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access, attributes)
         # add reified groups fields
         for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, uid, context):
             if kind == 'selection':
@@ -979,6 +986,3 @@ class change_password_user(osv.TransientModel):
             line.user_id.write({'password': line.new_passwd})
         # don't keep temporary passwords in the database longer than necessary
         self.write(cr, uid, ids, {'new_passwd': False}, context=context)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

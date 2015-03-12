@@ -23,18 +23,13 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 import product
+from openerp.exceptions import UserError
 
 
 class stock_landed_cost(osv.osv):
     _name = 'stock.landed.cost'
     _description = 'Stock Landed Cost'
     _inherit = 'mail.thread'
-
-    _track = {
-        'state': {
-            'stock_landed_costs.mt_stock_landed_cost_open': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
-        },
-    }
 
     def _total_amount(self, cr, uid, ids, name, args, context=None):
         result = {}
@@ -71,7 +66,7 @@ class stock_landed_cost(osv.osv):
                 vals = dict(product_id=move.product_id.id, move_id=move.id, quantity=move.product_uom_qty, former_cost=total_cost * total_qty, weight=weight, volume=volume)
                 lines.append(vals)
         if not lines:
-            raise osv.except_osv(_('Error!'), _('The selected picking does not contain any move that would be impacted by landed costs. Landed costs are only possible for products configured in real time valuation with real price costing method. Please make sure it is the case, or you selected the correct picking'))
+            raise UserError(_('The selected picking does not contain any move that would be impacted by landed costs. Landed costs are only possible for products configured in real time valuation with real price costing method. Please make sure it is the case, or you selected the correct picking'))
         return lines
 
     _columns = {
@@ -109,7 +104,7 @@ class stock_landed_cost(osv.osv):
         credit_account_id = line.cost_line_id.account_id.id or cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
 
         if not credit_account_id:
-            raise osv.except_osv(_('Error!'), _('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
+            raise UserError(_('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
 
         return self._create_account_move_line(cr, uid, line, move_id, credit_account_id, debit_account_id, qty_out, already_out_account_id, context=context)
 
@@ -189,7 +184,7 @@ class stock_landed_cost(osv.osv):
 
         for cost in self.browse(cr, uid, ids, context=context):
             if not cost.valuation_adjustment_lines or not self._check_sum(cr, uid, cost, context=context):
-                raise osv.except_osv(_('Error!'), _('You cannot validate a landed cost which has no valid valuation lines.'))
+                raise UserError(_('You cannot validate a landed cost which has no valid valuation lines.'))
             move_id = self._create_account_move(cr, uid, cost, context=context)
             quant_dict = {}
             for line in cost.valuation_adjustment_lines:
@@ -272,6 +267,12 @@ class stock_landed_cost(osv.osv):
                 line_obj.write(cr, uid, key, {'additional_landed_cost': value}, context=context)
         return True
 
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'done':
+            return 'stock_landed_costs.mt_stock_landed_cost_open'
+        return super(stock_landed_cost, self)._track_subtype(cr, uid, ids, init_values, context=context)
+
 
 class stock_landed_cost_lines(osv.osv):
     _name = 'stock.landed.cost.lines'
@@ -341,5 +342,3 @@ class stock_valuation_adjustment_lines(osv.osv):
         'weight': 1.0,
         'volume': 1.0,
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

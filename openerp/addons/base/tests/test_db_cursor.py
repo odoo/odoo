@@ -28,5 +28,3 @@ class test_cr_execute(unittest2.TestCase):
                 cr.execute("SELECT id FROM res_users WHERE id=%s", 1)
             with self.assertRaises(ValueError):
                 cr.execute("SELECT id FROM res_users WHERE id=%s", '1')
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

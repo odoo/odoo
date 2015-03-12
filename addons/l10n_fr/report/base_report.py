@@ -116,5 +116,3 @@ class base_report(report_sxw.rml_parse):
                             sum -= value
                         break
         self._set_variable(code, sum)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

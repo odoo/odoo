@@ -45,4 +45,3 @@ class res_company(osv.osv):
         'check_layout' : lambda *a: 'top',
     }
     
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,12 +20,12 @@
 ##############################################################################
 
 import logging
-import unicodedata
 
 from openerp import tools
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -124,7 +124,12 @@ class ir_translation_import_cursor(object):
 
         find_expr = "irt.lang = ti.lang AND irt.type = ti.type " \
                     " AND irt.name = ti.name AND irt.src = ti.src " \
-                    " AND (ti.type != 'model' OR ti.res_id = irt.res_id) "
+                    " AND irt.module = ti.module " \
+                    " AND ( " \
+                    "      (ti.type NOT IN ('model', 'view')) " \
+                    "   OR (ti.type = 'model' AND ti.res_id = irt.res_id) " \
+                    "   OR (ti.type = 'view' AND irt.res_id IS NULL) " \
+                    "   OR (ti.type = 'view' AND irt.res_id IS NOT NULL AND ti.res_id = irt.res_id)) "
 
         # Step 2: update existing (matching) translations
         if self._overwrite:
@@ -234,25 +239,25 @@ class ir_translation(osv.osv):
     def _auto_init(self, cr, context=None):
         super(ir_translation, self)._auto_init(cr, context)
 
-        # FIXME: there is a size limit on btree indexed values so we can't index src column with normal btree.
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltns',))
-        if cr.fetchone():
-            #temporarily removed: cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
-            cr.execute('DROP INDEX ir_translation_ltns')
-            cr.commit()
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_lts',))
-        if cr.fetchone():
-            #temporarily removed: cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
-            cr.execute('DROP INDEX ir_translation_lts')
+        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname LIKE 'ir_translation_%'")
+        indexes = [row[0] for row in cr.fetchall()]
+
+        # Removed because there is a size limit on btree indexed values (problem with column src):
+        # cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
+        # cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
+        #
+        # Removed because hash indexes are not compatible with postgres streaming replication:
+        # cr.execute('CREATE INDEX ir_translation_src_hash_idx ON ir_translation USING hash (src)')
+        if set(indexes) & set(['ir_translation_ltns', 'ir_translation_lts', 'ir_translation_src_hash_idx']):
+            cr.execute('DROP INDEX IF EXISTS ir_translation_ltns, ir_translation_lts, ir_translation_src_hash_idx')
             cr.commit()
 
-        # add separate hash index on src (no size limit on values), as postgres 8.1+ is able to combine separate indexes
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_src_hash_idx',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_translation_src_hash_idx ON ir_translation using hash (src)')
+        # Add separate md5 index on src (no size limit on values, and good performance).
+        if 'ir_translation_src_md5' not in indexes:
+            cr.execute('CREATE INDEX ir_translation_src_md5 ON ir_translation (md5(src))')
+            cr.commit()
 
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltn',))
-        if not cr.fetchone():
+        if 'ir_translation_ltn' not in indexes:
             cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
 
@@ -299,14 +304,21 @@ class ir_translation(osv.osv):
 
     def _get_source_query(self, cr, uid, name, types, lang, source, res_id):
         if source:
+            # Note: the extra test on md5(src) is a hint for postgres to use the
+            # index ir_translation_src_md5
             query = """SELECT value
                        FROM ir_translation
                        WHERE lang=%s
                         AND type in %s
-                        AND src=%s"""
-            params = (lang or '', types, tools.ustr(source))
+                        AND src=%s AND md5(src)=md5(%s)"""
+            source = tools.ustr(source)
+            params = (lang or '', types, source, source)
             if res_id:
-                query += " AND res_id=%s"
+                if isinstance(res_id, (int, long)):
+                    res_id = (res_id,)
+                else:
+                    res_id = tuple(res_id)
+                query += " AND res_id in %s"
                 params += (res_id,)
             if name:
                 query += " AND name=%s"
@@ -333,7 +345,7 @@ class ir_translation(osv.osv):
         :param types: single string defining type of term to translate (see ``type`` field on ir.translation), or sequence of allowed types (strings)
         :param lang: language code of the desired translation
         :param source: optional source term to translate (should be unicode)
-        :param res_id: optional resource id to translate (if used, ``source`` should be set)
+        :param res_id: optional resource id or a list of ids to translate (if used, ``source`` should be set)
         :rtype: unicode
         :return: the request translation, or an empty unicode string if no translation was
                  found and `source` was not passed
@@ -352,8 +364,7 @@ class ir_translation(osv.osv):
         trad = res and res[0] or u''
         if source and not trad:
             return tools.ustr(source)
-        # Remove control characters
-        return filter(lambda c: unicodedata.category(c) != 'Cc', tools.ustr(trad))
+        return trad
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -395,7 +406,7 @@ class ir_translation(osv.osv):
         domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
         langs_ids = self.pool.get('res.lang').search(cr, uid, [('code', '!=', 'en_US')], context=context)
         if not langs_ids:
-            raise osv.except_osv(_('Error'), _("Translation features are unavailable until you install an extra OpenERP translation."))
+            raise UserError(_("Translation features are unavailable until you install an extra OpenERP translation."))
         langs = [lg.code for lg in self.pool.get('res.lang').browse(cr, uid, langs_ids, context=context)]
         main_lang = 'en_US'
         translatable_fields = []
@@ -403,9 +414,9 @@ class ir_translation(osv.osv):
             if getattr(f, 'translate', False):
                 if f.inherited:
                     parent_id = trans_model.read(cr, uid, [id], [f.related[0]], context=context)[0][f.related[0]][0]
-                    translatable_fields.append({'name': k, 'id': parent_id, 'model': f.base_field.model})
+                    translatable_fields.append({'name': k, 'id': parent_id, 'model': f.base_field.model_name})
                     domain.insert(0, '|')
-                    domain.extend(['&', ('res_id', '=', parent_id), ('name', '=', "%s,%s" % (f.base_field.model, k))])
+                    domain.extend(['&', ('res_id', '=', parent_id), ('name', '=', "%s,%s" % (f.base_field.model_name, k))])
                 else:
                     translatable_fields.append({'name': k, 'id': id, 'model': model })
         if len(langs):
@@ -483,6 +494,3 @@ class ir_translation(osv.osv):
                     _logger.info('module %s: loading extra translation file (%s) for language %s', module_name, lang_code, lang)
                     tools.trans_load(cr, trans_extra_file, lang, verbose=False, module_name=module_name, context=context)
         return True
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

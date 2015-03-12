@@ -2,10 +2,8 @@
 # test cases for new-style fields
 #
 from datetime import date, datetime
-from collections import defaultdict
 
 from openerp.tests import common
-from openerp.exceptions import except_orm
 
 
 class TestNewFields(common.TransactionCase):
@@ -34,7 +32,7 @@ class TestNewFields(common.TransactionCase):
         # field access fails on multiple records
         records = self.env['test_new_api.message'].search([])
         assert len(records) > 1
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValueError):
             faulty = records.body
 
     def test_01_basic_set_assertion(self):
@@ -47,7 +45,7 @@ class TestNewFields(common.TransactionCase):
         # field assignment fails on multiple records
         records = self.env['test_new_api.message'].search([])
         assert len(records) > 1
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValueError):
             records.body = 'Faulty'
 
     def test_10_computed(self):
@@ -294,7 +292,7 @@ class TestNewFields(common.TransactionCase):
         # by default related fields are not stored
         field = message._fields['discussion_name']
         self.assertFalse(field.store)
-        self.assertTrue(field.readonly)
+        self.assertFalse(field.readonly)
 
         # check value of related field
         self.assertEqual(message.discussion_name, discussion.name)
@@ -375,20 +373,3 @@ class TestMagicFields(common.TransactionCase):
         record = self.env['test_new_api.discussion'].create({'name': 'Booba'})
         self.assertEqual(record.create_uid, self.env.user)
         self.assertEqual(record.write_uid, self.env.user)
-
-
-class TestInherits(common.TransactionCase):
-
-    def test_inherits(self):
-        """ Check that a many2one field with delegate=True adds an entry in _inherits """
-        Talk = self.env['test_new_api.talk']
-        self.assertEqual(Talk._inherits, {'test_new_api.discussion': 'parent'})
-        self.assertIn('name', Talk._fields)
-        self.assertEqual(Talk._fields['name'].related, ('parent', 'name'))
-
-        talk = Talk.create({'name': 'Foo'})
-        discussion = talk.parent
-        self.assertTrue(discussion)
-        self.assertEqual(talk._name, 'test_new_api.talk')
-        self.assertEqual(discussion._name, 'test_new_api.discussion')
-        self.assertEqual(talk.name, discussion.name)

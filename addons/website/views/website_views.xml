@@ -3,6 +3,7 @@
     <data noupdate="1">
         <record id="default_website" model="website">
             <field name="name">localhost</field>
+            <field name="domain">localhost</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
             <field name="default_lang_id" ref="base.lang_en"/>
@@ -32,11 +33,11 @@
                     <div name="social_media">
                         <separator string="Social Media"/>
                         <group name="social_media">
-                            <field name="social_twitter" placeholder="https://twitter.com/odooapps"/>
-                            <field name="social_facebook" placeholder="https://facebook.com/odoo"/>
+                            <field name="social_twitter" placeholder="https://twitter.com/Odoo"/>
+                            <field name="social_facebook" placeholder="https://www.facebook.com/odoo"/>
                             <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps"/>
-                            <field name="social_linkedin" placeholder="http://www.linkedin.com/company/odoo"/>
-                            <field name="social_youtube" placeholder="https://www.youtube.com/channel/UCkQPikELWZFLgQNHd73jkdg"/>
+                            <field name="social_linkedin" placeholder="https://www.linkedin.com/company/odoo"/>
+                            <field name="social_youtube" placeholder="https://www.youtube.com/user/OpenERPonline"/>
                             <field name="social_github" placeholder="https://youraccount.github.io"/>
                         </group>
                     </div>
@@ -88,11 +89,12 @@
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
                 <tree string="Website menu" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="website_id" options="{'no_create': True}"/>
                     <field name="name"/>
                     <field name="url"/>
                     <field name="new_window"/>
                     <field name="parent_id"/>
-                    <field name="sequence"/>
                 </tree>
             </field>
         </record>

@@ -57,20 +57,9 @@ class website_event(website_event):
         order = request.website.sale_get_order(force_create=1)
 
         registrations = self._process_registration_details(post)
-        registration_ctx = dict(context, registration_force_draft=True)
         for registration in registrations:
             ticket = request.registry['event.event.ticket'].browse(cr, SUPERUSER_ID, int(registration['ticket_id']), context=context)
-            order.with_context(event_ticket_id=ticket.id)._cart_update(product_id=ticket.product_id.id, add_qty=1)
-
-            request.registry['event.registration'].create(cr, SUPERUSER_ID, {
-                'name': registration.get('name'),
-                'phone': registration.get('phone'),
-                'email': registration.get('email'),
-                'event_ticket_id': int(registration['ticket_id']),
-                'partner_id': order.partner_id.id,
-                'event_id': event.id,
-                'origin': order.name,
-            }, context=registration_ctx)
+            order.with_context(event_ticket_id=ticket.id)._cart_update(product_id=ticket.product_id.id, add_qty=1, registration_data=[registration])
 
         return request.redirect("/shop/checkout")
 

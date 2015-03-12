@@ -92,7 +92,7 @@
         $('.comment_delete').on('click', function (ev) {
             ev.preventDefault();
             var $link = $(ev.currentTarget);
-            openerp.jsonRpc($link.data('href'), 'call', {}).then(function (data) {
+            openerp.jsonRpc($link.parent('form').attr('action'), 'call', {}).then(function (data) {
                 $link.parents('.comment').first().remove();
             });
         });
@@ -129,20 +129,25 @@
 
         $('.link_url').on('change', function (ev) {
             ev.preventDefault();
-            var $link = $(ev.currentTarget);
-            if ($link.attr("value").search("^http(s?)://.*")) {
+            var display_error = function(){
                 var $warning = $('<div class="alert alert-danger alert-dismissable" style="position:absolute; margin-top: -180px; margin-left: 90px;">'+
                     '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                    'Please enter valid URl.'+
+                    'Please enter valid URL. Example: http://www.odoo.com'+
                     '</div>');
                 $link.parent().append($warning);
-                $link.parent().find("button#btn_post_your_article")[0].disabled = true;
-                $link.parent().find("input[name='content']")[0].value = '';
+                $("button#btn_post_your_article")[0].disabled = true;
+            };
+            var $link = $(ev.currentTarget);
+            if ($link.val().search("^http(s?)://.*")) {
+                display_error();
             } else {
-                openerp.jsonRpc("/forum/get_url_title", 'call', {'url': $link.attr("value")}).then(function (data) {
-                    $link.parent().find("input[name='content']")[0].value = data;
-                    $('button').prop('disabled', false);
-                    $('input').prop('readonly', false);
+                openerp.jsonRpc("/forum/get_url_title", 'call', {'url': $link.val()}).then(function (data) {
+                    if(data){
+                        $("input[name='post_name']")[0].value = data;
+                        $('button#btn_post_your_article').prop('disabled', false);
+                    }else{
+                        display_error();
+                    }
                 });
             }
         });
@@ -164,7 +169,6 @@
                             isNew: true,
                         };
                     }
-                    
                 }
             },
             formatResult: function(term) {
@@ -193,11 +197,10 @@
                     return { results: ret };
                 }
             },
-
             // Take default tags from the input value
             initSelection: function (element, callback) {
                 var data = [];
-                _.each(JSON.parse(element.val()), function(x) {
+                _.each(element.data('init-value'), function(x) {
                     data.push({ id: x.id, text: x.name, isNew: false });
                 });
                 element.val('');
@@ -205,29 +208,29 @@
             },
         });
 
-        if ($('textarea.load_editor').length) {
-            $('textarea.load_editor').each(function () {
-                if (this['id']) {
-                    CKEDITOR.replace(this['id']).on('instanceReady', CKEDITORLoadComplete);
-                }
-            });
-        }
-
-        function IsKarmaValid(eventNumber,minKarma){
-            "use strict";
-            if(parseInt($("#karma").val()) >= minKarma){
-                CKEDITOR.tools.callFunction(eventNumber,this);
-                return false;
-            } else {
-                alert("Sorry you need more than " + minKarma + " Karma.");
+        $('textarea.load_editor').each(function () {
+            var $textarea = $(this);
+            var editor_karma = $textarea.data('karma') || 30;  // default value for backward compatibility
+            if (!$textarea.val().match(/\S/)) {
+                $textarea.val("<p><br/></p>");
             }
-        }
-
-        function CKEDITORLoadComplete(){
-            "use strict";
-            $('.cke_button__link').on('click', function() { IsKarmaValid(33,30); });
-            $('.cke_button__unlink').on('click', function() { IsKarmaValid(37,30); });
-            $('.cke_button__image').on('click', function() { IsKarmaValid(41,30); });
-        }
+            var $form = $textarea.closest('form');
+            var toolbar = [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']]
+                ];
+            if (parseInt($("#karma").val()) >= editor_karma) {
+                toolbar.push(['insert', ['link', 'picture']]);
+            }
+            $textarea.summernote({
+                    height: 150,
+                    toolbar: toolbar
+                });
+            $form.on('click', 'button, .a-submit', function () {
+                $textarea.html($form.find('.note-editable').code());
+            });
+        });
     });
 

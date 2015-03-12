@@ -61,7 +61,7 @@
                       "widget": "monetary",
                       "from_currency": "website.currency_id",
                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                   }'/><br/>
+                   }'/>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-field="product.price"
                     t-field-options='{
@@ -72,17 +72,13 @@
                 </td>
                 <td>
                   <div class="input-group oe_website_spinner">
-                      <span class="input-group-addon">
-                          <a t-attf-href="#" class="mb8 js_add_cart_json">
-                              <i class="fa fa-minus"></i>
-                          </a>
-                      </span>
+                      <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
+                          <i class="fa fa-minus"></i>
+                      </a>
                       <input type="text" class="js_quantity form-control" data-min="1" name="add_qty" value="1"/>
-                      <span class="input-group-addon">
-                          <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
-                              <i class="fa fa-plus"></i>
-                          </a>
-                      </span>
+                      <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
+                          <i class="fa fa-plus"></i>
+                      </a>
                   </div>
                 </td>
               </tr>
@@ -138,8 +134,8 @@
           </table>
         </div>
         <div class="modal-footer">
-          <a class="btn btn-default a-submit js_goto_shop"><i class="fa fa-chevron-left"></i> Continue shopping</a>
-          <a class="btn btn-primary pull-right a-submit"><i class="fa fa-shopping-cart fa-fw"></i> Proceed to checkout</a>
+          <a class="btn btn-default a-submit js_goto_shop"><i class="fa fa-chevron-left"></i> <span class="hidden-xs">Continue Shopping</span><span class="visible-xs-inline">Continue</span></a>
+          <a class="btn btn-primary pull-right a-submit"><i class="fa fa-shopping-cart fa-fw"></i> <span class="hidden-xs">Proceed to checkout</span><span class="visible-xs-inline">Checkout</span></a>
         </div>
       </div>
     </div>

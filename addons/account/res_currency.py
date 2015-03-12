@@ -42,4 +42,3 @@ class res_currency_account(osv.osv):
             elif tot1 and account_invert:
                 rate = float(tot2)/float(tot1)
         return rate
-

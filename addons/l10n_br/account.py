@@ -200,5 +200,3 @@ class account_tax(osv.osv):
             result['value']['domain'] = obj_tax_code.domain
 
         return result
-
-

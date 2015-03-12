@@ -95,6 +95,3 @@ class sale(osv.osv):
             if itype:
                 result['value']['invoice_type_id'] = itype.id
         return result
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

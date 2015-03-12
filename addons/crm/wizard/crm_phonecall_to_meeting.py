@@ -58,6 +58,3 @@ class crm_phonecall2meeting(osv.osv_memory):
                 'default_name': phonecall.name,
             }
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

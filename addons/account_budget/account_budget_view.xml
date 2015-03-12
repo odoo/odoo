@@ -25,7 +25,7 @@
                 <tree string="Budgetary Position">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -43,46 +43,18 @@
 
 
         <record model="ir.ui.view" id="view_budget_post_form">
-            <field name="name">account.budget.post.form.inherit</field>
+            <field name="name">account.budget.post.form</field>
             <field name="model">account.budget.post</field>
             <field name="arch" type="xml">
                 <form string="Budgetary Position">
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
-                        <field name="company_id"  groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id"  groups="base.group_multi_company" options="{'no_create': True}"/>
                     </group>
                     <notebook>
                         <page string="Accounts">
                             <field name="account_ids"/>
-                        </page>
-                        <page string="Budget Lines">
-                            <field name="crossovered_budget_line" widget="one2many_list" mode="tree">
-                                <tree string="Budget Lines"  editable="top">
-                                    <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="date_from"/>
-                                    <field name="date_to"/>
-                                    <field name="paid_date"/>
-                                    <field name="planned_amount" sum="Planned Amount"/>
-                                    <field name="practical_amount" sum="Practical Amount" />
-                                    <field name="theoritical_amount" sum="Theoretical Amount"/>
-                                    <field name="percentage"/>
-                                </tree>
-                                <form string="Budget Lines">
-                                    <group col="4">
-                                        <field name="crossovered_budget_id"/>
-                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                        <field name="date_from"/>
-                                        <field name="date_to"/>
-                                        <field name="paid_date"/>
-                                        <field name="planned_amount"/>
-                                        <field name="practical_amount"/>
-                                        <field name="theoritical_amount"/>
-                                        <field name="percentage"/>
-                                    </group>
-                                </form>
-                            </field>
                         </page>
                     </notebook>
                 </form>
@@ -121,7 +93,7 @@
                                     <field name="date_from" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> - 
                                     <field name="date_to" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}" nolabel="1"/>
                                 </div>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>
                         </group>
                         <notebook>
@@ -152,7 +124,7 @@
                                                     <field name="date_to" class="oe_inline"/>
                                                 </div>
                                                 <field name="paid_date"/>
-                                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                             </group>
                                         </group>
                                     </form>
@@ -173,7 +145,7 @@
                     <field name="code" colspan="1"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     <field name="creating_user_id"/>
                     <field name="state"/>
                 </tree>
@@ -268,7 +240,7 @@
                             <field name="practical_amount"/>
                             <field name="theoritical_amount"/>
                             <field name="percentage"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </sheet>
                 </form>

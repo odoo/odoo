@@ -9,6 +9,7 @@ import test_ir_actions
 import test_ir_attachment
 import test_ir_filters
 import test_ir_sequence
+import test_ir_sequence_date_range
 import test_ir_values
 import test_mail
 import test_menu

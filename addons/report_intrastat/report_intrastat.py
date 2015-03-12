@@ -39,6 +39,7 @@ class res_country(osv.osv):
 class report_intrastat_code(osv.osv):
     _name = "report.intrastat.code"
     _description = "Intrastat code"
+    _translate = False
     _columns = {
         'name': fields.char('Intrastat Code'),
         'description': fields.char('Description'),
@@ -118,6 +119,3 @@ class report_intrastat(osv.osv):
                     and inv_country.intrastat=true
                 group by to_char(inv.create_date, 'YYYY'), to_char(inv.create_date, 'MM'),intrastat.id,inv.type,pt.intrastat_id, inv_country.code,inv.number,  inv.currency_id
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

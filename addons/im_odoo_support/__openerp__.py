@@ -17,11 +17,11 @@ Ask your functionnal question directly to the Odoo Operators with the livechat s
     'data': [
         "views/im_odoo_support.xml"
     ],
-    'depends' : ["web", "im_chat"],
+    'depends' : ["web"],
     'qweb': [
         'static/src/xml/im_odoo_support.xml'
     ],
     'installable': True,
     'auto_install': True,
-    'application': True,
+    'application': False,
 }

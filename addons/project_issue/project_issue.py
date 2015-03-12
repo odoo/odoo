@@ -31,6 +31,7 @@ from openerp.osv import fields, osv, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
+from openerp.exceptions import UserError, AccessError
 
 
 class project_issue_version(osv.Model):
@@ -49,22 +50,7 @@ class project_issue(osv.Model):
     _description = "Project Issue"
     _order = "priority desc, create_date desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-
     _mail_post_access = 'read'
-    _track = {
-        'stage_id': {
-            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
-            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
-            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence > 1,
-        },
-        'user_id': {
-            'project_issue.mt_issue_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
-        },
-        'kanban_state': {
-            'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
-            'project_issue.mt_issue_ready': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
-        },
-    }
 
     def _get_default_partner(self, cr, uid, context=None):
         project_id = self._get_default_project_id(cr, uid, context)
@@ -196,7 +182,8 @@ class project_issue(osv.Model):
     def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
-            if issue.project_id.parent_id.type == 'contract':
+            esc_proj = issue.project_id.project_escalation_id
+            if esc_proj and esc_proj.analytic_account_id.type == 'contract':
                 res[issue.id] = True
         return res
 
@@ -260,7 +247,8 @@ class project_issue(osv.Model):
                         domain="[('project_ids', '=', project_id)]", copy=False),
         'project_id': fields.many2one('project.project', 'Project', track_visibility='onchange', select=True),
         'duration': fields.float('Duration'),
-        'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
+        'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]",
+            help="You can link this issue to an existing task or directly create a new one from here"),
         'day_open': fields.function(_compute_day, string='Days to Assign',
                                     multi='compute_day', type="float",
                                     store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
@@ -406,7 +394,7 @@ class project_issue(osv.Model):
             data = {}
             esc_proj = issue.project_id.project_escalation_id
             if not esc_proj:
-                raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
+                raise UserError(_('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
 
             data['project_id'] = esc_proj.id
             if esc_proj.user_id:
@@ -420,6 +408,20 @@ class project_issue(osv.Model):
     # -------------------------------------------------------
     # Mail gateway
     # -------------------------------------------------------
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'kanban_state' in init_values and record.kanban_state == 'blocked':
+            return 'project_issue.mt_issue_blocked'
+        elif 'kanban_state' in init_values and record.kanban_state == 'done':
+            return 'project_issue.mt_issue_ready'
+        elif 'user_id' in init_values and record.user_id:  # assigned -> new
+            return 'project_issue.mt_issue_new'
+        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:  # start stage -> new
+            return 'project_issue.mt_issue_new'
+        elif 'stage_id' in init_values:
+            return 'project_issue.mt_issue_stage'
+        return super(project_issue, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
@@ -436,7 +438,7 @@ class project_issue(osv.Model):
                     self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
                 elif issue.email_from:
                     self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
-        except (osv.except_osv, orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
+        except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
 
@@ -484,25 +486,14 @@ class project(osv.Model):
             project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
             for project_id in ids
         }
-    def _get_project_issue_data(self, cr, uid, ids, field_name, arg, context=None):
-        obj = self.pool['project.issue']
-        month_begin = date.today().replace(day=1)
-        date_begin = (month_begin - relativedelta.relativedelta(months=self._period_number - 1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        res = {}
-        for id in ids:
-            created_domain = [('project_id', '=', id), ('date_closed', '>=', date_begin ), ('date_closed', '<=', date_end )]
-            res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, [ 'date_closed'], 'date_closed_count', 'date_closed', context=context))
-        return res
+
     _columns = {
         'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
-                                     domain=[('date_closed', '!=', False)]),
-        'monthly_issues': fields.function(_get_project_issue_data, type='char', readonly=True,
-                                             string='Project Issue By Month')
+                                    domain=[('stage_id.fold', '=', False)]),
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
@@ -522,7 +513,7 @@ class account_analytic_account(osv.Model):
     _description = 'Analytic Account'
 
     _columns = {
-        'use_issues': fields.boolean('Issues', help="Check this field if this project manages issues"),
+        'use_issues': fields.boolean('Issues', help="Check this box to manage customer activities through this project"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
@@ -542,7 +533,7 @@ class account_analytic_account(osv.Model):
         proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
         has_issues = self.pool['project.issue'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
         if has_issues:
-            raise osv.except_osv(_('Warning!'), _('Please remove existing issues in the project linked to the accounts you want to delete.'))
+            raise UserError(_('Please remove existing issues in the project linked to the accounts you want to delete.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
 
@@ -589,10 +580,9 @@ class res_partner(osv.osv):
             partner_id: Issue.search_count(cr,uid, [('partner_id', '=', partner_id)])
             for partner_id in ids
         }
-    
+
     """ Inherits partner and adds Issue information in the partner form """
     _inherit = 'res.partner'
     _columns = {
         'issue_count': fields.function(_issue_count, string='# Issues', type='integer'),
     }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

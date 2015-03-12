@@ -15,7 +15,7 @@ $(document).ready(function () {
                 }).then(function (modal) {
                     var $modal = $(modal);
 
-                    $modal.find('img:first').attr("src", "/website/image/product.product/" + product_id + "/image");
+                    $modal.find('img:first').attr("src", "/website/image/product.product/" + product_id + "/image_medium");
 
                     $modal.appendTo($form)
                         .modal()

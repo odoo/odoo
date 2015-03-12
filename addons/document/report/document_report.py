@@ -86,6 +86,3 @@ class report_document_file(osv.osv):
                 group by EXTRACT(MONTH FROM f.create_date)
              )
         """)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

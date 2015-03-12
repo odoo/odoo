@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-10-03 08:57+0000\n"
+"PO-Revision-Date: 2014-10-13 11:08+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-04 06:49+0000\n"
+"X-Launchpad-Export-Date: 2014-10-15 20:29+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #. module: payment
@@ -30,7 +30,7 @@ msgstr "-payment_buckaroo Modülünü kurar.."
 #. module: payment
 #: help:account.config.settings,module_payment_ogone:0
 msgid "-It installs the module payment_ogone."
-msgstr ""
+msgstr "payment_ogone Modülünü kurar."
 
 #. module: payment
 #: help:account.config.settings,module_payment_paypal:0
@@ -158,6 +158,7 @@ msgstr "Ücret tutarı; sistem tarafından hesaplanır çünkü alıcıya bağl�
 #: help:payment.transaction,state_message:0
 msgid "Field used to store error and/or validation messages for information"
 msgstr ""
+"Bu alan, bilgi için hata ve/veya doğrulama mesajlarını tutmak için kullanılır"
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
@@ -182,7 +183,7 @@ msgstr "Form"
 #. module: payment
 #: field:payment.acquirer,view_template_id:0
 msgid "Form Button Template"
-msgstr ""
+msgstr "Düğme Form Şablonu"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_search
@@ -239,7 +240,7 @@ msgstr "Son Güncelleme"
 #. module: payment
 #: help:payment.acquirer,website_published:0
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Bu ödeme alıcısını uygun yap (Müşteri faturaları, vb.)"
 
 #. module: payment
 #: field:account.config.settings,module_payment_adyen:0
@@ -259,7 +260,7 @@ msgstr "Odoo Adyen kullanarak Ödemeleri yönet"
 #. module: payment
 #: field:account.config.settings,module_payment_paypal:0
 msgid "Manage Payments Using Paypal"
-msgstr ""
+msgstr "Ödemeleri Paypal kullanarak yönet"
 
 #. module: payment
 #: selection:payment.acquirer,validation:0
@@ -315,7 +316,7 @@ msgstr "İş Ortağı Adı"
 #. module: payment
 #: field:payment.transaction,partner_reference:0
 msgid "Partner Reference"
-msgstr ""
+msgstr "İş Ortağı Referansı"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:273
@@ -347,7 +348,7 @@ msgstr "Ödeme İşlemi"
 #: view:payment.transaction:payment.transaction_form
 #: view:payment.transaction:payment.transaction_list
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Ödeme İşlemleri"
 
 #. module: payment
 #: model:ir.ui.menu,name:payment.root_payment_menu
@@ -383,17 +384,17 @@ msgstr "Sağlayıcı"
 #. module: payment
 #: help:payment.transaction,acquirer_reference:0
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Alıcı veritabanında tutulan TX referansı"
 
 #. module: payment
 #: help:payment.transaction,partner_reference:0
 msgid "Reference of the customer in the acquirer database"
-msgstr ""
+msgstr "Alıcı veritabanında tutulan müşteri referansı"
 
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "zorunlu alanlar doldurulmamış"
 
 #. module: payment
 #: view:payment.transaction:payment.transaction_form
@@ -403,13 +404,15 @@ msgstr "Grupa bir mesaj gönder"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "Sunucudan Sunucuya"
 
 #. module: payment
 #: help:payment.acquirer,validation:0
 msgid ""
 "Static payments are payments like transfer, that require manual steps."
 msgstr ""
+"Statik ödemeler, transferler gibi el ile yapılan işlemler gerektiren "
+"ödemelerdir."
 
 #. module: payment
 #: field:payment.transaction,state:0
@@ -443,6 +446,9 @@ msgid ""
 "                                    It is be rendered with qWeb with the "
 "following evaluation context:"
 msgstr ""
+"Bu şablon gerekli tüm değerleri ile alıcı tuşunu verir.\n"
+"                                    Bu aşağıdaki değerlendirme bağlamlı qWeb "
+"ile anlatılır:"
 
 #. module: payment
 #: field:payment.transaction,type:0
@@ -492,27 +498,27 @@ msgstr "PKodu"
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "alıcı: payment.acquire kayıt izler"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "tutar: işlem tutarı, bir değişken"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "bağlam: geçerli içerik sözlüğü"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
+msgstr "para birimi: kayıtlardaki işlem para birimi"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr ""
+msgstr "iş ortağı: kayıtlardaki alıcı iş ortağı, genelde ayarlanmaz"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
@@ -520,23 +526,25 @@ msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
 msgstr ""
+"iş ortağı_değerleri: alıcı hakkında belirli bilgi, örn. sevkiyat formundan "
+"gelen"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "referans: işlem referans numarası"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url: formun gönderileceği işlemin URL adı"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_değerleri: işlem değerleri"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr ""
+msgstr "kullanıcı: kayıtları inceleyen kullanıcı"

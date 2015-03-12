@@ -23,7 +23,6 @@
     'name' : 'Double Validation on Purchases',
     'version' : '1.1',
     'category': 'Purchase Management',
-    'images' : ['images/purchase_validation.jpeg'],
     'depends' : ['base','purchase'],
     'author' : 'OpenERP SA',
     'description': """
@@ -47,5 +46,3 @@ exceeds minimum amount set by configuration wizard.
     'installable': True,
     'auto_install': False
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -72,6 +72,3 @@ class account_tax_chart(osv.osv_memory):
         'period_id': _get_period,
         'target_move': 'posted'
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

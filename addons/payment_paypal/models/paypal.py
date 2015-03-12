@@ -15,6 +15,7 @@ from openerp.addons.payment_paypal.controllers.main import PaypalController
 from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_compare
 from openerp import SUPERUSER_ID
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -185,8 +186,8 @@ class TxPaypal(osv.Model):
     def _paypal_form_get_tx_from_data(self, cr, uid, data, context=None):
         reference, txn_id = data.get('item_number'), data.get('txn_id')
         if not reference or not txn_id:
-            error_msg = 'Paypal: received data with missing reference (%s) or txn_id (%s)' % (reference, txn_id)
-            _logger.error(error_msg)
+            error_msg = _('Paypal: received data with missing reference (%s) or txn_id (%s)') % (reference, txn_id)
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
 
         # find tx -> @TDENOTE use txn_id ?
@@ -197,7 +198,7 @@ class TxPaypal(osv.Model):
                 error_msg += '; no order found'
             else:
                 error_msg += '; multiple order found'
-            _logger.error(error_msg)
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
         return self.browse(cr, uid, tx_ids[0], context=context)
 

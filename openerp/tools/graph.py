@@ -770,7 +770,3 @@ if __name__=='__main__':
     for t in transitions:
         draw.line( (int(node_res[t[0]]['y']), int(node_res[t[0]]['x']),int(node_res[t[1]]['y']),int(node_res[t[1]]['x'])),(128,128,128) )
     img.save("graph.png", "PNG")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

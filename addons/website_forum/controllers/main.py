@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
+import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 import simplejson
 import lxml
-from urllib2 import urlopen
+from urllib2 import urlopen, URLError
 
 from openerp import tools
 from openerp.addons.web import http
@@ -179,11 +181,19 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
     def get_url_title(self, **kwargs):
-        arch = lxml.html.parse(urlopen(kwargs.get('url')))
-        return arch.find(".//title").text
+        try:
+            arch = lxml.html.parse(urlopen(kwargs.get('url')))
+            return arch.find(".//title").text
+        except URLError:
+            return False
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
+
+        # Hide posts from abusers (negative karma), except for moderators
+        if not question.can_view:
+            raise werkzeug.exceptions.NotFound()
+
         # increment view counter
         question.sudo().set_viewed()
         if question.parent_id:
@@ -194,6 +204,7 @@ class WebsiteForum(http.Controller):
         values.update({
             'main_object': question,
             'question': question,
+            'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - datetime.strptime(question.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9),
             'header': {'question_data': True},
             'filters': filters,
             'reversed': reversed,
@@ -261,7 +272,7 @@ class WebsiteForum(http.Controller):
         if not request.session.uid:
             return login_redirect()
         user = request.env.user
-        if not post_type in ['question', 'link', 'discussion']:  # fixme: make dynamic
+        if post_type not in ['question', 'link', 'discussion']:  # fixme: make dynamic
             return werkzeug.utils.redirect('/forum/%s' % slug(forum))
         if not user.email or not tools.single_email_re.match(user.email):
             return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid))
@@ -272,10 +283,8 @@ class WebsiteForum(http.Controller):
                  '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
                 type='http', auth="public", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, post_type=None, **post):
-        cr, uid, context = request.cr, request.uid, request.context
         if not request.session.uid:
             return login_redirect()
-
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
@@ -295,7 +304,7 @@ class WebsiteForum(http.Controller):
         question = post.parent_id if post.parent_id else post
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
-            post.with_context(mail_create_nosubcribe=True).message_post(
+            post.with_context(mail_create_nosubscribe=True).message_post(
                 body=kwargs.get('comment'),
                 type='comment',
                 subtype='mt_comment')
@@ -346,6 +355,9 @@ class WebsiteForum(http.Controller):
         question = post.parent_id if post.parent_id else post
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
+    #  JSON utilities
+    # --------------------------------------------------
+
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='json', auth="public", website=True)
     def post_upvote(self, forum, post, **kwargs):
         if not request.session.uid:
@@ -364,6 +376,13 @@ class WebsiteForum(http.Controller):
         upvote = True if post.user_vote < 0 else False
         return post.vote(upvote=upvote)
 
+    @http.route('/forum/post/bump', type='json', auth="public", website=True)
+    def post_bump(self, post_id, **kwarg):
+        post = request.env['forum.post'].browse(int(post_id))
+        if not post.exists() or post.parent_id:
+            return False
+        return post.bump()
+
     # User
     # --------------------------------------------------
 
@@ -373,7 +392,7 @@ class WebsiteForum(http.Controller):
     def users(self, forum, page=1, **searches):
         User = request.env['res.users']
         step = 30
-        tag_count = len(User.search([('karma', '>', 1), ('website_published', '=', True)]))
+        tag_count = User.search_count([('karma', '>', 1), ('website_published', '=', True)])
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
         user_obj = User.sudo().search([('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC')
         # put the users in block of 3 to display them as a table
@@ -420,28 +439,39 @@ class WebsiteForum(http.Controller):
         Data = request.env["ir.model.data"]
 
         user = User.sudo().search([('id', '=', user_id)])
-        if not user or user.karma < 1:
+        current_user = request.env.user.sudo()
+
+        # Users with high karma can see users with karma <= 0 for
+        # moderation purposes, IFF they have posted something (see below)
+        if (not user or (user.karma < 1 and current_user.karma < forum.karma_unlink_all)):
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         values = self._prepare_forum_values(forum=forum, **post)
-        if user_id != request.session.uid and not user.website_published:
-            return request.website.render("website_forum.private_profile", values)
+
         # questions and answers by user
-        user_questions, user_answers = [], []
         user_question_ids = Post.search([
             ('parent_id', '=', False),
             ('forum_id', '=', forum.id), ('create_uid', '=', user.id)],
             order='create_date desc')
         count_user_questions = len(user_question_ids)
-        # displaying only the 20 most recent questions
-        user_questions = user_question_ids[:20]
 
+        if (user_id != request.session.uid and not
+                (user.website_published or
+                    (count_user_questions and current_user.karma > forum.karma_unlink_all))):
+            return request.website.render("website_forum.private_profile", values)
+
+        # limit length of visible posts by default for performance reasons, except for the high
+        # karma users (not many of them, and they need it to properly moderate the forum)
+        post_display_limit = None
+        if current_user.karma < forum.karma_unlink_all:
+            post_display_limit = 20
+
+        user_questions = user_question_ids[:post_display_limit]
         user_answer_ids = Post.search([
             ('parent_id', '!=', False),
             ('forum_id', '=', forum.id), ('create_uid', '=', user.id)],
             order='create_date desc')
         count_user_answers = len(user_answer_ids)
-        # displaying only the 20  most recent answers
-        user_answers = user_answer_ids[:20]
+        user_answers = user_answer_ids[:post_display_limit]
 
         # showing questions which user following
         post_ids = [follower.res_id for follower in Followers.sudo().search([('res_model', '=', 'forum.post'), ('partner_id', '=', user.partner_id.id)])]

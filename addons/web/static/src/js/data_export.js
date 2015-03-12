@@ -413,6 +413,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
         exported_fields.unshift({name: 'id', label: 'External ID'});
 
         var export_format = this.$el.find("#export_format").val();
+        var c = instance.webclient.crashmanager;
 
         instance.web.blockUI();
         this.session.get_file({
@@ -426,6 +427,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 import_compat: !!this.$el.find("#import_compat").val(),
             })},
             complete: instance.web.unblockUI,
+            error: c.rpc_error.bind(c),
         });
     },
     close: function() {

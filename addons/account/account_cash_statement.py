@@ -26,6 +26,7 @@ from openerp.osv import fields, osv
 from openerp.tools import float_compare
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError, AccessError
 
 class account_cashbox_line(osv.osv):
 
@@ -268,10 +269,10 @@ class account_cash_statement(osv.osv):
         for statement in statement_pool.browse(cr, uid, ids, context=context):
             vals = {}
             if not self._user_allow(cr, uid, statement.id, context=context):
-                raise osv.except_osv(_('Error!'), (_('You do not have rights to open this %s journal!') % (statement.journal_id.name, )))
+                raise AccessError((_('You do not have rights to open this %s journal!') % (statement.journal_id.name, )))
 
             if statement.name and statement.name == '/':
-                c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
+                c = {'ir_sequence_date': statement.period_id.date_start}
                 if statement.journal_id.sequence_id:
                     st_number = obj_seq.next_by_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
                 else:
@@ -312,12 +313,12 @@ class account_cash_statement(osv.osv):
                 account = obj.journal_id.loss_account_id
                 name = _('Loss')
                 if not obj.journal_id.loss_account_id:
-                    raise osv.except_osv(_('Error!'), _('There is no Loss Account on the journal %s.') % (obj.journal_id.name,))
+                    raise UserError(_('There is no Loss Account on the journal %s.') % (obj.journal_id.name,))
             else: # obj.difference > 0.0
                 account = obj.journal_id.profit_account_id
                 name = _('Profit')
                 if not obj.journal_id.profit_account_id:
-                    raise osv.except_osv(_('Error!'), _('There is no Profit Account on the journal %s.') % (obj.journal_id.name,))
+                    raise UserError(_('There is no Profit Account on the journal %s.') % (obj.journal_id.name,))
 
             values = {
                 'statement_id' : obj.id,
@@ -359,6 +360,3 @@ class account_journal_cashbox_line(osv.osv):
     }
 
     _order = 'pieces asc'
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

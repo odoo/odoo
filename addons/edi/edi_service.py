@@ -59,5 +59,3 @@ def dispatch(method, params):
     return fn(*params)
 
 openerp.service.wsgi_server.register_rpc_endpoint('edi', dispatch)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -78,6 +78,3 @@ class account_sequence_installer(osv.osv_memory):
         ir_values_obj = self.pool.get('ir.values')
         ir_values_obj.set(cr, uid, key='default', key2=False, name='internal_sequence_id', models =[('account.journal', False)], value=ir_seq)
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

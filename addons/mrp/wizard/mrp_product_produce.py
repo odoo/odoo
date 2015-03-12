@@ -29,7 +29,7 @@ class mrp_product_produce_line(osv.osv_memory):
 
     _columns = {
         'product_id': fields.many2one('product.product', string='Product'),
-        'product_qty': fields.float('Quantity (in default UoM)'),
+        'product_qty': fields.float('Quantity (in default UoM)', digits_compute=dp.get_precision('Product Unit of Measure')),
         'lot_id': fields.many2one('stock.production.lot', string='Lot'),
         'produce_id': fields.many2one('mrp.product.produce', string="Produce"),
         'track_production': fields.related('product_id', 'track_production', type='boolean', string="Track Production"),
@@ -122,6 +122,3 @@ class mrp_product_produce(osv.osv_memory):
         self.pool.get('mrp.production').action_produce(cr, uid, production_id,
                             data.product_qty, data.mode, data, context=context)
         return {}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

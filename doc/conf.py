@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'odoo'
-copyright = u'OpenERP S.A.'
+copyright = u'Odoo S.A.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -234,4 +234,3 @@ def _build_url(root, branch, pagename):
         canonical_page=(pagename + '.html').replace('index.html', '')
                                            .replace('index/', ''),
     )
-

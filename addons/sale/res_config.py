@@ -51,6 +51,9 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'group_discount_per_so_line': fields.boolean("Allow setting a discount on the sales order lines",
             implied_group='sale.group_discount_per_so_line',
             help="Allows you to apply some discount per sales order line."),
+        'group_display_incoterm':fields.boolean("Display incoterms on the printed sale orders and invoices reports",
+            implied_group='sale.group_display_incoterm',
+            help="The printed reports will display the incoterms for the sale orders and the related invoices"),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
             help='Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n'
                  'Example: Product: this product is deprecated, do not purchase more than 5.\n'
@@ -59,6 +62,9 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             help='This adds the \'Margin\' on sales order.\n'
                  'This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n'
                  '-This installs the module sale_margin.'),
+        'module_sale_layout': fields.boolean("Allow to categorize sale order lines",
+            help='Allows to create categories to structure lines in pdf reports.\n'
+                 '-This installs the module sale_layout.'),
         'module_website_quote': fields.boolean("Allow online quotations and templates",
             help='This adds the online quotation'),
         'module_sale_journal': fields.boolean("Allow batch invoicing of delivery orders through journals",
@@ -109,5 +115,3 @@ class account_config_settings(osv.osv_memory):
         if not module_sale_analytic_plans:
             return {}
         return {'value': {'group_analytic_account_for_sales': module_sale_analytic_plans}}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

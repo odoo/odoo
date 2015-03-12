@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-27 17:21+0000\n"
+"Last-Translator: Daniel Santos - ThinkOpen <dcs@thinkopensolutions.pt>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:09+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-10-28 07:55+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:84
@@ -66,7 +66,7 @@ msgstr "(data)s: Data atual"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
 msgid "(employee_name)s: Partner name"
-msgstr ""
+msgstr "(employee_name)s : Nome do Parceiro"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
@@ -101,6 +101,26 @@ msgid ""
 "<li>Significantly below standards and expectations</li>\n"
 "</ol>"
 msgstr ""
+"<h2>Na data da avaliação do supervisor</h2>\n"
+"<p>Seus colaboradores diretos serão convidados através do Odoo para "
+"expressar um feedback sobre a liderança do seu supervisor e para dar a sua "
+"opinião sobre o seu próprio envolvimento e eficácia, a melhoria contínua e a "
+"abertura das ações na empresa ...</p>\n"
+"<p>Os funcionários vão enviar de volta as suas respostas anônimas através do "
+"Odoo. Os dados serão tratados pelo gestor de RH e um breve resumo das "
+"respostas será enviada para o supervisor, a sua equipa e ao supervisor do "
+"supervisor.</p>\n"
+"<p>O avaliador deve avaliar as principais tarefas de trabalho do colaborador "
+"e do seu desempenho, de acordo com a métrica abaixo.\n"
+"</p><ol>\n"
+"<li>Supera significativamente os padrões e expectativas exigidas para a "
+"posição</li>\n"
+"<li>Excede os padrões e expectativas</li>\n"
+"<li>Está alinhado com os padrões e expectativas</li>\n"
+"<li>Não alcança os padrões e expectativas</li>\n"
+"<li>Significativamente abaixo dos padrões e expectativas exigidas para a "
+"posição</li>\n"
+"</ol>"
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_1
@@ -156,6 +176,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para criar uma nova Avaliação .\n"
+"              </p><p>\n"
+"                A cada funcionário pode ser atribuído um Plano de Avaliação. "
+"Esse\n"
+"                plano define a frequência e o modo de como gere a sua "
+"avaliação \n"
+"                pessoal períodica. Será capaz de definir as etapas e anexar "
+"entrevistas\n"
+"                a cada passo. O Odoo gere todos os tipos de avaliações: de "
+"baixo para  \n"
+"                cima (<em>buttom-up</em>), de cima para baixo (<em>top-"
+"down</em>), \n"
+"                auto-avaliação e avaliação final por parte do Gestor.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
@@ -171,6 +207,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para criar um novo pedido de entrevista relacionada "
+"com uma avaliação pessoal \n"
+"              </p><p>\n"
+"                Pedidos de entrevista geralmente são gerados automaticamente "
+"\n"
+"                pelo Odoo de acordo com o plano de avaliação de um "
+"funcionário. \n"
+"                Cada utilizador irá receber e-mails e pedidos para avaliar "
+"os seus\n"
+"                colegas periodicamente.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_evaluation_plans_installer
@@ -186,6 +235,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para definir um novo plano de avaliação.\n"
+"              </p><p>\n"
+"                Pode definir planos de avaliação (ex: primeira entervista "
+"após 6\n"
+"                meses. Depois definir uma a cada ano). Assim, cada "
+"funcionário \n"
+"                pode ser associado a um plano de avaliação para que Odoo "
+"possa \n"
+"                gerar automaticamente pedidos de entrevista aos gestores "
+"e/ou\n"
+"                funcionários.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_2
@@ -195,12 +258,12 @@ msgstr ""
 #: model:survey.survey,thank_you_message:hr_evaluation.appraisal_form
 #: model:survey.survey,thank_you_message:hr_evaluation.opinion_form
 msgid "<p> </p>"
-msgstr ""
+msgstr "<p> </p>"
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_5
 msgid "<p></p>"
-msgstr ""
+msgstr "<p> </p>"
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_4
@@ -209,6 +272,9 @@ msgid ""
 "for employee’s continued career development\n"
 "over the coming year.</p>"
 msgstr ""
+"<p>Identificar profissionais, desempenho ou objetivos de projeto, que "
+"recomenda para a continuação da evolução de carreira do funcionário durante "
+"o próximo ano. </p>"
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_3
@@ -223,21 +289,34 @@ msgid ""
 "</li><li> Did not meet standards and expectations\n"
 "</li><li> Significantly below standards and expectations</li></ol>"
 msgstr ""
+"<p>O avaliador deve avaliar as principais especialidades de trabalho do "
+"funcionário e o desempenho de acordo com a métrica fornecida abaixo: < / p> "
+"< ol>\n"
+"<li>Supera significativamente os padrões e expectativas exigidas para a "
+"posição</li>\n"
+"<li>Excede os padrões e expectativas</li>\n"
+"<li>Está alinhado com os padrões e expectativas</li>\n"
+"<li>Não alcança os padrões e expectativas</li>\n"
+"<li>Significativamente abaixo dos padrões e expectativas exigidas para a "
+"posição</li>\n"
+"</ol>"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_1
 msgid "Ability to cope with multidisciplinarity of team"
-msgstr ""
+msgstr "Capacidade de lidar com a multidisciplinaridade da equipa"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_6
 msgid "Ability to follow and complete work as instructed"
 msgstr ""
+"Capacidade de acompanhar e concluir o trabalho conforme as instruções"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_5
 msgid "Ability to manage planning resources, risks, budgets and deadlines"
 msgstr ""
+"Capacidade de gerir recursos de planeamento, riscos, orçamentos e prazos"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,action:0
@@ -252,7 +331,7 @@ msgstr "Plano de Ação"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
 msgid "Action Plan..."
-msgstr ""
+msgstr "Plano de Ação..."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
@@ -265,6 +344,8 @@ msgid ""
 "Actions by Executive management show genuine interest in the well-being of "
 "employees"
 msgstr ""
+"Ações por Gerência Executiva mostra interesse genuíno no bem-estar dos "
+"funcionários"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,active:0
@@ -277,16 +358,18 @@ msgid ""
 "Adaptability: Ability to adapt oneself to organizational changes while "
 "keeping efficiency"
 msgstr ""
+"Adaptabilidade: Capacidade de adaptar-se a mudanças organizacionais, "
+"mantendo a eficiência"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_2_3
 msgid "Additional Comments"
-msgstr ""
+msgstr "Comentários Adicionais"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_7
 msgid "Additional comments"
-msgstr ""
+msgstr "Comentários adicionais"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_answer_employee:0
@@ -297,7 +380,7 @@ msgstr "Todas as respostas"
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_11
 msgid "Analytical and synthetic mind"
-msgstr ""
+msgstr "Espírito analítico e sintético"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -358,7 +441,7 @@ msgstr "Avaliação de Entrevistas"
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,phase_id:0
 msgid "Appraisal Phase"
-msgstr ""
+msgstr "Fase de Avaliação"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_form
@@ -399,7 +482,7 @@ msgstr "Planos de Avaliação"
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.opinion_1
 msgid "Appraisal Process"
-msgstr ""
+msgstr "Processo de Avaliação"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
@@ -414,12 +497,12 @@ msgstr "Resumo da avaliação"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
 msgid "Appraisal Summary..."
-msgstr ""
+msgstr "Resumo de Avaliação..."
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_3
 msgid "Appraisal for Period"
-msgstr ""
+msgstr "Avaliação do Período"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
@@ -435,22 +518,22 @@ msgstr "Avaliações que estão em estado de espera da valorização"
 #: view:hr.employee:hr_evaluation.hr_hr_employee_view_form
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisals"
-msgstr ""
+msgstr "Avaliações"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
 msgid "Appraisals Month"
-msgstr ""
+msgstr "Avaliações do Mês"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
 msgid "Appraisals by Month"
-msgstr ""
+msgstr "Avaliações por Mês"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_5
 msgid "Appraiser"
-msgstr ""
+msgstr "Avaliador"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
@@ -466,12 +549,12 @@ msgstr "Bottom-Up Pedidos de Avaliação"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
 msgid "Cancel Appraisal"
-msgstr ""
+msgstr "Cancelar Avaliação"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
 msgid "Cancel Survey"
-msgstr ""
+msgstr "Cancelar Questionário"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.interview,state:0
@@ -500,13 +583,14 @@ msgstr ""
 #. module: hr_evaluation
 #: field:hr.evaluation.report,closed:0
 msgid "Close Date"
-msgstr ""
+msgstr "Data de Encerramento"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_9
 msgid ""
 "Communication skills (written & verbally): clearness, concision, exactitude"
 msgstr ""
+"As habilidades de comunicação (escrita e verbal): clareza, concisão, precisão"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
@@ -521,17 +605,20 @@ msgid ""
 "Compared to similar jobs in other companies where I could work, my total "
 "compensation..."
 msgstr ""
+"Em comparação com trabalhos semelhantes em outras empresas onde eu poderia "
+"trabalhar, minha remuneração total ..."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_3
 msgid ""
 "Compliance to internal rules and processes (timesheets completion, etc.)"
 msgstr ""
+"Submissão das normas e processos internos (conclusão de folha de horas, etc.)"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_4
 msgid "Continuous Improvement"
-msgstr ""
+msgstr "Melhoria Contínua"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,create_date:0
@@ -544,7 +631,7 @@ msgstr "Data de criação"
 #: field:hr_evaluation.plan,create_uid:0
 #: field:hr_evaluation.plan.phase,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Criado por"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,create_date:0
@@ -552,22 +639,22 @@ msgstr ""
 #: field:hr_evaluation.plan,create_date:0
 #: field:hr_evaluation.plan.phase,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Criado em"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
 msgid "Creation Month"
-msgstr ""
+msgstr "Mês de Criação"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_14
 msgid "Creativity and forward looking aptitude"
-msgstr ""
+msgstr "Espírito Criativo e aptidão para Inovar"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_8
 msgid "Customer commitment"
-msgstr ""
+msgstr "Compromisso com o cliente"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_1_2
@@ -577,7 +664,7 @@ msgstr "Data"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_4
 msgid "Date of review"
-msgstr ""
+msgstr "Data de revisão"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_last_post:0
@@ -599,7 +686,7 @@ msgstr "Prazo limite"
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_7
 msgid "Decision making"
-msgstr ""
+msgstr "Tomando uma decisão"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,delay_date:0
@@ -610,11 +697,12 @@ msgstr "Demora para iniciar"
 #: model:survey.label,value:hr_evaluation.arow_3_2_2
 msgid "Delegation: Ability to efficiently assign tasks to other people"
 msgstr ""
+"Delegação: Capacidade de atribuir tarefas a outras pessoas de forma eficiente"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_2_1
 msgid "Demonstrates genuine concern for me as a person"
-msgstr ""
+msgstr "Demonstra preocupação genuína para mim como uma pessoa"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -624,7 +712,7 @@ msgstr "Não correspondeu às expetativas"
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Do not meet expectations"
-msgstr ""
+msgstr "Não atende às expectativas"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
@@ -646,7 +734,7 @@ msgstr "Rascunho"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_3
 msgid "Effectiveness"
-msgstr ""
+msgstr "Eficácia"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_body:0
@@ -671,27 +759,27 @@ msgstr "Avaliação do Funcionário"
 #: model:survey.page,title:hr_evaluation.appraisal_1
 #: model:survey.survey,title:hr_evaluation.appraisal_form
 msgid "Employee Appraisal Form"
-msgstr ""
+msgstr "Formulário de Avaliação do Funcionário"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_5
 msgid "Employee Comments"
-msgstr ""
+msgstr "Comentários do funcionário"
 
 #. module: hr_evaluation
 #: model:survey.survey,title:hr_evaluation.opinion_form
 msgid "Employee Opinion Form"
-msgstr ""
+msgstr "Formulário de Opinião do Funcionário"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_3
 msgid "Employee Performance in Key Areas"
-msgstr ""
+msgstr "Desempenho do Funcionário em Áreas-Chave"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
 msgid "Employee to evaluate"
-msgstr ""
+msgstr "Empregado para avaliar"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date_close:0
@@ -701,12 +789,12 @@ msgstr "Data de fim"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_1
 msgid "Engagement"
-msgstr ""
+msgstr "Comprimisso"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_2
 msgid "Enthusiasm & implication toward projects/assignments"
-msgstr ""
+msgstr "Entusiasmo e Implicação para Projectos/Tarefas"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.opinion_2
@@ -766,7 +854,7 @@ msgstr "Geral"
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
 #: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupado por"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
@@ -780,11 +868,13 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Mantém o resumo Chatter (número de mensagens, ...). Este resumo édiretamente "
+"em formato html para ser inserido nas vistas kanban."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_1
 msgid "I am proud to tell others I work here"
-msgstr ""
+msgstr "Tenho orgulho de dizer aos outros que eu trabalho aqui"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_5
@@ -792,11 +882,13 @@ msgid ""
 "I am willing to put in a great deal of effort beyond what is expected to "
 "help my workgroup succeed"
 msgstr ""
+"Estou disposto a colocar um grande esforço para além do que é esperado para "
+"ajudar o meu grupo de trabalho a ter sucesso"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_2_4
 msgid "I believe the information that I get from the person I report to."
-msgstr ""
+msgstr "Eu acredito na informação que obtenho da pessoa que eu reporto."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_2_2
@@ -804,11 +896,13 @@ msgid ""
 "I consistently acquire new knowledge, skills or understanding through "
 "contact with my supervisor. He helps me growing my compete"
 msgstr ""
+"Nunca deixei de adquirir novos conhecimentos, habilidades ou compreensão "
+"através do contato com o meu supervisor. Ele ajuda-me a ser mais competitivo"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_3_2
 msgid "I have enough work"
-msgstr ""
+msgstr "Tenho trabalho suficiente"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_6_2
@@ -816,11 +910,13 @@ msgid ""
 "I have the same opportunity to succeed as others with similar experiences, "
 "performance and educational background"
 msgstr ""
+"Eu tenho a mesma oportunidade de ter sucesso como outras pessoas com "
+"experiências semelhantes, desempenho e formação"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_5_1
 msgid "I know the company's values and live them"
-msgstr ""
+msgstr "Eu sei que os valores da empresa e sinto-as"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_3_3
@@ -828,11 +924,14 @@ msgid ""
 "I mostly work on value-added tasks for the company, the products or the "
 "services"
 msgstr ""
+"Eu trabalho principalmente em tarefas de valor acrescentado para a empresa, "
+"produtos ou serviços"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_6_4
 msgid "I understand the company strategy and how my workgroup supports it"
 msgstr ""
+"Eu entendo a estratégia da empresa e como o meu grupo de trabalho a apoia"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_3
@@ -840,11 +939,13 @@ msgid ""
 "I would prefer to remain with this company even if a comparable job were "
 "available in another company"
 msgstr ""
+"Eu preferiria permanecer nesta empresa, mesmo que um trabalho comparável "
+"estivesse disponível noutra empresa"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_3_1
 msgid "I'm efficient at work and my achievements are successful"
-msgstr ""
+msgstr "Eu sou eficiente no trabalho e minhas conquistas são bem sucedidos"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,id:0
@@ -853,7 +954,7 @@ msgstr ""
 #: field:hr_evaluation.plan,id:0
 #: field:hr_evaluation.plan.phase,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_unread:0
@@ -886,7 +987,7 @@ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
 #: model:survey.question,comments_message:hr_evaluation.opinion_2_6
 #: model:survey.question,comments_message:hr_evaluation.opinion_2_7
 msgid "If other, precise:"
-msgstr ""
+msgstr "Se outro, indique:"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,note_action:0
@@ -894,6 +995,8 @@ msgid ""
 "If the evaluation does not meet the expectations, you can propose an action "
 "plan"
 msgstr ""
+"Se a avaliação não coincidir com as expectativas, pode propôr um plano de "
+"ação"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
@@ -914,7 +1017,7 @@ msgstr "Avaliações em progresso"
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_5
 msgid "Initiative and self autonomy"
-msgstr ""
+msgstr "Iniciativa e Autonomia"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
@@ -961,7 +1064,7 @@ msgstr "É um seguidor"
 #: field:hr.evaluation.interview,message_last_post:0
 #: field:hr_evaluation.evaluation,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data da última mensagem"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,write_uid:0
@@ -969,7 +1072,7 @@ msgstr ""
 #: field:hr_evaluation.plan,write_uid:0
 #: field:hr_evaluation.plan.phase,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última Atualização por"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,write_date:0
@@ -977,12 +1080,12 @@ msgstr ""
 #: field:hr_evaluation.plan,write_date:0
 #: field:hr_evaluation.plan.phase,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última Atualização em"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_2
 msgid "Leadership"
-msgstr ""
+msgstr "Liderança"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_3
@@ -990,11 +1093,13 @@ msgid ""
 "Leadership: create a challenging and motivating work environment aligned "
 "with the company's strategy"
 msgstr ""
+"Liderança: criar um ambiente de trabalho desafiador e motivador alinhado com "
+"a estratégia da empresa"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_4
 msgid "Leadership: sustain subordinates in their professional growth"
-msgstr ""
+msgstr "Liderança: sustentar funcionários no seu crescimento profissional"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
@@ -1007,6 +1112,8 @@ msgid ""
 "Listens and takes into account all ideas and do his best to put in place the "
 "best of these"
 msgstr ""
+"Escuta e leva em conta todas as ideias e faz o seu melhor para colocar as "
+"melhores em prática"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
@@ -1039,7 +1146,7 @@ msgstr "Histórico de mensagens e comunicação"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_6
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Diversos"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
@@ -1052,11 +1159,13 @@ msgid ""
 "My best achievements have been communicated to the community, internally or "
 "to customers"
 msgstr ""
+"Meus melhores resultados foram comunicados à comunidade, internamente ou "
+"para clientes"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_2
 msgid "My job provides me with a sense of personal accomplishment"
-msgstr ""
+msgstr "O meu trabalho realiza-me pessoalmente"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_4_1
@@ -1064,16 +1173,18 @@ msgid ""
 "My work contributes towards the continuous improvement of the company, our "
 "services or products"
 msgstr ""
+"Meu trabalho contribui para a melhoria contínua da empresa, nossos serviços "
+"ou produtos"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_1
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_1_1
 msgid "Name of your direct supervisor"
-msgstr ""
+msgstr "Nome de seu supervisor direto"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
@@ -1088,12 +1199,12 @@ msgstr "Data da Próxima Avaliação"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_2_1
 msgid "Objectives"
-msgstr ""
+msgstr "Objectivos"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_5
 msgid "Openness"
-msgstr ""
+msgstr "Abertura"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_4_4
@@ -1101,6 +1212,8 @@ msgid ""
 "Our workgroup identifies and reduces waste of time in our activities and "
 "processes"
 msgstr ""
+"Nosso grupo de trabalho identifica e reduz o desperdício de tempo nas nossas "
+"atividades e processos"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,rating:0
@@ -1113,6 +1226,8 @@ msgid ""
 "Overall, I believe the quality of products and/or services my workgroup "
 "delivers is improving"
 msgstr ""
+"No geral, eu acredito que a qualidade dos produtos e/ou serviços que o meu "
+"grupo de trabalho proporciona está a melhorar"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
@@ -1137,7 +1252,7 @@ msgstr "Periodicidade da Avaliação (meses)"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_4_2
 msgid "Personal Performance Objectives"
-msgstr ""
+msgstr "Objetivos de Desempenho Pessoal"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,name:0
@@ -1161,7 +1276,7 @@ msgstr "Plano em curso"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_2
 msgid "Position Title"
-msgstr ""
+msgstr "Título do Cargo"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
@@ -1172,22 +1287,22 @@ msgstr "Imprimir inquérito"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_4_1
 msgid "Professional Development Objectives"
-msgstr ""
+msgstr "Objetivos de Desenvolvimento Profissional"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_4
 msgid "Professional Development and Performance Plan"
-msgstr ""
+msgstr "Desenvolvimento Profissional e Plano de Desempenho"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_4_3
 msgid "Project Objectives"
-msgstr ""
+msgstr "Objetivos do Projeto"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_12
 msgid "Promptness and attendance record"
-msgstr ""
+msgstr "Registo de Celeridade e Assiduidade"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
@@ -1203,7 +1318,7 @@ msgstr "Tendo em conta "
 #. module: hr_evaluation
 #: field:hr.evaluation.report,request_id:0
 msgid "Request ID"
-msgstr ""
+msgstr "Solicitação de ID"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
@@ -1213,7 +1328,7 @@ msgstr "Redefinir para rascunho"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_2_2
 msgid "Results"
-msgstr ""
+msgstr "Resultados"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_1
@@ -1221,6 +1336,9 @@ msgid ""
 "Results of the bottom-up survey and mitigation actions to face technical, "
 "organizational, structural and/or relational issues"
 msgstr ""
+"Resultados das ações de pesquisa e de mitigação de baixo para cima para "
+"enfrentar questões técnicas , organizacionais , estruturais e / ou "
+"relacionais"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
@@ -1298,7 +1416,7 @@ msgstr "Significativamente abaixo das expetativas"
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Significantly below expectations"
-msgstr ""
+msgstr "Significativamente abaixo das expectativas"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -1329,7 +1447,7 @@ msgstr "Estado"
 #: field:hr_evaluation.plan.phase,email_subject:0
 #: model:survey.question,question:hr_evaluation.appraisal_3_1
 msgid "Subject"
-msgstr ""
+msgstr "Assunto"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_summary:0
@@ -1340,7 +1458,7 @@ msgstr "Resumo"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_3_2
 msgid "Supervisors only"
-msgstr ""
+msgstr "Só supervisores"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
@@ -1350,13 +1468,13 @@ msgstr "Inquérito"
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
 msgid "Survey Request"
-msgstr ""
+msgstr "Solicitação de Inquérito"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_4
 msgid ""
 "Taking everything into account, how satisfied are you with your current job?"
-msgstr ""
+msgstr "Levando tudo em conta, está satisfeito com seu trabalho atual?"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_4
@@ -1364,11 +1482,13 @@ msgid ""
 "Team spirit: ability to work efficiently with peers, manage the conflicts "
 "with diplomacy"
 msgstr ""
+"Espírito de equipa: a capacidade de trabalhar de forma eficiente com os "
+"colegas, gerir os conflitos com diplomacia"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_10
 msgid "Technical skills regarding to the job requirements"
-msgstr ""
+msgstr "Habilidades técnicas relativas às exigências de trabalho"
 
 #. module: hr_evaluation
 #: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_1
@@ -1395,7 +1515,7 @@ msgstr ""
 #: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_6
 #: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_7
 msgid "The answer you entered has an invalid format."
-msgstr ""
+msgstr "A resposta que inseriu tem um formato inválido"
 
 #. module: hr_evaluation
 #: help:hr.employee,evaluation_date:0
@@ -1418,7 +1538,7 @@ msgstr ""
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,rating:0
 msgid "This is the appreciation on which the evaluation is summarized."
-msgstr ""
+msgstr "Esta é a apreciação sobre a qual a avaliação é resumida."
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_first:0
@@ -1454,12 +1574,12 @@ msgstr ""
 #: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_6
 #: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_7
 msgid "This question requires an answer."
-msgstr ""
+msgstr "Esta questão exige uma resposta."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_15
 msgid "Time management: projects/tasks are completed on time"
-msgstr ""
+msgstr "A gestão do tempo: Projetos/Tarefas são concluídas a tempo"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
@@ -1483,6 +1603,8 @@ msgid ""
 "Use the following space to make any comments regarding the above performance "
 "evaluation."
 msgstr ""
+"Use o espaço abaixo para fazer quaisquer comentários sobre a avaliação de "
+"desempenho acima."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
@@ -1510,13 +1632,13 @@ msgstr "Aviso!"
 #: field:hr.evaluation.interview,website_message_ids:0
 #: field:hr_evaluation.evaluation,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Mensagens do Website"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,website_message_ids:0
 #: help:hr_evaluation.evaluation,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Histórico de Comunicação do Website"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_4_2
@@ -1528,7 +1650,7 @@ msgstr ""
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_2
 msgid "Work Plan"
-msgstr ""
+msgstr "Plano de Trabalho"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:239
@@ -1537,6 +1659,8 @@ msgid ""
 "You cannot change state, because some appraisal forms have not been "
 "completed."
 msgstr ""
+"Não pode mudar de estado, porque algumas formas de avaliação não foram "
+"concluídas."
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:338

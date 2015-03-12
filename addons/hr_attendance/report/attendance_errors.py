@@ -81,5 +81,3 @@ class report_hr_attendanceerrors(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'hr_attendance.report_attendanceerrors'
     _wrapped_report_class = attendance_print
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

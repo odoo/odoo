@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-09 14:34+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-11-10 06:33+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 
 #. module: sale_order_dates
 #: field:sale.order,commitment_date:0
@@ -33,6 +33,13 @@ msgid ""
 "default method: based on the Product Lead Times and the Company's Security "
 "Delay."
 msgstr ""
+"Müşterinin ürünlerin teslim edilmesini istediği tarihtir.\n"
+"Sipariş onaylandığında, tahmini Teslimat Emri tarihi bu tarihe ve Firmanın "
+"Emniyetli Teslim Süresine göre hesaplanacaktır.\n"
+"Teslimat Emrinin bir an önce işleme alınmasını istiyorsanız bu alanı boş "
+"bırakın. Bu durumda tahmini tarih varsayılan yöntem kullanılarak "
+"hesaplanacaktır: Ürün Teslim Süresi ve Firmanın Emniyetli Teslim Süresine "
+"göre."
 
 #. module: sale_order_dates
 #: help:sale.order,commitment_date:0
@@ -40,11 +47,13 @@ msgid ""
 "Date by which the products are sure to be delivered. This is a date that you "
 "can promise to the customer, based on the Product Lead Times."
 msgstr ""
+"Ürünlerin kesin olarak teslime edileceği tarih. Bu tarih, Ürün Teslim "
+"Süresine dayalı olarak müşteriye söz vereceğiniz tarihtir."
 
 #. module: sale_order_dates
 #: help:sale.order,effective_date:0
 msgid "Date on which the first Delivery Order was created."
-msgstr ""
+msgstr "Teslimat Emrinin ilk olarak oluşturulduğu tarih."
 
 #. module: sale_order_dates
 #: view:sale.order:sale_order_dates.view_sale_orderfor
@@ -65,7 +74,7 @@ msgstr "İsteme Tarih"
 #: code:addons/sale_order_dates/sale_order_dates.py:76
 #, python-format
 msgid "Requested date is too soon!"
-msgstr ""
+msgstr "İstenen tarih çok erken!"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -79,3 +88,5 @@ msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
 msgstr ""
+"Müşteri tarafından istenen tarih teslim tarihinden daha erkendir. Müşterinin "
+"isteğini yerine getiremezsiniz."

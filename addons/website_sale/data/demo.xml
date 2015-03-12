@@ -557,110 +557,84 @@ Weight: 1.1 ounces</field>
         
         <record id="product.Components" model="product.public.category">
           <field name="name">Components</field>
-        </record>
-
-        <record id="product.case" model="product.public.category">
-          <field name="parent_id" ref="product.Components"/>
-          <field name="name">Case</field>
-        </record>
-        <record id="product.HDD" model="product.public.category">
-          <field name="parent_id" ref="product.Components"/>
-          <field name="name">Hard Drive</field>
-        </record>
-        <record id="product.motherboard" model="product.public.category">
-          <field name="parent_id" ref="product.Components"/>
-          <field name="name">Motherboard</field>
-        </record>
-        <record id="product.graphics_card" model="product.public.category">
-          <field name="parent_id" ref="product.Components"/>
-          <field name="name">Graphics Card</field>
-        </record>
-        <record id="product.Memory" model="product.public.category">
-          <field name="parent_id" ref="product.Components"/>
-          <field name="name">Memory</field>
-        </record>
-        <record id="product.processor" model="product.public.category">
-          <field name="parent_id" ref="product.Components"/>
-          <field name="name">Processor</field>
-        </record>
-        <record id="product.video_acquisition" model="product.public.category">
-          <field name="parent_id" ref="product.Components"/>
-          <field name="name">Video Acquisition</field>
+          <field name="sequence">15</field>
         </record>
 
         <record id="product.devices" model="product.public.category">
           <field name="name">Devices</field>
+          <field name="sequence">5</field>
         </record>
 
         <record id="product.Screen" model="product.public.category">
           <field name="parent_id" ref="product.devices"/>
           <field name="name">Screen</field>
+          <field name="sequence">11</field>
         </record>
         <record id="product.Pen_Drive" model="product.public.category">
           <field name="parent_id" ref="product.devices"/>
           <field name="name">Pen Drive</field>
+          <field name="sequence">9</field>
         </record>
         <record id="product.External_Hard_Drive" model="product.public.category">
           <field name="parent_id" ref="product.devices"/>
           <field name="name">External Hard Drive</field>
+          <field name="sequence">6</field>
         </record>
         <record id="product.Keyboard_Mouse" model="product.public.category">
           <field name="parent_id" ref="product.devices"/>
           <field name="name">Keyboard / Mouse</field>
+          <field name="sequence">8</field>
         </record>
         <record id="product.printer" model="product.public.category">
           <field name="parent_id" ref="product.devices"/>
           <field name="name">Printer</field>
+          <field name="sequence">10</field>
         </record>
         <record id="product.Speakers" model="product.public.category">
           <field name="parent_id" ref="product.devices"/>
           <field name="name">Speakers</field>
+          <field name="sequence">13</field>
         </record>
         <record id="product.Headset" model="product.public.category">
           <field name="parent_id" ref="product.devices"/>
           <field name="name">Headset</field>
+          <field name="sequence">7</field>
         </record>
         <record id="product.Software" model="product.public.category">
           <field name="parent_id" ref="product.devices"/>
           <field name="name">Software</field>
+          <field name="sequence">12</field>
         </record>
 
         <record id="product.laptops" model="product.public.category">
           <field name="name">Laptops</field>
+          <field name="sequence">1</field>
         </record>
 
         <record id="product.sub_computers" model="product.public.category">
           <field name="name">Computers</field>
+          <field name="sequence">2</field>
         </record>
 
         <record id="product.Computer_all_in_one" model="product.public.category">
           <field name="parent_id" ref="product.sub_computers"/>
           <field name="name">Computer all-in-one</field>
+          <field name="sequence">3</field>
         </record>
         <record id="product.server" model="product.public.category">
           <field name="parent_id" ref="product.sub_computers"/>
           <field name="name">Server</field>
+          <field name="sequence">4</field>
         </record>
 
         <record id="product.network" model="product.public.category">
           <field name="name">Network</field>
-        </record>
-
-        <record id="product.Switch" model="product.public.category">
-          <field name="parent_id" ref="product.network"/>
-          <field name="name">Switch</field>
-        </record>
-        <record id="product.Modem_Router" model="product.public.category">
-          <field name="parent_id" ref="product.network"/>
-          <field name="name">Modem &amp; Router</field>
-        </record>
-        <record id="product.Switch" model="product.public.category">
-          <field name="parent_id" ref="product.network"/>
-          <field name="name">Switch</field>
+          <field name="sequence">14</field>
         </record>
         
         <record id="product.services" model="product.public.category">
           <field name="name">Services</field>
+          <field name="sequence">16</field>
         </record>
 
         <record id="product.product_product_1_product_template" model="product.template">
@@ -675,6 +649,9 @@ Weight: 1.1 ounces</field>
         <record id="product.product_product_4_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
         </record>
+        <record id="product.product_product_5_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
+        </record>
         <record id="product.product_product_5b_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Speakers')])]"/>
         </record>
@@ -682,7 +659,10 @@ Weight: 1.1 ounces</field>
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Screen')])]"/>
         </record>
         <record id="product.product_product_7_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Screen')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Headset')])]"/>
+        </record>
+        <record id="product.product_product_8_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
         </record>
         <record id="product.product_product_9_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
@@ -691,46 +671,46 @@ Weight: 1.1 ounces</field>
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
         </record>
         <record id="product.product_product_11_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
         </record>
         <record id="product.product_product_12_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
         </record>
         <record id="product.product_product_13_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Memory')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_14_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Memory')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_15_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Memory')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_16_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.case')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_17_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.HDD')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_18_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.HDD')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_19_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.HDD')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_20_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.motherboard')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_21_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.motherboard')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_22_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.processor')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_23_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.processor')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_24_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.graphics_card')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_25_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('product.laptops')])]"/>
@@ -760,7 +740,13 @@ Weight: 1.1 ounces</field>
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Headset')])]"/>
         </record>
         <record id="product.product_product_34_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.video_acquisition')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
+        </record>
+        <record id="product.product_product_35_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
+        </record>
+        <record id="product.product_product_36_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
         <record id="product.product_product_37_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('product.printer')])]"/>
@@ -787,13 +773,16 @@ Weight: 1.1 ounces</field>
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
         </record>
         <record id="product.product_product_45_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Modem_Router')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.network')])]"/>
         </record>
         <record id="product.product_product_46_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Pen_Drive')])]"/>
         </record>
         <record id="product.product_product_47_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Switch')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.network')])]"/>
+        </record>
+        <record id="product.product_product_48_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
 
     </data>

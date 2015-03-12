@@ -37,6 +37,3 @@ import server
     implement an extension to the network protocols, or need to debug some
     low-level behavior of the wire.
 """
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

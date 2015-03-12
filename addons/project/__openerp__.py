@@ -27,16 +27,6 @@
     'category': 'Project Management',
     'sequence': 8,
     'summary': 'Projects, Tasks',
-    'images': [
-        'images/gantt.png',
-        'images/project_task_tree.jpeg',
-        'images/project_task.jpeg',
-        'images/project.jpeg',
-        'images/task_analysis.jpeg',
-        'images/project_kanban.jpeg',
-        'images/task_kanban.jpeg',
-        'images/task_stages.jpeg'
-    ],
     'depends': [
         'base_setup',
         'product',
@@ -45,7 +35,7 @@
         'mail',
         'resource',
         'web_kanban',
-        'web_kanban_sparkline'
+        'web_tip',
     ],
     'description': """
 Track multi-level projects, tasks, work done on tasks
@@ -73,6 +63,7 @@ Dashboard / Reports for Project Management will include:
         'report/project_cumulative.xml',
         'res_config_view.xml',
         'views/project.xml',
+        'project_tip_data.xml',
     ],
     'demo': ['project_demo.xml'],
     'test': [
@@ -81,4 +72,3 @@ Dashboard / Reports for Project Management will include:
     'auto_install': False,
     'application': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

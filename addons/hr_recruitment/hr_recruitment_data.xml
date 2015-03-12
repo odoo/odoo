@@ -18,7 +18,7 @@
     </record>
 
     <!-- Templates for interest / refusing applicants -->
-    <record id="applicant_refuse" model="email.template">
+    <record id="applicant_refuse" model="mail.template">
         <field name="name">Application refused</field>
         <field name="subject">Application refused</field>
         <field name="email_to">${object.email_from}</field>
@@ -36,7 +36,7 @@
          ${object.user_id and object.user_id.signature | safe or ''}]]></field>
     </record>
 
-    <record id="applicant_interest" model="email.template">
+    <record id="applicant_interest" model="mail.template">
         <field name="name">Application approved</field>
         <field name="subject">Application approved</field>
         <field name="email_to">${object.email_from}</field>
@@ -53,22 +53,6 @@
         <br/>
          ${object.user_id.signature | safe}]]></field>
     </record>
-
-        <!--    HR Recruitment Source        -->
-
-    <record model="hr.recruitment.source" id="source_linkedin">
-        <field name="name">LinkedIn</field>
-    </record>
-    <record model="hr.recruitment.source" id="source_monster">
-        <field name="name">Monster</field>
-    </record>
-    <record model="hr.recruitment.source" id="source_word">
-        <field name="name">Word of Mouth</field>
-    </record>
-    <record model="hr.recruitment.source" id="source_website_company">
-        <field name="name">Company Website</field>
-    </record>
-
 
         <!--    Resource(type_id)        -->
 
@@ -147,6 +131,12 @@
     </record>
 
     <!-- Job-related subtypes for messaging / Chatter -->
+    <record id="mt_job_new" model="mail.message.subtype">
+        <field name="name">Job Position created</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+    </record>
     <record id="mt_job_applicant_new" model="mail.message.subtype">
         <field name="name">Applicant Created</field>
         <field name="res_model">hr.job</field>
@@ -169,18 +159,31 @@
         <field name="relation_field">job_id</field>
     </record>
 
+    <!-- Department-related (parent) subtypes for messaging / Chatter -->
+    <record id="mt_department_new" model="mail.message.subtype">
+        <field name="name">Job Position Created</field>
+        <field name="res_model">hr.department</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" eval="ref('mt_job_new')"/>
+        <field name="relation_field">department_id</field>
+    </record>
+
     <!-- Applicant Categories(Tag) -->
-    <record id="tag_applicant_reserve" model="hr.applicant_category">
+    <record id="tag_applicant_reserve" model="hr.applicant.category">
         <field name="name">Reserve</field>
     </record>
-    <record id="tag_applicant_manager" model="hr.applicant_category">
+    <record id="tag_applicant_manager" model="hr.applicant.category">
         <field name="name">Manager</field>
     </record>
-    <record id="tag_applicant_it" model="hr.applicant_category">
+    <record id="tag_applicant_it" model="hr.applicant.category">
         <field name="name">IT</field>
     </record>
-    <record id="tag_applicant_sales" model="hr.applicant_category">
+    <record id="tag_applicant_sales" model="hr.applicant.category">
         <field name="name">Sales</field>
     </record>
+    <record model="utm.campaign" id="utm_campaign_job">
+            <field name="name">Job Campaign</field>
+    </record>
+
 </data>
 </openerp>

@@ -44,6 +44,7 @@ synchronization with other companies.
     'website': 'https://www.odoo.com',
     'data': [
         'security/share_security.xml',
+        'security/ir.model.access.csv',
         'res_users_view.xml',
         'wizard/share_wizard_view.xml',
         'views/share.xml',
@@ -52,7 +53,4 @@ synchronization with other companies.
     'auto_install': True,
     'web': True,
     'qweb' : ['static/src/xml/*.xml'],
-    'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

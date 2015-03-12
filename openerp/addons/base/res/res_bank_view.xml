@@ -104,7 +104,7 @@
                         <field name="state"/>
                         <field name="acc_number" placeholder="Account Number"/>
                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"
-                            invisible="context.get('company_hide', True)" widget="selection"/>
+                            invisible="context.get('company_hide', True)" options="{'no_create': True}"/>
                         <field name="footer" invisible="context.get('footer_hide', True)"/>
                     </group>
                     <group>
@@ -119,7 +119,7 @@
                                     <field name="city" class="oe_inline" placeholder="City"/>
                                 </div>
                                 <field name="state_id" placeholder="State" options='{"no_open": True}'/>
-                                <field name="country_id" placeholder="Country" options='{"no_open": True}'/>
+                                <field name="country_id" placeholder="Country" options='{"no_open": True, "no_create": True}'/>
                             </div>
                         </group>
                         <group name="bank" string="Information About the Bank">

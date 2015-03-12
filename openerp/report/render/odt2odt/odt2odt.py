@@ -51,6 +51,3 @@ class odt2odt(object):
 def parseNode(node, localcontext = {}):
     r = odt2odt(node, localcontext)
     return r.render()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

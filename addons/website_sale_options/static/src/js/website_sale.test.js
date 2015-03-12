@@ -1,11 +1,11 @@
 (function () {
     'use strict';
-    
+    var _t = openerp._t;
     var steps = openerp.Tour.tours.shop_buy_product.steps;
     for (var k=0; k<steps.length; k++) {
         if (steps[k].title === "click on add to cart") {
             steps.splice(k+1, 0, {
-                title:     "click in modal on 'Proceed to checkout' button",
+                title:     _t("click in modal on 'Proceed to checkout' button"),
                 element:   '.modal a:contains("Proceed to checkout")',
             });
             break;
@@ -51,7 +51,7 @@
             {
                 title:     "click in modal on 'Proceed to checkout' button",
                 waitFor:   '.js_product:contains(Warranty) a:contains(Add to Cart):hidden',
-                element:   '.modal a:contains("Proceed to checkout")',
+                element:   '.modal-dialog a:contains("Proceed to checkout")',
             },
             {
                 title:     "check quantity",

@@ -86,6 +86,3 @@ class project_issue_report(osv.osv):
                 LEFT JOIN project_task t on c.task_id = t.id
                 WHERE c.active= 'true'
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

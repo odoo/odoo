@@ -290,7 +290,7 @@ class HttpCase(TransactionCase):
             _logger.info('phantomjs unlink localstorage %s', i)
             os.unlink(i)
         try:
-            phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=None)
         except OSError:
             raise unittest2.SkipTest("PhantomJS not found")
         try:
@@ -365,6 +365,3 @@ class HttpCase(TransactionCase):
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         cmd = ['phantomjs', phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

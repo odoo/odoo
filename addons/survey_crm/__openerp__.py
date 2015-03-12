@@ -39,4 +39,3 @@ This module adds a Survey mass mailing button inside the more option of lead/cus
     'installable': True,
     'auto_install': True
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

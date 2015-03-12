@@ -15,6 +15,27 @@ and to specify a number of module metadata.
 It is a file called ``__openerp__.py`` and contains a single Python
 dictionary, each dictionary key specifying a module metadatum.
 
+::
+
+    {
+        'name': "A Module",
+        'version': '1.0',
+        'depends': ['base'],
+        'author': "Author Name",
+        'category': 'Category',
+        'description': """
+        Description text
+        """,
+        # data files always loaded at installation
+        'data': [
+            'mymodule_view.xml',
+        ],
+        # data files containing optionally loaded demonstration data
+        'demo': [
+            'demo_data.xml',
+        ],
+    }
+
 Available manifest fields are:
 
 ``name`` (``str``, required)

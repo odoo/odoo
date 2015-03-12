@@ -73,7 +73,7 @@
                     <group>
                         <group>
                             <field name="type" invisible="True"/>
-                            <field name="company_id" widget="selection" on_change="onchange_company(partner_id, journal_id, currency_id, company_id)" groups="base.group_multi_company"/>
+                            <field name="company_id" options="{'no_create': True}" on_change="onchange_company(partner_id, journal_id, currency_id, company_id)" groups="base.group_multi_company"/>
                             <field name="partner_id" domain="[('customer','=',True)]" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="account_id"
                                   domain="[('type','in', ['liquidity', 'receivable'])]"/>
@@ -229,7 +229,7 @@
                             <field name="account_id" domain="[('type', 'in', ['liquidity', 'payable'])]"/>
                             <field name="name" colspan="2"/>
                             <field name="reference"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
                             <field name="date" string="Bill Date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>

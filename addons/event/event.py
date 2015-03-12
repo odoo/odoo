@@ -3,7 +3,7 @@
 import pytz
 
 from openerp import _, api, fields, models
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class event_type(models.Model):
@@ -183,20 +183,29 @@ class event_event(models.Model):
     @api.one
     @api.constrains('seats_max', 'seats_available')
     def _check_seats_limit(self):
-        if self.seats_max and self.seats_available < 0:
-            raise Warning(_('No more available seats.'))
+        if self.seats_availability == 'limited' and self.seats_max and self.seats_available < 0:
+            raise UserError(_('No more available seats.'))
 
     @api.one
     @api.constrains('date_begin', 'date_end')
     def _check_closing_date(self):
         if self.date_end < self.date_begin:
-            raise Warning(_('Closing Date cannot be set before Beginning Date.'))
+            raise UserError(_('Closing Date cannot be set before Beginning Date.'))
 
     @api.model
     def create(self, vals):
         res = super(event_event, self).create(vals)
+        if res.organizer_id:
+            res.message_subscribe([res.organizer_id.id])
         if res.auto_confirm:
             res.button_confirm()
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(event_event, self).write(vals)
+        if vals.get('organizer_id'):
+            self.message_subscribe([vals['organizer_id']])
         return res
 
     @api.one
@@ -207,7 +216,7 @@ class event_event(models.Model):
     def button_cancel(self):
         for event_reg in self.registration_ids:
             if event_reg.state == 'done':
-                raise Warning(_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."))
+                raise UserError(_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."))
         self.registration_ids.write({'state': 'cancel'})
         self.state = 'cancel'
 
@@ -238,7 +247,7 @@ class event_event(models.Model):
     @api.one
     def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: True):
         for attendee in self.registration_ids.filtered(filter_func):
-            self.env['email.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
+            self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
 
 class event_registration(models.Model):
@@ -274,16 +283,18 @@ class event_registration(models.Model):
     @api.one
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
-        if self.event_id.seats_max and self.event_id.seats_available < (1 if self.state == 'draft' else 0):
-            raise Warning(_('No more seats available for this event.'))
+        if self.event_id.seats_availability == 'limited' and self.event_id.seats_max and self.event_id.seats_available < (1 if self.state == 'draft' else 0):
+            raise UserError(_('No more seats available for this event.'))
 
-    @api.one
+    @api.multi
     def _check_auto_confirmation(self):
         if self._context.get('registration_force_draft'):
             return False
-        if self.event_id and self.event_id.state == 'confirm' and self.event_id.auto_confirm and self.event_id.seats_available:
-            return True
-        return False
+        if any(registration.event_id.state != 'confirm' or
+               not registration.event_id.auto_confirm or
+               (not registration.event_id.seats_available and registration.event_id.seats_availability == 'limited') for registration in self):
+            return False
+        return True
 
     @api.model
     def create(self, vals):
@@ -291,6 +302,24 @@ class event_registration(models.Model):
         if registration._check_auto_confirmation():
             registration.sudo().confirm_registration()
         return registration
+
+    @api.model
+    def _prepare_attendee_values(self, registration):
+        """ Method preparing the values to create new attendees based on a
+        sale order line. It takes some registration data (dict-based) that are
+        optional values coming from an external input like a web page. This method
+        is meant to be inherited in various addons that sell events. """
+        partner_id = registration.pop('partner_id', self.env.user.partner_id)
+        event_id = registration.pop('event_id', False)
+        data = {
+            'name': registration.get('name', partner_id.name),
+            'phone': registration.get('phone', partner_id.phone),
+            'email': registration.get('email', partner_id.email),
+            'partner_id': partner_id.id,
+            'event_id': event_id and event_id.id or False,
+        }
+        data.update({key: registration[key] for key in registration.keys() if key in self._fields})
+        return data
 
     @api.one
     def do_draft(self):
@@ -310,7 +339,7 @@ class event_registration(models.Model):
         if self.event_id.date_begin <= today:
             self.write({'state': 'done', 'date_closed': today})
         else:
-            raise Warning(_("You must wait for the starting day of the event to do this action."))
+            raise UserError(_("You must wait for the starting day of the event to do this action."))
 
     @api.one
     def button_reg_cancel(self):

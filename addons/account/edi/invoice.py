@@ -287,7 +287,3 @@ class account_invoice_line(osv.osv, EDIMixin):
 
 class account_invoice_tax(osv.osv, EDIMixin):
     _inherit = "account.invoice.tax"
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -33,7 +33,7 @@ Allow users to sign up and reset their password
     'auto_install': True,
     'depends': [
         'base_setup',
-        'email_template',
+        'mail',
         'web',
     ],
     'data': [

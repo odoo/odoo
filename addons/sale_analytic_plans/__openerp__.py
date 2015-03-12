@@ -31,11 +31,9 @@ Using this module you will be able to link analytic accounts to sales orders.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
-    'images': ['images/sale_order_analytic_account.jpeg', 'images/sales_order_line.jpeg'],
     'depends': ['sale', 'account_analytic_plans'],
     'data': ['sale_analytic_plans_view.xml'],
     'demo': [],
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

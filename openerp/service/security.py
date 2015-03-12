@@ -35,5 +35,3 @@ def check_super(passwd):
 def check(db, uid, passwd):
     res_users = openerp.registry(db)['res.users']
     return res_users.check(db, uid, passwd)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

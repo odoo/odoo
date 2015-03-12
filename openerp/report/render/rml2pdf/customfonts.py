@@ -73,7 +73,7 @@ def list_all_sysfonts():
     # TTFOpenFile is not very good at it.
     searchpath = list(set(TTFSearchPath + rl_config.TTFSearchPath))
     for dirname in searchpath:
-        for filename in glob.glob(os.path.join(os.path.expanduser(dirname), '*.[Tt][Tt][Ff]')):
+        for filename in glob.glob(os.path.join(os.path.expanduser(dirname), '*.[Tt][Tt][FfCc]')):
             filepath.append(filename)
     return filepath
 
@@ -89,5 +89,3 @@ def SetCustomFonts(rmldoc):
         if os.path.isabs(filename) and os.path.exists(filename):
             rmldoc.setTTFontMapping(family, font, filename, mode)
     return True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -12,6 +12,10 @@
                         <field name="overdue_msg" nolabel="1" colspan ="4"/>
                     </page>
                 </notebook>
+                <xpath expr="//group[@name='account_grp']" position="inside">
+                        <field name="bank_account_code_char"/>
+                        <field name="accounts_code_digits"/>
+                </xpath>
             </field>
         </record>
 

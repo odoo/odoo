@@ -33,5 +33,3 @@ This module also conveniently reexports some symbols from openerp.modules.
 Importing them from here is deprecated.
 
 """
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

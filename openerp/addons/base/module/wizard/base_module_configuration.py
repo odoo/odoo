@@ -49,5 +49,3 @@ class base_module_configuration(osv.osv_memory):
         return config_pool.start(cr, uid, ids, context=context)
 
 base_module_configuration()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

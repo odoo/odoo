@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class account_automatic_reconcile(osv.osv_memory):
     _name = 'account.automatic.reconcile'
@@ -151,7 +152,7 @@ class account_automatic_reconcile(osv.osv_memory):
         allow_write_off = form.allow_write_off
         reconciled = unreconciled = 0
         if not form.account_ids:
-            raise osv.except_osv(_('User Error!'), _('You must select accounts to reconcile.'))
+            raise UserError(_('You must select accounts to reconcile.'))
         for account_id in form.account_ids:
             params = (account_id.id,)
             if not allow_write_off:
@@ -251,6 +252,3 @@ class account_automatic_reconcile(osv.osv_memory):
             'target': 'new',
             'context': context,
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

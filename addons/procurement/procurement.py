@@ -27,6 +27,7 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 import openerp
+from openerp.exceptions import UserError
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
@@ -105,7 +106,7 @@ class procurement_order(osv.osv):
     _name = "procurement.order"
     _description = "Procurement"
     _order = 'priority desc, date_planned, id asc'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread','ir.needaction_mixin']
     _log_create = False
     _columns = {
         'name': fields.text('Description', required=True),
@@ -145,6 +146,9 @@ class procurement_order(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
 
+    def _needaction_domain_get(self, cr, uid, context=None):
+        return [('state', '=', 'exception')] 
+        
     def unlink(self, cr, uid, ids, context=None):
         procurements = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
@@ -152,8 +156,7 @@ class procurement_order(osv.osv):
             if s['state'] == 'cancel':
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid Action!'),
-                        _('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
+                raise UserError(_('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def do_view_procurements(self, cr, uid, ids, context=None):
@@ -203,7 +206,6 @@ class procurement_order(osv.osv):
             if procurement.state not in ("running", "done"):
                 try:
                     if self._assign(cr, uid, procurement, context=context):
-                        procurement.refresh()
                         res = self._run(cr, uid, procurement, context=context or {})
                         if res:
                             self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
@@ -345,4 +347,3 @@ class procurement_order(osv.osv):
                     pass
 
         return {}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

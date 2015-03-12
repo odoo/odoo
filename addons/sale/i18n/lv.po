@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-23 10:26+0000\n"
+"Last-Translator: Vladimirs Kuzmins <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:33+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-10-24 07:07+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
@@ -143,6 +143,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
@@ -154,7 +156,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "(update)"
-msgstr ""
+msgstr "(atjaunināt)"
 
 #. module: sale
 #: help:sale.order.line,state:0
@@ -448,7 +450,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr ""
+msgstr "Pirms piegādes"
 
 #. module: sale
 #: code:addons/sale/sale.py:1041
@@ -461,12 +463,12 @@ msgstr ""
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "Pēc produkta"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Pēc pārdevējiem"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
@@ -483,7 +485,7 @@ msgstr "Atcelt"
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Cancel Line"
-msgstr ""
+msgstr "Atcelt rindu"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -493,7 +495,7 @@ msgstr "Atcelt Pasūtījumu"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Quotation"
-msgstr ""
+msgstr "Atcelt piedāvājumu"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -506,7 +508,7 @@ msgstr "Atcelts"
 #: code:addons/sale/sale.py:588
 #, python-format
 msgid "Cannot cancel this sales order!"
-msgstr ""
+msgstr "Nevar atcelt šo klienta pasūtījumu!"
 
 #. module: sale
 #: code:addons/sale/sale.py:1164
@@ -577,7 +579,7 @@ msgstr "Uzņēmums"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Konfigurācijas kļūda!"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -612,12 +614,12 @@ msgstr ""
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contracts Management"
-msgstr ""
+msgstr "Līgumu pārvaldība"
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "Create & View Invoice"
-msgstr ""
+msgstr "Izveidot un parādīt rēķinu"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
@@ -637,7 +639,7 @@ msgstr "Veidot Rēķinus"
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoice"
-msgstr ""
+msgstr "Izveidot un parādīt rēķinu"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
@@ -652,7 +654,7 @@ msgstr "Izveidot Rēķinus"
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Izveidoja"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
@@ -660,7 +662,7 @@ msgstr ""
 #: field:sale.order.line,create_date:0
 #: field:sale.order.line.make.invoice,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Izveidots"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -670,7 +672,7 @@ msgstr "Izveides Datums"
 #. module: sale
 #: field:sale.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valūta"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -684,12 +686,12 @@ msgstr "Klients"
 #: code:addons/sale/sale.py:464
 #, python-format
 msgid "Customer Invoices"
-msgstr ""
+msgstr "Klientu rēķini"
 
 #. module: sale
 #: field:sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Datums"
 
 #. module: sale
 #: field:sale.report,date_confirm:0
@@ -699,12 +701,12 @@ msgstr "Apstiprināšanas Datums"
 #. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Pasūtījuma Datums"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "Pasūtījuma datums:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
@@ -751,7 +753,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Piegādes adrese"
 
 #. module: sale
 #: field:sale.order.line,delay:0
@@ -782,7 +784,7 @@ msgstr "Atlaide %"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Atlaide rindās"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
@@ -792,7 +794,7 @@ msgstr ""
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr ""
+msgstr "Vai Jūs tiešām vēlaties izveidot rēķinu(s)?"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -818,12 +820,12 @@ msgstr ""
 #: code:addons/sale/edi/sale_order.py:140
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "EDI cenrādis (%s)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "E-pasta veidnes"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
@@ -844,7 +846,7 @@ msgstr ""
 #: code:addons/sale/sale.py:944
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Kļūda!"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -854,12 +856,12 @@ msgstr "Kļūda"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Paplašināti filtri"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "False"
-msgstr ""
+msgstr "Aplams"
 
 #. module: sale
 #: code:addons/sale/sale.py:589
@@ -880,7 +882,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Sekotāji"
 
 #. module: sale
 #: help:sale.config.settings,timesheet:0
@@ -894,7 +896,7 @@ msgstr ""
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Forecast"
-msgstr ""
+msgstr "Prognoze"
 
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
@@ -941,7 +943,7 @@ msgstr ""
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupēt pēc"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -959,7 +961,7 @@ msgstr ""
 #: code:addons/sale/res_config.py:100
 #, python-format
 msgid "Hour"
-msgstr ""
+msgstr "Stunda"
 
 #. module: sale
 #: field:sale.advance.payment.inv,id:0
@@ -969,7 +971,7 @@ msgstr ""
 #: field:sale.order.line.make.invoice,id:0
 #: field:sale.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale
 #: help:sale.order,message_unread:0
@@ -1005,7 +1007,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:102
 #, python-format
 msgid "Incorrect Data"
-msgstr ""
+msgstr "Nekorekti dati"
 
 #. module: sale
 #: code:addons/sale/sale.py:274
@@ -1013,7 +1015,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1164
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Nekorekta darbība!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:121
@@ -1072,12 +1074,12 @@ msgstr "Pasūtījuma rēķina adrese"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "Rēķina adrese:"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "Rēķina un piegādes adrese:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:107
@@ -1093,13 +1095,13 @@ msgstr ""
 #: code:addons/sale/wizard/sale_line_invoice.py:97
 #, python-format
 msgid "Invoice created"
-msgstr ""
+msgstr "Rēķins izveidots"
 
 #. module: sale
 #: code:addons/sale/sale.py:1217
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "Rēķins apmaksāts"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1143,7 +1145,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ir sekotājs"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -1158,7 +1160,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Pēdēja ziņojuma datums"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
@@ -1167,7 +1169,7 @@ msgstr ""
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Pēdējo reizi atjaunoja"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
@@ -1176,7 +1178,7 @@ msgstr ""
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Pēdējās izmaiņas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1191,12 +1193,12 @@ msgstr "Manuāls Progresā"
 #. module: sale
 #: field:sale.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Ziņojumi"
 
 #. module: sale
 #: help:sale.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Ziņojumu un komunikācijas vēsture"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -1212,12 +1214,12 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "Piedāvājuma jauna kopija"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Jauns pasts"
 
 #. module: sale
 #: code:addons/sale/sale.py:1041
@@ -1229,7 +1231,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1125
 #, python-format
 msgid "No Pricelist ! : "
-msgstr ""
+msgstr "Nav Cenrāža! : "
 
 #. module: sale
 #: code:addons/sale/sale.py:1136
@@ -1257,7 +1259,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Demand"
-msgstr ""
+msgstr "Pēc pieprasījuma"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -1301,12 +1303,12 @@ msgstr ""
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
-msgstr ""
+msgstr "Pasūtījuma mēnesis"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
+msgstr "Pasūtījuma nr."
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1327,12 +1329,12 @@ msgstr ""
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Pasūtījuma statuss"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Order reference"
-msgstr ""
+msgstr "Pasūtījuma atsauksme"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -1368,12 +1370,12 @@ msgstr ""
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Paypal Url"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Percentage"
-msgstr ""
+msgstr "Procenti"
 
 #. module: sale
 #: code:addons/sale/sale.py:928
@@ -1407,7 +1409,7 @@ msgstr "Cenrādis"
 #: code:addons/sale/sale.py:304
 #, python-format
 msgid "Pricelist Warning!"
-msgstr ""
+msgstr "Cenrāža brīdinājums!"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
@@ -1417,7 +1419,7 @@ msgstr "Cenrādis Pasūtījumam"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Print"
-msgstr ""
+msgstr "Drukāt"
 
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
@@ -1427,7 +1429,7 @@ msgstr "Iepirkumi"
 #. module: sale
 #: field:sale.order,procurement_group_id:0
 msgid "Procurement group"
-msgstr ""
+msgstr "Iepirkumu grupa"
 
 #. module: sale
 #: field:sale.order.line,procurement_ids:0
@@ -1447,12 +1449,12 @@ msgstr "Produkts"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Product Features"
-msgstr ""
+msgstr "Produkta īpašības"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Produkta veidne"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1462,7 +1464,7 @@ msgstr "Produkta pārdošanas mērvienība"
 #. module: sale
 #: field:sale.config.settings,module_project:0
 msgid "Project"
-msgstr ""
+msgstr "Projekts"
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
@@ -1501,12 +1503,12 @@ msgstr "Cenas piedāvājums / Pasūtījums"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Piedāvājuma datums:"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr ""
+msgstr "Piedāvājuma numurs"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1516,29 +1518,29 @@ msgstr "Cenas piedāvājuma Nr."
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "Piedāvājums nosūtīts"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Piedāvājums nosūtīts"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Piedāvājums apstiprināts"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
-msgstr ""
+msgstr "Piedāvājums izveidots"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "Piedāvājums nosūtīts"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1553,7 +1555,7 @@ msgstr "Tāmējumi"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "Piedāvājumu/a analīze"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1754,12 +1756,12 @@ msgstr "Pasūtījumu Statistika"
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Pārdošanas komanda"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_case_section
 msgid "Sales Teams"
-msgstr ""
+msgstr "Pārdošanas komandas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_exception
@@ -1816,7 +1818,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Send by Email"
-msgstr ""
+msgstr "Sūtīt pa e-pastu"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -1871,7 +1873,7 @@ msgstr "Apakšsumma kopā"
 #. module: sale
 #: field:sale.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Kopsavilkums"
 
 #. module: sale
 #: help:crm.case.section,invoiced_target:0
@@ -1963,7 +1965,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "This Year"
-msgstr ""
+msgstr "Šogad"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_margin:0
@@ -2088,17 +2090,17 @@ msgstr "Vienības cena"
 #: view:sale.order.line:sale.view_order_line_tree
 #: field:sale.report,product_uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mērvienība"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Mērvienība "
 
 #. module: sale
 #: field:sale.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neizlasīti ziņojumi"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -2147,12 +2149,12 @@ msgstr ""
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "VAT:"
-msgstr ""
+msgstr "PVN:"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "View Invoice"
-msgstr ""
+msgstr "Rādīt rēķinu"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -2171,7 +2173,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Uzmanību!"
 
 #. module: sale
 #: field:sale.order,website_message_ids:0
@@ -2191,7 +2193,7 @@ msgstr "Svars"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "Par ko jūs gribat izrakstīt rēķinu?"
 
 #. module: sale
 #: code:addons/sale/sale.py:983
@@ -2240,7 +2242,7 @@ msgstr ""
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "sale.group_delivery_invoice_address"
-msgstr ""
+msgstr "sale.group_delivery_invoice_address"
 
 #~ msgid "Order Date"
 #~ msgstr "Pasūtījuma datums"

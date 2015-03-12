@@ -28,6 +28,7 @@ from openerp.tools.translate import _
 from datetime import date, datetime, timedelta
 import calendar
 import logging
+from openerp.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 # display top 3 in ranking, could be db variable
@@ -183,7 +184,7 @@ class gamification_challenge(osv.Model):
         'report_message_group_id': fields.many2one('mail.group',
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),
-        'report_template_id': fields.many2one('email.template', string="Report Template", required=True),
+        'report_template_id': fields.many2one('mail.template', string="Report Template", required=True),
         'remind_update_delay': fields.integer('Non-updated manual goals will be reminded after',
             help="Never reminded if no value or zero is specified."),
         'last_report_date': fields.date('Last Report Date'),
@@ -248,7 +249,7 @@ class gamification_challenge(osv.Model):
         elif vals.get('state') == 'draft':
             # resetting progress
             if self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids), ('state', '=', 'inprogress')], context=context):
-                raise osv.except_osv("Error", "You can not reset a challenge with unfinished goals.")
+                raise UserError(_("You can not reset a challenge with unfinished goals."))
 
         return write_res
 
@@ -300,18 +301,23 @@ class gamification_challenge(osv.Model):
 
         goal_obj = self.pool.get('gamification.goal')
 
-        # we use yesterday to update the goals that just ended
+        # include yesterday goals to update the goals that just ended
+        # exclude goals for users that did not connect since the last update
         yesterday = date.today() - timedelta(days=1)
-        goal_ids = goal_obj.search(cr, uid, [
-            ('challenge_id', 'in', ids),
-            '|',
-                ('state', '=', 'inprogress'),
-                '&',
-                    ('state', 'in', ('reached', 'failed')),
-                    '|',
-                        ('end_date', '>=', yesterday.strftime(DF)),
-                        ('end_date', '=', False)
-        ], context=context)
+        cr.execute("""SELECT gg.id
+                        FROM gamification_goal as gg,
+                             gamification_challenge as gc,
+                             res_users as ru
+                       WHERE gg.challenge_id = gc.id
+                         AND gg.user_id = ru.id
+                         AND gg.write_date < ru.login_date
+                         AND gg.closed IS false
+                         AND gc.id IN %s
+                         AND (gg.state = 'inprogress'
+                              OR (gg.state = 'reached'
+                                  AND (gg.end_date >= %s OR gg.end_date IS NULL)))
+        """, (tuple(ids), yesterday.strftime(DF)))
+        goal_ids = [res[0] for res in cr.fetchall()]
         # update every running goal already generated linked to selected challenges
         goal_obj.update(cr, uid, goal_ids, context=context)
 
@@ -553,7 +559,7 @@ class gamification_challenge(osv.Model):
 
             if challenge.visibility_mode == 'personal':
                 if not user_id:
-                    raise osv.except_osv(_('Error!'),_("Retrieving progress for personal challenge without user information"))
+                    raise UserError(_("Retrieving progress for personal challenge without user information"))
                 domain.append(('user_id', '=', user_id))
                 sorting = goal_obj._order
                 limit = 1
@@ -622,7 +628,7 @@ class gamification_challenge(osv.Model):
         if context is None:
             context = {}
 
-        temp_obj = self.pool.get('email.template')
+        temp_obj = self.pool.get('mail.template')
         ctx = context.copy()
         if challenge.visibility_mode == 'ranking':
             lines_boards = self._get_serialized_challenge_lines(cr, uid, challenge, user_id=False, restrict_goal_ids=subset_goal_ids, restrict_top=False, context=context)

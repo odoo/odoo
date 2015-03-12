@@ -21,7 +21,6 @@
 
 from openerp.addons.mail.tests.common import TestMail
 from openerp.exceptions import AccessError
-from openerp.osv.orm import except_orm
 from openerp.tools.misc import mute_logger
 
 
@@ -60,7 +59,7 @@ class test_portal(TestMail):
 
         # Do: Chell browses Pigs -> ko, employee group
         chell_pigs = self.mail_group.browse(cr, self.user_chell_id, self.group_pigs_id)
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             trigger_read = chell_pigs.name
 
         # Do: Chell posts a message on Pigs, crash because can not write on group or is not in the followers
@@ -77,7 +76,7 @@ class test_portal(TestMail):
             if partner.id == self.partner_chell_id:
                 # Chell can read her own partner record
                 continue
-            with self.assertRaises(except_orm):
+            with self.assertRaises(AccessError):
                 trigger_read = partner.name
 
         # Do: Chell comments Pigs, ok because he is now in the followers
@@ -99,7 +98,7 @@ class test_portal(TestMail):
         for message in chell_port.message_ids:
             trigger_read = message.subject
         for partner in chell_port.message_follower_ids:
-            with self.assertRaises(except_orm):
+            with self.assertRaises(AccessError):
                 trigger_read = partner.name
 
     def test_10_mail_invite(self):
@@ -225,5 +224,5 @@ class test_portal(TestMail):
         self.mail_message.read(cr, self.user_chell_id, msg_ids, ['body', 'type', 'subtype_id'])
 
         # Do: Chell read a message she should not be able to read
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_message.read(cr, self.user_chell_id, [msg4_id], ['body', 'type', 'subtype_id'])

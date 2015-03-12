@@ -8,31 +8,31 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-12 14:36+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:18+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-13 07:23+0000\n"
+"X-Generator: Launchpad (build 17241)\n"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:260
 #, python-format
 msgid " Manufacture"
-msgstr ""
+msgstr " Gyártás"
 
 #. module: mrp
 #: field:product.template,bom_count:0
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# Darabjegyzék"
 
 #. module: mrp
 #: field:product.product,mo_count:0
 #: field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Gyártási megrendelések"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:356
@@ -44,7 +44,7 @@ msgstr "%s (másolat)"
 #: code:addons/mrp/mrp.py:958
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%s legyártott"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -130,6 +130,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson darabjegyzék létrehozásához. \n"
+"              </p><p>\n"
+"                Darabjegyzékek lehetővé teszik a késztermék létrehozásához "
+"igényelt \n"
+"                nyersanyagok listáinak meghatározását; a gyártási "
+"megrendelésen vagy a \n"
+"                termékek csomagolásán keresztül.\n"
+"              </p><p>\n"
+"                Odoo rendszer a beszerzési igények szerinti automatikus "
+"gyártási megrendelések javaslatának elkészítéséhez\n"
+"                használja ezeket a darabjegyzékekekt.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -153,6 +167,26 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattints egy tulajdonságok csoport létrehozásához.\n"
+"              </p><p>\n"
+"                Határozz meg sajátos csoportokat, melyeket hozzátársíthat\n"
+"                a darabjegyzékeihez és vásárlói megrendelésekhez. A "
+"tulajdonságok\n"
+"                lehetővé teszik az Odoo rendszer részére a megfelelő "
+"darabjegyzék\n"
+"                automatikus kiválasztását az értékesítő által a vásárlói "
+"megrendelésen \n"
+"                kiválasztott tulajdonságok alapján.\n"
+"              </p><p>\n"
+"                Például, a \"Garancia\" tulajdonság csoportban, két \n"
+"                tulajdonság lehet: 1 éves garancia, 3 éves garancia. A "
+"vásárlói\n"
+"                megrendelésen kiválasztott tulajdonság alapján, az Odoo "
+"rendszer\n"
+"                ütemezni fogja a gyártáshoz megfelelő darabjegyzéket.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -171,6 +205,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson egy gyártási megrendelés létrehozásához. \n"
+"              </p><p>\n"
+"                Egy gyártási megrendelés, egy darabjegyzék alapján, \n"
+"                fogyasztani fog nyersanyagokat és létre fog hozni "
+"késztermékeket.\n"
+"              </p><p>\n"
+"                Gyártási megrendeléseket általában a fogyasztók igényei "
+"alapján\n"
+"                vagy automatikus szabályok alapján, mint minimum "
+"raktárkészlet szabály, \n"
+"                automatikusan javasol a rendszer.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
@@ -190,6 +238,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson új tulajdonság létrehozásához.\n"
+"              </p><p>\n"
+"                A tulajdonságokat az Odoo rendszer egy termék "
+"létrehozásához\n"
+"                megfelelő darabjegyzék kiválasztásához használja, akkor, ha\n"
+"                egy termék előállítását többféle módon el lehet végezni. \n"
+"                Hozzárendelhet több tulajdonságot mindegyik darabjegyzékhez. "
+"\n"
+"                Ha egy értékesítő létrehoz egy vásárlói megrendelést, akkor\n"
+"                ahhoz több tulajdonságot kapcsolhat és az Odoo rendszer\n"
+"                a követelményeknek megfelelő databjegyzékeket automatikusan\n"
+"                fogja kiválasztani.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -234,11 +297,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson új gyártási megrendelés elindításához. \n"
+"              </p><p>\n"
+"                 Egy gyártási megrendelés, egy darabjegyzék alapján, \n"
+"                fogyasztani fog nyersanyagokat és létre fog hozni "
+"késztermékeket.\n"
+"              </p><p>\n"
+"                Gyártási megrendeléseket általában a fogyasztók igényei "
+"alapján\n"
+"                vagy automatikus szabályok alapján, mint minimum "
+"raktárkészlet szabály, \n"
+"                automatikusan javasol a rendszer.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% during the production process."
 msgstr ""
+"A 0.9 együttható azt jelenti, hogy 10% veszteség keletkezik a gyártási "
+"munkafolyamatok során."
 
 #. module: mrp
 #: help:mrp.bom.line,product_efficiency:0
@@ -291,6 +370,14 @@ msgid ""
 "* Notes for the technician and for the final customer.\n"
 "-This installs the module mrp_repair."
 msgstr ""
+"Lehetővé teszi az összes termék javítási munkák kezelését.\n"
+"* Hozzáad/elvesz terméket a javítás során\n"
+"* Hatással van a raktárkészletekre\n"
+"* Számlázás (termékeket és/vagy szolgáltatásokat)\n"
+"* Garancia fogalma\n"
+"* Javítási árajánlat jelentés\n"
+"* Megjegyzés a műszaki szakember és az ügyfél részére.\n"
+"-Ez az mrp_repair modult telepíti."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
@@ -328,6 +415,9 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Átlag késési idő napokban, ennek a terméknek az előállításához "
+"vonatkoztatva.  Több lépcsős darabjegyzék (BOM) esetén, az alkatrészek "
+"gyártási ideje is hozzá lesz adva."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -343,6 +433,8 @@ msgstr "Anyagjegyzék név"
 #: help:mrp.bom.line,attribute_value_ids:0
 msgid "BOM Product Variants needed form apply this line."
 msgstr ""
+"Darabjegyzék (BOM) termék variációk szükségesek ennek a sornak az "
+"alkalmazásához."
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
@@ -363,6 +455,9 @@ msgid ""
 "raw material %s to proceed further in your production. Please use the "
 "'Produce' button to do so."
 msgstr ""
+"Mert a %s termék megkívánja, ezért egy széria számot kell hozzáadnia a %s "
+"nyersanyaghoz, ahhoz hogy tovább tudjon lépni a gyártási folyamatban. Kérem "
+"használja a 'Gyárts' gombot ehhez."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -420,6 +515,7 @@ msgstr "Anyagjegyzék"
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
+"Darabjegyzék (BoM) \"%s\" tartalmaz egy ismétlődő terméksort: \"%s\"."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:348
@@ -428,6 +524,8 @@ msgid ""
 "BoM \"%s\" contains a phantom BoM line but the product \"%s\" don't have any "
 "BoM defined."
 msgstr ""
+"Darabjegyzék (BoM) \"%s\" tartalmaz egy fantom sort, de a \"%s\" termékhez "
+"nincs darabjegyzék meghatározva."
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
@@ -437,7 +535,7 @@ msgstr "Anyagjegyzék hierarchia"
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr ""
+msgstr "Darabjegyzék (BoM) sor típus"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
@@ -453,7 +551,7 @@ msgstr "Anyagjegyzék tipusa"
 #: code:addons/mrp/stock.py:257
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "Nem található egyetlen általános gyátási útvonal."
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -480,6 +578,7 @@ msgstr "Törölt"
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
+"Nem tud tételmozgást használni ebből, mivel negatív vagy nulla a mennyiség."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:617
@@ -529,7 +628,7 @@ msgstr "Termékek mennyiségének megváltoztatása"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Check Availability"
-msgstr ""
+msgstr "Rendelkezésre állás ellenőrzése"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -607,13 +706,13 @@ msgstr "Felhasználás és gyártás"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Felhasználási sorok"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr ""
+msgstr "Felhasználási tétel mozgás"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -637,7 +736,7 @@ msgstr "Felhasznált termékek"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "Felhasznált ehhez"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -686,7 +785,7 @@ msgstr "Költségszámítási információk"
 #: field:mrp.workcenter.load,create_uid:0
 #: field:stock.move.consume,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Készítette"
 
 #. module: mrp
 #: field:change.production.qty,create_date:0
@@ -707,7 +806,7 @@ msgstr ""
 #: field:mrp.workcenter.load,create_date:0
 #: field:stock.move.consume,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Létrehozás dátuma"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -725,7 +824,7 @@ msgstr "Ciklus költség"
 #: help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "A feljegyzésen történt utolsó üzenet dátuma."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -843,6 +942,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "generated by a Manufacturing Order"
 msgstr ""
+"Minden tétel mozgáshoz, mely tartalmazza ezt a terméket és egy gyártási "
+"megrendelés generálta, kényszerítsen hozzá egy széria számot"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
@@ -875,12 +976,12 @@ msgstr "Megadja a sorrendet, amikor a munka megbízások listáját kiállítjuk
 #. module: mrp
 #: help:mrp.bom.line,sequence:0
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "Kijelzéskor egy sorrendet ad."
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr ""
+msgstr "Csoportosítás"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -935,13 +1036,15 @@ msgstr "Óránkénti költség"
 #: field:report.workcenter.load,id:0
 #: field:stock.move.consume,id:0
 msgid "ID"
-msgstr ""
+msgstr "Azonosító ID"
 
 #. module: mrp
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
+"Ha egy termék variáns meghatározott akkor a darabjegyzék csak erre a "
+"termékre vonatkozik."
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0
@@ -1015,7 +1118,7 @@ msgstr ""
 #: field:mrp.production,message_last_post:0
 #: field:mrp.production.workcenter.line,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Utolsó üzenet időpontja"
 
 #. module: mrp
 #: field:change.production.qty,write_uid:0
@@ -1036,7 +1139,7 @@ msgstr ""
 #: field:mrp.workcenter.load,write_uid:0
 #: field:stock.move.consume,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Utoljára frissítve, által"
 
 #. module: mrp
 #: field:change.production.qty,write_date:0
@@ -1057,7 +1160,7 @@ msgstr ""
 #: field:mrp.workcenter.load,write_date:0
 #: field:stock.move.consume,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Utoljára frissítve ekkor"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1067,7 +1170,7 @@ msgstr "Később"
 #. module: mrp
 #: field:stock.move.consume,location_id:0
 msgid "Location"
-msgstr ""
+msgstr "Hely"
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -1084,7 +1187,7 @@ msgstr "A késztermékek tárolásának helye."
 #: field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
-msgstr ""
+msgstr "Résztétel / csomag"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -1111,17 +1214,17 @@ msgstr "Igazgató"
 #: code:addons/mrp/stock.py:254
 #, python-format
 msgid "Manufacture"
-msgstr ""
+msgstr "Gyártás"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_pull_id:0
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "Gyártási szabály"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_to_resupply:0
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "Gyártás ehhez a raktárépülethez"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -1259,7 +1362,7 @@ msgstr "Új"
 #: code:addons/mrp/procurement.py:120
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "Nem létezik darabjegyzék (BoM) ehhez a termékhez!"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1286,7 +1389,7 @@ msgstr "Nem sürgős"
 #. module: mrp
 #: help:mrp.property,composition:0
 msgid "Not used in computations, for information purpose only."
-msgstr ""
+msgstr "Nem használt a számításhoz, csak információként szolgál."
 
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
@@ -1334,7 +1437,7 @@ msgstr "Open MRP Gyártási erőforrás/ Menü"
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Operation"
-msgstr ""
+msgstr "Művelet"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
@@ -1364,7 +1467,7 @@ msgstr "Fölérendelt eljárás"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Partner Ref:"
-msgstr ""
+msgstr "Partner hivatkozás:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1384,7 +1487,7 @@ msgstr "Hetente"
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr ""
+msgstr "Fantom"
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1393,6 +1496,9 @@ msgid ""
 "manufacturing orders,it will be directly replaced by the raw materials of "
 "its own BoM, without triggeringan extra manufacturing order."
 msgstr ""
+"Fantom: ez a termék sor nem fog látszani a gyártási megrendelések "
+"nyersanyagai közt, közvetlenül lesz kicserélve a a saját darabjegyzékében "
+"lévő nyersanyagokkal, egy extra gyártási megrendelés elindítása nélkül."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -1404,7 +1510,7 @@ msgstr "Tervezés"
 #: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "Kérem adjon meg megfelelő mennyiséget."
 
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
@@ -1420,7 +1526,7 @@ msgstr "Termék költségszerkezet nyomtatása"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Printing date:"
-msgstr ""
+msgstr "Nyomtatás dátuma:"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1435,7 +1541,7 @@ msgstr "Beszerzés"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Beszerzési szabály"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1499,7 +1605,7 @@ msgstr "Termék gyártása"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "Termék előállítási felhasználási sorok"
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -1523,7 +1629,7 @@ msgstr "Termék kerekítése"
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Terméksablon"
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos:0
@@ -1572,12 +1678,12 @@ msgstr "Termékek UoS Mennyisége"
 #. module: mrp
 #: field:mrp.bom,product_id:0
 msgid "Product Variant"
-msgstr ""
+msgstr "Termékváltozat"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Product:"
-msgstr ""
+msgstr "Termék:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1604,12 +1710,12 @@ msgstr "Munka megbízás száma:"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Termelési megrendelés a megtermelt termékekhez"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "Termelési megrendelés a nyersanyagokhoz"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1629,7 +1735,7 @@ msgstr "Gyártási munkaállomások"
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr ""
+msgstr "Termelési folyamat"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1652,7 +1758,7 @@ msgstr "Termékek"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "Felhasznált termékek"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1692,12 +1798,12 @@ msgstr "Tulajdonság-kategóriák"
 #. module: mrp
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr ""
+msgstr "Összetételek tulajdonságai"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property
 msgid "Property"
-msgstr ""
+msgstr "Tulajdonság"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
@@ -1728,12 +1834,12 @@ msgstr "Mennyiség"
 #. module: mrp
 #: field:mrp.product.produce.line,product_qty:0
 msgid "Quantity (in default UoM)"
-msgstr ""
+msgstr "Mennyiség (az alapértelmezett mértékegységben)"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Quantity:"
-msgstr ""
+msgstr "Mennyiség:"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
@@ -1852,7 +1958,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "SO Number:"
-msgstr ""
+msgstr "Vásárlói megrendelés szám:"
 
 #. module: mrp
 #: field:mrp.production,date_planned:0
@@ -1862,17 +1968,17 @@ msgstr "Tervezett dátum"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Tervezett idő havi lebontásban"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Tervezett dátum:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Ütemezés hónapja"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1904,7 +2010,7 @@ msgstr "Anyagjegyzék keresése"
 #. module: mrp
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "Darabjegyzék alkotó elemeinek keresése"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1943,7 +2049,7 @@ msgstr "Sorszám"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Set"
-msgstr ""
+msgstr "Beállítás"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -1951,6 +2057,9 @@ msgid ""
 "Set: When processing a sales order for this product, the delivery order will "
 "contain the raw materials, instead of the finished product."
 msgstr ""
+"Beállítás: ha egy vásárlói megrendelést dolgoz fel erre a termékre "
+"vonatkozólag, a kézbesítési bizonylat/szállítólevél a nyersanyagokat fogja "
+"tartalmazni a késztermék helyett."
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1960,7 +2069,7 @@ msgstr "Forrás dokumentum"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Document:"
-msgstr ""
+msgstr "Forrás dokumentum:"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -2031,7 +2140,7 @@ msgstr "Beszállítói ár a mértékegységben megadva"
 #. module: mrp
 #: help:stock.move,consumed_for:0
 msgid "Technical field used to make the traceability of produced products"
-msgstr ""
+msgstr "Technikai mező a megtermelt termékek nyomon követhetőségéhez."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:366
@@ -2087,6 +2196,9 @@ msgid ""
 "lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
 msgstr ""
+"Ez lehetővé teszi az állapot, elkezdés_dátuma,befelyezés_dátuma sorok "
+"hozzáadását a termelési megrendelés soraihoz (a \"Munka állomások\" fülön).\n"
+"-Ez a mrp_operations modult telepíti."
 
 #. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
@@ -2098,6 +2210,12 @@ msgid ""
 "* Product Attributes.\n"
 "-This installs the module product_manufacturer."
 msgstr ""
+"Ez lehetővé teszi egy termékhez a következők meghatározását:\n"
+"* Gyártó\n"
+"* Termék gyártói általi elnevezése\n"
+"* Termék gyártói termék kódja\n"
+"* Termék jellemzők.\n"
+"-Ez a product_manufacturer modult telepíti."
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
@@ -2141,7 +2259,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "Használja fel"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162
@@ -2170,12 +2288,12 @@ msgstr "Összmennyiség"
 #. module: mrp
 #: field:product.template,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "Gyártási rész tételek/csomagok nyomon követése"
 
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
 msgid "Track production"
-msgstr ""
+msgstr "Termelés nyomonkövetése"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2212,7 +2330,7 @@ msgstr "Olvasatlan üzenetek"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Update"
-msgstr ""
+msgstr "Frissítés"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2234,13 +2352,13 @@ msgstr "Érvényesség kezdete"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "Ettől a havi dátumtól érvényes"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Ettől a hónaptól érvényes"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
@@ -2252,23 +2370,24 @@ msgstr "Érvényesség vége"
 #: help:mrp.bom.line,date_start:0
 #: help:mrp.bom.line,date_stop:0
 msgid "Validity of component. Keep empty if it's always valid."
-msgstr ""
+msgstr "Összetevő érvényessége. Hagyja üresen, ha mindíg érvényes."
 
 #. module: mrp
 #: help:mrp.bom,date_start:0
 #: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
 msgstr ""
+"Érvényesítés erre a darabjegyzékre. Hagyja üresen, ha mindíg érvényes."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "Variáció"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
 msgid "Variants"
-msgstr ""
+msgstr "Változatok"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2278,7 +2397,7 @@ msgstr "Nagyon sürgős"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "Raktárépület"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:366
@@ -2300,14 +2419,14 @@ msgstr "Figyelem!"
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Weboldal üzenetek"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Weboldal  kommunikáció történet"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2327,6 +2446,9 @@ msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
 "linked to manufacturing activities, receipts of products and delivery orders."
 msgstr ""
+"Heti raktár érték variáció lehetővé teszi a raktár értékelés nyomon "
+"követését, melyek gyártási tevékenységhez, termék fogadáshoz és "
+"megrendelések kiszállításához kapcsoltak."
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view
@@ -2344,6 +2466,8 @@ msgstr ""
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
 msgstr ""
+"Ha a termékek legyártottak, akkor azokat ebben a raktárépületben lehet "
+"gyártani."
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -2475,32 +2599,36 @@ msgid ""
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
 msgstr ""
+"Be tudja állítani termékenként a darabjegyzéken.\n"
+"A modul nélkül: A + B + C -> D.\n"
+"Ezzel a modullal: A + B + C -> D + E.\n"
+"-Ez a mrp_byproduct modult telepíti."
 
 #. module: mrp
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "Hozzá kell rendelnie egy szériaszámot ehhez a termékhez %s"
 
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited
 msgid "days"
-msgstr ""
+msgstr "napok"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "max"
-msgstr ""
+msgstr "max."
 
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "min"
-msgstr ""
+msgstr "min"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "plus"
-msgstr ""
+msgstr "plusz"
 
 #. module: mrp
 #: field:mrp.product.produce,product_id:0
@@ -2508,7 +2636,7 @@ msgstr ""
 #: field:mrp.product.produce.line,track_production:0
 #: field:mrp.production,ready_production:0
 msgid "unknown"
-msgstr ""
+msgstr "ismeretlen"
 
 #, python-format
 #~ msgid ""

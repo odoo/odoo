@@ -171,5 +171,3 @@ class ir_rule(osv.osv):
         res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
         self.clear_cache(cr,uid)
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

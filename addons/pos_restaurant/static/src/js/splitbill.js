@@ -1,21 +1,19 @@
-function openerp_restaurant_splitbill(instance, module){
+openerp.pos_restaurant.load_splitbill = function(instance, module){
     var QWeb = instance.web.qweb;
-	var _t = instance.web._t;
 
     module.SplitbillScreenWidget = module.ScreenWidget.extend({
         template: 'SplitbillScreenWidget',
 
-        show_leftpane:   false,
         previous_screen: 'products',
 
         renderElement: function(){
             var self = this;
             this._super();
-            var order = this.pos.get('selectedOrder');
+            var order = this.pos.get_order();
             if(!order){
                 return;
             }
-            var orderlines = order.get('orderLines').models;
+            var orderlines = order.get_orderlines();
             for(var i = 0; i < orderlines.length; i++){
                 var line = orderlines[i];
                 linewidget = $(QWeb.render('SplitOrderline',{ 
@@ -29,13 +27,13 @@ function openerp_restaurant_splitbill(instance, module){
                 this.$('.orderlines').append(linewidget);
             }
             this.$('.back').click(function(){
-                self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
+                self.gui.show_screen(self.previous_screen);
             });
         },
 
         lineselect: function($el,order,neworder,splitlines,line_id){
             var split = splitlines[line_id] || {'quantity': 0, line: null};
-            var line  = order.getOrderline(line_id);
+            var line  = order.get_orderline(line_id);
             
             if( !line.get_unit().groupable ){
                 if( split.quantity !== line.get_quantity()){
@@ -57,11 +55,11 @@ function openerp_restaurant_splitbill(instance, module){
             if( split.quantity ){
                 if ( !split.line ){
                     split.line = line.clone();
-                    neworder.addOrderline(split.line);
+                    neworder.add_orderline(split.line);
                 }
                 split.line.set_quantity(split.quantity);
             }else if( split.line ) {
-                neworder.removeOrderline(split.line);
+                neworder.remove_orderline(split.line);
                 split.line = null;
             }
      
@@ -73,11 +71,11 @@ function openerp_restaurant_splitbill(instance, module){
                 quantity: split.quantity,
                 id: line_id,
             })));
-            this.$('.order-info .subtotal').text(this.format_currency(neworder.getSubtotal()));
+            this.$('.order-info .subtotal').text(this.format_currency(neworder.get_subtotal()));
         },
 
-        pay: function($el,order,neworder,splitlines,cashregister_id){
-            var orderlines = order.get('orderLines').models;
+        pay: function(order,neworder,splitlines){
+            var orderlines = order.get_orderlines();
             var empty = true;
             var full  = true;
 
@@ -100,27 +98,19 @@ function openerp_restaurant_splitbill(instance, module){
                 return;
             }
 
-            for(var i = 0; i < this.pos.cashregisters.length; i++){
-                if(this.pos.cashregisters[i].id === cashregister_id){
-                    var cashregister = this.pos.cashregisters[i];
-                    break;
-                }
-            }
 
             if(full){
-                order.addPaymentline(cashregister);
-                this.pos_widget.screen_selector.set_current_screen('payment');
+                this.gui.show_screen('payment');
             }else{
                 for(var id in splitlines){
                     var split = splitlines[id];
-                    var line  = order.getOrderline(parseInt(id));
+                    var line  = order.get_orderline(parseInt(id));
                     line.set_quantity(line.get_quantity() - split.quantity);
                     if(Math.abs(line.get_quantity()) < 0.00001){
-                        order.removeOrderline(line);
+                        order.remove_orderline(line);
                     }
                     delete splitlines[id];
                 }
-                neworder.addPaymentline(cashregister);
                 neworder.set_screen_data('screen','payment');
 
                 // for the kitchen printer we assume that everything
@@ -135,6 +125,9 @@ function openerp_restaurant_splitbill(instance, module){
                     neworder.saveChanges();
                 }
 
+                neworder.set_customer_count(1);
+                order.set_customer_count(order.get_customer_count() - 1);
+
                 this.pos.get('orders').add(neworder);
                 this.pos.set('selectedOrder',neworder);
             }
@@ -144,8 +137,8 @@ function openerp_restaurant_splitbill(instance, module){
             this._super();
             this.renderElement();
 
-            var order = this.pos.get('selectedOrder');
-            var neworder = new module.Order({
+            var order = this.pos.get_order();
+            var neworder = new module.Order({},{
                 pos: this.pos,
                 temporary: true,
             });
@@ -159,35 +152,35 @@ function openerp_restaurant_splitbill(instance, module){
                 self.lineselect($el,order,neworder,splitlines,id);
             });
 
-            this.$('.paymentmethod').click(function(){
-                var id = parseInt($(this).data('id'));
-                var $el = $(this);
-                self.pay($el,order,neworder,splitlines,id);
+            this.$('.paymentmethods .button').click(function(){
+                self.pay(order,neworder,splitlines);
             });
         },
     });
 
-    module.PosWidget.include({
-        build_widgets: function(){
-            var self = this;
-            this._super();
+    module.Gui.define_screen({
+        'name': 'splitbill', 
+        'widget': module.SplitbillScreenWidget,
+        'condition': function(){ 
+            return this.pos.config.iface_splitbill;
+        },
+    });
 
-            if(this.pos.config.iface_splitbill){
-                this.splitbill_screen = new module.SplitbillScreenWidget(this,{});
-                this.splitbill_screen.appendTo(this.$('.screens'));
-                this.screen_selector.add_screen('splitbill',this.splitbill_screen);
-
-                var splitbill = $(QWeb.render('SplitbillButton'));
-
-                splitbill.click(function(){
-                    if(self.pos.get('selectedOrder').get('orderLines').models.length > 0){
-                        self.pos_widget.screen_selector.set_current_screen('splitbill');
-                    }
-                });
-                
-                splitbill.appendTo(this.$('.control-buttons'));
-                this.$('.control-buttons').removeClass('oe_hidden');
+    module.SplitbillButton = module.ActionButtonWidget.extend({
+        template: 'SplitbillButton',
+        button_click: function(){
+            if(this.pos.get_order().get_orderlines().length > 0){
+                this.gui.show_screen('splitbill');
             }
         },
     });
-}
+
+    module.define_action_button({
+        'name': 'splitbill',
+        'widget': module.SplitbillButton,
+        'condition': function(){
+            return this.pos.config.iface_splitbill;
+        },
+    });
+};
+

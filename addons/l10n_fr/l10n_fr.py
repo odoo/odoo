@@ -55,6 +55,3 @@ class res_company(osv.osv):
         'siret': fields.char('SIRET', size=14),
         'ape': fields.char('APE'),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

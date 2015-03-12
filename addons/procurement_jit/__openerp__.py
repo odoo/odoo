@@ -40,11 +40,10 @@ In that case, you can not use priorities any more on the different picking.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/manufacturing',
-    'depends': ['procurement'],
+    'depends': ['procurement', 'stock'],
     'data': [],
     'demo': [],
     'test': ['test/procurement_jit.yml'],
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

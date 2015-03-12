@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import calendar
-from datetime import date
-from dateutil import relativedelta
-import json
-
-from openerp import tools
 from openerp.osv import fields, osv
 
 
@@ -13,42 +7,12 @@ class crm_team(osv.Model):
     _inherit = 'crm.team'
     _inherits = {'mail.alias': 'alias_id'}
 
-    def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
-        """ Get opportunities-related data for salesteam kanban view
-            monthly_open_leads: number of open lead during the last months
-            monthly_planned_revenue: planned revenu of opportunities during the last months
-        """
-        obj = self.pool.get('crm.lead')
-        res = dict.fromkeys(ids, False)
-        month_begin = date.today().replace(day=1)
-        date_begin = month_begin - relativedelta.relativedelta(months=self._period_number - 1)
-        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1])
-        lead_pre_domain = [('create_date', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)),
-                ('create_date', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)),
-                              ('type', '=', 'lead')]
-        opp_pre_domain = [('date_deadline', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
-                      ('date_deadline', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
-                      ('type', '=', 'opportunity')]
-        for id in ids:
-            res[id] = dict()
-            lead_domain = lead_pre_domain + [('team_id', '=', id)]
-            opp_domain = opp_pre_domain + [('team_id', '=', id)]
-            res[id]['monthly_open_leads'] = json.dumps(self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date'], 'create_date_count', 'create_date', context=context))
-            res[id]['monthly_planned_revenue'] = json.dumps(self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'date_deadline'], 'planned_revenue', 'date_deadline', context=context))
-        return res
-
     _columns = {
         'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
         'stage_ids': fields.many2many('crm.stage', 'crm_team_stage_rel', 'team_id', 'stage_id', 'Stages'),
         'use_leads': fields.boolean('Leads',
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
         'use_opportunities': fields.boolean('Opportunities', help="Check this box to manage opportunities in this sales team."),
-        'monthly_open_leads': fields.function(_get_opportunities_data,
-            type="char", readonly=True, multi='_get_opportunities_data',
-            string='Open Leads per Month'),
-        'monthly_planned_revenue': fields.function(_get_opportunities_data,
-            type="char", readonly=True, multi='_get_opportunities_data',
-            string='Planned Revenue per Month'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically create new leads assigned to the team."),
     }
 

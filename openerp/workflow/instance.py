@@ -128,7 +128,3 @@ def update(session, record, instance_id):
 
 def _update_end(session, record, instance_id):
     return WorkflowInstance(session, record)._update_end(instance_id)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

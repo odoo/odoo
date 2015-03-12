@@ -40,6 +40,3 @@ class ir_exports_line(osv.osv):
         'name': fields.char('Field Name'),
         'export_id': fields.many2one('ir.exports', 'Export', select=True, ondelete='cascade'),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

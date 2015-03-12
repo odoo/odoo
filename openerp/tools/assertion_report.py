@@ -26,4 +26,3 @@ class assertion_report(object):
     def __str__(self):
         res = 'Assertions report: %s successes, %s failures' % (self.successes, self.failures)
         return res
-

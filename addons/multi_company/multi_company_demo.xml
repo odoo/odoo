@@ -94,10 +94,6 @@
     Resource: product.product
     -->
 
-        <record id="Odoo1" model="product.category">
-            <field name="parent_id" ref="product.product_category_all"/>
-            <field name="name">Odoo Offers</field>
-        </record>
         <record id="product_product_odoo1" model="product.product">
             <field name="default_code">ODOO</field>
             <field name="list_price">35.0</field>
@@ -105,7 +101,7 @@
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field name="uom_po_id" ref="product.product_uom_unit"/>
             <field name="name">Odoo Offer</field>
-            <field name="categ_id" ref="Odoo1"/>
+            <field name="categ_id" ref="product.product_category_all"/>
         <field name="company_id" ref="res_company_odoo"/>
         </record>
 

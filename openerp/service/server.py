@@ -7,12 +7,7 @@ import logging
 import os
 import os.path
 import platform
-import psutil
 import random
-if os.name == 'posix':
-    import resource
-else:
-    resource = None
 import select
 import signal
 import socket
@@ -23,11 +18,18 @@ import time
 import unittest2
 
 import werkzeug.serving
+from werkzeug.debug import DebuggedApplication
 
-try:
+if os.name == 'posix':
+    # Unix only for workers
     import fcntl
-except ImportError:
-    pass
+    import resource
+    import psutil
+else:
+    # Windows shim
+    signal.SIGHUP = -1
+
+# Optional process names for workers
 try:
     from setproctitle import setproctitle
 except ImportError:
@@ -44,7 +46,7 @@ _logger = logging.getLogger(__name__)
 try:
     import watchdog
     from watchdog.observers import Observer
-    from watchdog.events import FileCreatedEvent, FileModifiedEvent
+    from watchdog.events import FileCreatedEvent, FileModifiedEvent, FileMovedEvent
 except ImportError:
     watchdog = None
 
@@ -122,9 +124,9 @@ class FSWatcher(object):
             self.observer.schedule(self, path, recursive=True)
 
     def dispatch(self, event):
-        if isinstance(event, (FileCreatedEvent, FileModifiedEvent)):
+        if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent)):
             if not event.is_directory:
-                path = event.src_path
+                path = getattr(event, 'dest_path', event.src_path)
                 if path.endswith('.py'):
                     try:
                         source = open(path, 'rb').read() + '\n'
@@ -254,7 +256,7 @@ class ThreadedServer(CommonServer):
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
         test_mode = config['test_enable'] or config['test_file']
-        if not stop or test_mode:
+        if test_mode or (config['xmlrpc'] and not stop):
             # some tests need the http deamon to be available...
             self.http_spawn()
 
@@ -496,12 +498,13 @@ class PreforkServer(CommonServer):
                 self.worker_kill(pid, signal.SIGKILL)
 
     def process_spawn(self):
-        while len(self.workers_http) < self.population:
-            self.worker_spawn(WorkerHTTP, self.workers_http)
+        if config['xmlrpc']:
+            while len(self.workers_http) < self.population:
+                self.worker_spawn(WorkerHTTP, self.workers_http)
+            if not self.long_polling_pid:
+                self.long_polling_spawn()
         while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
-        if not self.long_polling_pid:
-            self.long_polling_spawn()
 
     def sleep(self):
         try:
@@ -628,8 +631,6 @@ class Worker(object):
                 raise
 
     def process_limit(self):
-        if resource is None:
-            return
         # If our parent changed sucide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
@@ -688,7 +689,9 @@ class Worker(object):
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 self.process_work()
-            _logger.info("Worker (%s) exiting. request_count: %s.", self.pid, self.request_count)
+            _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
+                         self.pid, self.request_count,
+                         len(openerp.modules.registry.RegistryManager.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
@@ -863,10 +866,11 @@ def preload_registries(dbnames):
             # run test_file if provided
             if test_file:
                 _logger.info('loading test file %s', test_file)
-                if test_file.endswith('yml'):
-                    load_test_file_yml(registry, test_file)
-                elif test_file.endswith('py'):
-                    load_test_file_py(registry, test_file)
+                with openerp.api.Environment.manage():
+                    if test_file.endswith('yml'):
+                        load_test_file_yml(registry, test_file)
+                    elif test_file.endswith('py'):
+                        load_test_file_py(registry, test_file)
 
             if registry._assertion_report.failures:
                 rc += 1
@@ -894,6 +898,7 @@ def start(preload=None, stop=False):
             watcher.start()
         else:
             _logger.warning("'watchdog' module not installed. Code autoreload feature is disabled")
+        server.app = DebuggedApplication(server.app, evalex=True)
 
     rc = server.run(preload, stop)
 
@@ -913,5 +918,3 @@ def restart():
         threading.Thread(target=_reexec).start()
     else:
         os.kill(server.pid, signal.SIGHUP)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,12 +20,10 @@
 -
   I create currency USD in OpenERP for January of 1.333333 Rate
 -
-  !python {model: res.currency.rate}: |
-    from datetime import datetime
-    curr_id = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'USD')])[0]
-    date = '%s-01-01' %(datetime.now().year)
-    ids = self.search(cr, uid, [('currency_id', '=', curr_id), ('name', '=', date)])
-    self.write(cr, uid, ids, {'rate': 1.333333})
+  !record {model: res.currency.rate, id: jan_usd}:
+    currency_id: base.USD
+    name: !eval "'%s-01-01' %(datetime.now().year)"
+    rate: 1.333333
 -
   I create currency USD in OpenERP for February of 1.250000 Rate
 -

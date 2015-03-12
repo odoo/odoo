@@ -42,7 +42,6 @@ This module manages:
     'category': 'Accounting & Finance',
     'sequence': 4,
     'website' : 'https://www.odoo.com/page/billing',
-    'images' : ['images/customer_payment.jpeg','images/journal_voucher.jpeg','images/sales_receipt.jpeg','images/supplier_voucher.jpeg','images/customer_invoice.jpeg','images/customer_refunds.jpeg'],
     'depends' : ['account'],
     'demo' : [],
     'data' : [
@@ -76,5 +75,3 @@ This module manages:
     'application': True,
     'installable': True,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -39,4 +39,3 @@ This module adds access rules to your portal if stock and portal are installed.
     'auto_install': True,
     'category': 'Hidden',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

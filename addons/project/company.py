@@ -31,6 +31,3 @@ class res_company(osv.osv):
 "forget to setup the right unit of measure in your employees.",
         ),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

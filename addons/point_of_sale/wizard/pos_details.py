@@ -55,5 +55,3 @@ class pos_details(osv.osv_memory):
         if res.get('id',False):
             datas['ids']=[res['id']]
         return self.pool['report'].get_action(cr, uid, [], 'point_of_sale.report_detailsofsales', data=datas, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -32,6 +32,3 @@ def print_fnc(fnc, arg):
     if fnc in functions:
         return functions[fnc](arg)
     return ''
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

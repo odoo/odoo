@@ -105,5 +105,3 @@ class fetchmail_config_settings(osv.osv_memory):
             return (lambda cr, uid, ids, context=None:
                     self.configure_fetchmail(cr, uid, name[10:], context))
         return super(fetchmail_config_settings, self).__getattr__(name)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

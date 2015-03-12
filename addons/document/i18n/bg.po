@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-18 11:42+0000\n"
+"Last-Translator: Dimitar Dimitrov <dimitrovden@gmail.com>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:04+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-19 06:43+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 
 #. module: document
 #: field:report.document.file,nbr:0
@@ -35,7 +35,7 @@ msgstr ""
 #: code:addons/document/document.py:307
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (копие)"
 
 #. module: document
 #: model:ir.actions.act_window,help:document.action_document_file_form
@@ -49,6 +49,13 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Кликнете за създаване на нов документ. \n"
+"          </p><p>\n"
+"            Хранилището на документи ви дава достъп до всички приложения, "
+"като писма, документи, проекти, фактури и други.\n"
+"          </p>\n"
+"        "
 
 #. module: document
 #: help:document.directory.dctx,expr:0
@@ -90,12 +97,12 @@ msgstr "Април"
 #: code:addons/document/static/src/js/document.js:7
 #, python-format
 msgid "Attachment(s)"
-msgstr ""
+msgstr "Прикачени файлове"
 
 #. module: document
 #: view:ir.attachment:document.view_document_file_tree
 msgid "Attachments"
-msgstr ""
+msgstr "Прикачени файлове"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -132,7 +139,7 @@ msgstr "Фирма"
 #: view:document.configuration:document.view_auto_config_form
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
-msgstr ""
+msgstr "Настрой директории"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -152,7 +159,7 @@ msgstr "Съдържание"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "Контекстни полета"
 
 #. module: document
 #: field:document.configuration,create_uid:0
@@ -161,7 +168,7 @@ msgstr ""
 #: field:document.directory.dctx,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Създадено от"
 
 #. module: document
 #: field:document.configuration,create_date:0
@@ -170,7 +177,7 @@ msgstr ""
 #: field:document.directory.dctx,create_date:0
 #: field:document.storage,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Създадено на"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -191,7 +198,7 @@ msgstr "Дата на промяна"
 #. module: document
 #: selection:report.document.user,month:0
 msgid "December"
-msgstr ""
+msgstr "Декември"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -215,7 +222,7 @@ msgstr "Директории"
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
-msgstr ""
+msgstr "Структора на директории"
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -231,7 +238,7 @@ msgstr "Директория"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr ""
+msgstr "Настрйка на директория"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content
@@ -257,7 +264,7 @@ msgstr "Тип на директорията"
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr ""
+msgstr "Директорията не може да наследява сама себе си!"
 
 #. module: document
 #: code:addons/document/document.py:347
@@ -385,13 +392,13 @@ msgstr "Файлове"
 #: view:report.document.user:document.view_files_by_month_graph
 #: view:report.document.user:document.view_files_by_month_tree
 msgid "Files by Month"
-msgstr ""
+msgstr "Файлове по месеци"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
 #: view:report.document.user:document.view_files_by_user_graph
 msgid "Files by User"
-msgstr ""
+msgstr "Файлове от потребител"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_file
@@ -431,7 +438,7 @@ msgstr "Генерирани файлове"
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Group By"
-msgstr ""
+msgstr "Групиране по"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -502,7 +509,7 @@ msgstr "Настройки на приложение ЗНАНИЯ"
 #. module: document
 #: field:document.directory,write_uid:0
 msgid "Last Modification User"
-msgstr ""
+msgstr "Последна промяна потребител"
 
 #. module: document
 #: field:document.configuration,write_uid:0
@@ -511,7 +518,7 @@ msgstr ""
 #: field:document.directory.dctx,write_uid:0
 #: field:document.storage,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно обновено от"
 
 #. module: document
 #: field:document.configuration,write_date:0
@@ -520,7 +527,7 @@ msgstr ""
 #: field:document.directory.dctx,write_date:0
 #: field:document.storage,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно обновено на"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -556,12 +563,12 @@ msgstr "Дата на промяна"
 #: field:report.document.file,month:0
 #: field:report.document.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "Месец"
 
 #. module: document
 #: view:ir.attachment:document.view_attach_filter_inherit0
 msgid "My Document(s)"
-msgstr ""
+msgstr "Моите документи"
 
 #. module: document
 #: field:document.directory,name:0
@@ -598,6 +605,8 @@ msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
 msgstr ""
+"Само членовете на тези групи ще имат достъп до тази директория и нейните "
+"файлове."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
@@ -715,7 +724,7 @@ msgstr "Суфикс"
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr ""
+msgstr "Името на директорията трябва да бъде уникално"
 
 #. module: document
 #: sql_constraint:ir.attachment:0
@@ -789,4 +798,4 @@ msgstr ""
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "Неизвестен"

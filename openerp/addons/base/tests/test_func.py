@@ -19,4 +19,3 @@ class TestCompose(unittest2.TestCase):
             return a * b
 
         self.assertEqual(mul(5, 42), u"210")
-

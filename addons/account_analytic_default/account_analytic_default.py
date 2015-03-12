@@ -152,5 +152,3 @@ class product_template(osv.Model):
         # Remove context so it is not going to filter on product_id with active_id of template
         result['context'] = "{}"
         return result
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

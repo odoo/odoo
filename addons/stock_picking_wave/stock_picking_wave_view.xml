@@ -24,7 +24,7 @@
                             <field name="user_id"/>
                         </group>
                         <separator string="Pickings"/>
-                        <field name="picking_ids" domain="[('state', 'not in', ('done', 'cancel'))]">
+                        <field name="picking_ids" widget="many2many" domain="[('state', 'not in', ('done', 'cancel'))]">
                             <tree>
                                 <field name="name"/>
                                 <field name="backorder_id"/>

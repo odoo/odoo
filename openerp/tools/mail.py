@@ -42,7 +42,7 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 
 tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
-tags_to_remove = ['html', 'body', 'font']
+tags_to_remove = ['html', 'body']
 
 # allow new semantic HTML5 tags
 allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split() + [etree.Comment])
@@ -53,7 +53,7 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
      ])
 
 
-def html_sanitize(src, silent=True, strict=False):
+def html_sanitize(src, silent=True, strict=False, strip_style=False):
     if not src:
         return src
     src = ustr(src, errors='replace')
@@ -69,7 +69,7 @@ def html_sanitize(src, silent=True, strict=False):
 
     kwargs = {
         'page_structure': True,
-        'style': False,             # do not remove style attributes
+        'style': strip_style,       # True = remove style tags/attrs
         'forms': True,              # remove form tags
         'remove_unknown_tags': False,
         'allow_tags': allowed_tags,

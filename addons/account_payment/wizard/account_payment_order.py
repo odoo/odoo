@@ -119,6 +119,3 @@ class payment_order_create(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

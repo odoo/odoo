@@ -19,5 +19,3 @@ class test_uninstall_model(Model):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'Each name must be unique.')
     ]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

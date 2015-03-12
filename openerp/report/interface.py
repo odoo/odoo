@@ -263,5 +263,3 @@ class report_rml(report_int):
             'addons',
             tools.config['root_path']
         ]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

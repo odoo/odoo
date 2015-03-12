@@ -67,4 +67,3 @@ class stock_move_consume(osv.osv_memory):
                              qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
-

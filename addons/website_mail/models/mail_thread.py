@@ -35,4 +35,3 @@ class MailThread(osv.AbstractModel):
             help="Website communication history",
         ),
     }
-

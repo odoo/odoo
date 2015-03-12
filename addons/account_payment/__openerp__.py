@@ -42,7 +42,6 @@ when you get the confirmation from your bank that your order has been accepted
 that you can book it in your accounting. To help you with that operation, you 
 have a new option to import payment orders as bank statement lines.
     """,
-    'images': ['images/payment_mode.jpeg','images/payment_order.jpeg'],
     'depends': ['account','account_voucher'],
     'data': [
         'security/account_payment_security.xml',
@@ -67,4 +66,3 @@ have a new option to import payment orders as bank statement lines.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

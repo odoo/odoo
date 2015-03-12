@@ -73,5 +73,3 @@ class analytic_entries_report(osv.osv):
                      a.move_id,a.product_id,a.product_uom_id
             )
         """)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

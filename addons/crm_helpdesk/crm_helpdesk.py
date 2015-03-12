@@ -25,6 +25,7 @@ from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
+from openerp.exceptions import UserError
 
 
 class crm_helpdesk(osv.osv):
@@ -56,7 +57,7 @@ class crm_helpdesk(osv.osv):
             'date': fields.datetime('Date'),
             'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
             'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
-            'channel_id': fields.many2one('crm.tracking.medium', 'Channel', help="Communication channel."),
+            'channel_id': fields.many2one('utm.medium', 'Channel', help="Communication channel."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
             'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
@@ -112,7 +113,7 @@ class crm_helpdesk(osv.osv):
                 if parent_id.change_responsible and parent_id.user_id:
                     data['user_id'] = parent_id.user_id.id
             else:
-                raise osv.except_osv(_('Error!'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
+                raise UserError(_('You can not escalate, you are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data, context=context)
         return True
 
@@ -146,5 +147,3 @@ class crm_helpdesk_category(osv.Model):
         'name': fields.char('Name', required=True, translate=True),
         'team_id': fields.many2one('crm.team', 'Sales Team'),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

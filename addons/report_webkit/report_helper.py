@@ -88,5 +88,3 @@ class WebKitHelper(object):
         return self.embed_image("png", logo, width, height)
 
         
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

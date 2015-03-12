@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-28 12:15+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:24+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-10-29 07:50+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_inbox_feeds_portal
@@ -89,7 +89,7 @@ msgstr ""
 #: code:addons/portal/mail_message.py:59
 #, python-format
 msgid "Access Denied"
-msgstr ""
+msgstr "Пристапот е одбиен"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -115,7 +115,7 @@ msgstr "Архиви"
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_orders
 msgid "Billing"
-msgstr ""
+msgstr "Фактурирање"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
@@ -136,19 +136,19 @@ msgstr "Контакти"
 #: code:addons/portal/wizard/portal_wizard.py:163
 #, python-format
 msgid "Contacts Error"
-msgstr ""
+msgstr "Грешка при контакти"
 
 #. module: portal
 #: field:portal.wizard,create_uid:0
 #: field:portal.wizard.user,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Креирано од"
 
 #. module: portal
 #: field:portal.wizard,create_date:0
 #: field:portal.wizard.user,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Креирано на"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:34
@@ -172,6 +172,23 @@ msgid ""
 "Odoo - Open Source Business Applications\n"
 "http://www.openerp.com\n"
 msgstr ""
+"Драги %(name)s,\n"
+"\n"
+"Даден ви е пристап до %(company)s's %(portal)s.\n"
+"\n"
+"Вашите податоци за најава се:\n"
+"  Корисничко име: %(login)s\n"
+"  Портал: %(portal_url)s\n"
+"  Датабаза: %(db)s \n"
+"\n"
+"Можете да ја поставите или промените вашата лозинка преку следната адреса:\n"
+"   %(signup_url)s\n"
+"\n"
+"%(welcome_message)s\n"
+"\n"
+"--\n"
+"Odoo - Open Source Бизнис Апликација\n"
+"http://www.openerp.com\n"
 
 #. module: portal
 #: view:share.wizard:portal.share_step2_form_portal
@@ -187,12 +204,12 @@ msgstr "Е-пошта"
 #: code:addons/portal/wizard/portal_wizard.py:225
 #, python-format
 msgid "Email Required"
-msgstr ""
+msgstr "Е-маил е потребен"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Е-маил тема"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:39
@@ -216,7 +233,7 @@ msgstr "Постојни корисници"
 #: field:portal.wizard,id:0
 #: field:portal.wizard.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: portal
 #: help:res.groups,is_portal:0
@@ -243,18 +260,18 @@ msgstr "Порака за покана"
 #: field:portal.wizard,write_uid:0
 #: field:portal.wizard.user,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно ажурирање од"
 
 #. module: portal
 #: field:portal.wizard,write_date:0
 #: field:portal.wizard.user,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно ажурирање на"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Порака"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_messages
@@ -331,7 +348,7 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:149
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Неколку контакти ја имаат истата е-маил адреса: "
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
@@ -342,13 +359,14 @@ msgstr "Волшебник за споделување"
 #: code:addons/portal/wizard/portal_wizard.py:146
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Некои контакти немаат валидна е-маил адреса: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:152
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
+"Некои контакти имаат иста е-маил адреса со постоечки член на порталот:"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -364,6 +382,10 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
+"Бараната операција не може да се изврши поради безбедносни причини. "
+"Контактирајте го администраторот.\n"
+"\n"
+"(Тип на документ: %s, Операција: %s)"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
@@ -385,6 +407,9 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"За да ја разрешите оваа грешка, можете: \n"
+"- Да ги корегирате е-маил адресите на релевантните контакти\n"
+"- Да им дозволите пристап само на контакти со уникатни е-маил адреси"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
@@ -421,16 +446,16 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:33
 #, python-format
 msgid "Your Odoo account at %(company)s"
-msgstr ""
+msgstr "Вашиот Odoo налог при %(company)s"
 
 #. module: portal
 #: code:addons/portal/mail_mail.py:46
 #, python-format
 msgid "access directly to"
-msgstr ""
+msgstr "пристапи директно на"
 
 #. module: portal
 #: code:addons/portal/mail_mail.py:48
 #, python-format
 msgid "your messages "
-msgstr ""
+msgstr "вашите пораки "

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-31 10:41+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:36+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-11-01 07:15+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -43,6 +43,29 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Kattintson Beszerzések létrehozásához.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Beszerzési megrendelések</b> képviselik a bizonyos "
+"mennyiségre vonatkozó beszerzési igényeket a termékekből, egy bizonyos időn "
+"belül, egy megadott helyre.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Vásárlói megrendelések</b> tipikus forrása a Beszerzési "
+"megrendeléseknek (de ezek különálló dokumentumok). \n"
+"                <br/>A beszerzés paramétereiből és a termék beállításából "
+"adódóan, a beszerzési motor megpróbálja a termék igényt kielégíteni egy "
+"raktári foglalással, egy beszállítónál történő termékek megrendelésével, "
+"vagy egy gyártásba való átadással, stb...\n"
+"              </p>\n"
+"              <p>\n"
+"                A <b>Beszerzés  eldobás</b> történik, ha a rendszer nem "
+"talál utat a beszerzés kielégítésére. Egyes eldobás automatikusan "
+"megoldódik, de mások kézi beavatkozást igényelnek (ezekről egyedi hiba "
+"üzenet tájékoztat a társalgásban).\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -67,11 +90,30 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Kattintson Beszerzési megrendelés létrehozásához.\n"
+"              </p>\n"
+"              <p>\n"
+"                Egy <b>beszerzési megrendelés</b> a meghatározott helyen egy "
+"meghatározott termék\n"
+"                iránti igény feljegyzésére használja. Beszerzési "
+"megrendelések általában automatikusan\n"
+"                készülnek a <i>vásárlói megrendelésekből, kivételi "
+"logisztikai szabályokból vagy\n"
+"                minimum raktárkészlet szabályokból.</i>\n"
+"              </p>\n"
+"              <p>\n"
+"                Ha a beszerzési megrendelés leigazolt, az automatikusan \n"
+"                létrehozza a szükséges műveleteket az igény kielégítéséhez: "
+"beszerzési\n"
+"                megrendelés javaslat, gyártási megrendelés, stb.\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
 msgid "Action"
-msgstr ""
+msgstr "Művelet"
 
 #. module: procurement
 #: field:procurement.rule,active:0
@@ -81,7 +123,7 @@ msgstr "Aktív"
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "All at once"
-msgstr ""
+msgstr "Egyszerre"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
@@ -109,7 +151,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr ""
+msgstr "Beszerzés ellenőrzése"
 
 #. module: procurement
 #: help:procurement.order,rule_id:0
@@ -117,6 +159,9 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but "
 "can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
+"A beszerzés kiosztásához kiválasztott szabály. Általában a rendszer "
+"választja, de kézzel is beállítható a beszerzési igazgató által, egy nem "
+"általános viselkedés eröltetéséhez."
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -127,7 +172,7 @@ msgstr "Vállalat"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Számmítsa ki az összes beszerzést a háttérben."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -137,7 +182,7 @@ msgstr "Összes ütemező futtatása"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
-msgstr "Megerősített"
+msgstr "Jóváhagyott"
 
 #. module: procurement
 #: field:procurement.group,create_uid:0
@@ -145,7 +190,7 @@ msgstr "Megerősített"
 #: field:procurement.order.compute.all,create_uid:0
 #: field:procurement.rule,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Készítette"
 
 #. module: procurement
 #: field:procurement.group,create_date:0
@@ -153,17 +198,17 @@ msgstr ""
 #: field:procurement.order.compute.all,create_date:0
 #: field:procurement.rule,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Létrehozás dátuma"
 
 #. module: procurement
 #: help:procurement.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "A feljegyzésen történt utolsó üzenet dátuma."
 
 #. module: procurement
 #: field:procurement.group,move_type:0
 msgid "Delivery Method"
-msgstr ""
+msgstr "Szállítási mód"
 
 #. module: procurement
 #: field:procurement.order,name:0
@@ -198,12 +243,12 @@ msgstr "Extra információ"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Fixed"
-msgstr ""
+msgstr "Lerögzített"
 
 #. module: procurement
 #: field:procurement.rule,group_id:0
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Lerögzített beszerzési csoport"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -224,7 +269,7 @@ msgstr "Csoportosítás"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "Beszerzések csoportjai"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -241,7 +286,7 @@ msgstr ""
 #: field:procurement.order.compute.all,id:0
 #: field:procurement.rule,id:0
 msgid "ID"
-msgstr ""
+msgstr "Azonosító ID"
 
 #. module: procurement
 #: help:procurement.order,message_unread:0
@@ -252,6 +297,8 @@ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 #: help:procurement.rule,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr ""
+"Ha nincs bejelölve, lehetővé teszi a szabály eltüntetését annak törlése "
+"nélkül."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:155
@@ -267,7 +314,7 @@ msgstr "Ez egy követő"
 #. module: procurement
 #: field:procurement.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Utolsó üzenet időpontja"
 
 #. module: procurement
 #: field:procurement.group,write_uid:0
@@ -275,7 +322,7 @@ msgstr ""
 #: field:procurement.order.compute.all,write_uid:0
 #: field:procurement.rule,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Utoljára frissítve, által"
 
 #. module: procurement
 #: field:procurement.group,write_date:0
@@ -283,7 +330,7 @@ msgstr ""
 #: field:procurement.order.compute.all,write_date:0
 #: field:procurement.rule,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Utoljára frissítve ekkor"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -293,7 +340,7 @@ msgstr "Később"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr ""
+msgstr "Hagyja üresen"
 
 #. module: procurement
 #: view:res.company:procurement.mrp_company
@@ -319,7 +366,7 @@ msgstr "Név"
 #: code:addons/procurement/procurement.py:213
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Ehhez a beszerzéshez nincs szabály"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -339,7 +386,7 @@ msgstr "Megjegyzések"
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "Részleges"
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -362,7 +409,7 @@ msgstr "Beszerzési kifogások"
 #. module: procurement
 #: field:procurement.order,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "Beszerzési Csoport"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
@@ -377,17 +424,17 @@ msgstr "Beszerzési megrendelések"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Beszerzési hivatkozás"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Beszerzési szabály"
 
 #. module: procurement
 #: view:procurement.group:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Beszerzési csoport"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -420,27 +467,27 @@ msgstr "Termék eladási egysége"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Terjesztés"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Terjesztési lehetőségek"
 
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Beszerzési csoport terjesztése"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Pull Rule"
-msgstr ""
+msgstr "Kivételi szabály"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_tree
 msgid "Pull Rules"
-msgstr ""
+msgstr "Kivételi szabályok"
 
 #. module: procurement
 #: field:procurement.order,product_qty:0
@@ -450,12 +497,12 @@ msgstr "Mennyiség"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "Beszerzés visszaigazolása"
 
 #. module: procurement
 #: field:procurement.group,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Hivatkozás"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -463,11 +510,13 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
 msgstr ""
+"Arra a dokumentumra a hivatkozás, mely előállította ezt a beszerzést.\n"
+"Ezt az Odoo rendszer automatikusan hozza létre."
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "Szabály"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -493,7 +542,7 @@ msgstr "Tervezett dátum"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Ütemezés hónapja"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
@@ -503,7 +552,7 @@ msgstr "Ütemezett paraméterek"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr ""
+msgstr "Ütemezés"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -513,7 +562,7 @@ msgstr "Beszerzés keresése"
 #. module: procurement
 #: field:procurement.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sorrend"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -535,6 +584,7 @@ msgstr "Összegzés"
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
+"Ez a mező tartalmazza a becsomagolás helyét és a raktár mozgások neveit"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view

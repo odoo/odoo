@@ -20,8 +20,7 @@
 ##############################################################################
 
 import hr_timesheet_sheet
+import hr_department
 import wizard
 import report
 import res_config
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

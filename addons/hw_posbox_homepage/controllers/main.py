@@ -31,8 +31,8 @@ index_template = """
         <p>
         The PosBox is an hardware adapter that allows you to use 
         receipt printers and barcode scanners with Odoo's Point of
-        Sale, <b>version 8.0 or later</b>. You can start an <a href='https://www.openerp.com/start'>online free trial</a>,
-        or <a href='https://www.openerp.com/start?download'>download and install</a> it yourself.
+        Sale, <b>version 8.0 or later</b>. You can start an <a href='https://www.odoo.com/start'>online free trial</a>,
+        or <a href='https://www.odoo.com/start?download'>download and install</a> it yourself.
         </p>
         <p>
         For more information on how to setup the Point of Sale with

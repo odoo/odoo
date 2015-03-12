@@ -41,4 +41,3 @@ The module adds the possibility to display data from OpenERP in Google Spreadshe
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

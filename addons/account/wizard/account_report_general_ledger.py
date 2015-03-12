@@ -62,5 +62,3 @@ class account_report_general_ledger(osv.osv_memory):
             context['landscape'] = data['form']['landscape']
 
         return self.pool['report'].get_action(cr, uid, [], 'account.report_generalledger', data=data, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

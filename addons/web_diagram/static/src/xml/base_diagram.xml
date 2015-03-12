@@ -1,11 +1,11 @@
 <template>
+
 <t t-name="DiagramView.pager">
-    <div class="oe_diagram_pager">
         <t t-if="widget.options.pager !== false" t-call="ViewPager">
             <span class="oe_diagram_pager_state"></span>
         </t>
-    </div>
 </t>
+
 <t t-name="DiagramView">
     <div class="oe_diagram_header" t-att-id="widget.element_id + '_header'">
         <h3 class="oe_diagram_title"/>

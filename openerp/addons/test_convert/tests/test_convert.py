@@ -79,5 +79,3 @@ class TestEvalXML(common.TransactionCase):
     @unittest2.skip("not tested")
     def test_html(self):
         pass
-
-

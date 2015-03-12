@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.rule" id="website_channel_public">
+            <field name="name">website_livechat.channel.public</field>
+            <field name="model_id" ref="im_livechat.model_im_livechat_channel"/>
+            <field name="domain_force">[('website_published', '=', True)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+        </record>
+
+    </data>
+</odoo>

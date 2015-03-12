@@ -13,4 +13,3 @@ class TestTermCount(common.TransactionCase):
         ids = self.registry('ir.translation').search(self.cr, self.uid,
             [('src', '=', '1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB')])
         self.assertEqual(len(ids), 2)
-

@@ -6,6 +6,7 @@
         <menuitem name="Invoicing"
             id="menu_finance"
             groups="group_account_user,group_account_manager,group_account_invoice"
+            icon="fa-usd"
             sequence="50"/>
 
         <menuitem id="menu_finance_receivables" name="Customers" parent="menu_finance" sequence="2"/>
@@ -27,7 +28,6 @@
         <menuitem id="menu_finance_management_belgian_reports" name="Belgian Reports" parent="menu_finance_reporting"/>
         <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="15" groups="group_account_manager"/>
         <menuitem id="menu_finance_accounting" name="Financial Accounting" parent="menu_finance_configuration" sequence="1"/>
-        <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting" sequence="5"/>
         <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting" sequence="5"/>
 
         <menuitem id="menu_analytic" parent="menu_analytic_accounting" name="Accounts" groups="analytic.group_analytic_accounting"/>

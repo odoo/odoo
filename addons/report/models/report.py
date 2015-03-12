@@ -23,10 +23,12 @@ from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.exceptions import AccessError
 from openerp.osv import osv
-from openerp.tools import config, which
+from openerp.tools import config
+from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.exceptions import UserError
 
 import re
 import time
@@ -48,8 +50,7 @@ from pyPdf import PdfFileWriter, PdfFileReader
 _logger = logging.getLogger(__name__)
 
 def _get_wkhtmltopdf_bin():
-    defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
-    return which('wkhtmltopdf', path=os.pathsep.join(defpath))
+    return find_in_path('wkhtmltopdf')
 
 
 #--------------------------------------------------------------------------
@@ -86,6 +87,31 @@ class Report(osv.Model):
     #--------------------------------------------------------------------------
     # Extension of ir_ui_view.render with arguments frequently used in reports
     #--------------------------------------------------------------------------
+
+    def translate_doc(self, cr, uid, doc_id, model, lang_field, template, values, context=None):
+        """Helper used when a report should be translated into a specific lang.
+
+        <t t-foreach="doc_ids" t-as="doc_id">
+        <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', account.report_invoice_document')"/>
+        </t>
+
+        :param doc_id: id of the record to translate
+        :param model: model of the record to translate
+        :param lang_field': field of the record containing the lang
+        :param template: name of the template to translate into the lang_field
+        """
+        ctx = context.copy()
+        doc = self.pool[model].browse(cr, uid, doc_id, context=ctx)
+        qcontext = values.copy()
+        # Do not force-translate if we chose to display the report in a specific lang
+        if ctx.get('translatable') is True:
+            qcontext['o'] = doc
+        else:
+            # Reach the lang we want to translate the doc into
+            ctx['lang'] = eval('doc.%s' % lang_field, {'doc': doc})
+            qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
+        return self.pool['ir.ui.view'].render(cr, uid, template, qcontext, context=ctx)
+
     def render(self, cr, uid, ids, template, values=None, context=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
         render but embellish it with some variables/methods used in reports.
@@ -104,28 +130,7 @@ class Report(osv.Model):
         view_obj = self.pool['ir.ui.view']
 
         def translate_doc(doc_id, model, lang_field, template):
-            """Helper used when a report should be translated into a specific lang.
-
-            <t t-foreach="doc_ids" t-as="doc_id">
-            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', account.report_invoice_document')"/>
-            </t>
-
-            :param doc_id: id of the record to translate
-            :param model: model of the record to translate
-            :param lang_field': field of the record containing the lang
-            :param template: name of the template to translate into the lang_field
-            """
-            ctx = context.copy()
-            doc = self.pool[model].browse(cr, uid, doc_id, context=ctx)
-            qcontext = values.copy()
-            # Do not force-translate if we chose to display the report in a specific lang
-            if ctx.get('translatable') is True:
-                qcontext['o'] = doc
-            else:
-                # Reach the lang we want to translate the doc into
-                ctx['lang'] = eval('doc.%s' % lang_field, {'doc': doc})
-                qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
-            return view_obj.render(cr, uid, template, qcontext, context=ctx)
+            return self.translate_doc(cr, uid, doc_id, model, lang_field, template, values, context=context)
 
         user = self.pool['res.users'].browse(cr, uid, uid)
         website = None
@@ -288,10 +293,7 @@ class Report(osv.Model):
         try:
             report = report_obj.browse(cr, uid, idreport[0], context=context)
         except IndexError:
-            raise osv.except_osv(
-                _('Bad Report Reference'),
-                _('This report is not loaded into the database: %s.' % report_name)
-            )
+            raise UserError(_("Bad Report Reference") + _("This report is not loaded into the database: %s.") % report_name)
 
         return {
             'context': context,
@@ -443,9 +445,8 @@ class Report(osv.Model):
                 out, err = process.communicate()
 
                 if process.returncode not in [0, 1]:
-                    raise osv.except_osv(_('Report (PDF)'),
-                                         _('Wkhtmltopdf failed (error code: %s). '
-                                           'Message: %s') % (str(process.returncode), err))
+                    raise UserError(_('Wkhtmltopdf failed (error code: %s). '
+                                        'Message: %s') % (str(process.returncode), err))
 
                 # Save the pdf in attachment if marked
                 if reporthtml[0] is not False and save_in_attachment.get(reporthtml[0]):
@@ -460,7 +461,7 @@ class Report(osv.Model):
                         try:
                             self.pool['ir.attachment'].create(cr, uid, attachment)
                         except AccessError:
-                            _logger.warning("Cannot save PDF report %r as attachment",
+                            _logger.info("Cannot save PDF report %r as attachment",
                                             attachment['name'])
                         else:
                             _logger.info('The PDF document %s is now saved in the database',
@@ -516,7 +517,7 @@ class Report(osv.Model):
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
             command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
-        elif paperformat.margin_top:
+        else:
             command_args.extend(['--margin-top', str(paperformat.margin_top)])
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
@@ -533,12 +534,9 @@ class Report(osv.Model):
         elif paperformat.header_spacing:
             command_args.extend(['--header-spacing', str(paperformat.header_spacing)])
 
-        if paperformat.margin_left:
-            command_args.extend(['--margin-left', str(paperformat.margin_left)])
-        if paperformat.margin_bottom:
-            command_args.extend(['--margin-bottom', str(paperformat.margin_bottom)])
-        if paperformat.margin_right:
-            command_args.extend(['--margin-right', str(paperformat.margin_right)])
+        command_args.extend(['--margin-left', str(paperformat.margin_left)])
+        command_args.extend(['--margin-bottom', str(paperformat.margin_bottom)])
+        command_args.extend(['--margin-right', str(paperformat.margin_right)])
         if paperformat.orientation:
             command_args.extend(['--orientation', str(paperformat.orientation)])
         if paperformat.header_line:

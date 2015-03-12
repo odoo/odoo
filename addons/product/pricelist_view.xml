@@ -16,7 +16,7 @@
                         <group>
                             <field name="name"/>
                             <field name="pricelist_id"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="date_start"/>
@@ -94,11 +94,15 @@
                         <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_tmpl_id"/>
                         <field name="categ_id"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         <field name="min_quantity"/>
                         <field name="sequence"/>
                     </group>
-                    <group col="4" string="Price Computation">
+                    <separator string="Price Computation"/>
+                    <div class="oe_grey" groups="product.group_uom">
+                        <p>The computed price is expressed in the default Unit of Measure of the product.</p>
+                    </div>
+                    <group col="4">
                         <field name="base"/>
                         <field name="base_pricelist_id" attrs="{'invisible':[('base', '!=', -1)],'required': [('base','=', -1)], 'readonly': [('base','!=', -1)]}"/>
                     </group>
@@ -158,7 +162,7 @@
                         <field name="active"/>
                         <field name="type"/>
                         <field name="currency_id" groups="base.group_multi_currency"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     </group>
                     <field name="version_id" context="{'type':type}">
                         <form string="Pricelist Version">
@@ -168,7 +172,7 @@
                                 <field name="date_start"/>
                                 <field name="date_end"/>
                             </group>
-                            <field name="items_id" context="{'type':type}"/>
+                            <field name="items_id" context="{'type':parent.type}"/>
                         </form>
                         <tree string="Pricelist Version">
                             <field name="name"/>

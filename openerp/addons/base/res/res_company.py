@@ -409,5 +409,3 @@ class res_company(osv.osv):
     _constraints = [
         (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

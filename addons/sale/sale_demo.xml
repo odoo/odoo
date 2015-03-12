@@ -371,6 +371,7 @@ Thanks!</field>
         </record>
         <record id="test_crm_sale_invoice_1_line_1" model="account.invoice.line">
             <field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
+            <field name="product_id" ref="product.product_product_57"/>
             <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
             <field name="price_unit">250</field>
             <field name="quantity">1</field>
@@ -378,6 +379,7 @@ Thanks!</field>
         </record>
         <record id="test_crm_sale_invoice_1_line_2" model="account.invoice.line">
             <field name="name">Little server with raid 1 and 512ECC ram</field>
+            <field name="product_id" ref="product.product_product_58"/>
             <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
             <field name="price_unit">800</field>
             <field name="quantity">2</field>
@@ -385,6 +387,7 @@ Thanks!</field>
         </record>
         <record id="test_crm_sale_invoice_1_line_2" model="account.invoice.line">
             <field name="name">Server with raid 10 and 2048ECC ram</field>
+            <field name="product_id" ref="product.product_product_59"/>
             <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
             <field name="price_unit">4800</field>
             <field name="quantity">4</field>
@@ -418,7 +421,8 @@ Thanks!</field>
             <field name="name">Test invoice 1</field>
         </record>
         <record id="test_crm_sale_invoice_2_line_1" model="account.invoice.line">
-            <field name="name">Basic formation with Dvorak</field>
+            <field name="name">TypeMatrix Dvorak Keyboard</field>
+            <field name="product_id" ref="product.product_product_53"/>
             <field name="invoice_id" ref="test_crm_sale_invoice_2"/>
             <field name="price_unit">500</field>
             <field name="quantity">1</field>

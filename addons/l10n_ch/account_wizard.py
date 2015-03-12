@@ -39,6 +39,3 @@ class WizardMultiChartsAccounts(TransientModel):
             if sterchi_template.id == chart_template_id:
                 res['value']['code_digits'] = 0
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

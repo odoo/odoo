@@ -109,5 +109,3 @@ class document_configuration(osv.osv_memory):
                 'domain': '[]',
                 'ressource_tree': 1
         })
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

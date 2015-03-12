@@ -40,12 +40,6 @@ Generic Payroll system.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'images': [
-        'images/hr_company_contributions.jpeg',
-        'images/hr_salary_heads.jpeg',
-        'images/hr_salary_structure.jpeg',
-        'images/hr_employee_payslip.jpeg'
-    ],
     'depends': [
         'hr',
         'hr_contract',
@@ -76,5 +70,3 @@ Generic Payroll system.
     'auto_install': False,
     'application': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

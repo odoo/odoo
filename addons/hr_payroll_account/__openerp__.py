@@ -32,7 +32,6 @@ Generic Payroll system Integrated with Accounting.
     * Company Contribution Management
     """,
     'author':'OpenERP SA',
-    'images': ['images/hr_employee_payslip.jpeg'],
     'website': 'https://www.odoo.com/page/employees',
     'depends': [
         'hr_payroll',
@@ -45,5 +44,3 @@ Generic Payroll system Integrated with Accounting.
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -43,4 +43,3 @@ class ir_logging(osv.Model):
         'func': fields.char('Function', required=True),
         'line': fields.char('Line', required=True),
     }
-

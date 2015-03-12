@@ -85,8 +85,8 @@ There are three types of inheritance specs:
 * any other element, the first element with the same name and identical
   attributes (ignoring ``position``) is matched
 
-The inheritance spec can an optional ``position`` attribute specifhing how
-the matched node should be altered:
+The inheritance spec may have an optional ``position`` attribute specifying
+how the matched node should be altered:
 
 ``inside`` (default)
     the content of the inheritance spec is appended to the matched node
@@ -98,7 +98,7 @@ the matched node should be altered:
 ``before``
     the content of the inheritance spec is added to the matched node's
     parent, before the matched node
-``attribute``
+``attributes``
     the content of the inheritance spec should be ``attribute`` elements
     with a ``name`` attribute and an optional body:
 
@@ -132,6 +132,14 @@ root can have the following attributes:
     <reference/views/form>`'s fields and buttons are thus accepted by list
     views although they may not have any meaning if the list view is
     non-editable
+``default_order``
+    overrides the ordering of the view, replacing the model's default order.
+    The value is a comma-separated list of fields, postfixed by ``desc`` to
+    sort in reverse order:
+
+    .. code-block:: xml
+
+        <tree default_order="sequence,name desc">
 ``colors``
     allows changing the color of a row's text based on the corresponding
     record's attributes.
@@ -742,9 +750,7 @@ record groups. Its root element is ``<graph>`` which can take the following
 attributes:
 
 ``type``
-  one of ``bar`` (default), ``pie``, ``line`` and ``pivot``, the type of graph
-  to use (``pivot`` technically isn't a graph type, it displays the
-  aggregation as a `pivot table`_)
+  one of ``bar`` (default), ``pie`` and ``line``, the type of graph to use
 ``stacked``
   only used for ``bar`` charts. If present and set to ``True``, stacks bars
   within a group
@@ -762,7 +768,7 @@ following attributes:
 
   ``row`` (default)
     groups by the specified field. All graph types support at least one level
-    of grouping, some may support more. For pivot tables, each group gets its
+    of grouping, some may support more. For pivot views, each group gets its
     own row.
   ``col``
     only used by pivot tables, creates column-wise groups
@@ -778,6 +784,19 @@ following attributes:
 
    graph view aggregations are performed on database content, non-stored
    function fields can not be used in graph views
+
+Pivots
+------
+
+The pivot view is used to visualize aggregations as a `pivot table`_. Its root 
+element is ``<pivot>`` which can take the following attributes:
+
+``disable_linking``
+  Set to ``True`` to remove table cell's links to list view.
+``display_quantity``
+  Set to ``true`` to display the Quantity column by default.
+
+The elements allowed within a pivot view are the same as for the graph view.
 
 .. _reference/views/kanban:
 
@@ -926,9 +945,9 @@ calendar view are:
 
 ``date_start`` (required)
     name of the record's field holding the start date for the event
-``date_end``
+``date_stop``
     name of the record's field holding the end date for the event, if
-    ``date_end`` is provided records become movable (via drag and drop)
+    ``date_stop`` is provided records become movable (via drag and drop)
     directly in the calendar
 ``date_delay``
     alternative to ``date_end``, provides the duration of the event instead of

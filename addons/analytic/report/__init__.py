@@ -24,6 +24,3 @@ import analytic_balance
 import analytic_inverted_balance
 import analytic_cost_ledger
 import analytic_quantity_cost_ledger
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

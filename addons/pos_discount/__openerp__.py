@@ -40,9 +40,10 @@ sale discount to a customer.
         'views/views.xml',
         'views/templates.xml'
     ],
+    'qweb': [
+        'static/src/xml/discount.xml',
+    ],
     'installable': True,
     'website': 'https://www.odoo.com/page/point-of-sale',
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

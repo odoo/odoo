@@ -21,4 +21,3 @@
 
 import account
 import l10n_multilang
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

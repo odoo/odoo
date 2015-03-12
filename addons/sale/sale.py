@@ -26,6 +26,7 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 from openerp import workflow
+from openerp.exceptions import UserError
 
 class res_company(osv.Model):
     _inherit = "res.company"
@@ -37,12 +38,6 @@ class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Order"
-    _track = {
-        'state': {
-            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state in ['manual'],
-            'sale.mt_order_sent': lambda self, cr, uid, obj, ctx=None: obj.state in ['sent']
-        },
-    }
 
     def _amount_line_tax(self, cr, uid, line, context=None):
         val = 0.0
@@ -73,47 +68,7 @@ class sale_order(osv.osv):
             res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
         return res
 
-
-    def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for sale in self.browse(cursor, user, ids, context=context):
-            if sale.invoiced:
-                res[sale.id] = 100.0
-                continue
-            tot = 0.0
-            for invoice in sale.invoice_ids:
-                if invoice.state not in ('draft', 'cancel'):
-                    tot += invoice.amount_untaxed
-            if tot:
-                res[sale.id] = min(100.0, tot * 100.0 / (sale.amount_untaxed or 1.00))
-            else:
-                res[sale.id] = 0.0
-        return res
-
-    def _invoice_exists(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for sale in self.browse(cursor, user, ids, context=context):
-            res[sale.id] = False
-            if sale.invoice_ids:
-                res[sale.id] = True
-        return res
-
-    def _invoiced(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for sale in self.browse(cursor, user, ids, context=context):
-            res[sale.id] = True
-            invoice_existence = False
-            for invoice in sale.invoice_ids:
-                if invoice.state!='cancel':
-                    invoice_existence = True
-                    if invoice.state != 'paid':
-                        res[sale.id] = False
-                        break
-            if not invoice_existence or sale.state == 'manual':
-                res[sale.id] = False
-        return res
-
-    def _invoiced_search(self, cursor, user, obj, name, args, context=None):
+    def _search_invoiced(self, cursor, user, obj, name, args, context=None):
         if not len(args):
             return []
         clause = ''
@@ -151,7 +106,7 @@ class sale_order(osv.osv):
     def _get_default_company(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         if not company_id:
-            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+            raise UserError(_('There is no default company for the current user!'))
         return company_id
 
     def _get_default_team_id(self, cr, uid, context=None):
@@ -173,6 +128,17 @@ class sale_order(osv.osv):
             if len(team_ids) == 1:
                 return int(team_ids[0][0])
         return None
+
+    def _get_invoiced(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = {
+                'invoice_count': len(order.invoice_ids),
+                'invoiced': False,
+            }
+            if order.state != 'manual' and any(invoice.state == 'paid' for invoice in order.invoice_ids):
+                res[order.id]['invoiced'] = True
+        return res
 
     _columns = {
         'name': fields.char('Order Reference', required=True, copy=False,
@@ -211,13 +177,9 @@ class sale_order(osv.osv):
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', readonly=True, copy=False, help="This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example)."),
-        'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced Ratio', type='float'),
-        'invoiced': fields.function(_invoiced, string='Paid',
-            fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
-        'invoice_exists': fields.function(_invoice_exists, string='Invoiced',
-            fnct_search=_invoiced_search, type='boolean', help="It indicates that sales order has at least one invoice."),
+        'invoice_count': fields.function(_get_invoiced, type='integer', string='Invoices', multi="counts"),
+        'invoiced': fields.function(_get_invoiced, fnct_search=_search_invoiced, type='boolean', string='Paid', multi="counts"),
         'note': fields.text('Terms and conditions'),
-
         'amount_untaxed': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
@@ -256,6 +218,7 @@ class sale_order(osv.osv):
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
         'note': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note,
         'team_id': lambda s, cr, uid, c: s._get_default_team_id(cr, uid, c),
+        'pricelist_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.list0'),
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -270,7 +233,7 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it before!'))
+                raise UserError(_('In order to delete a confirmed sales order, you must cancel it before!'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -289,6 +252,14 @@ class sale_order(osv.osv):
             'target': 'current',
             'nodestroy': True,
         }
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'manual':
+            return 'sale.mt_order_confirmed'
+        elif 'state' in init_values and record.state == 'sent':
+            return 'sale.mt_order_sent'
+        return super(sale_order, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
         context = context or {}
@@ -386,8 +357,7 @@ class sale_order(osv.osv):
             [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
             limit=1)
         if not journal_ids:
-            raise osv.except_osv(_('Error!'),
-                _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
+            raise UserError(_('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
         invoice_vals = {
             'name': order.client_order_ref or '',
             'origin': order.name,
@@ -517,9 +487,7 @@ class sale_order(osv.osv):
         for o in self.browse(cr, uid, ids, context=context):
             currency_id = o.pricelist_id.currency_id.id
             if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
-                raise osv.except_osv(
-                    _('Error!'),
-                    _('You cannot group sales having different currencies for the same partner.'))
+                raise UserError(_('You cannot group sales having different currencies for the same partner.'))
 
             partner_currency[o.partner_id.id] = currency_id
             lines = []
@@ -583,9 +551,7 @@ class sale_order(osv.osv):
         for sale in self.browse(cr, uid, ids, context=context):
             for inv in sale.invoice_ids:
                 if inv.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(
-                        _('Cannot cancel this sales order!'),
-                        _('First cancel all invoices attached to this sales order.'))
+                    raise UserError(_('Cannot cancel this sales order!') + ':' + _('First cancel all invoices attached to this sales order.'))
                 inv.signal_workflow('invoice_cancel')
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
@@ -601,7 +567,7 @@ class sale_order(osv.osv):
         context = context or {}
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
-                raise osv.except_osv(_('Error!'),_('You cannot confirm a sales order which has no line.'))
+                raise UserError(_('You cannot confirm a sales order which has no line.'))
             noprod = self.test_no_product(cr, uid, o, context)
             if (o.order_policy == 'manual') or noprod:
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
@@ -662,7 +628,6 @@ class sale_order(osv.osv):
             'product_uos': (line.product_uos and line.product_uos.id) or line.product_uom.id,
             'company_id': order.company_id.id,
             'group_id': group_id,
-            'invoice_state': (order.order_policy == 'picking') and '2binvoiced' or 'none',
             'sale_line_id': line.id
         }
 
@@ -684,7 +649,7 @@ class sale_order(osv.osv):
 
     def action_ignore_delivery_exception(self, cr, uid, ids, context=None):
         for sale_order in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, ids, {'state': 'progress' if sale_order.invoice_exists else 'manual'}, context=context)
+            self.write(cr, uid, ids, {'state': 'progress' if sale_order.invoice_count else 'manual'}, context=context)
         return True
 
     def action_ship_create(self, cr, uid, ids, context=None):
@@ -694,6 +659,8 @@ class sale_order(osv.osv):
 
         :return: True
         """
+        context = context or {}
+        context['lang'] = self.pool['res.users'].browse(cr, uid, uid).lang
         procurement_obj = self.pool.get('procurement.order')
         sale_line_obj = self.pool.get('sale.order.line')
         for order in self.browse(cr, uid, ids, context=context):
@@ -710,13 +677,16 @@ class sale_order(osv.osv):
                     procurement_obj.check(cr, uid, [x.id for x in line.procurement_ids if x.state not in ['cancel', 'done']])
                     line.refresh()
                     #run again procurement that are in exception in order to trigger another move
-                    proc_ids += [x.id for x in line.procurement_ids if x.state in ('exception', 'cancel')]
-                    procurement_obj.reset_to_confirmed(cr, uid, proc_ids, context=context)
+                    except_proc_ids = [x.id for x in line.procurement_ids if x.state in ('exception', 'cancel')]
+                    procurement_obj.reset_to_confirmed(cr, uid, except_proc_ids, context=context)
+                    proc_ids += except_proc_ids
                 elif sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
                     if (line.state == 'done') or not line.product_id:
                         continue
                     vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=order.procurement_group_id.id, context=context)
-                    proc_id = procurement_obj.create(cr, uid, vals, context=context)
+                    ctx = context.copy()
+                    ctx['procurement_autorun_defer'] = True
+                    proc_id = procurement_obj.create(cr, uid, vals, context=ctx)
                     proc_ids.append(proc_id)
             #Confirm procurement order such that rules will be applied on it
             #note that the workflow normally ensure proc_ids isn't an empty list
@@ -930,7 +900,7 @@ class sale_order_line(osv.osv):
                     if not account_id:
                         account_id = line.product_id.categ_id.property_account_income_categ.id
                     if not account_id:
-                        raise osv.except_osv(_('Error!'),
+                        raise UserError(
                                 _('Please define income account for this product: "%s" (id:%d).') % \
                                     (line.product_id.name, line.product_id.id,))
                 else:
@@ -947,8 +917,7 @@ class sale_order_line(osv.osv):
             fpos = line.order_id.fiscal_position or False
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
             if not account_id:
-                raise osv.except_osv(_('Error!'),
-                            _('There is no Fiscal Position defined or Income category account defined for default properties of Product categories.'))
+                raise UserError(_('There is no Fiscal Position defined or Income category account defined for default properties of Product categories.'))
             res = {
                 'name': line.name,
                 'sequence': line.sequence,
@@ -986,7 +955,7 @@ class sale_order_line(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
-                raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sales order line that has already been invoiced.'))
+                raise UserError(_('You cannot cancel a sales order line that has already been invoiced.'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def button_confirm(self, cr, uid, ids, context=None):
@@ -1153,14 +1122,14 @@ class sale_order_line(osv.osv):
         """Allows to delete sales order lines in draft,cancel states"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel']:
-                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
+                raise UserError(_('Cannot delete a sales order line which is in state \'%s\'.') % (rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
 
 class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
 
-    def send_mail(self, cr, uid, ids, context=None):
+    def send_mail(self, cr, uid, ids, auto_commit=False, context=None):
         context = context or {}
         if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
@@ -1244,15 +1213,23 @@ class product_product(osv.Model):
     _inherit = 'product.product'
 
     def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
-        SaleOrderLine = self.pool['sale.order.line']
-        return {
-            product_id: SaleOrderLine.search_count(cr,uid, [('product_id', '=', product_id)], context=context)
-            for product_id in ids
-        }
+        r = dict.fromkeys(ids, 0)
+        domain = [
+            ('state', 'in', ['waiting_date','progress','manual', 'shipping_except', 'invoice_except', 'done']),
+            ('product_id', 'in', ids),
+        ]
+        for group in self.pool['sale.report'].read_group(cr, uid, domain, ['product_id','product_uom_qty'], ['product_id'], context=context):
+            r[group['product_id'][0]] = group['product_uom_qty']
+        return r
+
+    def action_view_sales(self, cr, uid, ids, context=None):
+        result = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'sale.action_order_line_product_tree', raise_if_not_found=True)
+        result = self.pool['ir.actions.act_window'].read(cr, uid, [result], context=context)[0]
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, ids)) + "])]"
+        return result
 
     _columns = {
         'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
-
     }
 
 class product_template(osv.Model):
@@ -1280,5 +1257,3 @@ class product_template(osv.Model):
         'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
 
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -195,5 +195,3 @@ class report_crossoveredbudget(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account_budget.report_crossoveredbudget'
     _wrapped_report_class = budget_report
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

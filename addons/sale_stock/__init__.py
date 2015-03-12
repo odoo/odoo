@@ -23,4 +23,3 @@ import sale_stock
 import report
 import company
 import res_config
-

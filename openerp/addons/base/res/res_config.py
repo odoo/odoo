@@ -29,6 +29,7 @@ from openerp.tools import ustr
 from openerp.tools.translate import _
 from openerp import exceptions
 from lxml import etree
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -362,13 +363,13 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
                         self.already_installed(cr, uid, context=context),
                         True))
 
-    def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
+    def fields_get(self, cr, uid, fields=None, context=None, write_access=True, attributes=None):
         """ If an addon is already installed, set it to readonly as
         res.config.installer doesn't handle uninstallations of already
         installed addons
         """
         fields = super(res_config_installer, self).fields_get(
-            cr, uid, fields, context, write_access)
+            cr, uid, fields, context, write_access, attributes)
 
         for name in self.already_installed(cr, uid, context=context):
             if name not in fields:
@@ -433,7 +434,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
     _name = 'res.config.settings'
 
     def copy(self, cr, uid, id, values, context=None):
-        raise osv.except_osv(_("Cannot duplicate configuration!"), "")
+        raise UserError(_("Cannot duplicate configuration!"), "")
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
@@ -466,10 +467,12 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
             dep_name = [x.shortdesc for x  in module_pool.browse(
                 cr, uid, dep_ids + module_ids, context=context)]
             message = '\n'.join(dep_name)
-            return {'warning': {'title': _('Warning!'),
-                    'message':
-                    _('Disabling this option will also uninstall the following modules \n%s' % message)
-                   }}
+            return {
+                'warning': {
+                    'title': _('Warning!'),
+                    'message': _('Disabling this option will also uninstall the following modules \n%s') % message,
+                }
+            }
         return {}
 
     def _get_classified_fields(self, cr, uid, context=None):
@@ -701,6 +704,4 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         # 3/ substitute and return the result
         if (action_id):
             return exceptions.RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
-        return exceptions.Warning(msg % values)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        return exceptions.UserError(msg % values)

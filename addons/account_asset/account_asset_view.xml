@@ -13,7 +13,7 @@
                 <group>
                     <group>
                         <field name="name"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
                     <group>
                         <field name="journal_id"/>
@@ -103,7 +103,7 @@
                         <group>
                             <field name="purchase_date"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -145,7 +145,6 @@
                                 <form string="Depreciation Lines"> 
                                     <group>
                                         <group>
-                                            <field name="asset_id" invisible="1"/>
                                             <field name="parent_state" invisible="1"/>
                                             <field name="name"/>
                                             <field name="amount"/>
@@ -156,8 +155,8 @@
                                         <group>
                                             <field name="sequence"/>
                                             <field name="depreciation_date"/>
-                                            <field name="depreciated_value" readonly="1"/>
-                                            <field name="remaining_value" readonly="1"/>
+                                            <field name="depreciated_value"/>
+                                            <field name="remaining_value"/>
                                         </group>
                                     </group>
                                 </form>

@@ -44,20 +44,15 @@ class mrp_config_settings(osv.osv_memory):
                  'Without this module: A + B + C -> D.\n'
                  'With this module: A + B + C -> D + E.\n'
                  '-This installs the module mrp_byproduct.'),
-        'group_mrp_routings': fields.boolean("Manage routings and work orders ",
+        'group_mrp_routings': fields.boolean("Manage Work Order Operations and work orders ",
             implied_group='mrp.group_mrp_routings',
-            help='Routings allow you to create and manage the manufacturing operations that should be followed '
+            help='Work Order Operations allow you to create and manage the manufacturing operations that should be followed '
                  'within your work centers in order to produce a product. They are attached to bills of materials '
                  'that will define the required raw materials.'),
         'group_mrp_properties': fields.boolean("Allow several bill of materials per products using properties",
             implied_group='product.group_mrp_properties',
             help="""The selection of the right Bill of Material to use will depend on the properties specified on the sales order and the Bill of Material."""),
-        'group_route_line_type': fields.boolean("Manage multi level Bill of Materials",
-            implied_group='mrp.group_route_line_type',
-            help="""Allow to manage multi level bill of material"""),
         'group_rounding_efficiency': fields.boolean("Manage rounding and efficiency of BoM components",
             implied_group='mrp.group_rounding_efficiency',
             help="""Allow to manage product rounding on quantity and product efficiency during production process"""),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

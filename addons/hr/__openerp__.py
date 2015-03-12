@@ -48,7 +48,13 @@ You can manage:
         'images/hr_job_position.jpeg',
         'static/src/img/default_image.png',
     ],
-    'depends': ['base_setup','mail', 'resource', 'board'],
+    'depends': [
+        'base_setup',
+        'mail',
+        'resource',
+        'board',
+        'web_kanban',
+    ],
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
@@ -70,6 +76,5 @@ You can manage:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'qweb': [ 'static/src/xml/suggestions.xml' ],
+    'qweb': ['static/src/xml/suggestions.xml'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

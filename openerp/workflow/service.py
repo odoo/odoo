@@ -112,4 +112,3 @@ class WorkflowService(object):
                 for (item_id,) in self.cr.fetchall():
                     # redirect all those workitems to the wkf instance of the new resource
                     self.cr.execute('update wkf_workitem set subflow_id=%s where id=%s', (new_id[0], item_id))
-

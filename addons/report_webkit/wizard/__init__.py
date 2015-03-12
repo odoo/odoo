@@ -30,5 +30,3 @@
 ##############################################################################
 
 import report_webkit_actions
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

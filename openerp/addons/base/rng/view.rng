@@ -562,6 +562,8 @@
             <rng:optional><rng:attribute name="filters"/></rng:optional>
             <rng:optional><rng:attribute name="statusbar_visible"/></rng:optional>
             <rng:optional><rng:attribute name="statusbar_colors"/></rng:optional>
+            <rng:optional><rng:attribute name="can_create" /></rng:optional>
+            <rng:optional><rng:attribute name="can_write" /></rng:optional>
             <rng:optional><rng:attribute name="interval" /></rng:optional>
             <!-- Widget *static* options defined as an arbitrary JSON dict, with
                  widget-dependent parameters. To be ignored if widget/client does
@@ -674,6 +676,12 @@
     <rng:define name="pivot">
         <rng:element name="pivot">
             <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="display_quantity"><rng:value>False</rng:value></rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="disable_linking"><rng:value>False</rng:value></rng:attribute>
+            </rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
             </rng:zeroOrMore>

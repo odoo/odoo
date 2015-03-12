@@ -174,12 +174,12 @@ function openerp_picking_widgets(instance){
             this.$('.js_plus').click(function(){
                 var id = $(this).data('product-id');
                 var op_id = $(this).parents("[data-id]:first").data('id');
-                self.getParent().scan_product_id(id,true,op_id);
+                self.getParent().scan_product_id(id,1,op_id);
             });
             this.$('.js_minus').click(function(){
                 var id = $(this).data('product-id');
                 var op_id = $(this).parents("[data-id]:first").data('id');
-                self.getParent().scan_product_id(id,false,op_id);
+                self.getParent().scan_product_id(id,-1,op_id);
             });
             this.$('.js_unfold').click(function(){
                 var op_id = $(this).parent().data('id');
@@ -362,7 +362,7 @@ function openerp_picking_widgets(instance){
             var container = this.$('.js_pack_op_line.container_head:not(.processed):not(.hidden)')
             var disabled = true;
             $.each(qties,function(index, value){
-                if (parseInt(value)>0){
+                if(value>0) {
                     disabled = false;
                 }
             });
@@ -466,12 +466,14 @@ function openerp_picking_widgets(instance){
             return new instance.web.Model('stock.picking.type').get_func('search_read')([],[])
                 .then(function(types){
                     self.picking_types = types;
+                    type_ids = [];
                     for(var i = 0; i < types.length; i++){
                         self.pickings_by_type[types[i].id] = [];
+                        type_ids.push(types[i].id);
                     }
                     self.pickings_by_type[0] = [];
 
-                    return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']]], [] ], {context: new instance.web.CompoundContext()});
+                    return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']], ['picking_type_id', 'in', type_ids]], [] ], {context: new instance.web.CompoundContext()});
 
                 }).then(function(pickings){
                     self.pickings = pickings;
@@ -859,7 +861,7 @@ function openerp_picking_widgets(instance){
                     }
                 });
         },
-        scan_product_id: function(product_id,increment,op_id){ //performs the same operation as a scan, but with product id instead
+        scan_product_id: function(product_id,increment,op_id){ //performs the same operation as a scan, but with product id instead, increment is the value to increment (-1 or 1)
             var self = this;
             return new instance.web.Model('stock.picking')
                 .call('process_product_id_from_ui', [self.picking.id, product_id, op_id, increment])
@@ -873,7 +875,8 @@ function openerp_picking_widgets(instance){
             if (pack_op_ids.length !== 0){
                 return new instance.web.Model('stock.picking')
                     .call('action_pack',[[[self.picking.id]], pack_op_ids])
-                    .then(function(){
+                    .then(function(pack){
+                        //TODO: the functionality using current_package_id in context is not needed anymore
                         instance.session.user_context.current_package_id = false;
                         return self.refresh_ui(self.picking.id);
                     });
@@ -1058,4 +1061,14 @@ function openerp_picking_widgets(instance){
 openerp.stock = function(openerp) {
     openerp.stock = openerp.stock || {};
     openerp_picking_widgets(openerp);
+
+    openerp.web_kanban.KanbanRecord.include({
+        on_card_clicked: function() {
+            if (this.view.dataset.model === 'stock.picking.type') {
+                this.$('.oe_kanban_stock_picking_type_list').first().click();
+            } else {
+                this._super.apply(this, arguments);
+            }
+        },
+    });
 }

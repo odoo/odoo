@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 {
     'name': 'Account Bank Statement Import',
+    'category' : 'Accounting & Finance',
     'version': '1.0',
     'author': 'OpenERP SA',
     'depends': ['account'],
@@ -17,5 +18,3 @@
     'auto_install': False,
     'installable': True,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

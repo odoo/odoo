@@ -320,7 +320,7 @@ var py = {};
                     if (token === 'in' && tokens[tokens.length-1].id === 'not') {
                         symbol = symbols['not in'];
                         tokens.pop();
-                    } else if (token === 'not' && tokens[tokens.length-1].id === 'is') {
+                    } else if (token === 'not' && tokens.length > 0 && tokens[tokens.length-1].id === 'is') {
                         symbol = symbols['is not'];
                         tokens.pop();
                     } else {
@@ -547,11 +547,13 @@ var py = {};
     };
     py.PY_call = function (callable, args, kwargs) {
         if (!args) {
-            args = []; kwargs = {};
-        } else if (typeof args === 'object' && !(args instanceof Array)) {
+            args = [];
+        }
+        if (typeof args === 'object' && !(args instanceof Array)) {
             kwargs = args;
             args = [];
-        } else if (!kwargs) {
+        }
+        if (!kwargs) {
             kwargs = {};
         }
         if (callable.__is_type) {
@@ -969,6 +971,12 @@ var py = {};
         __init__: function () {
             this._values = [];
         },
+        __len__: function () {
+            return this._values.length;
+        },
+        __nonzero__: function () {
+            return py.PY_size(this) > 0 ? py.True : py.False;
+        },
         __contains__: function (value) {
             for(var i=0, len=this._values.length; i<len; ++i) {
                 if (py.PY_isTrue(this._values[i].__eq__(value))) {
@@ -1012,6 +1020,12 @@ var py = {};
         },
         __setitem__: function (key, value) {
             this._store[key.__hash__()] = [key, value];
+        },
+        __len__: function () {
+            return Object.keys(this._store).length
+        },
+        __nonzero__: function () {
+            return py.PY_size(this) > 0 ? py.True : py.False;
         },
         get: function () {
             var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);

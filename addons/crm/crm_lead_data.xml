@@ -32,6 +32,7 @@
             <field name="name">Proposition</field>
             <field name="case_default">1</field>
             <field name="probability">40</field>
+            <field name="on_change">1</field>
             <field name="sequence">50</field>
             <field name="type">opportunity</field>
         </record>
@@ -39,6 +40,7 @@
             <field name="name">Negotiation</field>
             <field name="case_default">1</field>
             <field name="probability">60</field>
+            <field name="on_change">1</field>
             <field name="sequence">60</field>
             <field name="type">opportunity</field>
         </record>
@@ -67,24 +69,7 @@
                                             (4, ref('stage_lead5')), (4, ref('stage_lead6')),
                                             (4, ref('stage_lead7'))]"/>
         </record>
-
-        <!-- Crm Campain -->
-        <record model="crm.tracking.campaign" id="crm_campaign_fall_drive">
-            <field name="name">Fall Drive</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-        <record model="crm.tracking.campaign" id="crm_campaign_christmas_special">
-            <field name="name">Christmas Special</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-        <record model="crm.tracking.campaign" id="crm_campaign_email_campaign_services">
-            <field name="name">Email Campaign - Services</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-        <record model="crm.tracking.campaign" id="crm_campaign_email_campaign_products">
-            <field name="name">Email Campaign - Products</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
+        
         <!--  crm categories -->
         <record model="crm.lead.tag" id="categ_oppor1">
             <field name="name">Product</field>
@@ -180,7 +165,7 @@
         <!--Definition of an email template with an empty body that will be used in opportunity mailing.
             Used to give a basis for email recipients, name and to ease the definition of a further
             elaborated template.  -->
-        <record id="email_template_opportunity_mail" model="email.template">
+        <record id="email_template_opportunity_mail" model="mail.template">
             <field name="name">Lead/Opportunity Mass Mail</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="auto_delete" eval="True"/>
@@ -188,7 +173,7 @@
             <field name="email_to">${(not object.partner_id and object.email_from)|safe}</field>
             <field name="body_html"></field>
         </record>
-        <record id="email_template_opportunity_reminder_mail" model="email.template">
+        <record id="email_template_opportunity_reminder_mail" model="mail.template">
             <field name="name">Reminder to User</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="auto_delete" eval="True"/>

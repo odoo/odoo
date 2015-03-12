@@ -45,8 +45,7 @@ Dashboard / Reports for Purchase Management will include:
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/purchase',
-    'images': ['images/purchase_order.jpeg', 'images/purchase_analysis.jpeg', 'images/request_for_quotation.jpeg'],
-    'depends': ['stock_account', 'report'],
+    'depends': ['stock_account', 'report', 'web_tip'],
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
@@ -94,4 +93,3 @@ Dashboard / Reports for Purchase Management will include:
     'auto_install': False,
     'application': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

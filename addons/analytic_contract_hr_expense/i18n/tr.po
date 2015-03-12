@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-09 09:04+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:54+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-11-10 06:32+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 
 #. module: analytic_contract_hr_expense
 #: model:ir.model,name:analytic_contract_hr_expense.model_account_analytic_account
@@ -35,7 +35,7 @@ msgstr "Faturalanacak Giderlerin Tahmini"
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
 msgid "Expenses"
-msgstr ""
+msgstr "Giderler"
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
@@ -88,6 +88,10 @@ msgid ""
 "'invisible':[('invoice_on_timesheets','=',False), "
 "('charge_expenses','=',False)]}"
 msgstr ""
+"{'required': "
+"['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)], "
+"'invisible':[('invoice_on_timesheets','=',False), "
+"('charge_expenses','=',False)]}"
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form

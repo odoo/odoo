@@ -107,7 +107,7 @@ class ProjectTaskStageMrp(osv.Model):
     _inherit = 'project.task.type'
 
     _columns = {
-        'closed': fields.boolean('Close', help="Tasks in this stage are considered as closed."),
+        'closed': fields.boolean('Is a close stage', help="Tasks in this stage are considered as closed."),
     }
 
     _defaults = {
@@ -142,7 +142,7 @@ class product_template(osv.osv):
     _inherit = "product.template"
     _columns = {
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null',),
-        'auto_create_task': fields.boolean('Create Task Automatically', help="Thick this option if you want to create a task automatically each time this product is sold"),
+        'auto_create_task': fields.boolean('Create Task Automatically', help="Tick this option if you want to create a task automatically each time this product is sold"),
     }
 
 class product_product(osv.osv):
@@ -153,7 +153,3 @@ class product_product(osv.osv):
             if product.type == 'service' and product.auto_create_task:
                 return True
         return super(product_product, self).need_procurement(cr, uid, ids, context=context)
-
-
-
-

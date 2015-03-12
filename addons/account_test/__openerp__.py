@@ -46,5 +46,3 @@ and print the report from Print button in header area.
     'active': False,
     'installable': True
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

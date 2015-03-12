@@ -61,5 +61,3 @@ class base_language_install(osv.osv_memory):
             'target': 'new',
             'res_id': ids and ids[0] or False,
         }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

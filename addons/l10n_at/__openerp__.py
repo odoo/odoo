@@ -36,6 +36,3 @@ Please keep in mind that you should review and adapt it with your Accountant, be
     'auto_install': False,
     'installable': True
 }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

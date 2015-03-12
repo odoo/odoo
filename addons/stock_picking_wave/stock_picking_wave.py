@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class stock_picking_wave(osv.osv):
     _name = "stock.picking.wave"
@@ -37,7 +38,7 @@ class stock_picking_wave(osv.osv):
         for wave in self.browse(cr, uid, ids, context=context):
             picking_ids += [picking.id for picking in wave.picking_ids]
         if not picking_ids:
-            raise osv.except_osv(_('Error!'), _('Nothing to print.'))
+            raise UserError(_('Nothing to print.'))
         context['active_ids'] = picking_ids
         context['active_model'] = 'stock.picking'
         return self.pool.get("report").get_action(cr, uid, [], 'stock.report_picking', context=context)
@@ -54,7 +55,7 @@ class stock_picking_wave(osv.osv):
                 if picking.state in ('cancel', 'done'):
                     continue
                 if picking.state != 'assigned':
-                    raise osv.except_osv(_('Warning'), _('Some pickings are still waiting for goods. Please check or force their availability before setting this wave to done.'))
+                    raise UserError(_('Some pickings are still waiting for goods. Please check or force their availability before setting this wave to done.'))
                 picking_todo.add(picking.id)
         if picking_todo:
             self.pool.get('stock.picking').action_done(cr, uid, list(picking_todo), context=context)

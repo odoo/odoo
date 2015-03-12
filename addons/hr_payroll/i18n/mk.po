@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-07 14:58+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:11+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-08 06:21+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:77
@@ -32,6 +32,11 @@ msgid ""
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Кога рекапитуларот е креиран, статусот е 'Нацрт'.            \n"
+"* Кога рекапитуларот се верифицира, статусот е 'Чека'.             \n"
+"* Ако рекапитуларот е потврден тогаш статусот е подесен на 'Завршен'.        "
+"    \n"
+"* Кога корисникот ќе го откаже рекапитуларот статусот е 'Одбиен'."
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -56,7 +61,7 @@ msgstr "Сметководство"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Accounting Information"
-msgstr ""
+msgstr "Сметководствени информации"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,active:0
@@ -67,7 +72,7 @@ msgstr "Активно"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Додади внатрешна белешка..."
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslip
@@ -111,7 +116,7 @@ msgstr "Годишно"
 #: field:hr.payslip.line,appears_on_payslip:0
 #: field:hr.salary.rule,appears_on_payslip:0
 msgid "Appears on Payslip"
-msgstr ""
+msgstr "Се појавува на рекапитулар"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_python:0
@@ -127,7 +132,7 @@ msgstr ""
 #: view:website:hr_payroll.report_payslip
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Authorized signature"
-msgstr ""
+msgstr "Авторизиран потпис"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslip
@@ -138,12 +143,12 @@ msgstr "Банкарска сметка"
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Bi-monthly"
-msgstr ""
+msgstr "Двомесечно"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Bi-weekly"
-msgstr ""
+msgstr "Двонеделно"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_form
@@ -153,12 +158,12 @@ msgstr "Калкулации"
 #. module: hr_payroll
 #: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
 msgid "Cancel"
-msgstr ""
+msgstr "Откажи"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Cancel Payslip"
-msgstr ""
+msgstr "Откажи рекапитулар"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,category_id:0
@@ -236,7 +241,7 @@ msgstr "Пресметка"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Compute Sheet"
-msgstr ""
+msgstr "Пресметај табела"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_select:0
@@ -292,7 +297,7 @@ msgstr ""
 #. module: hr_payroll
 #: help:hr.config.settings,module_hr_payroll_account:0
 msgid "Create journal entries from payslips"
-msgstr ""
+msgstr "Креирај внесови во дневник од рекапитулари"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,create_uid:0
@@ -308,7 +313,7 @@ msgstr ""
 #: field:hr.salary.rule.category,create_uid:0
 #: field:payslip.lines.contribution.register,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Креирано од"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,create_date:0
@@ -324,7 +329,7 @@ msgstr ""
 #: field:hr.salary.rule.category,create_date:0
 #: field:payslip.lines.contribution.register,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Креирано на"
 
 #. module: hr_payroll
 #: field:hr.payslip,credit_note:0
@@ -344,7 +349,7 @@ msgstr "Датум од"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Date From:"
-msgstr ""
+msgstr "Датум од:"
 
 #. module: hr_payroll
 #: field:hr.payslip,date_to:0
@@ -353,12 +358,12 @@ msgstr ""
 #: view:website:hr_payroll.report_payslip
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Date To"
-msgstr ""
+msgstr "Датум до"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Date To:"
-msgstr ""
+msgstr "Датум до:"
 
 #. module: hr_payroll
 #: help:hr.payslip,struct_id:0
@@ -368,6 +373,10 @@ msgid ""
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
 msgstr ""
+"Ги дефинира правилата кои треба да се применат на овој рекапитулар, според "
+"избраниот договор. Ако полето договор го оставите празно, ова пола не е "
+"повеќе задолжително и одтука ќе се применат правилата подесени на "
+"структурата на сите договори на вработениот валидни за избраниот пероиод"
 
 #. module: hr_payroll
 #: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
@@ -392,7 +401,7 @@ msgstr "Ознака"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Details By Salary Rule Category"
-msgstr ""
+msgstr "Детали според категорија на правило на плата"
 
 #. module: hr_payroll
 #: field:hr.payslip,details_by_salary_rule_category:0
@@ -415,7 +424,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
 msgid "Done Slip"
-msgstr ""
+msgstr "Завршени рекапитулари"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
@@ -428,12 +437,12 @@ msgstr "Нацрт"
 #. module: hr_payroll
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
 msgid "Draft Payslip Batches"
-msgstr ""
+msgstr "Нацрт повеќе рекапитулари истовремено"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
 msgid "Draft Slip"
-msgstr ""
+msgstr "Нацрт рекапитулар"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslip
@@ -458,7 +467,7 @@ msgstr "Функција на вработен"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslips"
-msgstr ""
+msgstr "Рекапитулари на вработени"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
@@ -471,7 +480,7 @@ msgstr "Вработени"
 #. module: hr_payroll
 #: constraint:hr.payroll.structure:0
 msgid "Error ! You cannot create a recursive Salary Structure."
-msgstr ""
+msgstr "Грешка! Не можете да креирате рекурзивна структура на плати."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:851
@@ -518,19 +527,19 @@ msgstr "Генерирај"
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 msgid "Generate Payslips"
-msgstr ""
+msgstr "Генерирај рекапитулари"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr ""
+msgstr "Генерира рекапитулари за сите избрани вработени"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
 #: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
 msgid "Group By"
-msgstr ""
+msgstr "Групирање според"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,id:0
@@ -549,7 +558,7 @@ msgstr ""
 #: field:report.hr_payroll.report_payslip,id:0
 #: field:report.hr_payroll.report_payslipdetails,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslip
@@ -563,6 +572,8 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
+"Ако е означено, индицира дека сите рекапитулари генерирани од тука се "
+"рекапитулари за поврат на средства."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,active:0
@@ -577,7 +588,7 @@ msgstr ""
 #. module: hr_payroll
 #: help:hr.payslip,credit_note:0
 msgid "Indicates this payslip has a refund of another"
-msgstr ""
+msgstr "Индицира дека овој рекапитулар има поврат на срества или друго"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -595,7 +606,7 @@ msgstr "Внесови"
 #. module: hr_payroll
 #: field:hr.payslip,note:0
 msgid "Internal Note"
-msgstr ""
+msgstr "Внатрешна белешка"
 
 #. module: hr_payroll
 #: help:hr.salary.rule,quantity:0
@@ -604,6 +615,9 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Се користи за пресметка на процент и фиксни суми. На пример правило за "
+"ваучер за оброк што има фиксна вредност од of 1€ по работен ден може да ја "
+"има дефинирано количината во израз како worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: help:hr.payslip.input,amount:0
@@ -612,6 +626,9 @@ msgid ""
 "basic salary for per product can defined in expression like result = "
 "inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
+"Се користи при пресметки. На пример правило за продажба има 1% провизија од "
+"основна плата за секој производ може да се дефинира во израз како резултат = "
+"inputs.SALEURO.amount * contract.wage*0.01."
 
 #. module: hr_payroll
 #: field:hr.contribution.register,write_uid:0
@@ -627,7 +644,7 @@ msgstr ""
 #: field:hr.salary.rule.category,write_uid:0
 #: field:payslip.lines.contribution.register,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно ажурирање од"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,write_date:0
@@ -643,7 +660,7 @@ msgstr ""
 #: field:hr.salary.rule.category,write_date:0
 #: field:payslip.lines.contribution.register,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно ажурирање на"
 
 #. module: hr_payroll
 #: field:hr.config.settings,module_hr_payroll_account:0
@@ -755,17 +772,17 @@ msgstr "Извод од платен список"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
 msgid "PaySlip Batch"
-msgstr ""
+msgstr "Повеќе рекапитулари наеднаш"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
 msgid "PaySlip Details"
-msgstr ""
+msgstr "Детали на рекапитулар"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
 msgid "PaySlip Lines"
-msgstr ""
+msgstr "Ставки од рекапитулар"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
@@ -785,7 +802,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
-msgstr ""
+msgstr "Име на рекапитулар"
 
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_reporting
@@ -803,43 +820,43 @@ msgstr "Структури на платен список"
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 #: model:ir.actions.report.xml,name:hr_payroll.action_report_payslip
 msgid "Payslip"
-msgstr ""
+msgstr "Рекапитулар"
 
 #. module: hr_payroll
 #: constraint:hr.payslip:0
 msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr ""
+msgstr "'Датумот од' на рекапитуларот мора да биде пред 'Датумот до'."
 
 #. module: hr_payroll
 #: field:hr.payslip,payslip_run_id:0
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Batches"
-msgstr ""
+msgstr "Повеќе рекапитулари наеднаш"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 #: field:hr.payslip,payslip_count:0
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
 msgid "Payslip Computation Details"
-msgstr ""
+msgstr "Детали за пресметка на рекапитулар"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
 msgid "Payslip Input"
-msgstr ""
+msgstr "Внес на рекапитулар"
 
 #. module: hr_payroll
 #: field:hr.payslip,input_line_ids:0
 msgid "Payslip Inputs"
-msgstr ""
+msgstr "Внесови на рекапитулар"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_form
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
 msgid "Payslip Line"
-msgstr ""
+msgstr "Ставка од рекапитулар"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -857,13 +874,13 @@ msgstr ""
 #. module: hr_payroll
 #: field:hr.payslip,name:0
 msgid "Payslip Name"
-msgstr ""
+msgstr "Име на рекапитулар"
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days_line_ids:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
 msgid "Payslip Worked Days"
-msgstr ""
+msgstr "Изработни денови од рекапитулар"
 
 #. module: hr_payroll
 #: view:hr.employee:hr_payroll.payroll_hr_employee_view_form
@@ -875,7 +892,7 @@ msgstr ""
 #: field:hr.payslip.run,slip_ids:0
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 msgid "Payslips"
-msgstr ""
+msgstr "Рекапитулари"
 
 #. module: hr_payroll
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
@@ -883,12 +900,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
 msgid "Payslips Batches"
-msgstr ""
+msgstr "Повеќе рекапитулари наеднаш"
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
 msgid "Payslips by Employees"
-msgstr ""
+msgstr "Рекапитулари по вработени"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_percentage:0
@@ -927,7 +944,7 @@ msgstr "Код Python"
 #: field:hr.payslip.line,condition_python:0
 #: field:hr.salary.rule,condition_python:0
 msgid "Python Condition"
-msgstr ""
+msgstr "Python Услов"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
@@ -950,7 +967,7 @@ msgstr "Количина/Однос"
 #: view:website:hr_payroll.report_payslip
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Quantity/rate"
-msgstr ""
+msgstr "Количина/стапка"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -991,7 +1008,7 @@ msgstr "Поврат"
 #: code:addons/hr_payroll/hr_payroll.py:334
 #, python-format
 msgid "Refund Payslip"
-msgstr ""
+msgstr "Рекапитулар со поврат на средства"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:324
@@ -1007,7 +1024,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Register Name:"
-msgstr ""
+msgstr "Име за регистрација:"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -1042,7 +1059,7 @@ msgstr "Категории на плавило за плата"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
 msgid "Salary Rule Categories Hierarchy"
-msgstr ""
+msgstr "Хиерархија на категории на правила за плата"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
@@ -1055,7 +1072,7 @@ msgstr "Категорија на правила за плата"
 #: field:hr.rule.input,input_id:0
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
 msgid "Salary Rule Input"
-msgstr ""
+msgstr "Внес за правило за плата"
 
 #. module: hr_payroll
 #: view:hr.payroll.structure:hr_payroll.view_hr_employee_grade_form
@@ -1073,7 +1090,7 @@ msgstr "Правила за плата"
 #: code:addons/hr_payroll/hr_payroll.py:658
 #, python-format
 msgid "Salary Slip of %s for %s"
-msgstr ""
+msgstr "Рекапитулар за плата на %s за %s"
 
 #. module: hr_payroll
 #: field:hr.contract,struct_id:0
@@ -1114,7 +1131,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
 msgid "Search Payslips"
-msgstr ""
+msgstr "Пребарај рекапитулари"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
@@ -1159,7 +1176,7 @@ msgstr "Структура"
 #. module: hr_payroll
 #: help:hr.employee,total_wage:0
 msgid "Sum of all current contract's wage of employee."
-msgstr ""
+msgstr "Збир на целосна тековна плата на вработен според договорот."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,code:0
@@ -1180,13 +1197,13 @@ msgstr "Код кој може да се користи во правила за
 #: help:hr.payslip.line,amount_select:0
 #: help:hr.salary.rule,amount_select:0
 msgid "The computation method for the rule amount."
-msgstr ""
+msgstr "Начинот на пресметка за сума на правилото."
 
 #. module: hr_payroll
 #: help:hr.payslip.input,contract_id:0
 #: help:hr.payslip.worked_days,contract_id:0
 msgid "The contract for which applied this input"
-msgstr ""
+msgstr "Договорот за кој важи овој инпут"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range_max:0
@@ -1208,6 +1225,10 @@ msgid ""
 "but you can also use categories code fields in lowercase as a variable names "
 "(hra, ma, lta, etc.) and the variable basic."
 msgstr ""
+"Ова може да се користи за да се пресметат % вредностите на полињата; "
+"воглавно е на основно, но исто така можете да ги користите полињата за "
+"категории на кодови со мали букви како варијабилни имиња (hra, ma, lta, "
+"итн.) и основните варијабили."
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
@@ -1215,6 +1236,8 @@ msgid ""
 "This wizard will generate payslips for all selected employee(s) based on the "
 "dates and credit note specified on Payslips Run."
 msgstr ""
+"Овој волшебник ќе генерира рекапитулари за сите избрани вработени врз база "
+"на назначените датуми и кредитни белешки."
 
 #. module: hr_payroll
 #: field:hr.payslip.line,total:0
@@ -1238,13 +1261,13 @@ msgstr "Вкупно работни денови"
 #: help:hr.payslip.line,sequence:0
 #: help:hr.salary.rule,sequence:0
 msgid "Use to arrange calculation sequence"
-msgstr ""
+msgstr "Употребете за да уредите секвенца на пресметка"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,appears_on_payslip:0
 #: help:hr.salary.rule,appears_on_payslip:0
 msgid "Used to display the salary rule on payslip."
-msgstr ""
+msgstr "Се користи за да го прикаже правилото за плата на рекапитуларот."
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -1296,7 +1319,7 @@ msgstr "Грешка дефиниран python код за правило за �
 #: code:addons/hr_payroll/hr_payroll.py:885
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Погрешна python состојба е дефинирана за правилото за плата %s (%s)."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:851
@@ -1308,19 +1331,19 @@ msgstr "Погрешна количина дефинирана за правил
 #: code:addons/hr_payroll/hr_payroll.py:879
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Погрешна дефиниција на опсег за правило за плата %s (%s)."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:353
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
-msgstr ""
+msgstr "Не можете да избришете рекапитулар кој не е нацрт или откажан!"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
-msgstr ""
+msgstr "Морате да изберете вработен(и) за да генерирате рекапитулар(и)."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,amount_percentage_base:0

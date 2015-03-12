@@ -40,6 +40,3 @@ class account_cash_statement(osv.osv):
     _columns = {
         'pos_session_id' : fields.many2one('pos.session', string="Session", copy=False),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

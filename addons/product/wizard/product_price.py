@@ -55,5 +55,3 @@ class product_price_list(osv.osv_memory):
         res['price_list'] = res['price_list'][0]
         datas['form'] = res
         return self.pool['report'].get_action(cr, uid, [], 'product.report_pricelist', data=datas, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

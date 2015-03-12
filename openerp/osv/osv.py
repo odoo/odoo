@@ -30,5 +30,3 @@ except_osv = except_orm
 osv = Model
 osv_memory = TransientModel
 osv_abstract = AbstractModel # ;-)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

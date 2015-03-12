@@ -1342,5 +1342,3 @@ instance.web.SimpleIndexedDB = instance.web.Class.extend({
 });
 
 })();
-
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

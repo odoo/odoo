@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
@@ -141,8 +142,7 @@ class account_analytic_line(osv.osv):
         if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
-                    raise osv.except_osv(_('Error!'),
-                        _('You cannot modify an invoiced analytic line!'))
+                    raise UserError(_('You cannot modify an invoiced analytic line!'))
         return True
 
     def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
@@ -180,8 +180,7 @@ class account_analytic_line(osv.osv):
             for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
                 partner = account.partner_id
                 if (not partner) or not (account.pricelist_id):
-                    raise osv.except_osv(_('Analytic Account Incomplete!'),
-                            _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
+                    raise UserError(_('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
 
                 date_due = False
                 if partner.property_payment_term:
@@ -254,7 +253,7 @@ class account_analytic_line(osv.osv):
 
                         general_account = product.property_account_income or product.categ_id.property_account_income_categ
                         if not general_account:
-                            raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
+                            raise UserError(_("Configuration Error!") + '\n' + _("Please define income account for product '%s'.") % product.name)
                         taxes = product.taxes_id or general_account.tax_ids
                         tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                         curr_line.update({
@@ -282,7 +281,8 @@ class account_analytic_line(osv.osv):
                                 details.append("%s" % (line['unit_amount'], ))
                         if data.get('name', False):
                             details.append(line['name'])
-                        note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
+                        if details:
+                            note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
                     if note:
                         curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
                     invoice_line_obj.create(cr, uid, curr_line, context=context)
@@ -345,6 +345,3 @@ class account_move_line(osv.osv):
                     'to_invoice': line.account_id.to_invoice and line.account_id.to_invoice.id or False
                     }, context=context)
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

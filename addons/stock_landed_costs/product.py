@@ -41,5 +41,3 @@ class product_template(osv.osv):
         'landed_cost_ok': False,
         'split_method': 'equal',
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

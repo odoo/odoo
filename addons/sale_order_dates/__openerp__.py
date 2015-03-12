@@ -36,7 +36,6 @@ You can add the following additional dates to a sales order:
 """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
-    'images': ['images/sale_order_dates.jpeg'],
     'depends': ['sale_stock'],
     'data': ['sale_order_dates_view.xml'],
     'demo': [],
@@ -44,5 +43,3 @@ You can add the following additional dates to a sales order:
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

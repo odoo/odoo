@@ -19,4 +19,3 @@ class WorkflowActivity(object):
     KIND_DUMMY = 'dummy'
     KIND_STOPALL = 'stopall'
     KIND_SUBFLOW = 'subflow'
-

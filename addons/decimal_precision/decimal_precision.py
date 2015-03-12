@@ -53,7 +53,7 @@ class decimal_precision(orm.Model):
             for field in model._fields.values():
                 if field.type == 'float':
                     field._setup_digits(env)
-        RegistryManager.signal_caches_change(cr.dbname)
+        RegistryManager.signal_registry_change(cr.dbname)
 
     def create(self, cr, uid, data, context=None):
         res = super(decimal_precision, self).create(cr, uid, data, context=context)
@@ -102,5 +102,3 @@ class DecimalPrecisionTestModel(orm.Model):
         'float_2': fields.float(digits=(16, 2)),
         'float_4': fields.float(digits=(16, 4)),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -54,6 +54,3 @@ class report_stock_lines_date(osv.osv):
                     left join stock_move m on (m.product_id=p.id and m.state = 'done')
                 group by p.id
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

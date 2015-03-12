@@ -18,7 +18,6 @@
             return this._super.apply(this, arguments).then(function () {
                 var $edit_button = $("button[data-action=edit]");
                 $edit_button.removeClass("hidden");
-                $edit_button.text("Translate");
 
                 if(website.no_editor) {
                     $edit_button.removeProp('disabled');
@@ -42,7 +41,7 @@
                     localStorage[nodialog] = dialog.$('input[name=do_not_show]').prop('checked') || '';
                     dialog.$el.modal('hide');
                     self.translate().then(function () {
-                        mysuper.call(self);
+                        mysuper.call(self, true);
                         if(self.gengo_translate){
                             self.translation_gengo_display()
                         }
@@ -166,7 +165,8 @@
                 'data': trans,
                 'lang': website.get_context()['lang'],
             }).then(function () {
-                mysuper.call(self);
+                window.onbeforeunload = null;
+                website.reload();
             }).fail(function () {
                 // TODO: bootstrap alert with error message
                 alert("Could not save translation");

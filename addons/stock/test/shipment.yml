@@ -4,11 +4,11 @@
   !context
     uid: 'res_users_stock_manager'
 -
-  I confirm incomming move of 50 kgm Ice-cream
+  I confirm incoming move of 50 kgm Ice-cream
 -
   !python {model: stock.move}: |
-      incomming_move = self.browse(cr, uid, ref("incomming_shipment_icecream"))
-      self.action_confirm(cr, uid, [incomming_move.id])
+      incoming_move = self.browse(cr, uid, ref("incomming_shipment_icecream"))
+      self.action_confirm(cr, uid, [incoming_move.id])
 -
   I receive 40kgm Ice-cream so It will make backorder of incomming shipment for 10 kgm.
 -

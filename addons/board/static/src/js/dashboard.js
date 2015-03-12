@@ -26,6 +26,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
+        this.$el.addClass('o-dashboard');
 
         this.$('.oe_dashboard_column').sortable({
             connectWith: '.oe_dashboard_column',
@@ -329,7 +330,7 @@ instance.web.search.FavoriteMenu.include({
         var $add_to_dashboard = this.$('.add-to-dashboard');
         this.$add_dashboard_btn = $add_to_dashboard.eq(2).find('button');
         this.$add_dashboard_input = $add_to_dashboard.eq(1).find('input');
-        this.$add_dashboard_link = $add_to_dashboard.first().find('a');
+        this.$add_dashboard_link = $add_to_dashboard.first();
         var title = this.searchview.getParent().title;
         this.$add_dashboard_input.val(title);
         this.$add_dashboard_link.click(function () {
@@ -339,7 +340,7 @@ instance.web.search.FavoriteMenu.include({
     },
     toggle_dashboard_menu: function (is_open) {
         this.$add_dashboard_link
-            .toggleClass('closed-menu', !is_open)
+            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('open-menu', is_open);
         this.$add_dashboard_btn.toggle(is_open);
         this.$add_dashboard_input.toggle(is_open);
@@ -370,6 +371,7 @@ instance.web.search.FavoriteMenu.include({
         context.add({
             group_by: instance.web.pyeval.eval('groupbys', data.groupbys || [])
         });
+        context.add(view_manager.active_view.controller.get_context());
         var c = instance.web.pyeval.eval('context', context);
         for(var k in c) {
             if (c.hasOwnProperty(k) && /^search_default_/.test(k)) {

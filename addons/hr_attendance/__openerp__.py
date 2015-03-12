@@ -33,7 +33,6 @@ actions(Sign in/Sign out) performed by them.
        """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'images': ['images/hr_attendances.jpeg'],
     'depends': ['hr', 'report'],
     'data': [
         'security/ir_rule.xml',
@@ -55,5 +54,3 @@ actions(Sign in/Sign out) performed by them.
     #web
     'qweb': ["static/src/xml/attendance.xml"],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

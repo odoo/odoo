@@ -79,8 +79,3 @@ class res_users(osv.osv):
                 if not cr.fetchone()[0]:
                     raise
                 self._uid_cache.setdefault(db, {})[uid] = passwd
-
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

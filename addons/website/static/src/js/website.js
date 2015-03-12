@@ -1,6 +1,18 @@
 (function() {
     "use strict";
 
+    /* --- Set the browser into the dom for css selectors --- */
+    var browser;
+    if ($.browser.webkit) browser = "webkit";
+    else if ($.browser.safari) browser = "safari";
+    else if ($.browser.opera) browser = "opera";
+    else if ($.browser.msie || ($.browser.mozilla && +$.browser.version.replace(/^([0-9]+\.[0-9]+).*/, '\$1') < 20)) browser = "msie";
+    else if ($.browser.mozilla) browser = "mozilla";
+    browser += ","+$.browser.version;
+    if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) browser += ",mobile";
+    document.documentElement.setAttribute('data-browser', browser);
+    /* ---------------------------------------------------- */
+
     var website = {};
     openerp.website = website;
 
@@ -56,7 +68,7 @@
        Widgets
        ---------------------------------------------------- */ 
 
-    website.prompt = function (options) {
+    website.prompt = function (options, qweb) {
         /**
          * A bootstrapped version of prompt() albeit asynchronous
          * This was built to quickly prompt the user with a single field.
@@ -90,11 +102,14 @@
                 text: options
             };
         }
+        if (_.isUndefined(qweb)) {
+            qweb = 'website.prompt';
+        }
         options = _.extend({
             window_title: '',
             field_name: '',
             'default': '', // dict notation for IE<9
-            init: function() {}
+            init: function() {},
         }, options || {});
 
         var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
@@ -103,7 +118,7 @@
         options.field_name = options.field_name || options[type];
 
         var def = $.Deferred();
-        var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
+        var dialog = $(openerp.qweb.render(qweb, options)).appendTo("body");
         options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
         field.val(options['default']); // dict notation for IE<9
@@ -283,22 +298,37 @@
                 return templates_def;
             }).then(function () {
                 // display button if they are at least one editable zone in the page (check the branding)
-                if (!!$('[data-oe-model]').size()) {
+                if ($('[data-oe-model]').size()) {
                     $("#oe_editzone").show();
-
-                    //backwards compatibility with 8.0RC1 templates - Drop next line in master!
-                    $("#oe_editzone button").show();
                 }
 
                 if ($('html').data('website-id')) {
                     website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
-                    var modules = ['website'];
-                    return openerp._t.database.load_translations(website.session, modules, website.get_context().lang);
+                    return openerp.jsonRpc('/website/translations', 'call', {'lang': website.get_context().lang})
+                    .then(function(trans) {
+                        openerp._t.database.set_bundle(trans);});
+                }
+            }).then(function () {
+                var templates = openerp.qweb.templates;
+                var keys = _.keys(templates);
+                for (var i = 0; i < keys.length; i++){
+                    treat_node(templates[keys[i]]);
                 }
             }).promise();
         }
         return all_ready;
+    };
+
+    function treat_node(node){
+        if(node.nodeType === 3) {
+            if(node.nodeValue.match(/\S/)){
+                node.nodeValue = openerp._t($.trim(node.nodeValue));
+            }
+        }
+        else if(node.nodeType === 1 && node.hasChildNodes()) {
+            _.each(node.childNodes, function(subnode) {treat_node(subnode);});
+        }
     };
 
     website.inject_tour = function() {

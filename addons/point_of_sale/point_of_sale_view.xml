@@ -6,6 +6,7 @@
         <menuitem name="Point of Sale"
             id="menu_point_root"
             groups="group_pos_manager,group_pos_user"
+            icon="fa-suitcase"
             sequence="30"/>
 
         <record model="ir.ui.view" id="view_pos_pos_form">
@@ -22,11 +23,11 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
                     </header>
                     <sheet>
-                    <group col="4" colspan="4">
+                    <group col="4" colspan="4" name="order_fields">
                         <field name="name"/>
                         <field name="date_order"/>
                         <field name="session_id" required="1"/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
@@ -36,6 +37,7 @@
                                     <field name="qty" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
                                     <field name="price_unit" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
                                     <field name="discount"  on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
                                     <field name="price_subtotal"/>
                                     <field name="price_subtotal_incl"/>
                                 </tree>
@@ -496,7 +498,7 @@
             <field name="field_parent" eval="False"/>
             <field name="arch" type="xml">
                 <tree string="Product Product Categories">
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="complete_name"/>
                 </tree>
             </field>
@@ -553,7 +555,7 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
-                <field name="ean13" position="after">
+                <field name="barcode" position="after">
                     <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN"
                             attrs="{'invisible': [('product_variant_count', '>', 1)]}" class="oe_link oe_edit_only"/>
                 </field>
@@ -564,11 +566,23 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="ean13" position="after">
+                <field name="barcode" position="after">
                     <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
                 </field>
             </field>
         </record>
+
+        <record id="product_template_tree_view" model="ir.ui.view">
+            <field name="name">product.template.tree.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="sequence" widget="handle" />
+                </field>
+            </field>
+        </record>
+
         <!-- END -->
 
         <menuitem name="Configuration" parent="menu_point_root"
@@ -669,11 +683,12 @@
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                             <field name="journal_id" widget="selection"/>
                             <field name="group_by" groups="account.group_account_user"/>
+                            <field name="barcode_nomenclature_id" />
                             <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
-                        <field name="journal_ids" colspan="4" nolabel="1">
+                        <field name="journal_ids" colspan="4" nolabel="1" context="{'default_journal_user': 1}">
                             <tree string="Journals">
                                 <field name="code" />
                                 <field name="name" />
@@ -685,50 +700,27 @@
                             <group>
                                 <field name="iface_vkeyboard" />
                                 <field name="iface_invoicing" />
+                                <field name="iface_precompute_cash" />
+                                <field name="iface_start_categ_id" />
+                                <field name="tip_product_id" />
                             </group>
                             <group>
                                 <field name="iface_fullscreen" />
                                 <field name="iface_big_scrollbars" />
+                                <field name="iface_print_auto" />
+                                <field name="iface_tax_included" />
                             </group>
                         </group>
-                        <group string="Hardware Proxy" >
+                        <group string="Hardware Proxy / PosBox" >
                             <field name="proxy_ip" />
-                            <field name="iface_print_via_proxy" />
-                            <field name="iface_scan_via_proxy" />
+                            <field name="iface_print_via_proxy" string="Receipt Printer"/>
+                            <field name="iface_scan_via_proxy" string="Barcode Scanner"/>
                             <field name="iface_electronic_scale" />
                             <field name="iface_cashdrawer" />
                         </group>
                         <group string="Receipt" >
-                            <field name="receipt_header" placeholder="A custom receipt header message"/>
-                            <field name="receipt_footer" placeholder="A custom receipt header footage"/>
-                        </group>
-                        <group string="Barcode Types" col="1">
-                            <p>
-                                Barcode Patterns allow to match barcodes to actions or to embed information such as price and quantity in the barcode.
-                                Barcode Patterns only work with EAN13 barcodes.
-                            </p>
-                            <p> 
-                                Each type of barcode accepts a list of patterns seprated by commas. A scanned 
-                                barcode will be attributed to a type if it matches one of its patterns. 
-                                The patterns take the form of EAN13 barcodes. Numbers in the pattern must match
-                                the number in the scanned barcode. A 'x' or a '*' in a pattern will match
-                                any one number. If the patterns are shorter than EAN13 barcodes, they are assumed
-                                to be prefixes and match at the beginning. Weight, Price and Discount patterns also
-                                tell how the weight, price or discount is encoded in the barcode. 'N' indicate the
-                                positions where the integer part is en encoded, and 'D' where the decimals are encoded.
-                                If multiple pattern match one barcode, the longest pattern with the less 'x' or '*' is
-                                considered the matching one. If a barcode matches no pattern it will not be found in
-                                the POS.
-                            </p>
-                            <group col="4">
-
-                                <field name="barcode_product" />
-                                <field name="barcode_cashier" />
-                                <field name="barcode_customer" />
-                                <field name="barcode_weight" />
-                                <field name="barcode_discount" />
-                                <field name="barcode_price" />
-                            </group>
+                            <field name="receipt_header" string="Header" placeholder="A custom receipt header message"/>
+                            <field name="receipt_footer" string="Footer" placeholder="A custom receipt footer message"/>
                         </group>
                     </sheet>
 
@@ -931,7 +923,7 @@
                     <field name="name" />
                     <filter string="Open" domain="[('state', '=', 'opened')]" />
                     <separator/>
-                    <filter string="Today" domain="[('start_at', '>=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" />
+                    <filter string="Today" domain="[('start_at', '>=', datetime.datetime.now().replace(hour=0, minute=0, second=0))]" />
                     <field name="config_id" />
                     <field name="user_id" />
                     <group expand="0" string="Group By">
@@ -1021,7 +1013,8 @@
             </field>
         </record>
 
-
+        <!-- Barcode Nomenclatures -->
+        <menuitem parent="menu_point_config_product" action="barcodes.action_barcode_nomenclature_form" id="menu_pos_barcode_nomenclature_all"
+            sequence="30"/>
     </data>
 </openerp>
-

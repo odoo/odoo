@@ -377,4 +377,3 @@ class account_config_settings(osv.osv_memory):
                 'module_account_accountant': True,
                 }}
         return {}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

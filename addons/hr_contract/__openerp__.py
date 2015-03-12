@@ -37,7 +37,6 @@ You can assign several contracts per employee.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'images': ['images/hr_contract.jpeg'],
     'depends': ['base_action_rule', 'hr'],
     'data': [
         'security/ir.model.access.csv',
@@ -50,4 +49,3 @@ You can assign several contracts per employee.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

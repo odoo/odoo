@@ -115,7 +115,7 @@ def py2exe_options():
 
 
 setup(
-    name='openerp',
+    name='odoo',
     version=version,
     description=description,
     long_description=long_desc,
@@ -124,7 +124,7 @@ setup(
     author_email=author_email,
     classifiers=filter(None, classifiers.split('\n')),
     license=license,
-    scripts=['openerp-server', 'openerp-gevent', 'odoo.py'],
+    scripts=['openerp-server', 'odoo.py'],
     packages=find_packages(),
     package_dir={'%s' % lib_name: 'openerp'},
     include_package_data=True,

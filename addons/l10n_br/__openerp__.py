@@ -74,4 +74,3 @@ come with any additional paid permission for online use of 'private modules'.
     ],
     'installable': True,
 }
-

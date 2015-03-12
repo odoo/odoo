@@ -44,5 +44,3 @@ conf = config.configmanager()
 conf.parse_config(['-c', config_file_00, '--osv-memory-age-limit=2.3'])
 
 assert conf['osv_memory_age_limit'] == 2.3
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

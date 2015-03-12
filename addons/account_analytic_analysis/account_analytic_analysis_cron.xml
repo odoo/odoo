@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <record id="account_analytic_cron_email_template" model="email.template">
+        <record id="account_analytic_cron_email_template" model="mail.template">
             <field name="name">Contract expiration reminder</field>
             <field name="email_from">${(object.email or '')|safe}</field>
             <field name="subject">Contract expiration reminder ${user.company_id.name}</field>

@@ -13,7 +13,7 @@ openerp.gamification = function(instance) {
         },
         events: {
             // update a challenge and related goals
-            'click a.oe_update_challenge': function(event) {
+            'click i.oe_update_challenge': function(event) {
                 var self = this;
                 var challenge_id = parseInt(event.currentTarget.id, 10);
                 var goals_updated = new instance.web.Model('gamification.challenge').call('quick_update', [challenge_id]);

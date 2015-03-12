@@ -8,19 +8,30 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-16 22:39+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:28+0000\n"
+"X-Launchpad-Export-Date: 2014-10-17 06:27+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
+
+#. module: project
+#: help:project.project,message_last_post:0
+#: help:project.task,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "A feljegyzésen történt utolsó levelezés dátuma."
+
+#. module: project
+#: field:project.task.type,fold:0
+msgid "Folded in Kanban View"
+msgstr "Kanban nézetben összehajtott"
 
 #. module: project
 #: field:res.partner,task_count:0
 msgid "# Tasks"
-msgstr ""
+msgstr "# Feladatok"
 
 #. module: project
 #: field:report.project.task.user,no_of_days:0
@@ -31,7 +42,7 @@ msgstr "Napok száma"
 #: field:project.task.history.cumulative,nbr_tasks:0
 #: field:report.project.task.user,nbr:0
 msgid "# of Tasks"
-msgstr ""
+msgstr "# számú feladat"
 
 #. module: project
 #: code:addons/project/project.py:360
@@ -125,6 +136,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Odoo rendszer projekt szervezője lehetővé teszi a "
+"folyamatban lévő\n"
+"                    feladatai szervezését a hatékony munkavégzéshez. "
+"Követhetí a munkafolyamatot, \n"
+"                    megbeszélheti a feladat részletit, hozzáfűzhet "
+"dokumentumokat, stb.\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -146,7 +166,7 @@ msgstr ""
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "Email elfogadása innen"
 
 #. module: project
 #: field:project.project,active:0
@@ -229,18 +249,18 @@ msgstr "Hozzárendel ehhez"
 #. module: project
 #: field:report.project.task.user,date_start:0
 msgid "Assignation Date"
-msgstr ""
+msgstr "Hozzárendelés dátuma"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr ""
+msgstr "Hozzárendelés hónapja"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr "Kiosztott feladatok"
+msgstr "Hozzárendelt feladatok"
 
 #. module: project
 #: field:report.project.task.user,user_id:0
@@ -278,12 +298,12 @@ msgstr "Blokkolva"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "Felelős szerint"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_reviewer
 msgid "By Reviewer"
-msgstr ""
+msgstr "Véleményező szerint"
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
@@ -423,7 +443,7 @@ msgstr "Létrehozás dátuma"
 #: field:project.task.type,create_uid:0
 #: field:project.task.work,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Készítette"
 
 #. module: project
 #: field:project.category,create_date:0
@@ -433,7 +453,7 @@ msgstr ""
 #: field:project.task.type,create_date:0
 #: field:project.task.work,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Létrehozás dátuma"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -461,15 +481,9 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: project
-#: help:project.project,message_last_post:0
-#: help:project.task,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr ""
-
-#. module: project
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Assign"
-msgstr ""
+msgstr "Napok száma a hozzárendelésig"
 
 #. module: project
 #: field:report.project.task.user,closing_days:0
@@ -586,7 +600,7 @@ msgstr "Tényleges órák száma"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Email Alias"
-msgstr ""
+msgstr "E-mail fedőnevek"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -653,7 +667,7 @@ msgstr "Kisérlet"
 #. module: project
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Részletes szűrők"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -664,11 +678,6 @@ msgstr "Extra információ"
 #: model:project.category,name:project.project_category_02
 msgid "Feature request"
 msgstr "Új funkció igénylése"
-
-#. module: project
-#: field:project.task.type,fold:0
-msgid "Folded in Kanban View"
-msgstr ""
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -717,7 +726,7 @@ msgstr ""
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Group By"
-msgstr ""
+msgstr "Csoportosítás"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -728,7 +737,7 @@ msgstr "Ügyfélszolgálat & Támogatás"
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "Magas"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -761,6 +770,19 @@ msgid ""
 "portal\n"
 "   is activated, portal users see the followed tasks or issues."
 msgstr ""
+"A jelenlegi projekt feladat vagy ügy láthatóságát tartja vissza:\n"
+"- Nyilvános: mindenki lát mindent; ha a portál aktivált, az összes portál\n"
+"   használó látja a feladatokat vagy ügyeket; ha a névtelen portál aktivált, "
+"a látogatók\n"
+"   látják az összes feladatot és ügyeket\n"
+"- Portál (csak, ha a Portál telepítve van): munkavállalók mindent látnak;\n"
+"   ha a portál aktivált, portál felhasználók csak az általuk, vagy a "
+"vállalatuk által követendő \n"
+"   feladatokat és ügyeket látják\n"
+"- Munkavállalók kizárólag: munkavállalók látják az összes feladatot, ügyet\n"
+"- Csak a követők: munkavállalók csak a követett feladatokat,ügyeket látják; "
+"ha a portál\n"
+"   aktivált, portál felhasználók látják a követett feladatokat.ügyeket."
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -824,7 +846,7 @@ msgid ""
 "project. It will not assign this stage to existing projects."
 msgstr ""
 "Ha bejelöli ezt a mezőt, akkor ez a szint alapértelmezettként lesz ajánlva "
-"minden új projekthez. Nem lesz hozzáillesztve már meglévő projektekhez."
+"minden új projekthez. Nem lesz hozzárendelve már meglévő projektekhez."
 
 #. module: project
 #: selection:project.project,state:0
@@ -836,7 +858,7 @@ msgstr "Folyamatban"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Incoming Emails create"
-msgstr ""
+msgstr "Bejövő emailek létrehozása"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -886,24 +908,24 @@ msgstr "Kanban státusz"
 #. module: project
 #: view:project.task:project.view_task_search_form
 msgid "Last Message"
-msgstr ""
+msgstr "Utolsó üzenet"
 
 #. module: project
 #: field:project.project,message_last_post:0
 #: field:project.task,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Utolsó üzenet dátuma"
 
 #. module: project
 #: field:project.task,write_date:0
 msgid "Last Modification Date"
-msgstr ""
+msgstr "Utolsó módosítás dátuma"
 
 #. module: project
 #: field:project.task,date_last_stage_update:0
 #: field:report.project.task.user,date_last_stage_update:0
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Utolsó szint frissítése"
 
 #. module: project
 #: field:project.category,write_uid:0
@@ -914,7 +936,7 @@ msgstr ""
 #: field:project.task.type,write_uid:0
 #: field:project.task.work,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Utoljára frissítve, által"
 
 #. module: project
 #: field:project.category,write_date:0
@@ -924,7 +946,7 @@ msgstr ""
 #: field:project.task.type,write_date:0
 #: field:project.task.work,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Utoljára frissítve ekkor"
 
 #. module: project
 #: help:project.config.settings,module_pad:0
@@ -933,6 +955,9 @@ msgid ""
 "new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
+"A vállalat testre szabhatja, melyik Pad telepítőt használja az új pad-ok "
+"elérési útjához (például: http://padmanager.org/).\n"
+"-Ez a pad modult telepíti."
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -1032,7 +1057,7 @@ msgstr "Új"
 #: view:project.project:project.view_project_project_filter
 #: view:project.task:project.view_task_search_form
 msgid "New Mail"
-msgstr ""
+msgstr "Új e-mail"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1301,6 +1326,8 @@ msgid ""
 "Provides management of issues/bugs in projects.\n"
 "-This installs the module project_issue."
 msgstr ""
+"A projektek ügyeinek/hibáinak szervezését teszi lehetővé.\n"
+"-Ez a project_issue modult telepíti."
 
 #. module: project
 #: help:project.config.settings,module_project_issue_sheet:0
@@ -1308,6 +1335,8 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
 msgstr ""
+"A projektek ügyeinek/hibáinak szervezéséhez időbeosztás támogatást ad.\n"
+"-Ez a project_issue_sheet modult telepíti."
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1371,7 +1400,7 @@ msgstr "Felelős"
 #: field:project.task,reviewer_id:0
 #: field:report.project.task.user,reviewer_id:0
 msgid "Reviewer"
-msgstr ""
+msgstr "Véleményező"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1518,7 +1547,7 @@ msgstr "Feladat tevékenységei"
 #: model:mail.message.subtype,name:project.mt_project_task_assigned
 #: model:mail.message.subtype,name:project.mt_task_assigned
 msgid "Task Assigned"
-msgstr ""
+msgstr "Ügy hozzárendelve"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
@@ -1545,13 +1574,13 @@ msgstr "Feladat elosztás"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "Ügy folyamat"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready for Next Stage"
-msgstr ""
+msgstr "Az ügy készenáll a következő szintre lépésre"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -1682,6 +1711,11 @@ msgid ""
 "the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
 msgstr ""
+"Ez lehetővé teszi a projekt kezelésben meghatározott ügyek bevitt "
+"időbeosztás tételsor adataihoz a kiegészítést a dátum és felhasználó "
+"tekintetében, a létrehozás, szerkesztés és törlés bármely irányú "
+"megvalósításával.\n"
+"-Ez a project_timesheet modult telepíti."
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
@@ -1692,6 +1726,11 @@ msgid ""
 "method 'Manufacture'.\n"
 "-This installs the module sale_service."
 msgstr ""
+"Ez a tulajdonság automatikusan létrehoz projekt feladatokat a vevői "
+"megrendelések szolgáltatási bekezdésén. Pontosabban, feladatokat hoz létre a "
+"beszerzési tételsor igények 'Szolgáltatás' típusaiból, beszerzési módok "
+"'Rendelésre készül', és ellátás mód 'Gyártás'.\n"
+"-Ez a sale_service modult telepíti."
 
 #. module: project
 #: help:project.task,active:0
@@ -1723,6 +1762,8 @@ msgid ""
 "This stage is folded in the kanban view whenthere are no records in that "
 "stage to display."
 msgstr ""
+"Ez a szint behajtott a kanban nézetben, ha itt nincsenek kijelezhető "
+"rekordok."
 
 #. module: project
 #: help:project.config.settings,time_unit:0
@@ -1804,7 +1845,7 @@ msgstr "Ügy és hiba nyomon követése"
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Unassigned"
-msgstr ""
+msgstr "Nincs hozzárendelve"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1884,7 +1925,7 @@ msgstr "Munkaidő"
 #. module: project
 #: field:project.task,progress:0
 msgid "Working Time Progress (%)"
-msgstr ""
+msgstr "Munkaidő folyamatok (%)"
 
 #. module: project
 #: field:project.config.settings,time_unit:0
@@ -1894,7 +1935,7 @@ msgstr "Munka idő egysége"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
 msgid "Workload"
-msgstr ""
+msgstr "Munkamennyiség"
 
 #. module: project
 #: code:addons/project/project.py:172
@@ -1910,7 +1951,7 @@ msgstr ""
 #: code:addons/project/project.py:435
 #, python-format
 msgid "You must assign members on the project '%s'!"
-msgstr ""
+msgstr "Hozzá kell rendelnie egy tagot a projekten '%s'!"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -1931,7 +1972,7 @@ msgstr "oe_kanban_text_red"
 #: code:addons/project/project.py:878
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "feladatok"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0

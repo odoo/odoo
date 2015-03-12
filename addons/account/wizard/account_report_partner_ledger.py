@@ -60,5 +60,3 @@ class account_partner_ledger(osv.osv_memory):
         if data['form'].get('page_split') is True: 
             return self.pool['report'].get_action(cr, uid, [], 'account.report_partnerledgerother', data=data, context=context)
         return self.pool['report'].get_action(cr, uid, [], 'account.report_partnerledger', data=data, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

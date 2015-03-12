@@ -26,6 +26,7 @@ from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+from openerp.exceptions import UserError
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
@@ -39,9 +40,9 @@ class StockMove(osv.osv):
     def check_tracking(self, cr, uid, move, lot_id, context=None):
         super(StockMove, self).check_tracking(cr, uid, move, lot_id, context=context)
         if move.product_id.track_production and (move.location_id.usage == 'production' or move.location_dest_id.usage == 'production') and not lot_id:
-            raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
+            raise UserError(_('You must assign a serial number for the product %s') % (move.product_id.name))
         if move.raw_material_production_id and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.track_production and not move.consumed_for:
-            raise osv.except_osv(_('Warning!'), _("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
+            raise UserError(_("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
 
     def _check_phantom_bom(self, cr, uid, move, context=None):
         """check if product associated to move has a phantom bom
@@ -76,9 +77,6 @@ class StockMove(osv.osv):
             factor = uom_obj._compute_qty(cr, SUPERUSER_ID, move.product_uom.id, move.product_uom_qty, bom_point.product_uom.id) / bom_point.product_qty
             res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [], context=context)
             
-            state = 'confirmed'
-            if move.state == 'assigned':
-                state = 'assigned'
             for line in res[0]:
                 product = prod_obj.browse(cr, uid, line['product_id'], context=context)
                 if product.type != 'service':
@@ -89,7 +87,7 @@ class StockMove(osv.osv):
                         'product_uom_qty': line['product_qty'],
                         'product_uos': line['product_uos'],
                         'product_uos_qty': line['product_uos_qty'],
-                        'state': state,
+                        'state': 'draft',  #will be confirmed below
                         'name': line['name'],
                         'procurement_id': move.procurement_id.id,
                         'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
@@ -129,6 +127,10 @@ class StockMove(osv.osv):
                 moves = move.procurement_id.move_ids
                 if len(moves) == 1:
                     proc_obj.write(cr, uid, [move.procurement_id.id], {'state': 'done'}, context=context)
+
+            if processed_ids and move.state == 'assigned':
+                # Set the state of resulting moves according to 'assigned' as the original move is assigned
+                move_obj.write(cr, uid, list(set(processed_ids) - set([move.id])), {'state': 'assigned'}, context=context)
                 
             #delete the move with original product which is not relevant anymore
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
@@ -165,7 +167,7 @@ class StockMove(osv.osv):
         production_obj = self.pool.get('mrp.production')
 
         if product_qty <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
+            raise UserError(_('Please provide proper quantity.'))
         #because of the action_confirm that can create extra moves in case of phantom bom, we need to make 2 loops
         ids2 = []
         for move in self.browse(cr, uid, ids, context=context):
@@ -179,7 +181,7 @@ class StockMove(osv.osv):
             prod_orders.add(move.raw_material_production_id.id or move.production_id.id)
             move_qty = move.product_qty
             if move_qty <= 0:
-                raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
+                raise UserError(_('Cannot consume a move with negative or zero quantity.'))
             quantity_rest = move_qty - product_qty
             # Compare with numbers of move uom as we want to avoid a split with 0 qty
             quantity_rest_uom = move.product_uom_qty - self.pool.get("product.uom")._compute_qty_obj(cr, uid, move.product_id.uom_id, product_qty, move.product_uom)
@@ -242,16 +244,20 @@ class stock_warehouse(osv.osv):
         'manufacture_pull_id': fields.many2one('procurement.rule', 'Manufacture Rule'),
     }
 
+    _defaults = {
+        'manufacture_to_resupply': True,
+    }
+
     def _get_manufacture_pull_rule(self, cr, uid, warehouse, context=None):
         route_obj = self.pool.get('stock.location.route')
         data_obj = self.pool.get('ir.model.data')
         try:
-            manufacture_route_id = data_obj.get_object_reference(cr, uid, 'stock', 'route_warehouse0_manufacture')[1]
+            manufacture_route_id = data_obj.get_object_reference(cr, uid, 'mrp', 'route_warehouse0_manufacture')[1]
         except:
             manufacture_route_id = route_obj.search(cr, uid, [('name', 'like', _('Manufacture'))], context=context)
             manufacture_route_id = manufacture_route_id and manufacture_route_id[0] or False
         if not manufacture_route_id:
-            raise osv.except_osv(_('Error!'), _('Can\'t find any generic Manufacture route.'))
+            raise UserError(_('Can\'t find any generic Manufacture route.'))
 
         return {
             'name': self._format_routename(cr, uid, warehouse, _(' Manufacture'), context=context),

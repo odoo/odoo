@@ -58,6 +58,4 @@ For future development this will be a base for the Turkish localization.
         'view/res_company_view.xml',
     ],
     'installable': True,
-    'demo': [],
-    'images': [],
 }

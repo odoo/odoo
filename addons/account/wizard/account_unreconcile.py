@@ -46,6 +46,3 @@ class account_unreconcile_reconcile(osv.osv_memory):
         if rec_ids:
             obj_move_reconcile.unlink(cr, uid, rec_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

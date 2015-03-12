@@ -1,8 +1,6 @@
 ============================
-odoo developer documentation
+Odoo Technical Documentation
 ============================
-
-Welcome to the Odoo developer documentation.
 
 .. todo:: what's the documentation's license?
 
@@ -13,6 +11,7 @@ Welcome to the Odoo developer documentation.
     :maxdepth: 2
 
     tutorials
+    setup
     reference
     api_integration
 

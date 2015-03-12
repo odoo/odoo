@@ -10,10 +10,11 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//group[@name='mailing']" position="after">
-                        <group name="website" string="Website">
-                            <field name="website_private"/>
-                        </group>
+                    <xpath expr="//div[@name='buttons']" position="inside">
+                        <button class="oe_inline oe_stat_button" name="open_website_url"
+                            type="object" icon="fa-globe">
+                            <field name="website_published" widget="website_button"/>
+                        </button>
                     </xpath>
                 </data>
             </field>

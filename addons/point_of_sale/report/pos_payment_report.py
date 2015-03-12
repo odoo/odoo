@@ -68,5 +68,3 @@ class report_pos_payment(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'point_of_sale.report_payment'
     _wrapped_report_class = pos_payment_report
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

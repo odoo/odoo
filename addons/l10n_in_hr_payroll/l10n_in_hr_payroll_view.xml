@@ -65,7 +65,7 @@
                     <field name="date"/>
                     <field name="number"/>
                     <field name="name"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="bank_id"/>
                     <field name="state"/>
                 </tree>
@@ -113,7 +113,7 @@
                             </page>
                             <page string="Other Information">
                                 <group colspan="4" col="6">
-                                <field name="company_id" on_change="onchange_company_id(company_id)" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" on_change="onchange_company_id(company_id)" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="chaque_nos"/>
                                 <newline/>
                                 <field name="neft"/>

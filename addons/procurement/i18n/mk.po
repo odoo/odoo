@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-08 11:27+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:36+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-11-09 07:35+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -43,6 +43,28 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Кликнете да креирате набавка.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Налози за набавка</b> претставуваат потреба од одредена "
+"количина на производи, во даден момент, на дадена локација.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Налози за продажба</b> се типични извори за налози за "
+"набавка (но ова се различни документи). \n"
+"                <br/>Во зависност од параметрите на набавката и "
+"конфигурацијата на производот, системот за набавка ќе се обиде да ја "
+"задоволи потребата преку резервирање на производите од залиха, нарачување на "
+"производи од добавувач, или преку праќање на налог за производство, итн...\n"
+"              </p>\n"
+"              <p>\n"
+"                A <b>Исклучок за набавка</b> се случува кога системот не "
+"може да најде начин да ја исполни набавката. Некои исклучоци ќе се "
+"резолвираат автоматски, но за некои е потребна рачна интервенција (тие се "
+"идентификувани со специфична порака на грешка).\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -71,7 +93,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.rule,action:0
 msgid "Action"
-msgstr ""
+msgstr "Акција"
 
 #. module: procurement
 #: field:procurement.rule,active:0
@@ -81,7 +103,7 @@ msgstr "Активно"
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "All at once"
-msgstr ""
+msgstr "Се наеднаш"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
@@ -107,7 +129,7 @@ msgstr "Не може да се избрише Налог(зи) за набав�
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr ""
+msgstr "Провери набавка"
 
 #. module: procurement
 #: help:procurement.order,rule_id:0
@@ -115,6 +137,9 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but "
 "can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
+"Избрано правило за резолуција на набавка. Обично избрано од системот, но "
+"може и рачно да се подеси од страна на менаџерот за набавка за да присили "
+"необично однесување."
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -125,7 +150,7 @@ msgstr "Компанија"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Пресметај ги сите набавки во позадина."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -143,7 +168,7 @@ msgstr "Потврдено"
 #: field:procurement.order.compute.all,create_uid:0
 #: field:procurement.rule,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Креирано од"
 
 #. module: procurement
 #: field:procurement.group,create_date:0
@@ -151,17 +176,17 @@ msgstr ""
 #: field:procurement.order.compute.all,create_date:0
 #: field:procurement.rule,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Креирано на"
 
 #. module: procurement
 #: help:procurement.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Датум на испраќање на последната порака"
 
 #. module: procurement
 #: field:procurement.group,move_type:0
 msgid "Delivery Method"
-msgstr ""
+msgstr "Метод на испорака"
 
 #. module: procurement
 #: field:procurement.order,name:0
@@ -196,12 +221,12 @@ msgstr "Екстра информации"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Fixed"
-msgstr ""
+msgstr "Фиксно"
 
 #. module: procurement
 #: field:procurement.rule,group_id:0
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Фиксна група на набавки"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -211,7 +236,7 @@ msgstr "Пратители"
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "General Information"
-msgstr ""
+msgstr "Општи информации"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -222,7 +247,7 @@ msgstr "Групирај по"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "Набавки на група"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -239,7 +264,7 @@ msgstr ""
 #: field:procurement.order.compute.all,id:0
 #: field:procurement.rule,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: procurement
 #: help:procurement.order,message_unread:0
@@ -250,6 +275,8 @@ msgstr "Доколку се означени новите пораки, потр
 #: help:procurement.rule,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr ""
+"Ако не е означено ќе ви дозволи да го сокриете правилото без да го "
+"одстраните."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:155
@@ -265,7 +292,7 @@ msgstr "Е пратител"
 #. module: procurement
 #: field:procurement.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Датум на последна порака"
 
 #. module: procurement
 #: field:procurement.group,write_uid:0
@@ -273,7 +300,7 @@ msgstr ""
 #: field:procurement.order.compute.all,write_uid:0
 #: field:procurement.rule,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно ажурирање од"
 
 #. module: procurement
 #: field:procurement.group,write_date:0
@@ -281,7 +308,7 @@ msgstr ""
 #: field:procurement.order.compute.all,write_date:0
 #: field:procurement.rule,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно ажурирање на"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -291,7 +318,7 @@ msgstr "Доцна"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr ""
+msgstr "Оставете празно"
 
 #. module: procurement
 #: view:res.company:procurement.mrp_company
@@ -317,7 +344,7 @@ msgstr "Име"
 #: code:addons/procurement/procurement.py:213
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Ниту едно правило не се совпаѓа со оваа набавка"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -332,12 +359,12 @@ msgstr "Не е итно"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Notes"
-msgstr ""
+msgstr "Забелешки"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "Делумно"
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -360,7 +387,7 @@ msgstr "Исклучоци на набавки"
 #. module: procurement
 #: field:procurement.order,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "Група на набавки"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
@@ -375,17 +402,17 @@ msgstr "Налози за набавка"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Барање за набавка"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Правило за набавка"
 
 #. module: procurement
 #: view:procurement.group:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Група на набавки"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -418,17 +445,17 @@ msgstr "ЕП на производот"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Пропагирај"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Опции на пропагација"
 
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Пропагација на група за набавка"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
@@ -448,12 +475,12 @@ msgstr "Количина"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "Потврди набавка"
 
 #. module: procurement
 #: field:procurement.group,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Референца"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -461,11 +488,13 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
 msgstr ""
+"Референца на документот што ја креирал оваа набавка.\n"
+"Ова е автоматски комплетирано од Odoo."
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "Правило"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -491,7 +520,7 @@ msgstr "Планиран датум"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Закажан месец"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
@@ -501,7 +530,7 @@ msgstr "Параметри на распоред"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr ""
+msgstr "Закажување"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -511,7 +540,7 @@ msgstr "Барај набавка"
 #. module: procurement
 #: field:procurement.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Секвенца"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -533,6 +562,7 @@ msgstr "Резиме"
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
+"Ова поле ќе го пополни потеклото на пакувањето и името на неговите движења"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view

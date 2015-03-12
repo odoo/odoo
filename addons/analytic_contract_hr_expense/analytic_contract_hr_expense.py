@@ -150,6 +150,3 @@ class account_analytic_account(osv.osv):
             'res_model': 'account.analytic.line',
             'nodestroy': True,
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

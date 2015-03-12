@@ -22,5 +22,3 @@
 
 import hr_payroll_payslips_by_employees
 import hr_payroll_contribution_register_report
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -338,7 +338,8 @@ class ir_ui_menu(osv.osv):
                     obj = self.pool[menu.action.res_model]
                     if obj._needaction:
                         if menu.action.type == 'ir.actions.act_window':
-                            dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
+                            eval_context = self.pool['ir.actions.act_window']._get_eval_context(cr, uid, context=context)
+                            dom = menu.action.domain and eval(menu.action.domain, eval_context) or []
                         else:
                             dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
                         res[menu.id]['needaction_enabled'] = obj._needaction
@@ -357,7 +358,7 @@ class ir_ui_menu(osv.osv):
     @api.cr_uid_context
     @tools.ormcache_context(accepted_keys=('lang',))
     def load_menus_root(self, cr, uid, context=None):
-        fields = ['name', 'sequence', 'parent_id', 'action']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'icon']
         menu_root_ids = self.get_user_roots(cr, uid, context=context)
         menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
         return {
@@ -431,7 +432,7 @@ class ir_ui_menu(osv.osv):
                 "If this field is empty, Odoo will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name,
             string='Full Path', type='char', size=128),
-        'icon': fields.selection(tools.icons, 'Icon', size=64),
+        'icon': fields.char('Icon', size=64),
         'icon_pict': fields.function(_get_icon_pict, type='char', size=32),
         'web_icon': fields.char('Web Icon File'),
         'web_icon_hover': fields.char('Web Icon File (hover)'),
@@ -461,11 +462,8 @@ class ir_ui_menu(osv.osv):
         (osv.osv._check_recursion, _rec_message, ['parent_id'])
     ]
     _defaults = {
-        'icon': 'STOCK_OPEN',
         'icon_pict': ('stock', ('STOCK_OPEN', 'ICON_SIZE_MENU')),
         'sequence': 10,
     }
     _order = "sequence,id"
     _parent_store = True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

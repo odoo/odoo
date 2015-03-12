@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-31 23:24+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:59+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-01 07:13+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #. module: calendar
 #: model:email.template,body_html:calendar.calendar_template_meeting_reminder
@@ -678,6 +678,15 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Επιλέξτε για να προγραμματίσετε μια νέα συνάντηση.\n"
+"</p><p>\n"
+"Το ημερολόγιο είναι κοινό ανάμεσα στους εργαζόμενους και πλήρως διασυνδεμένο "
+"με\n"
+"με άλλες εφαρμογές όπως οι άδειες εργαζομένων ή οι επαγγελματικές\n"
+"ευκαιρίες.\n"
+"</p>\n"
+"        "
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1570
@@ -791,7 +800,7 @@ msgstr ""
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 msgid "Calendar"
-msgstr ""
+msgstr "Ημερολόγιο"
 
 #. module: calendar
 #. openerp-web
@@ -813,7 +822,7 @@ msgstr "Κοινό όνομα"
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Confirmed"
-msgstr "Ειβεβαιωμένο"
+msgstr "Επιβεβαιωμένο"
 
 #. module: calendar
 #: field:calendar.attendee,partner_id:0
@@ -827,7 +836,7 @@ msgstr "Επαφή"
 #: field:calendar.event,create_uid:0
 #: field:calendar.event.type,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Δημιουργήθηκε από"
 
 #. module: calendar
 #: field:calendar.alarm,create_date:0
@@ -836,12 +845,12 @@ msgstr ""
 #: field:calendar.event,create_date:0
 #: field:calendar.event.type,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Δημιουργήθηκε στις"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet1
 msgid "Customer Meeting"
-msgstr ""
+msgstr "Συνάντηση Πελάτη"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_tree
@@ -863,7 +872,7 @@ msgstr ""
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr ""
+msgstr "Ημέρα του Μήνα"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
@@ -873,7 +882,7 @@ msgstr "Μέρα του μήνα"
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Ημέρα(ες)"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -926,7 +935,7 @@ msgstr "Email"
 #: code:addons/calendar/calendar.py:1358
 #, python-format
 msgid "Email addresses not found"
-msgstr ""
+msgstr "Η διεύθυνση Email δεν βρέθηκε"
 
 #. module: calendar
 #: help:calendar.attendee,email:0
@@ -951,7 +960,7 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "End date"
-msgstr ""
+msgstr "Ημερομηνία λήξης"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -962,6 +971,7 @@ msgstr ""
 #: constraint:calendar.event:0
 msgid "Error ! End date cannot be set before start date."
 msgstr ""
+"Λάθος! Η ημερομηνία λήξης δεν μπορεί να οριστεί πριν την ημερομηνία έναρξης"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1237
@@ -994,7 +1004,7 @@ msgstr ""
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet5
 msgid "Feedback Meeting"
-msgstr ""
+msgstr "Συνάντηση Ανατροφοδότησης"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1010,12 +1020,12 @@ msgstr "Πρώτο"
 #: code:addons/calendar/calendar.py:140
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
+msgstr "Πρώτα θα πρέπει να καθορίσετε την ημέρα της πρόσκλησης"
 
 #. module: calendar
 #: field:calendar.event,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Ακόλουθοι"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1031,7 +1041,7 @@ msgstr "Ελεύθερος/η"
 #. module: calendar
 #: field:calendar.attendee,availability:0
 msgid "Free/Busy"
-msgstr "Ελεύθερο/Απασχολημένο"
+msgstr "Ελεύθερος/Απασχολημένος"
 
 #. module: calendar
 #: field:calendar.event,fr:0
@@ -1053,6 +1063,8 @@ msgstr ""
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
+"Η ομαδοποίηση ανά ημερομηνία δεν υποστηρίζεται, χρησιμοποιείστε την οθόνη "
+"ημερολογίου εναλλακτικά"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -1079,12 +1091,12 @@ msgstr "Ώρες"
 #: field:calendar.event,id:0
 #: field:calendar.event.type,id:0
 msgid "ID"
-msgstr "ID"
+msgstr "Κωδικός"
 
 #. module: calendar
 #: help:calendar.event,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
 
 #. module: calendar
 #: help:calendar.event,active:0
@@ -1092,13 +1104,13 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Εάν το ενεργό πεδίο είναι επιλεγμένο, σας επιτρέπει να κρύψεται την "
-"υπενθύμιση χωρίς να την απομακρύνεται."
+"Εάν το ενεργό πεδίο είναι επιλεγμένο, σας επιτρέπει να κρύψετε την "
+"πληροφορία υπενθύμισης συμβάντος χωρίς να την διαγράψετε."
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet2
 msgid "Internal Meeting"
-msgstr ""
+msgstr "Εσωτερική Συνάντηση"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1118,17 +1130,17 @@ msgstr "Λεπτομέρειες πρόσκλησης"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Invitations"
-msgstr ""
+msgstr "Προσκλήσεις"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Οδηγός Προσκλήσεων"
 
 #. module: calendar
 #: field:calendar.event,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Είναι Ακόλουθος"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1147,7 +1159,7 @@ msgstr ""
 #: field:calendar.event,write_uid:0
 #: field:calendar.event.type,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Τελευταία ενημέρωση από"
 
 #. module: calendar
 #: field:calendar.alarm,write_date:0
@@ -1156,7 +1168,7 @@ msgstr ""
 #: field:calendar.event,write_date:0
 #: field:calendar.event.type,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Τελευταία ενημέρωση στις"
 
 #. module: calendar
 #: field:res.partner,calendar_last_notif_ack:0
@@ -1187,29 +1199,29 @@ msgstr ""
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Meeting"
-msgstr ""
+msgstr "Συνάντηση"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr ""
+msgstr "Λεπτομέρειες Συνάντησης"
 
 #. module: calendar
 #: field:calendar.event,name:0
 msgid "Meeting Subject"
-msgstr ""
+msgstr "Θέμα Συνάντησης"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Meeting Type"
-msgstr ""
+msgstr "Τύπος Συνάντησης"
 
 #. module: calendar
 #: view:calendar.event.type:calendar.view_calendar_event_type_tree
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 msgid "Meeting Types"
-msgstr ""
+msgstr "Τύποι Συναντήσεων"
 
 #. module: calendar
 #: field:calendar.attendee,event_id:0
@@ -1225,22 +1237,22 @@ msgstr ""
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_notify
 msgid "Meetings"
-msgstr ""
+msgstr "Συναντήσεις"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Μήνυμα"
 
 #. module: calendar
 #: field:calendar.event,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Μηνύματα"
 
 #. module: calendar
 #: help:calendar.event,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -1255,7 +1267,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Μοντέλα"
 
 #. module: calendar
 #: field:calendar.event,mo:0
@@ -1270,17 +1282,17 @@ msgstr "Δευτέρα"
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Μήνας(ες)"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Events"
-msgstr "Τα Γεγονότα Μου"
+msgstr "Οι Εκδηλώσεις Μου"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr ""
+msgstr "Οι συναντήσεις μου"
 
 #. module: calendar
 #: field:calendar.alarm,name:0
@@ -1292,7 +1304,7 @@ msgstr "Όνομα"
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
-msgstr "Απαιτεί ενέργεια"
+msgstr "Απαιτεί Ενέργεια"
 
 #. module: calendar
 #. openerp-web
@@ -1309,24 +1321,24 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "Αριθμός των επαναλήψεων"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:20
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet3
 msgid "Off-site Meeting"
-msgstr ""
+msgstr "Συνάντηση εκτός γραφείου"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet4
 msgid "Open Discussion"
-msgstr ""
+msgstr "Ανοιχτή Συζήτηση"
 
 #. module: calendar
 #: field:calendar.event,month_by:0
@@ -1336,7 +1348,7 @@ msgstr "Επιλογή"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Options"
-msgstr ""
+msgstr "Επιλογές"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1353,27 +1365,27 @@ msgstr ""
 #: view:calendar.event:calendar.view_calendar_event_tree
 #: field:calendar.event,class:0
 msgid "Privacy"
-msgstr "Απόρρητο"
+msgstr "Προστασία Προσωπικών Δεδομένων"
 
 #. module: calendar
 #: selection:calendar.event,class:0
 msgid "Private"
-msgstr "Προσωπικό"
+msgstr "Ιδιωτική"
 
 #. module: calendar
 #: selection:calendar.event,class:0
 msgid "Public"
-msgstr "Κοινόχρηστο"
+msgstr "Δημόσια"
 
 #. module: calendar
 #: selection:calendar.event,class:0
 msgid "Public for Employees"
-msgstr ""
+msgstr "Δημόσια για τους Εργαζόμενους"
 
 #. module: calendar
 #: field:calendar.event,end_type:0
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "Τερματισμός Επανάληψης"
 
 #. module: calendar
 #: field:calendar.event,rrule_type:0
@@ -1383,22 +1395,22 @@ msgstr "Επανάληψη"
 #. module: calendar
 #: field:calendar.event,recurrency:0
 msgid "Recurrent"
-msgstr ""
+msgstr "Επαναλαμβανόμενη"
 
 #. module: calendar
 #: field:calendar.event,recurrent_id:0
 msgid "Recurrent ID"
-msgstr "Περιοδικό ID"
+msgstr "Επαναλαμβανόμενος Κωδικός"
 
 #. module: calendar
 #: field:calendar.event,recurrent_id_date:0
 msgid "Recurrent ID date"
-msgstr ""
+msgstr "Επανάληψη του κωδικού της ημερομηνίας"
 
 #. module: calendar
 #: help:calendar.event,recurrency:0
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "Επαναλαμβανόμενη Συνάντηση"
 
 #. module: calendar
 #: field:calendar.event,rrule:0
@@ -1425,7 +1437,7 @@ msgstr "Επαναλαμβανόμενη"
 #. module: calendar
 #: field:calendar.event,interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Επανάληψη Κάθε"
 
 #. module: calendar
 #: field:calendar.event,final_date:0
@@ -1435,18 +1447,18 @@ msgstr "Επανάληψη μέχρι"
 #. module: calendar
 #: help:calendar.event,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Επανάληψη κάθε (Ημέρα/Εβδομάδα/Μήνα/Έτος)"
 
 #. module: calendar
 #: help:calendar.event,count:0
 msgid "Repeat x times"
-msgstr ""
+msgstr "Επανέλαβε Χ φορές"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 #: field:calendar.event,user_id:0
 msgid "Responsible"
-msgstr "Υπεύθυνος"
+msgstr "Υπεύθυνοι"
 
 #. module: calendar
 #: field:calendar.event,sa:0
@@ -1461,7 +1473,7 @@ msgstr "Σάββατο"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr ""
+msgstr "Αναζήτηση Συναντήσεων"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1471,7 +1483,7 @@ msgstr "Δευτερόλεπτο"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Select Weekdays"
-msgstr ""
+msgstr "Επιλογή Ημερών"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1504,18 +1516,18 @@ msgstr ""
 #: view:calendar.event:calendar.view_calendar_event_form
 #: view:calendar.event:calendar.view_calendar_event_form_popup
 msgid "Starting at"
-msgstr ""
+msgstr "Αρχίζει στις"
 
 #. module: calendar
 #: field:calendar.attendee,state:0
 #: field:calendar.event,state:0
 msgid "Status"
-msgstr ""
+msgstr "Καθεστώς"
 
 #. module: calendar
 #: help:calendar.attendee,state:0
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "Το καθεστώς της συμμετοχής του συμμετέχοντα"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_tree
@@ -1540,7 +1552,7 @@ msgstr "Κυριακή"
 #. module: calendar
 #: field:calendar.event,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Ετικέτες"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1551,7 +1563,7 @@ msgstr "Το"
 #: code:addons/calendar/calendar.py:1354
 #, python-format
 msgid "The following contacts have no email address :"
-msgstr ""
+msgstr "Οι ακόλουθες επαφές δεν έχουν διεύθυνση email"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1598,7 +1610,7 @@ msgstr "Αβέβαιο"
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Μη Επιβεβαιωμένο"
 
 #. module: calendar
 #: field:calendar.alarm,interval:0
@@ -1609,12 +1621,12 @@ msgstr ""
 #: view:calendar.event:calendar.view_calendar_event_search
 #: field:calendar.event,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Αδιάβαστα Μυνήματα"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Until"
-msgstr ""
+msgstr "Μέχρι"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1627,7 +1639,7 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1593
 #, python-format
 msgid "Warning!"
-msgstr "Προειδοποίηση"
+msgstr "Προειδοποίηση!"
 
 #. module: calendar
 #: model:mail.message.subtype,description:calendar.subtype_invitation
@@ -1648,7 +1660,7 @@ msgstr "Τετάρτη"
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Εβδομάδα(ες)"
 
 #. module: calendar
 #: field:calendar.event,week_list:0
@@ -1679,7 +1691,7 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Έτος(η)"
 
 #. module: calendar
 #. openerp-web
@@ -1692,7 +1704,7 @@ msgstr ""
 #: code:addons/calendar/calendar.py:103
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "Δεν μπορείτε να αντίγράψετε ένα συμμετέχοντα του ημερολογίου"
 
 #. module: calendar
 #: field:calendar.contacts,active:0

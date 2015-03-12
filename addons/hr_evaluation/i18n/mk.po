@@ -8,14 +8,41 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-06 13:58+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:09+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-07 07:33+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
+
+#. module: hr_evaluation
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_3
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_4
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_5
+#: model:survey.question,comments_message:hr_evaluation.appraisal_2_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_2_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_2_3
+#: model:survey.question,comments_message:hr_evaluation.appraisal_3_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_3_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_4_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_4_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_4_3
+#: model:survey.question,comments_message:hr_evaluation.appraisal_5_1
+#: model:survey.question,comments_message:hr_evaluation.opinion_1_1
+#: model:survey.question,comments_message:hr_evaluation.opinion_1_2
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_1
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_2
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_3
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_4
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_5
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_6
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_7
+msgid "If other, precise:"
+msgstr "Ако е друго, нагласи:"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:84
@@ -66,7 +93,7 @@ msgstr "(датум)и: Тековен датум"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
 msgid "(employee_name)s: Partner name"
-msgstr ""
+msgstr "(employee_name)s: Име на партнер"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
@@ -156,6 +183,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликнете да креирате ново оценување.\n"
+"              </p><p>\n"
+"                На секој вработен може да му биде назначен план на "
+"оценување. Тој план\n"
+"                ја дефинира фреквентноста и начинот на кој ги управувате "
+"вашите \n"
+"                периодични проценки на персоналот. Можете да дефинирате "
+"чекори и да\n"
+"                прикачите интервјуа на секој чекор. Odoo управува со сите "
+"видови на\n"
+"                проценки: претходни, завршни, само евалуација и конечна\n"
+"                проценка од страна на менаџерот.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
@@ -171,6 +213,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликнете да креирате ново барање за интервју поврзано со "
+"проценка на персонал.\n"
+"              </p><p>\n"
+"                Барањата за интервју обично се автоматски генерирани од\n"
+"                Odoo според планот за оценување на вработениот. Секој "
+"корисник\n"
+"                добива автоматски е-маил и барање за периодична проценка на "
+"\n"
+"                нивните колеги.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_evaluation_plans_installer
@@ -186,6 +240,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликнете да креирате нов план за оценување.\n"
+"              </p><p>\n"
+"                Можете да дефинирате планови за оценување (пр: прво интервју "
+"по 6\n"
+"                месеци, потоа секоја година). Потоа, секој вработен може да "
+"биде поврзан со\n"
+"                план за оценување, за Odoo да може автоматски да генерира\n"
+"                барања за интервју до менаџерите и/или подредените.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_2
@@ -195,12 +260,12 @@ msgstr ""
 #: model:survey.survey,thank_you_message:hr_evaluation.appraisal_form
 #: model:survey.survey,thank_you_message:hr_evaluation.opinion_form
 msgid "<p> </p>"
-msgstr ""
+msgstr "<p> </p>"
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_5
 msgid "<p></p>"
-msgstr ""
+msgstr "<p></p>"
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_4
@@ -209,6 +274,9 @@ msgid ""
 "for employee’s continued career development\n"
 "over the coming year.</p>"
 msgstr ""
+"<p>Идентификувајте професионални, изведбени, или проектни цели кои би ги "
+"препорачале за продолжен кариерен развој на вработениот\n"
+"за следната година.</p>"
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_3
@@ -223,21 +291,30 @@ msgid ""
 "</li><li> Did not meet standards and expectations\n"
 "</li><li> Significantly below standards and expectations</li></ol>"
 msgstr ""
+"<p>Оценувачот треба да ги оценува главните работни достигнувања и изведба на "
+"вработениот согласно дадените мерки\n"
+"below:</p><ol>\n"
+"<li> Значително ги надминува стандардите и очекувањата потребни за работното "
+"место\n"
+"</li><li> Ги надминува стандардите и очекувањата\n"
+"</li><li> Ги исполнува стандардите и очекувањата\n"
+"</li><li> Не ги исполнува стандардите и очекувањата\n"
+"</li><li> Значително е под стандардите и очекувањата</li></ol>"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_1
 msgid "Ability to cope with multidisciplinarity of team"
-msgstr ""
+msgstr "Способност да се носи со мултидисциплинарност на тим"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_6
 msgid "Ability to follow and complete work as instructed"
-msgstr ""
+msgstr "Способност да следи и врши работа по инструкции"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_5
 msgid "Ability to manage planning resources, risks, budgets and deadlines"
-msgstr ""
+msgstr "Способност да менаџира плански ресурси, ризици, буџети и рокови"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,action:0
@@ -265,6 +342,8 @@ msgid ""
 "Actions by Executive management show genuine interest in the well-being of "
 "employees"
 msgstr ""
+"Дејствата на извршниот менаџмент покажува особен интерес за добро состојбата "
+"на вработените"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,active:0
@@ -277,16 +356,18 @@ msgid ""
 "Adaptability: Ability to adapt oneself to organizational changes while "
 "keeping efficiency"
 msgstr ""
+"Приспособливост: Способност да се адаптира на организациските промени без "
+"притоа да загуби ефикасност"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_2_3
 msgid "Additional Comments"
-msgstr ""
+msgstr "Дополнителни коментари"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_7
 msgid "Additional comments"
-msgstr ""
+msgstr "Дополнителни коментари"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_answer_employee:0
@@ -297,7 +378,7 @@ msgstr "Сите одговори"
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_11
 msgid "Analytical and synthetic mind"
-msgstr ""
+msgstr "Аналитички и синтетички ум"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -358,7 +439,7 @@ msgstr "Интервјуа за оценување"
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,phase_id:0
 msgid "Appraisal Phase"
-msgstr ""
+msgstr "Фаза на проценка"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_form
@@ -399,7 +480,7 @@ msgstr "Планови за оценување"
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.opinion_1
 msgid "Appraisal Process"
-msgstr ""
+msgstr "Процес на оценување"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
@@ -419,7 +500,7 @@ msgstr "Резиме на оценување..."
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_3
 msgid "Appraisal for Period"
-msgstr ""
+msgstr "Оценување за период"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
@@ -440,17 +521,17 @@ msgstr "Оценувања"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
 msgid "Appraisals Month"
-msgstr ""
+msgstr "Месец на оценување"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
 msgid "Appraisals by Month"
-msgstr ""
+msgstr "Проценки според месец"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_5
 msgid "Appraiser"
-msgstr ""
+msgstr "Проценител"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
@@ -500,13 +581,14 @@ msgstr ""
 #. module: hr_evaluation
 #: field:hr.evaluation.report,closed:0
 msgid "Close Date"
-msgstr ""
+msgstr "Завршен датум"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_9
 msgid ""
 "Communication skills (written & verbally): clearness, concision, exactitude"
 msgstr ""
+"Комуникациски вештини (пишани и говорни): јасност, концизност, точност"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
@@ -521,17 +603,20 @@ msgid ""
 "Compared to similar jobs in other companies where I could work, my total "
 "compensation..."
 msgstr ""
+"Споредено со слични работни места во друго компании каде би можел да "
+"работам, мојата компензација..."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_3
 msgid ""
 "Compliance to internal rules and processes (timesheets completion, etc.)"
 msgstr ""
+"Согласност на интерните правила и процеси (комплетирање распоред итн.)"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_4
 msgid "Continuous Improvement"
-msgstr ""
+msgstr "Континуирано подобрување"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,create_date:0
@@ -544,7 +629,7 @@ msgstr "Креирај датум"
 #: field:hr_evaluation.plan,create_uid:0
 #: field:hr_evaluation.plan.phase,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Креирано од"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,create_date:0
@@ -552,12 +637,12 @@ msgstr ""
 #: field:hr_evaluation.plan,create_date:0
 #: field:hr_evaluation.plan.phase,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Креирано на"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
 msgid "Creation Month"
-msgstr ""
+msgstr "Месец на креирање"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_14
@@ -567,7 +652,7 @@ msgstr ""
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_8
 msgid "Customer commitment"
-msgstr ""
+msgstr "Посветеност кон клиенти"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_1_2
@@ -577,13 +662,13 @@ msgstr "Датум"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_4
 msgid "Date of review"
-msgstr ""
+msgstr "Датум на преглед"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_last_post:0
 #: help:hr_evaluation.evaluation,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Датум на испраќање на последната порака"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,deadline:0
@@ -599,7 +684,7 @@ msgstr "Датум на краен рок"
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_7
 msgid "Decision making"
-msgstr ""
+msgstr "Донесување одлуки"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,delay_date:0
@@ -609,12 +694,12 @@ msgstr "Оддолжување до почеток"
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_2
 msgid "Delegation: Ability to efficiently assign tasks to other people"
-msgstr ""
+msgstr "Делегација: Способност за ефикасно доделување задачи на други луѓе"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_2_1
 msgid "Demonstrates genuine concern for me as a person"
-msgstr ""
+msgstr "Покажува искрена загриженост за мене како личност"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -624,7 +709,7 @@ msgstr "Не ги задоволува очекувањата"
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Do not meet expectations"
-msgstr ""
+msgstr "Не ги исполнува очекувањата"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
@@ -646,7 +731,7 @@ msgstr "Нацрт"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_3
 msgid "Effectiveness"
-msgstr ""
+msgstr "Ефективност"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_body:0
@@ -671,27 +756,27 @@ msgstr "Оценување на вработен"
 #: model:survey.page,title:hr_evaluation.appraisal_1
 #: model:survey.survey,title:hr_evaluation.appraisal_form
 msgid "Employee Appraisal Form"
-msgstr ""
+msgstr "Формулар за оценување на вработен"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_5
 msgid "Employee Comments"
-msgstr ""
+msgstr "Коментари на вработен"
 
 #. module: hr_evaluation
 #: model:survey.survey,title:hr_evaluation.opinion_form
 msgid "Employee Opinion Form"
-msgstr ""
+msgstr "Формулар за мислење на вработен"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_3
 msgid "Employee Performance in Key Areas"
-msgstr ""
+msgstr "Учинок на вработен во клучни области"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
 msgid "Employee to evaluate"
-msgstr ""
+msgstr "Вработен да се оцени"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date_close:0
@@ -701,17 +786,17 @@ msgstr "Датум на завршување"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_1
 msgid "Engagement"
-msgstr ""
+msgstr "Ангажман"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_2
 msgid "Enthusiasm & implication toward projects/assignments"
-msgstr ""
+msgstr "Ентузијазам и импликацијакон проекти/задачи"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.opinion_2
 msgid "Evaluation"
-msgstr ""
+msgstr "Оценување"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_report
@@ -766,7 +851,7 @@ msgstr "Општо"
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
 #: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
 msgid "Group By"
-msgstr ""
+msgstr "Групирање според"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
@@ -786,7 +871,7 @@ msgstr ""
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_1
 msgid "I am proud to tell others I work here"
-msgstr ""
+msgstr "Јас сум горд кога ќе им кажам на другите дека работам овде"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_5
@@ -794,11 +879,14 @@ msgid ""
 "I am willing to put in a great deal of effort beyond what is expected to "
 "help my workgroup succeed"
 msgstr ""
+"Сакам да вложам многу поголем труд одколку што се очекува за да ú помогнам "
+"на мојата работна група да успее"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_2_4
 msgid "I believe the information that I get from the person I report to."
 msgstr ""
+"Верувам на информациите што ги добивам од личноста пред која одговарам."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_2_2
@@ -806,11 +894,13 @@ msgid ""
 "I consistently acquire new knowledge, skills or understanding through "
 "contact with my supervisor. He helps me growing my compete"
 msgstr ""
+"Постојано се стекнувам со нови знаења, вештини и сваќања преку контактот со "
+"мојот претпоставен. Тој ми помага да ја зголемам мојата комплетност"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_3_2
 msgid "I have enough work"
-msgstr ""
+msgstr "Имам доволно работа"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_6_2
@@ -818,11 +908,13 @@ msgid ""
 "I have the same opportunity to succeed as others with similar experiences, "
 "performance and educational background"
 msgstr ""
+"Имам исти можности да успеам, како и другите со слични искуства, изведба и "
+"образовна позадина"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_5_1
 msgid "I know the company's values and live them"
-msgstr ""
+msgstr "Ги знам вредностите на компанијата и живеам според нив"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_3_3
@@ -835,6 +927,8 @@ msgstr ""
 #: model:survey.label,value:hr_evaluation.oprow_2_6_4
 msgid "I understand the company strategy and how my workgroup supports it"
 msgstr ""
+"Ги разбирам стратегиите на компанијата и како мојата работна група ги "
+"подржува"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_3
@@ -842,11 +936,13 @@ msgid ""
 "I would prefer to remain with this company even if a comparable job were "
 "available in another company"
 msgstr ""
+"Би сакал да останам во оваа компанија дури и ако слична работа е достапна во "
+"друга компанија"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_3_1
 msgid "I'm efficient at work and my achievements are successful"
-msgstr ""
+msgstr "Јас сум ефикасен на работа и моите достигнувања се успешни"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,id:0
@@ -855,7 +951,7 @@ msgstr ""
 #: field:hr_evaluation.plan,id:0
 #: field:hr_evaluation.plan.phase,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_unread:0
@@ -864,38 +960,13 @@ msgid "If checked new messages require your attention."
 msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
 
 #. module: hr_evaluation
-#: model:survey.question,comments_message:hr_evaluation.appraisal_1_1
-#: model:survey.question,comments_message:hr_evaluation.appraisal_1_2
-#: model:survey.question,comments_message:hr_evaluation.appraisal_1_3
-#: model:survey.question,comments_message:hr_evaluation.appraisal_1_4
-#: model:survey.question,comments_message:hr_evaluation.appraisal_1_5
-#: model:survey.question,comments_message:hr_evaluation.appraisal_2_1
-#: model:survey.question,comments_message:hr_evaluation.appraisal_2_2
-#: model:survey.question,comments_message:hr_evaluation.appraisal_2_3
-#: model:survey.question,comments_message:hr_evaluation.appraisal_3_1
-#: model:survey.question,comments_message:hr_evaluation.appraisal_3_2
-#: model:survey.question,comments_message:hr_evaluation.appraisal_4_1
-#: model:survey.question,comments_message:hr_evaluation.appraisal_4_2
-#: model:survey.question,comments_message:hr_evaluation.appraisal_4_3
-#: model:survey.question,comments_message:hr_evaluation.appraisal_5_1
-#: model:survey.question,comments_message:hr_evaluation.opinion_1_1
-#: model:survey.question,comments_message:hr_evaluation.opinion_1_2
-#: model:survey.question,comments_message:hr_evaluation.opinion_2_1
-#: model:survey.question,comments_message:hr_evaluation.opinion_2_2
-#: model:survey.question,comments_message:hr_evaluation.opinion_2_3
-#: model:survey.question,comments_message:hr_evaluation.opinion_2_4
-#: model:survey.question,comments_message:hr_evaluation.opinion_2_5
-#: model:survey.question,comments_message:hr_evaluation.opinion_2_6
-#: model:survey.question,comments_message:hr_evaluation.opinion_2_7
-msgid "If other, precise:"
-msgstr ""
-
-#. module: hr_evaluation
 #: help:hr_evaluation.evaluation,note_action:0
 msgid ""
 "If the evaluation does not meet the expectations, you can propose an action "
 "plan"
 msgstr ""
+"Ако оценката не е како што се очекува, можете да предложете план на "
+"дејствување"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
@@ -916,7 +987,7 @@ msgstr "Евалуации во тек"
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_5
 msgid "Initiative and self autonomy"
-msgstr ""
+msgstr "Иницијатива и само автономија"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
@@ -963,7 +1034,7 @@ msgstr "Пратител"
 #: field:hr.evaluation.interview,message_last_post:0
 #: field:hr_evaluation.evaluation,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Датум на последна порака"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,write_uid:0
@@ -971,7 +1042,7 @@ msgstr ""
 #: field:hr_evaluation.plan,write_uid:0
 #: field:hr_evaluation.plan.phase,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно ажурирање од"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,write_date:0
@@ -979,12 +1050,12 @@ msgstr ""
 #: field:hr_evaluation.plan,write_date:0
 #: field:hr_evaluation.plan.phase,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно ажурирање на"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_2
 msgid "Leadership"
-msgstr ""
+msgstr "Лидерство"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_3
@@ -992,11 +1063,13 @@ msgid ""
 "Leadership: create a challenging and motivating work environment aligned "
 "with the company's strategy"
 msgstr ""
+"Лидерство: создадете предизвикувачка и мотивирачка работна средина порамнета "
+"со стратегијата на компанијата"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_4
 msgid "Leadership: sustain subordinates in their professional growth"
-msgstr ""
+msgstr "Лидерство: задржете ги подредените во нивниот професионален развој"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
@@ -1009,6 +1082,8 @@ msgid ""
 "Listens and takes into account all ideas and do his best to put in place the "
 "best of these"
 msgstr ""
+"Ги слуша и ги зема в предвид сите идеи и се труди да ги реализира најдобрите "
+"од нив"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
@@ -1041,7 +1116,7 @@ msgstr "Историја на пораки и комуникација"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_6
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Разно"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
@@ -1054,11 +1129,13 @@ msgid ""
 "My best achievements have been communicated to the community, internally or "
 "to customers"
 msgstr ""
+"Моите најдобри достигнувања се пренесени на заедницата, интерно или на "
+"клиентите"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_2
 msgid "My job provides me with a sense of personal accomplishment"
-msgstr ""
+msgstr "Мојата работа ми дава чувство на лично исполнување"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_4_1
@@ -1066,16 +1143,18 @@ msgid ""
 "My work contributes towards the continuous improvement of the company, our "
 "services or products"
 msgstr ""
+"Мојата работа придонесува за постојано подобрување на компанијата, нашите "
+"услуги или производи"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_1
 msgid "Name"
-msgstr ""
+msgstr "Име"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_1_1
 msgid "Name of your direct supervisor"
-msgstr ""
+msgstr "Име на вашиот претпоставен"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
@@ -1090,12 +1169,12 @@ msgstr "Датум на следно оценување"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_2_1
 msgid "Objectives"
-msgstr ""
+msgstr "Цели"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_5
 msgid "Openness"
-msgstr ""
+msgstr "Транспарентност"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_4_4
@@ -1103,6 +1182,8 @@ msgid ""
 "Our workgroup identifies and reduces waste of time in our activities and "
 "processes"
 msgstr ""
+"Нашата работна група го идентификува и го намалува губењето на време во "
+"нашите активности и процеси"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,rating:0
@@ -1115,6 +1196,8 @@ msgid ""
 "Overall, I believe the quality of products and/or services my workgroup "
 "delivers is improving"
 msgstr ""
+"Како целина верувам дека квалитетот на производите и/или услугите што мојата "
+"работна група ги нуди се подобрува"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
@@ -1139,7 +1222,7 @@ msgstr "Период на оценување (месеци)"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_4_2
 msgid "Personal Performance Objectives"
-msgstr ""
+msgstr "Лични изведбени цели"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,name:0
@@ -1163,7 +1246,7 @@ msgstr "План во тек"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_2
 msgid "Position Title"
-msgstr ""
+msgstr "Назив на работно место"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
@@ -1174,17 +1257,17 @@ msgstr "Печати резиме"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_4_1
 msgid "Professional Development Objectives"
-msgstr ""
+msgstr "Професионални развојни цели"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_4
 msgid "Professional Development and Performance Plan"
-msgstr ""
+msgstr "План за професионален развој и изведба"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_4_3
 msgid "Project Objectives"
-msgstr ""
+msgstr "Цели на проектот"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_12
@@ -1205,7 +1288,7 @@ msgstr "Во врска со "
 #. module: hr_evaluation
 #: field:hr.evaluation.report,request_id:0
 msgid "Request ID"
-msgstr ""
+msgstr "ID на барање"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
@@ -1215,7 +1298,7 @@ msgstr "Ресетирај до нацрт"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_2_2
 msgid "Results"
-msgstr ""
+msgstr "Резултати"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_1
@@ -1300,7 +1383,7 @@ msgstr "Значително под очекувањата"
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Significantly below expectations"
-msgstr ""
+msgstr "Значително под очекувањата"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -1316,7 +1399,7 @@ msgstr "Започнете оценување"
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,state:0
 msgid "State"
-msgstr ""
+msgstr "Состојба"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
@@ -1331,7 +1414,7 @@ msgstr "Статус"
 #: field:hr_evaluation.plan.phase,email_subject:0
 #: model:survey.question,question:hr_evaluation.appraisal_3_1
 msgid "Subject"
-msgstr ""
+msgstr "Наслов"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_summary:0
@@ -1342,7 +1425,7 @@ msgstr "Резиме"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_3_2
 msgid "Supervisors only"
-msgstr ""
+msgstr "Само претпоставени"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
@@ -1352,13 +1435,14 @@ msgstr "Истражување"
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
 msgid "Survey Request"
-msgstr ""
+msgstr "Барање за анкета"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_4
 msgid ""
 "Taking everything into account, how satisfied are you with your current job?"
 msgstr ""
+"Ако се земе се во предвид, колку се задоволни од вашата моментална работа?"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_4
@@ -1366,11 +1450,13 @@ msgid ""
 "Team spirit: ability to work efficiently with peers, manage the conflicts "
 "with diplomacy"
 msgstr ""
+"Тимски дух: способност да се работи ефективно со други, решавање на "
+"конфликтите со дипломатија"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_10
 msgid "Technical skills regarding to the job requirements"
-msgstr ""
+msgstr "Технички вештини во одност на потребите на работното место"
 
 #. module: hr_evaluation
 #: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_1
@@ -1397,7 +1483,7 @@ msgstr ""
 #: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_6
 #: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_7
 msgid "The answer you entered has an invalid format."
-msgstr ""
+msgstr "Одговорот што го внесовте не е во валиден формат."
 
 #. module: hr_evaluation
 #: help:hr.employee,evaluation_date:0
@@ -1456,12 +1542,12 @@ msgstr ""
 #: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_6
 #: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_7
 msgid "This question requires an answer."
-msgstr ""
+msgstr "Прашањето треба да има одговор."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_15
 msgid "Time management: projects/tasks are completed on time"
-msgstr ""
+msgstr "Управување со време: проекти/задачи се комплетирани на време"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
@@ -1485,6 +1571,8 @@ msgid ""
 "Use the following space to make any comments regarding the above performance "
 "evaluation."
 msgstr ""
+"Искористете го овој простор за да оставите коментари во однос на оценката на "
+"изведба претставена погоре."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
@@ -1512,13 +1600,13 @@ msgstr "Внимание!"
 #: field:hr.evaluation.interview,website_message_ids:0
 #: field:hr_evaluation.evaluation,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Пораки на веб сајт"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,website_message_ids:0
 #: help:hr_evaluation.evaluation,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Историја на веб комуникација"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_4_2
@@ -1526,11 +1614,13 @@ msgid ""
 "What I did several months ago is still of use to the company, the services "
 "or the products today"
 msgstr ""
+"Тоа што го направив пред неколку месеци, сеуште ú користи на компанијата, "
+"услугите или производите денес"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_2
 msgid "Work Plan"
-msgstr ""
+msgstr "План на работа"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:239
@@ -1539,6 +1629,8 @@ msgid ""
 "You cannot change state, because some appraisal forms have not been "
 "completed."
 msgstr ""
+"Не можете да ја промените состојбата бидејќи некои формулари за оценување "
+"сеуште не се комплетирани."
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:338

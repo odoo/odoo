@@ -176,6 +176,3 @@ class MigrationManager(object):
                             fp2.close()
                         if mod:
                             del mod
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

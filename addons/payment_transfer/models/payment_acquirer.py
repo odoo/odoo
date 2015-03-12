@@ -45,7 +45,7 @@ class TransferPaymentAcquirer(osv.Model):
         """ Hook in create to create a default post_msg. This is done in create
         to have access to the name and other creation values. If no post_msg
         or a void post_msg is given at creation, generate a default one. """
-        if values.get('name') == 'transfer' and not values.get('post_msg'):
+        if values.get('provider') == 'transfer' and not values.get('post_msg'):
             values['post_msg'] = self._format_transfer_data(cr, uid, context=context)
         return super(TransferPaymentAcquirer, self).create(cr, uid, values, context=context)
 
@@ -61,12 +61,12 @@ class TransferPaymentTransaction(osv.Model):
             ], context=context)
 
         if not tx_ids or len(tx_ids) > 1:
-            error_msg = 'received data for reference %s' % (pprint.pformat(reference))
+            error_msg = _('received data for reference %s') % (pprint.pformat(reference))
             if not tx_ids:
-                error_msg += '; no order found'
+                error_msg += _('; no order found')
             else:
-                error_msg += '; multiple order found'
-            _logger.error(error_msg)
+                error_msg += _('; multiple order found')
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
 
         return self.browse(cr, uid, tx_ids[0], context=context)

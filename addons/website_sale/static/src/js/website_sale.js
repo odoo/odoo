@@ -45,6 +45,17 @@ $('.oe_website_sale').each(function () {
                 $input.val(data.quantity);
                 $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
                 $("#cart_total").replaceWith(data['website_sale.total']);
+                if (data.warning) {
+                    var cart_alert = $('.oe_cart').parent().find('#data_warning');
+                    if (cart_alert.length == 0) {
+                        $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
+                                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
+                    }
+                    else {
+                        cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning);
+                    }
+                    $input.val(data.quantity);
+                }
             });
     });
 
@@ -52,7 +63,7 @@ $('.oe_website_sale').each(function () {
     $(oe_website_sale).on('click', 'a.js_add_cart_json', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var $input = $link.parent().parent().find("input");
+        var $input = $link.parent().find("input");
         var min = parseFloat($input.data("min") || 0);
         var max = parseFloat($input.data("max") || Infinity);
         var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val(),10);
@@ -62,7 +73,7 @@ $('.oe_website_sale').each(function () {
         return false;
     });
 
-    $('.a-submit', oe_website_sale).off('click').on('click', function () {
+    $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function () {
         $(this).closest('form').submit();
     });
     $('form.js_attributes input, form.js_attributes select', oe_website_sale).on('change', function () {

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-18 16:59+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:33+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-19 06:43+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
@@ -115,12 +115,107 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Itt található${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} ettől ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Megrendelés szám: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Megrendelés összege: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Megrendelés dátuma: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Megrendelés hivatkozása: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Ön hivatkozása: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Ön kapcsolata: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"    <p>\n"
+"        Megtekintheti az árajánlatát online:\n"
+"    </p>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
+"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
+"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
+"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
+"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View "
+"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>Lehetősége van közvetlenül Paypal fizetéssel kiegyenlíteni:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>További felmerült kérdésekben, állunk szíves rendelkezésükre.</p>\n"
+"    <p>Köszönjük, hogy a ${object.company_id.name or 'us'} -t "
+"választotta!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: field:product.product,sales_count:0
 #: field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "# Értékesítések"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -152,6 +247,8 @@ msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -197,6 +294,17 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Kattintson árajánlat létrehozásához, melyet később "
+"vásárlói megrendeléssé\n"
+"                    alakíthat.\n"
+"                </p><p>\n"
+"                    Odoo rendszer segítséget nyújt a teljes értékesítési "
+"folyamat hatékonnyá tételében:\n"
+"                    árajánlat, vásárlói megrendelés, szállítás, számlázás és "
+"fizetés.\n"
+"                </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -218,6 +326,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson a vásárlóhoz tartozó árajánlat vagy vásárlási "
+"megrendelés létrehozásához.\n"
+"              </p><p>\n"
+"                Odoo rendszer segítséget nyújt a teljes értékesítési "
+"folyamat hatékony kezeléséhez:\n"
+"                árajánlat, vásárlói megrendelés, szállítás, számlázás és\n"
+"                fizetés.\n"
+"              </p><p>\n"
+"                A szociális tulajdonság segít az egyes megrendelések "
+"kommunikációjának\n"
+"                szervezésében, és elérhetővé teszi a vásárlók részére a "
+"vásárlói megrendeléseik\n"
+"                alakulását.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
@@ -233,6 +357,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson egy árajánlat létrehozásához, melyet vásárlói "
+"megrendeléssé\n"
+"                alakíthat.\n"
+"              </p><p>\n"
+"                Odoo rendszer segítséget nyújt a teljes értékesítési "
+"folyamat hatékony kezeléséhez:\n"
+"                árajánlat, vásárlói megrendelés, szállítás, számlázás és "
+"fizetés.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -254,6 +389,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson egy árajánlat létrehozásához, az első lépés egy "
+"új értékesítéshez.\n"
+"              </p><p>\n"
+"                Odoo rendszer segítséget nyújt a teljes értékesítési "
+"folyamat hatékony kezeléséhez:\n"
+"                az árajánlattól a vásárlói megrendelésig, a \n"
+"                szállítás, a számlázás és a fizetés fogadása.\n"
+"              </p><p>\n"
+"                A szociális tulajdonság segít az egyes megrendelések "
+"kommunikációjának\n"
+"                szervezésében, és elérhetővé teszi a vásárlók részére a "
+"vásárlói megrendeléseik\n"
+"                alakulását.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
@@ -356,7 +507,7 @@ msgstr "Elosztási partner"
 #. module: sale
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "Engedélyezze a szállításhoz és a számlázáshoz a különböző címeket "
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
@@ -371,7 +522,7 @@ msgstr "Engedélyezi riasztás beállítását vevőkre vagy termékekre"
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
 msgid "Allow online quotations and templates"
-msgstr ""
+msgstr "Engedélyezze az online áraájnlat és sablon készítést"
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
@@ -386,11 +537,16 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"Engedélyezze a termékekre vonatkozó figyelmeztetések beállítását és "
+"kapcsolja, ha egy felhasználó el akarja adni azt az árut vagy egy megadott "
+"vásárlóhoz.\n"
+"Például: Termék: ez a termék elavult, ne vásároljon többet 5 -nél.\n"
+"Beszállító: ne felejtsen el expressz szállítás után érdeklődni."
 
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measure"
-msgstr ""
+msgstr "Engedélyezi másmilyen mértékegység használatát"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -402,6 +558,12 @@ msgid ""
 "automatically.\n"
 "-It installs the account_analytic_analysis module."
 msgstr ""
+"Lehetővé teszi a vásárló vásárlási feltételeinek meghatározását: számlázási "
+"mód (fix ár, az időbeosztásokon, haladó számlázás), a pontos árazás "
+"(650€/nap egy fejlesztőért), az időtartam (egy éves támogatási szerződés).\n"
+"Lehetősége lesz a szerződés és az automatikus számlázási folyamat nyomon "
+"követésére.\n"
+"-Ez a account_analytic_analysis modult telepíti."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -420,6 +582,9 @@ msgid ""
 "Manage Related Stock.\n"
 "-This installs the module sale_stock."
 msgstr ""
+"Engedélyezi, hogy létrehozzon árajánlatot, vásárlói megrendelést más "
+"megrendelési szabályokkal és kezelhesse az ide vonatkozó raktárkészletet.\n"
+"-Ez a sale_stock modult telepíti."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -434,6 +599,10 @@ msgid ""
 "different journals, and perform batch operations on journals.\n"
 "-This installs the module sale_journal."
 msgstr ""
+"Lehetővé teszi az értékesítései és kiszállításai kategorizálását "
+"(kiválogatási listák) különböző naplók közt, és kötegelt műveletek "
+"elvégzését a naplókon.\n"
+"-Ez a sale_journal modult telepíti."
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
@@ -445,6 +614,12 @@ msgid ""
 "these values is still available.\n"
 "-This installs the module analytic_user_function."
 msgstr ""
+"Lehetővé teszi annak meghatározását, hogy egy megadott főkönyvi számlára egy "
+"meghatározott felhasználónak mi az alapértelmezett feladata.\n"
+"Ezt legtöbbször akkor használja, ha egy felhasználó felviszi az "
+"időbeosztását. Az értékeket helyreállítja és a mezőket automatikusan "
+"kitölti. Ezeknek az értékeknek a megváltoztatása még ezután is lehetésges.\n"
+"-Ez a analytic_user_function modult telepíti."
 
 #. module: sale
 #: help:sale.config.settings,group_uom:0
@@ -467,6 +642,8 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
+"Lehetővé teszi különböző szállítási és számlázási cím meghatározását a "
+"vásárlói megrendelésekhez."
 
 #. module: sale
 #: field:sale.report,analytic_account_id:0
@@ -501,17 +678,17 @@ msgstr ""
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "Termékenként"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Értékesítő személyenként"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "Értékesítési csoportonként"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -583,21 +760,23 @@ msgstr ""
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
 msgstr ""
+"Jelölje be ezt a négyzetet ahhoz, hogy kezelhesse ennek az értékesítési "
+"csoportnak az árajánlatait."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to acces the Sales Analysis."
-msgstr ""
+msgstr "Kattintson az értékesítési elemzés eléréséhez."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis of invoices."
-msgstr ""
+msgstr "Kattintson részletes számla elemzésekhez."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis."
-msgstr ""
+msgstr "Kattintson a részletes elemzés megtekintéséhez."
 
 #. module: sale
 #: field:sale.report,delay:0
@@ -699,7 +878,7 @@ msgstr "Számlák létrehozása"
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Készítette"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
@@ -707,7 +886,7 @@ msgstr ""
 #: field:sale.order.line,create_date:0
 #: field:sale.order.line.make.invoice,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Létrehozás dátuma"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -751,12 +930,12 @@ msgstr "Megrendelési dátum"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "Megrendelés dátuma:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "A feljegyzésen történt utolsó üzenet dátuma."
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -776,17 +955,17 @@ msgstr "Alapértelmezett lehetőségek"
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "Alapértelmezett követelmények és feltételek"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "Alapértelmezett követelmények & feltételek..."
 
 #. module: sale
 #: help:res.company,sale_note:0
 msgid "Default terms and conditions for quotations."
-msgstr ""
+msgstr "Alapértelmezett árajánlatokhoz tartozó követelmények és feltételek."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -794,6 +973,8 @@ msgid ""
 "Define an invoicing target in the sales team settings to see the period's "
 "achievement and forecast at a glance."
 msgstr ""
+"Határozzon meg egy számlázási célt az értékesítési csoport beállításoknál, "
+"hogy láthassa az időintervallum eredményét és a teljes előrejelzést."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -901,7 +1082,7 @@ msgstr "Hiba"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Részletes szűrők"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
@@ -938,11 +1119,15 @@ msgid ""
 "analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
 msgstr ""
+"A főkönyvi számla nézet módosításához, hogy fontos adatokat lásson a "
+"szolgáltató vállalatok projekt igazgatója. Láthatja még a számla elemzés "
+"összegző jelentést felhasználói osztásban vagy havi lebontásban.\n"
+"-Ez a account_analytic_analysis modult telepíti."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Forecast"
-msgstr ""
+msgstr "Előrejelzés"
 
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
@@ -953,6 +1138,10 @@ msgid ""
 "\n"
 " of the current and forecast revenue on the kanban view."
 msgstr ""
+"A számla pénzügyi előrejelzése a jelenlegi hónapra vonatkozólag. Ezt az "
+"összeget kell az értékesítési csapatnak ebben a hónapban kiszámláznia. Ezt "
+"általában a folyamat arányszám kiszámításához használja a jelenlegi és az "
+"előrejelzett bevételekre a kanban nézethez."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -961,6 +1150,9 @@ msgid ""
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Ebből a kimutatásból, áttekintheti az ehhez a partnerhez tartozó számlázott "
+"összegeket. A kereső eszközzel egyénivé teheti a Számla kimutatásait és így, "
+"az a kívánsága szerinti lesz."
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
@@ -997,7 +1189,7 @@ msgstr ""
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Group By"
-msgstr ""
+msgstr "Csoportosítás"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -1027,7 +1219,7 @@ msgstr "Óra"
 #: field:sale.order.line.make.invoice,id:0
 #: field:sale.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "Azonosító ID"
 
 #. module: sale
 #: help:sale.order,message_unread:0
@@ -1060,6 +1252,8 @@ msgstr "Folyamatban"
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before!"
 msgstr ""
+"Ahhoz, hogy törölhessen egy jóváhagyott vásárlói megrendelést, először "
+"vissza kell vonnia azt!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:102
@@ -1102,7 +1296,7 @@ msgstr "Számlázási kivétel"
 #. module: sale
 #: field:crm.case.section,invoiced_forecast:0
 msgid "Invoice Forecast"
-msgstr ""
+msgstr "Számla előrejelzés"
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
@@ -1122,7 +1316,7 @@ msgstr "Vevői megrendelés számlázás"
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
 msgid "Invoice Target"
-msgstr ""
+msgstr "Számlázás ide"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -1132,12 +1326,12 @@ msgstr "Az aktuális vevői megrendelés számlázási címe."
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "Számlázási cím:"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "Számlázási és szállítási cím:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:107
@@ -1157,13 +1351,13 @@ msgstr ""
 #: code:addons/sale/wizard/sale_line_invoice.py:97
 #, python-format
 msgid "Invoice created"
-msgstr ""
+msgstr "Számla létrehozva ekkor"
 
 #. module: sale
 #: code:addons/sale/sale.py:1217
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "Számla fizetve ekkor"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1192,12 +1386,12 @@ msgstr "Számlák"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr ""
+msgstr "Számlák elemzései"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "Számlastatisztika"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -1222,7 +1416,7 @@ msgstr "Ez mutatja, hogy a megrendelésnek legalább egy számlája van."
 #. module: sale
 #: field:sale.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Utolsó üzenet időpontja"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
@@ -1231,7 +1425,7 @@ msgstr ""
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Utoljára frissítette"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
@@ -1240,7 +1434,7 @@ msgstr ""
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Utoljára frissítve ekkor"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1281,13 +1475,13 @@ msgstr "Árajánlat új másolata"
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Új e-mail"
 
 #. module: sale
 #: code:addons/sale/sale.py:1041
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Nincs ügyfél meghatározva!"
 
 #. module: sale
 #: code:addons/sale/sale.py:1125
@@ -1307,6 +1501,8 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
+"A megrendelése visszaigazolásának és a termék megrendelőhöz való "
+"kiszállítása közti napok száma."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1371,7 +1567,7 @@ msgstr "Megrendelési sorok a számlához"
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
-msgstr ""
+msgstr "Megrendelés hónapja:"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
@@ -1433,7 +1629,7 @@ msgstr "Fizetési feltétel"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Payment Term:"
-msgstr ""
+msgstr "Fizetési feltétel:"
 
 #. module: sale
 #: field:sale.order,paypal_url:0
@@ -1499,12 +1695,12 @@ msgstr "Beszerzés"
 #. module: sale
 #: field:sale.order,procurement_group_id:0
 msgid "Procurement group"
-msgstr ""
+msgstr "Beszerzési csoport"
 
 #. module: sale
 #: field:sale.order.line,procurement_ids:0
 msgid "Procurements"
-msgstr ""
+msgstr "Beszerzések"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -1524,7 +1720,7 @@ msgstr "Termék tulajdonságok"
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Terméksablon"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1573,7 +1769,7 @@ msgstr "Árajánlat / Megrendelés"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Árajánlat dátuma:"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
@@ -1588,7 +1784,7 @@ msgstr "Árajánlat száma"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "Árajánlat elküldve"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1604,7 +1800,7 @@ msgstr "Árajánlat megerősítve"
 #: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
-msgstr ""
+msgstr "Árajánlat létrehozva"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
@@ -1625,7 +1821,7 @@ msgstr "Árajánlatok"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "Árajánlatok elemzése"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1635,17 +1831,17 @@ msgstr "Árajánlatok és Értékesítések"
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
 msgid "Rate of created quotation per duration"
-msgstr ""
+msgstr "Időtartam alatt létrehozott árajánlatok aránya"
 
 #. module: sale
 #: field:crm.case.section,monthly_invoiced:0
 msgid "Rate of sent invoices per duration"
-msgstr ""
+msgstr "Időtartam alatt elküldött árajánlatok aránya"
 
 #. module: sale
 #: field:crm.case.section,monthly_confirmed:0
 msgid "Rate of validate sales orders per duration"
-msgstr ""
+msgstr "Időtartam alatt jóváhagyott vásárlói megrendelések aránya"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1662,22 +1858,22 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Reference/Description"
-msgstr ""
+msgstr "Hivatkozó Referencia/Leírás"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of confirmed sales orders per month."
-msgstr ""
+msgstr "Havi visszaigazolt vásárlói megrendelések hozama"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of created quotations per month."
-msgstr ""
+msgstr "Havi létrehozott árajánlatok hozama"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of sent invoices per month."
-msgstr ""
+msgstr "Havi elküldött árajánlatok hozama"
 
 #. module: sale
 #: field:procurement.order,sale_line_id:0
@@ -1722,7 +1918,7 @@ msgstr "Értékesítési elemzés"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "Értékesítési összefoglaló"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -1831,12 +2027,12 @@ msgstr "Vevői megrendelési statisztikák"
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Értékesítési csapat"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_case_section
 msgid "Sales Teams"
-msgstr ""
+msgstr "Értékesítési csapatok"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_exception
@@ -1861,7 +2057,7 @@ msgstr "Értékesítő"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Salesperson:"
-msgstr ""
+msgstr "Értékesító személy:"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1963,6 +2159,9 @@ msgid ""
 "sales \n"
 "team estimates to be able to invoice this month."
 msgstr ""
+"A jelenlegi hónap számla jövedelem célja. Ez az értékesítési csapatok "
+"előrejelzett összege\n"
+"amit ki tudnak számlázni ebben a hónapban."
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -2031,7 +2230,7 @@ msgstr ""
 #: code:addons/sale/sale.py:154
 #, python-format
 msgid "There is no default company for the current user!"
-msgstr ""
+msgstr "Nincs alapértelmezett vállalat ehhez a felhaszálóhoz!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:93
@@ -2049,7 +2248,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "This Year"
-msgstr ""
+msgstr "Tárgyév"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_margin:0
@@ -2059,11 +2258,15 @@ msgid ""
 "Price and Cost Price.\n"
 "-This installs the module sale_margin."
 msgstr ""
+"Ez 'Határérték' ad a vásárlói megrendeléhez.\n"
+"Jövedelmezőséget ad, amit az egységár és a bekerülési ár különbségéből "
+"számít ki.\n"
+"-Ez a sale_margin modult telepíti."
 
 #. module: sale
 #: help:sale.config.settings,module_website_quote:0
 msgid "This adds the online quotation"
-msgstr ""
+msgstr "Ez hozzáadja az online árajánlatot"
 
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
@@ -2106,6 +2309,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Ez a kimutatás elemzést hajt végre az árajánlatain. Az elemzés megvizsgálja "
+"az értékesítések hozamait és sorba rendezi különböző feltétel csoportok "
+"alapján (értékesítő személy, partner, termék, stb.) Használja ezt a "
+"kimutatást olyan értékesítéseken, melyek még nem lettek kiszámlázva. Ha "
+"kimutatást szeretne készíteni a forgalmáról, akkor a számla kimutatást kell "
+"használnia a számlázási alkalmazásban."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2116,6 +2325,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Ez a kimutatás elemzést hajt végre az értékesítésein. Az elemzés "
+"megvizsgálja az értékesítések hozamait és sorba rendezi különböző feltétel "
+"csoportok alapján (értékesítő személy, partner, termék, stb.) Használja ezt "
+"a kimutatást olyan értékesítéseken, melyek még nem lettek kiszámlázva. Ha "
+"kimutatást szeretne készíteni a forgalmáról, akkor a számla kimutatást kell "
+"használnia a számlázási alkalmazásban."
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2158,7 +2373,7 @@ msgstr "Végösszeg adókkal együtt"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Összesen áfa nélkül"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
@@ -2217,6 +2432,13 @@ msgid ""
 "                Use Some Order Lines to invoice a selection of the sales "
 "order lines."
 msgstr ""
+"Használja a teljes vásárlási megrendelést a végszámla elkészítéséhez.\n"
+"                Használjon százalékot a végösszeg egy bizonyos százalékának "
+"kiszámlázásához.\n"
+"                Használjon fix árat egy meghatározott összeg előre "
+"számlázásához (díjbekéső).\n"
+"                Használjon egy pár megrendelési sort a kiválasztott vásárlói "
+"megrendelés tételsorainak kiszámlázásához."
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -2248,7 +2470,7 @@ msgstr "Használja az árlistát a vevőnkénti ár átdolgozására"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "VAT:"
-msgstr ""
+msgstr "ÁFA:"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -2277,12 +2499,12 @@ msgstr "Figyelem!"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Weboldal üzenetek"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Weboldal  kommunikáció történet"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2340,7 +2562,7 @@ msgstr "A következő megrendelés lehetőség szerint ne számlázza kézzel %s
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr ""
+msgstr "Ön hivatkozása:"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type

@@ -56,7 +56,7 @@
                         <group>
                             <field name="location_id" on_change="onchange_location_id(location_id)" groups="stock.group_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
                             <field name="location_dest_id" groups="stock.group_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="guarantee_limit"/>
                         </group>
                     </group>

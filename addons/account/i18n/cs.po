@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-16 16:16+0000\n"
+"Last-Translator: Marek Stopka <marek.stopka@perlur.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:40+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-17 06:25+0000\n"
+"X-Generator: Launchpad (build 17241)\n"
 
 #. module: account
 #: model:email.template,body_html:account.email_template_edi_invoice
@@ -101,6 +101,85 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"<p>Dobrý den ${object.partner_id.name},</p>\n"
+"\n"
+"<p>Máme pro vás k dispozici novou fakturu: </p>\n"
+"\n"
+"<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"&nbsp;&nbsp;<strong>REFERENCE</strong><br />\n"
+"&nbsp;&nbsp;Číslo faktury:<strong>${object.number}</strong><br />\n"
+"&nbsp;&nbsp;Celková částka: <strong>${object.amount_total} "
+"${object.currency_id.name}</strong><br />\n"
+"&nbsp;&nbsp;Datum vystavení: ${object.date_invoice}<br />\n"
+"% if object.origin:\n"
+"&nbsp;&nbsp;Číslo objednávky: ${object.origin}<br />\n"
+"% endif\n"
+"% if object.user_id:\n"
+"&nbsp;&nbsp;Váš kontakt: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
+"% endif\n"
+"</p>\n"
+"\n"
+"% if object.paypal_url:\n"
+"<br/>\n"
+"<p>Je také možné zaplatit přímo službou PayPal:</p>\n"
+"<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"<img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"</a>\n"
+"% endif\n"
+"\n"
+"<br/>\n"
+"<p>Pokud máte jakékoli otázky, neváhejte nás kontaktovat.</p>\n"
+"<p>Děkujeme že jste si vybrali ${object.company_id.name or 'nás'}!</p>\n"
+"<br/>\n"
+"<br/>\n"
+"<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"<strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"</div>\n"
+"<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"% if object.company_id.street:\n"
+"${object.company_id.street}<br/>\n"
+"% endif\n"
+"% if object.company_id.street2:\n"
+"${object.company_id.street2}<br/>\n"
+"% endif\n"
+"% if object.company_id.city or object.company_id.zip:\n"
+"${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"% endif\n"
+"% if object.company_id.country_id:\n"
+"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+"or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"% endif\n"
+"</span>\n"
+"% if object.company_id.phone:\n"
+"<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-"
+"left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; "
+"padding-left: 0px; \">\n"
+"Phone:&nbsp; ${object.company_id.phone}\n"
+"</div>\n"
+"% endif\n"
+"% if object.company_id.website:\n"
+"<div>\n"
+"Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"</div>\n"
+"%endif\n"
+"<p></p>\n"
+"</div>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -115,17 +194,24 @@ msgid ""
 "related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Stav \"Koncept\" se používá při vytváření nové, nepotrvzené faktury.\n"
+"* Stav \"Proforma\" se používá u Proforma fatkur, jež nemají číslo faktury.\n"
+"* Stav \"Otevřená\" se používá jakmule uživatel vytvoří fakturu a je jí "
+"přiděleno číslo faktury. Tento stav zůstává do doby uhrazení.\n"
+"* Stav \"Zaplacená\" se nastavuje automaticky jakmile je faktura uhrazená. "
+"Spojené zápisy v deníku mohou, nebo nemusí být zlikvidovány.\n"
+"* Stav \"Zrušená\" se používá pokud uživatel fakturu zruší."
 
 #. module: account
 #: code:addons/account/account.py:1455
 #, python-format
 msgid " Centralisation"
-msgstr ""
+msgstr " Centralizace"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
 msgid "# Entries"
-msgstr ""
+msgstr "Počet záznamů"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -137,12 +223,12 @@ msgstr "# cifer"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Entries"
-msgstr ""
+msgstr "Počet záznamů"
 
 #. module: account
 #: field:account.invoice.report,nbr:0
 msgid "# of Invoices"
-msgstr ""
+msgstr "Počet faktur"
 
 #. module: account
 #: field:account.entries.report,nbr:0
@@ -152,7 +238,7 @@ msgstr "# z položek"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Products Qty"
-msgstr ""
+msgstr "Počet produktů"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -164,12 +250,13 @@ msgstr "# z transakcí"
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
 msgstr ""
+"${object.company_id.name|safe} Faktura (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1848
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (Kopie)"
 
 #. module: account
 #: code:addons/account/account.py:635
@@ -190,6 +277,7 @@ msgid ""
 "(If you do not select a specific fiscal year, all open fiscal years will be "
 "selected.)"
 msgstr ""
+"(Pokud nezvolíte fiskální rok, budou vybrány všechny otevřené fiskální roky.)"
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
@@ -211,19 +299,19 @@ msgstr "(Nechejte prázdné pro otevření aktuální situace)"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "(change)"
-msgstr ""
+msgstr "(změnit)"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "(update)"
-msgstr ""
+msgstr "(aktualizovat)"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "+ Transactions"
-msgstr ""
+msgstr "+ transakce"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -258,7 +346,7 @@ msgstr ""
 #. module: account
 #: view:website:account.report_generalledger
 msgid ": General ledger"
-msgstr ""
+msgstr ": Hlavní kniha"
 
 #. module: account
 #: view:website:account.report_trialbalance

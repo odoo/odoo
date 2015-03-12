@@ -4,7 +4,7 @@
          so users can freely customize/delete them -->
     <data noupdate="1">
         <!--Mail template level 0-->
-        <record id="email_template_account_followup_level0" model="email.template">
+        <record id="email_template_account_followup_level0" model="mail.template">
             <field name="name">First polite payment follow-up reminder email</field>
             <field name="email_from">${(user.email or '')|safe}</field>
             <field name="subject">${user.company_id.name} Payment Reminder</field>
@@ -43,7 +43,7 @@ ${object.get_followup_table_html() | safe}
         </record>
 
         <!--Mail template level 1 -->
-        <record id="email_template_account_followup_level1" model="email.template">
+        <record id="email_template_account_followup_level1" model="mail.template">
             <field name="name">A bit urging second payment follow-up reminder email</field>
             <field name="email_from">${(user.email or '')|safe}</field>
             <field name="subject">${user.company_id.name} Payment Reminder</field>
@@ -83,7 +83,7 @@ ${object.get_followup_table_html() | safe}
         </record>
 
         <!--Mail template level 2 -->
-        <record id="email_template_account_followup_level2" model="email.template">
+        <record id="email_template_account_followup_level2" model="mail.template">
             <field name="name">Urging payment follow-up reminder email</field>
             <field name="email_from">${(user.email or '')|safe}</field>
             <field name="subject">${user.company_id.name} Payment Reminder</field>
@@ -120,7 +120,7 @@ ${object.get_followup_table_html() | safe}
         </record>
         
         <!-- Default follow up message -->
-        <record id="email_template_account_followup_default" model="email.template">
+        <record id="email_template_account_followup_default" model="mail.template">
             <field name="name">Default payment follow-up reminder e-mail</field>
             <field name="email_from">${(user.email or '')|safe}</field>
             <field name="subject">${user.company_id.name} Payment Reminder</field>

@@ -41,12 +41,7 @@
 - 
     !python {model: procurement.group}: |
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
-        assert self.browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0].product_qty == 200 
--
-  I run scheduler.
--
-  !python {model: procurement.order}: |
-    self.run_scheduler(cr, uid)
+        assert self.browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0].product_qty == 200
 - 
     Check a quotation was created to a certain supplier and confirm so it becomes a confirmed purchase order
 -
@@ -77,7 +72,7 @@
   Check one quant was created in Customers location with 200 pieces and one move in the history_ids
 - 
     !python {model: stock.quant}: |
-        quant_ids = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('qty', '=', 200), ('product_id', '=', ref("drop_shop_product"))])
+        quant_ids = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')), ('product_id', '=', ref("drop_shop_product"))])
         assert quant_ids, 'No Quant found'
-        assert len(quant_ids) == 1
-        assert len(self.browse(cr, uid, quant_ids)[0].history_ids) == 1
+        assert len(quant_ids) == 1, 'There should be exactly one quant'
+        assert len(self.browse(cr, uid, quant_ids)[0].history_ids) == 1, 'The quant should have exactly 1 move in its history'

@@ -104,4 +104,9 @@ class Users(models.Model):
                 excluded_categories.append('forum')
         else:
             excluded_categories = ['forum']
-        return super(Users, self).get_serialised_gamification_summary()
+        return super(Users, self).get_serialised_gamification_summary(excluded_categories=excluded_categories)
+
+    # Wrapper for call_kw with inherits
+    @api.multi
+    def open_website_url(self):
+        return self.mapped('partner_id').open_website_url()

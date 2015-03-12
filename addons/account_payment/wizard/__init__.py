@@ -22,5 +22,3 @@
 import account_payment_order
 import account_payment_populate_statement
 import account_payment_pay
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

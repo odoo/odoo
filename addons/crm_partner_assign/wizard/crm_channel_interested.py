@@ -23,6 +23,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
+from openerp.exceptions import UserError
 
 
 class crm_lead_forward_to_partner(osv.TransientModel):
@@ -41,7 +42,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
     def action_confirm(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
         if wizard.interested and not wizard.contacted:
-            raise osv.except_osv(_('Error!'), _("You must contact the lead before saying that you are interested"))
+            raise UserError(_("You must contact the lead before saying that you are interested"))
         lead_obj = self.pool.get('crm.lead')
         lead_obj.check_access_rights(cr, uid, 'write')
         if wizard.interested:
