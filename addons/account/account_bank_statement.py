@@ -199,11 +199,16 @@ class AccountBankStatement(models.Model):
                 }
             }]
 
+        lines = []
+        for el in statements:
+            lines.extend(el.line_ids.ids)
+        lines = list(set(lines))
+
         return {
             'st_lines_ids': st_lines_left.ids,
             'notifications': notifications,
             'statement_name': len(statements) == 1 and statements[0].name or False,
-            'num_already_reconciled_lines': statements and bsl_obj.search_count([('journal_entry_ids', '!=', False), ('id', 'in', statements.line_ids.ids)]) or 0,
+            'num_already_reconciled_lines': statements and bsl_obj.search_count([('journal_entry_ids', '!=', False), ('id', 'in', lines)]) or 0,
         }
 
     @api.multi

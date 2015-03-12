@@ -504,7 +504,7 @@
             <field name="arch" type="xml">
             <form string="Statement Line" create="false">
                 <group col="4">
-                    <field name="statement_id" readonly="1"/>
+                    <field name="statement_id"/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="ref"/>
@@ -521,9 +521,9 @@
             <field name="model">account.bank.statement.line</field>
             <field name="priority">8</field>
             <field name="arch" type="xml">
-                <tree string="Statement lines">
+                <tree string="Statement lines" editable="top">
                     <field name="sequence" readonly="1" invisible="1"/>
-                    <field name="statement_id" readonly="1" />
+                    <field name="statement_id" />
                     <field name="date"/>
                     <field name="name"/>
                     <field name="ref"/>
@@ -531,6 +531,24 @@
                     <field name="amount"/>
                     <field name="note"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="action_bank_statement_line" model="ir.actions.act_window">
+            <field name="name">Bank Statements Line</field>
+            <field name="res_model">account.bank.statement.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p>
+                A bank statement line is a financial transaction
+                on a bank account.
+              </p><p>
+                Odoo allows you to reconcile a statement line directly with
+                the related sale or puchase invoices.
+              </p>
             </field>
         </record>
 
@@ -1850,14 +1868,14 @@
                         <page string="Cash Control">
                             <group col="2" expand="1">
                                 <group string="Cash Control">
-                                    <field name="details_ids" colspan="2" nolabel="1" attrs="{'readonly': [('state', '=', 'open')]}" >
+                                    <field name="details_ids" colspan="2" nolabel="1">
                                         <tree string="Cashbox Lines" editable="bottom">
+                                            <field name="state" invisible="1"/>
                                             <field name="coin_value" widget="monetary"/>
-                                            <field name="number_opening" attrs="{'readonly': [('parent_state', '!=', 'draft')]}"/>
-                                            <field name="subtotal_opening" string="Opening Subtotal" sum="Total" attrs="{'readonly': [('parent_state', '!=', 'draft')]}"/>
-                                            <field name="number_closing" attrs="{'readonly': [('parent_state', '!=', 'open')]}"/>
-                                            <field name="subtotal_closing" string="Opening Subtotal" sum="Total" attrs="{'readonly': [('parent_state', '!=', 'open')]}"/>
-                                            <field name="parent_state" invisible="1"/>
+                                            <field name="number_opening"/>
+                                            <field name="subtotal_opening" sum="Total"/>
+                                            <field name="number_closing"/>
+                                            <field name="subtotal_closing" sum="Total"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -1915,6 +1933,7 @@
                 </graph>
             </field>
          </record>
+
         <record id="action_view_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Cash Registers</field>
             <field name="type">ir.actions.act_window</field>
