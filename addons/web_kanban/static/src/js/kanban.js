@@ -944,7 +944,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     bind_events: function() {
         var self = this;
         this.setup_color_picker();
-        this.$el.find('[title]').each(function(){
+        this.$el.find('[tooltip]').each(function(){
             $(this).tooltip({
                 delay: { show: 500, hide: 0},
                 title: function() {
