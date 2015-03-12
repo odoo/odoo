@@ -19,8 +19,10 @@ openerp.google_spreadsheet = function(instance) {
     instance.web.search.FavoriteMenu.include({
         prepare_dropdown_menu: function (filters) {
             this._super(filters);
-            this.$('.favorites-menu').append(QWeb.render('SearchView.addtogooglespreadsheet'));
-            this.$('.add-to-spreadsheet').click(this.add_to_spreadsheet.bind(this));
+            if (this.searchview.getParent() instanceof instance.web.ViewManager) {
+                this.$('.favorites-menu').append(QWeb.render('SearchView.addtogooglespreadsheet'));
+                this.$('.add-to-spreadsheet').click(this.add_to_spreadsheet.bind(this));
+            }
         },
         add_to_spreadsheet: function () {
             var data = this.searchview.build_search_data(),
