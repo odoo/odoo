@@ -733,7 +733,6 @@ class mail_message(osv.Model):
                 else :
                     parent_tree[parent_id].append(exp)
 
-
         # create final ordered parent_list based on parent_tree
         parent_list = parent_tree.items()
         parent_list = sorted(parent_list, key=lambda item: max([msg.get('date') for msg in item[1]]), reverse=True)
