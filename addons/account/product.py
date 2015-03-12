@@ -62,19 +62,3 @@ class product_template(osv.osv):
             string="Expense Account",
             help="This account will be used for invoices instead of the default one to value expenses for the current product."),
     }
-
-    def write(self, cr, uid, ids, vals, context=None):
-        check = ids and 'uom_po_id' in vals
-        if check:
-            cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(ids)])
-            uoms = dict(cr.fetchall())
-
-        result = super(product_template, self).write(cr, uid, ids, vals, context=context)
-
-        if check:
-            cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(ids)])
-            if dict(cr.fetchall()) != uoms:
-                product_ids = self.pool['product.product'].search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
-                if self.pool['account.move.line'].search_count(cr, uid, [('product_id', 'in', product_ids)], context=context):
-                    raise UserError(_("You can not change the unit of measure of a product that has been already used in an account journal item. If you need to change the unit of measure, you may deactivate this product."))
-        return result

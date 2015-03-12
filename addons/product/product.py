@@ -779,14 +779,6 @@ class product_template(osv.osv):
                 return False
         return True
 
-    def _check_uos(self, cursor, user, ids, context=None):
-        for product in self.browse(cursor, user, ids, context=context):
-            if product.uos_id \
-                    and product.uos_id.category_id.id \
-                    == product.uom_id.category_id.id:
-                return False
-        return True
-
     _constraints = [
         (_check_uom, 'Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category.', ['uom_id', 'uom_po_id']),
     ]

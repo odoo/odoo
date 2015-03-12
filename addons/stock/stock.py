@@ -1750,7 +1750,7 @@ class stock_move(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
         'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, type='float', digits=0, store={
                 'stock.move': (lambda self, cr, uid, ids, ctx: ids, ['product_id', 'product_uom_qty', 'product_uom'], 20),
-                'product.product': (_get_moves_from_prod, ['uom_id'], 20),
+                'product.product': (_get_moves_from_prod, ['uom_id'], 20), #Needed to allow to change UoM on the product when no done moves
             }, string='Quantity',
             help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
