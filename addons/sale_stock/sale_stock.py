@@ -92,7 +92,7 @@ class sale_order(osv.osv):
     def _get_delivery_count(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
-            res[order.id] = len(picking for picking in order.picking_ids if picking.picking_type_id.code == 'outgoing')
+            res[order.id] = len([picking for picking in order.picking_ids if picking.picking_type_id.code == 'outgoing'])
         return res
 
     _columns = {
