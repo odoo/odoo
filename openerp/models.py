@@ -1606,6 +1606,7 @@ class BaseModel(object):
             'views': [(view_id, 'form')],
             'target': 'current',
             'res_id': id,
+            'context': context,
         }
 
     def get_access_action(self, cr, uid, id, context=None):
