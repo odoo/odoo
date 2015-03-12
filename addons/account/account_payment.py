@@ -192,10 +192,11 @@ class account_payment(models.Model):
         res = super(account_payment, self).default_get(fields)
         if self._context.get('invoice_id'):
             res.update({'invoice_id': self._context['invoice_id']})
-            # Avoid a weird bug with onchange and default values by doing what _onchange_invoice would do
-            invoice = self.env['account.invoice'].browse(self._context['invoice_id'])
-            res.update({'payment_type': invoice.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'})
-            res.update({'partner_type': invoice.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier'})
+            # payment_type and partner_type will be set by _onchange_invoice. Otherwise, _onchange_invoice()
+            # might be called after _onchange_partner_type() or _onchange_payment_type(), which set
+            # self.invoice_id = False resulting in a buggy behaviour.
+            res.pop('payment_type', None)
+            res.pop('partner_type', None)
         return res
 
     def _get_move_vals(self, journal=None):
