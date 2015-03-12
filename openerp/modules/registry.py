@@ -305,8 +305,9 @@ class RegistryManager(object):
                     # cannot specify the memory limit soft on windows...
                     size = 42
                 else:
-                    # On average, a clean registry take 25MB of memory + cache
-                    avgsz = 30 * 1024 * 1024
+                    # A registry takes 10MB of memory on average, so we reserve
+                    # 10Mb (registry) + 5Mb (working memory) per registry
+                    avgsz = 15 * 1024 * 1024
                     size = int(config['limit_memory_soft'] / avgsz)
 
             cls._registries = LRU(size)
@@ -319,8 +320,8 @@ class RegistryManager(object):
         """
         with cls.lock():
             if cls._cache is None:
-                # we allocate one cache entry per 32KB of memory
-                size = max(8192, int(config['limit_memory_soft'] / 32768))
+                # we allocate 8192 cache entries per registry
+                size = 8192 * cls.registries.count
                 cls._cache = LRU(size)
             return cls._cache
 

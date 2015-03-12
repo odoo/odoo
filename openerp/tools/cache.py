@@ -27,7 +27,7 @@ from inspect import getargspec
 import lru
 import logging
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 class ormcache(object):
@@ -47,9 +47,9 @@ class ormcache(object):
         return lookup
 
     def stat(self):
-        return "lookup-stats hit=%s miss=%s err=%s ratio=%.1f" % \
+        return "lookup-stats %6d hit %6d miss %6d err %4.1f ratio" % \
             (self.stat_hit, self.stat_miss, self.stat_err,
-                (100*float(self.stat_hit))/(self.stat_miss+self.stat_hit))
+                (100*float(self.stat_hit))/(self.stat_miss+self.stat_hit or 1))
 
     def lru(self, model):
         return model.pool.cache, (model.pool.db_name, model._name, self.method)
@@ -73,9 +73,9 @@ class ormcache(object):
         """ Remove *args entry from the cache or all keys if *args is undefined """
         d, key0 = self.lru(model)
         if args:
-            logger.warn("ormcache.clear arguments are deprecated and ignored "
-                        "(while clearing caches on (%s).%s)",
-                        model._name, self.method.__name__)
+            _logger.warn("ormcache.clear arguments are deprecated and ignored "
+                         "(while clearing caches on (%s).%s)",
+                         model._name, self.method.__name__)
         d.clear_prefix(key0)
         model.pool._any_cache_cleared = True
 
@@ -166,6 +166,25 @@ class dummy_cache(object):
 
     def clear(self, *l, **kw):
         pass
+
+
+def log_ormcache_stats(sig=None, frame=None):
+    """ Log statistics of ormcache usage by database, model, and method. """
+    from openerp.modules.registry import RegistryManager
+    from collections import defaultdict
+    import threading
+
+    me = threading.currentThread()
+    entries = defaultdict(int)
+    for key in RegistryManager.cache.iterkeys():
+        entries[key[:3]] += 1
+    for (dbname, model_name, method), count in sorted(entries.items()):
+        me.dbname = dbname
+        model = RegistryManager.get(dbname)[model_name]
+        func = getattr(model, method.__name__).im_func
+        ormcache = func.clear_cache.im_self
+        _logger.info("%6d entries, %s, for %s.%s",
+            count, ormcache.stat(), model_name, method.__name__)
 
 
 # For backward compatibility
