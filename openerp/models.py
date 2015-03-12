@@ -3011,7 +3011,8 @@ class BaseModel(object):
                 model = self.env[model_name]
                 for field_name in field_names:
                     field = model._fields[field_name]
-                    map(field.add_trigger, triggers)
+                    for trigger in triggers:
+                        field.add_trigger(trigger)
 
         # determine old-api structures about inherited fields
         cls._inherits_reload()
