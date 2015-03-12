@@ -1,27 +1,5 @@
-<<<<<<< HEAD
 odoo.define('website_forum.website_forum', function (require) {
 'use strict';
-=======
-    openerp.website.if_dom_contains('.website_forum', function () {
-        $("[data-toggle='popover']").popover();
-
-
-
-        $('.karma_required').on('click', function (ev) {
-            var karma = $(ev.currentTarget).data('karma');
-            if (karma) {
-                ev.preventDefault();
-                var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="karma_alert">'+
-                    '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                    karma + ' karma is required to perform this action. You can earn karma by having '+
-                            'your answers upvoted by the community.</div>');
-                var vote_alert = $(ev.currentTarget).parent().find("#vote_alert");
-                if (vote_alert.length == 0) {
-                    $(ev.currentTarget).parent().append($warning);
-                }
-            }
-        });
->>>>>>> [IMP] website_forum: extended user biography now available
 
 var ajax = require('web.ajax');
 var core = require('web.core');
@@ -47,16 +25,17 @@ website.if_dom_contains('.website_forum', function () {
         }
     });
 
+    // Extended user biography toogle
     $('.o_forum_user_info').hover(
         function () {
-           $(this).parent().find('.o_forum_bio_expand').delay(500).toggle('fast');
+           $(this).parent().find('.o_forum_user_bio_expand').delay(500).toggle('fast');
         },
         function () {
-            $(this).parent().find('.o_forum_bio_expand').clearQueue();
+            $(this).parent().find('.o_forum_user_bio_expand').clearQueue();
         }
     );
 
-    $('.o_forum_bio_expand').hover(
+    $('.o_forum_user_bio_expand').hover(
         function () {},
         function () {
             $(this).fadeOut('fast');

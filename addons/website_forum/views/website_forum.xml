@@ -810,11 +810,12 @@
         </div>
         <div class="question-block">
             <div class="pull-right author-box">
-                <div class="o_forum_bio_expand" t-if=" answer.create_uid.karma >= answer.forum_id.karma_user_bio">
+                <div class="o_forum_user_bio_expand" t-if="tooltip_data and tooltip_data[answer.id]['is_established_user']">
+                    <t t-set="tooltip" t-value="tooltip_data[answer.id]"/>
                     <t t-call="website_forum.forum_user_tooltip"/>
                 </div>
                 <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }" class="o_forum_user_info">
-                    <img class="pull-left img img-rounded img-avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
+                    <img class="pull-left img img-rounded o_forum_avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
                 </a>
                 <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
                     t-field="answer.create_uid"
@@ -892,7 +893,7 @@
 <template id="forum_user_tooltip">
     <div class="o_forum_user_bio text-left panel panel-body">
         <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }">
-            <img class="pull-left img img-rounded img-avatar-big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
+            <img class="pull-left img img-rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
         </a>
         <div class="o_forum_tooltip_header">
             <h4 class="o_forum_tooltip_heading"><a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
@@ -900,18 +901,17 @@
                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                 style="display: inline-block;"/>
             </h4>
-            <span t-field="answer.create_uid.company_id.name" class="o_forum_tooltip_line"/><br/>
-            <a t-att-href="answer.create_uid.company_id.website" t-if="answer.create_uid.company_id.website">
-                <span t-field="answer.create_uid.company_id.website" class="o_forum_tooltip_line"/>
+            <span t-esc="tooltip['company']" class="o_forum_tooltip_line"/><br/>
+            <a t-att-href="tooltip['company_website']" t-if="tooltip['company_website']">
+                <span t-esc="tooltip['company_website']" class="o_forum_tooltip_line"/>
             </a>
             <div t-field="answer.create_uid" t-field-options='{"widget": "contact", "badges": true, "fields": ["karma"]}'/>
-            <t t-set="answer_uid" t-value="answer.create_uid.sudo()" />
-            <div class="o_forum_tooltip_line" t-if="answer_uid.partner_id.country_id or answer_uid.partner_id.city">
-                <span t-field="answer_uid.partner_id.city"/><span t-if="answer_uid.partner_id.city and answer_uid.partner_id.country_id">, </span><span t-field="answer_uid.partner_id.country_id"/>
+            <div class="o_forum_tooltip_line" t-if="tooltip['country'] or tooltip['city']">
+                <span t-esc="tooltip['city']"/><span t-if="tooltip['city'] and tooltip['country']">, </span><span t-esc="tooltip['country']"/>
             </div>
         </div>
-        <t t-if="answer_uid.partner_id.website_description">
-            <span t-field="answer_uid.partner_id.website_description"/>
+        <t t-if="tooltip['website_description']">
+            <span t-esc="tooltip['website_description']"/>
         </t>
     </div>
 </template>
@@ -1044,7 +1044,7 @@
         </h4>
         <div class="row">
             <div class="col-sm-3 mt16" t-foreach="users" t-as="user">
-                <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
+                <img class="pull-left img img-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                 </div>
@@ -1057,7 +1057,7 @@
     <t t-call="website_forum.header">
         <div t-foreach="users" t-as="row_users" class="row mt16">
             <div t-foreach="row_users" t-as="user" class="col-sm-4">
-                <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
+                <img class="pull-left img img-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                     <t t-if="user.country_id">
