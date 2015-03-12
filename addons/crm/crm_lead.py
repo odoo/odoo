@@ -33,39 +33,6 @@ from openerp.tools import email_re, email_split
 from openerp.exceptions import UserError, AccessError
 
 
-CRM_LEAD_FIELDS_TO_MERGE = ['name',
-    'partner_id',
-    'campaign_id',
-    'company_id',
-    'country_id',
-    'team_id',
-    'state_id',
-    'stage_id',
-    'medium_id',
-    'source_id',
-    'user_id',
-    'title',
-    'city',
-    'contact_name',
-    'description',
-    'email',
-    'fax',
-    'mobile',
-    'partner_name',
-    'phone',
-    'probability',
-    'planned_revenue',
-    'street',
-    'street2',
-    'zip',
-    'create_date',
-    'date_action_last',
-    'date_action_next',
-    'email_from',
-    'email_cc',
-    'partner_name']
-
-
 class crm_lead(format_address, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
@@ -73,6 +40,38 @@ class crm_lead(format_address, osv.osv):
     _order = "priority desc,date_action,id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
     _mail_mass_mailing = _('Leads / Opportunities')
+    CRM_LEAD_FIELDS_TO_MERGE = [
+        'name',
+        'partner_id',
+        'campaign_id',
+        'company_id',
+        'country_id',
+        'team_id',
+        'state_id',
+        'stage_id',
+        'medium_id',
+        'source_id',
+        'user_id',
+        'title',
+        'city',
+        'contact_name',
+        'description',
+        'email',
+        'fax',
+        'mobile',
+        'partner_name',
+        'phone',
+        'probability',
+        'planned_revenue',
+        'street',
+        'street2',
+        'zip',
+        'create_date',
+        'date_action_last',
+        'date_action_next',
+        'email_from',
+        'email_cc',
+        'partner_name']
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         context = dict(context or {})
@@ -545,7 +544,7 @@ class crm_lead(format_address, osv.osv):
         for opportunity in opportunities:
             subject.append(opportunity.name)
             title = "%s : %s" % (opportunity.type == 'opportunity' and _('Merged opportunity') or _('Merged lead'), opportunity.name)
-            fields = list(CRM_LEAD_FIELDS_TO_MERGE)
+            fields = list(self.CRM_LEAD_FIELDS_TO_MERGE)
             details.append(self._mail_body(cr, uid, opportunity, fields, title=title, context=context))
 
         # Chatter message's subject
@@ -659,7 +658,7 @@ class crm_lead(format_address, osv.osv):
 
         tail_opportunities = opportunities_rest
 
-        fields = list(CRM_LEAD_FIELDS_TO_MERGE)
+        fields = list(self.CRM_LEAD_FIELDS_TO_MERGE)
         merged_data = self._merge_data(cr, uid, ids, highest, fields, context=context)
 
         if user_id:
