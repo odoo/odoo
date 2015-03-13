@@ -37,7 +37,7 @@ class product_template(osv.osv):
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
                                         , required=True, copy=True),
         'cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
-            help="""Standard Price: The cost price is manually updated at the end of a specific period (usually every year).
+            help="""Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).
                     Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
                     Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""",
             string="Costing Method", required=True, copy=True),
