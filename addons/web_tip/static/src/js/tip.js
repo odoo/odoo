@@ -1,5 +1,4 @@
 (function() {
-
     var instance = openerp;
 
     instance.web.Tip = instance.web.Class.extend({
@@ -7,6 +6,7 @@
             var self = this;
             self.tips = [];
             self.tip_mutex = new $.Mutex();
+            self.action_id = null;
             self.$overlay = null;
             self.$element = null;
 
@@ -15,12 +15,7 @@
                 'highlight_selector', 'end_selector', 'end_event', 'placement', 'is_consumed'])
                 .all().then(function(tips) {
                     self.tips = tips;
-                })
-            ;
-
-            instance.web.bus.on('action', this, function(action) {
-                self.on_action(action);
-            });
+                });
 
             instance.web.bus.on('view_shown', this, function(view) {
                 if (_.keys(view.fields_view).length === 0) {
@@ -30,38 +25,20 @@
                 } else {
                     self.on_view(view);
                 }
-
-                view.on('switch_mode', this, function() {
-                });
             });
 
-            instance.web.bus.on('view_switch_mode', this, function(viewManager, mode) {
-                self.on_switch(viewManager, mode);
-            });
-
-            instance.web.bus.on('form_view_shown', this, function(formView) {
+            instance.web.bus.on('form_view_shown form_view_saved', this, function(formView) {
                 self.on_form_view(formView);
             });
-
-            instance.web.bus.on('form_view_saved', this, function(formView) {
-                self.on_form_view(formView);
-            });
-        },
-
-        // stub
-        on_action: function(action) {
-            var self = this;
-            var action_id = action.id;
-            var model = action.res_model;
         },
 
         on_view: function(view) {
             var self = this;
             var fields_view = view.fields_view;
-            var action_id = view.ViewManager.action ? view.ViewManager.action.id : null;
+            if(view.ViewManager.action)
+                self.action_id = view.ViewManager.action.id;
             var model = fields_view.model;
 
-            // kanban
             if(fields_view.type === 'kanban') {
                 var dataset_def = $.Deferred();
                 var groups_def = $.Deferred();
@@ -73,16 +50,18 @@
                     groups_def.resolve();
                 });
                 dataset_def.done(function(length) {
-                    self.eval_tip(action_id, model, fields_view.type);
+                    self.eval_tip(model, fields_view.type);
                 });
                 groups_def.done(function() {
-                    self.eval_tip(action_id, model, fields_view.type);
+                    self.eval_tip(model, fields_view.type);
                 });
-            } else if (fields_view.type === 'tree') {
+            }
+            else if (fields_view.type === 'tree') {
                 view.on('view_list_rendered', self, function() {
-                    self.eval_tip(action_id, model, fields_view.type);
+                    self.eval_tip(model, fields_view.type);
                 });
-            } else if (view.hasOwnProperty('editor')) {
+            }
+            else if (view.hasOwnProperty('editor')) {
                 view.on('view_list_rendered', self, function() {
                     self.reposition();
                 });
@@ -94,62 +73,47 @@
             var model = formView.model;
             var type = formView.datarecord.type ? formView.datarecord.type : null;
             var mode = 'form';
-            formView.on('view_content_has_changed', self, _.once(function() {
-                self.eval_tip(null, model, mode, type);
-            }));
+            formView.on('view_content_has_changed', self, function() {
+                self.eval_tip(model, mode, type);
+            });
+
             if ($('.oe_chatter').length > 0) {
                 instance.web.bus.on('chatter_messages_fetched', this, _.once(function () {
-                    self.eval_tip(null, model, mode, type);
+                    self.eval_tip(model, mode, type);
                 }));
-            } else {
-                self.eval_tip(null, model, mode, type);
+            }
+            else {
+                self.eval_tip(model, mode, type);
             }
         },
 
-        // stub
-        on_switch: function (viewManager, mode) {
+        eval_tip: function(model, mode, type) {
             var self = this;
-            var action = viewManager.action;
-            var action_id = action.id;
-            var model = action.res_model;
-        },
 
-        eval_tip: function(action_id, model, mode, type) {
-            var self = this;
-            var filter = {};
-            var valid_tips = [];
-            var tips = [];
-            if (action_id) {
-                valid_tips = _.filter(self.tips, function (tip) {
-                    return tip.action_id[0] === action_id;
-                });
-            }
+            mode = (mode === "list")? "tree" : mode;
 
-            filter.model = model;
-            filter.mode = mode;
-            tips = _.where(self.tips, filter);
-            if (type) {
-                tips = _.filter(tips, function(tip) {
-                    if (!tip.type) {
-                        return true;
-                    }
-                    return tip.type === type;
-                });
-            }
+            $(self.tips).each(function(i, tip) {
+                if(tip.is_consumed)
+                    return;
 
-            valid_tips = _.uniq(valid_tips.concat(tips));
-            _.each(valid_tips, function(tip) {
-                if (!tip.is_consumed) {
-                    self.add_tip(tip);
-                }
+                if(tip.action_id[0] && tip.action_id[0] !== self.action_id)
+                    return;
+
+                var tipMode = (tip.mode === "list")? "tree" : tip.mode;
+                if(tip.model != model || tipMode != mode)
+                    return;
+
+                if(tip.type && tip.type !== type)
+                    return;
+
+                self.add_tip(tip);
             });
         },
-
 
         add_tip: function(tip) {
             var self = this;
             self.tip_mutex.exec(function() {
-                if (!tip.is_consumed) {
+                if(!tip.is_consumed) {
                     return $.when(self.do_tip(tip));
                 }
             });
@@ -158,98 +122,99 @@
         do_tip: function (tip) {
             var self = this;
             var def = $.Deferred();
-            var Tips = new instance.web.Model('web.tip');
-            var highlight_selector = tip.highlight_selector;
-            var triggers = tip.trigger_selector ? tip.trigger_selector.split(',') : [];
-            var trigger_tip = true;
 
-            if(!$(highlight_selector).length > 0 || !$(highlight_selector).is(":visible")) {
+            // Check if tip must be triggered
+            var triggers = (tip.trigger_selector)? tip.trigger_selector.split(',') : [];
+            if($(tip.highlight_selector).length <= 0 || !$(tip.highlight_selector).is(":visible"))
+                return def.reject();
+            for(var i = 0 ; i < triggers.length ; i++) {
+                if($(triggers[i]).length <= 0 || !$(triggers[i]).is(":visible"))
+                    return def.reject();
+            }
+
+            // Tip to trigger !
+            self.$element = $(tip.highlight_selector).filter(':visible').first();
+
+            // Check if visible element to highlight or images in loading
+            if(self.$element.height() === 0 || self.$element.width() === 0) {
+                var $images = self.$element.find('img');
+                if ($images.length > 0) {
+                    $images.first().on('load', function(e) {
+                        self.add_tip(tip);
+                    });
+                }
                 return def.reject();
             }
-            for (var i = 0; i < triggers.length; i++) {
-                if(!$(triggers[i]).length > 0) {
-                    trigger_tip = false;
+
+            // If needed, scroll prior to displaying the tip (TODO?)
+            var scroll = _.find(self.$element.parentsUntil('body'), function(el) {
+                var overflow = $(el).css('overflow-y');
+                return (overflow === 'auto' || overflow === 'scroll');
+            });
+            if(scroll)
+                $(scroll).scrollTo(self.$element);
+
+            self.$helper = $("<div>", { class: 'oe_tip_helper' });
+            self.$element.after(self.$helper);
+            self._set_helper_position();
+
+            self.$overlay = $("<div>", { class: 'oe_tip_overlay' });
+            $('body').append(self.$overlay);
+            self.$element.addClass('oe_tip_show_element');
+
+            // Fix the stacking context problem
+            _.each(self.$element.parentsUntil('body'), function(el) {
+                var zIndex = $(el).css('z-index');
+                var opacity = parseFloat($(el).css('opacity'));
+
+                if (/[0-9]+/.test(zIndex) || opacity < 1) {
+                    $(el).addClass('oe_tip_fix_parent');
                 }
-            }
+            });
 
-            if (trigger_tip) {
-                self.$element = $(highlight_selector).first();
-                if (self.$element.height() === 0 || self.$element.width() === 0) {
-                    var $images = self.$element.find('img');
-                    if ($images.length > 0) {
-                        $images.first().load(function() {
-                            self.add_tip(tip);
-                        });
-                    }
-                    return def.reject();
-                }
+            self.$element.popover({
+                placement: tip.placement,
+                title: tip.title,
+                content: tip.description,
+                html: true,
+                container: 'body',
+            }).popover("show");
 
-                self.scroll_to_tip();
-                self.$helper = $("<div>", { class: 'oe_tip_helper' });
-                self.$element.after(self.$helper);
-                self._set_helper_position();
+            var $cross = $('<button type="button" class="close">&times;</button>');
+            $cross.addClass('oe_tip_close');
 
-                self.$overlay = $("<div>", { class: 'oe_tip_overlay' });
-                $('body').append(self.$overlay);
-                self.$element.addClass('oe_tip_show_element');
+            if(tip.title)
+                $('.popover-title').prepend($cross);
+            else
+                $('.popover-content').prepend($cross);
 
-                // fix the stacking context problem
-                _.each(self.$element.parentsUntil('body'), function(el) {
-                    var zIndex = $(el).css('z-index');
-                    var opacity = parseFloat($(el).css('opacity'));
+            // Consume tip
+            tip.end_selector = (tip.end_selector)? tip.end_selector : tip.highlight_selector;
+            $(tip.end_selector).one(tip.end_event, function($ev) {
+                self.end_tip(tip);
+                def.resolve();
+            });
 
-                    if (/[0-9]+/.test(zIndex) || opacity < 1) {
-                        $(el).addClass('oe_tip_fix_parent');
-                    }
-                });
-
-                self.$element.popover({
-                    placement: tip.placement,
-                    title: tip.title,
-                    content: tip.description,
-                    html: true,
-                    container: 'body',
-                }).popover("show");
-
-                var $cross = $('<button type="button" class="close">&times;</button>');
-                $cross.addClass('oe_tip_close');
-
-                if (tip.title) {
-                    $('.popover-title').prepend($cross);
-                } else {
-                    $('.popover-content').prepend($cross);
-                }
-
-                // consume tip
-                tip.end_selector = tip.end_selector ? tip.end_selector : tip.highlight_selector;
-                $(tip.end_selector).one(tip.end_event, function($ev) {
+            // Dismiss tip
+            $cross.on('click', function($ev) {
+                self.end_tip(tip);
+                def.resolve();
+            });
+            self.$overlay.on('click', function($ev) {
+                self.end_tip(tip);
+                def.resolve();
+            });
+            $(document).on('keyup.web_tip', function($ev) {
+                if ($ev.which === 27) { // esc
                     self.end_tip(tip);
                     def.resolve();
-                });
-
-                // dismiss tip
-                $cross.on('click', function($ev) {
-                    self.end_tip(tip);
-                    def.resolve();
-                });
-                self.$overlay.on('click', function($ev) {
-                    self.end_tip(tip);
-                    def.resolve();
-                });
-                $(document).on('keyup.web_tip', function($ev) {
-                    if ($ev.which === 27) { // esc
-                        self.end_tip(tip);
-                        def.resolve();
-                    }
-                });
-
-                // resize
-                instance.web.bus.on('resize', this, function() {
-                    self.reposition();
-                });
-            } else {
-               def.reject();
-            }
+                }
+            });
+            // resize
+            instance.web.bus.on('resize', this, function() {
+                self.reposition();
+            });
+            
             return def;
         },
 
@@ -267,14 +232,14 @@
         end_tip: function(tip) {
             var self = this;
             var Tips = new instance.web.Model('web.tip');
+
             self.$element.popover('destroy');
             self.$overlay.remove();
             self.$helper.remove();
             self.$element.removeClass('oe_tip_show_element');
-            _.each($('.oe_tip_fix_parent'), function(el) {
-                $(el).removeClass('oe_tip_fix_parent');
-            });
+            $('.oe_tip_fix_parent').removeClass('oe_tip_fix_parent');
             $(document).off('keyup.web_tip');
+
             Tips.call('consume', [tip.id], {});
             tip.is_consumed = true;
         },
