@@ -181,8 +181,8 @@ class product_product(osv.Model):
 
     # Wrapper for call_kw with inherits
     def open_website_url(self, cr, uid, ids, context=None):
-        template_ids = list(set(self.browse(cr, uid, ids, context=context).product_tmpl_id.id))
-        return self.pool['product.template'].open_website_url(cr, uid, template_ids, context=context)
+        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
+        return self.pool['product.template'].open_website_url(cr, uid, [template_id], context=context)
 
 
 class product_attribute(osv.Model):
