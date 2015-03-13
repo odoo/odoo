@@ -23,6 +23,7 @@
         # 'security/ir.model.access.csv',
         'views/SaleCoupon.xml',
         #'views/templates.xml',
+        'data/data.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
