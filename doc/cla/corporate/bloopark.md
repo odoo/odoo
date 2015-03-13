@@ -12,9 +12,9 @@ Jens Holze  jholze@bloopark.de https://github.com/jholze
 
 List of contributors:
 
-Jens Holze  jholze@bloopark.de https://github.com/jholze
+Jens Holze jholze@bloopark.de https://github.com/jholze
 Christoph Giesel cgiesel@bloopark.de https://github.com/christophlsa
-Benjamin Bachmann bBachmann@bloopark.de https://github.com/Benniphx
+Benjamin Bachmann bBachmann@bloopark.de https://github.com/benniphx
 Robert Rübner rruebner@bloopark.de https://github.com/rruebner
-Florian Fischer ffischer@bloopark.de https://github.com/Fl0rianFischer
-Mercerdez https://github.com/mscenna mscenna@bloopark.de
+Florian Fischer ffischer@bloopark.de https://github.com/florianfischer
+Mercerdes Scenna mscenna@bloopark.de https://github.com/mscenna
