@@ -411,9 +411,10 @@
                 <div class="oe_button_box" >
                     <button class="oe_stat_button"
                         icon="fa-file-o"
-                        name="%(action_hr_job_applications)d"
-                        context="{'default_user_id': user_id}"
-                        type="action">
+                        name="%(action_hr_job_applications)d" 
+                        context="{'default_user_id': user_id}" 
+                        type="action"
+                        tour_id="total_application">
                         <field name="application_count" widget="statinfo" string="Applications"/>
                     </button>
                     <button class="oe_stat_button"

@@ -7,11 +7,11 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header/button[@name='action_button_confirm']" position="before">
-                    <button name="open_quotation" string="Preview Quotation" type="object" class="oe_highlight"
+                    <button name="open_quotation" string="Preview Quotation" type="object"
                         attrs="{'invisible': ['|','&amp;',('template_id','=',False),('state','=','draft'),('quote_viewed','=',True)]}"/>
                 </xpath>
                 <xpath expr="//header/button[@name='action_button_confirm']" position="before">
-                    <button name="open_quotation" string="Preview Quotation" type="object" 
+                    <button name="open_quotation" string="Preview Quotation" type="object" class="oe_highlight" tour_id="preview_quotation"
                         attrs="{'invisible': ['|','&amp;',('template_id','=',False),('state','!=','draft'),('quote_viewed','=',False)]}"/>
                 </xpath>
                 <xpath expr="//header/button[@name='action_quotation_send'][1]" position="replace">

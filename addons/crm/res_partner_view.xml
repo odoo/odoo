@@ -94,7 +94,8 @@
                             attrs="{'invisible': [('customer', '=', False)]}"
                             name="%(crm.crm_lead_opportunities)d"
                             icon="fa-star"
-                            context="{'search_default_partner_id': active_id}">
+                            context="{'search_default_partner_id': active_id}"
+                            tour_id="total_opportunity">
                             <field string="Opportunities" name="opportunity_count" widget="statinfo"/>
                         </button>
                         <button class="oe_inline oe_stat_button" type="object"

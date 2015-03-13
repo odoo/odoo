@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		<record model="web.tip" id="hr_tip_1">
+            <field name="title">Awesome</field>
+            <field name="description">Here is your job position. Click here to track your applications and plan meetings with them. Let the recruitment begin !</field>
+            <field name="model">hr.job</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.oe_form_buttons_view</field>
+            <field name="highlight_selector">div.oe_right > .oe_button_box:visible > #total_application</field>
+            <field name="placement">bottom</field>
+        </record>
+
+        <record model="web.tip" id="hr_tip_2">
+            <field name="title"/>
+            <field name="description">Great, we have an applicant. Click here to come back to where you came from.</field>
+            <field name="model">hr.applicant</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.oe_form_buttons_view</field>
+            <field name="highlight_selector">ol.breadcrumb a:last</field>
+            <field name="placement">bottom</field>
+        </record>
+    </data>
+</openerp>
