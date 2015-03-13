@@ -27,7 +27,7 @@
                         </group>
                         <notebook>
                             <page string="Conditions" name="condition">
-                                <group>
+                                <group style="width: 450px;">
                                     <field name="purchase_type"/>
                                     <label string="Amount" for="minimum_amount" attrs="{'invisible': [('purchase_type', '!=', 'amount')]}" />
                                     <div attrs="{'invisible': [('purchase_type', '!=', 'amount')]}">
@@ -55,7 +55,7 @@
                             </page>
                             <page string="Rewards" name="rewards">
                                 <form>
-                                    <group>
+                                    <group style="width: 450px;">
                                         <field name="reward_type"/>
                                         <field name="reward_product_product_id" attrs="{'invisible': [('reward_type', '!=', 'product')]}" placeholder="Select reward product"/>
                                         <label string="Quantity" for="reward_quantity" attrs="{'invisible': [('reward_type', '!=', 'product')]}"/>
