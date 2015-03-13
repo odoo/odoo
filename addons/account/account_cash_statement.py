@@ -20,12 +20,12 @@ class AccountCashboxLine(models.Model):
         self.subtotal_closing = self.coin_value * self.number_closing
 
     coin_value = fields.Float(string='Unit of Currency', required=True, digits=0)
-    number_opening = fields.Integer(string='Number of Units', help='Opening Unit Numbers', readonly=True, states={'draft': [('readonly', False)]})
-    number_closing = fields.Integer(string='Number of Units', help='Closing Unit Numbers', readonly=True, states={'confirm': [('readonly', False)]})
+    number_opening = fields.Integer(string='Opening Number of Units', help='Opening Unit Numbers')
+    number_closing = fields.Integer(string='Closing Number of Units', help='Closing Unit Numbers')
     subtotal_opening = fields.Float(compute='_sub_total', string='Opening Subtotal', digits=0, readonly=True)
     subtotal_closing = fields.Float(compute='_sub_total', string='Closing Subtotal', digits=0, readonly=True)
     cash_statement_id = fields.Many2one('account.cash.statement', string='Bank Statement', required=True, ondelete='cascade')
-    state = fields.Selection([('draft', 'New'), ('open', 'Open'), ('confirm', 'Closed')], related='cash_statement_id.state', string='Cash Statement Status', store=True)
+    parent_state = fields.Selection([('draft', 'New'), ('open', 'Open'), ('confirm', 'Closed')], related='cash_statement_id.state', string='Cash Statement Status', store=True, default='draft')
 
 
 class AccountCashStatement(models.Model):
@@ -46,6 +46,17 @@ class AccountCashStatement(models.Model):
                     raise UserError(_('Cannot cancel a cash register that already created journal items.'))
         self.state = 'draft'
         self.statement_id.write({'state': 'open'})
+
+    @api.multi
+    def action_open_reconcile(self):
+        #search for bank_statement_ids with journal_id = self.ids
+        bank_stmt = [l.statement_id.id for l in self]
+        return {
+            'name': 'open reconciliation',
+            'type': 'ir.actions.client',
+            'tag': 'bank_statement_reconciliation_view',
+            'context': {'statement_ids': bank_stmt},
+        }
 
     @api.model
     def _get_cash_open_box_lines(self, journal_id):

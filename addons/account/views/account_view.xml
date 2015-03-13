@@ -1817,7 +1817,7 @@
                     <field name="all_lines_reconciled" invisible="1" />
                     <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_highlight"/>
                     <span attrs="{'invisible':['|',('all_lines_reconciled','=',True),('line_ids','=',[])]}">
-                        <button name="%(action_bank_reconcile_bank_statements)d" states="open" string="Reconcile" type="action" class="oe_highlight"/>
+                        <button name="action_open_reconcile" states="open" string="Reconcile" type="object" class="oe_highlight"/>
                     </span>
                     <span attrs="{'invisible':[('all_lines_reconciled','=',False)]}">
                         <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
@@ -1870,11 +1870,11 @@
                                 <group string="Cash Control">
                                     <field name="details_ids" colspan="2" nolabel="1">
                                         <tree string="Cashbox Lines" editable="bottom">
-                                            <field name="state" invisible="1"/>
+                                            <field name="parent_state" invisible="1"/>
                                             <field name="coin_value" widget="monetary"/>
-                                            <field name="number_opening"/>
+                                            <field name="number_opening" attrs="{'readonly': [('parent_state', '!=', 'draft')]}"/>
                                             <field name="subtotal_opening" sum="Total"/>
-                                            <field name="number_closing"/>
+                                            <field name="number_closing" attrs="{'readonly': [('parent_state', '!=', 'confirm')]}"/>
                                             <field name="subtotal_closing" sum="Total"/>
                                         </tree>
                                     </field>
