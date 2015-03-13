@@ -56,17 +56,16 @@
                                 <field name="payment_type" widget="radio" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="partner_type" widget="radio" attrs="{'required': [('payment_type', '!=', 'transfer')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="invoice_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), '&amp;', ('state', '=', 'confirmed'), ('invoice_id', '=', False)], 'readonly': [('state', '=', 'confirmed')]}"/>
-                                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                             </group>
                             <group>
                                 <field name="date" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="partner_id" attrs="{'required': [('payment_type', '!=', 'transfer')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '=', 'confirmed')]}"/>
-                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="currency_id" attrs="{'readonly': [('state', '=', 'confirmed')]}" groups="base.group_multi_currency"/>
                                 <field name="amount" widget="monetary" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="payment_method" widget="radio" attrs="{'invisible': [('journal_id', '=', False)], 'readonly': [('state', '=', 'confirmed')]}"/>
-                                <field name="reference" attrs="{'invisible': [('state', '=', 'confirmed'), ('reference', '=', False)]}"/>
+                                <field name="reference" attrs="{'invisible': [('state', '=', 'confirmed'), ('reference', '=', False)], 'readonly': [('state', '=', 'confirmed')]}"/>
                             </group>
                             <group attrs="{'invisible': ['|', ('invoice_id', '=', False), ('payment_difference', '&lt;=', 0.0)]}">
                                 <field name="payment_difference" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
@@ -89,8 +88,8 @@
                 <p class="oe_view_nocontent_create">
                   Click to register a payment
                 </p><p>
-                  Payments are used to send or collect money using the payments methods provided by installed modules.
-                  Each payment generates a journal entry in the selected bank or cash journal.
+                  Payments are used to register liquidity movements (send, collect or transfer money).
+                  You can then process those payments by your own means or by using installed facilities.
                 </p>
             </field>
         </record>
@@ -108,7 +107,6 @@
                             <field name="invoice_id" invisible="1"/>
                             <field name="partner_id" invisible="1"/>
                             <group>
-                                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                                 <field name="date"/>
                                 <field name="amount" widget="monetary"/>
                                 <field name="currency_id" groups="base.group_multi_currency"/>
@@ -124,7 +122,7 @@
                         </group>
                     </sheet>
                     <footer>
-                        <button string='Register Payment' name="button_create_and_post" type="object" class="oe_highlight"/>
+                        <button string='Register Payment' name="post" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -150,6 +148,7 @@
             <field name="model">account.register.payments</field>
             <field name="arch" type="xml">
                 <form string="Register Payment" version="7">
+                    <field name="payment_type" invisible="1"/>
                     <group>
                         <group>
                             <field name="journal_id" widget="selection"/>
@@ -157,7 +156,6 @@
                         </group>
                         <group>
                             <field name="date"/>
-                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
                     <footer>

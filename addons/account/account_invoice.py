@@ -1059,24 +1059,25 @@ class AccountInvoice(models.Model):
     @api.v8
     def pay_and_reconcile(self, pay_amount, date, pay_journal, writeoff_acc=None):
         assert len(self) == 1, "Can only pay one invoice at a time."
-        ref = self.type in ('in_invoice', 'in_refund') and self.reference or self.number
         payment_type = self.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
-        partner_type = self.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier'
-        partner_id = self.partner_id.id
-        payment_method = 'manual'
-        # Check payment_type is enabled on pay_journal
-        journal_payment_methods = partner_type == 'inbound' and pay_journal.inbound_payment_methods or pay_journal.outbound_payment_methods
+        if payment_type == 'inbound':
+            payment_method = self.env.ref('account.account_payment_method_manual_in')
+            journal_payment_methods = pay_journal.inbound_payment_methods
+        else:
+            payment_method = self.env.ref('account.account_payment_method_manual_out')
+            journal_payment_methods = pay_journal.outbound_payment_methods
         if not payment_method in journal_payment_methods:
             raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
         payment = self.env['account.payment'].create({
             'invoice_id': self.id,
             'amount': pay_amount,
             'date': date,
-            'reference': ref,
-            'partner_id': partner_id,
-            'partner_type': partner_type,
+            'reference': self.type in ('in_invoice', 'in_refund') and self.reference or self.number,
+            'partner_id': self.partner_id.id,
+            'partner_type': self.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier',
             'journal_id': pay_journal.id,
             'payment_type': payment_type,
+            'payment_method': payment_method.id,
             'payment_difference_handling': 'open' if writeoff_acc == None else 'reconcile',
             'writeoff_account': writeoff_acc.id if writeoff_acc else False,
         })

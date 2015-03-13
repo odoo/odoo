@@ -99,7 +99,7 @@ class AccountMoveLine(models.Model):
         if len(counterpart) > 2:
             counterpart = counterpart[0:2] + ["..."]
         self.counterpart = ",".join(counterpart)
-        
+
     name = fields.Char(required=True)
     quantity = fields.Float(digits=(16, 2),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
@@ -849,12 +849,13 @@ class AccountMoveLine(models.Model):
         return result
 
     @api.model
-    def compute_amount_fields(self, amount, src_currency, company_currency):
+    def compute_amount_fields(self, amount, src_currency, company_currency, date=None):
         """ Compute value for fields debit/credit/amount_currency """
         amount_currency = False
         if src_currency and src_currency != company_currency:
+            ctx = date != None and dict(self._context, date=date) or self._context
             amount_currency = amount
-            amount = src_currency.compute(amount, company_currency)
+            amount = src_currency.with_context(ctx).compute(amount, company_currency)
         debit = amount > 0 and amount or 0.0
         credit = amount < 0 and -amount or 0.0
         return debit, credit, amount_currency
