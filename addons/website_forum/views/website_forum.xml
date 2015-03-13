@@ -412,13 +412,12 @@
 <!-- Edition: Post Article -->
 <template id="new_link">
     <t t-call="website_forum.header">
-        <t t-set="link_create" t-value="False if post_name else True"/>
-        <t t-if="link_create">
+        <t t-if="not post_name">
             <h1 class="mt0" >Submit a Link</h1>
             <t t-set ="action_url" t-value="'/forum/' + slug(forum) +'/new?post_type=link'"/>
         </t>
-        <t t-if="not link_create">
-            <h1 class="mt0" t-if="not link_create">Edit your Link</h1>
+        <t t-if="post_name">
+            <h1 class="mt0">Edit your Link</h1>
             <t t-set ="action_url" t-value="'/forum/' + slug(forum) +'/post/' + slug(post) + '/save'"/>
         </t>
         <p class="mb32">
@@ -429,7 +428,7 @@
             We keep a high level of quality in showcased posts, around 20% of the submited
             posts will be featured.
         </p>
-        <form t-att-action="action_url" method="post" role="form" class="post_link tag_text form-horizontal">
+        <form t-att-action="action_url" method="post" role="form" class="tag_text form-horizontal">
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <div class="form-group">
