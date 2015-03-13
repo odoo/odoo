@@ -15,11 +15,12 @@ instance.web.form.WidgetWebsiteButton = instance.web.form.AbstractField.extend({
 });
 instance.web.form.widgets = instance.web.form.widgets.extend({
     'website_button': 'instance.web.form.WidgetWebsiteButton',
+    'html_frame': 'instance.web.form.FieldTextHtmlFrame',
 });
 
 var widget = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin);
-instance.web.form.FieldTextHtml = widget.extend({
-    template: 'FieldTextHtml',
+instance.web.form.FieldTextHtmlFrame = widget.extend({
+    template: 'FieldTextHtmlFrame',
     start: function () {
         var self = this;
 
