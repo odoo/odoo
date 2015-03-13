@@ -1,9 +1,8 @@
 
-odoo.define('web.translation', ['web.Class', 'qweb'], function (require) {
+odoo.define('web.translation', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-
 var qweb = require('qweb');
 
 

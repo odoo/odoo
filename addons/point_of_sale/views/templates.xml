@@ -31,7 +31,7 @@
         <t t-call-assets="point_of_sale.assets"/>
 
         <script type="text/javascript" id="loading-script" t-raw="init">
-            odoo.define('web.web_client', ['point_of_sale.main', 'web.WebClient'], function (require) {
+            odoo.define('web.web_client', function (require) {
                 var WebClient = require('web.WebClient');
                 var web_client = new WebClient();
 

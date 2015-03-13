@@ -1,4 +1,4 @@
-odoo.define('web.View', ['web.core', 'web.data', 'web.pyeval', 'web.Widget'], function (require) {
+odoo.define('web.View', function (require) {
 "use strict";
 
 var core = require('web.core');

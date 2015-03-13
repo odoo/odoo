@@ -1,4 +1,4 @@
-odoo.define('pos_restaurant.splitbill', ['point_of_sale.gui', 'point_of_sale.models', 'point_of_sale.screens', 'web.core'], function (require) {
+odoo.define('pos_restaurant.splitbill', function (require) {
 "use strict";
 
 var gui = require('point_of_sale.gui');

@@ -1,4 +1,4 @@
-odoo.define('website.editor', ['web.ajax', 'web.core', 'web.utils', 'web.Widget', 'website.website'], function (require) {
+odoo.define('website.editor', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

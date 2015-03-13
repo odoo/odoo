@@ -1,4 +1,4 @@
-odoo.define('pos_reprint.pos_reprint', ['point_of_sale.devices', 'point_of_sale.screens', 'web.core'], function (require) {
+odoo.define('pos_reprint.pos_reprint', function (require) {
 "use strict";
 
 var devices = require('point_of_sale.devices');

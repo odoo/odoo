@@ -1,4 +1,4 @@
-odoo.define('board.dashboard', ['web.ActionManager', 'web.core', 'web.data', 'web.Dialog', 'web.FavoriteMenu', 'web.form_common', 'web.Model', 'web.pyeval', 'web.ViewManager'], function (require) {
+odoo.define('board.dashboard', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');

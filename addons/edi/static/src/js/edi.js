@@ -1,4 +1,4 @@
-odoo.define('edi.EdiImport', ['web.core', 'web.Dialog', 'web.framework', 'web.Widget'], function (require) {
+odoo.define('edi.EdiImport', function (require) {
 "use strict";
 
 var core = require('web.core');

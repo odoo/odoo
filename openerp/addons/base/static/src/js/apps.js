@@ -1,4 +1,4 @@
-odoo.define('base.apps', ['web.core', 'web.framework', 'web.Model', 'web.session', 'web.web_client', 'web.Widget'], function (require) {
+odoo.define('base.apps', function (require) {
 "use strict";
 
 var core = require('web.core');

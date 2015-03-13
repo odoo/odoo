@@ -1,5 +1,5 @@
 
-odoo.define('web.ListView', ['web.core', 'web.data', 'web.DataExport', 'web.formats', 'web.list_common', 'web.Model', 'web.pyeval', 'web.session', 'web.Sidebar', 'web.utils', 'web.View'], function (require) {
+odoo.define('web.ListView', function (require) {
 "use strict";
 
 var core = require('web.core');

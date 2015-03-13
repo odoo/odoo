@@ -1,4 +1,4 @@
-odoo.define('website.tour.rte', ['web.core', 'web.Tour'], function (require) {
+odoo.define('website.tour.rte', function (require) {
 'use strict';
 
 var core = require('web.core');

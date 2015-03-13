@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.gui', ['web.core', 'web.Model'], function (require) {
+odoo.define('point_of_sale.gui', function (require) {
 "use strict";
 // this file contains the Gui, which is the pos 'controller'. 
 // It contains high level methods to manipulate the interface

@@ -1,4 +1,4 @@
-odoo.define('web.formats', ['web.core', 'web.time', 'web.utils'], function (require) {
+odoo.define('web.formats', function (require) {
 "use strict";
 
 var core = require('web.core');

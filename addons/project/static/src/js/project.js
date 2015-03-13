@@ -1,4 +1,4 @@
-odoo.define('project.update_kanban', ['web_kanban.common', 'web_kanban.KanbanView', 'web.data', 'web.session'], function (require) {
+odoo.define('project.update_kanban', function (require) {
 
 var kanban_common = require('web_kanban.common');
 var KanbanView = require('web_kanban.KanbanView');

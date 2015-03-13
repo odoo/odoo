@@ -1,4 +1,4 @@
-odoo.define('website_mail.website_mail', ['web.Model', 'website.editor', 'website.snippets.editor'], function (require) {
+odoo.define('website_mail.website_mail', function (require) {
 "use strict";
 
 var Model = require('web.Model');

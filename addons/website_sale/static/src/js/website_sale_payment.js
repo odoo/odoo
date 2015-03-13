@@ -1,4 +1,4 @@
-odoo.define('website_sale.payment', ['web.ajax'], function (require) {
+odoo.define('website_sale.payment', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');

@@ -1,4 +1,4 @@
-odoo.define('website_version.widget', ['web.core','web.form_common', 'web.framework', 'web.pyeval'], function (require) {
+odoo.define('website_version.widget', function (require) {
 "use strict";
 
 var core = require('web.core');

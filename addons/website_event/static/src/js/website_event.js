@@ -1,4 +1,4 @@
-odoo.define('website_event.website_event', ['web.ajax'], function (require) {
+odoo.define('website_event.website_event', function (require) {
 
 var ajax = require('web.ajax');
 

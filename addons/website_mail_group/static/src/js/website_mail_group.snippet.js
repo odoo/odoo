@@ -1,4 +1,4 @@
-odoo.define('website_mail_group.snippet', ['web.ajax', 'website.snippets.animation'], function (require) {
+odoo.define('website_mail_group.snippet', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

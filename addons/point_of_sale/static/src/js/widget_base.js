@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.BaseWidget', ['web.utils', 'web.Widget'], function (require) {
+odoo.define('point_of_sale.BaseWidget', function (require) {
 "use strict";
 
 var utils = require('web.utils');

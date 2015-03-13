@@ -1,4 +1,4 @@
-odoo.define('web.core', ['web.Class', 'web.mixins', 'web.Registry', 'web.translation', 'qweb', '_', '$'], function (require) {
+odoo.define('web.core', function (require) {
 "use strict";
 
 var Class = require('web.Class');

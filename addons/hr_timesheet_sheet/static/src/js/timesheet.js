@@ -1,4 +1,4 @@
-odoo.define('hr_timesheet_sheet.sheet', ['web.core', 'web.data', 'web.form_common', 'web.formats', 'web.Model', 'web.time', 'web.utils'], function (require) {
+odoo.define('hr_timesheet_sheet.sheet', function (require) {
 "use strict";
 
 var core = require('web.core');

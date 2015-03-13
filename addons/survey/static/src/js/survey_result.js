@@ -1,4 +1,4 @@
-odoo.define('survey.result', ['website.website'], function (require) {
+odoo.define('survey.result', function (require) {
 'use strict';
 
 var website = require('website.website');

@@ -1,4 +1,4 @@
-odoo.define('hr_gamification.hr_gamification', ['web_kanban.common'], function(require) {
+odoo.define('hr_gamification.hr_gamification', function(require) {
 "use strict";
 
 var common = require('web_kanban.common');

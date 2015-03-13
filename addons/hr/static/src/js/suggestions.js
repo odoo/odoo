@@ -1,4 +1,4 @@
-odoo.define('hr.suggestions', ['mail.mail', 'web.core', 'web.data', 'web.Widget'], function (require) {
+odoo.define('hr.suggestions', function (require) {
 "use strict";
 
 var mail = require('mail.mail');

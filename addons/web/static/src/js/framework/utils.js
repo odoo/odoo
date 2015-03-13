@@ -1,4 +1,4 @@
-odoo.define('web.utils', ['web.Class', 'web.translation'], function (require) {
+odoo.define('web.utils', function (require) {
 "use strict";
 
 var Class = require('web.Class');

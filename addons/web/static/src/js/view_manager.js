@@ -1,4 +1,4 @@
-odoo.define('web.ViewManager', ['web.core', 'web.data', 'web.Dialog', 'web.formats', 'web.framework', 'web.Model', 'web.pyeval', 'web.utils', 'web.SearchView', 'web.session', 'web.Widget'], function (require) {
+odoo.define('web.ViewManager', function (require) {
 "use strict";
 
 var core = require('web.core');

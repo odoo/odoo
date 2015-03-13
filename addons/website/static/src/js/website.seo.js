@@ -1,4 +1,4 @@
-odoo.define('website.seo', ['web.Class', 'web.mixins', 'web.Model', 'web.Widget', 'website.website'], function (require) {
+odoo.define('website.seo', function (require) {
 'use strict';
 
 var Class = require('web.Class');

@@ -1,4 +1,4 @@
-odoo.define('web.PivotView', ['web.core', 'web.crash_manager', 'web.formats', 'web.framework', 'web.Model', 'web.session', 'web.Sidebar', 'web.utils', 'web.View'], function (require) {
+odoo.define('web.PivotView', function (require) {
 "use strict";
 /*---------------------------------------------------------
  * Odoo Pivot Table view

@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.chrome', ['point_of_sale.BaseWidget', 'point_of_sale.gui', 'point_of_sale.keyboard', 'point_of_sale.models', 'web.core'], function (require) {
+odoo.define('point_of_sale.chrome', function (require) {
 "use strict";
 
 var PosBaseWidget = require('point_of_sale.BaseWidget');

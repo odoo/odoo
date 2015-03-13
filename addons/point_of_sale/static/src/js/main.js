@@ -1,5 +1,5 @@
 
-odoo.define('point_of_sale.main', ['point_of_sale.chrome', 'web.core'], function (require) {
+odoo.define('point_of_sale.main', function (require) {
 "use strict";
 
 var chrome = require('point_of_sale.chrome');

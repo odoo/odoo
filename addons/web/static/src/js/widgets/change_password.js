@@ -1,4 +1,4 @@
-odoo.define('web.ChangePassword', ['web.core', 'web.Dialog', 'web.Widget'], function (require) {
+odoo.define('web.ChangePassword', function (require) {
 "use strict";
 
 var core = require('web.core');

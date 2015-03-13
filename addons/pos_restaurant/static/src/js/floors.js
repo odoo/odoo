@@ -1,4 +1,4 @@
-odoo.define('pos_restaurant.floors', ['point_of_sale.BaseWidget', 'point_of_sale.chrome', 'point_of_sale.gui', 'point_of_sale.models', 'point_of_sale.screens', 'web.core', 'web.Model'], function (require) {
+odoo.define('pos_restaurant.floors', function (require) {
 "use strict";
 
 var PosBaseWidget = require('point_of_sale.BaseWidget');

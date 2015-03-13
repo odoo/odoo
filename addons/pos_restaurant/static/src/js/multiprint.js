@@ -1,4 +1,4 @@
-odoo.define('pos_restaurant.multiprint', ['point_of_sale.models', 'point_of_sale.screens', 'web.core', 'web.Session'], function (require) {
+odoo.define('pos_restaurant.multiprint', function (require) {
 "use strict";
 
 var models = require('point_of_sale.models');

@@ -1,7 +1,7 @@
 
 var _gaq = _gaq || [];  // asynchronous stack used by google analytics
 
-odoo.define('web_analytics.web_analytics', ['web.ActionManager', 'web.core', 'web.CrashManager', 'web.FormView', 'web.Session', 'web.session', 'web.View', 'web.web_client', 'web.WebClient'], function (require) {
+odoo.define('web_analytics.web_analytics', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');

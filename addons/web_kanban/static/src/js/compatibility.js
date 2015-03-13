@@ -1,4 +1,4 @@
-odoo.define('web_kanban.compatibility', ['web_kanban.common', 'web_kanban.KanbanView'], function (require) {
+odoo.define('web_kanban.compatibility', function (require) {
 "use strict";
 
 var common = require('web_kanban.common');

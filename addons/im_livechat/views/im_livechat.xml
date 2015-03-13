@@ -118,7 +118,7 @@
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Javascript initializing the LiveSupport">
-            odoo.define('im_livechat.livesupport', ['im_livechat.im_livechat'], function (require) {
+            odoo.define('im_livechat.livesupport', function (require) {
                 var im_livechat = require('im_livechat.im_livechat');
                 window.livesupport = new im_livechat.LiveSupport(
                     "<t t-esc="url"/>",

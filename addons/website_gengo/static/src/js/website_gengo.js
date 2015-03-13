@@ -1,4 +1,4 @@
-odoo.define('website_gengo.website_gengo', ['web.ajax', 'web.core', 'web.Widget', 'website.editor', 'website.website'], function (require) {
+odoo.define('website_gengo.website_gengo', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

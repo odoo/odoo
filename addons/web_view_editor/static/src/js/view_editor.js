@@ -1,4 +1,4 @@
-odoo.define(['web.ActionManager', 'web.core', 'web.data', 'web.Dialog', 'web.formats', 'web.Registry', 'web.session', 'web.utils', 'web.ViewManager', 'web.Widget'], function (require) {
+odoo.define('web_view_editor.view_editor', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');

@@ -1,4 +1,4 @@
-odoo.define('web_linkedin.web_linkedin', ['web.core', 'web.data', 'web.Dialog', 'web.form_widgets', 'web.Model', 'web.utils', 'web.Widget'], function (require) {
+odoo.define('web_linkedin.web_linkedin', function (require) {
 "use strict";
 
 var core = require('web.core');

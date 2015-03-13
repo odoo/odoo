@@ -1,4 +1,4 @@
-odoo.define('web.list_common', ['web.core'], function (require) {
+odoo.define('web.list_common', function (require) {
 "use strict";
 
 var core = require('web.core');

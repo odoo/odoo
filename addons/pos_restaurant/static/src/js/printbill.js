@@ -1,4 +1,4 @@
-odoo.define('pos_restaurant.printbill', ['point_of_sale.screens', 'web.core'], function (require) {
+odoo.define('pos_restaurant.printbill', function (require) {
 "use strict";
 
 var core = require('web.core');

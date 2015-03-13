@@ -1,4 +1,4 @@
-odoo.define('web.form_common', ['web.core', 'web.data', 'web.Dialog', 'web.ListView', 'web.pyeval', 'web.SearchView', 'web.session', 'web.utils', 'web.Widget'], function (require) {
+odoo.define('web.form_common', function (require) {
 "use strict";
 
 var core = require('web.core');

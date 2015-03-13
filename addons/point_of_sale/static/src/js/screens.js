@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.screens', ['point_of_sale.BaseWidget', 'point_of_sale.gui', 'point_of_sale.models', 'web.core', 'web.Model', 'web.utils'], function (require) {
+odoo.define('point_of_sale.screens', function (require) {
 "use strict";
 // This file contains the Screens definitions. Screens are the
 // content of the right pane of the pos, containing the main functionalities. 

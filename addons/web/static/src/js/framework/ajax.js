@@ -1,4 +1,4 @@
-odoo.define('web.ajax', ['web.time'], function (require) {
+odoo.define('web.ajax', function (require) {
 "use strict";
 
 var time = require('web.time');

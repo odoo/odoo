@@ -1,4 +1,4 @@
-odoo.define('web_kanban.common', ['web.core', 'web.data', 'web.form_common', 'web.formats', 'web.framework', 'web.pyeval', 'web.Registry', 'web.session', 'web.time', 'web.utils', 'web.web_client', 'web.Widget'], function (require) {
+odoo.define('web_kanban.common', function (require) {
 "use strict";
 
 var core = require('web.core');

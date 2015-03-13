@@ -1,4 +1,4 @@
-odoo.define('mail.mail_followers', ['mail.utils', 'web.core', 'web.data', 'web.Dialog', 'web.form_common', 'web.session', 'web.web_client'], function (require) {
+odoo.define('mail.mail_followers', function (require) {
 "use strict";
 
 var mail_utils = require('mail.utils');

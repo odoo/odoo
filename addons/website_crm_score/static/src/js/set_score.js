@@ -1,4 +1,4 @@
-odoo.define('website_crm_score.set_score', ['web.Model', 'website.seo', 'website.website'], function (require) {
+odoo.define('website_crm_score.set_score', function (require) {
 "use strict";
 
 var Model = require('web.Model');

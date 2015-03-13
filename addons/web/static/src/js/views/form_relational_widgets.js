@@ -1,4 +1,4 @@
-odoo.define('web.form_relational', ['web.core', 'web.data', 'web.Dialog', 'web.form_common', 'web.FormView', 'web.ListView', 'web.Model', 'web.session', 'web.utils', 'web.ViewManager'], function (require) {
+odoo.define('web.form_relational', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -1935,7 +1935,7 @@ return {
 
 });
 
-odoo.define('web_kanban.Many2ManyKanbanView', ['web.core', 'web_kanban.KanbanView', 'web.Widget'], function (require) {
+odoo.define('web_kanban.Many2ManyKanbanView', function (require) {
     "use strict";
     // This code has a dependency on the addon web_kanban.  This is a weird dependency issue.  To fix it,
     // we should either move this code into web_kanban, or move web_kanban into the web client.

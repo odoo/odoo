@@ -1,4 +1,4 @@
-odoo.define(['web.core', 'web.data', 'web.Dialog', 'web.Model', 'web.session', 'web.web_client', 'web.Widget', 'web_kanban.kanban_common'], function (require) {
+odoo.define('stock.widgets', function (require) {
 "use strict";
 
 var core = require('web.core');

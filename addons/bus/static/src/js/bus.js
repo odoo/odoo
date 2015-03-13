@@ -1,4 +1,4 @@
-odoo.define('bus.bus', ['web.session', 'web.Widget'], function (require) {
+odoo.define('bus.bus', function (require) {
 
 var session = require('web.session');
 var Widget = require('web.Widget');

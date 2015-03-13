@@ -1,4 +1,4 @@
-odoo.define('mail.mail', ['mail.utils', 'web.core', 'web.data', 'web.form_common', 'web.pyeval', 'web.SearchView', 'web.session', 'web.SystrayMenu', 'web.time', 'web.utils', 'web.web_client', 'web.Widget'], function (require) {
+odoo.define('mail.mail', function (require) {
 "use strict";
 
 var mail_utils = require('mail.utils');

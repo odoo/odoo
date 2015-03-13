@@ -1,4 +1,4 @@
-odoo.define('im_chat.im_chat', ['bus.bus', 'web.core', 'web.data', 'web.Model', 'web.session', 'web.SystrayMenu', 'web.time', 'web.utils', 'web.web_client', 'web.Widget'], function (require) {
+odoo.define('im_chat.im_chat', function (require) {
 "use strict";
 
 // to do: make this work in website

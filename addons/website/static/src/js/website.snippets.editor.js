@@ -1,4 +1,4 @@
-odoo.define('website.snippets.editor', ['web.ajax', 'web.Class', 'web.core', 'web.Widget', 'website.editor', 'website.snippets.animation', 'website.website'], function (require) {
+odoo.define('website.snippets.editor', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

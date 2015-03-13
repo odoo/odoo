@@ -1,4 +1,4 @@
-odoo.define(['mail.mail', 'web.core'], function (require) {
+odoo.define('mail_tip.mail_tip', function (require) {
 "use strict";
 
 var mail = require('mail.mail');

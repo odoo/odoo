@@ -1,4 +1,4 @@
-odoo.define('web.mixins', ['web.Class', 'web.utils'], function (require) {
+odoo.define('web.mixins', function (require) {
 "use strict";
 
 var Class = require('web.Class');

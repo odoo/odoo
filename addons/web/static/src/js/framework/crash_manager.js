@@ -1,9 +1,9 @@
-odoo.define('web.crash_manager', ['web.CrashManager'], function (require) {
+odoo.define('web.crash_manager', function (require) {
     var CrashManager = require('web.CrashManager');
     return new CrashManager();
 });
 
-odoo.define('web.CrashManager', ['web.ajax', 'web.core', 'web.Dialog', 'web.session'], function (require) {
+odoo.define('web.CrashManager', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');

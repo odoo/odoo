@@ -21,6 +21,9 @@
         _: _,
     });
 
+    var commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg;
+    var cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
+
     var debug = ($.deparam($.param.querystring()).debug !== undefined);
 
     var odoo = window.odoo = {
@@ -49,10 +52,20 @@
             services: services,
         },
         define: function () {
-            var args = Array.prototype.slice.call(arguments),
-                name = typeof args[0] === 'string' ? args.shift() : _.uniqueId('__job'),
-                deps = args[0] instanceof Array ? args.shift() : [],
-                factory = args[0];
+            var args = Array.prototype.slice.call(arguments);
+            var name = typeof args[0] === 'string' ? args.shift() : _.uniqueId('__job');
+            var factory = args[args.length - 1];
+            var deps;
+            if (args[0] instanceof Array) {
+                deps = args[0];
+            } else {
+                deps = [];
+                factory.toString()
+                    .replace(commentRegExp, '')
+                    .replace(cjsRequireRegExp, function (match, dep) {
+                        deps.push(dep);
+                    });
+            }
 
             if (odoo.debug) {
                 if (!(deps instanceof Array)) {

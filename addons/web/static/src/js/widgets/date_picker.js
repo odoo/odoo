@@ -1,4 +1,4 @@
-odoo.define('web.datepicker', ['web.core', 'web.formats', 'web.time', 'web.Widget'], function (require) {
+odoo.define('web.datepicker', function (require) {
 "use strict";
 
 var core = require('web.core');

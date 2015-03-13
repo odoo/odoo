@@ -1,4 +1,4 @@
-odoo.define('website_quote.website_quote', ['web.ajax', 'web.Widget', 'website.website'], function (require) {
+odoo.define('website_quote.website_quote', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

@@ -1,4 +1,4 @@
-odoo.define('web.Sidebar', ['web.core', 'web.data', 'web.Dialog', 'web.framework', 'web.pyeval', 'web.session', 'web.Widget'], function (require) {
+odoo.define('web.Sidebar', function (require) {
 "use strict";
 
 var core = require('web.core');

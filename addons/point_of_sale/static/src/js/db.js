@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.DB', ['web.core'], function (require) {
+odoo.define('point_of_sale.DB', function (require) {
 "use strict";
 
 var core = require('web.core');

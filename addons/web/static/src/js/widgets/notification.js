@@ -1,4 +1,4 @@
-odoo.define('web.Notification', ['web.Widget'], function (require) {
+odoo.define('web.Notification', function (require) {
 "use strict";
 
 var Widget = require('web.Widget');

@@ -1,4 +1,4 @@
-odoo.define('planner.planner', ['web.core', 'web.Model', 'web.session', 'web.SystrayMenu', 'web.Widget'], function (require) {
+odoo.define('planner.planner', function (require) {
 "use strict";
 
 var core = require('web.core');

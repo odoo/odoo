@@ -1,4 +1,4 @@
-odoo.define('mass_mailing.website_integration', ['web.ajax', 'web.utils', 'website.snippets.animation', 'website.website'], function (require) {
+odoo.define('mass_mailing.website_integration', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');

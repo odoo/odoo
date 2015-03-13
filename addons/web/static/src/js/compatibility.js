@@ -7,36 +7,7 @@
 // facilitate migration.  Odoo addons should not use the 'openerp' variable at 
 // all.
 // ------------------------------------------------------------------------------
-odoo.define('web.compatibility', [
-    'web.ActionManager',
-    'web.core', 
-    'web.data',
-    'web.Dialog', 
-    'web.FavoriteMenu',
-    'web.form_common', 
-    'web.form_relational',
-    'web.form_widgets',
-    'web.formats',
-    'web.FormView',
-    'web.framework',
-    'web.ListView',
-    'web.Menu', 
-    'web.Model', 
-    'web.pyeval',
-    'web.Registry',
-    'web.SearchView',
-    'web.session',
-    'web.Sidebar',
-    'web.SystrayMenu', 
-    'web.time',
-    'web.UserMenu', 
-    'web.utils',
-    'web.View',
-    'web.ViewManager',
-    'web.WebClient', 
-    'web.Widget', 
-    ], 
-    function (require) {
+odoo.define('web.compatibility', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
@@ -215,9 +186,9 @@ function start_modules (modules) {
 
 });
 
-odoo.define('mail.compatibility', ['mail.mail'], function (require) {
+odoo.define('mail.compatibility', function (require) {
 var mail = require('mail.mail');
-return;
+
 window.openerp = window.openerp || {};
 openerp.mail = {};
 openerp.mail.Wall = mail.Wall;

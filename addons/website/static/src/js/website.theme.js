@@ -1,4 +1,4 @@
-odoo.define('website.theme', ['web.ajax', 'web.core', 'web.Widget', 'website.website'], function (require) {
+odoo.define('website.theme', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

@@ -1,4 +1,4 @@
-odoo.define('google_calendar.google_calendar', ['web.core', 'web.framework', 'web.pyeval', 'web_calendar.CalendarView'], function (require) {
+odoo.define('google_calendar.google_calendar', function (require) {
 "use strict";
 
 var core = require('web.core');

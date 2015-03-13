@@ -1,4 +1,4 @@
-odoo.define('web_calendar.CalendarView', ['web.core', 'web.data', 'web.form_common', 'web.Model', 'web.time', 'web.View', 'web_calendar.widgets'], function (require) {
+odoo.define('web_calendar.CalendarView', function (require) {
 "use strict";
 /*---------------------------------------------------------
  * OpenERP web_calendar

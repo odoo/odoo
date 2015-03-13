@@ -1,4 +1,4 @@
-odoo.define('google_spreadsheet.google.spreadsheet', ['web.core', 'web.data', 'web.FavoriteMenu', 'web.FormView', 'web.pyeval'], function (require) {
+odoo.define('google_spreadsheet.google.spreadsheet', function (require) {
 "use strict";
 
 var core = require('web.core');

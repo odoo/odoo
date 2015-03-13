@@ -1,4 +1,4 @@
-odoo.define('account.move_line_quickadd', ['web.core', 'web.data', 'web.ListView', 'web.Model'], function (require) {
+odoo.define('account.move_line_quickadd', function (require) {
 "use strict";
 
 var core = require('web.core');

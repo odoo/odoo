@@ -1,4 +1,4 @@
-odoo.define('document.document', ['web.core', 'web.Sidebar'], function(require) {
+odoo.define('document.document', function(require) {
 "use strict";
 
 var core = require('web.core');

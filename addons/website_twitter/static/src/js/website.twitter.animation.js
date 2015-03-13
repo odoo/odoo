@@ -1,4 +1,4 @@
-odoo.define('website_twitter.animation', ['web.ajax', 'web.core', 'website.snippets.animation'], function (require) {
+odoo.define('website_twitter.animation', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

@@ -1,4 +1,4 @@
-odoo.define('im_odoo_support.OdooSupport', ['im_livechat.im_livechat', 'web.core', 'web.UserMenu', 'web.utils', 'web.web_client', 'web.Widget'], function (require) {
+odoo.define('im_odoo_support.OdooSupport', function (require) {
 "use strict";
 
 var im_livechat = require('im_livechat.im_livechat');
@@ -117,7 +117,7 @@ return OdooSupport;
 
 });
 
-odoo.define('im_odoo_support.config_im_chat', ['im_chat.im_chat', 'web.core'], function (require) {
+odoo.define('im_odoo_support.config_im_chat', function (require) {
 "use strict";
 
 var im_chat = require('im_chat.im_chat');

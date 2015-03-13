@@ -1,4 +1,4 @@
-odoo.define('web.Model', ['web.Class', 'web.session', 'web.utils'], function (require) {
+odoo.define('web.Model', function (require) {
 "use strict";
 
 var Class = require('web.Class');
@@ -110,7 +110,7 @@ var Model = Class.extend({
 return Model;
 });
 
-odoo.define('web.DataModel', ['web.data', 'web.Model', 'web.pyeval', 'web.session'], function (require) {
+odoo.define('web.DataModel', function (require) {
 "use strict";
 
 var data = require('web.data');

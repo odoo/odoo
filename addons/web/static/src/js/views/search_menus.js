@@ -1,4 +1,4 @@
-odoo.define('web.FavoriteMenu', ['web.core', 'web.Model','web.pyeval', 'web.session', 'web.Widget'], function (require) {
+odoo.define('web.FavoriteMenu', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -247,7 +247,7 @@ return Widget.extend({
 
 });
 
-odoo.define('web.FilterMenu', ['web.Widget', 'web.search_filters', 'web.search_inputs'], function (require) {
+odoo.define('web.FilterMenu', function (require) {
 
 var search_filters = require('web.search_filters'),
     search_inputs = require('web.search_inputs'),
@@ -355,7 +355,7 @@ return Widget.extend({
 
 });
 
-odoo.define('web.GroupByMenu', ['web.Widget', 'web.core', 'web.search_inputs'], function (require) {
+odoo.define('web.GroupByMenu', function (require) {
 
 var Widget = require('web.Widget'),
     core = require('web.core'),

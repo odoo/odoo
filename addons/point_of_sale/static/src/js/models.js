@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.models', ['barcodes.BarcodeParser', 'point_of_sale.DB', 'point_of_sale.devices', 'web.core', 'web.Model', 'web.session', 'web.time', 'web.utils'], function (require) {
+odoo.define('point_of_sale.models', function (require) {
 "use strict";
 
 var BarcodeParser = require('barcodes.BarcodeParser');

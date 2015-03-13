@@ -1,4 +1,4 @@
-odoo.define('web_calendar.widgets', ['web.core', 'web.Dialog', 'web.form_common', 'web.Widget'], function(require) {
+odoo.define('web_calendar.widgets', function(require) {
 "use strict";
 
 var core = require('web.core');

@@ -239,7 +239,7 @@
                                 <t t-raw="init"/>
                             </t>
                             <t t-if="not init">
-                                odoo.define('web.web_client', ['web.WebClient'], function (require) {
+                                odoo.define('web.web_client', function (require) {
                                     var WebClient = require('web.WebClient');
                                     var web_client = new WebClient();
                                     web_client.setElement($(document.body));

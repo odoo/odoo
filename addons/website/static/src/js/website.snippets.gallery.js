@@ -1,4 +1,4 @@
-odoo.define('website.snippets.gallery', ['web.core', 'website.snippets.editor', 'website.website'], function (require) {
+odoo.define('website.snippets.gallery', function (require) {
 'use strict';
 
 var core = require('web.core');

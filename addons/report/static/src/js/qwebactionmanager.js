@@ -1,4 +1,4 @@
-odoo.define('report.report', ['web.ActionManager', 'web.core', 'web.crash_manager', 'web.framework', 'web.session'], function (require) {
+odoo.define('report.report', function (require) {
 
 var ActionManager = require('web.ActionManager');
 var core = require('web.core');

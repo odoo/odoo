@@ -1,4 +1,4 @@
-odoo.define('hr.hr', ['web_kanban.common'], function(require) {
+odoo.define('hr.hr', function(require) {
 "use strict";
 
 var common = require('web_kanban.common');

@@ -1,4 +1,4 @@
-odoo.define('im_livechat.im_livechat', ['bus.bus', 'im_chat.im_chat', 'web.core', 'web.session', 'web.utils', 'web.time', 'web.Widget'], function (require) {
+odoo.define('im_livechat.im_livechat', function (require) {
 "use strict";
 
 var bus = require('bus.bus');

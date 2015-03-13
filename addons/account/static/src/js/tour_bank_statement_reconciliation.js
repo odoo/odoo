@@ -1,4 +1,4 @@
-odoo.define('account.tour_bank_statement_reconciliation', ['web.core', 'web.Tour'], function(require) {
+odoo.define('account.tour_bank_statement_reconciliation', function(require) {
 'use strict';
 
 var core = require('web.core');

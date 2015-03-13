@@ -1,4 +1,4 @@
-odoo.define('google_drive.google_drive', ['web.data', 'web.Model', 'web.Sidebar'], function (require) {
+odoo.define('google_drive.google_drive', function (require) {
 "use strict";
 
 var data = require('web.data');

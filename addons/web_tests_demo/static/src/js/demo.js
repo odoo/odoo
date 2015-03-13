@@ -1,4 +1,4 @@
-odoo.define('web_tests_demo.demo', ['web.core'], function (require) {
+odoo.define('web_tests_demo.demo', function (require) {
 "use strict";
 
 var core = require('web.core');

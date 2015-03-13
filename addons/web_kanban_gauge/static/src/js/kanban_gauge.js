@@ -1,4 +1,4 @@
-odoo.define('web_kanban_gauge.widget', ['web.core', 'web_kanban.common'], function (require) {
+odoo.define('web_kanban_gauge.widget', function (require) {
 "use strict";
 
 var core = require('web.core');

@@ -1,4 +1,4 @@
-odoo.define('website_links.charts', ['web.Widget', 'website.website'], function (require) {
+odoo.define('website_links.charts', function (require) {
 'use strict';
 
 var Widget = require('web.Widget');

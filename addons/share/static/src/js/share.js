@@ -1,4 +1,4 @@
-odoo.define(['mail.mail', 'web.core', 'web.data', 'web.Model', 'web.pyeval', 'web.session', 'web.Sidebar', 'web.ViewManager'], function (require) {
+odoo.define('share.share', function (require) {
 
 var mail = require('mail.mail');
 var core = require('web.core');

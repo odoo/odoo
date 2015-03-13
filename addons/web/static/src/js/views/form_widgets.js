@@ -1,4 +1,4 @@
-odoo.define('web.form_widgets', ['web.core', 'web.crash_manager', 'web.data', 'web.datepicker', 'web.Dialog', 'web.form_common', 'web.formats', 'web.framework', 'web.Model', 'web.pyeval', 'web.session', 'web.utils'], function (require) {
+odoo.define('web.form_widgets', function (require) {
 "use strict";
 
 var core = require('web.core');

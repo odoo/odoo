@@ -1,4 +1,4 @@
-odoo.define('web.framework', ['web.core', 'web.crash_manager', 'web.session', 'web.utils', 'web.Widget'], function (require) {
+odoo.define('web.framework', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -331,7 +331,7 @@ return {
 
 });
 
-odoo.define('web.session', ['web.Session'], function (require) {
+odoo.define('web.session', function (require) {
     var Session = require('web.Session');
     var modules = odoo._modules;
     return new Session(undefined, undefined, {modules:modules});

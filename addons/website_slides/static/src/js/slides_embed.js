@@ -1,5 +1,5 @@
 /*global $, _, PDFSlidesViewer*/
-odoo.define('website_slides.slides_embed', [], function (require) {
+odoo.define('website_slides.slides_embed', function (require) {
 
 
 /**

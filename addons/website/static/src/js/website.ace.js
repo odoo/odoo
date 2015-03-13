@@ -1,4 +1,4 @@
-odoo.define('website.ace', ['web.ajax', 'web.Class', 'web.core', 'web.Widget', 'website.ace_call', 'website.website'], function (require) {
+odoo.define('website.ace', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

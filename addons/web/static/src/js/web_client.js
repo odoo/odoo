@@ -1,4 +1,4 @@
-odoo.define('web.WebClient', ['web.ActionManager', 'web.core', 'web.crash_manager', 'web.data', 'web.Loading', 'web.Menu', 'web.Model', 'web.Notification', 'web.session', 'web.SystrayMenu', 'web.UserMenu', 'web.utils', 'web.Widget'], function (require) {
+odoo.define('web.WebClient', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');

@@ -1,4 +1,4 @@
-odoo.define('base_import.import', ['web.core', 'web.ListView', 'web.Model', 'web.session', 'web.Widget'], function (require) {
+odoo.define('base_import.import', function (require) {
 "use strict";
 
 var core = require('web.core');

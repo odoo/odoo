@@ -1,4 +1,4 @@
-odoo.define('web.GraphWidget', ['web.core', 'web.Model', 'web.Widget'], function (require) {
+odoo.define('web.GraphWidget', function (require) {
 "use strict";
 
 var core = require('web.core');

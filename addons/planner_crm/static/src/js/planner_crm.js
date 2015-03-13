@@ -1,4 +1,4 @@
-odoo.define('planner_crm.planner', ['planner.planner'], function (require) {
+odoo.define('planner_crm.planner', function (require) {
 "use strict";
 
 var planner = require('planner.planner');

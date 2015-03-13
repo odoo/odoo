@@ -1,4 +1,4 @@
-odoo.define('website.website', ['web.ajax', 'web.core', 'web.session'], function (require) {
+odoo.define('website.website', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
@@ -400,7 +400,7 @@ return {
 
 });
 
-odoo.define('web.session', ['web.Session'], function (require) {
+odoo.define('web.session', function (require) {
 "use strict";
 
 var Session = require('web.Session');

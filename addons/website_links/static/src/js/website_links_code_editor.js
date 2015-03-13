@@ -1,4 +1,4 @@
-odoo.define('website_links.code_editor', ['web.ajax', 'website.website'], function (require) {
+odoo.define('website_links.code_editor', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

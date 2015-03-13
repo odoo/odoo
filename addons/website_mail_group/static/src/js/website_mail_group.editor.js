@@ -1,4 +1,4 @@
-odoo.define('website_mail_group.editor', ['web.core', 'web.Model', 'website.snippets.editor', 'website.website'], function (require) {
+odoo.define('website_mail_group.editor', function (require) {
 'use strict';
 
 var core = require('web.core');

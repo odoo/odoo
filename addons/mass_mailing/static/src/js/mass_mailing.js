@@ -1,4 +1,4 @@
-odoo.define('mass_mailing.mass_mailing', ['web.core', 'web_kanban.common', 'web_kanban.KanbanView'], function (require) {
+odoo.define('mass_mailing.mass_mailing', function (require) {
 
 var core = require('web.core');
 var common = require('web_kanban.common');

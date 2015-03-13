@@ -1,4 +1,4 @@
-odoo.define('web.search_inputs', ['web.core', 'web.data', 'web.formats', 'web.Model', 'web.pyeval', 'web.time', 'web.utils', 'web.Widget'], function (require) {
+odoo.define('web.search_inputs', function (require) {
 "use strict";
 
 var core = require('web.core');

@@ -1,4 +1,4 @@
-odoo.define('website_event_sale.tour', ['web.Tour', 'website.website'], function (require) {
+odoo.define('website_event_sale.tour', function (require) {
 'use strict';
 
 var Tour = require('web.Tour');

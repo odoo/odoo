@@ -1,4 +1,4 @@
-odoo.define('website.summernote', ['web.core'], function (require) {
+odoo.define('website.summernote', function (require) {
 'use strict';
 
 var core = require('web.core');

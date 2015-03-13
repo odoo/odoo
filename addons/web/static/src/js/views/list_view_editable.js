@@ -1,4 +1,4 @@
-odoo.define('web.ListEditor', ['web.core', 'web.FormView', 'web.list_common', 'web.ListView', 'web.utils', 'web.Widget'], function (require) {
+odoo.define('web.ListEditor', function (require) {
 "use strict";    
 /*---------------------------------------------------------
  * Odoo Editable List view

@@ -1,4 +1,4 @@
-odoo.define('pos_restaurant.notes', ['point_of_sale.models', 'point_of_sale.screens', 'web.core'], function (require) {
+odoo.define('pos_restaurant.notes', function (require) {
 "use strict";
 
 console.log("notes");

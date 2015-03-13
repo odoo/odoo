@@ -1,4 +1,4 @@
-odoo.define('web_diagram.DiagramView', ['web.core', 'web.data', 'web.form_common', 'web.View'], function (require) {
+odoo.define('web_diagram.DiagramView', function (require) {
 /*---------------------------------------------------------
  * OpenERP diagram library
  *---------------------------------------------------------*/

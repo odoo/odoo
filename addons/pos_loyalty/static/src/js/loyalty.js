@@ -1,4 +1,4 @@
-odoo.define('pos_loyalty.pos_loyalty', ['point_of_sale.models', 'point_of_sale.screens', 'web.core', 'web.utils'], function (require) {
+odoo.define('pos_loyalty.pos_loyalty', function (require) {
 "use strict";
 
 var models = require('point_of_sale.models');

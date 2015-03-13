@@ -1,4 +1,4 @@
-odoo.define('account_analytic_plans.custom', ['account.widgets', 'web.core'], function (require) {
+odoo.define('account_analytic_plans.custom', function (require) {
 "use strict";
 
 var widgets = require('account.widgets');

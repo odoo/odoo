@@ -1,4 +1,4 @@
-odoo.define('hr_attendance.hr_attendance', ['web.core', 'web.data', 'web.formats', 'web.Model', 'web.SystrayMenu', 'web.time', 'web.Widget'], function(require) {
+odoo.define('hr_attendance.hr_attendance', function(require) {
 "use strict";
 
 var core = require('web.core');

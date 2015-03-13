@@ -1,4 +1,4 @@
-odoo.define('website_forum.website_forum', ['web.ajax', 'web.core', 'website.website'], function (require) {
+odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

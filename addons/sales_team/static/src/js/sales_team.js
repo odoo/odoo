@@ -1,4 +1,4 @@
-odoo.define('sales_team.update_kanban', ['web_kanban.KanbanView', 'web_kanban.common', 'web.data', 'web.session'], function (require) {
+odoo.define('sales_team.update_kanban', function (require) {
 "use strict";
 
 var KanbanView = require('web_kanban.KanbanView');

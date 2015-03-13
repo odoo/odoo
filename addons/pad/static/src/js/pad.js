@@ -1,4 +1,4 @@
-odoo.define('pad.pad', ['web.core', 'web.form_common'], function (require) {
+odoo.define('pad.pad', function (require) {
 
 var core = require('web.core');
 var form_common = require('web.form_common');

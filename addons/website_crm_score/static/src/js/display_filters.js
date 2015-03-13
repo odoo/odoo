@@ -1,4 +1,4 @@
-odoo.define('website_crm_score.filters', ['web_kanban.common'], function (require) {
+odoo.define('website_crm_score.filters', function (require) {
 "use strict";
 
 var common = require('web_kanban.common');

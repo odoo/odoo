@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.popups', ['point_of_sale.BaseWidget', 'point_of_sale.gui'], function (require) {
+odoo.define('point_of_sale.popups', function (require) {
 "use strict";
 
 // This file contains the Popups.

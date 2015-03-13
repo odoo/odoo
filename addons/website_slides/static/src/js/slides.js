@@ -1,5 +1,5 @@
 /*global $, _, PDFJS */
-odoo.define('website_slides.slides', ['web.ajax', 'web.core', 'web.time', 'web.Widget'], function (require) {
+odoo.define('website_slides.slides', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');

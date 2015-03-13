@@ -1,4 +1,4 @@
-odoo.define('website.share', ['web.core', 'web.Widget', 'website.website'], function (require) {
+odoo.define('website.share', function (require) {
 "use strict";
 
 var core = require('web.core');

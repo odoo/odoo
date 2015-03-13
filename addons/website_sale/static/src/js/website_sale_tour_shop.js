@@ -1,4 +1,4 @@
-odoo.define('website_sale.tour_shop', ['web.core', 'web.Tour', 'website.website'], function (require) {
+odoo.define('website_sale.tour_shop', function (require) {
 'use strict';
 
 var core = require('web.core');

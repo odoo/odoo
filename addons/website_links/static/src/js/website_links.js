@@ -1,4 +1,4 @@
-odoo.define('website_links.website_links', ['web.ajax', 'web.core', 'web.Widget', 'website.website'], function (require) {
+odoo.define('website_links.website_links', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

@@ -1,4 +1,4 @@
-odoo.define('base_calendar.base_calendar', ['web.core', 'web.data', 'web.form_common', 'web.Model', 'web.WebClient', 'web_calendar.CalendarView', 'web_calendar.widgets'], function (require) {
+odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
 var core = require('web.core');

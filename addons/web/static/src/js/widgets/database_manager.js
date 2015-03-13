@@ -1,4 +1,4 @@
-odoo.define('web.DatabaseManager', ['web.core', 'web.Dialog', 'web.framework', 'web.web_client', 'web.Widget'], function (require) {
+odoo.define('web.DatabaseManager', function (require) {
 "use strict";
 
 var core = require('web.core');

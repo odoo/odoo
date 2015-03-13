@@ -1,4 +1,4 @@
-odoo.define('web_kanban.KanbanView', ['web.core', 'web.data', 'web.Model', 'web.pyeval', 'web.session', 'web.utils', 'web.View', 'web_kanban.common'], function (require) {
+odoo.define('web_kanban.KanbanView', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -579,7 +579,7 @@ return KanbanView;
 });
 
 
-odoo.define(['web.core', 'web.data', 'web.web_client', 'web_kanban.common', 'web_kanban.KanbanView'], function (require) {
+odoo.define(function (require) {
 
 var core = require('web.core');
 var data = require('web.data');

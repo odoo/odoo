@@ -1,4 +1,4 @@
-odoo.define('website_version.edit', ['web.ajax', 'web.core', 'website.editor'], function (require) {
+odoo.define('website_version.edit', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

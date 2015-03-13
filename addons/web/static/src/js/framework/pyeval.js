@@ -1,4 +1,4 @@
-odoo.define('web.pyeval', ['web.core', 'web.session', 'web.utils'], function (require) {
+odoo.define('web.pyeval', function (require) {
 "use strict";
 
 var core = require('web.core');

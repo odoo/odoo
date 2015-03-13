@@ -1,4 +1,4 @@
-odoo.define('website.tour.banner', ['web.core', 'web.Tour', 'website.website'], function (require) {
+odoo.define('website.tour.banner', function (require) {
 'use strict';
 
 var core = require('web.core');

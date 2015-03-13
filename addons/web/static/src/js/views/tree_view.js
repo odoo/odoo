@@ -1,4 +1,4 @@
-odoo.define('web.TreeView', ['web.core', 'web.data', 'web.formats', 'web.pyeval', 'web.session', 'web.View'], function (require) {
+odoo.define('web.TreeView', function (require) {
 "use strict";
 /*---------------------------------------------------------
  * Odoo Tree view

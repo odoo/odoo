@@ -1,4 +1,4 @@
-odoo.define(['web.core', 'web.Model', 'web.session', 'web.WebClient'], function (require) {
+odoo.define('mail.announcement', function (require) {
 "use strict";
 
 var core = require('web.core');

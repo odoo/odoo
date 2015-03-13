@@ -1,4 +1,4 @@
-odoo.define('mail.many2manytags', ['web.core', 'web.form_common', 'web.form_relational', 'web.Model'], function (require) {
+odoo.define('mail.many2manytags', function (require) {
 "use strict";
 
 var core = require('web.core');

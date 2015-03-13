@@ -1,4 +1,4 @@
-odoo.define(['web_kanban.common'], function (require) {
+odoo.define('web_kanban_sparkline.widget', function (require) {
 "use strict";
 
 var kanban_common = require('web_kanban.common');

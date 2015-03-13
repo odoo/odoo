@@ -1,4 +1,4 @@
-odoo.define('web.GraphView', ['web.core', 'web.GraphWidget', 'web.Model', 'web.View'], function (require) {
+odoo.define('web.GraphView', function (require) {
 "use strict";
 /*---------------------------------------------------------
  * Odoo Graph view

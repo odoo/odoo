@@ -1,4 +1,4 @@
-odoo.define('website.mobile', ['web.Widget', 'website.website'], function (require) {
+odoo.define('website.mobile', function (require) {
 'use strict';
 
 var Widget = require('web.Widget');

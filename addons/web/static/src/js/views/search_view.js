@@ -1,4 +1,4 @@
-odoo.define('web.SearchView', ['web.AutoComplete', 'web.core', 'web.FavoriteMenu', 'web.FilterMenu', 'web.GroupByMenu', 'web.Model', 'web.pyeval', 'web.search_inputs', 'web.utils', 'web.Widget'], function (require) {
+odoo.define('web.SearchView', function (require) {
 "use strict";
 
 var AutoComplete = require('web.AutoComplete');
@@ -715,7 +715,7 @@ return SearchView;
 
 });
 
-odoo.define('web.AutoComplete', ['web.Widget'], function (require) {
+odoo.define('web.AutoComplete', function (require) {
 "use strict";
 
 var Widget = require('web.Widget');

@@ -1,4 +1,4 @@
-odoo.define(['web.core', 'web.form_widgets', 'web.Model', 'web.utils', 'web.WebClient'], function (require) {
+odoo.define('web_tip.web_tip', function (require) {
 "use strict";
 
 var core = require('web.core');

@@ -1,4 +1,4 @@
-odoo.define('web.UserMenu', ['web.core', 'web.Dialog', 'web.framework', 'web.Model', 'web.session', 'web.Widget'], function (require) {
+odoo.define('web.UserMenu', function (require) {
 "use strict";
 
 var core = require('web.core');

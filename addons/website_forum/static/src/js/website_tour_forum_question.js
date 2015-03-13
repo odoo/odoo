@@ -1,4 +1,4 @@
-odoo.define('website_forum.tour_forum_question', ['web.Tour'], function (require) {
+odoo.define('website_forum.tour_forum_question', function (require) {
 'use strict';
 
 var Tour = require('web.Tour');

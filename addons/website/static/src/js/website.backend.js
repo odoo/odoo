@@ -1,4 +1,4 @@
-odoo.define('website.backend', ['web.core', 'web.form_common', 'web.form_widgets'], function (require) {
+odoo.define('website.backend', function (require) {
 "use strict";
 
 var core = require('web.core');

@@ -1,4 +1,4 @@
-odoo.define(['mail.mail', 'web.core', 'web.data', 'web.session', 'web.Widget'], function (require) {
+odoo.define('mail.suggestion', function (require) {
 
 var mail = require('mail.mail');
 var core = require('web.core');

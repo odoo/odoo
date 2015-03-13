@@ -1,4 +1,4 @@
-odoo.define('website_blog.InlineDiscussion', ['web.ajax', 'web.core', 'website.website'], function (require) {
+odoo.define('website_blog.InlineDiscussion', function (require) {
 'use strict';
 
 // Inspired from https://github.com/tsi/inlineDisqussions

@@ -1,4 +1,4 @@
-odoo.define('website_blog.website_blog', ['web.ajax', 'website_blog.InlineDiscussion'], function (require) {
+odoo.define('website_blog.website_blog', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');

@@ -1,4 +1,4 @@
-odoo.define('web.Registry', ['web.Class'], function (require) {
+odoo.define('web.Registry', function (require) {
 "use strict";
 
 var Class = require('web.Class');

@@ -1,4 +1,4 @@
-odoo.define('website_twitter.editor', ['web.ajax', 'web.core', 'website.snippets.editor'], function (require) {
+odoo.define('website_twitter.editor', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

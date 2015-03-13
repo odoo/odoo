@@ -1,4 +1,4 @@
-odoo.define('purchase_requisition.purchase_requisition', ['web.core', 'web.ListView', 'web.Model'], function (require) {
+odoo.define('purchase_requisition.purchase_requisition', function (require) {
 "use strict";
 
 var core = require('web.core');

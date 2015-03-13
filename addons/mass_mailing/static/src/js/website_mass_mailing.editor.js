@@ -1,4 +1,4 @@
-odoo.define('website_mass_mailing.editor', ['web.core', 'website.editor', 'website.snippet.editor', 'website.website'], function (require) {
+odoo.define('website_mass_mailing.editor', function (require) {
 'use strict';
 
 var core = require('web.core');

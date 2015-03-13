@@ -1,4 +1,4 @@
-odoo.define('web.Loading', ['web.core', 'web.framework', 'web.session', 'web.Widget'], function (require) {
+odoo.define('web.Loading', function (require) {
 "use strict";
 
 var core = require('web.core');

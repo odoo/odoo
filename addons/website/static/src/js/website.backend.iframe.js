@@ -1,4 +1,4 @@
-odoo.define('website.backend.iframe', ['website.editor', 'website.snippets.editor'], function (require) {
+odoo.define('website.backend.iframe', function (require) {
 'use strict';
 
 var editor = require('website.editor');

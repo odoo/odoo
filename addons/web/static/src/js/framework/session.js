@@ -1,4 +1,4 @@
-odoo.define('web.Session', ['web.ajax', 'web.core', 'web.utils'], function (require) {
+odoo.define('web.Session', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');

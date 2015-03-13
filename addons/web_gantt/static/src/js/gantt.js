@@ -1,4 +1,4 @@
-odoo.define('web_gantt.GanttView', ['web.core', 'web.form_common', 'web.formats', 'web.Model', 'web.time', 'web.View'], function (require) {
+odoo.define('web_gantt.GanttView', function (require) {
 "use strict";
 /*---------------------------------------------------------
  * Odoo web_gantt

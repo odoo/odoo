@@ -1,4 +1,4 @@
-odoo.define('web.FormView', ['web.core', 'web.crash_manager', 'web.data', 'web.Dialog', 'web.form_common', 'web.Model', 'web.Sidebar', 'web.utils', 'web.View'], function (require) {
+odoo.define('web.FormView', function (require) {
 "use strict";
 
 var core = require('web.core');

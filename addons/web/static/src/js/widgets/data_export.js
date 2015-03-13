@@ -1,4 +1,4 @@
-odoo.define('web.DataExport', ['web.core', 'web.crash_manager', 'web.data', 'web.Dialog', 'web.framework'], function (require) {
+odoo.define('web.DataExport', function (require) {
 "use strict";
 
 var core = require('web.core');

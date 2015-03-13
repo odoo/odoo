@@ -1,4 +1,4 @@
-odoo.define('account.widgets', ['web.ActionManager', 'web.core', 'web.CrashManager', 'web.data', 'web.Dialog', 'web.formats', 'web.FormView', 'web.ListView', 'web.Model', 'web.pyeval', 'web.web_client', 'web.Widget'], function (require) {
+odoo.define('account.widgets', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');

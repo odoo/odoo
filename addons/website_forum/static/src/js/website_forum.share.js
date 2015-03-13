@@ -1,4 +1,4 @@
-odoo.define('website_forum.share', ['web.ajax', 'web.core', 'website.share', 'website.website'], function (require) {
+odoo.define('website_forum.share', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');

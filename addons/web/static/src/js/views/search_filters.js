@@ -1,4 +1,4 @@
-odoo.define('web.search_filters', ['web.core',  'web.datepicker', 'web.formats', 'web.Widget'], function (require) {
+odoo.define('web.search_filters', function (require) {
 "use strict";
 
 var core = require('web.core');

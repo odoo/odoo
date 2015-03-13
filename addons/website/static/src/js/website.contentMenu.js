@@ -1,4 +1,4 @@
-odoo.define('website.contentMenu', ['web.ajax', 'web.core', 'web.Widget', 'website.editor', 'website.website'], function (require) {
+odoo.define('website.contentMenu', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');

@@ -1,4 +1,4 @@
-odoo.define('website.translator', ['website.editor', 'website.website'], function (require) {
+odoo.define('website.translator', function (require) {
 'use strict';
 
 var editor = require('website.editor');

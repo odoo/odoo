@@ -1,4 +1,4 @@
-odoo.define('gamification.gamification', ['mail.mail', 'web.core', 'web.form_common', 'web.Model', 'web.session', 'web.Widget'], function(require) {
+odoo.define('gamification.gamification', function(require) {
 "use strict";
 
 var mail = require('mail.mail');
