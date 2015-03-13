@@ -484,6 +484,7 @@ class purchase_order(osv.osv):
             action['res_id'] = pick_ids and pick_ids[0] or False
         return action
 
+
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
@@ -542,6 +543,10 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
+            if po.invoice_method == 'picking' and not any([l.product_id and l.product_id.type in ('product', 'consu') for l in po.order_line]):
+                raise osv.except_osv(
+                    _('Error!'),
+                    _("You cannot confirm a purchase order with Invoice Control Method 'Based on incoming shipments' that doesn't contain any stockable item."))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)        
@@ -1021,9 +1026,9 @@ class purchase_order_line(osv.osv):
             if line.state not in ['draft', 'cancel']:
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
         procurement_obj = self.pool.get('procurement.order')
-        procurement_ids_to_cancel = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
-        if procurement_ids_to_cancel:
-            self.pool['procurement.order'].cancel(cr, uid, procurement_ids_to_cancel)
+        procurement_ids_to_except = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
+        if procurement_ids_to_except:
+            self.pool['procurement.order'].write(cr, uid, procurement_ids_to_except, {'state': 'exception'}, context=context)
         return super(purchase_order_line, self).unlink(cr, uid, ids, context=context)
 
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,

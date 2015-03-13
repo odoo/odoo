@@ -23,7 +23,7 @@
 from operator import itemgetter
 from textwrap import dedent
 
-from openerp import tools
+from openerp import tools, SUPERUSER_ID
 from openerp.osv import fields, osv
 
 class board_board(osv.osv):
@@ -143,7 +143,7 @@ class board_create(osv.osv_memory):
             ''')
         }, context=context)
 
-        menu_id = self.pool.get('ir.ui.menu').create(cr, uid, {
+        menu_id = self.pool.get('ir.ui.menu').create(cr, SUPERUSER_ID, {
             'name': this.name,
             'parent_id': this.menu_parent_id.id,
             'action': 'ir.actions.act_window,%s' % (action_id,)
