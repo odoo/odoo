@@ -967,6 +967,7 @@ openerp.web_calendar = function(instance) {
 
             // Can hold data pre-set from where you clicked on agenda
             this.data_template = data_template || {};
+            this.$input = $();
         },
         get_title: function () {
             var parent = this.getParent();
