@@ -757,7 +757,7 @@ class account_journal(osv.osv):
         'cash_control' : False,
         'with_last_closing_balance' : True,
         'user_id': lambda self, cr, uid, context: uid,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.journal', context=c),
         'sequence': 1,
     }
     _sql_constraints = [
@@ -881,7 +881,7 @@ class account_fiscalyear(osv.osv):
     }
     _defaults = {
         'state': 'draft',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.fiscalyear', context=c),
     }
     _order = "date_start, id"
 
@@ -939,7 +939,7 @@ class account_fiscalyear(osv.osv):
         if context.get('company_id', False):
             company_id = context['company_id']
         else:
-            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.fiscalyear', context=context)
         args.append(('company_id', '=', company_id))
         ids = self.search(cr, uid, args, context=context)
         if not ids:
@@ -1280,7 +1280,7 @@ class account_move(osv.osv):
         'state': 'draft',
         'period_id': _get_period,
         'date': fields.date.context_today,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move', context=c),
     }
 
     def _check_centralisation(self, cursor, user, ids, context=None):
@@ -1809,14 +1809,9 @@ class account_tax_code(osv.osv):
         return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name']) \
                 for x in reads]
 
-    def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'company_id': _default_company,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.tax.code', context=c),
         'sign': 1.0,
         'notprintable': False,
     }
@@ -1957,11 +1952,6 @@ class account_tax(osv.osv):
             res.append((record['id'],name ))
         return res
 
-    def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
         'python_compute': '''# price_unit\n# or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
@@ -1978,7 +1968,7 @@ class account_tax(osv.osv):
         'tax_sign': 1,
         'base_sign': 1,
         'include_base_amount': False,
-        'company_id': _default_company,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.tax', context=c),
     }
     _order = 'sequence'
 
@@ -2830,10 +2820,7 @@ class account_tax_template(osv.osv):
         return res
 
     def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+        return self.pool.get('res.company')._company_default_get(cr, uid, 'account.tax.template', context=context)
 
     _defaults = {
         'python_compute': lambda *a: '''# price_unit\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',

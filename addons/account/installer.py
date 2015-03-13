@@ -85,8 +85,7 @@ class account_installer(osv.osv_memory):
     }
 
     def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.company_id and user.company_id.id or False
+        return self.pool.get('res.company')._company_default_get(cr, uid, 'account.installer', context=context)
 
     def _default_has_default_company(self, cr, uid, context=None):
         count = self.pool.get('res.company').search_count(cr, uid, [], context=context)

@@ -932,5 +932,5 @@ class account_statement_operation_template(osv.osv):
     _defaults = {
         'amount_type': 'percentage_of_balance',
         'amount': 100.0,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.statement.operation.template', context=c),
     }

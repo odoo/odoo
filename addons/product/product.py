@@ -304,9 +304,9 @@ class produce_price_history(osv.osv):
         if 'force_company' in context:
             return context['force_company']
         else:
-            company = self.pool['res.users'].browse(cr, uid, uid,
-                context=context).company_id
-            return company.id if company else False
+            company = self.pool['res.company']._company_default_get(cr, uid, 'product.price.history',
+                context=context)
+            return company
 
     _defaults = {
         'datetime': fields.datetime.now,

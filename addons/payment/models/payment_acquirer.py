@@ -92,7 +92,7 @@ class PaymentAcquirer(osv.Model):
     }
 
     _defaults = {
-        'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
+        'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.company']._company_default_get(cr, uid, 'payment.acquirer', ctx),
         'environment': 'test',
         'validation': 'automatic',
         'website_published': True,

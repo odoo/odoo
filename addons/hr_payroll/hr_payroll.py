@@ -64,8 +64,8 @@ class hr_payroll_structure(osv.osv):
 
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+                self.pool.get('res.company')._company_default_get(cr, uid, 'hr.payroll.structure',
+                    context=context),
         'parent_id': _get_parent,
     }
 
@@ -157,8 +157,8 @@ class contrib_register(osv.osv):
     }
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+                self.pool.get('res.company')._company_default_get(cr, uid, 'hr.contribution.register',
+                    context=context),
     }
 
 
@@ -180,8 +180,8 @@ class hr_salary_rule_category(osv.osv):
 
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+                self.pool.get('res.company')._company_default_get(cr, uid, 'hr.salary.rule.category',
+                    context=context),
     }
 
 
@@ -297,8 +297,8 @@ class hr_payslip(osv.osv):
         'state': 'draft',
         'credit_note': False,
         'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+                self.pool.get('res.company')._company_default_get(cr, uid, 'hr.payslip',
+                    context=context),
     }
 
     def _check_dates(self, cr, uid, ids, context=None):
@@ -815,8 +815,8 @@ result = rules.NET > categories.NET * 0.10''',
         'appears_on_payslip': True,
         'active': True,
         'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+                self.pool.get('res.company')._company_default_get(cr, uid, 'hr.salary.rule',
+                    context=context),
         'condition_select': 'none',
         'amount_select': 'fix',
         'amount_fix': 0.0,

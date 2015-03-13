@@ -244,19 +244,13 @@ class account_analytic_account(osv.osv):
                 res['name'] = _('Contract: ') + partner.name
         return {'value': res}
 
-    def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-
     def _get_default_currency(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id.currency_id.id
 
     _defaults = {
         'type': 'normal',
-        'company_id': _default_company,
+        'company_id': lambda self, cr, uid, c=None: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.account', context=c),
         'code' : lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'account.analytic.account'),
         'state': 'open',
         'user_id': lambda self, cr, uid, ctx: uid,
@@ -391,5 +385,5 @@ class account_analytic_journal(osv.osv):
     _defaults = {
         'active': True,
         'type': 'general',
-        'company_id': lambda self, cr, uid, c=None: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self, cr, uid, c=None: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.journal', context=c),
     }
