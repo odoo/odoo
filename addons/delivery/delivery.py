@@ -33,14 +33,24 @@ class delivery_carrier(osv.osv):
             return []
         if context is None:
             context = {}
-        order_id = context.get('order_id',False)
-        if not order_id:
-            res = super(delivery_carrier, self).name_get(cr, uid, ids, context=context)
-        else:
-            order = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
-            currency = order.pricelist_id.currency_id.name or ''
-            res = [(r['id'], r['name']+' ('+(str(r['price']))+' '+currency+')') for r in self.read(cr, uid, ids, ['name', 'price'], context)]
-        return res
+        order_id = context.get('order_id', False)
+        if order_id:
+            # search id, since active_id could have defined another object
+            real_order_ids = self.pool.get('sale.order').search(
+                cr, uid, [('id', '=', order_id)], context=context)
+            if len(real_order_ids) > 0:
+                order = self.pool.get('sale.order').browse(
+                    cr, uid, real_order_ids[0], context=context)
+                currency = order.pricelist_id.currency_id.name or ''
+                return [
+                    (r['id'],
+                     r['name'] + ' ('+(str(r['price'])) + ' ' + currency + ')')
+                    for r
+                    in self.read(cr, uid, ids, ['name', 'price'], context)
+                ]
+
+        return super(delivery_carrier, self).name_get(
+            cr, uid, ids, context=context)
 
     def get_price(self, cr, uid, ids, field_name, arg=None, context=None):
         res={}
