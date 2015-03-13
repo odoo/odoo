@@ -130,11 +130,11 @@
                     <field name="user_id" string="Salesperson"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="residual" sum="Residual Amount" widget="monetary"/>
-                    <field name="amount_untaxed" sum="Untaxed Amount" widget="monetary"/>
-                    <field name="amount_total" sum="Total Amount" widget="monetary"/>
+                    <field name="amount_untaxed" groups="base.group_multi_currency"/>
+                    <field name="amount_untaxed_signed" sum="Untaxed Amount" widget="monetary"/>
+                    <field name="amount_total_signed" sum="Total Amount" widget="monetary"/>
+                    <field name="residual_signed" sum="Residual Amount" widget="monetary"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="amount_total_signed" sum="Total Amount" widget="monetary" groups="base.group_multi_currency"/>
                     <field name="state"/>
                 </tree>
             </field>

@@ -43,10 +43,13 @@ class AccountInvoice(models.Model):
         self.amount_tax = sum(line.amount for line in self.tax_line)
         self.amount_total = self.amount_untaxed + self.amount_tax
         amount_total_signed = self.amount_total
+        amount_untaxed_signed = self.amount_untaxed
         if self.currency_id and self.currency_id != self.company_id.currency_id:
             amount_total_signed = self.currency_id.compute(self.amount_total, self.company_id.currency_id)
-        sign = self.type in ['in_invoice', 'out_refund'] and -1 or 1
+            amount_untaxed_signed = self.currency_id.compute(self.amount_untaxed, self.company_id.currency_id)
+        sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
         self.amount_total_signed = amount_total_signed * sign
+        self.amount_untaxed_signed = amount_untaxed_signed * sign
 
     @api.model
     def _default_journal(self):
@@ -86,7 +89,7 @@ class AccountInvoice(models.Model):
     def _compute_residual(self):
         residual = 0.0
         residual_signed = 0.0
-        sign = self.type in ['in_invoice', 'out_refund'] and -1 or 1
+        sign = self.type in ['in_refund', 'in_invoice'] and -1 or 1
         for line in self.sudo().move_id.line_id:
             if line.account_id.internal_type in ('receivable', 'payable'):
                 residual_signed += line.amount_residual * sign
@@ -95,9 +98,11 @@ class AccountInvoice(models.Model):
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     residual += from_currency.compute(line.amount_residual, self.currency_id)
-        self.residual = abs(residual)
         self.residual_signed = residual_signed
-        self.reconciled = residual == 0.0
+        self.residual = abs(residual)
+        digits_rounding_precision = self.currency_id.rounding
+        if float_is_zero(self.residual, digits_rounding_precision):
+            self.reconciled = True
 
     @api.one
     def _get_outstanding_info_JSON(self):
@@ -248,13 +253,15 @@ class AccountInvoice(models.Model):
         readonly=True, index=True, ondelete='restrict', copy=False,
         help="Link to the automatically generated Journal Items.")
 
-    amount_untaxed = fields.Float(string='Subtotal', digits=0,
+    amount_untaxed = fields.Float(string='Untaxed Amount', digits=0,
         store=True, readonly=True, compute='_compute_amount', track_visibility='always')
+    amount_untaxed_signed = fields.Float(string='Untaxed Amount', digits=0,
+        store=True, readonly=True, compute='_compute_amount')
     amount_tax = fields.Float(string='Tax', digits=0,
         store=True, readonly=True, compute='_compute_amount')
     amount_total = fields.Float(string='Total', digits=0,
         store=True, readonly=True, compute='_compute_amount')
-    amount_total_signed = fields.Float(string='Total Signed', digits=0,
+    amount_total_signed = fields.Float(string='Total', digits=0,
         store=True, readonly=True, compute='_compute_amount',
         help="Total amount in the currency of the company, negative for credit notes.")
 
@@ -279,7 +286,7 @@ class AccountInvoice(models.Model):
 
     residual = fields.Float(string='Amount Due', digits=0,
         compute='_compute_residual', store=True, help="Remaining amount due.")
-    residual_signed = fields.Float(string='Amount Due Signed', digits=0,
+    residual_signed = fields.Float(string='Amount Due', digits=0,
         compute='_compute_residual', store=True, help="Remaining amount due in the currency of the company.")
     payment_ids = fields.Many2many('account.move.line', string='Payments',
         compute='_compute_payments')
