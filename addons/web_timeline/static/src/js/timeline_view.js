@@ -139,7 +139,7 @@ openerp.web_timeline = function (session) {
                 'compose_as_todo' : false,
                 'view_inbox': false,
                 'emails_from_on_composer': true,
-                'fetch_limit': 150,
+                'fetch_limit': 20,
                 'readonly': this.node.attrs.readonly || false,
                 'compose_placeholder' : this.node.attrs.placeholder || false,
                 'display_log_button' : this.options.display_log_button || true,
@@ -202,8 +202,8 @@ openerp.web_timeline = function (session) {
                 'show_link': true,
                 'show_reply_button': true,
                 'show_read_unread_button': true,
-                'fetch_limit': 200,
-                'fetch_child_limit': 200,
+                'fetch_limit': 30,
+                'fetch_child_limit': 10,
                 }, this.options);
 
             this.fields_view = {};

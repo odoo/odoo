@@ -715,7 +715,7 @@ class mail_message(osv.Model):
                 parent_tree[parent_id].append(self._message_read_dict(cr, uid, message_tree[cid], parent_id=parent_id, context=context))
 
             if parent_id:
-                parent_tree[parent_id].sort(key=lambda item: item['date'])
+                parent_tree[parent_id].sort(key=lambda item: item['id'])
                 parent_tree[parent_id].reverse();
                 parent_tree[parent_id].append(self._message_read_dict(cr, uid, message_tree[parent_id], context=context))
 
@@ -735,7 +735,7 @@ class mail_message(osv.Model):
 
         # create final ordered parent_list based on parent_tree
         parent_list = parent_tree.items()
-        parent_list = sorted(parent_list, key=lambda item: max([msg.get('date') for msg in item[1]]), reverse=True)
+        parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]), reverse=True)
 
         if mode != 'default':
             exp_domain = domain + [('id', '<', min(ids)), ('id', 'not in', parent_ids), ('parent_id', 'not in', parent_ids)]
@@ -1002,9 +1002,10 @@ class mail_message(osv.Model):
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
         if 'record_name' not in values and 'default_record_name' not in context:
             values['record_name'] = self._get_record_name(cr, uid, values, context=context)
+
+        print "values", values
         
         newid = super(mail_message, self).create(cr, uid, values, context)
-
 
         self._notify(cr, uid, newid, context=context,
                      force_send=context.get('mail_notify_force_send', True),
