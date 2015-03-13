@@ -73,8 +73,15 @@ class mail_mail(osv.Model):
     def default_get(self, cr, uid, fields, context=None):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         # To remove when automatic context propagation is removed in web client
-        if context and context.get('default_type') and context.get('default_type') not in self._all_columns['type'].column.selection:
-            context = dict(context, default_type=None)
+        if context:
+            if context.get('default_type') and context.get(
+                    'default_type'
+            ) not in self._all_columns['type'].column.selection:
+                context = dict(context, default_type=None)
+            if context.get('default_state') and context.get(
+                    'default_state'
+            ) not in self._all_columns['state'].column.selection:
+                context = dict(context, default_state=None)
         return super(mail_mail, self).default_get(cr, uid, fields, context=context)
 
     def create(self, cr, uid, values, context=None):
