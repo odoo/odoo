@@ -169,18 +169,8 @@
                             <div name="Sale Features"/>
                         </group>
                     </div>
-                    <div name="config_sale">
-                        <field name="module_crm" invisible="1"/>
-                        <separator string="Emails Integration" attrs="{'invisible': [('module_crm','=',False)]}"/>
-                        <p name="config_email_integration" attrs="{'invisible': [('module_crm','=',False)]}">
-                            Odoo allows to automatically create leads (or others documents)
-                            from incoming emails. You can automatically synchronize emails with Odoo
-                            using regular POP/IMAP accounts, using a direct email integration script for your
-                            email server, or by manually pushing emails to Odoo using specific
-                            plugins for your preferred email application.
-                        </p>
-                    </div>
-                    <div name="config_other"/>
+                    <div name="config_sale"/>
+                    <div name="config_pos"/>
                 </form>
             </field>
         </record>

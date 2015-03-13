@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <record id="view_sale_config_settings" model="ir.ui.view">
             <field name="name">crm settings</field>
             <field name="model">sale.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <data>
-	            <div name="config_sale" position="before">
+	            <div name="config_sale" position="inside">
 	                <separator string="Sale Services"/>
 	                <group>
                         <label for="id" string="Pre-Sale Services"/>
@@ -32,23 +31,38 @@
                             </div>
                         </div>
                     </group>
-	            </div>
-                <xpath expr="//p[@name='config_email_integration']" position="after">
-                    <group name="default_alias">
-                        <label for="id" string="Leads Email Alias"/>
-                        <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                </div>
+                <div name="config_sale" position="after">
+                    <div name="config_alias">
+                        <separator string="Emails Integration"/>
+                        <p name="config_email_integration">
+                            Odoo allows to automatically create leads
+                            from incoming emails.
+                        </p> 
+                        <group>
+                            <label for="id" string="Leads Email Alias"/>
                             <div>
-                                <field name="alias_prefix" class="oe_inline" attrs="{'required': [('alias_domain', '!=', False)]}"/>
-                                @
-                                <field name="alias_domain" class="oe_inline" readonly="1"/>
+                                <div>
+                                    <span attrs="{'invisible': [('group_multi_salesteams', '!=', True)]}">
+                                        <label string="Each sales team has an email alias that can be defined on the sales team form view" class="oe_inline oe_form_label_help oe_align_right"/>
+                                    </span>
+                                    <span class="oe_inline" attrs="{'invisible': [('group_multi_salesteams', '!=', False)]}">
+                                        <label string="Automatically create new leads when an email is sent to the following alias :" class="oe_inline oe_form_label_help oe_align_right"/>
+                                        <field name="alias_prefix" class="oe_inline"/>
+                                        <span>@</span>
+                                        <field name="alias_domain"  class="oe_inline" readonly="1"/>
+                                    </span>
+                                </div>
+                                 <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
+                                    <p>
+                                        <label string="Your alias domain is not configured yet, or is still 'localhost'"/>
+                                        <button type="action" name="base_setup.action_general_configuration" string="Configure your domain alias" icon="gtk-execute" class="oe_inline oe_link"/>
+                                    </p>
+                                </div>
                             </div>
-                            <p>
-                                All emails sent to this address and processed by the mailgateway
-                                will create a new lead.
-                            </p>
-                        </div>
-                    </group>
-                </xpath>
+                        </group>
+                    </div>
+	            </div>
                 </data>
             </field>
         </record>
