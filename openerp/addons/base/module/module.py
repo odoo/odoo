@@ -493,6 +493,32 @@ class module(osv.osv):
                                                               known_dep_ids, exclude_states, context))
         return list(known_dep_ids)
 
+    def upstream_dependencies(self, cr, uid, ids, known_dep_ids=None,
+                                exclude_states=['installed', 'uninstallable', 'to remove'],
+                                context=None):
+        """ Return the dependency tree of modules of the given `ids`, and that
+            satisfy the `exclude_states` filter """
+        if not ids:
+            return []
+        known_dep_ids = set(known_dep_ids or [])
+        cr.execute('''SELECT DISTINCT m.id
+                        FROM
+                            ir_module_module_dependency d
+                        JOIN
+                            ir_module_module m ON (d.module_id=m.id)
+                        WHERE
+                            m.name IN (SELECT name from ir_module_module_dependency where module_id in %s) AND
+                            m.state NOT IN %s AND
+                            m.id NOT IN %s ''',
+                   (tuple(ids), tuple(exclude_states), tuple(known_dep_ids or ids)))
+        new_dep_ids = set([m[0] for m in cr.fetchall()])
+        missing_mod_ids = new_dep_ids - known_dep_ids
+        known_dep_ids |= new_dep_ids
+        if missing_mod_ids:
+            known_dep_ids |= set(self.upstream_dependencies(cr, uid, list(missing_mod_ids),
+                                                              known_dep_ids, exclude_states, context))
+        return list(known_dep_ids)
+
     def _button_immediate_function(self, cr, uid, ids, function, context=None):
         function(cr, uid, ids, context=context)
 
