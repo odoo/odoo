@@ -29,16 +29,14 @@ class account_move_line(osv.osv):
     def amount_to_pay(self, cr, uid, ids, name, arg=None, context=None):
         """ Return the amount still to pay regarding all the payemnt orders
         (excepting cancelled orders)"""
+        res = {}
         if not ids:
-            return {}
-        res = dict.fromkeys(ids, 0.0)
-        cr.execute("""SELECT ml.id,
-                    (SELECT sum(coalesce(residual, 0))
-                        FROM account_invoice
-                        WHERE move_id = ml.move_id)
-                    FROM account_move_line ml
-                    WHERE id IN %s""", (tuple(ids),))
-        res.update(cr.fetchall())
+            return res
+        for ml in self.browse(cr, uid, ids, context=context):
+            if ml.amount_currency:
+                res[ml.id] = ml.amount_residual_currency
+            else:
+                res[ml.id] = ml.amount_residual
         return res
 
     def _to_pay_search(self, cr, uid, obj, name, args, context=None):
