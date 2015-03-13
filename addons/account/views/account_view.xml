@@ -273,8 +273,8 @@
                                     <field name="show_on_dashboard"/>
                                 </group>
                                 <group>
-                                    <field name="inbound_payment_methods" create="false" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ('bank', 'cash'))]}"/>
-                                    <field name="outbound_payment_methods" create="false" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ('bank', 'cash'))]}"/>
+                                    <field name="inbound_payment_methods" widget="many2many_checkboxes" attrs="{'invisible': [('type', '!=', 'bank')]}"/>
+                                    <field name="outbound_payment_methods" widget="many2many_checkboxes" attrs="{'invisible': [('type', '!=', 'bank')]}"/>
                                     <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                     <field name="sequence_id" groups="base.group_no_one" required="0"/>
                                     <field name="refund_sequence_id" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}" groups="base.group_no_one" required="0"/>

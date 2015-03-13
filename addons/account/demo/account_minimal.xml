@@ -296,14 +296,14 @@
         </record>
 
         <!-- TODO: set company_id.transfer_account via l10n_xx -->
-        <record id="trans" model="account.account">
+        <record id="transfer_account" model="account.account">
             <field name="code">X1019</field>
             <field name="reconcile" eval='True'/>
             <field name="name">Liquidity Transfers - (test)</field>
             <field name="user_type" ref="data_account_type_current_assets"/>
         </record>
         <record id="base.main_company" model="res.company">
-            <field name="transfer_account" ref="trans"/>
+            <field name="transfer_account_id" ref="transfer_account"/>
         </record>
 
     </data>

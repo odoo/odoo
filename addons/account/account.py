@@ -276,22 +276,13 @@ class AccountJournal(models.Model):
     refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal")
 
     inbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
-        domain=[('type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_in').id])
+        domain=[('payment_type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_in').id])
     outbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
-        domain=[('type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_out').id])
+        domain=[('payment_type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_out').id])
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
-
-    @api.one
-    @api.constrains('inbound_payment_methods', 'outbound_payment_methods')
-    def _check_payment_methods(self):
-        # TODO: or allow to set no payment method in which case the journal can't be used for the corresponding payment operation ?
-        if not self.inbound_payment_methods:
-            raise UserError(_('Configuration error!\nYou must enable at least an inbound payment method.'))
-        if not self.outbound_payment_methods:
-            raise UserError(_('Configuration error!\nYou must enable at least an outbound payment method.'))
 
     @api.one
     @api.constrains('currency', 'default_credit_account_id', 'default_debit_account_id')

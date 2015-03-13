@@ -10,9 +10,7 @@ class ResCompany(models.Model):
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], default=12)
     period_lock_date = fields.Date(help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
     fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
-    # TODO: Set this via l10n_xx muse have reconcile = True and user_type = self.env.ref('account.data_account_type_current_assets')
-    transfer_account = fields.Many2one('account.account',
-        help="Intermediary account used when moving money from a liquidity account to another")
+    transfer_account_id = fields.Many2one('account.account', help="Intermediary account used when moving money from a liquidity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
     bank_account_code_char = fields.Char(string='Code of the main bank account')
     accounts_code_digits = fields.Integer(string='Number of digits in an account code')
