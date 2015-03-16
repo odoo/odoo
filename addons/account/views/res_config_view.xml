@@ -80,6 +80,10 @@
                                 <label for="purchase_tax_rate"/>
                                 <field name="purchase_tax_rate" />
                             </div>
+                            <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}">
+                                <label for="transfer_account_id"/>
+                                <field name="transfer_account_id" class="oe_inline"/>
+                            </div>
                         </div>
                     </group>
                     <group string="Fiscal Year">

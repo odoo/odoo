@@ -50,6 +50,8 @@ class AccountConfigSettings(models.TransientModel):
     purchase_tax = fields.Many2one('account.tax.template', string='Default purchase tax')
     sale_tax_rate = fields.Float(string='Sales tax (%)')
     purchase_tax_rate = fields.Float(string='Purchase tax (%)')
+    transfer_account_id = fields.Many2one('account.account.template', required=True, domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_liabilities').id)],
+        help="Intermediary account used when moving money from a liquidity account to another")
     complete_tax_set = fields.Boolean(string='Complete set of taxes',
         help='''This boolean helps you to choose if you want to propose to the user to encode
              the sales and purchase rates or use the usual m2o fields. This last choice assumes that
@@ -160,6 +162,7 @@ class AccountConfigSettings(models.TransientModel):
             has_chart_of_accounts = self.company_id.id not in self.env['account.installer'].get_unconfigured_cmp()
             values = {
                 'expects_chart_of_accounts': self.company_id.expects_chart_of_accounts,
+                'transfer_account_id': self.company_id.transfer_account_id.id,
                 'currency_id': self.company_id.currency_id.id,
                 'paypal_account': self.company_id.paypal_account,
                 'company_footer': self.company_id.rml_footer,
@@ -217,6 +220,8 @@ class AccountConfigSettings(models.TransientModel):
                 res['value']['purchase_tax'] = purchase_tax and purchase_tax.id or False
             if self.chart_template_id.code_digits:
                 res['value']['code_digits'] = self.chart_template_id.code_digits
+            if self.chart_template_id.transfer_account_id:
+                res['value']['transfer_account_id'] = self.chart_template_id.transfer_account_id.id
         return res
 
     @api.onchange('sale_tax_rate')
@@ -258,6 +263,7 @@ class AccountConfigSettings(models.TransientModel):
             wizard = self.env['wizard.multi.charts.accounts'].create({
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
+                'transfer_account_id': self.transfer_account_id.id,
                 'code_digits': self.code_digits or 6,
                 'sale_tax': self.sale_tax.id,
                 'purchase_tax': self.purchase_tax.id,

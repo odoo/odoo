@@ -2775,7 +2775,7 @@
             <field name="user_type" ref="account.data_account_type_liquidity"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
-        <record id="a580" model="account.account.template">
+        <record id="trans" model="account.account.template">
             <field name="name">Transferts</field>
             <field name="code">580</field>
             <field name="user_type" ref="account.data_account_type_liquidity"/>
@@ -3099,7 +3099,7 @@
             <field name="user_type" ref="account.data_account_type_expenses"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
-        
+
         <record id="a6200" model="account.account.template">
             <field name="name">Administrateurs ou gérants</field>
             <field name="code">6200</field>
@@ -4101,6 +4101,8 @@
             <!--<field name="bank_account_view_id" ref="a550"/>-->
             <field name="bank_account_code_char">550</field>
             <field name="code_digits">6</field>
+            <field name="transfer_account_id" ref="trans"/>
+            <field name="property_account_receivable" ref="a_recv"/>
             <field name="property_account_receivable" ref="a_recv"/>
             <field name="property_account_payable" ref="a_pay"/>
             <field name="property_account_expense_categ" ref="a_expense"/>
