@@ -1492,13 +1492,13 @@ class related(function):
     """
     __slots__ = ['arg', '_relations']
 
-    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
+    def _related_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         # assume self._arg = ('foo', 'bar', 'baz')
         # domain = [(name, op, val)]   =>   search [('foo.bar.baz', op, val)]
         field = '.'.join(self._arg)
         return map(lambda x: (field, x[1], x[2]), domain)
 
-    def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
+    def _related_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for instance in obj.browse(cr, uid, ids, context=context):
@@ -1509,7 +1509,7 @@ class related(function):
                 # write on the last field of the target record
                 instance.write({self.arg[-1]: values})
 
-    def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
+    def _related_read(self, obj, cr, uid, ids, field_name, args, context=None):
         res = {}
         for record in obj.browse(cr, SUPERUSER_ID, ids, context=context):
             value = record
@@ -1536,7 +1536,7 @@ class related(function):
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(related, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, fnct_search=self._fnct_search, **args)
+        super(related, self).__init__(self._related_read, arg, self._related_write, fnct_inv_arg=arg, fnct_search=self._related_search, **args)
         if self.store is True:
             # TODO: improve here to change self.store = {...} according to related objects
             pass
@@ -1592,7 +1592,7 @@ class sparse(function):
             return read_value
         return value
 
-    def _fnct_write(self,obj,cr, uid, ids, field_name, value, args, context=None):
+    def _sparse_write(self,obj,cr, uid, ids, field_name, value, args, context=None):
         if not type(ids) == list:
             ids = [ids]
         records = obj.browse(cr, uid, ids, context=context)
@@ -1607,7 +1607,7 @@ class sparse(function):
             obj.write(cr, uid, ids, {self.serialization_field: serialized}, context=context)
         return True
 
-    def _fnct_read(self, obj, cr, uid, ids, field_names, args, context=None):
+    def _sparse_read(self, obj, cr, uid, ids, field_names, args, context=None):
         results = {}
         records = obj.browse(cr, uid, ids, context=context)
         for record in records:
@@ -1633,7 +1633,7 @@ class sparse(function):
 
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
-        super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
+        super(sparse, self).__init__(self._sparse_read, fnct_inv=self._sparse_write, multi='__sparse_multi', **kwargs)
 
 
 # ---------------------------------------------------------
@@ -1643,19 +1643,19 @@ class sparse(function):
 class dummy(function):
     __slots__ = ['arg', '_relations']
 
-    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
+    def _dummy_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         return []
 
-    def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
+    def _dummy_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
         return False
 
-    def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
+    def _dummy_read(self, obj, cr, uid, ids, field_name, args, context=None):
         return {}
 
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, fnct_search=self._fnct_search, **args)
+        super(dummy, self).__init__(self._dummy_read, arg, self._dummy_write, fnct_inv_arg=arg, fnct_search=self._dummy_search, **args)
 
 # ---------------------------------------------------------
 # Serialized fields
@@ -1693,19 +1693,19 @@ class property(function):
         args['company_dependent'] = True
         return args
 
-    def _fnct_search(self, tobj, cr, uid, obj, name, domain, context=None):
+    def _property_search(self, tobj, cr, uid, obj, name, domain, context=None):
         ir_property = obj.pool['ir.property']
         result = []
         for field, operator, value in domain:
             result += ir_property.search_multi(cr, uid, name, tobj._name, operator, value, context=context)
         return result
 
-    def _fnct_write(self, obj, cr, uid, id, prop_name, value, obj_dest, context=None):
+    def _property_write(self, obj, cr, uid, id, prop_name, value, obj_dest, context=None):
         ir_property = obj.pool['ir.property']
         ir_property.set_multi(cr, uid, prop_name, obj._name, {id: value}, context=context)
         return True
 
-    def _fnct_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
+    def _property_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
         ir_property = obj.pool['ir.property']
 
         res = {id: {} for id in ids}
@@ -1734,9 +1734,9 @@ class property(function):
         args = dict(args)
         args['obj'] = args.pop('relation', '') or args.get('obj', '')
         super(property, self).__init__(
-            fnct=self._fnct_read,
-            fnct_inv=self._fnct_write,
-            fnct_search=self._fnct_search,
+            fnct=self._property_read,
+            fnct_inv=self._property_write,
+            fnct_search=self._property_search,
             multi='properties',
             **args
         )
