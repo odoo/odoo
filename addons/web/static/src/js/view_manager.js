@@ -1,6 +1,7 @@
 odoo.define('web.ViewManager', function (require) {
 "use strict";
 
+var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var data = require('web.data');
 var Model = require('web.Model');
@@ -11,15 +12,14 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
-var ViewManager = Widget.extend({
+var ViewManager = Widget.extend(ControlPanelMixin, {
     template: "ViewManager",
     /**
      * @param {Object} [dataset] null object (... historical reasons)
      * @param {Array} [views] List of [view_id, view_type]
      * @param {Object} [flags] various boolean describing UI state
-     * @param {Object} [cp_bus] Bus to allow communication with ControlPanel
      */
-    init: function(parent, dataset, views, flags, action, cp_bus) {
+    init: function(parent, dataset, views, flags, action) {
         if (action) {
             flags = action.flags || {};
             if (!('auto_search' in flags)) {
@@ -45,7 +45,6 @@ var ViewManager = Widget.extend({
         this.active_view = null;
         this.registry = core.view_registry;
         this.title = this.action && this.action.name;
-        this.cp_bus = cp_bus;
 
         _.each(views, function (view) {
             var view_type = view[1] || view.view_type;
@@ -157,18 +156,16 @@ var ViewManager = Widget.extend({
         // Show the view
         this.active_view.$container.show();
         $.when(view_controller.do_show(view_options)).done(function () {
-            // Render the control elements of the active view (buttons, sidebar, pager)
-            var view_elements = self.render_view_control_elements();
-            var status = {
+            // Prepare the ControlPanel content and update it
+            var cp_status = {
                 active_view_selector: '.oe-cp-switch-' + self.active_view.type,
                 breadcrumbs: self.action_manager && self.action_manager.get_breadcrumbs(),
-                cp_content: _.extend({}, self.control_elements, view_elements),
+                cp_content: _.extend({}, self.control_elements, self.render_view_control_elements()),
                 hidden: self.flags.headless,
                 searchview: self.searchview,
                 search_view_hidden: view_controller.searchable === false,
             };
-            // Tell the ControlPanel to update its elements
-            self.cp_bus.trigger('update', status);
+            self.update_control_panel(cp_status);
         });
     },
     create_view: function(view, view_options) {

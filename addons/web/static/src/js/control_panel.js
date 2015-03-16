@@ -1,3 +1,32 @@
+odoo.define('web.ControlPanelMixin', function (require) {
+"use strict";
+
+/**
+ * Mixin allowing widgets to communicate with the ControlPanel. Widgets needing a
+ * ControlPanel should use this mixin and call update_control_panel(cp_status) where
+ * cp_status contains information for the ControlPanel to update itself.
+ */
+var ControlPanelMixin = {
+    need_control_panel: true,
+    /**
+     * @param {web.Bus} [cp_bus] Bus to communicate with the ControlPanel
+     */
+    set_cp_bus: function(cp_bus) {
+        this.cp_bus = cp_bus;
+    },
+    /**
+     * Triggers 'update' on the cp_bus to update the ControlPanel according to cp_status
+     * @param {Object} [cp_status] see web.ControlPanel.update() for a description
+     */
+    update_control_panel: function(cp_status) {
+        this.cp_bus.trigger("update", cp_status || {});
+    },
+};
+
+return ControlPanelMixin;
+
+});
+
 odoo.define('web.ControlPanel', function (require) {
 "use strict";
 

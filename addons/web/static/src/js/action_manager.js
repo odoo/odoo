@@ -203,6 +203,14 @@ var ActionManager = Widget.extend({
         this.inner_action = new_action;
         this.inner_widget = widget;
 
+        if (widget.need_control_panel) {
+            // Set the ControlPanel bus on the widget to allow it to communicate its status
+            widget.set_cp_bus(this.main_control_panel.get_bus());
+        } else {
+            // Hide the main ControlPanel for widgets that do not use it
+            this.main_control_panel.do_hide();
+        }
+
         // render the inner_widget in a fragment, and append it to the
         // document only when it's ready
         var new_widget_fragment = document.createDocumentFragment();
@@ -497,12 +505,6 @@ var ActionManager = Widget.extend({
                 search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
             });
         }
-        // Do not permit popups to communicate with the main control panel
-        if (!popup) {
-            options.cp_bus = this.main_control_panel.get_bus();
-        } else {
-            options.cp_bus = core.bus;   
-        }
 
         return this[type](action, options);
     },
@@ -563,6 +565,11 @@ var ActionManager = Widget.extend({
                     widget.flags.headless = true;
                 }
             }
+            if (widget.need_control_panel) {
+                // Set a fake bus to Dialogs needing a ControlPanel as they should not
+                // communicate with the main ControlPanel
+                widget.set_cp_bus(new core.Bus());
+            }
             this.dialog_widget = widget;
             this.dialog_widget.setParent(this.dialog);
             var initialized = this.dialog_widget.appendTo(this.dialog.$el);
@@ -580,7 +587,7 @@ var ActionManager = Widget.extend({
         var self = this;
         return this.ir_actions_common({
             widget: function () {
-                return new ViewManager(self, null, null, null, action, options.cp_bus);
+                return new ViewManager(self, null, null, null, action);
             },
             action: action,
             klass: 'oe_act_window',
@@ -602,8 +609,6 @@ var ActionManager = Widget.extend({
 
         return this.ir_actions_common({
             widget: function () {
-                // Hide main control panel as client actions do not use it
-                self.main_control_panel.do_hide();
                 return new ClientWidget(self, action);
             },
             action: action,

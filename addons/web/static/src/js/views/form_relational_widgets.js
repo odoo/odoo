@@ -1089,7 +1089,8 @@ var One2ManyViewManager = ViewManager.extend({
             sidebar: false,
         });
         this.control_panel = new ControlPanel(parent, "One2ManyControlPanel");
-        this._super(parent, dataset, views, flags, null, this.control_panel.bus);
+        this.set_cp_bus(this.control_panel.get_bus());
+        this._super(parent, dataset, views, flags);
         this.registry = core.view_registry.extend({
             list: One2ManyListView,
             form: One2ManyFormView,
