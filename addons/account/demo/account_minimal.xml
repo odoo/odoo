@@ -167,8 +167,14 @@
             <field name="user_type" ref="data_account_type_expenses"/>
             <field name="tag_ids" eval="[(6,0,[ref('account_tag_financing')])]"/>
         </record>
-        <record id="a_dividends" model="account.account">
+        <record id="a_capital" model="account.account">
             <field name="code">X3001</field>
+            <field name="name">Capital</field>
+            <field name="user_type" ref="data_account_type_equity"/>
+            <field name="tag_ids" eval="[(6,0,[ref('demo_capital_account')])]"/>
+        </record>
+        <record id="a_dividends" model="account.account">
+            <field name="code">X3002</field>
             <field name="name">Dividends</field>
             <field name="user_type" ref="data_account_type_equity"/>
         </record>

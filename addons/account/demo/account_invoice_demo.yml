@@ -125,7 +125,7 @@
     type: 'in_invoice'
     date_invoice: !eval time.strftime('%Y')+'-01-15'
 -
-  !python {model: account.invoice.line} : |
+  !python {model: ir.model.data} : |
       account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_fixed_assets'))])
       line_vals = {
           'invoice_id': ref('demo_invoice_equipment_purchase'),
@@ -134,7 +134,7 @@
       }
       if account_id:
           line_vals['account_id'] = account_id[0]
-      self.create(cr, uid, line_vals)
+      self._update(cr, uid, 'account.invoice.line', 'account', line_vals, 'coffee_machine_line')
 -
   !workflow {model: account.invoice, action: invoice_open, ref: demo_invoice_equipment_purchase}
 -
@@ -144,3 +144,30 @@
       if not line.journal_entry_ids and account_ids:
           line.write({'account_id': account_ids[0]})
           line.fast_counterpart_creation()
+-
+  !record {model: account.move, id: demo_opening_move}:
+    company_id: base.main_company
+    journal_id: miscellaneous_journal 
+    date: !eval time.strftime('%Y')+'-01-01'
+    ref: 'Company Creation'
+-
+  !python {model: ir.model.data} : |
+      bank_account_id = self.pool.get('account.journal').browse(cr, uid, ref('bank_journal')).default_debit_account_id.id
+      fixed_asset_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_fixed_assets'))])
+      equity_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_equity')), ('tag_ids', in', [ref('demo_capital_account')])])
+      if bank_account_id and fixed_asset_account_ids and equity_account_ids:
+          self._update(cr, uid, 'account.move.line', 'account', {
+              'move_id': ref('demo_opening_move'),
+              'name': 'Opening Entry',
+              'debit': 5103,
+              'account_id': bank_account_id}, 'opening_line_1', context={'check_move_validity': False})
+          self._update(cr, uid, 'account.move.line', 'account', {
+              'move_id': ref('demo_opening_move'),
+              'name': 'Opening Entry',
+              'debit': 13447,
+              'account_id': fixed_asset_account_ids[0]}, 'opening_line_2', context={'check_move_validity': False})
+          self._update(cr, uid, 'account.move.line', 'account', {
+              'move_id': ref('demo_opening_move'),
+              'name': 'Opening Entry',
+              'credit': 18550,
+              'account_id': equity_account_ids[0]}, 'opening_line_3', context={'check_move_validity': False})
