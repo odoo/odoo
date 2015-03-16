@@ -1729,7 +1729,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 self.clear_selection();
             })
             .on('reset', this.proxy('clear_selection'));
-        return this.model.call('get_filters', [this.view.model, this.get_action_id()])
+        return this.model.call('get_filters', [this.view.model, this.get_action_id()], {context: this.view.dataset.context})
             .then(this.proxy('set_filters'))
             .done(function () { self.is_ready.resolve(); })
             .fail(function () { self.is_ready.reject.apply(self.is_ready, arguments); });
