@@ -189,6 +189,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             name: _t("Add column"),
             res_model: self.group_by_field.relation,
             views: [[false, 'form']],
+            view_mode: "form",
             type: 'ir.actions.act_window',
             target: "new",
             context: self.dataset.get_context(),
