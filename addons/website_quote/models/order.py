@@ -183,7 +183,7 @@ class sale_order(osv.osv):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/quote/%s' % (quote.id)
+            'url': '/quote/%s/%s' % (quote.id, quote.access_token)
         }
 
     def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position=False, context=None):
