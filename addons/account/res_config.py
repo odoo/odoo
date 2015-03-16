@@ -50,7 +50,8 @@ class AccountConfigSettings(models.TransientModel):
     purchase_tax = fields.Many2one('account.tax.template', string='Default purchase tax')
     sale_tax_rate = fields.Float(string='Sales tax (%)')
     purchase_tax_rate = fields.Float(string='Purchase tax (%)')
-    transfer_account_id = fields.Many2one('account.account.template', required=True, domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_liabilities').id)],
+    transfer_account_id = fields.Many2one('account.account.template', required=True,
+        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
     complete_tax_set = fields.Boolean(string='Complete set of taxes',
         help='''This boolean helps you to choose if you want to propose to the user to encode

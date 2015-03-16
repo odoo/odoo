@@ -844,7 +844,9 @@ class AccountChartTemplate(models.Model):
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
     bank_account_code_char = fields.Char(string='Code of the main bank account')
-    transfer_account_id = fields.Many2one('account.account.template', string='Transfer Account')
+    transfer_account_id = fields.Many2one('account.account.template',
+        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
+        help="Intermediary account used when moving money from a liquidity account to another")
     property_account_receivable = fields.Many2one('account.account.template', string='Receivable Account')
     property_account_payable = fields.Many2one('account.account.template', string='Payable Account')
     property_account_expense_categ = fields.Many2one('account.account.template', string='Expense Category Account')
@@ -1293,7 +1295,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
     purchase_tax = fields.Many2one('account.tax.template', string='Default Purchase Tax')
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
     use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
-    transfer_account_id = fields.Many2one('account.account.template', required=True, domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_liabilities').id)],
+    transfer_account_id = fields.Many2one('account.account.template', required=True,
+        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
     purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
     complete_tax_set = fields.Boolean('Complete Set of Taxes',

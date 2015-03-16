@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import time
+
 from openerp import models, fields, api, _
 from openerp.exceptions import UserError, ValidationError
 
@@ -71,7 +73,7 @@ class account_register_payments(models.TransientModel):
     @api.multi
     def button_register_payments(self):
         for invoice in self.env['account.invoice'].browse(self._context.get('active_ids')):
-            self.env['account.payment'].create({
+            payment = self.env['account.payment'].create({
                 'journal_id': self.journal_id.id,
                 'payment_method': self.payment_method.id,
                 'date': self.date,
@@ -81,6 +83,7 @@ class account_register_payments(models.TransientModel):
                 'partner_id': invoice.partner_id.id,
                 'partner_type': invoice.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier'
             })
+            payment.post()
 
 
 class account_payment(models.Model):
@@ -106,18 +109,18 @@ class account_payment(models.Model):
         self.payment_difference = self.invoice_id and self.invoice_id.residual - self.amount or 0
 
     name = fields.Char(readonly=True, copy=False)
-    state = fields.Selection([('draft','Draft'), ('confirmed','Confirmed')], readonly=True, default='draft')
+    state = fields.Selection([('draft','Draft'), ('confirmed','Confirmed')], readonly=True, default='draft', copy=False)
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Transfer Money')], default='outbound', required=True)
     payment_method = fields.Many2one('account.payment.method', string='Payment Method', required=True)
-    payment_state = fields.Selection([('todo', 'To Process'), ('done', 'Processed'), ('failed', 'Failed')], required=True, default="todo")
+    payment_state = fields.Selection([('todo', 'To Process'), ('done', 'Processed'), ('failed', 'Failed')], required=True, default="todo", copy=False)
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Supplier')], default='supplier')
     partner_id = fields.Many2one('res.partner', string='Partner')
 
     amount = fields.Float(string='Amount', required=True, digits=0)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
-    date = fields.Date(string='Date', default=fields.Date.context_today, required=True, copy=False)
+    date = fields.Date(string='Date', default=fields.Date.context_today, required=True)
     reference = fields.Char('Ref', help="Transaction reference number.")
     journal_id = fields.Many2one('account.journal', string='Bank Journal', required=True, domain=[('type', '=', 'bank')])
     # Money flows from the journal_id's default_debit_account_id or default_credit_account_id to the destination_account_id
@@ -126,10 +129,10 @@ class account_payment(models.Model):
     destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain=[('type', '=', 'bank')])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
-    invoice_id = fields.Many2one('account.invoice', string="Invoice", domain=[('state', '=', 'open')], default=lambda self: self._context.get('invoice_id'))
+    invoice_id = fields.Many2one('account.invoice', string="Invoice", domain=[('state', '=', 'open')], default=lambda self: self._context.get('invoice_id'), copy=False)
     payment_difference = fields.Float(compute='_compute_payment_difference')
-    payment_difference_handling = fields.Selection([('open', 'Keep Open'), ('reconcile', 'Reconcile Payment Balance')], default='open', string="Payment Difference")
-    writeoff_account = fields.Many2one('account.account', string="Counterpart Account", domain=[('deprecated', '=', False)])
+    payment_difference_handling = fields.Selection([('open', 'Keep Open'), ('reconcile', 'Reconcile Payment Balance')], default='open', string="Payment Difference", copy=False)
+    writeoff_account = fields.Many2one('account.account', string="Counterpart Account", domain=[('deprecated', '=', False)], copy=False)
 
     move_lines = fields.One2many('account.move.line', 'payment_id', copy=False, readonly=True, ondelete='restrict')
 
@@ -159,6 +162,7 @@ class account_payment(models.Model):
     @api.onchange('journal_id')
     def _onchange_journal(self):
         if self.journal_id:
+            self.currency_id = self.journal_id.currency and self.journal_id.currency or self.company_id.currency_id
             # Set default payment method (we consider the first to be the default one)
             payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_methods or self.journal_id.outbound_payment_methods
             self.payment_method = payment_methods and payment_methods[0] or False
@@ -192,7 +196,8 @@ class account_payment(models.Model):
                 if vals['payment_type'] == 'outbound':
                     sequence = self.env.ref('account.sequence_payment_supplier_invoice')
 
-        vals['name'] = sequence.with_context(ir_sequence_date=vals['date']).next_by_id()
+        date_str = isinstance(vals['date'], str) and vals['date'] or fields.Date.to_string(vals['date'])
+        vals['name'] = sequence.with_context(ir_sequence_date=date_str).next_by_id()
         return super(account_payment, self).create(vals)
 
     @api.multi

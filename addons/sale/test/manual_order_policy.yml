@@ -54,9 +54,7 @@
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
     import time
     for invoice in order.invoice_ids:
-        invoice.pay_and_reconcile(
-            invoice.amount_total, time.strftime('%Y-%m-%d'),
-            journal_ids[0])
+        self.pay_and_reconcile(cr, uid, invoice.id, invoice.amount_total, time.strftime('%Y-%m-%d'), journal_ids[0])
 -
   I check Invoice after do manual.
 -
