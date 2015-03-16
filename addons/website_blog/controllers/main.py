@@ -151,7 +151,7 @@ class WebsiteBlog(http.Controller):
                 tag_ids.remove(current_tag)
             else:
                 tag_ids.append(current_tag)
-            tag_ids = request.registry['blog.tag'].browse(cr, uid, tag_ids, context=context)
+            tag_ids = request.registry['blog.tag'].browse(cr, uid, tag_ids, context=context).exists()
             return ','.join(map(slug, tag_ids))
 
         values = {
