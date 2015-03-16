@@ -90,7 +90,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
 
         # I totally pay the Invoice
         pay = self.account_invoice_customer0.pay_and_reconcile(
-            10050.0, datetime.date.today(), self.env.ref('account.bank_journal').id,
+            10050.0, datetime.date.today(), self.env.ref('account.bank_journal'),
         )
 
         # I verify that invoice is now in Paid state
