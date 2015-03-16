@@ -707,20 +707,19 @@ openerp.web_calendar = function(instance) {
                             console.log("Consecutive ``do_search`` called. Cancelling.");
                             return;
                         }
-                        
+
                         if (!self.useContacts) {  // If we use all peoples displayed in the current month as filter in sidebars
                             var filter_item;
-                            
+
                             self.now_filter_ids = [];
 
                             var color_field = self.fields[self.color_field];
                             _.each(events, function (e) {
-                                var key,val = null;
-                                if (self.color_field.type == "selection") {
+                                var key, val = null;
+                                if (self.fields[self.color_field].type == "selection"){
                                     key = e[self.color_field];
-                                    val = _.find( self.color_field.selection, function(name){ return name[0] === key;});
-                                }
-                                else {
+                                    val = _.find( self.fields[self.color_field].selection, function(name){ return name[0] === key;});
+                                }else{
                                     key = e[self.color_field][0];
                                     val = e[self.color_field];
                                 }
@@ -742,16 +741,16 @@ openerp.web_calendar = function(instance) {
                             if (self.sidebar) {
                                 self.sidebar.filter.events_loaded();
                                 self.sidebar.filter.set_filters();
-                                
+
                                 events = $.map(events, function (e) {
-                                    var key = self.color_field.type == "selection" ? e[self.color_field] : e[self.color_field][0];
+                                    var key = self.fields[self.color_field].type == "selection"?e[self.color_field]:e[self.color_field][0];
                                     if (_.contains(self.now_filter_ids, key) &&  self.all_filters[key].is_checked) {
                                         return e;
                                     }
                                     return null;
                                 });
                             }
-                            
+
                         }
                         else { //WE USE CONTACT
                             if (self.attendee_people !== undefined) {
