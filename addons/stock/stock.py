@@ -895,8 +895,10 @@ class stock_picking(osv.osv):
                 if all([x.state != 'waiting' for x in pick.move_lines]):
                     return True
             for move in pick.move_lines:
-                if (move.state) == 'waiting':
-                    move.check_assign()
+                if move.state == 'waiting':
+                    if self.pool['stock.move'].check_assign(
+                            cr, uid, [move.id], {'picking_trg_write': False}):
+                        move.refresh()
                 if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
                     return False
                 if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):
@@ -2223,7 +2225,7 @@ class stock_move(osv.osv):
             count += len(done)
             self.write(cr, uid, done, {'state': 'assigned'})
 
-        if count:
+        if count and context.get('picking_trg_write', True):
             for pick_id in pickings:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
