@@ -545,7 +545,7 @@ openerp.web_timeline = function (session) {
 
         treat_threads: function (records) {
             var self = this;
-            
+
             _.each(records.threads, function (record) {
                 self.create_thread(record);
             });
@@ -873,7 +873,7 @@ openerp.web_timeline = function (session) {
         insert_message: function (message) {
             this.$('.oe_view_nocontent').remove();
             if (this.options.view_inbox && !this.root) {
-                $(message.content).appendTo(this.$('.oe_tl_thread_content'));
+                $(message.content).insertAfter(this.$('.oe_tl_thread_content'));
             }
             else if (this.options.view_inbox && this.root) {
                 $(message.content).appendTo(this.$('.oe_tl_thread_parent:first'));
