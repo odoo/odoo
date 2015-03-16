@@ -533,7 +533,7 @@ class Post(models.Model):
         question = self.parent_id
         values = {
             'author_id': self.sudo().create_uid.partner_id.id,  # use sudo here because of access to res.users model
-            'body': tools.html2plaintext(self.content),
+            'body': tools.html_sanitize(self.content, strict=True, strip_style=True, strip_classes=True),
             'type': 'comment',
             'subtype': 'mail.mt_comment',
             'date': self.create_date,
