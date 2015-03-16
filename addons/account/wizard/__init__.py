@@ -34,6 +34,5 @@ import account_validate_account_move
 import account_state_open
 
 import pos_box
-import account_statement_from_invoice
 import account_register_payment
 import account_move_reversal

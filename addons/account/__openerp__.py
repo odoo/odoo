@@ -44,7 +44,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_installer.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/account_unreconcile_view.xml',
-        'wizard/account_statement_from_invoice_view.xml',
         'views/account_view.xml',
         'views/account_report.xml',
         'views/account_financial_report_data.xml',

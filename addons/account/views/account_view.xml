@@ -403,16 +403,15 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="import_buttons">
-                        <button class="oe_inline oe_stat_button" name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoice" type="action"
-                            attrs="{'invisible':[('state','=','confirm')]}" widget="statinfo" icon="fa-pencil-square-o"/>
                         <button class="oe_inline oe_stat_button" name="button_journal_entries"
                                 string="Journal Items" type="object"
                                 attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
                         <field name="move_line_ids" invisible="1"/>
                     </div>
-                    <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name"/></h1>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
                     <group>
                         <group>
                             <field name="journal_id" domain="[('type', '=', 'bank')]" attrs="{'readonly': [('move_line_ids', '!=', [])]}" widget="selection"/>
