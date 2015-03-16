@@ -546,8 +546,6 @@ openerp.web_timeline = function (session) {
         treat_threads: function (records) {
             var self = this;
             
-            console.log("records", records);
-
             _.each(records.threads, function (record) {
                 self.create_thread(record);
             });
