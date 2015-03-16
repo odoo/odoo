@@ -151,8 +151,6 @@ class _column(object):
 
     def __getattr__(self, name):
         """ Access a non-slot attribute. """
-        if name == '_args':
-            raise AttributeError(name)
         try:
             return self._args[name]
         except KeyError:
@@ -684,7 +682,7 @@ class many2one(_column):
     _symbol_f = lambda x: x or None
     _symbol_set = (_symbol_c, _symbol_f)
 
-    __slots__ = ['ondelete', '_obj', '_auto_join']
+    __slots__ = ['_obj', '_auto_join']
 
     def __init__(self, obj, string='unknown', auto_join=False, **args):
         args['ondelete'] = args.get('ondelete', 'set null')
