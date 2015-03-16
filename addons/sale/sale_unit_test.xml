@@ -65,7 +65,6 @@
             <value eval="obj(ref('test_order_1')).amount_total" model="sale.order"/>
             <value eval="time.strftime('%Y-%m-%d')"/>
             <value eval="ref('account.bank_journal')"/>
-            <value model="account.account" search="[('internal_type', '=', 'cash')]"/>
         </function>
 
         <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order's invoice is now paid">
