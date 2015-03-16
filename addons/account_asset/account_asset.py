@@ -172,10 +172,6 @@ class account_asset_asset(osv.osv):
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
-                company_currency = asset.company_id.currency_id.id
-                current_currency = asset.currency_id.id
-                # compute amount into company currency
-                amount = currency_obj.compute(cr, uid, current_currency, company_currency, amount, context=context)
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
