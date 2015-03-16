@@ -128,7 +128,7 @@
                           <img class="media-object pull-left" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                           <div class="media-body">
                               <h5 class="media-heading">
-                                  <span t-raw="message.author_id.name"/> <small>on <span t-raw="message.date"/></small>
+                                  <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
                               </h5>
                               <div t-raw="message.body"/>
                           </div>
