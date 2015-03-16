@@ -370,8 +370,6 @@ class hr_holidays(osv.osv):
         return hr_holiday_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
         employee_id = vals.get('employee_id', False)
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
