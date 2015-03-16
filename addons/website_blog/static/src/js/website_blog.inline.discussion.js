@@ -24,27 +24,34 @@ var InlineDiscussion = core.Class.extend({
     },
     start: function() {
         var self = this;
-        if ($('#discussions_wrapper').length === 0 && this.settings.content.length > 0) {
-            $('<div id="discussions_wrapper"></div>').insertAfter($('#blog_content'));
+        var $wrapper = $('#discussions_wrapper');
+        if (!$wrapper.length && this.settings.content.length > 0) {
+            $wrapper = $('<div id="discussions_wrapper"></div>').insertAfter($('#blog_content'));
         }
         // Attach a discussion to each paragraph.
         this.discussions_handler(this.settings.content);
 
-        // Hide the discussion.
-        $('html').click(function(event) {
-            if($(event.target).parents('#discussions_wrapper, .main-discussion-link-wrp').length === 0) {
+        // Open/close the discussion.
+        $('html').click(function (event) {
+            var $target = $(event.target);
+            var open;
+
+            if ((!$target.is('.discussion-link:not(.active)') && !$target.closest('.popover').length) || !$target.closest('#discussions_wrapper').length) {
                 self.hide_discussion();
+                open = false;
+            } else if ($target.is('.discussion-link')) {
+                self.get_discussion($target);
+                open = true;
             }
-            if(!$(event.target).hasClass('discussion-link') && !$(event.target).parents('.popover').length){
-                if($('.move_discuss').length){
-                    $('[enable_chatter_discuss=True]').removeClass('move_discuss');
-                    $('[enable_chatter_discuss=True]').animate({
-                        'marginLeft': "+=40%"
-                    });
-                    $('#discussions_wrapper').animate({
-                        'marginLeft': "+=250px"
-                    });
-                }
+
+            if (open === !$wrapper.hasClass('o_move_discuss')) {
+                $wrapper.toggleClass('o_move_discuss', open);
+                $wrapper.animate({
+                    'marginLeft': (open ? '-' : '+')+"=20%"
+                });
+                $('#blog_content[enable_chatter_discuss=True]').animate({
+                    'marginLeft': (open ? '-' : '+')+"=40%"
+                });
             }
         });
     },
@@ -101,28 +108,8 @@ var InlineDiscussion = core.Class.extend({
         }).mouseout(function() {
             a.removeClass("hovered");
         });
-
-        a.delegate('a.discussion-link', "click", function(e) {
-            e.preventDefault();
-            if(!$('.move_discuss').length){
-                $('[enable_chatter_discuss=True]').addClass('move_discuss');
-                $('[enable_chatter_discuss=True]').animate({
-                    'marginLeft': "-=40%"
-                });
-                $('#discussions_wrapper').animate({
-                    'marginLeft': "-=250px"
-                });
-            }
-            if ($(this).is('.active')) {
-                e.stopPropagation();
-                self.hide_discussion();
-            }
-            else {
-                self.get_discussion($(this), function() {});
-            }
-        });
     },
-    get_discussion : function(source, callback) {
+    get_discussion : function(source) {
         var self = this;
         var identifier = source.attr('data-discus-identifier');
         self.hide_discussion();
@@ -140,7 +127,6 @@ var InlineDiscussion = core.Class.extend({
             // Add 'active' class.
             $('a.discussion-link, a.main-discussion-link').removeClass('active').filter(source).addClass('active');
             elt.popover('hide').filter(source).popover('show');
-            callback(source);
         });
     },
     create_popover : function(elt, identifier) {

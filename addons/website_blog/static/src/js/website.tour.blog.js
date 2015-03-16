@@ -103,6 +103,7 @@ base.ready().done(function () {
                 popover:   { fixed: true },
             },
             {
+                waitFor:   '.modal:has(#mobile-viewport):visible',
                 element:   '.modal:has(#mobile-viewport) button[data-dismiss=modal]',
                 placement: 'right',
                 title:     _t("Check Mobile Preview"),
