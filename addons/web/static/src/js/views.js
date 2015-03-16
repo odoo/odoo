@@ -202,6 +202,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.inner_action = new_action;
         this.inner_widget = widget;
 
+        if (widget.need_control_panel) {
+            // Set the ControlPanel bus on the widget to allow it to communicate its status
+            widget.set_cp_bus(this.main_control_panel.get_bus());
+        } else {
+            // Hide the main ControlPanel for widgets that do not use it
+            this.main_control_panel.do_hide();
+        }
+
         // render the inner_widget in a fragment, and append it to the
         // document only when it's ready
         var new_widget_fragment = document.createDocumentFragment();
@@ -499,12 +507,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
             });
         }
-        // Do not permit popups to communicate with the main control panel
-        if (!popup) {
-            options.cp_bus = this.main_control_panel.get_bus();
-        } else {
-            options.cp_bus = new instance.web.Bus();
-        }
 
         return this[type](action, options);
     },
@@ -565,6 +567,11 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     widget.flags.headless = true;
                 }
             }
+            if (widget.need_control_panel) {
+                // Set a fake bus to Dialogs needing a ControlPanel as they should not
+                // communicate with the main ControlPanel
+                widget.set_cp_bus(new instance.web.Bus);
+            }
             this.dialog_widget = widget;
             this.dialog_widget.setParent(this.dialog);
             var initialized = this.dialog_widget.appendTo(this.dialog.$el);
@@ -582,7 +589,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         var self = this;
         return this.ir_actions_common({
             widget: function () {
-                return new instance.web.ViewManager(self, null, null, null, action, options.cp_bus);
+                return new instance.web.ViewManager(self, null, null, null, action);
             },
             action: action,
             klass: 'oe_act_window',
@@ -604,8 +611,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
 
         return this.ir_actions_common({
             widget: function () {
-                // Hide main control panel as client actions do not use it
-                self.main_control_panel.do_hide();
                 return new ClientWidget(self, action);
             },
             action: action,
@@ -678,6 +683,28 @@ instance.web.ActionManager = instance.web.Widget.extend({
         return $.when();
     },
 });
+
+/**
+ * Mixin allowing widgets to communicate with the ControlPanel. Widgets needing a
+ * ControlPanel should use this mixin and call update_control_panel(cp_status) where
+ * cp_status contains information for the ControlPanel to update itself.
+ */
+instance.web.ControlPanelMixin = {
+    need_control_panel: true,
+    /**
+     * @param {openerp.web.Bus} [cp_bus] Bus to communicate with the ControlPanel
+     */
+    set_cp_bus: function(cp_bus) {
+        this.cp_bus = cp_bus;
+    },
+    /**
+     * Triggers 'update' on the cp_bus to update the ControlPanel according to cp_status
+     * @param {Object} [cp_status] see instance.web.ControlPanel.update() for a description
+     */
+    update_control_panel: function(cp_status) {
+        this.cp_bus.trigger("update", cp_status || {});
+    },
+};
 
 instance.web.ControlPanel = instance.web.Widget.extend({
     template: 'ControlPanel',
@@ -1040,7 +1067,7 @@ if (instance.session.debug) {
     instance.web.SystrayItems.push(instance.web.DebugManager);
 }
 
-instance.web.ViewManager = instance.web.Widget.extend({
+instance.web.ViewManager = instance.web.Widget.extend(instance.web.ControlPanelMixin, {
     template: "ViewManager",
     /**
      * @param {Object} [dataset] null object (... historical reasons)
@@ -1048,7 +1075,7 @@ instance.web.ViewManager = instance.web.Widget.extend({
      * @param {Object} [flags] various boolean describing UI state
      * @param {Object} [cp_bus] Bus to allow communication with ControlPanel
      */
-    init: function(parent, dataset, views, flags, action, cp_bus) {
+    init: function(parent, dataset, views, flags, action) {
         if (action) {
             flags = action.flags || {};
             if (!('auto_search' in flags)) {
@@ -1074,7 +1101,6 @@ instance.web.ViewManager = instance.web.Widget.extend({
         this.active_view = null;
         this.registry = instance.web.views;
         this.title = this.action && this.action.name;
-        this.cp_bus = cp_bus;
 
         _.each(views, function (view) {
             var view_type = view[1] || view.view_type,
@@ -1186,18 +1212,16 @@ instance.web.ViewManager = instance.web.Widget.extend({
         // Show the view
         this.active_view.$container.show();
         $.when(view_controller.do_show(view_options)).done(function () {
-            // Render the control elements of the active view (buttons, sidebar, pager)
-            var view_elements = self.render_view_control_elements();
-            var status = {
+            // Prepare the ControlPanel content and update it
+            var cp_status = {
                 active_view_selector: '.oe-cp-switch-' + self.active_view.type,
                 breadcrumbs: self.action_manager && self.action_manager.get_breadcrumbs(),
-                cp_content: _.extend({}, self.control_elements, view_elements),
+                cp_content: _.extend({}, self.control_elements, self.render_view_control_elements()),
                 hidden: self.flags.headless,
                 searchview: self.searchview,
                 search_view_hidden: view_controller.searchable === false,
             };
-            // Tell the ControlPanel to update its elements
-            self.cp_bus.trigger('update', status);
+            self.update_control_panel(cp_status);
         });
     },
     create_view: function(view, view_options) {

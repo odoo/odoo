@@ -4386,7 +4386,8 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             sidebar: false,
         });
         this.control_panel = new instance.web.ControlPanel(parent, "One2ManyControlPanel");
-        this._super(parent, dataset, views, flags, null, this.control_panel.bus);
+        this.set_cp_bus(this.control_panel.get_bus());
+        this._super(parent, dataset, views, flags, null);
         this.registry = instance.web.views.extend({
             list: 'instance.web.form.One2ManyListView',
             form: 'instance.web.form.One2ManyFormView',
