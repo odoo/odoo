@@ -1267,20 +1267,18 @@ class Selection(Field):
     def set_class_name(self, cls, name):
         super(Selection, self).set_class_name(cls, name)
         # determine selection (applying 'selection_add' extensions)
-        selection = None
         for field in resolve_all_mro(cls, name, reverse=True):
             if isinstance(field, type(self)):
                 # We cannot use field.selection or field.selection_add here
                 # because those attributes are overridden by `set_class_name`.
                 if 'selection' in field._attrs:
-                    selection = field._attrs['selection']
+                    self.selection = field._attrs['selection']
                 if 'selection_add' in field._attrs:
                     # use an OrderedDict to update existing values
                     selection_add = field._attrs['selection_add']
-                    selection = OrderedDict(selection + selection_add).items()
+                    self.selection = OrderedDict(self.selection + selection_add).items()
             else:
-                selection = None
-        self.selection = selection
+                self.selection = None
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
