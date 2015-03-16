@@ -199,15 +199,13 @@ class AccountFinancialReportLine(models.Model):
 
     def _build_cmp(self, balance, comp):
         if comp != 0:
-            res = round(balance/comp * 100, 1)
-        elif balance >= 0:
-            res = 100.0
+            res = round((balance-comp)/comp * 100, 1)
+            if (res > 0) != self.green_on_positive:
+                return (str(res) + '%', 'color: red;')
+            else:
+                return (str(res) + '%', 'color: green;')
         else:
-            res = -100.0
-        if (res > 0) != self.green_on_positive:
-            return (str(res) + '%', 'color: red;')
-        else:
-            return (str(res) + '%', 'color: green;')
+            return 'n/a'
 
     def _get_footnotes(self, type, target_id, context):
         footnotes = context.footnotes.filtered(lambda s: s.type == type and s.target_id == target_id)
