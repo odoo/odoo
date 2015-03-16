@@ -705,7 +705,7 @@ class mail_message(osv.Model):
                 exp_domain = domain + [('id', '<', min(child_ids))]
             else:
                 child_ids = [msg.id for msg in self.browse(cr, uid, parent_id, context=context).child_ids][0:child_limit]
-                exp_domain = [('parent_id', '=', parent_id)]
+                exp_domain = [('parent_id', '=', parent_id), ('id', '>', parent_id)]
                 if len(child_ids):
                     exp_domain += [('id', '<', min(child_ids))]
 
