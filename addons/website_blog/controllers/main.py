@@ -7,7 +7,7 @@ import werkzeug
 from openerp import tools
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models.website import slug
+from openerp.addons.website.models.website import slug, unslug
 from openerp.exceptions import UserError
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
@@ -117,7 +117,8 @@ class WebsiteBlog(http.Controller):
 
         # build the domain for blog post to display
         domain = []
-        active_tag_ids = tag and map(int, tag.split(',')) or []
+        # retrocompatibility to accept tag as slug
+        active_tag_ids = tag and map(int, [unslug(t)[1] for t in tag.split(',')]) or []
         if active_tag_ids:
             domain += [('tag_ids', 'in', active_tag_ids)]
         if blog:
@@ -150,7 +151,8 @@ class WebsiteBlog(http.Controller):
                 tag_ids.remove(current_tag)
             else:
                 tag_ids.append(current_tag)
-            return ','.join(map(str, tag_ids))
+            tag_ids = request.registry['blog.tag'].browse(cr, uid, tag_ids, context=context)
+            return ','.join(map(slug, tag_ids))
 
         values = {
             'blog': blog,
