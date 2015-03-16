@@ -1035,7 +1035,7 @@ class ir_server_object_lines(osv.osv):
     _sequence = 'ir_actions_id_seq'
 
     _columns = {
-        'server_id': fields.many2one('ir.actions.server', 'Related Server Action'),
+        'server_id': fields.many2one('ir.actions.server', 'Related Server Action', ondelete='cascade'),
         'col1': fields.many2one('ir.model.fields', 'Field', required=True),
         'value': fields.text('Value', required=True, help="Expression containing a value specification. \n"
                                                           "When Formula type is selected, this field may be a Python expression "

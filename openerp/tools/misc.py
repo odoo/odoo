@@ -536,7 +536,7 @@ ALL_LANGUAGES = {
         'mn_MN': u'Mongolian / монгол',
         'nb_NO': u'Norwegian Bokmål / Norsk bokmål',
         'nl_NL': u'Dutch / Nederlands',
-        'nl_BE': u'Flemish (BE) / Vlaams (BE)',
+        'nl_BE': u'Dutch (BE) / Nederlands (BE)',
         'oc_FR': u'Occitan (FR, post 1500) / Occitan',
         'pl_PL': u'Polish / Język polski',
         'pt_BR': u'Portuguese (BR) / Português (BR)',
