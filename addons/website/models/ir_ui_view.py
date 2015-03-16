@@ -205,3 +205,7 @@ class view(osv.osv):
                     'active': v.active,
                 })
         return result
+
+    def toggle_options(self, cr, uid, ids, context=None):
+        view_ids = self.search(cr, uid, [('inherit_id', 'child_of', ids), ('active', '=', True), ('customize_show', '=', True)], context=context)
+        self.toggle(cr, uid, view_ids or ids, context=context)
