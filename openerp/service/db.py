@@ -155,8 +155,8 @@ def exp_dump(db_name):
 
 def dump_db_manifest(cr):
     pg_version = "%d.%d" % divmod(cr._obj.connection.server_version / 100, 100)
-    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
-    modules = dict([(i.name,i.latest_version) for i in env['ir.module.module'].search([('state','=','installed')])])
+    cr.execute("SELECT name, latest_version FROM ir_module_module WHERE state = 'installed'")
+    modules = dict(cr.fetchall())
     manifest = {
         'odoo_dump': '1',
         'db_name': cr.dbname,
@@ -185,14 +185,13 @@ def dump_db(db_name, stream, backup_format='zip'):
 
     if backup_format == 'zip':
         with openerp.tools.osutil.tempdir() as dump_dir:
-            registry = openerp.modules.registry.RegistryManager.get(db_name)
-            with registry.cursor() as cr:
-                filestore = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
-                if os.path.exists(filestore):
-                    shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
-                manifest = dump_db_manifest(cr)
-                with open(os.path.join(dump_dir, 'manifest.json'), 'w') as fh:
-                    json.dump(manifest, fh, indent=4)
+            filestore = openerp.tools.config.filestore(db_name)
+            if os.path.exists(filestore):
+                shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
+            with open(os.path.join(dump_dir, 'manifest.json'), 'w') as fh:
+                db = openerp.sql_db.db_connect(db_name)
+                with db.cursor() as cr:
+                    json.dump(dump_db_manifest(cr), fh, indent=4)
             cmd.insert(-1, '--file=' + os.path.join(dump_dir, 'dump.sql'))
             openerp.tools.exec_pg_command(*cmd)
             if stream:
