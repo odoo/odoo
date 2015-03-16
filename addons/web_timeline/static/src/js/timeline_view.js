@@ -202,8 +202,8 @@ openerp.web_timeline = function (session) {
                 'show_link': true,
                 'show_reply_button': true,
                 'show_read_unread_button': true,
-                'fetch_limit': 30,
-                'fetch_child_limit': 10,
+                'fetch_limit': 20,
+                'fetch_child_limit': 5,
                 }, this.options);
 
             this.fields_view = {};

@@ -659,7 +659,7 @@ class mail_message(osv.Model):
 
     @api.cr_uid_context
     def message_read(self, cr, uid, ids=None, domain=None, context=None,
-                      mode='defauft', parent_id=False, limit=None, child_limit=None):
+                      mode='default', parent_id=False, limit=None, child_limit=None):
 
         domain = domain if domain is not None else []
         limit = limit or self._message_read_limit
@@ -751,6 +751,7 @@ class mail_message(osv.Model):
             nb_read = self.set_message_read(cr, uid, ids, True, create_missing=False, context=context)    
 
         return {'nb_read': nb_read, 'threads': parent_list}
+
 
     def get_likers_list(self, cr, uid, ids, limit=10, context=None):
         """ Return the people list who liked this message. """
