@@ -1008,7 +1008,7 @@ openerp.web_calendar = function(instance) {
             })
             .open();
             this.$input = this.$dialog.$('input').keyup(function enterHandler (e) {
-                if(event.keyCode == 13){
+                if(e.keyCode == 13){
                     self.$input.off('keyup', enterHandler);
                     if (!self.quick_add()){
                         self.$input.on('keyup', enterHandler);
