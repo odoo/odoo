@@ -1232,6 +1232,7 @@ openerp.Model = openerp.Class.extend({
 
         this.name = model_name;
         this._session = session;
+        this._cache = false;
     },
     session: function() {
         if (! this._session)
@@ -1255,13 +1256,17 @@ openerp.Model = openerp.Class.extend({
             kwargs = args;
             args = [];
         }
-        var call_kw = '/web/dataset/call_kw/' + this.name + '/' + method;
+        var call_kw = this._cache ? '/web/dataset/call_kw_cache?cache=1' : '/web/dataset/call_kw/' + this.name + '/' + method;
         return this.session().rpc(call_kw, {
             model: this.name,
             method: method,
             args: args,
             kwargs: kwargs
         }, options);
+    },
+    cache: function() {
+        this._cache = true;
+        return this;
     }
 });
 
