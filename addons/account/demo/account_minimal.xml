@@ -36,7 +36,7 @@
         </record>
         <record id="ova" model="account.account">
             <field name="code">X1013</field>
-            <field name="name">Output VAT - (test)</field>
+            <field name="name">VAT Paid- (test)</field>
             <field name="user_type" ref="data_account_type_current_assets"/>
         </record>
         <record id="bnk" model="account.account">
@@ -84,7 +84,7 @@
 
         <record id="iva" model="account.account">
             <field name="code">X1112</field>
-            <field name="name">Input VAT - (test)</field>
+            <field name="name">VAT Received - (test)</field>
             <field name="user_type" ref="data_account_type_current_liabilities"/>
         </record>
 
@@ -116,19 +116,19 @@
         <record id="a_sale" model="account.account">
             <field name="code">X2020</field>
             <field name="name">Product Sales - (test)</field>
-            <field name="user_type" ref="data_account_type_sales"/>
+            <field name="user_type" ref="data_account_type_revenue"/>
             <field name="tag_ids" eval="[(6,0,[ref('account_tag_operating')])]"/>
         </record>
         <record id="a_sale_invest" model="account.account">
             <field name="code">X2021</field>
             <field name="name">Sale of Lands - (test)</field>
-            <field name="user_type" ref="data_account_type_sales"/>
+            <field name="user_type" ref="data_account_type_revenue"/>
             <field name="tag_ids" eval="[(6,0,[ref('account_tag_investing')])]"/>
         </record>
         <record id="a_sale_finance" model="account.account">
             <field name="code">X2022</field>
             <field name="name">Bank Accounts Interests - (test)</field>
-            <field name="user_type" ref="data_account_type_sales"/>
+            <field name="user_type" ref="data_account_type_revenue"/>
             <field name="tag_ids" eval="[(6,0,[ref('account_tag_financing')])]"/>
         </record>
         <record id="cog" model="account.account">
@@ -158,7 +158,7 @@
         <record id="a_expense_invest" model="account.account">
             <field name="code">X2122</field>
             <field name="name">Purchase of Equipments - (test)</field>
-            <field name="user_type" ref="data_account_type_expenses"/>
+            <field name="user_type" ref="data_account_type_fixed_assets"/>
             <field name="tag_ids" eval="[(6,0,[ref('account_tag_investing')])]"/>
         </record>
         <record id="a_expense_finance" model="account.account">

@@ -60,7 +60,7 @@
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
 -
   !python {model: account.invoice.line} : |
-      account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_sales')), ('tag_ids', 'in', [ref('account_tag_investing')])])
+      account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_fixed_assets'))])
       line_vals = {
           'invoice_id': ref('demo_invoice_invest_sale'),
           'name': "Land located at '50.635336,4.863298'",
@@ -126,7 +126,7 @@
     date_invoice: !eval time.strftime('%Y')+'-01-15'
 -
   !python {model: account.invoice.line} : |
-      account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_expenses')), ('tag_ids', 'in', [ref('account_tag_investing')])])
+      account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_fixed_assets'))])
       line_vals = {
           'invoice_id': ref('demo_invoice_equipment_purchase'),
           'name': "Coffee Machine with huge 'employee\'s performances boosting perk'",
@@ -139,7 +139,7 @@
   !workflow {model: account.invoice, action: invoice_open, ref: demo_invoice_equipment_purchase}
 -
   !python {model: account.bank.statement.line} : |
-      account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_sales')), ('tag_ids', 'in', [ref('account_tag_financing')])])
+      account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_revenue')), ('tag_ids', 'in', [ref('account_tag_financing')])])
       line = self.browse(cr, uid, ref('demo_bank_statement_line_5'))
       if not line.journal_entry_ids and account_ids:
           line.write({'account_id': account_ids[0]})

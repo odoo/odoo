@@ -30,7 +30,7 @@
         <record id="account_financial_report_income0" model="account.financial.report.line">
             <field name="name">Income</field>
             <field name="code">INC</field>
-            <field name="formulas">balance = REV.balance + SAL.balance</field>
+            <field name="formulas">balance = REV.balance</field>
             <field name="parent_id" ref='account_financial_report_gross_profit0'/>
             <field name="sequence" eval="1"/>
             <field name="level" eval="2" />
@@ -45,19 +45,9 @@
             <field name="sequence" eval="1"/>
             <field name="level" eval="3" />
         </record>
-        <record id="account_financial_report_sales0" model="account.financial.report.line">
-            <field name="name">Sales</field>
-            <field name="code">SAL</field>
-            <field name="formulas">balance = -sum.balance</field>
-            <field name="parent_id" ref='account_financial_report_income0'/>
-            <field name="domain" eval="[('account_id.user_type', '=', ref('data_account_type_sales'))]" />
-            <field name="groupby">account_id</field>
-            <field name="sequence" eval="2"/>
-            <field name="level" eval="3" />
-        </record>
 
         <record id="account_financial_report_cost_sales0" model="account.financial.report.line">
-            <field name="name">Less Cost of Sales</field>
+            <field name="name">Less Cost of Revenue</field>
             <field name="code">COS</field>
             <field name="formulas">balance = DCO.balance</field>
             <field name="parent_id" ref='account_financial_report_gross_profit0'/>
@@ -301,7 +291,7 @@
             <field name="code">CRE</field>
             <field name="sequence" eval="1"/>
             <field name="parent_id" ref='account_financial_report_cashsummary_operating0'/>
-            <field name="domain" eval="[('account_id.user_type', 'in', [ref('data_account_type_sales'), ref('data_account_type_revenue'), ref('data_account_type_other_income')]), ('account_id.tag_ids', '=', ref('account_tag_operating'))]" />
+            <field name="domain" eval="[('account_id.user_type', 'in', [ref('data_account_type_revenue'), ref('data_account_type_other_income')]), ('account_id.tag_ids', '=', ref('account_tag_operating'))]" />
             <field name="formulas">balance = -sum.balance</field>
             <field name="level" eval="2" />
             <field name="groupby">partner_id</field>
@@ -329,7 +319,7 @@
             <field name="code">INV_IN</field>
             <field name="sequence" eval="1"/>
             <field name="parent_id" ref='account_financial_report_cashsummary_investing0'/>
-            <field name="domain" eval="[('account_id.user_type', 'in', [ref('data_account_type_sales'), ref('data_account_type_revenue')]), ('account_id.tag_ids', '=', ref('account_tag_investing'))]" />
+            <field name="domain" eval="['|', '&amp;', ('account_id.user_type', '=', ref('data_account_type_fixed_assets')), ('journal_id.type', '=', 'sale'), '&amp;', ('account_id.user_type', 'in', [ref('data_account_type_revenue')]), ('account_id.tag_ids', '=', ref('account_tag_investing'))]" />
             <field name="formulas">balance = -sum.balance</field>
             <field name="groupby">account_id</field>
             <field name="level" eval="2" />
@@ -339,7 +329,7 @@
             <field name="code">INV_OUT</field>
             <field name="sequence" eval="2"/>
             <field name="parent_id" ref='account_financial_report_cashsummary_investing0'/>
-            <field name="domain" eval="[('account_id.user_type', 'in', [ref('data_account_type_overheads'), ref('data_account_type_depreciation'), ref('data_account_type_expenses')]), ('account_id.tag_ids', '=', ref('account_tag_investing'))]" />
+            <field name="domain" eval="['|', '&amp;', ('account_id.user_type', '=', ref('data_account_type_fixed_assets')), ('journal_id.type', '=', 'purchase'), '&amp;', ('account_id.user_type', 'in', [ref('data_account_type_overheads'), ref('data_account_type_depreciation'), ref('data_account_type_expenses')]), ('account_id.tag_ids', '=', ref('account_tag_investing'))]" />
             <field name="formulas">balance = -sum.balance</field>
             <field name="groupby">account_id</field>
             <field name="level" eval="2" />
@@ -357,7 +347,7 @@
             <field name="code">FI_IN</field>
             <field name="sequence" eval="1"/>
             <field name="parent_id" ref='account_financial_report_cashsummary_financing0'/>
-            <field name="domain" eval="[('account_id.user_type', 'in', [ref('data_account_type_sales'), ref('data_account_type_revenue')]), ('account_id.tag_ids', '=', ref('account_tag_financing'))]" />
+            <field name="domain" eval="[('account_id.user_type', 'in', [ref('data_account_type_revenue')]), ('account_id.tag_ids', '=', ref('account_tag_financing'))]" />
             <field name="formulas">balance = -sum.balance</field>
             <field name="groupby">account_id</field>
             <field name="level" eval="2" />
@@ -386,7 +376,7 @@
             <field name="code">UNC_IN</field>
             <field name="sequence" eval="1"/>
             <field name="parent_id" ref='account_financial_report_cashsummary_unclassified0'/>
-            <field name="domain" eval="[('account_id.user_type', 'in', [ref('data_account_type_sales'), ref('data_account_type_revenue')]), ('account_id.tag_ids', 'not in', [ref('account_tag_financing'), ref('account_tag_investing'), ref('account_tag_operating')])]" />
+            <field name="domain" eval="[('account_id.user_type', 'in', [ref('data_account_type_revenue')]), ('account_id.tag_ids', 'not in', [ref('account_tag_financing'), ref('account_tag_investing'), ref('account_tag_operating')])]" />
             <field name="formulas">balance = -sum.balance</field>
             <field name="groupby">account_id</field>
             <field name="level" eval="2" />
