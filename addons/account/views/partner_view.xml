@@ -73,12 +73,12 @@
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button type="action" 
+                    <button type="action"
                         class="oe_stat_button"
                         id="invoice_button"
                         icon="fa-pencil-square-o"
-                        name="%(account.action_invoice_tree)d" 
-                        attrs="{'invisible': [('customer', '=', False)]}" 
+                        name="%(account.action_invoice_tree)d"
+                        attrs="{'invisible': [('customer', '=', False)]}"
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}">
                         <div><strong><field name="total_invoiced" widget="monetary"/></strong><br/>Invoiced</div>
                     </button>
@@ -95,7 +95,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action" class="oe_stat_button" name="%(account.action_account_moves_all_tree)d" icon="fa-list">
-                        <field string="Journal Items" name="journal_item_count" widget="statinfo"/>                        
+                        <field string="Journal Items" name="journal_item_count" widget="statinfo"/>
                     </button>
                 </xpath>
             </field>
@@ -109,7 +109,7 @@
             <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button class="oe_inline oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d" 
+                    <button class="oe_inline oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d"
                         icon="fa-book">
                         <field string="Contracts" name="contracts_count" widget="statinfo"/>
                     </button>
@@ -165,9 +165,8 @@
                             <field name="property_account_receivable" groups="account.group_account_invoice" />
                             <field name="property_account_payable" groups="account.group_account_invoice"/>
                             <field name="last_time_entries_checked"/>
-                            <button string="Invoices &amp; Payments Matching" type="action" class="oe_highlight"
-                                name="%(action_reconcile_partner)d"
-                                attrs="{'invisible':[('is_company','=',False),('parent_id','=',False)]}"/>
+                            <button string="Invoices &amp; Payments Matching" type="action" class="oe_highlight oe_read_only"
+                                name="%(action_reconcile_partner)d" attrs="{'invisible':[('is_company','=',False),('parent_id','=',False)]}"/>
                         </group>
                     </group>
                     <group string="Bank Accounts" name="bank_accounts">
