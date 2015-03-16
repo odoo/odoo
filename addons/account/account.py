@@ -243,7 +243,7 @@ class AccountJournal(models.Model):
             ('general', 'General'),
         ], required=True,
         help="Select 'Sale' for customer invoices journals."\
-        " Select 'Purchase' for supplier invoices journals."\
+        " Select 'Purchase' for supplier bills journals."\
         " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
         " Select 'General' for miscellaneous operations journals."\
         " Select 'Opening/Closing Situation' for entries generated for new fiscal years.")

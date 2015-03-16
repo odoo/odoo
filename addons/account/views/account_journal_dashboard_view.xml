@@ -247,7 +247,7 @@
         </record>
 
         <record id="open_account_journal_dashboard_kanban" model="ir.actions.act_window">
-            <field name="name">Dashboard</field>
+            <field name="name">Accounting</field>
             <field name="res_model">account.journal</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -261,8 +261,8 @@
             </field>
         </record>
 
-        <menuitem id="menu_finance_journal_board" name="Journals" parent="menu_finance" sequence="1"/>
-        <menuitem id="menu_board_journal_1" name="Dashboard" action="open_account_journal_dashboard_kanban" parent="menu_finance_journal_board" sequence="1"/>
+        <menuitem id="menu_finance_journal_board" name="Accounting" parent="menu_finance" sequence="1"/>
+        <menuitem id="menu_board_journal_1" name="Overview" action="open_account_journal_dashboard_kanban" parent="menu_finance_journal_board" sequence="1"/>
 
     </data>
 </openerp>

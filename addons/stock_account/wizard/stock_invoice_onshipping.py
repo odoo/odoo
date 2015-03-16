@@ -67,7 +67,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         'invoice_date': fields.date('Invoice Date'),
         'invoice_type': fields.selection(selection=[
             ('out_invoice', 'Create Customer Invoice'),
-            ('in_invoice', 'Create Supplier Invoice'),
+            ('in_invoice', 'Create Supplier Bill'),
             ('out_refund', 'Create Customer Refund'),
             ('in_refund', 'Create Supplier Refund'),
         ], string='Invoice type', readonly=True),

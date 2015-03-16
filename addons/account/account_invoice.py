@@ -22,7 +22,7 @@ TYPE2JOURNAL = {
 # mapping invoice type to refund type
 TYPE2REFUND = {
     'out_invoice': 'out_refund',        # Customer Invoice
-    'in_invoice': 'in_refund',          # Supplier Invoice
+    'in_invoice': 'in_refund',          # Supplier Bill
     'out_refund': 'out_invoice',        # Customer Refund
     'in_refund': 'in_invoice',          # Supplier Refund
 }
@@ -180,12 +180,12 @@ class AccountInvoice(models.Model):
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.",
         readonly=True, states={'draft': [('readonly', False)]})
-    supplier_invoice_number = fields.Char(string='Supplier Invoice Number',
+    supplier_invoice_number = fields.Char(string='Supplier Bill Number',
         help="The reference of this invoice as provided by the supplier.",
         readonly=True, states={'draft': [('readonly', False)]})
     type = fields.Selection([
             ('out_invoice','Customer Invoice'),
-            ('in_invoice','Supplier Invoice'),
+            ('in_invoice','Supplier Bill'),
             ('out_refund','Customer Refund'),
             ('in_refund','Supplier Refund'),
         ], readonly=True, index=True, change_default=True,
@@ -957,7 +957,7 @@ class AccountInvoice(models.Model):
     def name_get(self):
         TYPES = {
             'out_invoice': _('Invoice'),
-            'in_invoice': _('Supplier Invoice'),
+            'in_invoice': _('Supplier Bill'),
             'out_refund': _('Refund'),
             'in_refund': _('Supplier Refund'),
         }

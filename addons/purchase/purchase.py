@@ -445,7 +445,7 @@ class purchase_order(osv.osv):
         res_id = res and res[1] or False
 
         return {
-            'name': _('Supplier Invoices'),
+            'name': _('Supplier Bills'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': [res_id],

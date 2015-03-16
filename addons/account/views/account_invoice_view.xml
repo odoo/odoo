@@ -145,7 +145,7 @@
             <field name="model">account.invoice</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form string="Supplier Invoice">
+                <form string="Supplier Bill">
                 <header>
                         <button name="invoice_open" states="draft,proforma2" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="%(action_account_register_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
@@ -155,12 +155,12 @@
                         <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
-                <sheet string="Supplier Invoice">
+                <sheet string="Supplier Bill">
                     <div class="oe_title">
                         <h1>
-                            <label string="Draft Invoice" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_invoice')]}"/>
+                            <label string="Draft Bill" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_invoice')]}"/>
                             <label string="Draft Refund" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_refund')]}"/>
-                            <label string="Invoice" attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_invoice')]}"/>
+                            <label string="Bill" attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_invoice')]}"/>
                             <label string="Refund" attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_refund')]}"/>
                             <field name="number" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
                         </h1>
@@ -193,9 +193,9 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Invoice">
+                        <page string="Bill">
                             <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line">
-                                <tree string="Invoice lines" editable="bottom">
+                                <tree string="Bill lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
                                     <field name="product_id"
                                         on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" context="{'partner_id': parent.partner_id}"/>
@@ -518,7 +518,7 @@
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
-            <field name="name">Supplier Invoices</field>
+            <field name="name">Supplier Bills</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,pivot,graph</field>
@@ -528,7 +528,7 @@
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to record a new supplier invoice.
+                Click to record a new supplier bill.
               </p><p>
                 You can control the invoice from your supplier according to
                 what you purchased or received. Odoo can also generate

@@ -66,9 +66,9 @@ class AccountConfigSettings(models.TransientModel):
         string='Next invoice number')
     purchase_journal_id = fields.Many2one('account.journal', string='Purchase journal')
     purchase_sequence_prefix = fields.Char(related='purchase_journal_id.sequence_id.prefix',
-        string='Supplier invoice sequence')
+        string='Supplier bill sequence')
     purchase_sequence_next = fields.Integer(related='purchase_journal_id.sequence_id.number_next',
-        string='Next supplier invoice number')
+        string='Next supplier bill number')
 
     module_account_check_writing = fields.Boolean(string='Pay your suppliers by check',
         help='This allows you to check writing and printing.\n'
@@ -120,7 +120,7 @@ class AccountConfigSettings(models.TransientModel):
     group_analytic_accounting = fields.Boolean(string='Analytic accounting',
         implied_group='analytic.group_analytic_accounting',
         help="Allows you to use the analytic accounting.")
-    group_check_supplier_invoice_total = fields.Boolean(string='Check the total of supplier invoices',
+    group_check_supplier_invoice_total = fields.Boolean(string='Check the total of supplier bills',
         implied_group="account.group_supplier_inv_check_total")
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',

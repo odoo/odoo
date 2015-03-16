@@ -25,7 +25,7 @@
     'version': '1.1',
     'category': 'Purchase Management',
     'sequence': 19,
-    'summary': 'Purchase Orders, Receipts, Supplier Invoices',
+    'summary': 'Purchase Orders, Receipts, Supplier Bills',
     'description': """
 Manage goods requirement by Purchase Orders easily
 ==================================================

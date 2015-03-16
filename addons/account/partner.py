@@ -286,7 +286,7 @@ class ResPartner(models.Model):
         help="This payment term will be used instead of the default one for sale orders and customer invoices")
     property_supplier_payment_term = fields.Many2one('account.payment.term', company_dependent=True,
          string ='Supplier Payment Term',
-         help="This payment term will be used instead of the default one for purchase orders and supplier invoices")
+         help="This payment term will be used instead of the default one for purchase orders and supplier bills")
     ref_companies = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
     last_time_entries_checked = fields.Datetime(oldname='last_reconciliation_date',
