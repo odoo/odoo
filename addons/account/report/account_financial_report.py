@@ -91,7 +91,6 @@ class ReportAccountFinancialReport(models.Model):
                                    string='Not a date range report', default=False, required=True,
                                    help='For report like the balance sheet that do not work with date ranges')
 
-
     @api.multi
     def get_lines(self, context_id, line_id=None):
         if isinstance(context_id, int):
@@ -166,7 +165,13 @@ class AccountFinancialReportLine(models.Model):
                 [field, formula] = f.split('=')
                 field = field.strip()
                 if field in field_names:
-                    res[field] = safe_eval(formula, c, nocopy=True)
+                    try:
+                        res[field] = safe_eval(formula, c, nocopy=True)
+                    except ValueError as err:
+                        if 'division by zero' in err.args[0]:
+                            res[field] = 0
+                        else:
+                            raise err
         return res
 
     def _format(self, value):
@@ -285,7 +290,7 @@ class AccountFinancialReportLine(models.Model):
             line_comparison_table = comparison_table
             if line.special_date_changer == 'from_beginning':
                 line_comparison_table = [(False, k[1]) for k in comparison_table]
-            if line.special_date_changer == 'to_begining_of_fy':
+            if line.special_date_changer == 'to_beginning_of_fy':
                 for period in line_comparison_table:
                     date_to = datetime.strptime(period[1], "%Y-%m-%d")
                     period[1] = date_to.strftime('%Y-01-01')

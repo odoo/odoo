@@ -546,7 +546,7 @@
             <field name="level" eval="1" />
         </record>
         <record id="account_financial_report_executivesummary_gpmargin0" model="account.financial.report.line">
-            <field name="name">Gross profit margin</field>
+            <field name="name">Gross profit margin (gross profit / income)</field>
             <field name="sequence" eval="1"/>
             <field name="parent_id" ref='account_financial_report_executivesummary_performance0'/>
             <field name="formulas">balance = GRP.balance / INC.balance</field>
@@ -554,7 +554,7 @@
             <field name="level" eval="2" />
         </record>
         <record id="account_financial_report_executivesummary_npmargin0" model="account.financial.report.line">
-            <field name="name">Net profit margin</field>
+            <field name="name">Net profit margin (net profit / income)</field>
             <field name="sequence" eval="2"/>
             <field name="parent_id" ref='account_financial_report_executivesummary_performance0'/>
             <field name="formulas">balance = NEP.balance / INC.balance</field>
@@ -562,7 +562,7 @@
             <field name="level" eval="2" />
         </record>
         <record id="account_financial_report_executivesummary_return_investment0" model="account.financial.report.line">
-            <field name="name">Return on investments</field>
+            <field name="name">Return on investments (net profit / assets)</field>
             <field name="sequence" eval="3"/>
             <field name="parent_id" ref='account_financial_report_executivesummary_performance0'/>
             <field name="formulas">balance = NEP.balance / TA.balance</field>
