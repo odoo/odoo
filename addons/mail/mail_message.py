@@ -748,7 +748,7 @@ class mail_message(osv.Model):
 
         nb_read = 0
         if context and 'mail_read_set_read' in context and context['mail_read_set_read']: 
-            nb_read = self.set_message_read(cr, uid, ids, True, create_missing=False, context=context)
+            nb_read = self.set_message_read(cr, uid, ids, True, create_missing=False, context=context)    
 
         return {'nb_read': nb_read, 'threads': parent_list}
 
