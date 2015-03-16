@@ -75,14 +75,6 @@ class FormulaContext(dict):
         return super(FormulaContext, self).__getitem__(item)
 
 
-def report_safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False):
-    try:
-        res = safe_eval(expr, globals_dict, locals_dict, mode, nocopy, locals_builtins)
-    except ValueError:
-        res = 1
-    return res
-
-
 class ReportAccountFinancialReport(models.Model):
     _name = "account.financial.report"
     _description = "Account Report"
@@ -90,6 +82,8 @@ class ReportAccountFinancialReport(models.Model):
     name = fields.Char()
     debit_credit = fields.Boolean('Show Credit and Debit Columns')
     line_ids = fields.One2many('account.financial.report.line', 'financial_report_id', string='Lines')
+    default_date_filter = fields.Selection([('default', 'default : month or today'),
+                                            ('year', 'current financial year')], String='Default date filter', default='default')
     report_type = fields.Selection([('date_range', 'Based on date ranges'),
                                     ('date_range_extended', "Based on date ranges with 'older' and 'total' columns and last 3 months"),
                                     ('no_date_range', 'Based on a single date'),
@@ -153,7 +147,7 @@ class AccountFinancialReportLine(models.Model):
             field_names = ['debit', 'credit', 'balance']
         res = dict((fn, 0.0) for fn in field_names)
         if self.domain:
-            amls = self.env['account.move.line'].search(report_safe_eval(self.domain))
+            amls = self.env['account.move.line'].search(safe_eval(self.domain))
             compute = amls.compute_fields(field_names)
             for aml in amls:
                 if compute.get(aml.id):
@@ -172,7 +166,7 @@ class AccountFinancialReportLine(models.Model):
                 [field, formula] = f.split('=')
                 field = field.strip()
                 if field in field_names:
-                    res[field] = report_safe_eval(formula, c, nocopy=True)
+                    res[field] = safe_eval(formula, c, nocopy=True)
         return res
 
     def _format(self, value):
@@ -255,7 +249,13 @@ class AccountFinancialReportLine(models.Model):
                     c['sum'] = FormulaLine(results[key], type='not_computed')
                     for col, formula in formulas.items():
                         if col in results[key]:
-                            results[key][col] = report_safe_eval(formula, c, nocopy=True)
+                            results[key][col] = safe_eval(formula, c, nocopy=True)
+            to_del = []
+            for key in results:
+                if self.env.user.company_id.currency_id.is_zero(results[key]['balance']):
+                    to_del.append(key)
+            for key in to_del:
+                del results[key]
 
         results.update({'line': vals})
 
@@ -363,6 +363,13 @@ class AccountFinancialReportContext(models.TransientModel):
 
     report_id = fields.Many2one('account.financial.report', 'Linked financial report', help='Only if financial report')
     unfolded_lines = fields.Many2many('account.financial.report.line', 'context_to_line', string='Unfolded lines')
+
+    @api.model
+    def create(self, vals):
+        res = super(AccountFinancialReportContext, self).create(vals)
+        if res.report_id.default_date_filter == 'year':
+            res.write({'date_filter': 'this_year'})
+        return res
 
     @api.multi
     def remove_line(self, line_id):

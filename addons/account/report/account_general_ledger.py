@@ -81,9 +81,9 @@ class report_account_general_ledger(models.AbstractModel):
                 'columns': ['', '', '', '', debit, credit, debit-credit, amount_currency],
                 'level': 2,
                 'unfoldable': True,
-                'unfolded': account in context['context_id']['unfolded_account']
+                'unfolded': account in context['context_id']['unfolded_accounts']
             })
-            if account in context['context_id']['unfolded_account']:
+            if account in context['context_id']['unfolded_accounts']:
                 progress = 0
                 for line in grouped_accounts[account]['lines']:
                     if self.env.context['cash_basis']:
@@ -140,18 +140,18 @@ class account_context_general_ledger(models.TransientModel):
     _description = "A particular context for the general ledger"
     _inherit = "account.report.context.common"
 
-    unfolded_account = fields.Many2many('account.account', 'context_to_account', string='Unfolded lines')
+    unfolded_accounts = fields.Many2many('account.account', 'context_to_account', string='Unfolded lines')
 
     def get_report_obj(self):
         return self.env['account.general.ledger']
 
     @api.multi
     def remove_line(self, line_id):
-        self.write({'unfolded_account': [(3, line_id)]})
+        self.write({'unfolded_accounts': [(3, line_id)]})
 
     @api.multi
     def add_line(self, line_id):
-        self.write({'unfolded_account': [(4, line_id)]})
+        self.write({'unfolded_accounts': [(4, line_id)]})
 
     def get_columns_names(self):
         columns = [_("date"), _("JRNL"), _("Partner"), _("Counterpart"), _("Debit"), _("Credit"), _("Progress"), _("Currency")]

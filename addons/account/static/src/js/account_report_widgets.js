@@ -34,8 +34,8 @@
                 'click .oe-account-to-graph': 'displayMoveLinesByAccountGraph',
                 'click .oe-account-to-net': 'displayNetTaxLines',
                 'click .oe-account-to-tax': 'displayTaxLines',
-		'click .oe-account-to-bank-statement': 'display_bank_statement',
-		'click .oe-account-to-move-line': 'display_move_line',
+                'click .oe-account-to-bank-statement': 'display_bank_statement',
+                'click .oe-account-to-move-line': 'display_move_line',
             },
             saveFootNote: function() {
                 var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
@@ -503,11 +503,14 @@
                 var commonContext = new openerp.Model('account.report.context.common');
                 commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                     var contextObj = new openerp.Model(result);
-                    contextObj.query(['all_entries'])
+                    contextObj.query(['all_entries', 'cash_basis'])
                     .filter([['id', '=', context_id]]).first().then(function (context) {
                         var action = 'action_move_line_graph'
+                        if (context.cash_basis) {
+                            action = 'action_move_line_graph_cash_basis'
+                        }
                         if (!context.all_entries) {
-                            action = 'action_move_line_graph_posted'
+                            action += '_posted'
                         }
                         var model = new openerp.Model('ir.model.data');
                         model.call('get_object_reference', ['account', action]).then(function (result) {
@@ -584,16 +587,16 @@
                 var active_id = $(e.target).attr("class").split(/\s+/)[1];
                 window.open("/web?#id=" + active_id + "&view_type=form&model=account.move.line", "_self");
             },
-	    display_bank_statement: function(e) {
-		e.stopPropagation();
+            display_bank_statement: function(e) {
+                e.stopPropagation();
                 var active_id = $(e.target).attr("class").split(/\s+/)[1];
                 window.open("/web?#id=" + active_id + "&view_type=form&model=account.bank.statement", "_self");
-	    },
-	    display_move_line: function(e) {
-		e.stopPropagation();
+            },
+            display_move_line: function(e) {
+                e.stopPropagation();
                 var active_id = $(e.target).attr("class").split(/\s+/)[1];
                 window.open("/web?#id=" + active_id + "&view_type=form&model=account.move", "_self");
-	    },
+            },
         });
         var reportWidgets = new openerp.reportWidgets();
         reportWidgets.setElement($('.oe_account_report_widgets'));

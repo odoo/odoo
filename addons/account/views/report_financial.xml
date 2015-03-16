@@ -81,7 +81,7 @@
     <t t-set="style" t-value="'margin-left: ' + str(40 + ((a.get('level', 3) - 3) * 10)) + 'px'"/>
     <t t-if="a.get('level') == 0"><t t-set="trclass" t-value="'oe-account-level0'"/></t>
     <t t-if="a.get('level') == 1"><t t-set="trclass" t-value="'oe-account-level1'"/></t>
-    <t t-if="a.get('level') == 2"><t t-set="style" t-value="'font-weight: bold; margin-left: 20px;'"/><t t-set="trclass" t-value="'oe-account-evel2'"/></t>
+    <t t-if="a.get('level') == 2"><t t-set="style" t-value="'font-weight: bold; margin-left: 20px;'"/><t t-set="trclass" t-value="'oe-account-level2'"/></t>
     <t t-if="not a.get('level') &gt; 1"><t t-set="style" t-value="'font-weight: bold;'"/></t>
     <t t-if="a['type'] != 'line'"><t t-set="style" t-value="'font-style: italic;'"/></t>
     <t t-set="column" t-value="0" />
@@ -110,7 +110,7 @@
                 <t t-call="account.report_financial_footnote_sup" />
                 <ul class="dropdown-menu oe-account-domain-dropdown" role="menu" aria-labelledby="dLabel">
                     <li role="presentation" t-if="a['type'] == 'account_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-graph">Graph</a></li>
-                    <li role="presentation" t-if="a['type'] == 'account_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-amls">Account Move Lines</a></li>
+                    <li role="presentation" t-if="a['type'] == 'account_id'"><a role="menuitem" tabindex="-1" t-att-href="'../general_ledger/1?force_account=' + str(a.get('id'))">Account Move Lines</a></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" class="oe-account-add-footnote">Add Footnote</a></li>
                     <li role="presentation" t-if="a['type'] == 'tax_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-net">See net move lines</a></li>
                     <li role="presentation" t-if="a['type'] == 'tax_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-net">See tax move lines</a></li>
