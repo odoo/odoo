@@ -169,3 +169,4 @@ class TestMessageRead(TestMail):
         self.assertEqual(len(read_msg_list), 9, 'message_read on Pigs should return 9 messages and 0 expandable')
         self.assertEqual([self.msg_id8, self.msg_id7, self.msg_id6, self.msg_id5, self.msg_id4, self.msg_id3, self.msg_id2, self.msg_id1, self.msg_id0], read_msg_ids,
             'message_read, More on flat, should return all remaning messages')
+        
