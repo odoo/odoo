@@ -1057,7 +1057,14 @@ class AccountInvoice(models.Model):
         return new_invoices
 
     @api.v8
-    def pay_and_reconcile(self, pay_amount, date, pay_journal, writeoff_acc=None):
+    def pay_and_reconcile(self, pay_journal, pay_amount=None, date=None, writeoff_acc=None):
+        """ Create and post an account.payment for the invoice self, which creates a journal entry that reconciles the invoice.
+
+            :param pay_journal: journal in which the payment entry will be created
+            :param pay_amount: amount of the payment to register, defaults to the residual of the invoice
+            :param date: payment date, defaults to fields.Date.context_today(self)
+            :param writeoff_acc: account in which to create a writeoff if pay_amount < self.residual, so that the invoice is fully paid
+        """
         assert len(self) == 1, "Can only pay one invoice at a time."
         payment_type = self.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
         if payment_type == 'inbound':
@@ -1068,27 +1075,28 @@ class AccountInvoice(models.Model):
             journal_payment_methods = pay_journal.outbound_payment_methods
         if not payment_method in journal_payment_methods:
             raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
+
         payment = self.env['account.payment'].create({
             'invoice_id': self.id,
-            'amount': pay_amount,
-            'date': date,
+            'amount': pay_amount or self.residual,
+            'date': date or fields.Date.context_today(self),
             'reference': self.type in ('in_invoice', 'in_refund') and self.reference or self.number,
             'partner_id': self.partner_id.id,
             'partner_type': self.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier',
             'journal_id': pay_journal.id,
             'payment_type': payment_type,
             'payment_method': payment_method.id,
-            'payment_difference_handling': 'open' if writeoff_acc == None else 'reconcile',
-            'writeoff_account': writeoff_acc.id if writeoff_acc else False,
+            'payment_difference_handling': writeoff_acc and 'reconcile' or 'open',
+            'writeoff_account': writeoff_acc and writeoff_acc.id or False,
         })
         payment.post()
 
     @api.v7
-    def pay_and_reconcile(self, cr, uid, ids, pay_amount, date, pay_journal_id, writeoff_acc_id=None, context=None):
+    def pay_and_reconcile(self, cr, uid, ids, pay_journal_id, pay_amount=None, date=None, writeoff_acc_id=None, context=None):
         recs = self.browse(cr, uid, ids, context)
         pay_journal = self.pool.get('account.journal').browse(cr, uid, pay_journal_id, context=context)
         writeoff_acc = self.pool.get('account.account').browse(cr, uid, writeoff_acc_id, context=context)
-        return recs.pay_and_reconcile(pay_amount, date, pay_journal, writeoff_acc)
+        return recs.pay_and_reconcile(pay_journal, pay_amount, date, writeoff_acc)
 
     @api.multi
     def _track_subtype(self, init_values):

@@ -392,11 +392,9 @@ Thanks!</field>
         </record>
         <workflow action="invoice_open" model="account.invoice" ref="test_crm_sale_invoice_1"/>
         <function model="account.invoice" name="pay_and_reconcile">
-            <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_1')]"/>
-            <!-- pay_amount = -->            <value eval="1850"/>
-            <!-- date         = -->            <value eval="time.strftime('%Y-%m-%d')"/>
+            <!-- ids = -->                   <value eval="[ref('test_crm_sale_invoice_1')]"/>
             <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
-            <!-- context = -->              <value eval="{}"/>
+            <!-- pay_amount = -->            <value eval="1850"/>
         </function>
 
         <!-- Invoice for Indirect Marketing -->
@@ -421,11 +419,9 @@ Thanks!</field>
         </record>
         <workflow action="invoice_open" model="account.invoice" ref="test_crm_sale_invoice_2"/>
         <function model="account.invoice" name="pay_and_reconcile">
-            <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_2')]"/>
-            <!-- pay_amount = -->            <value eval="500"/>
-            <!-- date         = -->            <value eval="time.strftime('%Y-%m-%d')"/>
+            <!-- ids = -->                   <value eval="[ref('test_crm_sale_invoice_2')]"/>
             <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
-            <!-- context = -->              <value eval="{}"/>
+            <!-- pay_amount = -->            <value eval="500"/>
         </function>
 
     </data>

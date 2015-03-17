@@ -89,9 +89,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         assert self.account_invoice_customer0.move_id, "Move not created for open invoice"
 
         # I totally pay the Invoice
-        pay = self.account_invoice_customer0.pay_and_reconcile(
-            10050.0, datetime.date.today(), self.env.ref('account.bank_journal'),
-        )
+        pay = self.account_invoice_customer0.pay_and_reconcile(self.env.ref('account.bank_journal'), 10050.0)
 
         # I verify that invoice is now in Paid state
         assert (self.account_invoice_customer0.state == 'paid'), "Invoice is not in Paid state"

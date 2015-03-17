@@ -181,7 +181,7 @@
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
     import  time
     for invoice in invoice_ids:
-        self.pool.get('account.invoice').pay_and_reconcile(cr, uid, [invoice.id], invoice.amount_total, time.strftime('%Y-%m-%d'), journal_ids[0])
+        self.pool.get('account.invoice').pay_and_reconcile(cr, uid, [invoice.id], journal_ids[0])
 -
   I check Payable(Creditors) Account is Debited sucessfully after invoice paid.
 -
@@ -315,7 +315,7 @@
     account_invoice = self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')], limit=1)
     import time
-    pay = self.pay_and_reconcile(cr, uid, account_invoice, 20.0, time.strftime('%Y-%m-%d'), journal_ids[0])
+    pay = self.pay_and_reconcile(cr, uid, account_invoice, journal_ids[0], 20.0)
 -
   I check Receivable(Debtor) Account for credit.
 -

@@ -49,10 +49,8 @@
         </assert>
         <function model="account.invoice" name="pay_and_reconcile">
             <!-- ids = -->                   <value eval="[ref('test_invoice_1')]"/>
-            <!-- pay_amount = -->            <value eval="1950"/>
-            <!-- date = -->                  <value eval="time.strftime('%Y-%m-%d')"/>
             <!-- pay_journal_id = -->        <value eval="ref('bank_journal')"/>
-            <!-- context = -->               <value eval="{}"/>
+            <!-- pay_amount = -->            <value eval="1950"/>
         </function>
 
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now paid">
