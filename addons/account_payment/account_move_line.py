@@ -26,8 +26,10 @@ from operator import itemgetter
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
+    # delegate to parent, used for local fields.function redefinition
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
-        return self._amount_residual(cr, uid, ids, field_names, args, context=context)
+        return super(account_move_line, self)._amount_residual(
+            cr, uid, ids, field_names, args, context=context)
 
     def _to_pay_search(self, cr, uid, obj, name, args, context=None):
         if not args:
