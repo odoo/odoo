@@ -36,12 +36,9 @@ class delivery_carrier(osv.osv):
             context = {}
         order_id = context.get('order_id', False)
         if order_id:
-            # search id, since active_id could have defined another object
-            real_order_ids = self.pool.get('sale.order').search(
-                cr, uid, [('id', '=', order_id)], context=context)
-            if len(real_order_ids) > 0:
-                order = self.pool.get('sale.order').browse(
-                    cr, uid, real_order_ids[0], context=context)
+            order = self.pool.get('sale.order').browse(
+                cr, uid, order_id, context=context)
+            if order.exists():
                 currency = order.pricelist_id.currency_id.name or ''
                 return [
                     (r['id'],
