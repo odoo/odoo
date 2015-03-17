@@ -57,7 +57,7 @@ class purchase_line_invoice(osv.osv_memory):
             'partner_id': partner.id,
             'invoice_line': [(6, 0, lines_ids)],
             'currency_id': orders[0].currency_id.id,
-            'comment': multiple_order_invoice_notes(orders),
+            'comment': " \n".join([order.notes for order in orders if order.notes]),
             'payment_term': orders[0].payment_term_id.id,
             'fiscal_position': partner.property_account_position.id
         }
@@ -87,12 +87,6 @@ class purchase_line_invoice(osv.osv_memory):
             purchase_obj = self.pool.get('purchase.order')
             purchase_line_obj = self.pool.get('purchase.order.line')
             invoice_line_obj = self.pool.get('account.invoice.line')
-
-            def multiple_order_invoice_notes(orders):
-                notes = ""
-                for order in orders:
-                    notes += "%s \n" % order.notes
-                return notes
 
             for line in purchase_line_obj.browse(cr, uid, record_ids, context=context):
                 if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
