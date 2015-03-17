@@ -1702,10 +1702,22 @@
                     <group>
                         <group string="Amount Computation">
                             <field name="value" widget="radio" nolabel="1" colspan="4"/>
-                            <label for="value_amount" string="Amount To Pay"  attrs="{'invisible':[('value','=','balance')]}"/>
-                            <div attrs="{'invisible':[('value','=','balance')]}">
-                                <field name="value_amount" class="oe_inline"/>
-                            </div>
+                            <group>
+                                <div attrs="{'invisible':[('value','=','balance')]}">
+                                    <label for="value_amount" string="Enter a value"/>
+                                    <field name="value_amount"/>
+                                </div>
+                            </group>
+                            <group class="oe_inline">
+                                <div attrs="{'invisible':[('value','=','balance')]}">
+                                    <p class="text-muted" attrs="{'invisible': [('value','=','procent')]}">
+                                        Enter the amount to pay, from 0 to the amount you want to pay.
+                                    </p>
+                                    <p class="text-muted" attrs="{'invisible': [('value','=','fixed')]}">
+                                        Enter a percentage between 0 and 100 % of the amount you want to pay.
+                                    </p>
+                                </div>
+                            </group>
                         </group>
                         <group string="Due Date Computation">
                             <field name="days"/>
@@ -1737,6 +1749,9 @@
                     <label for="note"/>
                     <field name="note" placeholder="Payment term explanation for the customer..."/>
                     <separator string="Computation"/>
+                    <p class="text-muted">
+                        Important: Note that you should have your last line with the type "Balance" to ensure that the whole amount will be treated.
+                    </p>
                     <field name="line_ids"/>
                 </form>
             </field>

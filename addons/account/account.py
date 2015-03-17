@@ -119,14 +119,12 @@ class account_payment_term_line(osv.osv):
     _description = "Payment Term Line"
     _columns = {
         'value': fields.selection([('procent', 'Percent'),
-                                   ('balance', 'Balance'),
-                                   ('fixed', 'Fixed Amount')], 'Computation',
-                                   required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated."""),
-
-        'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100%."),
-        'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
-            "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
-        'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
+                                   ('fixed', 'Fixed Amount'),
+                                   ('balance', 'Balance')], 'Computation',
+                                   required=True, help="""Select here the kind of valuation related to this payment term line."""),
+        'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term')),
+        'days': fields.integer('Number of Days', required=True, help="Number of days to add before computing the day of the month."),
+        'days2': fields.integer('Day of the Month', required=True, help="Day of the month \n\n Set : \n1)-1 for the last day of the current month. \n2) 0 for net days\n3) A positive number for the specific day of the next month.\n\nExample : if Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'payment_id': fields.many2one('account.payment.term', 'Payment Term', required=True, select=True, ondelete='cascade'),
     }
     _defaults = {
