@@ -312,10 +312,10 @@
 -
   !python {model: account.invoice}: |
     move_name = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001_fifo')).name
-    account_invoice= self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
+    account_invoice = self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')], limit=1)
     import time
-    pay = self.pay_and_reconcile(cr, uid, [account_invoice], 20.0, time.strftime('%Y-%m-%d'), journal_ids[0])
+    pay = self.pay_and_reconcile(cr, uid, account_invoice, 20.0, time.strftime('%Y-%m-%d'), journal_ids[0])
 -
   I check Receivable(Debtor) Account for credit.
 -

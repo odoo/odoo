@@ -196,7 +196,7 @@ class account_payment(models.Model):
                 if vals['payment_type'] == 'outbound':
                     sequence = self.env.ref('account.sequence_payment_supplier_invoice')
 
-        date_str = isinstance(vals['date'], str) and vals['date'] or fields.Date.to_string(vals['date'])
+        date_str = isinstance(vals['date'], str) and vals['date'] or vals['date'].strftime('%Y-%m-%d')
         vals['name'] = sequence.with_context(ir_sequence_date=date_str).next_by_id()
         return super(account_payment, self).create(vals)
 
