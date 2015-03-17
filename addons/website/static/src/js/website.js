@@ -304,12 +304,32 @@
                 if ($('html').data('website-id')) {
                     website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
-                    var modules = ['website'];
-                    return openerp._t.database.load_translations(website.session, modules, website.get_context().lang);
+                    return openerp.jsonRpc('/website/translations', 'call', {'lang': website.get_context().lang})
+                    .then(function(trans) {
+                        openerp._t.database.set_bundle(trans);});
+                }
+            }).then(function () {
+                var templates = openerp.qweb.templates;
+                var keys = _.keys(templates);
+                for (var i = 0; i < keys.length; i++){
+                    treat_node(templates[keys[i]]);
                 }
             }).promise();
         }
         return all_ready;
+    };
+
+    function treat_node(node){
+        if(node.nodeType === 3) {
+            if(node.nodeValue.match(/\S/)){
+                var text_value = $.trim(node.nodeValue);
+                var spaces = node.nodeValue.split(text_value);
+                node.nodeValue = spaces[0] + openerp._t(text_value) + spaces[1];
+            }
+        }
+        else if(node.nodeType === 1 && node.hasChildNodes()) {
+            _.each(node.childNodes, function(subnode) {treat_node(subnode);});
+        }
     };
 
     website.inject_tour = function() {

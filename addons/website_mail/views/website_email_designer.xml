@@ -8,7 +8,7 @@
         <div id="wrap" class="container" t-ignore="True">
             <div id="email_template" class="mb32" t-att-style="mode != 'email_template' and 'display: none' or ''">
                 <a class="mt16 btn btn-default pull-right css_editable_mode_hidden" 
-                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
+                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form&amp;action=#{return_action}">
                     Back
                 </a>
                 <h1 class="page-header mt16">
@@ -33,7 +33,7 @@
             </div>
             <div id="email_designer" class="mb32" t-att-style="mode != 'email_designer' and 'display: none' or ''">
                 <a class="mt16 btn btn-primary pull-right css_editable_mode_hidden" 
-                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
+                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form&amp;action=#{return_action}">
                     Back to the mass mailing
                 </a>
                 <h1 class="page-header mt16">

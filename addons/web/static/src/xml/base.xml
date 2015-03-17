@@ -566,6 +566,10 @@
                 <td><t t-esc="perm.xmlid or '/'"/></td>
             </tr>
             <tr>
+                <th>No Update:</th>
+                <td><t t-esc="perm.noupdate"/></td>
+            </tr>
+            <tr>
                 <th>Creation User:</th>
                 <td><t t-esc="format(perm.create_uid, { 'type' : 'many2one' }, '/')"/></td>
             </tr>

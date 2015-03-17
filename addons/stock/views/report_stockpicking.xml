@@ -83,15 +83,24 @@
                               </thead>
                               <tbody>
                                 <tr t-foreach="o.move_lines" t-as="move">
-                                    <td><span t-field="move.product_id"/></td>
-                                    <td class="text-right"><span t-field="move.product_uom_qty"/> <span t-field="move.product_uom" groups="product.group_uom"/></td>
-                                    <t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="move.location_id"/></td></t>
-                                    <td>
-                                        <span t-if="move.product_id and move.product_id.ean13">
-                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move.product_id.ean13, 600, 100)" style="width:300px;height:50px"/>
-                                        </span>
-                                    </td>
-                                    <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>
+                                    <t t-if="(o.state != 'partially_available') or (move.reserved_availability > 0)">
+                                        <td><span t-field="move.product_id"/></td>
+                                        <td class="text-right">
+                                            <t t-if="o.state == 'partially_available'">
+                                                <span t-field="move.reserved_availability"/> <span t-field="move.product_id.uom_id" groups="product.group_uom"/>
+                                            </t>
+                                            <t t-if="o.state != 'partially_available'">
+                                                <span t-field="move.product_uom_qty"/> <span t-field="move.product_uom" groups="product.group_uom"/>
+                                            </t>
+                                        </td>
+                                        <t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="move.location_id"/></td></t>
+                                        <td>
+                                            <span t-if="move.product_id and move.product_id.ean13">
+                                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move.product_id.ean13, 600, 100)" style="width:300px;height:50px"/>
+                                            </span>
+                                        </td>
+                                        <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>
+                                    </t>
                                 </tr>
                               </tbody>
                             </table>
