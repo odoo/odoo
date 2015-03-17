@@ -383,12 +383,12 @@ class ir_model_fields(osv.osv):
             if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
+            self.pool.clear_manual_fields()
+
             if vals['model'] in self.pool:
                 model = self.pool[vals['model']]
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
                     model._rec_name = 'x_name'
-
-                self.pool.clear_manual_fields()
 
                 # re-initialize model in registry
                 model.__init__(self.pool, cr)
