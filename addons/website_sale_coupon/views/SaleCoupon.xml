@@ -33,7 +33,7 @@
                                     <div attrs="{'invisible': [('purchase_type', '!=', 'amount')]}">
                                         <field name="minimum_amount" class="oe_inline"/>
                                         <field name="currency_id" class="oe_inline"/>
-                                        <field name="tax" class="oe_inline"/>
+                                        <field name="applicability_tax" class="oe_inline"/>
                                      </div>
                                     <field name="product_id" attrs="{'invisible': [('purchase_type', '!=', 'product')]}" placeholder="Select product"/>
                                     <field name="product_category_id" attrs="{'invisible': [('purchase_type', '!=', 'category')]}" placeholder="Select product category"/>
@@ -129,10 +129,10 @@
              <field name="inherit_id" ref="sale.view_order_form" />
              <field name="arch" type="xml">
                 <xpath expr="//field[@name='note']" position="before">
-                    <group style="width: 100px">
-                        <!-- <h2><input type="text" name="txt_typed_coupon"/></h2> -->
-                        <field name="typed_code"/>
-                       <button name="apply_coupon" string="Apply" type="object"/>
+                    <group style="width: 50px">
+                        <!-- <h2><input type="text" name="txt_typed_coupon" class="form-control"/></h2> -->
+                        <field name="typed_code" class="oe_inline"/>
+                       <button name="apply_coupon" string="Apply" type="object" class="oe_edit_only oe_inline"/>
                     </group>
                 </xpath>
              </field>
