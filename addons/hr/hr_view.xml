@@ -8,7 +8,8 @@
             groups="base.group_hr_manager,base.group_hr_user,base.group_user"
             icon="fa-user"
             sequence="90"/>
-        <menuitem id="menu_hr_reporting" parent="base.menu_reporting" name="Human Resources" sequence="60" />
+        <menuitem id="menu_hr_reporting" parent="base.menu_reporting" name="Human Resources" sequence="60" 
+        groups="base.group_hr_manager"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_user" sequence="50"/>
         <menuitem id="menu_hr_configuration_employees" name="Employees" parent="hr.menu_hr_configuration" groups="base.group_hr_user" sequence="1"/>

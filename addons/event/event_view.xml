@@ -3,8 +3,8 @@
     <data>
 
         <!-- Main menu items -->
-        <menuitem name="Events" id="event_main_menu" parent="base.marketing_menu" sequence="2"/>
-        <menuitem name="Events" id="event_configuration" parent="base.menu_marketing_config_root" sequence="1"/>
+        <menuitem name="Events" id="event_main_menu" parent="base.marketing_menu" sequence="2" groups="marketing.group_marketing_user"/>
+        <menuitem name="Events" id="event_configuration" parent="base.menu_marketing_config_root" sequence="1" groups="marketing.group_marketing_user"/>
 
         <!-- EVENT.TYPE VIEWS -->
         <record model="ir.ui.view" id="view_event_type_form">
