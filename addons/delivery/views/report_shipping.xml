@@ -5,7 +5,7 @@
                 <div name="invoice_partner" t-if="o.picking_type_id.code == 'outgoing' and o.sale_id and o.sale_id.partner_invoice_id">
                     Will be invoiced to:
                     <div t-field="o.sale_id.partner_invoice_id" 
-                     t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                     t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true, "phone_icons": true}'/>
                 </div>
             </xpath>
             <xpath expr="//th[@name='td_sched_date_h']" position="after">

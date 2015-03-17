@@ -13,12 +13,12 @@
                             <p t-if="o.address_id == o.partner_invoice_id">Invoice and shipping address:</p>
                             <p t-if="o.address_id != o.partner_invoice_id">Invoice address: </p>
                             <div t-field="o.partner_invoice_id" 
-                                t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                                t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true, "phone_icons": true}'/>
                             <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
                             <div t-if="o.address_id != o.partner_invoice_id">
                                 <p>Shipping address :</p>
                                 <div t-field="o.address_id" 
-                                    t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                                    t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true, "phone_icons": true}'/>
                                 <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
                             </div>                        
                         </div>
