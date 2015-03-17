@@ -13,6 +13,11 @@
         background: #f0eeee;
     }
 
+    .openerp .oe_timeline.oe_tl_inbox {
+        padding-top: 15px;
+        padding-bottom: 15px; 
+    }
+
     .oe-view-manager-view-timeline {
         background-color: #f0eeee;
     }
@@ -44,6 +49,7 @@
         position: relative;
         background: #f0eeee;
         min-height: 42px;
+        margin-top: 12px;
         margin-bottom: 12px;
         padding-right: 5px;
         padding-left: 5px;
@@ -64,7 +70,6 @@
 
         .openerp .oe_timeline .oe_tl_thread_parent {
             width: 870px;
-            margin-top: 8px;
             vertical-align: middle;
         }
 
@@ -72,7 +77,6 @@
             background-color: white;
             border: solid 1px #CACACA;
             margin-left: 17%;
-            margin-bottom: 8px;
             padding: 3px;
             white-space: nowrap;
         }
@@ -609,11 +613,15 @@
         .openerp .oe_timeline .oe_tl_parent_expandable span {
             display: inline-block;
             text-align: right;
-            padding-left: 27%;
+            padding-left: 26%;
         }
 
         .openerp .oe_timeline .oe_tl_msg_expandable span {
             border-left: dashed 2px #A4A4A4;
+        }
+
+        .openerp .oe_timeline .oe_tl_parent_expandable {
+            padding-top: 10px;
         }
 
     /* ----------------- message ----------------- */
