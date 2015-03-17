@@ -260,7 +260,7 @@ Tour.register({
 
                 var steps = ["Click on switch view", "Click on sub menu", "Click on need action", "Click on top menu"];
                 for (var k in steps) {
-                    var step = openerp.Tour.search_step(steps[k]);
+                    var step = Tour.search_step(steps[k]);
                     if($(step.element).size()) {
                         return step.id;
                     }

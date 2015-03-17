@@ -1228,7 +1228,7 @@ odoo.define_section('search.filters', ['web.search_inputs', 'web.SearchView', 'w
 
     test('drawn', function (assert) {
         setup();
-        assert.expect(4);
+        assert.expect(3);
         var view = makeSearchView(this);
         var $fix = $('#qunit-fixture');
 
@@ -1241,10 +1241,13 @@ odoo.define_section('search.filters', ['web.search_inputs', 'web.SearchView', 'w
                 // 1 filter condition menu, 1 apply button
                 assert.equal($filters.length, 7,
                       'filter menu should have 7 elements total');
+
                 // 1 divider, 1 save search button, 1 text input, 2 checkboxes, 
                 // 1 save button, 3 add to dashboard things (a, input, button)
-                assert.equal($favorites.length, 9,
-                      "favorites menu should have 9 elements");
+                // this test is disabled because the number of elements depends on
+                // the various addons installed.
+                // assert.equal($favorites.length, 9,
+                //       "favorites menu should have 9 elements");
 
                 // 1 divider, 1 add custom group button, 1 select groupby, 1 apply button,
                 assert.equal($groupby.length, 4,
