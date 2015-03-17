@@ -1154,7 +1154,7 @@ class task(osv.osv):
         }
         defaults.update(custom_values)
         res = super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
-        email_list = tools.email_split(msg.get('to', '') + ',' + msg.get('cc', ''))
+        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
         new_task = self.browse(cr, uid, res, context=context)
         if new_task.project_id and new_task.project_id.alias_name:  # check left-part is not already an alias
             email_list = filter(lambda x: x.split('@')[0] != new_task.project_id.alias_name, email_list)
