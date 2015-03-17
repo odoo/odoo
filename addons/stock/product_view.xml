@@ -148,13 +148,12 @@
                 <field name="product_manager" position="attributes">
                     <attribute name="context">{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}</attribute>
                 </field>
-                <page name="procurements" position="after">
-                    <page string="Supply Chain" groups="base.group_user" attrs="{'invisible': [('type', '=', 'service')]}">
-                        <group>
-                            <field name="route_ids" widget="many2many_checkboxes"/>
-                        </group>
-                    </page>
-                </page>
+                <group name="procurement" position="after" >
+                   <group string="Supply Chain Information" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
+                       <field name="route_ids" widget="many2many_checkboxes"/>
+                        <field name="route_from_categ_ids" widget="many2many_tags" readonly="1"/>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -227,10 +226,12 @@
                            type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
                         <field name="qty_available2" widget="statinfo"/>
                     </button>
-                   <button class="oe_stat_button" string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
+                   <button class="oe_stat_button" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" string="Moves" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
-                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh" string="Reordering Rules"/>
-                   <button class="oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_adv_location" />
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh">
+                        <field name="nbr_reordering_rules" widget="statinfo"/>
+                    </button>
+                   <button class="oe_stat_button" name="action_view_routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_adv_location" string="Routes"/>
                 </div>
             </field>
         </record>
@@ -247,10 +248,12 @@
                            type="object"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
                         <field name="qty_available2" widget="statinfo"/>
                    </button>
-                   <button class="oe_stat_button" string="Moves" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
+                   <button class="oe_stat_button" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" string="Moves" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_stat_button" name="action_view_orderpoints" type="object" 
-                        attrs="{'invisible':[('type', 'in', ('service','consu'))]}" icon="fa-refresh" string="Reordering Rules"/>
-                   <button class="oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_adv_location"/>
+                        attrs="{'invisible':[('type', 'in', ('service','consu'))]}" icon="fa-refresh">
+                        <field name="nbr_reordering_rules" widget="statinfo"/>
+                    </button>
+                   <button class="oe_stat_button" name="action_view_routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_adv_location" string="Routes"/>
                 </div>
             </field>
         </record>

@@ -486,7 +486,6 @@
                 </xpath>
             </field>
         </record>
-        
 
         <record id="action_location_form" model="ir.actions.act_window">
             <field name="name">Locations</field>
@@ -1952,7 +1951,8 @@
         <menuitem id="menu_stock_sched" name="Schedulers" parent="stock.menu_stock_root" sequence="50" groups="base.group_no_one"/>
         <menuitem action="action_procurement_compute" id="menu_procurement_compute" parent="menu_stock_sched" groups="base.group_no_one" sequence="2"/>
         <menuitem action="procurement.action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="1" groups="stock.group_stock_manager"/>
-        <menuitem action="procurement.procurement_exceptions" id="menu_stock_procurement_action" parent="menu_stock_inventory_control" sequence="50" groups="stock.group_stock_manager"/>
+        <menuitem action="procurement.procurement_order_action_exceptions" id="menu_stock_procurement_action" parent="menu_stock_inventory_control" sequence="50" groups="stock.group_stock_manager"/>
+        <menuitem action="procurement.procurement_order_action_exceptions" id="menu_stock_procurement_action" parent="menu_stock_sched" sequence="50" groups="stock.group_stock_manager"/>
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_config_settings" sequence="5"/>
         <menuitem id="menu_reordering_rules_config" action="action_orderpoint_form" name="Reordering Rules" parent="menu_stock_config_settings" sequence="3"/>
         <menuitem id="stock.menu_warehouse_report" name="Reports" sequence="99" parent="stock.menu_stock_root" groups="group_stock_manager"/>
