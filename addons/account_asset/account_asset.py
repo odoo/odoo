@@ -212,7 +212,10 @@ class account_asset_asset(osv.osv):
                 l.asset_id IN %s GROUP BY l.asset_id """, (tuple(ids),))
         res=dict(cr.fetchall())
         for asset in self.browse(cr, uid, ids, context):
-            res[asset.id] = asset.purchase_value - res.get(asset.id, 0.0) - asset.salvage_value
+            company_currency = asset.company_id.currency_id.id
+            current_currency = asset.currency_id.id
+            amount = self.pool['res.currency'].compute(cr, uid, company_currency, current_currency, res.get(asset.id, 0.0), context=context)
+            res[asset.id] = asset.purchase_value - amount - asset.salvage_value
         for id in ids:
             res.setdefault(id, 0.0)
         return res
