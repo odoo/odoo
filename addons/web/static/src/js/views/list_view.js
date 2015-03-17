@@ -107,6 +107,12 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
 
         this.no_leaf = false;
         this.grouped = false;
+
+        // the view's number of records per page (|| section)
+        this._limit = (this.options.limit ||
+                       this.defaults.limit ||
+                       (this.getParent().action || {}).limit ||
+                       80);
     },
     view_loading: function(r) {
         return this.load_list(r);
@@ -117,23 +123,6 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             GroupsType: ListView.Groups,
             ListType: ListView.List
         });
-    },
-
-    /**
-     * Retrieves the view's number of records per page (|| section)
-     *
-     * options > defaults > parent.action.limit > indefinite
-     *
-     * @returns {Number|null}
-     */
-    limit: function () {
-        if (this._limit === undefined) {
-            this._limit = (this.options.limit
-                        || this.defaults.limit
-                        || (this.getParent().action || {}).limit
-                        || 80);
-        }
-        return this._limit;
     },
     /**
      * Set a custom Group construct as the root of the List View.
@@ -365,7 +354,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             this.$pager
                 .on('click', 'a[data-pager-action]', function () {
                     var $this = $(this);
-                    var max_page_index = Math.ceil(self.dataset.size() / self.limit()) - 1;
+                    var max_page_index = Math.ceil(self.dataset.size() / self._limit) - 1;
                     switch ($this.data('pager-action')) {
                         case 'first':
                             self.page = 0;
@@ -455,10 +444,10 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             if (this.grouped) {
                 // page count is irrelevant on grouped page, replace by limit
                 this.$pager.find('.oe-pager-buttons').hide();
-                this.$pager.find('.oe_list_pager_state').text(this.limit() ? this.limit() : '∞');
+                this.$pager.find('.oe_list_pager_state').text(this._limit || '∞');
             } else {
                 var total = dataset.size();
-                var limit = this.limit() || total;
+                var limit = this._limit || total;
                 this.$pager.find('.oe-pager-buttons').toggle(total > limit);
                 this.$pager.find('.oe_pager_value').toggle(total !== 0);
                 var spager = '-';
@@ -663,7 +652,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
                 //Trigger previous manually to navigate to previous page, 
                 //If all records are deleted on current page.
                 self.$pager.find('ul li:first a').trigger('click');
-            } else if (self.dataset.size() == self.limit()) {
+            } else if (self.dataset.size() == self._limit) {
                 //Reload listview to update current page with next page records 
                 //because pager going to be hidden if dataset.size == limit
                 self.reload();
@@ -1548,7 +1537,7 @@ ListView.Groups = Class.extend( /** @lends instance.web.ListView.Groups# */{
         this.bind_child_events(list);
 
         var view = this.view,
-           limit = view.limit(),
+            limit = view._limit,
             page = this.datagroup.openable ? this.page : view.page;
 
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name');
