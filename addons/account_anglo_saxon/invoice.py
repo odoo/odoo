@@ -161,7 +161,8 @@ class account_invoice_line(osv.osv):
                             stock_move_obj = self.pool.get('stock.move')
                             valuation_stock_move = stock_move_obj.search(cr, uid, [('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1, context=context)
                             if valuation_stock_move:
-                                valuation_price_unit = stock_move_obj.browse(cr, uid, valuation_stock_move[0], context=context).price_unit
+                                move = stock_move_obj.browse(cr, uid, valuation_stock_move[0], context=context)
+                                valuation_price_unit = self.pool.get('product.uom')._compute_price(cr, uid, move.product_id.uom_id.id, move.price_unit, i_line.uos_id.id)
                         if inv.currency_id.id != company_currency:
                             valuation_price_unit = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, valuation_price_unit, context={'date': inv.date_invoice})
                         if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
@@ -170,19 +171,20 @@ class account_invoice_line(osv.osv):
                                 i_line.price_unit * (1-(i_line.discount or 0.0)/100.0), line['quantity'])['total']
                             price_line = round(valuation_price_unit * line['quantity'], account_prec)
                             price_diff = round(price_unit - price_line, account_prec)
-                            line.update({'price': price_line})
-                            diff_res.append({
-                                'type': 'src',
-                                'name': i_line.name[:64],
-                                'price_unit': round(price_diff / line['quantity'], account_prec),
-                                'quantity': line['quantity'],
-                                'price': price_diff,
-                                'account_id': acc,
-                                'product_id': line['product_id'],
-                                'uos_id': line['uos_id'],
-                                'account_analytic_id': line['account_analytic_id'],
-                                'taxes': line.get('taxes', []),
-                                })
+                            if price_diff != 0.0:
+                                line.update({'price': price_line})
+                                diff_res.append({
+                                    'type': 'src',
+                                    'name': i_line.name[:64],
+                                    'price_unit': round(price_diff / line['quantity'], account_prec),
+                                    'quantity': line['quantity'],
+                                    'price': price_diff,
+                                    'account_id': acc,
+                                    'product_id': line['product_id'],
+                                    'uos_id': line['uos_id'],
+                                    'account_analytic_id': line['account_analytic_id'],
+                                    'taxes': line.get('taxes', []),
+                                    })
                 return diff_res
         return []
 
