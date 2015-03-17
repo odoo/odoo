@@ -154,7 +154,7 @@
   !python {model: ir.model.data} : |
       bank_account_id = self.pool.get('account.journal').browse(cr, uid, ref('bank_journal')).default_debit_account_id.id
       fixed_asset_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_fixed_assets'))])
-      equity_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_equity')), ('tag_ids', in', [ref('demo_capital_account')])])
+      equity_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('data_account_type_equity')), ('tag_ids', 'in', [ref('demo_capital_account')])])
       if bank_account_id and fixed_asset_account_ids and equity_account_ids:
           self._update(cr, uid, 'account.move.line', 'account', {
               'move_id': ref('demo_opening_move'),
