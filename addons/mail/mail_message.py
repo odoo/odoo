@@ -476,7 +476,7 @@ class mail_message(osv.Model):
                 'parent_id': parent_id,
                 'is_private': is_private,
                 'author_id': False,
-                'author_avatar': message.author_avatar,
+                #'author_avatar': message.author_avatar,
                 'is_author': False,
                 'partner_ids': [],
                 'vote_nb': vote_nb,
@@ -1003,8 +1003,6 @@ class mail_message(osv.Model):
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
         if 'record_name' not in values and 'default_record_name' not in context:
             values['record_name'] = self._get_record_name(cr, uid, values, context=context)
-
-        print "values", values
         
         newid = super(mail_message, self).create(cr, uid, values, context)
 

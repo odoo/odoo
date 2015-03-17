@@ -202,7 +202,7 @@ openerp.web_timeline = function (session) {
                 'show_link': true,
                 'show_reply_button': true,
                 'show_read_unread_button': true,
-                'fetch_limit': 20,
+                'fetch_limit': 18,
                 'fetch_child_limit': 5,
                 }, this.options);
 
@@ -897,7 +897,7 @@ openerp.web_timeline = function (session) {
                 this.follower_ids = [];
 
                 this.ds_res = new session.web.DataSetSearch(this, this.model, this.context, [['id', '=', this.res_id]]);
-                this.ds_res.read_slice().then(function (data) {
+                this.ds_res.read_slice(['id', 'message_follower_ids']).then(function (data) {
                     self.follower_ids = data[0].message_follower_ids;
                     self.nb_followers = data[0].message_follower_ids.length;
                     self.followers_loaded.resolve();
