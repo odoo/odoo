@@ -27,7 +27,7 @@ class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
-        return self._amount_residual(self, cr, uid, ids, field_names, args, context=context)
+        return self._amount_residual(cr, uid, ids, field_names, args, context=context)
 
     def _to_pay_search(self, cr, uid, obj, name, args, context=None):
         if not args:
