@@ -104,9 +104,15 @@ class account_payment(models.Model):
                 self.destination_account_id = self.partner_id.property_account_payable.id
 
     @api.one
-    @api.depends('invoice_id', 'amount')
+    @api.depends('invoice_id', 'amount', 'date', 'currency_id')
     def _compute_payment_difference(self):
-        self.payment_difference = self.invoice_id and self.invoice_id.residual - self.amount or 0
+        amount = 0
+        if self.invoice_id:
+            if self.invoice_id.currency_id == self.currency_id:
+                amount = self.amount
+            else:
+                amount = self.currency_id.with_context(date=self.date).compute(self.amount, self.invoice_id.currency_id)
+        self.payment_difference = self.invoice_id and self.invoice_id.residual - amount or 0
 
     name = fields.Char(readonly=True, copy=False)
     state = fields.Selection([('draft','Draft'), ('confirmed','Confirmed')], readonly=True, default='draft', copy=False)
