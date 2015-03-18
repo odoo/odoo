@@ -274,26 +274,26 @@ class account_payment(models.Model):
             # In case of a transfer, the first journal entry created debited the source liquidity account and credited
             # the transfer account. Now we debit the transfer account and credit the destination liquidity account.
             if rec.payment_type == 'transfer':
-                debit, credit, amount_currency = aml_obj.with_context(date=rec.date).compute_amount_fields(-amount, rec.destination_journal_id.currency, rec.currency_id)
+                amount_currency = rec.destination_journal_id.currency and rec.currency_id.with_context(date=rec.date).compute(amount, rec.destination_journal_id.currency) or 0
 
                 dst_move = rec.env['account.move'].create(rec._get_move_vals(rec.destination_journal_id))
 
-                dst_liquidity_aml_dict = rec._get_shared_move_line_vals(credit, debit, -amount_currency, dst_move.id)
+                dst_liquidity_aml_dict = rec._get_shared_move_line_vals(debit, credit, amount_currency, dst_move.id)
                 dst_liquidity_aml_dict.update({
                     'name': _('Transfer from %s') % self.journal_id.name,
                     'account_id': rec.destination_journal_id.default_credit_account_id.id,
                     'currency_id': rec.destination_journal_id.currency.id,
                     'payment_id': rec.id,
-                    'journal_id': rec.destination_journal_id.id })
+                    'journal_id': rec.destination_journal_id.id})
                 aml_obj.create(dst_liquidity_aml_dict)
 
-                transfer_debit_aml_dict = rec._get_shared_move_line_vals(debit, credit, amount_currency, dst_move.id)
+                transfer_debit_aml_dict = rec._get_shared_move_line_vals(credit, debit, -amount_currency, dst_move.id)
                 transfer_debit_aml_dict.update({
                     'name': '/',
                     'payment_id': rec.id,
                     'account_id': self.company_id.transfer_account_id.id,
                     'currency_id': rec.destination_journal_id.currency.id,
-                    'journal_id': rec.destination_journal_id.id })
+                    'journal_id': rec.destination_journal_id.id})
                 transfer_debit_aml = aml_obj.create(transfer_debit_aml_dict)
 
                 dst_move.post()
