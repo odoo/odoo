@@ -10,17 +10,149 @@ openerp.web.views = {};
 var QWeb = instance.web.qweb,
     _t = instance.web._t;
 
+/**
+ * Class representing the actions of the ActionManager
+ * Basic implementation for client actions that are functions
+ */
+var Action = instance.web.Class.extend({
+    init: function(action) {
+        this.action_descr = action;
+        this.title = action.display_name || action.name;
+    },
+    /**
+     * This method should restore this previously loaded action
+     * Calls on_reverse_breadcrumb callback if defined
+     * @return {Deferred} resolved when widget is enabled
+     */
+    restore: function() {
+        if (this.__on_reverse_breadcrumb) {
+            return this.__on_reverse_breadcrumb();
+        }
+    },
+    /**
+     * Destroyer: there is nothing to destroy in the case of a client function
+     */
+    destroy: function() {
+    },
+    /**
+     * Sets the on_reverse_breadcrumb callback to be called when coming back to that action
+     * @param {Function} [on_reverse_breadcrumb] the callback
+     */
+    set_on_reverse_breadcrumb: function(on_reverse_breadcrumb) {
+        this.on_reverse_breadcrumb = on_reverse_breadcrumb;
+    },
+    /**
+     * @return {Object} the description of the action
+     */
+    get_action_descr: function() {
+        return this.action_descr;
+    },
+    /**
+     * @return {Object} dictionnary that will be interpreted to display the breadcrumbs
+     */
+    get_breadcrumbs: function() {
+        return { title: this.title, action: this };
+    },
+    /**
+     * @return {int} the number of views stacked, i.e. 0 for client functions
+     */
+    get_nb_views: function() {
+        return 0;
+    },
+});
+/**
+ * Specialization of Action for client actions that are Widgets
+ */
+var WidgetAction = Action.extend({
+    /**
+     * Initializes the WidgetAction
+     * Sets the title of the widget
+     */
+    init: function(action, widget) {
+        this._super(action);
+
+        this.widget = widget;
+        if (!this.widget.get('title')) {
+            this.widget.set('title', this.title);
+        }
+    },
+    /**
+     * Restores WidgetAction by calling do_show on its widget
+     */
+    restore: function() {
+        this.widget.do_show();
+        return this._super();
+    },
+    /**
+     * Destroys the widget
+     */
+    destroy: function() { 
+        this.widget.destroy();
+    },
+});
+/**
+ * Specialization of WidgetAction for window actions (i.e. ViewManagers)
+ */
+var ViewManagerAction = WidgetAction.extend({
+    /**
+     * Restores a ViewManagerAction
+     * Switches to the requested view by calling select_view on the ViewManager
+     * @param {int} [view_index] the index of the view to select
+     */
+    restore: function(view_index) {
+        var self = this;
+        var _super = this._super;
+        return this.widget.select_view(view_index).then(function() {
+            _super.call(self);
+        });
+    },
+    /**
+     * @return {Array} array of Objects that will be interpreted to display the breadcrumbs
+     */
+    get_breadcrumbs: function() {
+        var self = this;
+        return this.widget.view_stack.map(function (view, index) {
+            return {
+                title: view.controller.get('title') || self.title,
+                index: index,
+                action: self,
+            };
+        });
+    },
+    /**
+     * @return {int} the number of views stacked in the ViewManager
+     */
+    get_nb_views: function() {
+        return this.widget.view_stack.length;
+    },
+});
+
 instance.web.ActionManager = instance.web.Widget.extend({
     template: "ActionManager",
     init: function(parent) {
         this._super(parent);
+        this.action_stack = [];
         this.inner_action = null;
         this.inner_widget = null;
         this.webclient = parent;
         this.dialog = null;
         this.dialog_widget = null;
-        this.widgets = [];
+
         this.on('history_back', this, this.proxy('history_back'));
+
+        // Instantiate a unique main ControlPanel used by widgets of actions in this.action_stack
+        this.main_control_panel = new instance.web.ControlPanel(this);
+        // Listen to event "on_breadcrumb_click" trigerred on the control panel when
+        // clicking on a part of the breadcrumbs. Call select_action for this breadcrumb.
+        this.main_control_panel.on("on_breadcrumb_click", this, function(action, index) {
+            this.select_action(action, index);
+        });
+
+    },
+    start: function() {
+        this._super();
+        // Append the main control panel to the DOM (inside the ActionManager jQuery element)
+        this.main_control_panel.appendTo(this.$el);
     },
     dialog_stop: function (reason) {
         if (this.dialog) {
@@ -29,128 +161,132 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog = null;
     },
     /**
-     * Add a new widget to the action manager
+     * Add a new action to the action manager
      *
-     * widget: typically, widgets added are instance.web.ViewManager.  The action manager
-     *      uses this list of widget to handle the breadcrumbs.
-     * action: new action
-     * options.on_reverse_breadcrumb: will be called when breadcrumb is selected
-     * options.clear_breadcrumbs: boolean, if true, current widgets are destroyed
-     * options.replace_breadcrumb: boolean, if true, replace current breadcrumb
+     * widget: typically, widgets added are openerp.web.ViewManager. The action manager
+     *      uses the stack of actions to handle the breadcrumbs.
+     * action_descr: new action description
+     * options.on_reverse_breadcrumb: will be called when breadcrumb is clicked on
+     * options.clear_breadcrumbs: boolean, if true, action stack is destroyed
      */
-    push_widget: function(widget, action, options) {
+    push_action: function(widget, action_descr, options) {
         var self = this,
             to_destroy,
-            old_widget = this.inner_widget;
+            old_widget = this.inner_widget,
+            old_action = this.inner_action;
         options = options || {};
 
+        // Empty action_stack if requested
         if (options.clear_breadcrumbs) {
-            to_destroy = this.widgets;
-            this.widgets = [];
-        } else if (options.replace_breadcrumb) {
-            to_destroy = _.last(this.widgets);
-            this.widgets = _.initial(this.widgets);
+            to_destroy = this.action_stack;
+            this.action_stack = [];
         }
-        if (widget instanceof instance.web.Widget) {
-            var title = widget.get('title') || action.display_name || action.name;
-            widget.set('title', title);
-            this.widgets.push(widget);
+
+        // Instantiate the new action
+        var new_action;
+        if (widget instanceof instance.web.ViewManager) {
+            new_action = new ViewManagerAction(action_descr, widget);
+        } else if (widget instanceof instance.web.Widget) {
+            new_action = new WidgetAction(action_descr, widget);
         } else {
-            this.widgets.push({
-                view_stack: [{
-                    controller: {get: function () {return action.display_name || action.name; }},
-                }],
-                destroy: function () {},
-            });
+            new_action = new Action(action_descr);
         }
-        _.last(this.widgets).__on_reverse_breadcrumb = options.on_reverse_breadcrumb;
-        this.inner_action = action;
+
+        // Set on_reverse_breadcrumb callback on previous inner_action
+        if (old_action) {
+            old_action.set_on_reverse_breadcrumb(options.on_reverse_breadcrumb);
+        }
+
+        // Update action_stack
+        this.action_stack.push(new_action);
+        this.inner_action = new_action;
         this.inner_widget = widget;
-        return $.when(this.inner_widget.appendTo(this.$el)).done(function () {
-            if ((action.target !== 'inline') && (!action.flags.headless) && widget.$header) {
-                widget.$header.show();
-            }
+
+        if (widget.need_control_panel) {
+            // Set the ControlPanel bus on the widget to allow it to communicate its status
+            widget.set_cp_bus(this.main_control_panel.get_bus());
+        } else {
+            // Hide the main ControlPanel for widgets that do not use it
+            this.main_control_panel.do_hide();
+        }
+
+        // render the inner_widget in a fragment, and append it to the
+        // document only when it's ready
+        var new_widget_fragment = document.createDocumentFragment();
+        return $.when(this.inner_widget.appendTo(new_widget_fragment)).done(function() {
+            self.$el.append(new_widget_fragment);
+            // Hide the old_widget as it will be removed from the DOM when it
+            // is destroyed
             if (old_widget) {
                 old_widget.$el.hide();
             }
             if (options.clear_breadcrumbs) {
-                self.clear_widgets(to_destroy);
+                self.clear_action_stack(to_destroy);
             }
         });
     },
     get_breadcrumbs: function () {
-        return _.flatten(_.map(this.widgets, function (widget) {
-            if (widget instanceof instance.web.ViewManager) {
-                return widget.view_stack.map(function (view, index) { 
-                    return {
-                        title: view.controller.get('title') || widget.title,
-                        index: index,
-                        widget: widget,
-                    }; 
-                });
-            } else {
-                return {title: widget.get('title'), widget: widget };
-            }
+        return _.flatten(_.map(this.action_stack, function (action) {
+            return action.get_breadcrumbs();
         }), true);
     },
     get_title: function () {
-        if (this.widgets.length === 1) {
+        if (this.action_stack.length === 1) {
             // horrible hack to display the action title instead of "New" for the actions
             // that use a form view to edit something that do not correspond to a real model
             // for example, point of sale "Your Session" or most settings form,
-            var widget = this.widgets[0];
-            if (widget instanceof instance.web.ViewManager && widget.view_stack.length === 1) {
-                return widget.title;
+            var action = this.action_stack[0];
+            if (action.get_breadcrumbs().length === 1) {
+                return action.title;
             }
         }
         return _.pluck(this.get_breadcrumbs(), 'title').join(' / ');
     },
-    get_widgets: function () {
-        return this.widgets.slice(0);
+    get_action_stack: function () {
+        return this.action_stack;
+    },
+    get_inner_action: function() {
+        return this.inner_action;
+    },
+    get_inner_widget: function() {
+        return this.inner_widget;
     },
     history_back: function() {
-        var widget = _.last(this.widgets);
-        if (widget instanceof instance.web.ViewManager) {
-            var nbr_views = widget.view_stack.length;
-            if (nbr_views > 1) {
-                return this.select_widget(widget, nbr_views - 2);
-            } 
-        } 
-        if (this.widgets.length > 1) {
-            widget = this.widgets[this.widgets.length - 2];
-            var index = widget.view_stack && widget.view_stack.length - 1;
-            return this.select_widget(widget, index);
+        var nb_views = this.inner_action.get_nb_views();
+        if (nb_views > 1) {
+            // Stay on this action, but select the previous view
+            return this.select_action(action, nb_views - 2);
+        }
+        if (this.action_stack.length > 1) {
+            // Select the previous action
+            action = this.action_stack[this.action_stack.length - 2];
+            nb_views = action.get_nb_views();
+            return this.select_action(action, nb_views - 1);
         }
         return $.Deferred().reject();
     },
-    select_widget: function(widget, index) {
+    select_action: function(action, index) {
         var self = this;
         if (this.webclient.has_uncommitted_changes()) {
             return $.Deferred().reject();
         }
-        var widget_index = this.widgets.indexOf(widget),
-            def = $.when(widget.select_view && widget.select_view(index));
 
-        return def.done(function () {
-            if (widget.__on_reverse_breadcrumb) {
-                widget.__on_reverse_breadcrumb();
-            }
-            _.each(self.widgets.splice(widget_index + 1), function (w) {
-                w.destroy();
-            });
-            self.inner_widget = _.last(self.widgets);
-            if (self.inner_widget.display_breadcrumbs) {
-                self.inner_widget.display_breadcrumbs();
-            }
-            if (self.inner_widget.do_show) {
-                self.inner_widget.do_show();
-            }
-        });
+        // Set the new inner_widget and clear the action_stack
+        this.inner_widget = action.widget;
+        var action_index = this.action_stack.indexOf(action);
+        this.clear_action_stack(this.action_stack.splice(action_index + 1));
+
+        return action.restore(index);
     },
-    clear_widgets: function(widgets) {
-        _.invoke(widgets || this.widgets, 'destroy');
-        if (!widgets) {
-            this.widgets = [];
+    clear_action_stack: function(action_stack) {
+        var self = this;
+
+        _.map(action_stack || this.action_stack, function(action) {
+            action.destroy();
+        });
+        if (!action_stack) {
+            this.action_stack = [];
+            this.inner_action = null;
             this.inner_widget = null;
         }
     },
@@ -160,39 +296,40 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         state = state || {};
         if (this.inner_action) {
-            if (this.inner_action._push_me === false) {
+            var inner_action_descr = this.inner_action.get_action_descr();
+            if (inner_action_descr._push_me === false) {
                 // this action has been explicitly marked as not pushable
                 return;
             }
-            state.title = this.get_title(); 
-            if(this.inner_action.type == 'ir.actions.act_window') {
-                state.model = this.inner_action.res_model;
+            state.title = this.get_title();
+            if(inner_action_descr.type == 'ir.actions.act_window') {
+                state.model = inner_action_descr.res_model;
             }
-            if (this.inner_action.menu_id) {
-                state.menu_id = this.inner_action.menu_id;
+            if (inner_action_descr.menu_id) {
+                state.menu_id = inner_action_descr.menu_id;
             }
-            if (this.inner_action.id) {
-                state.action = this.inner_action.id;
-            } else if (this.inner_action.type == 'ir.actions.client') {
-                state.action = this.inner_action.tag;
+            if (inner_action_descr.id) {
+                state.action = inner_action_descr.id;
+            } else if (inner_action_descr.type == 'ir.actions.client') {
+                state.action = inner_action_descr.tag;
                 var params = {};
-                _.each(this.inner_action.params, function(v, k) {
+                _.each(inner_action_descr.params, function(v, k) {
                     if(_.isString(v) || _.isNumber(v)) {
                         params[k] = v;
                     }
                 });
                 state = _.extend(params || {}, state);
             }
-            if (this.inner_action.context) {
-                var active_id = this.inner_action.context.active_id;
+            if (inner_action_descr.context) {
+                var active_id = inner_action_descr.context.active_id;
                 if (active_id) {
                     state.active_id = active_id;
                 }
-                var active_ids = this.inner_action.context.active_ids;
+                var active_ids = inner_action_descr.context.active_ids;
                 if (active_ids && !(active_ids.length === 1 && active_ids[0] === active_id)) {
                     // We don't push active_ids if it's a single element array containing the active_id
                     // This makes the url shorter in most cases.
-                    state.active_ids = this.inner_action.context.active_ids.join(',');
+                    state.active_ids = inner_action_descr.context.active_ids.join(',');
                 }
             }
         }
@@ -237,8 +374,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
                         instance.webclient.menu.is_bound.done(function() {
-                            if (self.inner_action && self.inner_action.id) {
-                                instance.webclient.menu.open_action(self.inner_action.id);
+                            if (self.inner_action && self.inner_action.get_action_descr().id) {
+                                instance.webclient.menu.open_action(self.inner_action.get_action_descr().id);
                             }
                         });
                     });
@@ -297,7 +434,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_menu_id: null,
             additional_context: {},
         });
-
         if (action === false) {
             action = { type: 'ir.actions.act_window_close' };
         } else if (_.isString(action) && instance.web.client_actions.contains(action)) {
@@ -335,31 +471,48 @@ instance.web.ActionManager = instance.web.Widget.extend({
             console.error("No type for action", action);
             return $.Deferred().reject();
         }
+
         var type = action.type.replace(/\./g,'_');
-        var popup = action.target === 'new';
-        var inline = action.target === 'inline' || action.target === 'inlineview';
-        var form = _.str.startsWith(action.view_mode, 'form');
-        action.flags = _.defaults(action.flags || {}, {
-            views_switcher : !popup && !inline,
-            search_view : !popup && !inline,
-            action_buttons : !popup && !inline,
-            sidebar : !popup && !inline,
-            pager : (!popup || !form) && !inline,
-            display_title : !popup,
-            headless: (popup || inline) && form,
-            search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
-        });
         action.menu_id = options.action_menu_id;
         action.context.params = _.extend({ 'action' : action.id }, action.context.params);
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
             return $.Deferred().reject();
         }
+
+        // Special case for Dashboards, this should definitively be done upstream
+        if (action.res_model === 'board.board' && action.view_mode === 'form') {
+            action.target = 'inline';
+            _.extend(action.flags, {
+                headless: true,
+                views_switcher: false,
+                display_title: false,
+                search_view: false,
+                pager: false,
+                sidebar: false,
+                action_buttons: false
+            });
+        } else {
+            var popup = action.target === 'new';
+            var inline = action.target === 'inline' || action.target === 'inlineview';
+            var form = _.str.startsWith(action.view_mode, 'form');
+            action.flags = _.defaults(action.flags || {}, {
+                views_switcher : !popup && !inline,
+                search_view : !popup && !inline,
+                action_buttons : !popup && !inline,
+                sidebar : !popup && !inline,
+                pager : (!popup || !form) && !inline,
+                display_title : !popup,
+                headless: (popup || inline) && form,
+                search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
+            });
+        }
+
         return this[type](action, options);
     },
     null_action: function() {
         this.dialog_stop();
-        this.clear_widgets();
+        this.clear_action_stack();
     },
     /**
      *
@@ -414,6 +567,11 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     widget.flags.headless = true;
                 }
             }
+            if (widget.need_control_panel) {
+                // Set a fake bus to Dialogs needing a ControlPanel as they should not
+                // communicate with the main ControlPanel
+                widget.set_cp_bus(new instance.web.Bus);
+            }
             this.dialog_widget = widget;
             this.dialog_widget.setParent(this.dialog);
             var initialized = this.dialog_widget.appendTo(this.dialog.$el);
@@ -425,14 +583,13 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         widget = executor.widget();
         this.dialog_stop(executor.action);
-        return this.push_widget(widget, executor.action, options);
+        return this.push_action(widget, executor.action, options);
     },
     ir_actions_act_window: function (action, options) {
         var self = this;
-
         return this.ir_actions_common({
-            widget: function () { 
-                return new instance.web.ViewManager(self, null, null, null, action); 
+            widget: function () {
+                return new instance.web.ViewManager(self, null, null, null, action);
             },
             action: action,
             klass: 'oe_act_window',
@@ -444,7 +601,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (!ClientWidget) {
             return self.do_warn("Action Error", "Could not find client action '" + action.tag + "'.");
         }
-
         if (!(ClientWidget.prototype instanceof instance.web.Widget)) {
             var next;
             if ((next = ClientWidget(this, action))) {
@@ -454,7 +610,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
 
         return this.ir_actions_common({
-            widget: function () { return new ClientWidget(self, action); },
+            widget: function () {
+                return new ClientWidget(self, action);
+            },
             action: action,
             klass: 'oe_act_client',
         }, options).then(function () {
@@ -526,193 +684,142 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
 });
 
-instance.web.ViewManager =  instance.web.Widget.extend({
-    template: "ViewManager",
+/**
+ * Mixin allowing widgets to communicate with the ControlPanel. Widgets needing a
+ * ControlPanel should use this mixin and call update_control_panel(cp_status) where
+ * cp_status contains information for the ControlPanel to update itself.
+ */
+instance.web.ControlPanelMixin = {
+    need_control_panel: true,
     /**
-     * @param {Object} [dataset] null object (... historical reasons)
-     * @param {Array} [views] List of [view_id, view_type]
-     * @param {Object} [flags] various boolean describing UI state
+     * @param {openerp.web.Bus} [cp_bus] Bus to communicate with the ControlPanel
      */
-    init: function(parent, dataset, views, flags, action) {
-        if (action) {
-            flags = action.flags || {};
-            if (!('auto_search' in flags)) {
-                flags.auto_search = action.auto_search !== false;
-            }
-            if (action.res_model === 'board.board' && action.view_mode === 'form') {
-                action.target = 'inline';
-                // Special case for Dashboards
-                _.extend(flags, {
-                    views_switcher : false,
-                    display_title : false,
-                    search_view : false,
-                    pager : false,
-                    sidebar : false,
-                    action_buttons : false
-                });
-            }
-            this.action = action;
-            this.action_manager = parent;
-            dataset = new instance.web.DataSetSearch(this, action.res_model, action.context, action.domain);
-            if (action.res_id) {
-                dataset.ids.push(action.res_id);
-                dataset.index = 0;
-            }
-            views = action.views;
-        }
-        var self = this;
+    set_cp_bus: function(cp_bus) {
+        this.cp_bus = cp_bus;
+    },
+    /**
+     * Triggers 'update' on the cp_bus to update the ControlPanel according to cp_status
+     * @param {Object} [cp_status] see instance.web.ControlPanel.update() for a description
+     */
+    update_control_panel: function(cp_status) {
+        this.cp_bus.trigger("update", cp_status || {});
+    },
+};
+
+instance.web.ControlPanel = instance.web.Widget.extend({
+    template: 'ControlPanel',
+    /**
+     * @param {String} [template] the QWeb template to render the ControlPanel.
+     * By default, the template 'ControlPanel' will be used
+     */
+    init: function(parent, template) {
         this._super(parent);
+        if (template) {
+            this.template = template;
+        }
 
-        this.flags = flags || {};
-        this.dataset = dataset;
-        this.view_order = [];
-        this.url_states = {};
-        this.views = {};
-        this.view_stack = []; // used for breadcrumbs
-        this.active_view = null;
-        this.searchview = null;
-        this.active_search = null;
-        this.registry = instance.web.views;
-        this.title = this.action && this.action.name;
+        this.bus = new instance.web.Bus();
+        this.bus.on("update", this, this.update);
+        this.bus.on("update_breadcrumbs", this, this.update_breadcrumbs);
+    },
+    start: function() {
+        // Retrieve ControlPanel jQuery nodes
+        this.$title_col = this.$('.oe-cp-title');
+        this.$breadcrumbs = this.$('.oe-view-title');
+        this.$searchview = this.$('.oe-cp-search-view');
+        this.$searchview_buttons = this.$('.oe-search-options');
+        this.$buttons = this.$('.oe-cp-buttons');
+        this.$sidebar = this.$('.oe-cp-sidebar');
+        this.$pager = this.$('.oe-cp-pager');
+        this.$switch_buttons = this.$('.oe-cp-switch-buttons');
 
-        _.each(views, function (view) {
-            var view_type = view[1] || view.view_type,
-                View = instance.web.views.get_object(view_type, true),
-                view_label = View ? View.prototype.display_name: (void 'nope'),
-                view_descr = {
-                    controller: null,
-                    options: view.options || {},
-                    view_id: view[0] || view.view_id,
-                    type: view_type,
-                    label: view_label,
-                    embedded_view: view.embedded_view,
-                    title: self.action && self.action.name,
-                    button_label: View ? _.str.sprintf(_t('%(view_type)s view'), {'view_type': (view_label || view_type)}) : (void 'nope'),
-                };
-            self.view_order.push(view_descr);
-            self.views[view_type] = view_descr;
-        });
-        this.multiple_views = (self.view_order.length > 1);
+        // By default, hide the ControlPanel and remove its contents from the DOM
+        this.$el.hide();
+        this.contents = this.$el.contents().detach();
+
+        return this._super();
     },
     /**
-     * @returns {jQuery.Deferred} initial view loading promise
+     * @return {Object} the Bus the ControlPanel is listening on
      */
-    start: function() {
-        var self = this;
-        var default_view = this.flags.default_view || this.view_order[0].type,
-            default_options = this.flags[default_view] && this.flags[default_view].options;
-
-        if (this.flags.headless) {
-            this.$('.oe-view-manager-header').hide();
-        }
-        this._super();
-        var $sidebar = this.flags.sidebar ? this.$('.oe-view-manager-sidebar') : undefined,
-            $pager = this.$('.oe-view-manager-pager');
-
-        this.$breadcrumbs = this.$('.oe-view-title');
-        this.$switch_buttons = this.$('.oe-view-manager-switch button');
-        this.$header = this.$('.oe-view-manager-header');
-        this.$header_col = this.$header.find('.oe-header-title');
-        this.$search_col = this.$header.find('.oe-view-manager-search-view');
-        this.$switch_buttons.click(function (event) {
-            var view_type = $(this).data('view-type');
-            if ((view_type === 'form') && (self.active_view.type === 'form')) {
-                self._display_view(view_type);
-            } else {
-                self.switch_mode(view_type);
-            }
-        });
-        var views_ids = {};
-        _.each(this.views, function (view) {
-            views_ids[view.type] = view.view_id;
-            view.options = _.extend({
-                $buttons: self.$('.oe-' + view.type + '-buttons'),
-                $sidebar : $sidebar,
-                $pager : $pager,
-                action : self.action,
-                action_views_ids : views_ids,
-            }, self.flags, self.flags[view.type], view.options);
-            view.$container = self.$(".oe-view-manager-view-" + view.type);
-            // show options.$buttons as views will put their $buttons inside it
-            // and call show/hide on them
-            view.options.$buttons.show();
-            self.$('.oe-vm-switch-' + view.type).tooltip();
-        });
-        this.$('.oe_debug_view').click(this.on_debug_changed);
-        this.$el.addClass("oe_view_manager_" + ((this.action && this.action.target) || 'current'));
-
-        this.search_view_loaded = this.setup_search_view();
-        var main_view_loaded = this.switch_mode(default_view, null, default_options);
-            
-        return $.when(main_view_loaded, this.search_view_loaded);
+    get_bus: function() {
+        return this.bus;
     },
-
-    switch_mode: function(view_type, no_store, view_options) {
-        var self = this,
-            view = this.views[view_type];
-        if (!view) {
-            return $.Deferred().reject();
+    /**
+     * Hides (or shows) the ControlPanel in headless (resp. non-headless) mode
+     * Also detaches or attaches its contents to clean the DOM
+     */
+    toggle_visibility: function(hidden) {
+        this.$el.toggle(!hidden);
+        if (hidden && !this.contents) {
+            this.contents = this.$el.contents().detach();
+        } else if (this.contents) {
+            this.contents.appendTo(this.$el);
+            this.contents = null;
         }
-        if ((view_type !== 'form') && (view_type !== 'diagram')) {
-            this.view_stack = [];
-        } 
-
-        this.view_stack.push(view);
-
-        // Hide active view (at first rendering, there is no view to hide)
-        if (this.active_view && this.active_view !== view) {
-            if (this.active_view.controller) this.active_view.controller.do_hide();
-            if (this.active_view.$container) this.active_view.$container.hide();
-        }
-        this.active_view = view;
-
-        if (!view.created) {
-            view.created = this.create_view.bind(this)(view, view_options);
-        }
-        this.active_search = $.Deferred();
-
-        if (this.searchview && 
-                this.flags.auto_search && 
-                view.controller.searchable !== false) {
-            $.when(this.search_view_loaded, view.created).done(this.searchview.do_search);
-        } else {
-            this.active_search.resolve();
-        }
-
-        self.update_header();
-        return $.when(view.created, this.active_search).done(function () {
-            self.active_view = view;
-            self._display_view(view_options);
-            self.trigger('switch_mode', view_type, no_store, view_options);
-            if (self.session.debug) {
-                self.$('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
-                    view: self.active_view.controller,
-                    view_manager: self,
-                }));
+    },
+    /**
+     * Detaches the content of the ControlPanel
+     */
+    _detach_content: function() {
+        this.$buttons.contents().detach();
+        this.$switch_buttons.contents().detach();
+        this.$pager.contents().detach();
+        this.$sidebar.contents().detach();
+        this.$searchview.contents().detach();
+        this.$searchview_buttons.contents().detach();
+    },
+    /**
+     * Attaches content to the ControlPanel
+     * @param {Object} [content] dictionnary of jQuery elements to attach, whose keys
+     * are jQuery nodes identifiers
+     */
+    _attach_content: function(content) {
+        var self = this;
+        _.each(content, function($nodeset, $element) {
+            if ($nodeset && self[$element]) {
+                $nodeset.appendTo(self[$element]);
             }
         });
     },
-    update_header: function () {
-        this.$switch_buttons.removeClass('active');
-        this.$('.oe-vm-switch-' + this.active_view.type).addClass('active');
+    /**
+     * Updates the content and display of the ControlPanel
+     * @param {Object} [status.active_view] the current active view
+     * @param {Array} [status.breadcrumbs] the breadcrumbs to display
+     * @param {Object} [status.cp_content] dictionnary containing the new ControlPanel jQuery elements
+     * @param {Boolean} [status.hidden] true if the ControlPanel should be hidden
+     * @param {openerp.web.SearchView} [status.searchview] the searchview widget
+     * @param {Boolean} [status.search_view_hidden] true if the searchview is hidden, false otherwise
+     */
+    update: function(status) {
+        this.toggle_visibility(status.hidden);
+        if (!status.hidden) {
+            // Don't update the ControlPanel in headless mode as the views have
+            // inserted themselves the buttons where they want, so inserting them
+            // again in the ControlPanel will removed them from there they should be
+            this._detach_content();
+            this._attach_content(status.cp_content);
+            if (status.active_view_selector) this.update_switch_buttons(status.active_view_selector);
+            if (status.searchview) this.update_search_view(status.searchview, status.search_view_hidden);
+            if (status.breadcrumbs) this.update_breadcrumbs(status.breadcrumbs);
+        }
     },
-    _display_view: function (view_options) {
-        var self = this;
-        this.active_view.$container.show();
-        $.when(this.active_view.controller.do_show(view_options)).done(function () {
-            if (self.searchview) {
-                var is_hidden = self.active_view.controller.searchable === false;
-                self.searchview.toggle_visibility(!is_hidden);
-                self.$header_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
-                self.$search_col.toggle(!is_hidden);
-            }
-            self.display_breadcrumbs();
+    /**
+     * Removes active class on all switch-buttons and adds it to the one of the active view
+     * @param {Object} [active_view_selector] the selector of the div to activate
+     */
+    update_switch_buttons: function(active_view_selector) {
+        _.each(this.$switch_buttons.find('button'), function(button) {
+            $(button).removeClass('active');
         });
+        this.$(active_view_selector).addClass('active');
     },
-    display_breadcrumbs: function () {
+    /**
+     * Updates the breadcrumbs
+     **/
+    update_breadcrumbs: function (breadcrumbs) {
         var self = this;
-        if (!this.action_manager) return;
-        var breadcrumbs = this.action_manager.get_breadcrumbs();
+
         if (!breadcrumbs.length) return;
 
         var $breadcrumbs = breadcrumbs.map(function (bc, index) {
@@ -729,11 +836,393 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     .toggleClass('active', is_last);
             if (!is_last) {
                 $bc.click(function () {
-                    self.action_manager.select_widget(bc.widget, bc.index);
+                    self.trigger("on_breadcrumb_click", bc.action, bc.index);
                 });
             }
             return $bc;
         }
+    },
+    /**
+     * Updates the SearchView's visibility and extend the breadcrumbs area if the SearchView is not visible
+     * @param {openerp.web.SearchView} [searchview] the searchview Widget
+     * @param {Boolean} [is_hidden] visibility of the searchview
+     **/
+    update_search_view: function(searchview, is_hidden) {
+        // Set the $buttons div (in the DOM) of the searchview as the $buttons
+        // have been appended to a jQuery node not in the DOM at SearchView initialization
+        searchview.$buttons = this.$searchview_buttons;
+        searchview.toggle_visibility(!is_hidden);
+        this.$title_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
+    },
+});
+
+instance.web.DebugManager = instance.web.Widget.extend({
+    template: "WebClient.DebugManager",
+    events: {
+        "click .oe_debug_button": "render_dropdown",
+        "click .js_debug_dropdown li": "on_debug_click",
+    },
+    init: function(parent) {
+        this._super(parent);
+        // This won't be necessary anymore when the DebugManager will be instantiated by the WebClient
+        this.action_manager = instance.webclient.action_manager;
+    },
+    start: function() {
+        this._super();
+        this.$dropdown = this.$(".js_debug_dropdown");
+    },
+    /**
+     * Updates its attributes according to the inner_widget of the ActionManager
+     */
+    _update: function() {
+        this.view_manager = this.action_manager.get_inner_widget();
+        if (!this.view_manager instanceof instance.web.ViewManager) { return; }
+        this.dataset = this.view_manager.dataset;
+        this.active_view = this.view_manager.active_view;
+        if (!this.active_view) { return; }
+        this.view = this.active_view.controller;
+        return true;
+    },
+    /**
+     * Renders dropdown
+     */
+    render_dropdown: function() {
+        var self = this;
+
+        // Empty the previously rendered dropdown
+        this.$dropdown.empty();
+
+        // Attempt to retrieve the inner_widget of the ActionManager
+        if (!this._update()) {
+            // Disable the button when not available
+            console.warn("DebugManager is not available");
+            return;
+        }
+
+        // Render the dropdown and append it
+        var dropdown_content = QWeb.render('WebClient.DebugDropdown', {
+            widget: self,
+            active_view: self.active_view,
+            view: self.view,
+            action: self.view_manager.action,
+            searchview: self.view_manager.searchview,
+        });
+        $(dropdown_content).appendTo(self.$dropdown);
+    },
+    /**
+     * Calls the appropriate callback when clicking on a Debug option
+     */
+    on_debug_click: function (evt) {
+        evt.preventDefault();
+
+        var self = this,
+            params = $(evt.target).data(),
+            callback = params.action;
+
+        if (callback && this[callback]) {
+            // Perform the callback corresponding to the option
+            this[callback](params, evt);
+        } else {
+            console.warn("No debug handler for ", callback);
+        }
+    },
+    get_metadata: function() {
+        var self = this;
+        var ids = this.view.get_selected_ids();
+        if (ids.length === 1) {
+            self.dataset.call('get_metadata', [ids]).done(function(result) {
+                var dialog = new instance.web.Dialog(this, {
+                    title: _.str.sprintf(_t("Metadata (%s)"), self.dataset.model),
+                    size: 'medium',
+                    buttons: {
+                        Ok: function() { this.parents('.modal').modal('hide');}
+                    },
+                }, QWeb.render('WebClient.DebugViewLog', {
+                    perm : result[0],
+                    format : instance.web.format_value
+                })).open();
+            });
+        }
+    },
+    toggle_layout_outline: function() {
+        this.view.rendering_engine.toggle_layout_debugging();
+    },
+    set_defaults: function() {
+        this.view.open_defaults_dialog();
+    },
+    perform_js_tests: function() {
+        this.do_action({
+            name: _t("JS Tests"),
+            target: 'new',
+            type : 'ir.actions.act_url',
+            url: '/web/tests?mod=*'
+        });
+    },
+    get_view_fields: function() {
+        var self = this;
+        self.dataset.call('fields_get', [false, {}]).done(function (fields) {
+            var $root = $('<dl>');
+            _(fields).each(function (attributes, name) {
+                $root.append($('<dt>').append($('<h4>').text(name)));
+                var $attrs = $('<dl>').appendTo($('<dd>').appendTo($root));
+                _(attributes).each(function (def, name) {
+                    if (def instanceof Object) {
+                        def = JSON.stringify(def);
+                    }
+                    $attrs
+                        .append($('<dt>').text(name))
+                        .append($('<dd style="white-space: pre-wrap;">').text(def));
+                });
+            });
+            new instance.web.Dialog(self, {
+                title: _.str.sprintf(_t("Model %s fields"),
+                                     self.dataset.model),
+                buttons: {
+                    Ok: function() { this.parents('.modal').modal('hide');}
+                },
+            }, $root).open();
+        });
+    },
+    fvg: function() {
+        var dialog = new instance.web.Dialog(this, { title: _t("Fields View Get") }).open();
+        $('<pre>').text(instance.web.json_node_to_xml(this.view.fields_view.arch, true)).appendTo(dialog.$el);
+    },
+    manage_filters: function() {
+        this.do_action({
+            res_model: 'ir.filters',
+            name: _t('Manage Filters'),
+            views: [[false, 'list'], [false, 'form']],
+            type: 'ir.actions.act_window',
+            context: {
+                search_default_my_filters: true,
+                search_default_model_id: this.dataset.model
+            }
+        });
+    },
+    translate: function() {
+        this.do_action({
+            name: _t("Technical Translation"),
+            res_model : 'ir.translation',
+            domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
+            views: [[false, 'list'], [false, 'form']],
+            type : 'ir.actions.act_window',
+            view_type : "list",
+            view_mode : "list"
+        });
+    },
+    edit: function(params, evt) {
+        this.do_action({
+            res_model : params.model,
+            res_id : params.id,
+            name: evt.target.text,
+            type : 'ir.actions.act_window',
+            view_type : 'form',
+            view_mode : 'form',
+            views : [[false, 'form']],
+            target : 'new',
+            flags : {
+                action_buttons : true,
+                headless: true,
+            }
+        });
+    },
+    edit_workflow: function() {
+        return this.do_action({
+            res_model : 'workflow',
+            name: _t('Edit Workflow'),
+            domain : [['osv', '=', this.dataset.model]],
+            views: [[false, 'list'], [false, 'form'], [false, 'diagram']],
+            type : 'ir.actions.act_window',
+            view_type : 'list',
+            view_mode : 'list'
+        });
+    },
+    print_workflow: function() {
+        if (this.view.get_selected_ids && this.view.get_selected_ids().length == 1) {
+            instance.web.blockUI();
+            var action = {
+                context: { active_ids: this.view.get_selected_ids() },
+                report_name: "workflow.instance.graph",
+                datas: {
+                    model: this.dataset.model,
+                    id: this.view.get_selected_ids()[0],
+                    nested: true,
+                }
+            };
+            this.session.get_file({
+                url: '/web/report',
+                data: {action: JSON.stringify(action)},
+                complete: instance.web.unblockUI
+            });
+        } else {
+            this.do_warn("Warning", "No record selected.");
+        }
+    },
+    leave_debug: function() {
+        window.location.search="?";
+    },
+});
+
+if (instance.session.debug) {
+    instance.web.SystrayItems.push(instance.web.DebugManager);
+}
+
+instance.web.ViewManager = instance.web.Widget.extend(instance.web.ControlPanelMixin, {
+    template: "ViewManager",
+    /**
+     * @param {Object} [dataset] null object (... historical reasons)
+     * @param {Array} [views] List of [view_id, view_type]
+     * @param {Object} [flags] various boolean describing UI state
+     * @param {Object} [cp_bus] Bus to allow communication with ControlPanel
+     */
+    init: function(parent, dataset, views, flags, action) {
+        if (action) {
+            flags = action.flags || {};
+            if (!('auto_search' in flags)) {
+                flags.auto_search = action.auto_search !== false;
+            }
+            this.action = action;
+            this.action_manager = parent;
+            dataset = new instance.web.DataSetSearch(this, action.res_model, action.context, action.domain);
+            if (action.res_id) {
+                dataset.ids.push(action.res_id);
+                dataset.index = 0;
+            }
+            views = action.views;
+        }
+        var self = this;
+        this._super(parent);
+
+        this.flags = flags || {};
+        this.dataset = dataset;
+        this.view_order = [];
+        this.views = {};
+        this.view_stack = []; // used for breadcrumbs
+        this.active_view = null;
+        this.registry = instance.web.views;
+        this.title = this.action && this.action.name;
+
+        _.each(views, function (view) {
+            var view_type = view[1] || view.view_type,
+                View = instance.web.views.get_object(view_type, true),
+                view_label = View ? View.prototype.display_name: (void 'nope'),
+                view_descr = {
+                    controller: null,
+                    options: view.options || {},
+                    view_id: view[0] || view.view_id,
+                    type: view_type,
+                    label: view_label,
+                    embedded_view: view.embedded_view,
+                    title: self.title,
+                    button_label: View ? _.str.sprintf(_t('%(view_type)s view'), {'view_type': (view_label || view_type)}) : (void 'nope'),
+                };
+            self.view_order.push(view_descr);
+            self.views[view_type] = view_descr;
+        });
+
+        // Listen to event 'switch_view' indicating that the VM must now display view wiew_type
+        this.on('switch_view', this, function(view_type) {
+            if (view_type === 'form' && this.active_view && this.active_view.type === 'form') {
+                this._display_view(view_type);
+            } else {
+                this.switch_mode(view_type);
+            }
+        });
+    },
+    /**
+     * @returns {jQuery.Deferred} initial view loading promise
+     */
+    start: function() {
+        var self = this;
+        var default_view = this.get_default_view(),
+            default_options = this.flags[default_view] && this.flags[default_view].options;
+
+        this._super();
+
+        var views_ids = {};
+        _.each(this.views, function (view) {
+            views_ids[view.type] = view.view_id;
+            view.options = _.extend({
+                action : self.action,
+                action_views_ids : views_ids,
+            }, self.flags, self.flags[view.type], view.options);
+            view.$container = self.$(".oe-view-manager-view-" + view.type);
+        });
+
+        this.$el.addClass("oe_view_manager_" + ((this.action && this.action.target) || 'current'));
+
+        this.control_elements = {};
+        if (this.flags.search_view) {
+            this.search_view_loaded = this.setup_search_view();
+        }
+        if (this.flags.views_switcher) {
+            this.render_switch_buttons();
+        }
+
+        // Switch to the default_view to load it
+        var main_view_loaded = this.switch_mode(default_view, null, default_options);
+
+        return $.when(main_view_loaded, this.search_view_loaded);
+    },
+    get_default_view: function() {
+        return this.flags.default_view || this.view_order[0].type;
+    },
+    switch_mode: function(view_type, no_store, view_options) {
+        var self = this,
+            view = this.views[view_type];
+
+        if (!view) {
+            return $.Deferred().reject();
+        }
+        if ((view_type !== 'form') && (view_type !== 'diagram')) {
+            this.view_stack = [];
+        }
+
+        this.view_stack.push(view);
+
+        // Hide active view (at first rendering, there is no view to hide)
+        if (this.active_view && this.active_view !== view) {
+            if (this.active_view.controller) this.active_view.controller.do_hide();
+            if (this.active_view.$container) this.active_view.$container.hide();
+        }
+        this.active_view = view;
+
+        if (!view.created) {
+            view.created = this.create_view.bind(this)(view, view_options);
+        }
+
+        // Call do_search on the searchview to compute domains, contexts and groupbys
+        if (this.search_view_loaded &&
+                this.flags.auto_search &&
+                view.controller.searchable !== false) {
+            this.active_search = $.Deferred();
+            $.when(this.search_view_loaded, view.created).done(function() {
+                self.searchview.do_search();
+            });
+        }
+        return $.when(view.created, this.active_search).done(function () {
+            self._display_view(view_options);
+            self.trigger('switch_mode', view_type, no_store, view_options);
+        });
+    },
+    _display_view: function (view_options) {
+        var self = this;
+        var view_controller = this.active_view.controller;
+
+        // Show the view
+        this.active_view.$container.show();
+        $.when(view_controller.do_show(view_options)).done(function () {
+            // Prepare the ControlPanel content and update it
+            var cp_status = {
+                active_view_selector: '.oe-cp-switch-' + self.active_view.type,
+                breadcrumbs: self.action_manager && self.action_manager.get_breadcrumbs(),
+                cp_content: _.extend({}, self.control_elements, self.render_view_control_elements()),
+                hidden: self.flags.headless,
+                searchview: self.searchview,
+                search_view_hidden: view_controller.searchable === false,
+            };
+            self.update_control_panel(cp_status);
+        });
     },
     create_view: function(view, view_options) {
         var self = this,
@@ -760,14 +1249,16 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (self.action_manager) self.action_manager.trigger('history_back');
         });
         controller.on("change:title", this, function() {
-            self.display_breadcrumbs();
+            if (self.action_manager) {
+                var breadcrumbs = self.action_manager.get_breadcrumbs();
+                self.cp_bus.trigger("update_breadcrumbs", breadcrumbs);
+            }
         });
         controller.on('view_loaded', this, function () {
             view_loaded.resolve();
         });
-        this.$('.oe-view-manager-pager > span').hide();
         return $.when(controller.appendTo($container), view_loaded)
-                .done(function () { 
+                .done(function () {
                     self.trigger("controller_inited", view.type, controller);
                 });
     },
@@ -777,18 +1268,74 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         return this.switch_mode(view_type);
     },
     /**
+     * Renders the switch buttons and adds listeners on them but does not append them to the DOM
+     * Sets $switch_buttons in control_elements to send to the ControlPanel
+     * @param {Object} [src] the source requesting the switch_buttons
+     * @param {Array} [views] the array of views
+     */
+    render_switch_buttons: function() {
+        if (this.flags.views_switcher && this.view_order.length > 1) {
+            var self = this;
+
+            // Render switch buttons but do not append them to the DOM as this will
+            // be done later, simultaneously to all other ControlPanel elements
+            this.control_elements.$switch_buttons = $(QWeb.render('ViewManager.switch-buttons', {views: self.view_order}));
+
+            // Create bootstrap tooltips
+            _.each(this.views, function(view) {
+                self.control_elements.$switch_buttons.siblings('.oe-cp-switch-' + view.type).tooltip();
+            });
+
+            // Add onclick event listener
+            this.control_elements.$switch_buttons.siblings('button').click(function() {
+                var view_type = $(event.target).data('view-type');
+                self.switch_mode(view_type);
+            })
+        }
+    },
+    /**
+     * Renders the control elements (buttons, sidebar, pager) of the current view
+     * This must be done when active_search is resolved (for KanbanViews)
+     * Fills this.active_view.control_elements dictionnary with the rendered elements
+     */
+    render_view_control_elements: function() {
+        if (!this.active_view.control_elements) {
+            var view_controller = this.active_view.controller;
+            var elements = {};
+            if (!this.flags.headless) {
+                elements = {
+                    $buttons: !this.flags.footer_to_buttons ? $("<div>") : undefined,
+                    $sidebar: $("<div>"),
+                    $pager: $("<div>"),
+                }
+            }
+            view_controller.render_buttons(elements.$buttons);
+            view_controller.render_sidebar(elements.$sidebar);
+            view_controller.render_pager(elements.$pager);
+            // Remove the unnecessary outer div
+            elements = _.mapObject(elements, function($node) {
+                return $node && $node.contents();
+            });
+            // Store the rendered elements in the active_view to allow restoring them later
+            this.active_view.control_elements = elements;
+        }
+        return this.active_view.control_elements;
+    },
+    /**
      * @returns {Number|Boolean} the view id of the given type, false if not found
      */
     get_view_id: function(view_type) {
         return this.views[view_type] && this.views[view_type].view_id || false;
-    },    
+    },
     /**
      * Sets up the current viewmanager's search view.
+     * Sets $searchview and $searchview_buttons in control_elements to send to the ControlPanel
      *
      * @param {Number|false} view_id the view to use or false for a default one
      * @returns {jQuery.Deferred} search view startup deferred
      */
     setup_search_view: function() {
+        var self = this;
         if (this.searchview) {
             this.searchview.destroy();
         }
@@ -809,18 +1356,25 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var options = {
             hidden: this.flags.search_view === false,
             disable_custom_filters: this.flags.search_disable_custom_filters,
-            $buttons: this.$('.oe-search-options'),
+            $buttons: $("<div>"),
             action: this.action,
         };
-        var SearchView = instance.web.SearchView;
-        this.searchview = new SearchView(this, this.dataset, view_id, search_defaults, options);
+        // Instantiate the SearchView, but do not append it nor its buttons to the DOM as this will
+        // be done later, simultaneously to all other ControlPanel elements
+        this.searchview = new instance.web.SearchView(this, this.dataset, view_id, search_defaults, options);
 
         this.searchview.on('search_data', this, this.search.bind(this));
-        return this.searchview.appendTo(this.$(".oe-view-manager-search-view:first"));
+        return $.when(this.searchview.appendTo($("<div>"))).done(function() {
+            self.control_elements.$searchview = self.searchview.$el;
+            self.control_elements.$searchview_buttons = self.searchview.$buttons.contents();
+        });
     },
+    /**
+     * Executed on event "search_data" thrown by the SearchView
+     */
     search: function(domains, contexts, groupbys) {
         var self = this,
-            controller = this.active_view.controller,
+            controller = this.active_view.controller, // the correct view must be loaded here
             action_context = this.action.context || {},
             view_context = controller.get_context();
         instance.web.pyeval.eval_domains_and_contexts({
@@ -855,7 +1409,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             state.view_type = this.active_view.type;
             this.action_manager.do_push_state(state);
         }
-    },    
+    },
     do_load_state: function(state, warm) {
         if (state.view_type && state.view_type !== this.active_view.type) {
             // warning: this code relies on the fact that switch_mode has an immediate side
@@ -864,155 +1418,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             // on the new view, after it was initialized, but before it is fully loaded and 
             // in particular, before the do_show method is called.
             this.switch_mode(state.view_type, true);
-        } 
-        this.active_view.controller.do_load_state(state, warm);
-    },
-    on_debug_changed: function (evt) {
-        var self = this,
-            params = $(evt.target).data(),
-            val = params.action,
-            current_view = this.active_view.controller;
-        switch (val) {
-            case 'fvg':
-                var dialog = new instance.web.Dialog(this, { title: _t("Fields View Get") }).open();
-                $('<pre>').text(instance.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$el);
-                break;
-            case 'tests':
-                this.do_action({
-                    name: _t("JS Tests"),
-                    target: 'new',
-                    type : 'ir.actions.act_url',
-                    url: '/web/tests?mod=*'
-                });
-                break;
-            case 'get_metadata':
-                var ids = current_view.get_selected_ids();
-                if (ids.length === 1) {
-                    this.dataset.call('get_metadata', [ids]).done(function(result) {
-                        var dialog = new instance.web.Dialog(this, {
-                            title: _.str.sprintf(_t("Metadata (%s)"), self.dataset.model),
-                            size: 'medium',
-                            buttons: {
-                                Ok: function() { this.parents('.modal').modal('hide');}
-                            },
-                        }, QWeb.render('ViewManagerDebugViewLog', {
-                            perm : result[0],
-                            format : instance.web.format_value
-                        })).open();
-                    });
-                }
-                break;
-            case 'toggle_layout_outline':
-                current_view.rendering_engine.toggle_layout_debugging();
-                break;
-            case 'set_defaults':
-                current_view.open_defaults_dialog();
-                break;
-            case 'translate':
-                this.do_action({
-                    name: _t("Technical Translation"),
-                    res_model : 'ir.translation',
-                    domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
-                    views: [[false, 'list'], [false, 'form']],
-                    type : 'ir.actions.act_window',
-                    view_type : "list",
-                    view_mode : "list"
-                });
-                break;
-            case 'fields':
-                this.dataset.call('fields_get', [false, {}]).done(function (fields) {
-                    var $root = $('<dl>');
-                    _(fields).each(function (attributes, name) {
-                        $root.append($('<dt>').append($('<h4>').text(name)));
-                        var $attrs = $('<dl>').appendTo($('<dd>').appendTo($root));
-                        _(attributes).each(function (def, name) {
-                            if (def instanceof Object) {
-                                def = JSON.stringify(def);
-                            }
-                            $attrs
-                                .append($('<dt>').text(name))
-                                .append($('<dd style="white-space: pre-wrap;">').text(def));
-                        });
-                    });
-                    new instance.web.Dialog(self, {
-                        title: _.str.sprintf(_t("Model %s fields"),
-                                             self.dataset.model),
-                        buttons: {
-                            Ok: function() { this.parents('.modal').modal('hide');}
-                        },
-                        }, $root).open();
-                });
-                break;
-            case 'edit_workflow':
-                return this.do_action({
-                    res_model : 'workflow',
-                    name: _t('Edit Workflow'),
-                    domain : [['osv', '=', this.dataset.model]],
-                    views: [[false, 'list'], [false, 'form'], [false, 'diagram']],
-                    type : 'ir.actions.act_window',
-                    view_type : 'list',
-                    view_mode : 'list'
-                });
-            case 'edit':
-                this.do_edit_resource(params.model, params.id, evt.target.text);
-                break;
-            case 'manage_filters':
-                this.do_action({
-                    res_model: 'ir.filters',
-                    name: _t('Manage Filters'),
-                    views: [[false, 'list'], [false, 'form']],
-                    type: 'ir.actions.act_window',
-                    context: {
-                        search_default_my_filters: true,
-                        search_default_model_id: this.dataset.model
-                    }
-                });
-                break;
-            case 'print_workflow':
-                if (current_view.get_selected_ids  && current_view.get_selected_ids().length == 1) {
-                    instance.web.blockUI();
-                    var action = {
-                        context: { active_ids: current_view.get_selected_ids() },
-                        report_name: "workflow.instance.graph",
-                        datas: {
-                            model: this.dataset.model,
-                            id: current_view.get_selected_ids()[0],
-                            nested: true,
-                        }
-                    };
-                    this.session.get_file({
-                        url: '/web/report',
-                        data: {action: JSON.stringify(action)},
-                        complete: instance.web.unblockUI
-                    });
-                } else {
-                    self.do_warn("Warning", "No record selected.");
-                }
-                break;
-            case 'leave_debug':
-                window.location.search="?";
-                break;
-            default:
-                if (val) {
-                    console.warn("No debug handler for ", val);
-                }
         }
-    },
-    do_edit_resource: function(model, id, name) {
-        this.do_action({
-            res_model : model,
-            res_id : id,
-            name: name,
-            type : 'ir.actions.act_window',
-            view_type : 'form',
-            view_mode : 'form',
-            views : [[false, 'form']],
-            target : 'new',
-            flags : {
-                action_buttons : true,
-                headless: true,
-            }
-        });
+        this.active_view.controller.do_load_state(state, warm);
     },
 });
 
@@ -1229,7 +1636,6 @@ instance.web.View = instance.web.Widget.extend({
         this.ViewManager = parent;
         this.dataset = dataset;
         this.view_id = view_id;
-        this.$buttons = options && options.$buttons;
         this.set_default_options(options);
     },
     start: function () {
@@ -1372,9 +1778,6 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_show: function () {
         var self = this;
-        if (this.$buttons) {
-            this.$buttons.show();
-        }
         this.$el.show();
         setTimeout(function () {
             self.$el.parent().addClass('in');
@@ -1383,15 +1786,13 @@ instance.web.View = instance.web.Widget.extend({
         instance.web.bus.trigger('view_shown', this);
     },
     do_hide: function () {
-        if (this.$buttons) {
-            this.$buttons.hide();
-        }
         this.$el.parent().removeClass('in');
         this.$el.hide();
     },
     is_active: function () {
         return this.ViewManager.active_view.controller === this;
-    }, /**
+    },
+    /**
      * Wraps fn to only call it if the current view is the active one. If the
      * current view is not active, doesn't call fn.
      *
@@ -1415,6 +1816,33 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_load_state: function (state, warm) {
 
+    },
+    /**
+     * This function should render the buttons of the view, set this.$buttons to
+     * the produced jQuery element and define some listeners on it.
+     * This function should be called after start().
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case the View can insert the buttons somewhere else
+     */
+    render_buttons: function($node) {
+    },
+    /**
+     * This function should instantiate and render the sidebar of the view, set this.sidebar to
+     * the instantiated Sidebar Widget and possibly add custom items in it.
+     * This function should be called after start().
+     * @param {jQuery} [$node] a jQuery node where the sidebar should be inserted
+     * $node may be undefined, in which case the View can insert the sidebar somewhere else
+     */
+    render_sidebar: function($node) {
+    },
+    /**
+     * This function should render the pager of the view, set this.$pager to
+     * the produced jQuery element and define some listeners on it.
+     * This function should be called after start().
+     * @param {jQuery} [$node] a jQuery node where the pager should be inserted
+     * $node may be undefined, in which case the View can insert the pager somewhere else
+     */
+    render_pager: function($node) {
     },
     /**
      * Switches to a specific view type

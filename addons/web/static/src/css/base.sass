@@ -370,11 +370,6 @@ $sheet-padding: 16px
             color: white
             background: #dc5f59
             font-weight: bold
-        button.oe_highlight_on_dirty
-            @include vertical-gradient(#dc5f59, #b33630)
-            @include box-shadow(none)
-            &:hover
-                background: #ED6F6A
     .oe_warning_redirect
         border: none !important
         padding: 0 !important
@@ -801,54 +796,62 @@ $sheet-padding: 16px
         text-decoration: underline
     .oe_application
         height: 100%
-        -webkit-flex-grow: 1
-        flex-grow: 1
-        -ms-flex-negative: 1
-        display: inline-block\9
-        overflow: auto\9
-        width: -webkit-calc(100% - 220px)
-        width: calc(100% - 220px)
+        width: 100%
+        display: -webkit-box
+        display: -moz-box
+        display: -ms-flexbox
+        display: -webkit-flex
+        display: flex
+        -ms-flex-direction: column
+        -webkit-flex-direction: column
+        flex-direction: column        
         .oe_application
             width: 100%
     // }}}
     // ViewManager common {{{
     .oe-view-manager
-        width: 100%
-        height: 100%
-        display: -webkit-flex
-        display: flex
-        -webkit-flex-direction: column
-        flex-direction: column
+        -webkit-box-flex: 1
+        -webkit-flex: 1 1 auto
+        -ms-flex: 1 1 auto
+        flex: 1 1 auto
+        overflow: auto
+        position: relative
         .oe-view-manager-content
-            overflow: auto
-            -webkit-flex-grow: 1
-            flex-grow: 1
-            position: relative
+            position: absolute
+            top: 0
+            bottom: 0
+            right: 0
+            left: 0
             a
                 color: $link-color
             > div
-                position: absolute
-                position: static\9
-                top: 0
-                bottom: 0
-                right: 0
-                left: 0
+                height: 100%
+                position: static
                 display: none
             .oe-view-manager-content
+                position: static
                 > div
-                    position: relative
                     display: block
-        .oe-view-manager-debug
-            margin-right: 5px
-    .oe-view-manager-header
+    .oe-o2m-control-panel
+        width: 100%
+        .oe-cp-buttons
+            div
+                display: inline-block
+                padding: 5px 5px
+        .oe-cp-pager
+            div
+                display: inline-block
+                padding: 5px 5px
+    .oe-control-panel
         background-color: rgb(240, 238, 238)
         border-bottom: 1px solid #afafb6
-        -webkit-flex-shrink: 0
-        flex-shrink: 0
-        width: 100%
-        -webkit-user-select: none
-        -moz-user-select: none
+        -webkit-box-flex: 0
+        -webkit-flex: 0 0 auto
+        -ms-flex: 0 0 auto
+        flex: 0 0 auto
         user-select: none
+        > .container-fluid
+            width: 100%
         .oe-button-column
             height: 30px
         .dropdown-menu
@@ -891,32 +894,30 @@ $sheet-padding: 16px
                 -moz-user-select: initial
                 -webkit-user-select: initial
                 user-select: initial
-        .oe-view-manager-search-view
+        .oe-cp-search-view
             padding-top: 5px
-        .oe-view-manager-switch
+        .oe-cp-switch-buttons
             button
                 width: 34px
-            .oe-vm-switch-kanban:before
+            .oe-cp-switch-kanban:before
                 content: "\f009"
-            .oe-vm-switch-list:before
+            .oe-cp-switch-list:before
                 content: ""
-            .oe-vm-switch-form:before
+            .oe-cp-switch-form:before
                 content: "\f044"
-            .oe-vm-switch-graph:before
+            .oe-cp-switch-graph:before
                 content: "\f080"
-            .oe-vm-switch-calendar:before
+            .oe-cp-switch-calendar:before
                 content: "\f073"
-            .oe-vm-switch-gantt:before
+            .oe-cp-switch-gantt:before
                 content: "\f0ae"
-            .oe-vm-switch-pivot:before
+            .oe-cp-switch-pivot:before
                 content: "\f0ce"
-            .oe-vm-switch-tree:before
+            .oe-cp-switch-tree:before
                 content: "\f036"
-        .oe-view-manager-buttons
+        .oe-cp-buttons
             display: inline-block
-            > div
-                display: none
-        .oe-view-manager-sidebar
+        .oe-cp-sidebar
             display: inline-block
             float: right
             .oe_form_binary_form
@@ -950,9 +951,6 @@ $sheet-padding: 16px
 
         .oe-pager-buttons
             min-height: 30px
-    .oe_view_manager_inline, .oe_view_manager_inlineview
-        > .oe-view-manager-header
-            display: none
 
         // }}}
     // FormPopup {{{
@@ -1673,8 +1671,7 @@ $sheet-padding: 16px
             margin: 4px 7px
         // Override ViewManager overflow auto for One2Many fields
         .oe-view-manager-content
-            overflow: visible
-
+            overflow: hidden
     .oe_form_editable
         .oe_form
             .oe_form_field_integer input
@@ -2222,11 +2219,7 @@ $sheet-padding: 16px
             float: right
         .oe_form_group_row_incomplete.oe_form_group_row_newline > td:last-child:after
             content: "[newline]"
-    .oe_debug_view
-        float: left
-        margin-top: 5px
-        width: auto
-    .oe_debug_view_log
+    .oe_debug_menu_log
         font-size: 95%
         line-height: 1.2em
     // }}}
@@ -2549,7 +2542,7 @@ body.oe_single_form
                 box-shadow: 0px 0px 0px
                 .oe_list
                     overflow-x: visible
-        .oe_view_manager_current > .oe_view_manager_header
+        .oe-control-panel, .oe-o2m-control-panel
             border: 0px !important
             box-shadow: 0px 0px 0px
         text-shadow: none
@@ -2641,7 +2634,7 @@ body.oe_single_form
         margin: 0 4px 0 0
     .oe_act_window.modal-body
         padding: 0
-    .oe-view-manager-content > div
+    .oe-view-manager-content
         position: static !important
 
 @media (min-width: 768px)
