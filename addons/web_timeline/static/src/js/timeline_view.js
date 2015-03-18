@@ -225,6 +225,9 @@ openerp.web_timeline = function (session) {
     
             this.add_qweb_template(); 
 
+            var wall_sidebar = new openerp.web_timeline.Sidebar(this);
+            wall_sidebar.appendTo(this.$('.oe_tl_inbox_aside'));
+
             if (this.options.$buttons) {
                 this.$buttons = $(QWeb.render("TimelineView.buttons", {'widget': this}));
                 this.$buttons.appendTo(this.options.$buttons);
@@ -1501,6 +1504,18 @@ openerp.web_timeline = function (session) {
                 this.reinit();
             }
         },
+    });
+
+    /**
+     * ------------------------------------------------------------
+     * Aside Widget
+     * ------------------------------------------------------------
+     * 
+     * This widget handles the display of a sidebar on the Wall. Its main use
+     * is to display group and employees suggestion (if hr is installed).
+     */
+    openerp.web_timeline.Sidebar = session.web.Widget.extend({
+        className: 'oe_tl_sidebar',
     });
     
     /**

@@ -19,7 +19,10 @@
 </div>
 
 <div t-name="TimelineWall" t-attf-class="oe_timeline #{widget.options.view_inbox ? 'oe_tl_inbox' : 'oe_tl_chatter'}">
-    <div class="oe_timeline-placeholder"> </div>
+    <div class="oe_timeline-placeholder"></div>
+    <t t-if="widget.options.view_inbox">
+        <aside class="oe_tl_inbox_aside"></aside>
+    </t>
 </div>
 
 <t t-name="ComposeMessage">
