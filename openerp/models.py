@@ -4651,17 +4651,19 @@ class BaseModel(object):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         query_str = 'SELECT %s "%s".id FROM ' % (
-            ('DISTINCT ON (' +
+            'DISTINCT ON (' +
              ','.join(
-                 x.strip()[:-4]
-                 if x.strip().upper().endswith('DESC')
-                 else
-                 x.strip()[:-3]
-                 if x.strip().upper().endswith('ASC')
-                 else x
-                 for x in self._generate_order_by_elements(order, query)) +
-             ')'
-            ) if order_by else '',
+                 ([
+                     x.strip()[:-4]
+                     if x.strip().upper().endswith('DESC')
+                     else
+                     x.strip()[:-3]
+                     if x.strip().upper().endswith('ASC')
+                     else x
+                     for x in self._generate_order_by_elements(order, query)
+                 ] if order_by else []) +
+                 ['"%s".id' % self._table]
+            ) + ')',
             self._table,
         ) + from_clause + where_str + order_by + limit_str + offset_str
         cr.execute(query_str, where_clause_params)
