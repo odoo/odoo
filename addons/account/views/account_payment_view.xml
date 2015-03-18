@@ -52,6 +52,12 @@
                     </header>
                     <sheet>
                         <field name="id" invisible="1"/>
+                        <div class="oe_right oe_button_box">
+                            <button class="oe_inline oe_stat_button" name="button_journal_entries"
+                                    string="Journal Items" type="object"
+                                    attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
+                            <field name="move_line_ids" invisible="1"/>
+                        </div>
                         <div class="oe_title" attrs="{'invisible': [('id', '=', False)]}">
                             <h1><field name="name"/></h1>
                         </div>

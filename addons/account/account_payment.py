@@ -96,7 +96,9 @@ class account_payment(models.Model):
         if self.invoice_id:
             self.destination_account_id = self.invoice_id.account_id.id
         elif self.payment_type == 'transfer':
-            self.destination_account_id = self.env.user.company_id.transfer_account_id.id
+            if not self.company_id.transfer_account_id.id:
+                raise UserError(_('Transfer account not defined on the company.'))
+            self.destination_account_id = self.company_id.transfer_account_id.id
         elif self.partner_id:
             if self.partner_type == 'customer':
                 self.destination_account_id = self.partner_id.property_account_receivable.id
@@ -140,7 +142,7 @@ class account_payment(models.Model):
     payment_difference_handling = fields.Selection([('open', 'Keep Open'), ('reconcile', 'Reconcile Payment Balance')], default='open', string="Payment Difference", copy=False)
     writeoff_account = fields.Many2one('account.account', string="Counterpart Account", domain=[('deprecated', '=', False)], copy=False)
 
-    move_lines = fields.One2many('account.move.line', 'payment_id', copy=False, readonly=True, ondelete='restrict')
+    move_line_ids = fields.One2many('account.move.line', 'payment_id', copy=False, readonly=True, ondelete='restrict')
 
     @api.one
     @api.constrains('amount')
@@ -206,10 +208,21 @@ class account_payment(models.Model):
         return super(account_payment, self).create(vals)
 
     @api.multi
+    def button_journal_entries(self):
+        return {
+            'name': _('Journal Items'),
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'res_model': 'account.move.line',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': [('payment_id', 'in', self.ids)],
+        }
+
+    @api.multi
     def cancel(self):
         for rec in self:
-            moves = rec.move_lines.mapped('move_id')
-            for move in moves:
+            for move in rec.move_line_ids.mapped('move_id'):
                 if rec.invoice_id:
                     move.line_id.remove_move_reconcile()
                 move.button_cancel()
@@ -270,6 +283,7 @@ class account_payment(models.Model):
                     'name': _('Transfer from %s') % self.journal_id.name,
                     'account_id': rec.destination_journal_id.default_credit_account_id.id,
                     'currency_id': rec.destination_journal_id.currency.id,
+                    'payment_id': rec.id,
                     'journal_id': rec.destination_journal_id.id })
                 aml_obj.create(dst_liquidity_aml_dict)
 
@@ -277,13 +291,12 @@ class account_payment(models.Model):
                 transfer_debit_aml_dict.update({
                     'name': '/',
                     'payment_id': rec.id,
-                    'account_id': rec.env.user.company_id.transfer_account_id.id,
+                    'account_id': self.company_id.transfer_account_id.id,
                     'currency_id': rec.destination_journal_id.currency.id,
                     'journal_id': rec.destination_journal_id.id })
                 transfer_debit_aml = aml_obj.create(transfer_debit_aml_dict)
 
                 dst_move.post()
-
                 (counterpart_aml + transfer_debit_aml).reconcile()
 
             rec.state = 'confirmed'
@@ -348,5 +361,6 @@ class account_payment(models.Model):
             'account_id': self.payment_type == 'outbound' \
                 and self.journal_id.default_debit_account_id.id \
                 or self.journal_id.default_credit_account_id.id,
+            'payment_id': self.id,
             'journal_id': self.journal_id.id,
         }

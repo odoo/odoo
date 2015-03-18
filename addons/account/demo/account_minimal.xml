@@ -60,6 +60,12 @@
             <field name="user_type" ref="data_account_type_liquidity"/>
             <field name="currency_id" ref="base.USD"/>
         </record>
+        <record id="transfer_account" model="account.account">
+            <field name="code">X1019</field>
+            <field name="name">Internal Transfert Account - (test)</field>
+            <field name="user_type" ref="data_account_type_current_assets"/>
+            <field name="reconcile">1</field>
+        </record>
         <record id="ncas" model="account.account">
             <field name="code">X1020</field>
             <field name="name">Non-current Assets - (test)</field>
