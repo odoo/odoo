@@ -3120,10 +3120,10 @@
             <field name="parent_id" ref="pcg_3"/>
         </record>
         <record id="pcg_380" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="name">Achats de Marchandises stockées</field>
             <field name="code">380</field>
             <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="parent_id" ref="pcg_38"/>
         </record>
         <record id="pcg_3801" model="account.account.template">
@@ -3509,6 +3509,7 @@
             <field name="name">Fournisseurs de biens et services</field>
             <field name="code">401</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_40"/>
         </record>
         <record id="pcg_4013" model="account.account.template">
@@ -3516,6 +3517,7 @@
             <field name="name">Fournisseurs de stocks</field>
             <field name="code">4013</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_401"/>
         </record>
         <record id="pcg_40131" model="account.account.template">
@@ -3523,6 +3525,7 @@
             <field name="name">Fournisseurs de stocks : Nationaux – Publics</field>
             <field name="code">40131</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_4013"/>
         </record>
         <record id="pcg_40132" model="account.account.template">
@@ -3530,6 +3533,7 @@
             <field name="name">Fournisseurs de stocks : Nationaux – Privés</field>
             <field name="code">40132</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_4013"/>
         </record>
         <record id="pcg_40133" model="account.account.template">
@@ -3544,6 +3548,7 @@
             <field name="name">Fournisseurs de services</field>
             <field name="code">4016</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_401"/>
         </record>
         <record id="pcg_40161" model="account.account.template">
@@ -3551,6 +3556,7 @@
             <field name="name">Fournisseurs de services : Nationaux – Publics</field>
             <field name="code">40161</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_4016"/>
         </record>
         <record id="pcg_40162" model="account.account.template">
@@ -3558,6 +3564,7 @@
             <field name="name">Fournisseurs de services : Nationaux – Privés</field>
             <field name="code">40162</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_4016"/>
         </record>
         <record id="pcg_40163" model="account.account.template">
@@ -3565,6 +3572,7 @@
             <field name="name">Fournisseurs de services : Etrangers</field>
             <field name="code">40163</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_4016"/>
         </record>
         <record id="pcg_4017" model="account.account.template">
@@ -3572,6 +3580,7 @@
             <field name="name">Fournisseurs : Retenue de garantie sur stocks &amp; services</field>
             <field name="code">4017</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_401"/>
         </record>
         <record id="pcg_40171" model="account.account.template">
@@ -3579,6 +3588,7 @@
             <field name="name">Fournisseurs : Retenues de garantie – Publics</field>
             <field name="code">40171</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_4017"/>
         </record>
         <record id="pcg_40172" model="account.account.template">
@@ -3586,6 +3596,7 @@
             <field name="name">Fournisseurs : Retenues de garantie – Privés</field>
             <field name="code">40172</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_4017"/>
         </record>
         <record id="pcg_40173" model="account.account.template">
@@ -3593,6 +3604,7 @@
             <field name="name">Fournisseurs : Retenues de garantie – Etrangers</field>
             <field name="code">40173</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_4017"/>
         </record>
         <record id="pcg_403" model="account.account.template">
@@ -3600,6 +3612,7 @@
             <field name="name">Fournisseurs : Effets à payer</field>
             <field name="code">403</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_40"/>
         </record>
         <record id="pcg_4031" model="account.account.template">
@@ -3607,6 +3620,7 @@
             <field name="name">Effets à payer aux fournisseurs de stocks</field>
             <field name="code">4031</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_403"/>
         </record>
         <record id="pcg_4032" model="account.account.template">
@@ -3614,6 +3628,7 @@
             <field name="name">Effets à payer aux fournisseurs de services</field>
             <field name="code">4032</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_403"/>
         </record>
         <record id="pcg_404" model="account.account.template">
@@ -3621,6 +3636,7 @@
             <field name="name">Fournisseurs d&apos;immobilisations</field>
             <field name="code">404</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_40"/>
         </record>
         <record id="pcg_4041" model="account.account.template">
@@ -3628,6 +3644,7 @@
             <field name="name">Fournisseurs d&apos;immobilisations : Nationaux – Publics</field>
             <field name="code">4041</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_404"/>
         </record>
         <record id="pcg_4042" model="account.account.template">
@@ -3635,6 +3652,7 @@
             <field name="name">Fournisseurs d&apos;immobilisations : Nationaux – Privés</field>
             <field name="code">4042</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_404"/>
         </record>
         <record id="pcg_4043" model="account.account.template">
@@ -3642,6 +3660,7 @@
             <field name="name">Fournisseurs d&apos;immobilisations : Etrangers</field>
             <field name="code">4043</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_404"/>
         </record>
         <record id="pcg_4047" model="account.account.template">
@@ -3649,6 +3668,7 @@
             <field name="name">Fournisseurs d&apos;immobilisations : Retenues de garantie</field>
             <field name="code">4047</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_404"/>
         </record>
         <record id="pcg_405" model="account.account.template">
@@ -3656,6 +3676,7 @@
             <field name="name">Fournisseurs d&apos;immobilisations : Effets à payer</field>
             <field name="code">405</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_40"/>
         </record>
         <record id="pcg_408" model="account.account.template">
@@ -3663,6 +3684,7 @@
             <field name="name">Fournisseurs factures non parvenues</field>
             <field name="code">408</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_40"/>
         </record>
         <record id="pcg_4081" model="account.account.template">
@@ -3670,6 +3692,7 @@
             <field name="name">Fournisseurs de stocks nationaux : Factures non parvenues</field>
             <field name="code">4081</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_408"/>
         </record>
         <record id="pcg_4082" model="account.account.template">
@@ -3684,6 +3707,7 @@
             <field name="name">Factures à recevoir des Fournisseurs d’immobilisations</field>
             <field name="code">4083</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_408"/>
         </record>
         <record id="pcg_4086" model="account.account.template">
@@ -3691,6 +3715,7 @@
             <field name="name">Factures à recevoir des Consultants, CAC et Experts</field>
             <field name="code">4086</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_408"/>
         </record>
         <record id="pcg_4088" model="account.account.template">
@@ -3698,6 +3723,7 @@
             <field name="name">Fournisseurs : Intérêts courus à payer</field>
             <field name="code">4088</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_408"/>
         </record>
         <record id="pcg_409" model="account.account.template">
@@ -3705,6 +3731,7 @@
             <field name="name">Fournisseurs débiteurs : avances et acomptes, RRR à obtenir, autres créances</field>
             <field name="code">409</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_40"/>
         </record>
         <record id="pcg_4091" model="account.account.template">
@@ -3712,6 +3739,7 @@
             <field name="name">Fournisseurs : Avances et acomptes sur commandes</field>
             <field name="code">4091</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_409"/>
         </record>
         <record id="pcg_40913" model="account.account.template">
@@ -3719,6 +3747,7 @@
             <field name="name">Avances et acomptes sur acquisition de Stocks</field>
             <field name="code">40913</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_4091"/>
         </record>
         <record id="pcg_40916" model="account.account.template">
@@ -3726,6 +3755,7 @@
             <field name="name">Avances et acomptes sur achats de services</field>
             <field name="code">40916</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_4091"/>
         </record>
         <record id="pcg_4094" model="account.account.template">
@@ -3733,6 +3763,7 @@
             <field name="name">Autres avances et acomptes (Consultants, CAC et Experts)</field>
             <field name="code">4094</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_409"/>
         </record>
         <record id="pcg_4096" model="account.account.template">
@@ -3740,6 +3771,7 @@
             <field name="name">Fournisseurs : Créances pour emballages et matériels à rendre</field>
             <field name="code">4096</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_409"/>
         </record>
         <record id="pcg_4097" model="account.account.template">
@@ -3747,13 +3779,15 @@
             <field name="name">Fournisseurs à soldes débiteurs (à détailler par code Tiers)</field>
             <field name="code">4097</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_409"/>
         </record>
         <record id="pcg_4098" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="name">R.R.R à obtenir</field>
             <field name="code">4098</field>
-            <field name="type">payable</field>
+            <field name="type">receivable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_409"/>
         </record>
         <record id="pcg_41" model="account.account.template">
@@ -3764,108 +3798,116 @@
             <field name="parent_id" ref="pcg_4"/>
         </record>
         <record id="pcg_411" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="name">Clients</field>
             <field name="code">411</field>
-            <field name="type">payable</field>
+            <field name="type">receivable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_41"/>
         </record>
         <record id="pcg_4111" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="name">Clients : Ventes de biens et services</field>
             <field name="code">4111</field>
-            <field name="type">payable</field>
+            <field name="type">receivable</field>
             <field name="parent_id" ref="pcg_411"/>
+            <field name="reconcile" eval="True"/>
         </record>
         <record id="pcg_4114" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="name">Clients : Autres créances diverses</field>
             <field name="code">4114</field>
-            <field name="type">payable</field>
+            <field name="type">receivable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_411"/>
         </record>
         <record id="pcg_4117" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="name">Clients : Retenues de garantie</field>
             <field name="code">4117</field>
-            <field name="type">payable</field>
+            <field name="type">receivable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_411"/>
         </record>
         <record id="pcg_413" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="name">Clients : effets à recevoir</field>
             <field name="code">413</field>
-            <field name="type">payable</field>
+            <field name="type">receivable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_41"/>
         </record>
         <record id="pcg_416" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="name">Clients douteux (ou litigieux)</field>
             <field name="code">416</field>
-            <field name="type">payable</field>
+            <field name="type">receivable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_41"/>
         </record>
         <record id="pcg_4161" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="name">Clients douteux : secteur public</field>
             <field name="code">4161</field>
-            <field name="type">payable</field>
+            <field name="type">receivable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_416"/>
         </record>
         <record id="pcg_4162" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="name">Clients douteux : secteur privé</field>
             <field name="code">4162</field>
-            <field name="type">payable</field>
+            <field name="type">receivable</field>
             <field name="parent_id" ref="pcg_416"/>
+            <field name="reconcile" eval="True"/>
         </record>
         <record id="pcg_417" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="name">Créances sur travaux ou prestations en cours</field>
             <field name="code">417</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="parent_id" ref="pcg_41"/>
         </record>
         <record id="pcg_4171" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="name">Créances sur travaux en cours (à l&apos;avancement)</field>
             <field name="code">4171</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="parent_id" ref="pcg_417"/>
         </record>
         <record id="pcg_4172" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="name">Créances sur prestations en cours (à l&apos;avancement)</field>
             <field name="code">4172</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="parent_id" ref="pcg_417"/>
         </record>
         <record id="pcg_418" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="name">Clients - produits (finis) non encore facturés</field>
             <field name="code">418</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="parent_id" ref="pcg_41"/>
         </record>
         <record id="pcg_4181" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="name">Clients : Factures à établir – Secteur Public</field>
             <field name="code">4181</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="parent_id" ref="pcg_418"/>
         </record>
         <record id="pcg_4182" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="name">Clients : Factures à établir – Secteur Privé</field>
             <field name="code">4182</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="parent_id" ref="pcg_418"/>
         </record>
         <record id="pcg_4188" model="account.account.template">
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="name">Clients : intérêts moratoires à facturer</field>
             <field name="code">4188</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="parent_id" ref="pcg_418"/>
         </record>
         <record id="pcg_419" model="account.account.template">
@@ -3873,6 +3915,7 @@
             <field name="name">Clients créditeurs – RRR à accorder et autres avoirs à établir</field>
             <field name="code">419</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_41"/>
         </record>
         <record id="pcg_4191" model="account.account.template">
@@ -3880,6 +3923,7 @@
             <field name="name">Avances et acomptes perçus sur commandes</field>
             <field name="code">4191</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_419"/>
         </record>
         <record id="pcg_4196" model="account.account.template">
@@ -3887,6 +3931,7 @@
             <field name="name">Clients : dettes pour emballages et matériels consignés</field>
             <field name="code">4196</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_419"/>
         </record>
         <record id="pcg_4197" model="account.account.template">
@@ -3894,6 +3939,7 @@
             <field name="name">Clients à solde créditeur (à détailler par code Tiers)</field>
             <field name="code">4197</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_419"/>
         </record>
         <record id="pcg_4198" model="account.account.template">
@@ -3901,6 +3947,7 @@
             <field name="name">R.R.R. à accorder</field>
             <field name="code">4198</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_419"/>
         </record>
         <record id="pcg_42" model="account.account.template">
@@ -3915,6 +3962,7 @@
             <field name="name">Personnel : Rémunérations dues</field>
             <field name="code">421</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_42"/>
         </record>
         <record id="pcg_4211" model="account.account.template">
@@ -3922,6 +3970,7 @@
             <field name="name">Salaires et appointements à payer</field>
             <field name="code">4211</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_421"/>
         </record>
         <record id="pcg_4212" model="account.account.template">
@@ -3929,6 +3978,7 @@
             <field name="name">Présalaires à payer</field>
             <field name="code">4212</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_421"/>
         </record>
         <record id="pcg_4213" model="account.account.template">
@@ -3936,6 +3986,7 @@
             <field name="name">Soldes de tout compte restant dus</field>
             <field name="code">4213</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_421"/>
         </record>
         <record id="pcg_422" model="account.account.template">
@@ -3943,6 +3994,7 @@
             <field name="name">Fonds des œuvres sociales</field>
             <field name="code">422</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_42"/>
         </record>
         <record id="pcg_4221" model="account.account.template">
@@ -3950,6 +4002,7 @@
             <field name="name">Contributions annuelles à payer (3%)</field>
             <field name="code">4221</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_422"/>
         </record>
         <record id="pcg_4229" model="account.account.template">
@@ -3957,6 +4010,7 @@
             <field name="name">Autres avances pour le compte des œuvres sociales</field>
             <field name="code">4229</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_422"/>
         </record>
         <record id="pcg_423" model="account.account.template">
@@ -3964,6 +4018,7 @@
             <field name="name">Participation des salariés au résultat</field>
             <field name="code">423</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_42"/>
         </record>
         <record id="pcg_4231" model="account.account.template">
@@ -3971,6 +4026,7 @@
             <field name="name">Quote-part de bénéfice attribuée au personnel</field>
             <field name="code">4231</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_423"/>
         </record>
         <record id="pcg_425" model="account.account.template">
@@ -4993,6 +5049,7 @@
             <field name="name">Provisions pour amendes et pénalités</field>
             <field name="code">4815</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_481"/>
         </record>
         <record id="pcg_4816" model="account.account.template">
@@ -5007,6 +5064,7 @@
             <field name="name">Autres provisions : Passifs courants</field>
             <field name="code">4818</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_481"/>
         </record>
         <record id="pcg_486" model="account.account.template">
@@ -5014,6 +5072,7 @@
             <field name="name">Charges constatées d&apos;avance</field>
             <field name="code">486</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_48"/>
         </record>
         <record id="pcg_4861" model="account.account.template">
@@ -5021,6 +5080,7 @@
             <field name="name">Loyers payés d’avance (autre que cautionnement)</field>
             <field name="code">4861</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_486"/>
         </record>
         <record id="pcg_4862" model="account.account.template">
@@ -5035,6 +5095,7 @@
             <field name="name">Abonnements payés d’avance</field>
             <field name="code">4863</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_486"/>
         </record>
         <record id="pcg_4866" model="account.account.template">
@@ -5042,6 +5103,7 @@
             <field name="name">Charges financières différées</field>
             <field name="code">4866</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_486"/>
         </record>
         <record id="pcg_4868" model="account.account.template">
@@ -5049,6 +5111,7 @@
             <field name="name">Autres charges constatées d’avance</field>
             <field name="code">4868</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_486"/>
         </record>
         <record id="pcg_487" model="account.account.template">
@@ -5063,6 +5126,7 @@
             <field name="name">Loyers perçus d’avance (immeubles de placement)</field>
             <field name="code">4871</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_487"/>
         </record>
         <record id="pcg_4877" model="account.account.template">
@@ -5077,6 +5141,7 @@
             <field name="name">Autres produits constatés d’avance</field>
             <field name="code">4878</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_487"/>
         </record>
         <record id="pcg_49" model="account.account.template">
@@ -5091,6 +5156,7 @@
             <field name="name">Pertes de valeur sur comptes de clients</field>
             <field name="code">491</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_49"/>
         </record>
         <record id="pcg_4911" model="account.account.template">
@@ -5098,6 +5164,7 @@
             <field name="name">Pertes de valeurs sur comptes de clients</field>
             <field name="code">4911</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_491"/>
         </record>
         <record id="pcg_4912" model="account.account.template">
@@ -5105,6 +5172,7 @@
             <field name="name">Pertes de valeurs sur retenues de garanties</field>
             <field name="code">4912</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_491"/>
         </record>
         <record id="pcg_495" model="account.account.template">
@@ -5119,6 +5187,7 @@
             <field name="name">Pertes de valeur sur compte du groupe</field>
             <field name="code">4951</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_495"/>
         </record>
         <record id="pcg_4955" model="account.account.template">
@@ -5126,6 +5195,7 @@
             <field name="name">Pertes de valeur sur comptes courants des associés</field>
             <field name="code">4955</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_495"/>
         </record>
         <record id="pcg_4958" model="account.account.template">
@@ -5133,6 +5203,7 @@
             <field name="name">Pertes de valeur sur opérations faites en commun (SEP – GIE)</field>
             <field name="code">4958</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_495"/>
         </record>
         <record id="pcg_496" model="account.account.template">
@@ -5140,6 +5211,7 @@
             <field name="name">Pertes de valeur sur comptes de débiteurs divers</field>
             <field name="code">496</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_49"/>
         </record>
         <record id="pcg_4962" model="account.account.template">
@@ -5147,6 +5219,7 @@
             <field name="name">Pertes de valeur sur créances de cessions d&apos;immobilisations</field>
             <field name="code">4962</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_496"/>
         </record>
         <record id="pcg_4965" model="account.account.template">
@@ -5154,6 +5227,7 @@
             <field name="name">Pertes de valeur sur créances de cessions de VMP</field>
             <field name="code">4965</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_496"/>
         </record>
         <record id="pcg_4967" model="account.account.template">
@@ -5161,6 +5235,7 @@
             <field name="name">Pertes de valeur sur autres comptes débiteurs</field>
             <field name="code">4967</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_496"/>
         </record>
         <record id="pcg_498" model="account.account.template">
@@ -5168,6 +5243,7 @@
             <field name="name">Pertes de valeur sur autres comptes de tiers</field>
             <field name="code">498</field>
             <field name="type">payable</field>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pcg_49"/>
         </record>
         <record id="pcg_5" model="account.account.template">
@@ -8480,5 +8556,5 @@
         </record>
 
 
-           </data>
+    </data>
 </openerp>
