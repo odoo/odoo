@@ -1112,7 +1112,7 @@
 
         <record id="action_move_line_graph" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
-            <field name="view_mode">graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="view_id" ref="account_move_line_graph_date"/>
             <field name="context">{'search_default_account_id': [active_id]}</field>
             <field name="res_model">account.move.line</field>
@@ -1120,7 +1120,7 @@
 
         <record id="action_move_line_graph_posted" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
-            <field name="view_mode">graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="view_id" ref="account_move_line_graph_date"/>
             <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
             <field name="res_model">account.move.line</field>
@@ -1128,7 +1128,7 @@
 
         <record id="action_move_line_graph_cash_basis" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
-            <field name="view_mode">graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="view_id" ref="account_move_line_graph_date_cash_basis"/>
             <field name="context">{'search_default_account_id': [active_id]}</field>
             <field name="res_model">account.move.line</field>
@@ -1136,7 +1136,7 @@
 
         <record id="action_move_line_graph_cash_basis_posted" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
-            <field name="view_mode">graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="view_id" ref="account_move_line_graph_date_cash_basis"/>
             <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
             <field name="res_model">account.move.line</field>

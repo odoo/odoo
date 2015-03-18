@@ -139,6 +139,7 @@ class AccountFinancialReportLine(models.Model):
     special_date_changer = fields.Selection([('from_beginning', 'From the beginning'), ('to_beginning_of_fy', 'At the beginning of the Year'), ('normal', 'Use given dates')], default='normal')
     show_domain = fields.Selection([('always', 'Always'), ('never', 'Never'), ('foldable', 'Foldable')], default='foldable')
     hide_if_zero = fields.Boolean(default=False)
+    action_id = fields.Many2one('ir.actions.actions')
 
     def get_sum(self, field_names=None):
         ''' Returns the sum of the amls in the domain '''
@@ -318,6 +319,8 @@ class AccountFinancialReportLine(models.Model):
                 'unfoldable': len(domain_ids) > 1 and line.show_domain != 'always',
                 'unfolded': line in context.unfolded_lines or line.show_domain == 'always',
             }
+            if line.action_id:
+                vals['action_id'] = line.action_id.id
             domain_ids.remove('line')
             lines = [vals]
             groupby = line.groupby or 'aml'
