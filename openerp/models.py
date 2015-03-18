@@ -2474,7 +2474,9 @@ class BaseModel(object):
                     self._o2m_raise_on_missing_reference(cr, f)
 
                 elif isinstance(f, fields.many2many):
-                    self._m2m_raise_or_create_relation(cr, f)
+                    res = self._m2m_raise_or_create_relation(cr, f)
+                    if res and self._fields[k].depends:
+                        stored_fields.append(self._fields[k])
 
                 else:
                     res = column_data.get(k)
@@ -2769,6 +2771,9 @@ class BaseModel(object):
                     raise except_orm('Programming Error', "There is no reference field '%s' found for '%s'" % (f._fields_id, f._obj,))
 
     def _m2m_raise_or_create_relation(self, cr, f):
+        """ Create the table for the relation if necessary.
+        Return ``True`` if the relation had to be created.
+        """
         m2m_tbl, col1, col2 = f._sql_names(self)
         # do not create relations for custom fields as they do not belong to a module
         # they will be automatically removed when dropping the corresponding ir.model.field
@@ -2795,6 +2800,7 @@ class BaseModel(object):
             cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, ref))
             cr.commit()
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
+            return True
 
 
     def _add_sql_constraints(self, cr):
