@@ -22,7 +22,6 @@
 import math
 import re
 import time
-from collections import OrderedDict
 from _common import ceiling
 
 
@@ -800,6 +799,12 @@ class product_template(osv.osv):
         return super(product_template, self).name_get(cr, user, ids, context)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        # Only use the product.product heuristics if there is a search term and the domain
+        # does not specify a match on `product.template` IDs.
+        if not name or any(term[0] == 'id' for term in (args or [])):
+            return super(product_template, self).name_search(
+                cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
+
         product_product = self.pool['product.product']
         results = product_product.name_search(
             cr, user, name, args, operator=operator, context=context, limit=limit)
@@ -807,8 +812,11 @@ class product_template(osv.osv):
         template_ids = [p.product_tmpl_id.id
                             for p in product_product.browse(
                                 cr, user, product_ids, context=context)]
-        uniq_ids = OrderedDict.fromkeys(template_ids).keys()
-        return self.name_get(cr, user, uniq_ids, context=context)
+
+        # re-apply product.template order + name_get
+        return super(product_template, self).name_search(
+            cr, user, '', args=[('id', 'in', template_ids)],
+            operator=operator, context=context, limit=limit)
 
 class product_product(osv.osv):
     _name = "product.product"
