@@ -348,7 +348,7 @@ class account_payment(models.Model):
             name = prefix + self.partner_id.name
         return {
             'name': name,
-            'account_id': self.payment_type == 'outbound' \
+            'account_id': self.payment_type in ('outbound','transfer') \
                 and self.journal_id.default_debit_account_id.id \
                 or self.journal_id.default_credit_account_id.id,
             'payment_id': self.id,
