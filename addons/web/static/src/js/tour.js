@@ -1,24 +1,29 @@
-(function () {
-    'use strict';
+odoo.define('web.Tour', function (require) {
+"use strict";
 
+var core = require('web.core');
+
+var _t = core._t;
+var qweb = core.qweb;
+
+// make this work
 // raise an error in test mode if openerp don't exist
-if (typeof openerp === "undefined") {
-    var error = "openerp is undefined"
-                + "\nhref: " + window.location.href
-                + "\nreferrer: " + document.referrer
-                + "\nlocalStorage: " + window.localStorage.getItem("tour");
-    if (typeof $ !== "undefined") {
-        error += '\n\n' + $("body").html();
-    }
-    throw new Error(error);
-}
+// if (typeof openerp === "undefined") {
+//     var error = "openerp is undefined"
+//                 + "\nhref: " + window.location.href
+//                 + "\nreferrer: " + document.referrer
+//                 + "\nlocalStorage: " + window.localStorage.getItem("tour");
+//     if (typeof $ !== "undefined") {
+//         error += '\n\n' + $("body").html();
+//     }
+//     throw new Error(error);
+// }
 
-var website = openerp.website;
 
-// don't rewrite T in test mode
-if (typeof openerp.Tour !== "undefined") {
-    return;
-}
+// // don't rewrite T in test mode
+// if (typeof openerp.Tour !== "undefined") {
+//     return;
+// }
 
 /////////////////////////////////////////////////
 
@@ -130,8 +135,8 @@ var Tour = {
                     id: index,
                     waitNot: step.waitNot,
                     waitFor: step.waitFor,
-                    title: openerp._t("Move your mouse"),
-                    content: openerp._t("Move your mouse here to open the insert block"),
+                    title: _t("Move your mouse"),
+                    content: _t("Move your mouse here to open the insert block"),
                     element: '#oe_snippets',
                     onend: function () {
                         $("#oe_snippets").addClass("o_open");
@@ -321,7 +326,7 @@ var Tour = {
         Tour._load_template = true;
         if (typeof QWeb2 === "undefined") return $.when();
         var def = $.Deferred();
-        openerp.qweb.add_template('/web/static/src/xml/website.tour.xml', function(err) {
+        qweb.add_template('/web/static/src/xml/website.tour.xml', function(err) {
             if (err) {
                 def.reject(err);
             } else {
@@ -331,10 +336,10 @@ var Tour = {
         return def;
     },
     popoverTitle: function (tour, options) {
-        return typeof QWeb2 !== "undefined" ? openerp.qweb.render('tour.popover_title', options) : options.title;
+        return typeof QWeb2 !== "undefined" ? qweb.render('tour.popover_title', options) : options.title;
     },
     popover: function (options) {
-        return typeof QWeb2 !== "undefined" ? openerp.qweb.render('tour.popover', options) : options.title;
+        return typeof QWeb2 !== "undefined" ? qweb.render('tour.popover', options) : options.title;
     },
     getLang: function () {
         return $("html").attr("lang") ? "/" + $("html").attr("lang").replace(/-/, '_') : "";
@@ -697,10 +702,12 @@ var Tour = {
         }
     }
 };
-openerp.Tour = Tour;
+// openerp.Tour = Tour;
 
 /////////////////////////////////////////////////
 
 $(document).ready(Tour.running);
 
-}());
+return Tour;
+
+});

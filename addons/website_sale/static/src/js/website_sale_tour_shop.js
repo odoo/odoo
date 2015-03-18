@@ -1,10 +1,14 @@
-(function () {
-    'use strict';
+odoo.define('website_sale.tour_shop', function (require) {
+'use strict';
 
-    var _t = openerp._t;
-    var website = openerp.website;
-    website.ready().done(function() {
-    openerp.Tour.register({
+var core = require('web.core');
+var Tour = require('web.Tour');
+var website = require('website.website');
+
+var _t = core._t;
+
+website.ready().done(function () {
+    Tour.register({
         id: 'shop',
         name: _t("Create a product"),
         steps: [
@@ -108,6 +112,6 @@
             },
         ]
     });
-    });
+});
 
-}());
+});

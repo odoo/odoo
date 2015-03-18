@@ -473,7 +473,7 @@
     <div class="oe-view-manager-header container-fluid">
         <div class="row">
             <div class="col-md-6 oe-header-title">
-                <div t-if="widget.session.debug" class="oe_debug_view btn-group btn-group-sm"/>
+                <div t-if="widget.debug" class="oe_debug_view btn-group btn-group-sm"/>
                 <ol class="oe-view-title breadcrumb" t-if="widget.flags.display_title !== false">
                 </ol>
             </div>
@@ -523,7 +523,7 @@
         <li><a data-action="fields">View Fields</a></li>
         <li><a data-action="fvg">Fields View Get</a></li>
         <li><a data-action="manage_filters">Manage Filters</a></li>
-        <t t-if="view_manager.session.uid === 1">
+        <t t-if="uid === 1">
             <li><a data-action="translate">Technical Translation</a></li>
             <li><a data-action="manage_views">Manage Views</a></li>
             <li><a data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/> View</a></li>

@@ -1,3 +1,8 @@
+odoo.define('website_mail_group', function (require) {
+"use strict";
+
+var ajax = require('web.ajax');
+
 $(document).ready(function () {
 
     $('.o_mg_link_hide').on('click', function (ev) {
@@ -22,7 +27,7 @@ $(document).ready(function () {
 
     $('body').on('click', 'button.o_mg_read_more', function (ev) {
         var $link = $(ev.target);
-        return openerp.jsonRpc($link.data('href'), 'call', {
+        return ajax.jsonRpc($link.data('href'), 'call', {
             'last_displayed_id': $link.data('msg-id'),
         }).then(function (data) {
             if (! data) {
@@ -39,4 +44,6 @@ $(document).ready(function () {
             return true;
         });
     });
+});
+
 });

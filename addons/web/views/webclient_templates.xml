@@ -20,7 +20,18 @@
             <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
 
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/class.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/translation.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/ajax.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/time.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/mixins.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/widget.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/registry.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/session.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/model.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/utils.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/core.js"></script>
             <script type="text/javascript" src="/web/static/src/js/tour.js"></script>
             <script type="text/javascript" src="/web/static/test/menu.js"></script>
 
@@ -83,33 +94,53 @@
 
             <!-- Internals -->
             <script type="text/javascript" charset="utf-8">
-                openerp._modules = <t t-raw="get_modules_order()"/>;
+                odoo._modules = <t t-raw="get_modules_order()"/>;
             </script>
             <link rel="stylesheet" href="/web/static/src/css/base.css"/>
             <link rel="stylesheet" href="/web/static/src/css/data_export.css"/>
             <link rel="stylesheet" href="/base/static/src/css/modules.css"/>
 
             <script type="text/javascript" src="/web/static/lib/py.js/lib/py.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/testing.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/pyeval.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/core.js"></script>
 
             <!-- Special case: core.js declares $.browser needed by ba-bbq -->
             <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
 
-            <script type="text/javascript" src="/web/static/src/js/formats.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/chrome.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/views.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/data.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/data_export.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/search.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/view_list.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/view_form.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/view_list_editable.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/view_pivot.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/view_graph.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/view_tree.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/formats.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/view.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/pyeval.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/action_manager.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_manager.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/web_client.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/data.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/compatibility.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/misc.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/crash_manager.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/widgets/change_password.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/widgets/database_manager.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/widgets/loading.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/widgets/sidebar.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/widgets/systray_menu.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/widgets/user_menu.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/dialog.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/menu.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/list_common.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/list_view.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/form_view.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/form_common.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/form_widgets.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/form_relational_widgets.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/list_view_editable.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/pivot_view.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/graph_view.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/graph_widget.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/search_view.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/search_filters.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/search_inputs.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/search_menus.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views/tree_view.js"></script>
             <script type="text/javascript" src="/base/static/src/js/apps.js"></script>
 
         </template>
@@ -204,14 +235,18 @@
                     <t t-call-assets="web.assets_backend"/>
                     <script type="text/javascript">
                         $(function() {
-                            var s = new openerp.init();
                             <t t-if="init">
                                 <t t-raw="init"/>
                             </t>
                             <t t-if="not init">
-                                var wc = new s.web.WebClient();
-                                wc.setElement($(document.body));
-                                wc.start();
+                                odoo.define('web.web_client', function (require) {
+                                    var WebClient = require('web.WebClient');
+                                    var web_client = new WebClient();
+                                    web_client.setElement($(document.body));
+                                    web_client.start();
+                                    return web_client;
+                                });
+                                odoo.init();
                             </t>
                         });
                     </script>
@@ -322,8 +357,8 @@
                     <title>Odoo Web Tests</title>
 
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-                    <link rel="stylesheet" href="/web/static/lib/qunit/qunit.css"/>
-                    <script src="/web/static/lib/qunit/qunit.js"></script>
+                    <link rel="stylesheet" href="/web/static/lib/qunit/qunit-1.17.1.css"/>
+                    <script src="/web/static/lib/qunit/qunit-1.17.1.js"></script>
 
                     <t t-call="web.assets_common"/>
                     <t t-call="web.assets_backend"/>
@@ -331,35 +366,20 @@
                     <style>
                         body { overflow: auto !important; }
                     </style>
-                    <script type="text/javascript" id="qunit_config">
-                        localStorage.clear();
-                        QUnit.config.testTimeout = 5 * 60 * 1000;
-                        QUnit.moduleDone(function(result) {
-                            console.log(result.name + " (" + result.passed + "/" + result.total + " passed tests)");
-                        });
-                        QUnit.done(function(result) {
-                            if (result.failed === 0) {
-                                console.log('ok');
-                            } else {
-                                console.log('error');
-                            }
-                        });
-                        openerp.web.qweb.add_template("/web/webclient/qweb");
-                    </script>
-
                     <script type="text/javascript" src="/web/static/test/testing.js"></script>
-                    <script type="text/javascript" src="/web/static/test/framework.js"></script>
+
                     <script type="text/javascript" src="/web/static/test/registry.js"></script>
-                    <script type="text/javascript" src="/web/static/test/form.js"></script>
-                    <script type="text/javascript" src="/web/static/test/data.js"></script>
-                    <script type="text/javascript" src="/web/static/test/list-utils.js"></script>
-                    <script type="text/javascript" src="/web/static/test/formats.js"></script>
                     <script type="text/javascript" src="/web/static/test/rpc-misordered.js"></script>
-                    <script type="text/javascript" src="/web/static/test/evals.js"></script>
-                    <script type="text/javascript" src="/web/static/test/search.js"></script>
-                    <script type="text/javascript" src="/web/static/test/list.js"></script>
-                    <script type="text/javascript" src="/web/static/test/list-editable.js"></script>
                     <script type="text/javascript" src="/web/static/test/mutex.js"></script>
+                    <script type="text/javascript" src="/web/static/test/data.js"></script>
+                    <script type="text/javascript" src="/web/static/test/evals.js"></script>
+                    <script type="text/javascript" src="/web/static/test/form.js"></script>
+                    <script type="text/javascript" src="/web/static/test/formats.js"></script>
+                    <script type="text/javascript" src="/web/static/test/framework.js"></script>
+                    <script type="text/javascript" src="/web/static/test/list.js"></script>
+                    <script type="text/javascript" src="/web/static/test/list-utils.js"></script>
+                    <script type="text/javascript" src="/web/static/test/list-editable.js"></script>
+                    <script type="text/javascript" src="/web/static/test/search.js"></script>
                 </head>
 
                 <body id="oe" class="openerp">

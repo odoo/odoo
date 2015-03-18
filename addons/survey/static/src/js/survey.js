@@ -1,3 +1,7 @@
+odoo.define('survey.survey', function (require) {
+'use strict';
+
+var website = require('website.website');
 /*
  *    OpenERP, Open Source Management Solution
  *    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
@@ -21,13 +25,10 @@
  * the website engine.
  */
 
-(function () {
-'use strict';
-openerp.website.if_dom_contains('.js_surveyform', function (the_form) {
+website.if_dom_contains('.js_surveyform', function (the_form) {
     console.debug("[survey] Custom JS for survey is loading...");
 
     var prefill_controller = the_form.attr("data-prefill");
-    var validate_controller = the_form.attr("data-validate");
     var submit_controller = the_form.attr("data-submit");
     var scores_controller = the_form.attr("data-scores");
     var print_mode = false;
@@ -180,4 +181,5 @@ openerp.website.if_dom_contains('.js_surveyform', function (the_form) {
 
     console.debug("[survey] Custom JS for survey loaded!");
 });
-})();
+
+});
