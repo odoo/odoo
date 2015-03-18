@@ -100,9 +100,9 @@ website.if_dom_contains('.website_blog', function() {
         change : function(type, value, $li) {
             if (type !== 'click') return;
             var self = this;
-            var editor  = new editor.MediaDialog(this.$image, this.$image[0], {only_images: true});
-            editor.appendTo('body');
-            editor.on('saved', self, function (event, img) {
+            var _editor  = new editor.MediaDialog(this.$image, this.$image[0], {only_images: true});
+            _editor.appendTo('body');
+            _editor.on('saved', self, function (event, img) {
                 var url = self.$image.attr('src');
                 self.$target.find('#js_blogcover').css({"background-image": url ? 'url(' + url + ')' : ""});
                 self.$target.attr("class","cover cover_full");
