@@ -279,6 +279,8 @@ class AccountJournal(models.Model):
         domain=[('payment_type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_in').id])
     outbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
         domain=[('payment_type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_out').id])
+    at_least_one_inbound = fields.Boolean(compute='_methods_compute', store=True)
+    at_least_one_outbound = fields.Boolean(compute='_methods_compute', store=True)
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
@@ -347,6 +349,13 @@ class AccountJournal(models.Model):
             name = "%s (%s)" % (journal.name, currency.name)
             res += [(journal.id, name)]
         return res
+
+    @api.multi
+    @api.depends('inbound_payment_methods', 'outbound_payment_methods')
+    def _methods_compute(self):
+        for journal in self:
+            journal.at_least_one_inbound = bool(len(self.inbound_payment_methods))
+            journal.at_least_one_outbound = bool(len(self.outbound_payment_methods))
 
 
 #----------------------------------------------------------

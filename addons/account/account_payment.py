@@ -5,16 +5,6 @@ import time
 from openerp import models, fields, api, _
 from openerp.exceptions import UserError, ValidationError
 
-'''
-Thing that don't work :
-    - pay more than invoice amount
-    - domain on journal_id via onchange to hide journals with no payment method corresponding to the payment type
-    - close wizard if warning: use a server action that throws warning or open wizard action ?
-
-Thing that may be not far from working:
-    - domains set via onchanges for the form view consistency
-    - multicurrency (check with transfer use cases)
-'''
 
 class account_payment_method(models.Model):
     _name = "account.payment.method"
