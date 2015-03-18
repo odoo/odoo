@@ -44,8 +44,8 @@
                 </t>
             </t>
             <t t-if="mode == 'print' and a['type'] != 'line'"><span t-att-class="a.get('type') + ' ' + str(a.get('id')) + ' oe-account-domain-line'"><t t-esc="a.get('name')"/></span><t t-call="account.report_financial_footnote_sup" /></t>
-            <a t-if="a['type'] not in ['account_id', 'line', 'tax_id', 'bank_statement_id', 'move_line_id'] and mode != 'print'"><span t-att-class="a.get('type') + ' ' + str(a.get('id')) + ' oe-account-domain-line'"><span style="color: black;"><i class="fa fa-pencil-square"></i></span><t t-esc="a.get('name')"/><t t-call="account.report_financial_footnote_sup" /></span></a>
-            <div class="dropdown" t-if="(a['type'] in ['account_id', 'tax_id', 'bank_statement_id', 'move_line_id']) and mode != 'print'">
+            <a t-if="a['type'] not in ['account_id', 'line', 'tax_id', 'bank_statement_id'] and mode != 'print'"><span t-att-class="a.get('type') + ' ' + str(a.get('id')) + ' oe-account-domain-line'"><span style="color: black;"><i class="fa fa-pencil-square"></i></span><t t-esc="a.get('name')"/><t t-call="account.report_financial_footnote_sup" /></span></a>
+            <div class="dropdown" t-if="(a['type'] in ['account_id', 'tax_id', 'bank_statement_id']) and mode != 'print'">
                 <a data-toggle="dropdown">
                     <span t-att-class="' '.join([a['type'], str(a['id']), 'oe-account-domain-line'])">
                         <t t-esc="a.get('name')"/>
@@ -59,8 +59,7 @@
                     <li role="presentation"><a role="menuitem" tabindex="-1" class="oe-account-add-footnote">Add Footnote</a></li>
                     <li role="presentation" t-if="a['type'] == 'tax_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-net">See net move lines</a></li>
                     <li role="presentation" t-if="a['type'] == 'tax_id'"><a role="menuitem" tabindex="-1" class="oe-account-to-net">See tax move lines</a></li>
-			<li role="presentation" t-if="a['type'] == 'bank_statement_id'"><a role="menuitem" tabindex="-1" t-att-class="'oe-account-to-bank-statement ' + str(a.get('statement_id'))">See bank statement</a></li>
-		    <li role="presentation" t-if="a['type'] == 'move_line_id'"><a role="menuitem" tabindex="-1" t-att-class="'oe-account-to-move-line ' + str(a.get('move_id'))">See journal entries</a></li>
+                    <li role="presentation" t-if="a['type'] == 'bank_statement_id'"><a role="menuitem" tabindex="-1" t-att-class="'oe-account-to-bank-statement ' + str(a.get('statement_id'))">See bank statement</a></li>           
                 </ul>
             </div>
             <t t-if="a['type'] == 'line'">

@@ -35,7 +35,7 @@
                 'click .oe-account-to-net': 'displayNetTaxLines',
                 'click .oe-account-to-tax': 'displayTaxLines',
                 'click .oe-account-to-bank-statement': 'display_bank_statement',
-                'click .oe-account-to-move-line': 'display_move_line',
+                'click .move_line_id': 'onClickAML',
             },
             saveFootNote: function() {
                 var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
@@ -582,20 +582,18 @@
                 var active_id = $(e.target).attr("class").split(/\s+/)[1];
                 window.open("/web?#id=" + active_id + "&view_type=form&model=account.tax", "_self");
             },
-            displayMoveLine: function(e) {
-                e.stopPropagation();
-                var active_id = $(e.target).attr("class").split(/\s+/)[1];
-                window.open("/web?#id=" + active_id + "&view_type=form&model=account.move.line", "_self");
-            },
             display_bank_statement: function(e) {
                 e.stopPropagation();
                 var active_id = $(e.target).attr("class").split(/\s+/)[1];
                 window.open("/web?#id=" + active_id + "&view_type=form&model=account.bank.statement", "_self");
             },
-            display_move_line: function(e) {
+            onClickAML: function(e) {
                 e.stopPropagation();
                 var active_id = $(e.target).attr("class").split(/\s+/)[1];
-                window.open("/web?#id=" + active_id + "&view_type=form&model=account.move", "_self");
+                var model = new openerp.Model('account.move.line');
+                model.call('get_model_and_id', [[parseInt(active_id)]]).then(function (result) {
+                    window.open("/web?#id=" + result[1] + "&view_type=form&model=" + result[0], "_self");
+                })
             },
         });
         var reportWidgets = new openerp.reportWidgets();

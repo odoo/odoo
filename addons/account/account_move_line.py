@@ -177,6 +177,16 @@ class AccountMoveLine(models.Model):
         return results
 
     @api.multi
+    def get_model_and_id(self):
+        if self.statement_id:
+            return ['account.bank.statement', self.statement_id.id]
+        if self.invoice:
+            return ['account.invoice', self.invoice.id]
+        if self.payment_id:
+            return ['account.payment', self.payment_id.id]
+        return ['account.move.line', self.id]
+
+    @api.multi
     @api.constrains('account_id')
     def _check_account_type(self):
         for line in self:
