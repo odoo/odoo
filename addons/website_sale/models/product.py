@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import tools
+from openerp import tools, api
 from openerp.osv import osv, fields
 
 class product_style(osv.Model):
@@ -107,11 +107,12 @@ class product_template(osv.Model):
     _name = 'product.template'
     _mail_post_access = 'read'
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(product_template, self)._website_url(cr, uid, ids, field_name, arg, context=context)
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = "/shop/product/%s" % (product.id,)
-        return res
+    @api.multi
+    @api.depends('name')
+    def _website_url(self):
+        super(product_template, self)._website_url()
+        for product in self:
+            product.website_url = "/shop/product/%s" % (product.id,)
 
     _columns = {
         # TODO FIXME tde: when website_mail/mail_thread.py inheritance work -> this field won't be necessary

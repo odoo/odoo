@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from openerp import api
 from openerp.osv import osv
 from openerp.addons.website.models.website import slug
 
@@ -11,8 +12,9 @@ class res_partner_grade(osv.osv):
         'website_published': True,
     }
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(res_partner_grade, self)._website_url(cr, uid, ids, field_name, arg, context=context)
-        for grade in self.browse(cr, uid, ids, context=context):
-            res[grade.id] = "/partners/grade/%s" % (slug(grade))
-        return res
+    @api.multi
+    @api.depends('name')
+    def _website_url(self):
+        super(res_partner_grade, self)._website_url()
+        for grade in self:
+            grade.website_url = "/partners/grade/%s" % (slug(grade))
