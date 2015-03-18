@@ -137,20 +137,21 @@ class product_product(osv.osv):
         domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
         domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
         domain_quant += domain_products
-        if context.get('lot_id') or context.get('owner_id') or context.get('package_id'):
-            if context.get('lot_id'):
-                domain_quant.append(('lot_id', '=', context['lot_id']))
-            if context.get('owner_id'):
-                domain_quant.append(('owner_id', '=', context['owner_id']))
-            if context.get('package_id'):
-                domain_quant.append(('package_id', '=', context['package_id']))
-            moves_in = []
-            moves_out = []
-        else:
-            domain_move_in += domain_move_in_loc
-            domain_move_out += domain_move_out_loc
-            moves_in = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
-            moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
+
+        if context.get('lot_id'):
+            domain_quant.append(('lot_id', '=', context['lot_id']))
+        if context.get('owner_id'):
+            domain_quant.append(('owner_id', '=', context['owner_id']))
+            owner_domain = ('restrict_partner_id', '=', context['owner_id'])
+            domain_move_in.append(owner_domain)
+            domain_move_out.append(owner_domain)
+        if context.get('package_id'):
+            domain_quant.append(('package_id', '=', context['package_id']))
+
+        domain_move_in += domain_move_in_loc
+        domain_move_out += domain_move_out_loc
+        moves_in = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
+        moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
 
         domain_quant += domain_quant_loc
         quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
