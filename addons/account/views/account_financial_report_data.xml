@@ -622,7 +622,7 @@
             <field name="sequence" eval="1"/>
             <field name="domain" eval="[('account_id.user_type.type', '=', 'payable'), ('reconciled', '=', False)]" />
             <field name="groupby">partner_id</field>
-            <field name="formulas">balance = -sum.balance</field>
+            <field name="formulas">balance = -sum.amount_residual</field>
             <field name="show_domain">always</field>
             <field name="level" eval="2" />
             <field name="financial_report_id" ref="account_financial_report_agedpayable0"/>
@@ -641,7 +641,7 @@
             <field name="sequence" eval="1"/>
             <field name="domain" eval="[('account_id.user_type.type', '=', 'receivable'), ('reconciled', '=', False)]" />
             <field name="groupby">partner_id</field>
-            <field name="formulas">balance = sum.balance</field>
+            <field name="formulas">balance = sum.amount_residual</field>
             <field name="show_domain">always</field>
             <field name="level" eval="2" />
             <field name="financial_report_id" ref="account_financial_report_agedreceivable0"/>

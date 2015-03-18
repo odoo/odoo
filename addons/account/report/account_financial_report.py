@@ -34,15 +34,19 @@ class FormulaLine(object):
         elif type == 'sum':
             if obj._name == 'account.financial.report.line':
                 fields = obj.get_sum()
+                self.amount_residual = fields['amount_residual']
             elif obj._name == 'account.move.line':
-                field_names = ['debit', 'credit', 'balance']
+                self.amount_residual = 0.0
+                field_names = ['debit', 'credit', 'balance', 'amount_residual']
                 res = obj.compute_fields(field_names)
                 if res.get(obj.id):
                     for field in field_names:
                         fields[field] = res[obj.id][field]
+                    self.amount_residual = fields['amount_residual']
         elif type == 'not_computed':
             for field in fields:
                 fields[field] = obj.get(field, 0)
+            self.amount_residual = obj.get('amount_residual', 0)
         self.balance = fields['balance']
         self.credit = fields['credit']
         self.debit = fields['debit']
@@ -144,7 +148,7 @@ class AccountFinancialReportLine(models.Model):
     def get_sum(self, field_names=None):
         ''' Returns the sum of the amls in the domain '''
         if not field_names:
-            field_names = ['debit', 'credit', 'balance']
+            field_names = ['debit', 'credit', 'balance', 'amount_residual']
         res = dict((fn, 0.0) for fn in field_names)
         if self.domain:
             amls = self.env['account.move.line'].search(safe_eval(self.domain))
@@ -235,7 +239,7 @@ class AccountFinancialReportLine(models.Model):
             where_clause, where_params = aml_obj._query_get(domain=self.domain)
 
             groupby = self.groupby or 'id'
-            select = ',COALESCE(SUM(\"account_move_line\".debit-\"account_move_line\".credit), 0)'
+            select = ',COALESCE(SUM(\"account_move_line\".debit-\"account_move_line\".credit), 0),SUM(\"account_move_line\".amount_residual)'
             if financial_report.debit_credit and debit_credit:
                 select = ',SUM(\"account_move_line\".debit),SUM(\"account_move_line\".credit)' + select
             if self.env.context.get('cash_basis'):
@@ -246,9 +250,9 @@ class AccountFinancialReportLine(models.Model):
             self.env.cr.execute(query, where_params)
             results = self.env.cr.fetchall()
             if financial_report.debit_credit and debit_credit:
-                results = dict([(k[0], {'debit': k[1], 'credit': k[2], 'balance': k[3]}) for k in results])
+                results = dict([(k[0], {'debit': k[1], 'credit': k[2], 'balance': k[3], 'amount_residual': k[4]}) for k in results])
             else:
-                results = dict([(k[0], {'balance': k[1]}) for k in results])
+                results = dict([(k[0], {'balance': k[1], 'amount_residual': k[2]}) for k in results])
             c = FormulaContext(self.env['account.financial.report.line'])
             if formulas:
                 for key in results:
