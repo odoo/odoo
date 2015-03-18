@@ -397,7 +397,7 @@ define([
     var hToolbarAndPopoverClick = function (event) {
       var $btn = $(event.target).closest('[data-event]');
 
-      if ($btn.length) {
+      if ($btn.length && !$btn.is(':disabled')) {
         var eventName = $btn.attr('data-event'),
             value = $btn.attr('data-value'),
             hide = $btn.attr('data-hide');

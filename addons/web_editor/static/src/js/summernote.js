@@ -942,7 +942,8 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
         if (r.isOnCell() && r.isOnCellFirst()) {
             var td = dom.ancestor(r.sc, dom.isCell);
             if (!outdent && !dom.nextElementSibling(td) && !dom.nextElementSibling(td.parentNode)) {
-                range.create(td.lastChild, td.lastChild.textContent.length, td.lastChild, td.lastChild.textContent.length).select();
+                var last = dom.lastChild(td);
+                range.create(last, dom.nodeLength(last), last, dom.nodeLength(last)).select();
                 $.summernote.pluginEvents.enter(event, editor, layoutInfo);
             } else if (outdent && !dom.previousElementSibling(td) && !$(td.parentNode).text().match(/\S/)) {
                 $.summernote.pluginEvents.backspace(event, editor, layoutInfo);
@@ -1969,6 +1970,8 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
       }
     }
 
+    range.create(startPoint.node, startPoint.offset, endPoint.node, endPoint.offset).select();
+};
 $.summernote.pluginEvents.fontSize = function (event, editor, layoutInfo, value) {
   var $editable = layoutInfo.editable();
   event.preventDefault();
@@ -2139,7 +2142,9 @@ function summernote_table_update (oStyle) {
 var fn_popover_update = eventHandler.popover.update;
 eventHandler.popover.update = function ($popover, oStyle, isAirMode) {
     fn_popover_update.call(this, $popover, oStyle, isAirMode);
-    summernote_table_update(oStyle);
+    if(!!(isAirMode ? $popover : $popover.parent()).find('.note-table').length) {
+        summernote_table_update(oStyle);
+    }
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2180,12 +2185,13 @@ eventHandler.attach = function (oLayoutInfo, options) {
     oLayoutInfo.editor.on("paste", summernote_paste);
     $editable.on("scroll", summernote_table_scroll);
 };
-var fn_dettach = eventHandler.dettach;
-eventHandler.dettach = function (oLayoutInfo, options) {
+var fn_detach = eventHandler.detach;
+eventHandler.detach = function (oLayoutInfo, options) {
     var $editable = oLayoutInfo.editor.hasClass('note-editable') ? oLayoutInfo.editor : oLayoutInfo.editor.find('.note-editable');
-    fn_dettach.call(this, oLayoutInfo, options);
+    fn_detach.call(this, oLayoutInfo, options);
     oLayoutInfo.editor.off("paste", summernote_paste);
     $editable.off("scroll", summernote_table_scroll);
+    $('.o_table_handler').remove();
 };
 
 return $.summernote;
