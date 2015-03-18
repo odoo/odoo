@@ -144,9 +144,16 @@
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><a type="object" name="open_action" context="{'action_name': 'action_account_moves_all_a'}" groups="base.group_no_one">Journal Items</a></td>
+                                                                        <td>
+                                                                            <a type="object" name="action_open_reconcile">Invoices/payments matching</a>
+                                                                        </td>
                                                                         <td><a type="object" name="action_create_new"  context="{'refund':True}">Credit Notes</a></td>
                                                                         <td><a type="action" name="%(action_account_invoice_report_all)d">Invoice Analysis</a></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><a type="object" name="open_action" context="{'action_name': 'action_account_moves_all_a'}" groups="base.group_no_one">Journal Items</a></td>
+                                                                        <td></td>
+                                                                        <td></td>
                                                                     </tr>
                                                                     <!-- <tr>
                                                                         <td></td>

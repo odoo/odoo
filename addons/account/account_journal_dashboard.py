@@ -183,13 +183,22 @@ class account_journal(models.Model):
     @api.multi
     def action_open_reconcile(self):
         #search for bank_statement_ids with journal_id = self.ids
-        bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)])
-        return {
-            'name': 'open reconciliation',
-            'type': 'ir.actions.client',
-            'tag': 'bank_statement_reconciliation_view',
-            'context': {'statement_ids': bank_stmt.ids},
-        }
+        if self.type in ['bank', 'cash']:
+            bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)])
+            return {
+                'name': 'open reconciliation',
+                'type': 'ir.actions.client',
+                'tag': 'bank_statement_reconciliation_view',
+                'context': {'statement_ids': bank_stmt.ids},
+            }
+        else:
+            accounts = self.env['account.account'].search([('reconcile','=',True),('internal_type','not in',('payable', 'receivable'))])
+            return {
+                'name': 'invoices & payments matching',
+                'type': 'ir.actions.client',
+                'tag': 'manual_reconciliation_view',
+                'context': {'account_id': accounts.ids},
+            }
 
     @api.multi
     def open_action(self):

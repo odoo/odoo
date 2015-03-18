@@ -568,16 +568,11 @@
             <field name="tag">bank_statement_reconciliation_view</field>
         </record>
 
-        <!-- because of the needaction badge, groups needs to be specified -->
-        <menuitem id="menu_bank_reconcile_bank_statements" name="Reconciliation on Bank Statements" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_bank_reconcile" sequence="20"/>
-
         <record id="action_manual_reconcile" model="ir.actions.client">
             <field name="name">Journal Items to Reconcile</field>
             <field name="res_model">account.move.line</field>
             <field name="tag">manual_reconciliation_view</field>
         </record>
-
-        <menuitem id="menu_bank_manual_reconciliation" name="Invoices &amp; Payments Matching" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_manual_reconcile"/>
 
         <record id="view_account_operation_template_form" model="ir.ui.view">
             <field name="name">account.operation.template.form</field>
