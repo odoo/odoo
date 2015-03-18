@@ -34,8 +34,7 @@
             <field name="view_id" ref="view_budget_post_tree"/>
             <field name="search_view_id" ref="view_budget_post_search"/>
         </record>
-        <menuitem id="next_id_pos" name="Budgets" parent="account.menu_finance_configuration" sequence="8"/>
-        <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="next_id_pos" sequence="20"/>
+        <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="account.account_management_menu" sequence="1"/>
 
 
         <record model="ir.ui.view" id="view_budget_post_form">
