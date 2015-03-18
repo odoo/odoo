@@ -80,10 +80,6 @@
                                 <label for="purchase_tax_rate"/>
                                 <field name="purchase_tax_rate" />
                             </div>
-                            <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}">
-                                <label for="transfer_account_id"/>
-                                <field name="transfer_account_id" class="oe_inline"/>
-                            </div>
                         </div>
                     </group>
                     <group string="Fiscal Year">
@@ -235,6 +231,10 @@
                                     string="Configure your company bank accounts" icon="gtk-go-forward"
                                     class="oe_inline oe_link"/>
                                 <field name="company_footer"/>
+                            </div>
+                            <div>
+                                <label for="transfer_account_id"/>
+                                <field name="transfer_account_id" class="oe_inline"/>
                             </div>
                             <div name='payment_acquirer'>
                                 <label for="paypal_account"/>
