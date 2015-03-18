@@ -100,7 +100,7 @@ class account_payment(models.Model):
     def _compute_payment_difference(self):
         amount = 0
         if self.invoice_id:
-            if self.invoice_id.currency_id == self.currency_id:
+            if not self.currency_id or self.invoice_id.currency_id == self.currency_id:
                 amount = self.amount
             else:
                 amount = self.currency_id.with_context(date=self.date).compute(self.amount, self.invoice_id.currency_id)
