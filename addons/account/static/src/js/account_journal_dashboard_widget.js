@@ -47,6 +47,10 @@ openerp.account.journal_dashboard = function (instance)
                         .showMaxMin(false);
                         break;
                     case "bar":
+                        var bar_color = [];
+                        $.each(data[0].values, function(k,v){
+                            bar_color.push(v.color);
+                        })
                         var chart = nv.models.discreteBarChart()
                         .x(function(d) { return d.label })
                         .y(function(d) { return d.value })
@@ -54,11 +58,7 @@ openerp.account.journal_dashboard = function (instance)
                         .height(self.$el.find('svg').height())
                         .showValues(false)
                         .showYAxis(false)
-                        .color(function(item){
-                            if (item.color){
-                                return item.color;
-                            }
-                            return nv.utils.getColor()})
+                        .color(bar_color)
                         .margin({'left': 15, 'right':10, 'top':10, 'bottom': 25})
                         .tooltips(true);
                         chart.xAxis.axisLabel(data[0].title);

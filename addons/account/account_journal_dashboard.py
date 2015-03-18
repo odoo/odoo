@@ -105,6 +105,10 @@ class account_journal(models.Model):
                 data[3]['value'] += invoice.residual_signed
             else:
                 data[2]['value'] += invoice.residual_signed
+        #postprocess to set graph color
+        for bar in data:
+            if bar['value'] == 0.0:
+                bar['color'] = '#ffffff'
         return [{'values': data, 'title': title}]
 
     @api.multi
