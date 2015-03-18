@@ -56,6 +56,7 @@ class FinancialReportController(http.Controller):
             context_id.write(update)
         lines = report_obj.get_lines(context_id)
         rcontext = {
+            'res_company': request.env['res.users'].browse(uid).company_id,
             'context': context_id,
             'report': report_obj,
             'lines': lines,
