@@ -4555,10 +4555,9 @@ class BaseModel(object):
         qualify = lambda field: '"%s"."%s"' % (dst_alias, field)
         return map(qualify, m2o_order) if isinstance(m2o_order, list) else qualify(m2o_order)
 
-    def _generate_order_by(self, order_spec, query):
+    def _generate_order_by_elements(self, order_spec, query):
         """
-        Attempt to construct an appropriate ORDER BY clause based on order_spec, which must be
-        a comma-separated list of valid field names, optionally followed by an ASC or DESC direction.
+        Return elements that can form an ORDER BY clause
 
         :raise ValueError in case order_spec is malformed
         """
@@ -4602,9 +4601,18 @@ class BaseModel(object):
                             order_by_elements.append("%s %s" % (clause, order_direction))
                     else:
                         order_by_elements.append("%s %s" % (inner_clause, order_direction))
-            if order_by_elements:
-                order_by_clause = ",".join(order_by_elements)
+            return order_by_elements
+        return []
 
+    def _generate_order_by(self, order_spec, query):
+        """
+        Attempt to consruct an appropriate ORDER BY clause based on order_spec, which must be
+        a comma-separated list of valid field names, optionally followed by an ASC or DESC direction.
+
+        :raise" except_orm in case order_spec is malformed
+        """
+        order_by_clause = ",".join(
+            self._generate_order_by_elements(order_spec, query))
         return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
     def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
@@ -4642,18 +4650,24 @@ class BaseModel(object):
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
-        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
+        query_str = 'SELECT %s "%s".id FROM ' % (
+            ('DISTINCT ON (' +
+             ','.join(
+                 x.strip()[:-4]
+                 if x.strip().upper().endswith('DESC')
+                 else
+                 x.strip()[:-3]
+                 if x.strip().upper().endswith('ASC')
+                 else x
+                 for x in self._generate_order_by_elements(order, query)) +
+             ')'
+            ) if order_by else '',
+            self._table,
+        ) + from_clause + where_str + order_by + limit_str + offset_str
         cr.execute(query_str, where_clause_params)
         res = cr.fetchall()
 
-        # TDE note: with auto_join, we could have several lines about the same result
-        # i.e. a lead with several unread messages; we uniquify the result using
-        # a fast way to do it while preserving order (http://www.peterbe.com/plog/uniqifiers-benchmark)
-        def _uniquify_list(seq):
-            seen = set()
-            return [x for x in seq if x not in seen and not seen.add(x)]
-
-        return _uniquify_list([x[0] for x in res])
+        return [x[0] for x in res]
 
     # returns the different values ever entered for one field
     # this is used, for example, in the client when the user hits enter on
