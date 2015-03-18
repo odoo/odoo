@@ -99,7 +99,7 @@ class AccountMoveLine(models.Model):
         if len(counterpart) > 2:
             counterpart = counterpart[0:2] + ["..."]
         self.counterpart = ",".join(counterpart)
-        
+
     name = fields.Char(required=True)
     quantity = fields.Float(digits=(16, 2),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
@@ -127,6 +127,7 @@ class AccountMoveLine(models.Model):
         help="The move of this entry line.", index=True, required=True)
     narration = fields.Text(related='move_id.narration', string='Internal Note')
     ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False)
+    payment_id = fields.Many2one('account.payment', string="Originator Payment", help="Payment that created this entry")
     statement_id = fields.Many2one('account.bank.statement', string='Statement',
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)

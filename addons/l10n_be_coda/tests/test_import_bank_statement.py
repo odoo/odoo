@@ -40,6 +40,6 @@ class TestCodaFile(TransactionCase):
         bank_statement_id = self.statement_import_model.create(cr, uid, dict(
             data_file = self.coda_file,
         ))
-        self.context['journal_id'] = self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'check_journal')[1]
+        self.context['journal_id'] = self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'bank_journal_usd')[1]
         with self.assertRaises(Exception):
             self.statement_import_model.import_file(cr, uid, [bank_statement_id], context=self.context)

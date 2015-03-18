@@ -7,7 +7,7 @@
             <field name="code_digits">6</field>
             <field name="bank_account_code_char">BNK</field>
         </record>
-        
+
         <!-- Account Templates-->
 
         <!-- Balance Sheet -->
@@ -65,6 +65,14 @@
             <field name="code">1016</field>
             <field name="name">Opening Income Account</field>
             <field name="user_type" ref="data_account_type_other_income"/>
+            <field name="chart_template_id" ref="configurable_chart_template"/>
+        </record>
+
+        <record id="transfer_account_id" model="account.account.template">
+            <field name="code">1017</field>
+            <field name="name">Liquidity Transfers</field>
+            <field name="reconcile" eval='True'/>
+            <field name="user_type" ref="data_account_type_current_assets"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
@@ -153,6 +161,7 @@
 
 
         <record id="configurable_chart_template" model="account.chart.template">
+            <field name="transfer_account_id" ref="transfer_account_id"/>
             <field name="property_account_receivable" ref="conf_a_recv"/>
             <field name="property_account_payable" ref="conf_a_pay"/>
             <field name="property_account_expense_categ" ref="conf_a_expense"/>

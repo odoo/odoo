@@ -41,7 +41,7 @@
     from openerp.tools import float_compare
     so = self.browse(cr, uid, ref('sale_order_service'))
     float_compare(sum([l.price_subtotal for l in so.order_line]), so.amount_untaxed, precision_digits=2) == 0, "The amount of the Quotation is not correctly computed"
-- 
+-
   I set an explicit invoicing partner that is different from the main SO Customer
 -
   !python {model: sale.order}: |
@@ -203,9 +203,7 @@
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
     import time
     for invoice in order.invoice_ids:
-        invoice.pay_and_reconcile(
-            invoice.amount_total, ref('account.cash'), time.strftime('%Y-%m-%d'),
-            journal_ids[0])
+        self.pay_and_reconcile(cr, uid, [invoice.id], journal_ids[0])
 -
   To test process of the Sale Order with access rights of saleman,
 -

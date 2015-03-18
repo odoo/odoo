@@ -275,6 +275,13 @@ class AccountJournal(models.Model):
     analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
     refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal")
 
+    inbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
+        domain=[('payment_type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_in').id])
+    outbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
+        domain=[('payment_type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_out').id])
+    at_least_one_inbound = fields.Boolean(compute='_methods_compute', store=True)
+    at_least_one_outbound = fields.Boolean(compute='_methods_compute', store=True)
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
@@ -342,6 +349,13 @@ class AccountJournal(models.Model):
             name = "%s (%s)" % (journal.name, currency.name)
             res += [(journal.id, name)]
         return res
+
+    @api.multi
+    @api.depends('inbound_payment_methods', 'outbound_payment_methods')
+    def _methods_compute(self):
+        for journal in self:
+            journal.at_least_one_inbound = bool(len(self.inbound_payment_methods))
+            journal.at_least_one_outbound = bool(len(self.outbound_payment_methods))
 
 
 #----------------------------------------------------------
@@ -839,6 +853,9 @@ class AccountChartTemplate(models.Model):
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
     bank_account_code_char = fields.Char(string='Code of the main bank account')
+    transfer_account_id = fields.Many2one('account.account.template',
+        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)],
+        help="Intermediary account used when moving money from a liquidity account to another")
     property_account_receivable = fields.Many2one('account.account.template', string='Receivable Account')
     property_account_payable = fields.Many2one('account.account.template', string='Payable Account')
     property_account_expense_categ = fields.Many2one('account.account.template', string='Expense Category Account')
@@ -986,11 +1003,12 @@ class AccountChartTemplate(models.Model):
         return True
 
     @api.multi
-    def _install_template(self, company, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None):
+    def _install_template(self, company, code_digits=None, transfer_account_id=None, obj_wizard=None, acc_ref=None, taxes_ref=None):
         """ Recursively load the template objects and create the real objects from them.
 
             :param company: company the wizard is running for
             :param code_digits: number of digits the accounts code should have in the COA
+            :param transfer_account_id: reference to the account template that will be used as intermediary account for transfers between 2 liquidity accounts
             :param obj_wizard: the current wizard for generating the COA from the templates
             :param acc_ref: Mapping between ids of account templates and real accounts created from them
             :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
@@ -1006,20 +1024,21 @@ class AccountChartTemplate(models.Model):
         if taxes_ref is None:
             taxes_ref = {}
         if self.parent_id:
-            tmp1, tmp2 = self.parent_id._install_template(company, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref)
+            tmp1, tmp2 = self.parent_id._install_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, acc_ref=acc_ref, taxes_ref=taxes_ref)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
-        tmp1, tmp2 = self._load_template(company, code_digits=code_digits, account_ref=acc_ref, taxes_ref=taxes_ref)
+        tmp1, tmp2 = self._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
         return acc_ref, taxes_ref
 
     @api.multi
-    def _load_template(self, company, code_digits=None, account_ref=None, taxes_ref=None):
+    def _load_template(self, company, code_digits=None, transfer_account_id=None, account_ref=None, taxes_ref=None):
         """ Generate all the objects from the templates
 
             :param company: company the wizard is running for
             :param code_digits: number of digits the accounts code should have in the COA
+            :param transfer_account_id: reference to the account template that will be used as intermediary account for transfers between 2 liquidity accounts
             :param acc_ref: Mapping between ids of account templates and real accounts created from them
             :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
             :returns: tuple with a dictionary containing
@@ -1035,6 +1054,8 @@ class AccountChartTemplate(models.Model):
             taxes_ref = {}
         if not code_digits:
             code_digits = self.code_digits
+        if not transfer_account_id:
+            transfer_account_id = self.transfer_account_id
         AccountTaxObj = self.env['account.tax']
 
         # Generate taxes from templates.
@@ -1045,7 +1066,8 @@ class AccountChartTemplate(models.Model):
         account_template_ref = self.generate_account(taxes_ref, account_ref, code_digits, company)
         account_ref.update(account_template_ref)
 
-        # writing account values on tax after creation of accounts
+        # writing account values after creation of accounts
+        company.transfer_account_id = account_template_ref[transfer_account_id.id]
         for key, value in generated_tax_res['account_dict'].items():
             if value['refund_account_id'] or value['account_id']:
                 AccountTaxObj.browse(key).write({
@@ -1284,6 +1306,9 @@ class WizardMultiChartsAccounts(models.TransientModel):
     purchase_tax = fields.Many2one('account.tax.template', string='Default Purchase Tax')
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
     use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
+    transfer_account_id = fields.Many2one('account.account.template', required=True,
+        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)],
+        help="Intermediary account used when moving money from a liquidity account to another")
     purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
     complete_tax_set = fields.Boolean('Complete Set of Taxes',
         help="This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use "
@@ -1328,6 +1353,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
                 res.setdefault('domain', {})
                 res['domain']['sale_tax'] = repr(sale_tax_domain)
                 res['domain']['purchase_tax'] = repr(purchase_tax_domain)
+            if self.chart_template_id.transfer_account_id:
+                res['value']['transfer_account_id'] = self.chart_template_id.transfer_account_id.id
             if self.chart_template_id.code_digits:
                 res['value']['code_digits'] = self.chart_template_id.code_digits
             if self.chart_template_id.bank_account_code_char:
@@ -1451,7 +1478,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         # Install all the templates objects and generate the real objects
 
-        acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits)
+        acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits, transfer_account_id=self.transfer_account_id)
 
         # write values of default taxes for product as super user
         if self.sale_tax and taxes_ref:

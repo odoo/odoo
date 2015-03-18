@@ -36,23 +36,23 @@
 -
   !record {model: account.account, id: account_anglo_cash_fifo}:
     code: X5000f
-    name: Cash/Bank Account 
+    name: Cash/Bank Account
     user_type: account.data_account_type_liquidity
     reconcile: True
 -
-  Configure Creditor Account Payable. 
+  Configure Creditor Account Payable.
 -
   !record {model: account.account, id: account_anglo_payable_fifo}:
     code: X440001f
-    name: Creditor Account Payable 
+    name: Creditor Account Payable
     user_type: account.data_account_type_payable
     reconcile: True
 -
-  Configure Debtor Account Receivable. 
+  Configure Debtor Account Receivable.
 -
   !record {model: account.account, id: account_anglo_receivable_fifo}:
     code: X400001f
-    name: Debtor Account Receivable 
+    name: Debtor Account Receivable
     user_type: account.data_account_type_receivable
     reconcile: True
 -
@@ -89,7 +89,7 @@
 -
   I create a product with required accounts, and cost method average (but same applies for fifo)
 -
-  !record {model: product.product, id: product_fifo_anglo_saxon}: 
+  !record {model: product.product, id: product_fifo_anglo_saxon}:
     name: 'FIFO product for anglo saxon tests'
     lst_price: 20.00
     standard_price: 0
@@ -181,7 +181,7 @@
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
     import  time
     for invoice in invoice_ids:
-        invoice.pay_and_reconcile(invoice.amount_total, ref('account_anglo_cash_fifo'), time.strftime('%Y-%m-%d'), journal_ids[0], ref('account_anglo_cash_fifo'))
+        self.pool.get('account.invoice').pay_and_reconcile(cr, uid, [invoice.id], journal_ids[0])
 -
   I check Payable(Creditors) Account is Debited sucessfully after invoice paid.
 -
@@ -232,7 +232,7 @@
   !python {model: stock.picking}: |
     picking = self.pool.get('stock.picking').browse(cr, uid, ref("stock_picking_out001_fifo"), context=context)
     picking.do_transfer()
-- 
+-
   I check Stock Interim account (Delivery) is debited successfully.
 -
   !python {model: account.account}: |
@@ -312,12 +312,10 @@
 -
   !python {model: account.invoice}: |
     move_name = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001_fifo')).name
-    account_invoice= self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
+    account_invoice = self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')], limit=1)
     import time
-    pay = self.pay_and_reconcile(cr, uid, account_invoice,
-                        20.0, ref('account_anglo_cash_fifo'), time.strftime('%Y-%m-%d'),
-                        journal_ids[0], ref('account_anglo_cash_fifo'))
+    pay = self.pay_and_reconcile(cr, uid, account_invoice, journal_ids[0], 20.0)
 -
   I check Receivable(Debtor) Account for credit.
 -
