@@ -845,7 +845,7 @@ class AccountChartTemplate(models.Model):
         help='List of all the taxes that have to be installed by the wizard')
     bank_account_code_char = fields.Char(string='Code of the main bank account')
     transfer_account_id = fields.Many2one('account.account.template',
-        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
+        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)],
         help="Intermediary account used when moving money from a liquidity account to another")
     property_account_receivable = fields.Many2one('account.account.template', string='Receivable Account')
     property_account_payable = fields.Many2one('account.account.template', string='Payable Account')
@@ -999,6 +999,7 @@ class AccountChartTemplate(models.Model):
 
             :param company: company the wizard is running for
             :param code_digits: number of digits the accounts code should have in the COA
+            :param transfer_account_id: reference to the account template that will be used as intermediary account for transfers between 2 liquidity accounts
             :param obj_wizard: the current wizard for generating the COA from the templates
             :param acc_ref: Mapping between ids of account templates and real accounts created from them
             :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
@@ -1028,6 +1029,7 @@ class AccountChartTemplate(models.Model):
 
             :param company: company the wizard is running for
             :param code_digits: number of digits the accounts code should have in the COA
+            :param transfer_account_id: reference to the account template that will be used as intermediary account for transfers between 2 liquidity accounts
             :param acc_ref: Mapping between ids of account templates and real accounts created from them
             :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
             :returns: tuple with a dictionary containing
@@ -1296,7 +1298,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
     use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
     transfer_account_id = fields.Many2one('account.account.template', required=True,
-        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
+        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)],
         help="Intermediary account used when moving money from a liquidity account to another")
     purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
     complete_tax_set = fields.Boolean('Complete Set of Taxes',
