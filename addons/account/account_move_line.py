@@ -849,13 +849,12 @@ class AccountMoveLine(models.Model):
         return result
 
     @api.model
-    def compute_amount_fields(self, amount, src_currency, company_currency, date=None):
+    def compute_amount_fields(self, amount, src_currency, company_currency):
         """ Compute value for fields debit/credit/amount_currency """
         amount_currency = False
         if src_currency and src_currency != company_currency:
-            ctx = date != None and dict(self._context, date=date) or self._context
             amount_currency = amount
-            amount = src_currency.with_context(ctx).compute(amount, company_currency)
+            amount = src_currency.compute(amount, company_currency)
         debit = amount > 0 and amount or 0.0
         credit = amount < 0 and -amount or 0.0
         return debit, credit, amount_currency

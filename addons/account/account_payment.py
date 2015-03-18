@@ -231,7 +231,7 @@ class account_payment(models.Model):
         for rec in self:
             # Create the journal entry
             amount = rec.amount * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
-            debit, credit, amount_currency = aml_obj.compute_amount_fields(amount, rec.currency_id, rec.company_id.currency_id, rec.date)
+            debit, credit, amount_currency = aml_obj.with_context(date=rec.date).compute_amount_fields(amount, rec.currency_id, rec.company_id.currency_id)
 
             move = rec.env['account.move'].create(rec._get_move_vals())
 
@@ -255,7 +255,7 @@ class account_payment(models.Model):
             # In case of a transfer, the first journal entry created debited the source liquidity account and credited
             # the transfer account. Now we debit the transfer account and credit the destination liquidity account.
             if rec.payment_type == 'transfer':
-                debit, credit, amount_currency = aml_obj.compute_amount_fields(-amount, rec.destination_journal_id.currency, rec.currency_id, rec.date)
+                debit, credit, amount_currency = aml_obj.with_context(date=rec.date).compute_amount_fields(-amount, rec.destination_journal_id.currency, rec.currency_id)
 
                 dst_move = rec.env['account.move'].create(rec._get_move_vals(rec.destination_journal_id))
 
