@@ -292,7 +292,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
                 return self.dataset.read_index(fields, {
-                    context: { 'bin_size': true, 'future_display_name' : true }
+                    context: { 'bin_size': true }
                 }).then(function(r) {
                     self.trigger('load_record', r);
                 });
