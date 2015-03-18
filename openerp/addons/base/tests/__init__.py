@@ -9,6 +9,7 @@ import test_res_config
 import test_res_lang
 import test_search
 import test_views
+import test_ir_sequence
 
 checks = [
     test_base,
@@ -22,4 +23,5 @@ checks = [
     test_res_lang,
     test_search,
     test_views,
+    test_ir_sequence,
 ]
