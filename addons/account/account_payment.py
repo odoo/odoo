@@ -135,7 +135,7 @@ class account_payment(models.Model):
     destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain=[('type', '=', 'bank')])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
-    invoice_id = fields.Many2one('account.invoice', string="Invoice", domain=[('state', '=', 'open')], default=lambda self: self._context.get('invoice_id'), copy=False)
+    invoice_id = fields.Many2one('account.invoice', string="Invoice", domain=[('state', '=', 'open')], copy=False)
     payment_difference = fields.Float(compute='_compute_payment_difference')
     payment_difference_handling = fields.Selection([('open', 'Keep Open'), ('reconcile', 'Reconcile Payment Balance')], default='open', string="Payment Difference", copy=False)
     writeoff_account = fields.Many2one('account.account', string="Counterpart Account", domain=[('deprecated', '=', False)], copy=False)

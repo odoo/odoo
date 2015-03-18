@@ -51,19 +51,30 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <field name="id" invisible="1"/>
+                        <div class="oe_title" attrs="{'invisible': [('id', '=', False)]}">
+                            <h1><field name="name"/></h1>
+                        </div>
                         <group>
+                            <group colspan="4">
+                                <field name="invoice_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), '&amp;', ('state', '=', 'confirmed'), ('invoice_id', '=', False)], 'readonly': [('state', '=', 'confirmed')]}"/>
+                            </group>
                             <group>
                                 <field name="payment_type" widget="radio" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                            </group>
+                            <group>
                                 <field name="partner_type" widget="radio" attrs="{'required': [('payment_type', '!=', 'transfer')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '=', 'confirmed')]}"/>
-                                <field name="invoice_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), '&amp;', ('state', '=', 'confirmed'), ('invoice_id', '=', False)], 'readonly': [('state', '=', 'confirmed')]}"/>
                             </group>
                             <group>
                                 <field name="date" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="partner_id" attrs="{'required': [('payment_type', '!=', 'transfer')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '=', 'confirmed')]}"/>
-                                <field name="currency_id" attrs="{'readonly': [('state', '=', 'confirmed')]}" groups="base.group_multi_currency"/>
-                                <field name="amount" widget="monetary" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '=', 'confirmed')]}"/>
+                                <label for="amount"/>
+                                <div>
+                                    <field name="amount" widget="monetary" attrs="{'readonly': [('state', '=', 'confirmed')]}" class="oe_inline"/>
+                                    <field name="currency_id" attrs="{'readonly': [('state', '=', 'confirmed')]}" groups="base.group_multi_currency" class="oe_inline"/>
+                                </div>
                                 <field name="payment_method" widget="radio" attrs="{'invisible': [('journal_id', '=', False)], 'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="reference" attrs="{'invisible': [('state', '=', 'confirmed'), ('reference', '=', False)], 'readonly': [('state', '=', 'confirmed')]}"/>
                             </group>
@@ -108,16 +119,21 @@
                             <field name="partner_id" invisible="1"/>
                             <group>
                                 <field name="date"/>
-                                <field name="amount" widget="monetary"/>
-                                <field name="currency_id" groups="base.group_multi_currency"/>
-                                <field name="journal_id" widget="selection"/>
-                                <field name="payment_method" widget="radio" create="false" class="oe_no_button" attrs="{'invisible': [('journal_id', '=', False)]}"/>
+                                <label for="amount"/>
+                                <div>
+                                    <field name="amount" widget="monetary" class="oe_inline"/>
+                                    <field name="currency_id" groups="base.group_multi_currency" class="oe_inline"/>
+                                </div>
                                 <field name="reference"/>
                             </group>
                             <group>
-                                <field name="payment_difference" attrs="{'invisible': ['|', ('invoice_id', '=', False), ('payment_difference', '&lt;=', 0.0)]}"/>
-                                <field name="payment_difference_handling" widget="radio" attrs="{'required': [('invoice_id', '!=', False)], 'invisible': ['|', ('invoice_id', '=', False), '|', ('payment_difference', '&lt;=', 0.0)]}"/>
-                                <field name="writeoff_account" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')], 'invisible': ['|', ('invoice_id', '=', False), '|', ('payment_difference', '&lt;=', 0.0), ('payment_difference_handling', '!=', 'reconcile')]}"/>
+                                <field name="journal_id" widget="selection"/>
+                                <field name="payment_method" widget="radio" attrs="{'invisible': [('journal_id', '=', False)]}"/>
+                            </group>
+                            <group attrs="{'invisible': [('payment_difference', '&lt;=', 0.0)]}">
+                                <field name="payment_difference"/>
+                                <field name="payment_difference_handling" widget="radio"/>
+                                <field name="writeoff_account" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')], 'invisible': [('payment_difference_handling', '!=', 'reconcile')]}"/>
                             </group>
                         </group>
                     </sheet>
@@ -136,7 +152,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_account_payment_invoice_form"/>
-            <field name="context">{'invoice_id': active_id}</field>
+            <field name="context">{'default_invoice_id': active_id}</field>
             <field name="target">new</field>
         </record>
 
