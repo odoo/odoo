@@ -214,7 +214,7 @@
                         "fields": ["name"]
                     }'/>
                 </div>
-                <div t-if="blog_post_cover_properties['resize_class'] == 'cover cover_full'" id="blog_angle_down">
+                <div t-if="blog_post_cover_properties.get('resize_class') == 'cover cover_full'" id="blog_angle_down">
                     <strong><a href="#blog_content" class="fa fa-angle-down fa-3x fa-inverse mt4"/></strong>
                 </div>
             </div>
