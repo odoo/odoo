@@ -239,7 +239,7 @@ class account_followup_print(osv.osv_memory):
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context.update({'description': restot['resulttext'], 'needprinting': restot['needprinting'], 'report_data': restot['action']})
         return {
-            'name': _('Send Letters and Emails: Actions Summary'),
+            'name': _('Customer Statements: Actions Summary'),
             'view_type': 'form',
             'context': context,
             'view_mode': 'tree,form',

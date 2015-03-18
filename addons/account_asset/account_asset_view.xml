@@ -303,8 +303,6 @@
         </field>
     </record>
 
-    <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance" sequence="7" groups="account.group_account_user"/>
-
     <record model="ir.actions.act_window" id="action_account_asset_asset_form">
         <field name="name">Assets</field>
         <field name="res_model">account.asset.asset</field>
@@ -313,7 +311,7 @@
         <field name="search_view_id" ref="view_account_asset_search"/>
     </record>
 
-    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form"/>
+    <menuitem parent="account.menu_asset_budget" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" name="Assets" groups="account.group_account_user"/>
 
     <act_window id="act_entries_open" name="Entries" res_model="account.move.line" src_model="account.asset.asset" context="{'search_default_asset_id': [active_id], 'default_asset_id': active_id}"/>
 
