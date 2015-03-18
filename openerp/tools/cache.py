@@ -21,13 +21,29 @@
 
 # decorator makes wrappers that have the same API as their wrapped function;
 # this is important for the openerp.api.guess() that relies on signatures
+from collections import defaultdict
 from decorator import decorator
 from inspect import getargspec
-
-import lru
 import logging
 
 _logger = logging.getLogger(__name__)
+
+
+class ormcache_counter(object):
+    """ Statistic counters for cache entries. """
+    __slots__ = ['hit', 'miss', 'err']
+
+    def __init__(self):
+        self.hit = 0
+        self.miss = 0
+        self.err = 0
+
+    @property
+    def ratio(self):
+        return 100.0 * self.hit / (self.hit + self.miss or 1)
+
+# statistic counters dictionary, maps (dbname, modelname, method) to counter
+STAT = defaultdict(ormcache_counter)
 
 
 class ormcache(object):
@@ -35,21 +51,12 @@ class ormcache(object):
 
     def __init__(self, skiparg=2, size=8192, multi=None, timeout=None):
         self.skiparg = skiparg
-        self.size = size
-        self.stat_miss = 0
-        self.stat_hit = 0
-        self.stat_err = 0
 
     def __call__(self, method):
         self.method = method
         lookup = decorator(self.lookup, method)
         lookup.clear_cache = self.clear
         return lookup
-
-    def stat(self):
-        return "lookup-stats %6d hit %6d miss %6d err %4.1f ratio" % \
-            (self.stat_hit, self.stat_miss, self.stat_err,
-                (100*float(self.stat_hit))/(self.stat_miss+self.stat_hit or 1))
 
     def lru(self, model):
         return model.pool.cache, (model.pool.db_name, model._name, self.method)
@@ -59,14 +66,14 @@ class ormcache(object):
         key = key0 + args[self.skiparg:]
         try:
             r = d[key]
-            self.stat_hit += 1
+            STAT[key0].hit += 1
             return r
         except KeyError:
-            self.stat_miss += 1
+            STAT[key0].miss += 1
             value = d[key] = self.method(*args, **kwargs)
             return value
         except TypeError:
-            self.stat_err += 1
+            STAT[key0].err += 1
             return self.method(*args, **kwargs)
 
     def clear(self, model, *args):
@@ -107,14 +114,14 @@ class ormcache_context(ormcache):
         key = key0 + args[self.skiparg:self.context_pos] + tuple(ckey)
         try:
             r = d[key]
-            self.stat_hit += 1
+            STAT[key0].hit += 1
             return r
         except KeyError:
-            self.stat_miss += 1
+            STAT[key0].miss += 1
             value = d[key] = self.method(*args, **kwargs)
             return value
         except TypeError:
-            self.stat_err += 1
+            STAT[key0].err += 1
             return self.method(*args, **kwargs)
 
 
@@ -136,9 +143,9 @@ class ormcache_multi(ormcache):
             key = base_key + (i,)
             try:
                 result[i] = d[key]
-                self.stat_hit += 1
+                STAT[key0].hit += 1
             except Exception:
-                self.stat_miss += 1
+                STAT[key0].miss += 1
                 missed.append(i)
 
         if missed:
@@ -171,20 +178,18 @@ class dummy_cache(object):
 def log_ormcache_stats(sig=None, frame=None):
     """ Log statistics of ormcache usage by database, model, and method. """
     from openerp.modules.registry import RegistryManager
-    from collections import defaultdict
     import threading
 
     me = threading.currentThread()
     entries = defaultdict(int)
     for key in RegistryManager.cache.iterkeys():
         entries[key[:3]] += 1
-    for (dbname, model_name, method), count in sorted(entries.items()):
+    for key, count in sorted(entries.items()):
+        dbname, model_name, method = key
         me.dbname = dbname
-        model = RegistryManager.get(dbname)[model_name]
-        func = getattr(model, method.__name__).im_func
-        ormcache = func.clear_cache.im_self
-        _logger.info("%6d entries, %s, for %s.%s",
-            count, ormcache.stat(), model_name, method.__name__)
+        stat = STAT[key]
+        _logger.info("%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
+            count, stat.hit, stat.miss, stat.err, stat.ratio, model_name, method.__name__)
 
 
 # For backward compatibility
