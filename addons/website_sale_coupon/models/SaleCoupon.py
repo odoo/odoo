@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from dateutil.relativedelta import relativedelta
+import math
 import hashlib
 import random
 
@@ -145,27 +146,6 @@ class SaleOrder(models.Model):
     typed_code = fields.Char(string="Coupon", help="Please enter the coupon code")
     coupon_program_id = fields.Many2one('sale.couponprogram', string="Coupon program")
 
-    def _make_product_domain(self):
-            so_line_group = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
-            domain = []
-            for line in so_line_group:
-                if not domain:
-                    domain = ['&', ('product_id', '=', line['product_id'][0]), ('product_quantity', '<=', line['product_uom_qty'])]
-                else:
-                    domain = ['|'] + domain + ['&', ('product_id', '=', line['product_id'][0]), ('product_quantity', '<=', line['product_uom_qty'])]
-            return domain
-
-    def _make_product_category_domain(self):
-            so_line_group = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
-            domain = []
-            for line in so_line_group:
-                category = self.env['product.template'].search([('product_variant_ids', '=', line['product_id'][0])]).categ_id.id
-                if not domain:
-                    domain = ['&', ('product_category_id', '=', category), ('product_quantity', '<=', line['product_uom_qty'])]
-                else:
-                    domain = ['|'] + domain + ['&', ('product_category_id', '=', category), ('product_quantity', '<=', line['product_uom_qty'])]
-            return domain
-
     def _search_rewards(self, domain=[]):
         find_reward_programs = self.env['sale.couponprogram'].search(domain + [
             '|',
@@ -178,66 +158,99 @@ class SaleOrder(models.Model):
         )
         return find_reward_programs
 
+    def _make_product_domain(self):
+        so_line_group = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
+        domain = []
+        for line in so_line_group:
+            if not domain:
+                domain = ['&', ('product_id', '=', line['product_id'][0]), ('product_quantity', '<=', line['product_uom_qty'])]
+            else:
+                domain = ['|'] + domain + ['&', ('product_id', '=', line['product_id'][0]), ('product_quantity', '<=', line['product_uom_qty'])]
+        return domain
+
+    def _make_product_category_domain(self):
+        so_line_group = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
+        domain = []
+        for line in so_line_group:
+            category = self.env['product.template'].search([('product_variant_ids', '=', line['product_id'][0])]).categ_id.id
+            if not domain:
+                domain = ['&', ('product_category_id', '=', category), ('product_quantity', '<=', line['product_uom_qty'])]
+            else:
+                domain = ['|'] + domain + ['&', ('product_category_id', '=', category), ('product_quantity', '<=', line['product_uom_qty'])]
+        return domain
+
     def _process_rewards(self, reward_programs):
         for reward_program in reward_programs:
-            getattr(self, '_process_reward_' + reward_program.reward_type)(reward_program.reward_id)
+            reward_qty = self._compute_reward_quantity(reward_program)
+            getattr(self, '_process_reward_' + reward_program.reward_type)(reward_program.reward_id, reward_qty)
 
-    def _process_reward_product(self, reward):
-        #if reward_product_id exits self.order_line:
+    def _compute_reward_quantity(self, program):
+        so_line_group = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
+        #result = dict((data['product_id'][0], data['product_uom_qty']) for data in so_line_group)
+        if program.purchase_type == 'product':
+            for line in so_line_group:
+                if line['product_id'][0] == program.product_id.id:
+                    return math.floor((line['product_uom_qty']/program.product_quantity))
+        if program.purchase_type == 'amount':
+            return math.floor(self.amount_total/program.minimum_amount)
+        if program.purchase_type == 'category':
+            #to get total product qty of applicable category
+            product_qty = 0
+            for line in self.order_line:
+                category = self.env['product.template'].search([('product_variant_ids', '=', line.product_id.id)]).categ_id.id
+                if category == program.product_category_id.id:
+                    product_qty = product_qty + line.product_uom_qty
+            return math.floor((product_qty/program.product_quantity))
+
+    def _process_reward_product(self, reward, quantity):
+        program = self.env['sale.couponprogram'].search([('reward_id', '=', reward.id)])
+        so_line_group = self.env['sale.order.line'].read_group([('order_id', '=', self.id)], ['product_id', 'product_uom_qty'], ['product_id', 'product_uom_qty'])
+        #result = dict((data['product_id'][0], data['product_uom_qty']) for data in so_line_group)
         for line in self.order_line:
+            #print "---------------", result.get(line.product_id)
             if line.product_id == reward.reward_product_product_id:
-                line.update({'product_uom_qty': line.product_uom_qty + reward.reward_quantity})
-                self._create_so_reward_line(line.price_unit, reward.reward_quantity)
+                for line_group in so_line_group:
+                    if line_group['product_id'][0] == line.product_id.id:
+                        line.update({'product_uom_qty': (line.product_uom_qty + (reward.reward_quantity * quantity))})
+                        self._create_so_reward_line(line.price_unit, reward.reward_quantity * quantity)
                 return True
         price_unit = self.env['product.template'].search([('product_variant_ids', '=', reward.reward_product_product_id.id)]).list_price
-        print "------", reward.reward_product_product_id.id, price_unit
-        self._create_so_reward_product_line(reward.reward_product_product_id, price_unit, reward.reward_quantity)
-        self._create_so_reward_line(price_unit, reward.reward_quantity)
-        return True
-        # if product (qty, uom) is exits in sale order:
-        #     update qty with reward_qty
-        # if not exits:
-        #     create new sale order license
-        # create/update new sale order for reward
-
-    def _process_reward_discount(self, reward):
-            if reward.reward_discount_type == 'amount':
-                self._create_so_reward_line(reward.reward_discount_amount, reward.reward_quantity)
-            if reward.reward_discount_type == 'percentage':
-                getattr(self, '_process_reward_percentage_on_' + reward.reward_discount_on)(reward)
-
-    def _process_reward_percentage_on_cart(self, reward):
-        self._create_so_reward_line(self.amount_total * (reward.reward_discount_percentage) / 100, reward.reward_quantity)
+        reward_line = self._create_so_reward_product_line(reward.reward_product_product_id, price_unit, reward.reward_quantity * quantity)
+        reward_line.update({'coupon_program_line_id': program.id})
+        self._create_so_reward_line(price_unit, reward.reward_quantity * quantity)
         return True
 
-    def _process_reward_percentage_on_specific_product(self, reward):
+    def _process_reward_discount(self, reward, quantity):
+        if reward.reward_discount_type == 'amount':
+            self._create_so_reward_line(reward.reward_discount_amount, quantity)
+        if reward.reward_discount_type == 'percentage':
+            getattr(self, '_process_reward_percentage_on_' + reward.reward_discount_on)(reward, quantity)
+
+    def _process_reward_copuon(self, reward, quantity):
+        pass
+
+    def _process_reward_percentage_on_cart(self, reward, quantity):
+        self._create_so_reward_line(self.amount_total * (reward.reward_discount_percentage / 100), quantity)
+
+    def _process_reward_percentage_on_specific_product(self, reward, quantity):
+        program = self.env['sale.couponprogram'].search([('reward_id', '=', reward.id)])
         for line in self.order_line:
             if line.product_id.id == reward.reward_discount_on_product_id.id:
-                line.update({'product_uom_qty': line.product_uom_qty + reward.reward_quantity})
-                self._create_so_reward_line(line.price_unit * (reward.reward_discount_percentage) / 100, reward.reward_quantity)
+                line.update({'product_uom_qty': line.product_uom_qty + (reward.reward_quantity * quantity)})
+                self._create_so_reward_line(line.price_unit * (reward.reward_discount_percentage) / 100, quantity)
                 return True
         price_unit = self.env['product.template'].search([('product_variant_ids', '=', reward.reward_discount_on_product_id.id)]).list_price
-        self._create_so_reward_product_line(reward.reward_discount_on_product_id, price_unit, reward.reward_quantity)
-        self._create_so_reward_line(price_unit * (reward.reward_discount_percentage) / 100, reward.reward_quantity)
+        reward_product_line = self._create_so_reward_product_line(reward.reward_discount_on_product_id, price_unit, quantity)
+        reward_product_line.update({'coupon_program_line_id': program.id})
+        self._create_so_reward_line(price_unit * (reward.reward_discount_percentage) / 100, quantity)
         return True
 
-    def _process_reward_percentage_on_cheapest_product(self, reward):
+    def _process_reward_percentage_on_cheapest_product(self, reward, quantity):
         list_of_unit_price = []
         for line in self.order_line:
             list_of_unit_price.append(line.price_unit)
-        self._create_so_reward_line((min(list_of_unit_price) * (reward.reward_discount_percentage) / 100), 1)
+        self._create_so_reward_line((min(list_of_unit_price) * (reward.reward_discount_percentage) / 100), quantity)
         return True
-
-    def _process_reward_copuon(self, reward):
-        pass
-
-    @api.multi
-    def apply_immediately_reward(self):
-        print "----- im in apply immediately reward method"
-        for sale_order in self:
-            programs = sale_order._search_rewards([('program_type', '=', 'apply_immediately')])
-            print "-----", programs
-            sale_order._process_rewards(programs)
 
     def _create_so_reward_product_line(self, product, unit_price, quantity):
         order_line_obj = self.env['sale.order.line']
@@ -251,11 +264,32 @@ class SaleOrder(models.Model):
         #if so already have product
         for line in self.order_line:
             if line.product_id == self.env.ref('website_sale_coupon.product_product_reward').id:
-                    return line.update({'product_uom_qty': line.product_uom_qty + quantity, 'price_unit': line.price_unit - amount})
+                    return line.update({'product_uom_qty': line.product_uom_qty + quantity,
+                                        'price_unit': line.price_unit - amount})
         return order_line_obj.create({'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
                                       'order_id': self.id,
                                       'price_unit': -amount,
                                       'product_uom_qty': quantity})
+
+    def _delete_so_reward_line(self, sale_order_line):
+        sale_order_line.unlink()
+
+    def _delete_so_reward_product_line(self, sale_order_line):
+        sale_order_line.unlink()
+
+    @api.multi
+    def apply_immediately_reward(self):
+        for order_line in self.order_line:
+            if order_line.coupon_program_line_id:
+                self._delete_so_reward_product_line(order_line)
+                continue
+            if order_line.product_id.id == self.env.ref('website_sale_coupon.product_product_reward').id:
+                self._delete_so_reward_line(order_line)
+        for sale_order in self:
+            if sale_order.order_line:
+                programs = sale_order._search_rewards([('program_type', '=', 'apply_immediately')])
+                print "-----", programs
+                sale_order._process_rewards(programs)
 
     @api.model
     def create(self, vals):
