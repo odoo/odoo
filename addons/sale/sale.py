@@ -578,11 +578,13 @@ class sale_order(osv.osv):
             context = {}
         sale_order_line_obj = self.pool.get('sale.order.line')
         account_invoice_obj = self.pool.get('account.invoice')
+        procurement_obj = self.pool.get('procurement.order')
         for sale in self.browse(cr, uid, ids, context=context):
             for inv in sale.invoice_ids:
                 if inv.state not in ('draft', 'cancel'):
                     raise UserError(_('Cannot cancel this sales order!') + ':' + _('First cancel all invoices attached to this sales order.'))
                 inv.signal_workflow('invoice_cancel')
+            procurement_obj.cancel(cr, uid, sum([l.procurement_ids.ids for l in sale.order_line],[]))
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
         self.write(cr, uid, ids, {'state': 'cancel'})
