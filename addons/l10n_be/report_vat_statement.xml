@@ -12,7 +12,7 @@
             <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_l10n_be_tva0'))"/>
             <field name="target">self</field>
         </record>
-        <menuitem id="menu_action_account_report_betax" name="Belgian Tax Report" action="action_account_report_betax" parent="account.menu_finance_legal_statement"/>
+        <menuitem id="menu_action_account_report_betax" name="Belgian Tax Report" action="action_account_report_betax" parent="account.menu_finance_reports"/>
 
         <record id="account_financial_report_l10n_be_tva_line0" model="account.financial.report.line">
             <field name="name">Total de contrôle</field>

@@ -17,7 +17,6 @@
         <menuitem id="menu_finance_reporting" name="Accounting" parent="base.menu_reporting" sequence="35"/>
         <menuitem id="menu_finance_reporting_budgets" name="Budgets" parent="menu_finance_reporting" groups="group_account_user" sequence="8"/>
         <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="10" groups="group_account_user,group_account_manager"/>
-        <menuitem id="menu_finance_legal_statement" name="Legal Reports" parent="menu_finance_reports"/>
         <menuitem id="menu_finance_management_belgian_reports" name="Belgian Reports" parent="menu_finance_reporting"/>
         <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="15" groups="group_account_manager"/>
         <menuitem id="menu_finance_accounting" name="Financial Accounting" parent="menu_finance_configuration" sequence="1"/>
@@ -29,25 +28,10 @@
         <menuitem id="menu_config_multi_currency" name="Multi-Currencies" parent="menu_finance_configuration" sequence="9" groups="base.group_multi_currency"/>
 
         <menuitem id="base.menu_action_currency_form" name="Currencies" parent="menu_config_multi_currency" sequence="20" groups="base.group_no_one"/>
-        <menuitem id="menu_finance_generic_reporting" name="Generic Reporting" parent="menu_finance_reports" sequence="100"/>
         <menuitem id="menu_finance_entries" name="Adviser" parent="menu_finance" sequence="6" groups="group_account_user,group_account_manager"/>
 
         <menuitem id="account_account_menu" name="Accounts" parent="account.menu_finance_configuration" sequence="2"/>
         <menuitem id="menu_account_reports" name="Reports" parent="account.account_account_menu" sequence="4" />
-
-        <menuitem id="next_id_22" name="Partners" parent="menu_finance_generic_reporting" sequence="1"/>
-        <menuitem id="menu_multi_currency" name="Multi-Currencies" parent="menu_finance_generic_reporting" sequence="10" groups="base.group_multi_currency"/>
-
-        <menuitem
-            parent="account.menu_finance_legal_statement"
-            id="final_accounting_reports"
-            name="Accounting Reports"/>
-
-        <menuitem
-            parent="account.menu_finance_legal_statement"
-            id="menu_journals_report"
-            groups="group_account_user,group_account_manager"
-            name="Journals"/>
 
     </data>
 </openerp>

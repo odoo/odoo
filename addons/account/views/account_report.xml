@@ -22,13 +22,5 @@
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
         />
 
-        <!-- Menu items -->
-        <menuitem
-            id="menu_tax_report"
-            name="Taxes"
-            groups="group_account_user,group_account_manager"
-            parent="account.menu_finance_generic_reporting"
-            sequence="3"
-        />
     </data>
 </openerp>
