@@ -357,7 +357,7 @@ var CalendarView = View.extend({
             return this.quick.trigger('close');
         }
         var QuickCreate = this.get_quick_create_class();
-        
+
         this.options.disable_quick_create =  this.options.disable_quick_create || !this.quick_add_pop;
         this.quick = new QuickCreate(this, this.dataset, true, this.options, data_template);
         this.quick.on('added', this, this.quick_created)
@@ -368,8 +368,9 @@ var CalendarView = View.extend({
                     this.$calendar.fullCalendar('unselect');
                 });
         this.quick.replace(this.$el.find('.oe_calendar_qc_placeholder'));
-        this.quick.focus();
-        
+        if (!this.options.disable_quick_create) {
+            this.quick.focus();
+        }
     },
 
     /**
