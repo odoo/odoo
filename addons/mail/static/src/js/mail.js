@@ -1781,7 +1781,7 @@ var RecordThread = form_common.AbstractField.extend({
         return this.root.replace(this.$('.oe_mail-placeholder'));
     },
 });
-core.form_widget_registry.add('mail_thread', RecordThread);
+core.form_widget_registry.add('old_mail_thread', RecordThread);
 
 /**
  * ------------------------------------------------------------
@@ -1794,7 +1794,6 @@ core.form_widget_registry.add('mail_thread', RecordThread);
 var WallSidebar = Widget.extend({
     template: 'mail.wall.sidebar',
 });
-
 
 
 /**

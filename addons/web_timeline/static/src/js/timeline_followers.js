@@ -1,8 +1,16 @@
-openerp.web_timeline.followers = function(session, mail) {
-    var _t = session.web._t,
-       _lt = session.web._lt;
+odoo.define('web_timeline.followers', function (require) {
+    "use strict";
 
-    var timeline_followers = session.timeline_followers = {};
+    var mail_utils = require('mail.utils');
+    var core = require('web.core');
+    var data = require('web.data');
+    var Dialog = require('web.Dialog');
+    var form_common = require('web.form_common');
+    var session = require('web.session');
+    var web_client = require('web.web_client');
+
+    var _t = core._t;
+    var qweb = core.qweb;
 
     /** 
      * ------------------------------------------------------------
@@ -16,10 +24,7 @@ openerp.web_timeline.followers = function(session, mail) {
      * in OpenChatter.
      */
 
-    /* Add the widget to registry */
-    session.web.form.widgets.add('mail_followers', 'openerp.timeline_followers.Followers');
-
-    openerp.timeline_followers.Followers = session.web.form.AbstractField.extend({
+    var Followers = form_common.AbstractField.extend ({
         template: 'timeline_followers',
 
         init: function() {
@@ -412,4 +417,7 @@ openerp.web_timeline.followers = function(session, mail) {
             }
         },
     });
-};
+
+    /* Add the widget to registry */
+    core.form_widget_registry.add('mail_followers', Followers);
+});

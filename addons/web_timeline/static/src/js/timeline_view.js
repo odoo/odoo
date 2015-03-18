@@ -2,125 +2,27 @@
  * OpenERP web_timeline
  *---------------------------------------------------------*/
 
-openerp.web_timeline = function (session) {
+odoo.define('web_timeline.mail', function (require) {
     "use strict";
 
-    var _t = session.web._t,
-        _lt = session.web._lt;
-    var QWeb = openerp.web.qweb;
-    var mail = session.mail;
+    var mail_utils = require('mail.utils');
+    var core = require('web.core');
+    var data = require('web.data');
+    var form_common = require('web.form_common');
+    var pyeval = require('web.pyeval');
+    var real_session = require('web.session');
+    var SystrayMenu = require('web.SystrayMenu');
+    var time = require('web.time');
+    var utils = require('web.utils');
+    var web_client = require('web.web_client');
+    var Widget = require('web.Widget');
+    var Model = require('web.Model');
+    var View = require('web.View');
 
+    var _t = core._t;
+    var qweb = core.qweb;
 
-    openerp.web_timeline.followers(session, mail);          // import timeline_followers.js
-
-    /**
-     * ChatterUtils
-     * This class holds a few tools method for Chatter.
-     * Some regular expressions not used anymore, kept because I want to
-     * - (^|\s)@((\w|@|\.)*): @login@log.log
-     * - (^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]: [ir.attachment,3|My Label],
-     *   for internal links
-     */
-    openerp.web_timeline.ChatterUtils = {
-
-        /** 
-         * Parse text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False 
-         */
-        parse_email: function (text) {
-            var result = text.match(/(.*)<(.*@.*)>/);
-            if (result) {
-                return [_.str.trim(result[1]), _.str.trim(result[2])];
-            }
-            result = text.match(/(.*@.*)/);
-            if (result) {
-                return [_.str.trim(result[1]), _.str.trim(result[1])];
-            }
-            return [text, false];
-        },
-
-        /**
-         * Get an image in /web/binary/image?... 
-         */
-        get_image: function (session, model, field, id, resize) {
-            var r = resize ? encodeURIComponent(resize) : '';
-            id = id || '';
-            return session.url('/web/binary/image', {model: model, field: field, id: id, resize: r});
-        },
- 
-        /** 
-         * Get the url of an attachment {'id': id} 
-         */
-        get_attachment_url: function (session, message_id, attachment_id) {
-            return session.url('/mail/download_attachment', {
-                'model': 'mail.message',
-                'id': message_id,
-                'method': 'download_attachment',
-                'attachment_id': attachment_id,
-            });
-        },
-
-        /**
-         * Replaces textarea text into html text (add <p>, <a>)
-         */
-        get_text2html: function (text) {
-            return text
-                .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
-                .replace(/[\n\r]/g,'<br/>');              
-        },
-
-        /** 
-         * Returns the complete domain with "&" 
-         */
-        expand_domain: function (domain) {
-            var new_domain = [];
-            var nb_and = -1;
-            
-            for (var k = domain.length-1; k >= 0; k--) {
-                if (typeof domain[k] != 'array' && typeof domain[k] != 'object') {
-                    nb_and -= 2;
-                    continue;
-                }
-                nb_and += 1;
-            }
-
-            for (var k = 0; k < nb_and; k++)
-                domain.unshift('&');
-
-            return domain;
-        },
-
-        /**
-         * Inserts zero width space between each letter of a string so that
-         * the word will correctly wrap in html boxes smaller than the text
-         */
-        breakword: function (str) {
-            var out = '';
-            if (!str) return str;
-            
-            for(var i = 0, len = str.length; i < len; i++)
-                out += _.str.escapeHTML(str[i]) + '&#8203;';
-            
-            return out;
-        },
-
-        bindTooltipTo: function ($el, value, position) {
-            $el.tooltip({
-                'title': value,
-                'placement': position,
-                'html': true,
-                'trigger': 'manual',
-                'animation': false,
-            }).on("mouseleave", function () {
-                setTimeout(function () {
-                    if (!$(".tooltip:hover").length) {
-                        $el.tooltip("hide");
-                    }
-                }, 100);
-            });
-        },
-    };
-
-    openerp.web_timeline.TimelineRecordThread = session.web.form.AbstractField.extend ({
+    var TimelineRecordThread = form_common.AbstractField.extend ({
         className: 'oe_timeline_record_thread',
 
         init: function (parent, node) {
@@ -183,7 +85,7 @@ openerp.web_timeline = function (session) {
         }
     });
 
-    session.web_timeline.TimelineView = session.web.View.extend ({
+    var TimelineView = View.extend ({
         display_name: _lt('Timeline'),
         view_type: 'timeline',
         template: 'TimelineWall',
@@ -354,7 +256,7 @@ openerp.web_timeline = function (session) {
         },
     });
 
-    openerp.web_timeline.Common = session.web.Widget.extend ({
+    var Common = Widget.extend ({
         format_attachments: function (attachments) {
             for (var l in attachments) {
                 var attach = attachments[l];
@@ -382,7 +284,7 @@ openerp.web_timeline = function (session) {
         },
     });
 
-    openerp.web_timeline.MailThread = openerp.web_timeline.Common.extend ({
+    var MailThread = Common.extend ({
         template: 'MailThread',
 
         events: {
@@ -1024,7 +926,7 @@ openerp.web_timeline = function (session) {
         },
     });
 
-    openerp.web_timeline.ThreadComposeMessage = openerp.web_timeline.Common.extend ({
+    var ThreadComposeMessage = Common.extend ({
         template: 'ComposeMessage',
 
         events: {
@@ -1514,7 +1416,7 @@ openerp.web_timeline = function (session) {
      * This widget handles the display of a sidebar on the Wall. Its main use
      * is to display group and employees suggestion (if hr is installed).
      */
-    openerp.web_timeline.Sidebar = session.web.Widget.extend({
+    var Sidebar = Widget.extend({
         className: 'oe_tl_sidebar',
     });
     
@@ -1522,8 +1424,8 @@ openerp.web_timeline = function (session) {
      * UserMenu
      * Add a link on the top user bar for write a full mail
      */
-    session.web.ComposeMessageTopButton = session.web.Widget.extend ({
-        template:'ComposeMessageTopButton',
+    var ComposeMessageTopButton = Widget.extend({
+        template:'mail.compose_message_top_button',
 
         events: {
             "click": "on_compose_message",
@@ -1540,11 +1442,19 @@ openerp.web_timeline = function (session) {
                 target: 'new',
                 context: {},
             };
-            session.client.action_manager.do_action(action);
+            web_client.action_manager.do_action(action);
         },
     });
 
-    session.web.SystrayItems.push(session.web.ComposeMessageTopButton);
-    session.web.views.add('timeline', 'session.web_timeline.TimelineView');
-    session.web.form.widgets.add('mail_thread', 'openerp.web_timeline.TimelineRecordThread');
-};
+    SystrayMenu.Items.push(ComposeMessageTopButton);
+    core.view_registry.add('timeline', TimelineView);
+    core.form_widget_registry.add('mail_thread', TimelineRecordThread);
+
+    return {
+        TimelineView: TimelineView,
+        MailThread: MailThread,
+        TimelineRecordThread: TimelineRecordThread,
+        Sidebar: Sidebar,
+    };
+
+});

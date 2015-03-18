@@ -383,6 +383,6 @@ var Followers = form_common.AbstractField.extend({
     },
 });
 /* Add the widget to registry */
-core.form_widget_registry.add('mail_followers', Followers);
+core.form_widget_registry.add('old_mail_followers', Followers);
 
 });
