@@ -2803,7 +2803,7 @@ class stock_inventory_line(osv.osv):
 
     def _get_quants(self, cr, uid, line, context=None):
         quant_obj = self.pool["stock.quant"]
-        dom = [('company_id', '=', line.company_id.id), ('location_id', 'child_of', line.location_id.id), ('lot_id', '=', line.prod_lot_id.id),
+        dom = [('company_id', '=', line.company_id.id), ('location_id', '=', line.location_id.id), ('lot_id', '=', line.prod_lot_id.id),
                         ('product_id','=', line.product_id.id), ('owner_id', '=', line.partner_id.id), ('package_id', '=', line.package_id.id)]
         quants = quant_obj.search(cr, uid, dom, context=context)
         return quants
@@ -2823,7 +2823,7 @@ class stock_inventory_line(osv.osv):
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             if not company_id:
                 company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-            dom = [('company_id', '=', company_id), ('location_id', 'child_of', location_id), ('lot_id', '=', prod_lot_id),
+            dom = [('company_id', '=', company_id), ('location_id', '=', location_id), ('lot_id', '=', prod_lot_id),
                         ('product_id','=', product_id), ('owner_id', '=', partner_id), ('package_id', '=', package_id)]
             quants = quant_obj.search(cr, uid, dom, context=context)
             th_qty = sum([x.qty for x in quant_obj.browse(cr, uid, quants, context=context)])
@@ -2864,7 +2864,7 @@ class stock_inventory_line(osv.osv):
         move_id = stock_move_obj.create(cr, uid, vals, context=context)
         move = stock_move_obj.browse(cr, uid, move_id, context=context)
         if diff > 0:
-            domain = [('qty', '>', 0.0), ('package_id', '=', inventory_line.package_id.id), ('lot_id', '=', inventory_line.prod_lot_id.id)]
+            domain = [('qty', '>', 0.0), ('package_id', '=', inventory_line.package_id.id), ('lot_id', '=', inventory_line.prod_lot_id.id), ('location_id', '=', inventory_line.location_id.id)]
             preferred_domain_list = [[('reservation_id', '=', False)], [('reservation_id.inventory_id', '!=', inventory_line.inventory_id.id)]]
             quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, move.product_qty, domain=domain, prefered_domain_list=preferred_domain_list, restrict_partner_id=move.restrict_partner_id.id, context=context)
             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
