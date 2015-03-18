@@ -1442,18 +1442,34 @@ class mail_thread(osv.AbstractModel):
                     if follower.email == email_address:
                         partner_id = follower.id
             # second try: check in partners that are also users
+            # Escape special SQL characters in email_address to avoid invalid matches
+            email_address = (email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_'))
+            email_brackets = "<%s>" % email_address
             if not partner_id:
-                ids = partner_obj.search(cr, SUPERUSER_ID, [
-                                                ('email', 'ilike', email_address),
-                                                ('user_ids', '!=', False)
-                                            ], limit=1, context=context)
+                # exact, case-insensitive match
+                ids = partner_obj.search(cr, SUPERUSER_ID,
+                                         [('email', '=ilike', email_address),
+                                          ('user_ids', '!=', False)],
+                                         limit=1, context=context)
+                if not ids:
+                    # if no match with addr-spec, attempt substring match within name-addr pair
+                    ids = partner_obj.search(cr, SUPERUSER_ID,
+                                             [('email', 'ilike', email_brackets),
+                                              ('user_ids', '!=', False)],
+                                             limit=1, context=context)
                 if ids:
                     partner_id = ids[0]
             # third try: check in partners
             if not partner_id:
-                ids = partner_obj.search(cr, SUPERUSER_ID, [
-                                                ('email', 'ilike', email_address)
-                                            ], limit=1, context=context)
+                # exact, case-insensitive match
+                ids = partner_obj.search(cr, SUPERUSER_ID,
+                                         [('email', '=ilike', email_address)],
+                                         limit=1, context=context)
+                if not ids:
+                    # if no match with addr-spec, attempt substring match within name-addr pair
+                    ids = partner_obj.search(cr, SUPERUSER_ID,
+                                             [('email', 'ilike', email_brackets)],
+                                             limit=1, context=context)
                 if ids:
                     partner_id = ids[0]
             partner_ids.append(partner_id)
@@ -1473,13 +1489,15 @@ class mail_thread(osv.AbstractModel):
             partner_id = partner_ids[idx]
             partner_info = {'full_name': email_address, 'partner_id': partner_id}
             result.append(partner_info)
-
             # link mail with this from mail to the new partner id
             if link_mail and partner_info['partner_id']:
+                # Escape special SQL characters in email_address to avoid invalid matches
+                email_address = (email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_'))
+                email_brackets = "<%s>" % email_address
                 message_ids = mail_message_obj.search(cr, SUPERUSER_ID, [
                                     '|',
-                                    ('email_from', '=', email_address),
-                                    ('email_from', 'ilike', '<%s>' % email_address),
+                                    ('email_from', '=ilike', email_address),
+                                    ('email_from', 'ilike', email_brackets),
                                     ('author_id', '=', False)
                                 ], context=context)
                 if message_ids:

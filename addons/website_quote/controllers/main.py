@@ -140,6 +140,8 @@ class sale_quote(http.Controller):
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
             return request.website.render('website.404')
+        if order.state not in ['draft', 'sent']:
+            return request.website.render('website.http_error', {'status_code': 'Forbidden', 'status_message': _('You cannot add options to a confirmed order.')})
         option_obj = request.registry.get('sale.order.option')
         option = option_obj.browse(request.cr, SUPERUSER_ID, option_id)
 

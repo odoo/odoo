@@ -227,7 +227,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         var field = (_.contains(f, ':')) ? f.split(':')[0] : f,
             groupby_field = _.findWhere(this.groupby_fields, {field:field}),
             string = groupby_field ? groupby_field.string : this.fields[field].string,
-            result =  {field: f, string: string, type: this.fields[field].type };
+            result =  {field: f, string: string, type: this.fields[field].type, digits: this.fields[field].digits };
 
         if (groupby_field) {
             result.filter = groupby_field.filter;
@@ -271,11 +271,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         event.preventDefault();
         event.stopPropagation();
         var measure_field = event.target.getAttribute('data-choice');
-        var measure = {
-            field: measure_field,
-            type: this.fields[measure_field].type,
-            string: this.fields[measure_field].string
-        };
+        var measure = this.create_field_value(measure_field);
 
         this.pivot.toggle_measure(measure).then(this.proxy('display_data'));
         this.put_measure_checkmarks();
@@ -496,7 +492,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     make_cell: function (row, col, value, index, raw) {
-        var formatted_value = raw && !_.isUndefined(value) ? value : openerp.web.format_value(value, {type:this.pivot.measures[index].type}),
+        var formatted_value = raw && !_.isUndefined(value) ? value : openerp.web.format_value(value, this.pivot.measures[index]),
             cell = {value:formatted_value};
 
         if (this.heatmap_mode === 'none') { return cell; }

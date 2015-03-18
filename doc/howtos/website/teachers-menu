@@ -1,19 +1,22 @@
 # HG changeset patch
 # Parent c8cc9e66a2701dad6589ff1d950e1cb7738d0854
-diff -r c8cc9e66a270 -r 0201053e995d academy/__openerp__.py
---- a/academy/__openerp__.py	Wed Aug 13 10:11:49 2014 +0200
-+++ b/academy/__openerp__.py	Wed Aug 13 11:04:49 2014 +0200
-@@ -10,6 +10,7 @@
+# Parent  44a09b8865d418cda8b7c46dfb70fadc86e22184
+
+diff --git a/academy/__openerp__.py b/academy/__openerp__.py
+--- a/academy/__openerp__.py
++++ b/academy/__openerp__.py
+@@ -26,6 +26,7 @@
      'data': [
-         'ir.model.access.csv',
+         'security/ir.model.access.csv',
          'templates.xml',
 +        'views.xml',
      ],
-     # data files which are only installed in "demonstration mode"
+     # only loaded in demonstration mode
      'demo': [
-diff -r c8cc9e66a270 -r 0201053e995d academy/views.xml
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/academy/views.xml	Wed Aug 13 11:04:49 2014 +0200
+diff --git a/academy/views.xml b/academy/views.xml
+new file mode 100644
+--- /dev/null
++++ b/academy/views.xml
 @@ -0,0 +1,13 @@
 +<openerp><data>
 +  <record id="action_academy_teachers" model="ir.actions.act_window">

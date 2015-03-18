@@ -88,4 +88,4 @@ class sale_order(osv.Model):
                 'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
                 'tax_id': [(6, 0, taxes_ids)],
                 'is_delivery': True
-            })
+            }, context=context)

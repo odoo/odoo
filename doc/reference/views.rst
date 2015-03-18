@@ -934,9 +934,9 @@ calendar view are:
 
 ``date_start`` (required)
     name of the record's field holding the start date for the event
-``date_end``
+``date_stop``
     name of the record's field holding the end date for the event, if
-    ``date_end`` is provided records become movable (via drag and drop)
+    ``date_stop`` is provided records become movable (via drag and drop)
     directly in the calendar
 ``date_delay``
     alternative to ``date_end``, provides the duration of the event instead of

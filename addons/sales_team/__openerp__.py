@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-    'name': 'Sale Team',
+    'name': 'Sales Teams',
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Sales Management',

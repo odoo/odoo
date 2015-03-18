@@ -36,7 +36,7 @@ class crm_case_section(osv.osv):
 
         res = {}
         for id in ids:
-            created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', date_begin), ('date', '<=', date_end)]
+            created_domain = [('type', 'in', ['out_invoice', 'out_refund']), ('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', date_begin), ('date', '<=', date_end)]
             values = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context)
             for value in values:
                 value['value'] = float_repr(value.get('value', 0), precision_digits=self.pool['decimal.precision'].precision_get(cr, uid, 'Account'))

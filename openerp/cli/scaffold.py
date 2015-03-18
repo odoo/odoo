@@ -83,17 +83,20 @@ env.filters['snake'] = snake
 env.filters['pascal'] = pascal
 class template(object):
     def __init__(self, identifier):
-        # TODO: directories, archives (zipfile, tarfile)
+        # TODO: archives (zipfile, tarfile)
         self.id = identifier
-        if not os.path.isdir(self.path):
-            die("{} is not a valid module template".format(identifier))
+        # is identifier a builtin?
+        self.path = builtins(identifier)
+        if os.path.isdir(self.path):
+            return
+        # is identifier a directory?
+        self.path = identifier
+        if os.path.isdir(self.path):
+            return
+        die("{} is not a valid module template".format(identifier))
 
     def __str__(self):
         return self.id
-
-    @property
-    def path(self):
-        return builtins(self.id)
 
     def files(self):
         """ Lists the (local) path and content of all files in the template
@@ -109,16 +112,18 @@ class template(object):
         """
         # overwrite with local
         for path, content in self.files():
-            _, ext = os.path.splitext(path)
-
             local = os.path.relpath(path, self.path)
+            # strip .template extension
+            root, ext = os.path.splitext(local)
+            if ext == '.template':
+                local = root
             dest = os.path.join(directory, modname, local)
             destdir = os.path.dirname(dest)
             if not os.path.exists(destdir):
                 os.makedirs(destdir)
 
             with open(dest, 'wb') as f:
-                if ext not in ('.py', '.xml', '.csv', '.js'):
+                if ext not in ('.py', '.xml', '.csv', '.js', '.rst', '.html', '.template'):
                     f.write(content)
                 else:
                     env.from_string(content)\

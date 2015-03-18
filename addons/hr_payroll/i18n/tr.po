@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2014-12-05 20:09+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:12+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-01-22 07:49+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:77
@@ -32,6 +32,10 @@ msgid ""
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Maaş bordrosu oluşturulduğunda durumu 'Taslak'tır.            \n"
+"* Maaş bordrosu doğrulama sürecindeyse durumu 'Bekliyor'dur.             \n"
+"* Maaş bordrosu onaylanmışsa durumu 'Tamamlandı' olur.            \n"
+"* Kullanıcı maaş bordrosunu iptal ederse durumu 'Reddedildi' olur."
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -47,6 +51,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir katkı payı kaydı için tıklayın.\n"
+"              </p><p>\n"
+"                Bir katkı kaydı çalışanların maaş ödemelerinde yer alan\n"
+"                bir üçüncü taraftır. Sosyal güvenlik, vergi ya da "
+"bordrolardan\n"
+"                para toplayan ya da para koyan herhangi bir kimsedir.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -56,7 +69,7 @@ msgstr "Muhasebe"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Accounting Information"
-msgstr ""
+msgstr "Muhasebe Bilgisi"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,active:0
@@ -67,7 +80,7 @@ msgstr "Etkin"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Bir iç not ekle..."
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslip
@@ -120,12 +133,14 @@ msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
 msgstr ""
+"Bu kuralı eğer koşul doğruysa uygulayın. >1000 gibi temel bir koşul "
+"belirtebilirsiniz."
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslip
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Authorized signature"
-msgstr ""
+msgstr "Yetkili imza"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslip
@@ -272,7 +287,7 @@ msgstr "Katkı"
 #: field:hr.salary.rule,register_id:0
 #: model:ir.model,name:hr_payroll.model_hr_contribution_register
 msgid "Contribution Register"
-msgstr ""
+msgstr "Katkı Payı Kaydı"
 
 #. module: hr_payroll
 #: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
@@ -285,7 +300,7 @@ msgstr "Destek Kayıtlı kullanıcısının maaş bordro Satırları"
 #: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
 msgid "Contribution Registers"
-msgstr ""
+msgstr "Katkı Payı Kayıtları"
 
 #. module: hr_payroll
 #: help:hr.config.settings,module_hr_payroll_account:0
@@ -306,7 +321,7 @@ msgstr "Maaş bordroları dan yevmiye girişleri oluşturma"
 #: field:hr.salary.rule.category,create_uid:0
 #: field:payslip.lines.contribution.register,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,create_date:0
@@ -322,7 +337,7 @@ msgstr ""
 #: field:hr.salary.rule.category,create_date:0
 #: field:payslip.lines.contribution.register,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturma"
 
 #. module: hr_payroll
 #: field:hr.payslip,credit_note:0
@@ -342,7 +357,7 @@ msgstr "Tarihinden"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Date From:"
-msgstr ""
+msgstr "Bu Tarihten:"
 
 #. module: hr_payroll
 #: field:hr.payslip,date_to:0
@@ -356,7 +371,7 @@ msgstr "Tarihine"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Date To:"
-msgstr ""
+msgstr "Bu Tarihe:"
 
 #. module: hr_payroll
 #: help:hr.payslip,struct_id:0
@@ -366,6 +381,10 @@ msgid ""
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
 msgstr ""
+"Seçilen sözleşmeye uygun olarak bu bordroda uygulanacak kuralları "
+"tanımlayın. Sözleşme alanını boş bırakırsanız, bu alan artık zorunlu olmaz "
+"ve böylece uygulanan kurallar, personel sözleşmelerinin yapısında seçilen "
+"dönem için tanımlanan bütün kurallar  için geçerli olacaktır."
 
 #. module: hr_payroll
 #: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
@@ -527,7 +546,7 @@ msgstr "Seçilen tüm çalışanlar için maaş bordroları üret"
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
 #: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
 msgid "Group By"
-msgstr ""
+msgstr "Gruplandır"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,id:0
@@ -546,7 +565,7 @@ msgstr ""
 #: field:report.hr_payroll.report_payslip,id:0
 #: field:report.hr_payroll.report_payslipdetails,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslip
@@ -594,7 +613,7 @@ msgstr "Girişler"
 #. module: hr_payroll
 #: field:hr.payslip,note:0
 msgid "Internal Note"
-msgstr ""
+msgstr "İç Not"
 
 #. module: hr_payroll
 #: help:hr.salary.rule,quantity:0
@@ -626,7 +645,7 @@ msgstr ""
 #: field:hr.salary.rule.category,write_uid:0
 #: field:payslip.lines.contribution.register,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,write_date:0
@@ -642,7 +661,7 @@ msgstr ""
 #: field:hr.salary.rule.category,write_date:0
 #: field:payslip.lines.contribution.register,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: hr_payroll
 #: field:hr.config.settings,module_hr_payroll_account:0
@@ -854,7 +873,7 @@ msgstr ""
 #. module: hr_payroll
 #: field:hr.payslip,name:0
 msgid "Payslip Name"
-msgstr ""
+msgstr "Maaş Bordrosu Adı"
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days_line_ids:0
@@ -947,7 +966,7 @@ msgstr "Miktar/Oran"
 #: view:website:hr_payroll.report_payslip
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Quantity/rate"
-msgstr ""
+msgstr "Miktar/oran"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -1004,7 +1023,7 @@ msgstr "Kayıt Satırı"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Register Name:"
-msgstr ""
+msgstr "Kayıt Adı:"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -1316,6 +1335,11 @@ msgstr "Sen taslak veya iptal olmayan bir maaş bordrosu silemezsiniz!"
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
 msgstr "Bu maaş bordrosu üretmek için çalışan (lar) seçmelisiniz."
+
+#. module: hr_payroll
+#: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
+msgid "or"
+msgstr ""
 
 #. module: hr_payroll
 #: help:hr.payslip.line,amount_percentage_base:0

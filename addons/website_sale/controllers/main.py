@@ -6,6 +6,7 @@ from openerp import http
 from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
+from openerp.addons.web.controllers.main import login_redirect
 
 PPG = 20 # Products Per Page
 PPR = 4  # Products Per Row
@@ -121,14 +122,17 @@ class website_sale(http.Controller):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         currency_obj = pool['res.currency']
         attribute_value_ids = []
+        visible_attrs = set(l.attribute_id.id
+                                for l in product.attribute_line_ids
+                                    if len(l.value_ids) > 1)
         if request.website.pricelist_id.id != context['pricelist']:
             website_currency_id = request.website.currency_id.id
             currency_id = self.get_pricelist().currency_id.id
             for p in product.product_variant_ids:
                 price = currency_obj.compute(cr, uid, website_currency_id, currency_id, p.lst_price)
-                attribute_value_ids.append([p.id, [v.id for v in p.attribute_value_ids if len(v.attribute_id.value_ids) > 1], p.price, price])
+                attribute_value_ids.append([p.id, [v.id for v in p.attribute_value_ids if v.attribute_id.id in visible_attrs], p.price, price])
         else:
-            attribute_value_ids = [[p.id, [v.id for v in p.attribute_value_ids if len(v.attribute_id.value_ids) > 1], p.price, p.lst_price]
+            attribute_value_ids = [[p.id, [v.id for v in p.attribute_value_ids if v.attribute_id.id in visible_attrs], p.price, p.lst_price]
                 for p in product.product_variant_ids]
 
         return attribute_value_ids
@@ -143,11 +147,11 @@ class website_sale(http.Controller):
 
         domain = request.website.sale_product_domain()
         if search:
-            domain += ['|', '|', '|', ('name', 'ilike', search), ('description', 'ilike', search),
-                ('description_sale', 'ilike', search), ('product_variant_ids.default_code', 'ilike', search)]
+            for srch in search.split(" "):
+                domain += ['|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
+                    ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
         if category:
             domain += [('public_categ_ids', 'child_of', int(category))]
-
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
         attrib_set = set([v[1] for v in attrib_values])
@@ -185,6 +189,8 @@ class website_sale(http.Controller):
         if category:
             category = pool['product.public.category'].browse(cr, uid, int(category), context=context)
             url = "/shop/category/%s" % slug(category)
+        if attrib_list:
+            post['attrib'] = attrib_list
         pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
         product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
@@ -194,9 +200,8 @@ class website_sale(http.Controller):
         styles = style_obj.browse(cr, uid, style_ids, context=context)
 
         category_obj = pool['product.public.category']
-        category_ids = category_obj.search(cr, uid, [], context=context)
-        categories = category_obj.browse(cr, uid, category_ids, context=context)
-        categs = filter(lambda x: not x.parent_id, categories)
+        category_ids = category_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+        categs = category_obj.browse(cr, uid, category_ids, context=context)
 
         attributes_obj = request.registry['product.attribute']
         attributes_ids = attributes_obj.search(cr, uid, [], context=context)
@@ -274,6 +279,8 @@ class website_sale(http.Controller):
 
     @http.route(['/shop/product/comment/<int:product_template_id>'], type='http', auth="public", methods=['POST'], website=True)
     def product_comment(self, product_template_id, **post):
+        if not request.session.uid:
+            return login_redirect()
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
             request.registry['product.template'].message_post(
@@ -281,7 +288,7 @@ class website_sale(http.Controller):
                 body=post.get('comment'),
                 type='comment',
                 subtype='mt_comment',
-                context=dict(context, mail_create_nosubcribe=True))
+                context=dict(context, mail_create_nosubscribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
@@ -510,7 +517,12 @@ class website_sale(http.Controller):
         orm_user = registry.get('res.users')
         order_obj = request.registry.get('sale.order')
 
-        billing_info = self.checkout_parse('billing', checkout, True)
+        partner_lang = request.lang if request.lang in [lang.code for lang in request.website.language_ids] else None
+
+        billing_info = {}
+        if partner_lang:
+            billing_info['lang'] = partner_lang
+        billing_info.update(self.checkout_parse('billing', checkout, True))
 
         # set partner_id
         partner_id = None
@@ -531,7 +543,10 @@ class website_sale(http.Controller):
 
         # create a new shipping partner
         if checkout.get('shipping_id') == -1:
-            shipping_info = self.checkout_parse('shipping', checkout, True)
+            shipping_info = {}
+            if partner_lang:
+                shipping_info['lang'] = partner_lang
+            shipping_info.update(self.checkout_parse('shipping', checkout, True))
             shipping_info['type'] = 'delivery'
             shipping_info['parent_id'] = partner_id
             checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
@@ -791,13 +806,23 @@ class website_sale(http.Controller):
 
         # send the email
         if email_act and email_act.get('context'):
+            composer_obj = request.registry['mail.compose.message']
             composer_values = {}
             email_ctx = email_act['context']
-            public_id = request.website.user_id.id
-            if uid == public_id:
+            template_values = [
+                email_ctx.get('default_template_id'),
+                email_ctx.get('default_composition_mode'),
+                email_ctx.get('default_model'),
+                email_ctx.get('default_res_id'),
+            ]
+            composer_values.update(composer_obj.onchange_template_id(cr, SUPERUSER_ID, None, *template_values, context=context).get('value', {}))
+            if not composer_values.get('email_from') and uid == request.website.user_id.id:
                 composer_values['email_from'] = request.website.user_id.company_id.email
-            composer_id = request.registry['mail.compose.message'].create(cr, SUPERUSER_ID, composer_values, context=email_ctx)
-            request.registry['mail.compose.message'].send_mail(cr, SUPERUSER_ID, [composer_id], context=email_ctx)
+            for key in ['attachment_ids', 'partner_ids']:
+                if composer_values.get(key):
+                    composer_values[key] = [(6, 0, composer_values[key])]
+            composer_id = composer_obj.create(cr, SUPERUSER_ID, composer_values, context=email_ctx)
+            composer_obj.send_mail(cr, SUPERUSER_ID, [composer_id], context=email_ctx)
 
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset(context=context)

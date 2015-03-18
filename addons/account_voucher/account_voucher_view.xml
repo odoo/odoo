@@ -19,6 +19,24 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="view_voucher_tree_nocreate">
+            <field name="name">account.voucher.tree_nocreate</field>
+            <field name="model">account.voucher</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries" create="0" edit="0">
+                    <field name="date"/>
+                    <field name="number"/>
+                    <field name="reference"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id" groups="account.group_account_user"/>
+                    <field name="period_id" invisible="context.get('visible', True)"/>
+                    <field name="type" invisible="context.get('visible', True)"/>
+                    <field name="amount" sum="Total Amount"/>
+                    <field name="audit" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
         <record model="ir.ui.view" id="view_voucher_line_form">
             <field name="name">account.voucher.line.form</field>
             <field name="model">account.voucher.line</field>
@@ -40,7 +58,7 @@
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <form string="Accounting Voucher">
+                <form string="Accounting Voucher" create="0" edit="0">
                   <header>
                       <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
                       <button name="cancel_voucher" string="Cancel Voucher" type="object" states="posted" confirm="Are you sure you want to unreconcile this record?"/>
@@ -160,12 +178,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="context">{}</field>
-            <field name="view_id" eval="view_voucher_tree"/>
+            <field name="view_id" eval="view_voucher_tree_nocreate"/>
             <field name="search_view_id" ref="view_voucher_filter"/>
         </record>
         <record id="action_journal_voucher_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_voucher_tree_nocreate"/>
             <field name="act_window_id" ref="action_voucher_list"/>
         </record>
         <record id="action_journal_voucher_form" model="ir.actions.act_window.view">

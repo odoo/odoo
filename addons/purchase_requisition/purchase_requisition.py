@@ -170,6 +170,7 @@ class purchase_requisition(osv.osv):
             'order_id': purchase_id,
             'product_id': product.id,
             'account_analytic_id': requisition_line.account_analytic_id.id,
+            'taxes_id': [(6, 0, vals.get('taxes_id', []))],
         })
         return vals
 
@@ -300,7 +301,7 @@ class purchase_requisition_line(osv.osv):
     _rec_name = 'product_id'
 
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product'),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok', '=', True)]),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'requisition_id': fields.many2one('purchase.requisition', 'Call for Bids', ondelete='cascade'),

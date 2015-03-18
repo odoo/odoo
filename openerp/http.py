@@ -13,6 +13,7 @@ import inspect
 import logging
 import mimetypes
 import os
+import pprint
 import random
 import re
 import sys
@@ -25,7 +26,6 @@ import warnings
 from zlib import adler32
 
 import babel.core
-import psutil
 import psycopg2
 import simplejson
 import werkzeug.contrib.sessions
@@ -37,6 +37,11 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 from werkzeug.wsgi import wrap_file
 
+try:
+    import psutil
+except ImportError:
+    psutil = None
+
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.service import security, model as service_model
@@ -44,6 +49,8 @@ from openerp.tools.func import lazy_property
 from openerp.tools import ustr
 
 _logger = logging.getLogger(__name__)
+rpc_request = logging.getLogger(__name__ + '.rpc.request')
+rpc_response = logging.getLogger(__name__ + '.rpc.response')
 
 # 1 week cache for statics as advised by Google Page Speed
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -82,14 +89,13 @@ def dispatch_rpc(service_name, method, params):
     in a upper layer.
     """
     try:
-        rpc_request = logging.getLogger(__name__ + '.rpc.request')
-        rpc_response = logging.getLogger(__name__ + '.rpc.response')
         rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
         rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
         if rpc_request_flag or rpc_response_flag:
             start_time = time.time()
             start_rss, start_vms = 0, 0
-            start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+            if psutil:
+                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
             if rpc_request and rpc_response_flag:
                 openerp.netsvc.log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
 
@@ -110,7 +116,8 @@ def dispatch_rpc(service_name, method, params):
         if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
             end_rss, end_vms = 0, 0
-            end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+            if psutil:
+                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
             logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
             if rpc_response_flag:
                 openerp.netsvc.log(rpc_response, logging.DEBUG, logline, result)
@@ -207,6 +214,7 @@ class WebRequest(object):
 
     @lazy_property
     def lang(self):
+        self.session._fix_lang(self.context)
         return self.context["lang"]
 
     @lazy_property
@@ -262,7 +270,8 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
         self._failed = exception # prevent tx commit
-        if not isinstance(exception, NO_POSTMORTEM):
+        if not isinstance(exception, NO_POSTMORTEM) \
+                and not isinstance(exception, werkzeug.exceptions.HTTPException):
             openerp.tools.debugger.post_mortem(
                 openerp.tools.config, sys.exc_info())
         raise
@@ -387,14 +396,18 @@ def route(route=None, **kw):
             response = f(*args, **kw)
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
-            elif isinstance(response, werkzeug.wrappers.BaseResponse):
+
+            if isinstance(response, basestring):
+                return Response(response)
+
+            if isinstance(response, werkzeug.exceptions.HTTPException):
+                response = response.get_response()
+            if isinstance(response, werkzeug.wrappers.BaseResponse):
                 response = Response.force_type(response)
                 response.set_default()
                 return response
-            elif isinstance(response, basestring):
-                return Response(response)
-            else:
-                _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
+
+            _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
             return response
         response_wrap.routing = routing
         response_wrap.original_func = f
@@ -535,7 +548,36 @@ class JsonRequest(WebRequest):
         if self.jsonp_handler:
             return self.jsonp_handler()
         try:
+            rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+            rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
+            if rpc_request_flag or rpc_response_flag:
+                endpoint = self.endpoint.method.__name__
+                model = self.params.get('model')
+                method = self.params.get('method')
+                args = self.params.get('args', [])
+
+                start_time = time.time()
+                _, start_vms = 0, 0
+                if psutil:
+                    _, start_vms = psutil.Process(os.getpid()).get_memory_info()
+                if rpc_request and rpc_response_flag:
+                    rpc_request.debug('%s: %s %s, %s',
+                        endpoint, model, method, pprint.pformat(args))
+
             result = self._call_function(**self.params)
+
+            if rpc_request_flag or rpc_response_flag:
+                end_time = time.time()
+                _, end_vms = 0, 0
+                if psutil:
+                    _, end_vms = psutil.Process(os.getpid()).get_memory_info()
+                logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
+                    endpoint, model, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+                if rpc_response_flag:
+                    rpc_response.debug('%s, %s', logline, pprint.pformat(result))
+                else:
+                    rpc_request.debug(logline)
+
             return self._json_response(result)
         except Exception, e:
             return self._handle_exception(e)
@@ -802,7 +844,9 @@ def routing_map(modules, nodb_only, converters=None):
                                 if url.endswith("/") and len(url) > 1:
                                     url = url[: -1]
 
-                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods']))
+                            xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
+                            kw = {k: routing[k] for k in xtra_keys if k in routing}
+                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
     return routing_map
 
 #----------------------------------------------------------
@@ -957,7 +1001,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         :param dict context: context to fix
         """
-        lang = context['lang']
+        lang = context.get('lang')
 
         # inane OpenERP locale
         if lang == 'ar_AR':

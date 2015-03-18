@@ -170,7 +170,7 @@
                                     <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                                     <field name="zip" placeholder="ZIP" style="width: 20%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                                 </div>
-                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                         </group>
@@ -215,7 +215,7 @@
                                                 <div class="oe_module_vignette">
                                                 <a type="open">
                                                     <t t-if="record.has_image.raw_value === true">
-                                                        <img t-att-src="kanban_image('res.partner', 'image', record.id.value, {'preview_image': 'image_small'})" class="oe_avatar oe_kanban_avatar_smallbox"/>
+                                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
                                                     </t>
                                                     <t t-if="record.image and record.image.raw_value !== false">
                                                         <img t-att-src="'data:image/png;base64,'+record.image.raw_value" class="oe_avatar oe_kanban_avatar_smallbox"/>
@@ -284,7 +284,7 @@
                                                     <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
                                                     <field name="zip" placeholder="ZIP" style="width: 20%%"/>
                                                 </div>
-                                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}'/>
                                             </div>
                                         </group>
                                         <field name="supplier" invisible="True"/>

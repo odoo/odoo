@@ -26,6 +26,31 @@ from openerp import workflow
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
     _description = "Sale OrderLine Make_invoice"
+
+    def _prepare_invoice(self, cr, uid, order, lines, context=None):
+        a = order.partner_id.property_account_receivable.id
+        if order.partner_id and order.partner_id.property_payment_term.id:
+            pay_term = order.partner_id.property_payment_term.id
+        else:
+            pay_term = False
+        return {
+            'name': order.client_order_ref or '',
+            'origin': order.name,
+            'type': 'out_invoice',
+            'reference': "P%dSO%d" % (order.partner_id.id, order.id),
+            'account_id': a,
+            'partner_id': order.partner_invoice_id.id,
+            'invoice_line': [(6, 0, lines)],
+            'currency_id' : order.pricelist_id.currency_id.id,
+            'comment': order.note,
+            'payment_term': pay_term,
+            'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
+            'user_id': order.user_id and order.user_id.id or False,
+            'company_id': order.company_id and order.company_id.id or False,
+            'date_invoice': fields.date.today(),
+            'section_id': order.section_id.id,
+        }
+
     
     def make_invoices(self, cr, uid, ids, context=None):
         """
@@ -55,27 +80,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                  @return:
 
             """
-            a = order.partner_id.property_account_receivable.id
-            if order.partner_id and order.partner_id.property_payment_term.id:
-                pay_term = order.partner_id.property_payment_term.id
-            else:
-                pay_term = False
-            inv = {
-                'name': order.client_order_ref or '',
-                'origin': order.name,
-                'type': 'out_invoice',
-                'reference': "P%dSO%d" % (order.partner_id.id, order.id),
-                'account_id': a,
-                'partner_id': order.partner_invoice_id.id,
-                'invoice_line': [(6, 0, lines)],
-                'currency_id' : order.pricelist_id.currency_id.id,
-                'comment': order.note,
-                'payment_term': pay_term,
-                'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
-                'user_id': order.user_id and order.user_id.id or False,
-                'company_id': order.company_id and order.company_id.id or False,
-                'date_invoice': fields.date.today(),
-            }
+            inv = self._prepare_invoice(cr, uid, order, lines)
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
             return inv_id
 

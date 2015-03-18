@@ -36,8 +36,15 @@ class account_invoice_report(osv.osv):
             context={}
         currency_obj = self.pool.get('res.currency')
         currency_rate_obj = self.pool.get('res.currency.rate')
-        user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-        currency_rate_id = currency_rate_obj.search(cr, uid, [('rate', '=', 1)], limit=1, context=context)[0]
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        user_currency_id = user.company_id.currency_id.id
+        currency_rate_id = currency_rate_obj.search(
+            cr, uid, [
+                ('rate', '=', 1),
+                '|',
+                    ('currency_id.company_id', '=', user.company_id.id),
+                    ('currency_id.company_id', '=', False)
+                ], limit=1, context=context)[0]
         base_currency_id = currency_rate_obj.browse(cr, uid, currency_rate_id, context=context).currency_id.id
         res = {}
         ctx = context.copy()
@@ -132,23 +139,15 @@ class account_invoice_report(osv.osv):
                 SELECT min(ail.id) AS id,
                     ai.date_invoice AS date,
                     ail.product_id, ai.partner_id, ai.payment_term, ai.period_id,
-                    CASE
-                     WHEN u.uom_type::text <> 'reference'::text
-                        THEN ( SELECT product_uom.name
-                               FROM product_uom
-                               WHERE product_uom.uom_type::text = 'reference'::text
-                                AND product_uom.active
-                                AND product_uom.category_id = u.category_id LIMIT 1)
-                        ELSE u.name
-                    END AS uom_name,
+                    u2.name AS uom_name,
                     ai.currency_id, ai.journal_id, ai.fiscal_position, ai.user_id, ai.company_id,
                     count(ail.*) AS nbr,
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
                     SUM(CASE
                          WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                            THEN (- ail.quantity) / u.factor
-                            ELSE ail.quantity / u.factor
+                            THEN (- ail.quantity) / u.factor * u2.factor
+                            ELSE ail.quantity / u.factor * u2.factor
                         END) AS product_qty,
                     SUM(CASE
                          WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
@@ -160,11 +159,11 @@ class account_invoice_report(osv.osv):
                         THEN SUM(- ail.price_subtotal)
                         ELSE SUM(ail.price_subtotal)
                     END / CASE
-                           WHEN SUM(ail.quantity / u.factor) <> 0::numeric
+                           WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
                                THEN CASE
                                      WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                                        THEN SUM((- ail.quantity) / u.factor)
-                                        ELSE SUM(ail.quantity / u.factor)
+                                        THEN SUM((- ail.quantity) / u.factor * u2.factor)
+                                        ELSE SUM(ail.quantity / u.factor * u2.factor)
                                     END
                                ELSE 1::numeric
                           END AS price_average,
@@ -172,17 +171,8 @@ class account_invoice_report(osv.osv):
                      WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
                         THEN - ai.residual
                         ELSE ai.residual
-                    END / CASE
-                           WHEN (( SELECT count(l.id) AS count
-                                   FROM account_invoice_line l
-                                   LEFT JOIN account_invoice a ON a.id = l.invoice_id
-                                   WHERE a.id = ai.id)) <> 0
-                               THEN ( SELECT count(l.id) AS count
-                                      FROM account_invoice_line l
-                                      LEFT JOIN account_invoice a ON a.id = l.invoice_id
-                                      WHERE a.id = ai.id)
-                               ELSE 1::bigint
-                          END::numeric AS residual,
+                    END / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
+                    count(*) AS residual,
                     ai.commercial_partner_id as commercial_partner_id,
                     partner.country_id
         """
@@ -196,16 +186,17 @@ class account_invoice_report(osv.osv):
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
                 LEFT JOIN product_uom u ON u.id = ail.uos_id
+                LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
         """
         return from_str
 
     def _group_by(self):
         group_by_str = """
                 GROUP BY ail.product_id, ai.date_invoice, ai.id,
-                    ai.partner_id, ai.payment_term, ai.period_id, u.name, ai.currency_id, ai.journal_id,
+                    ai.partner_id, ai.payment_term, ai.period_id, u2.name, u2.id, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,
-                    ai.amount_total, u.uom_type, u.category_id, ai.commercial_partner_id, partner.country_id
+                    ai.amount_total, ai.commercial_partner_id, partner.country_id
         """
         return group_by_str
 

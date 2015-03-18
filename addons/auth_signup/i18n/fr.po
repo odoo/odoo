@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-01-07 17:54+0000\n"
+"Last-Translator: Florian Hatat <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:58+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-01-22 07:29+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.set_password_email
@@ -50,6 +50,34 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Vous avez reçu une invitation pour rejoindre "
+"\"${object.company_id.name}\" afin d'avoir accès à vos documents dans Odoo.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Pour accepter cette invitation, cliquez sur le lien "
+"suivant :\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accepter "
+"l'invitation pour \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Avec nos remerciements,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -63,11 +91,20 @@ msgid ""
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
 msgstr ""
+"\n"
+"<p>Une demande de réinitialisation de mot de passe a été effectuée pour le "
+"compte Odoo lié à cette adresse.</p>\n"
+"\n"
+"<p>Vous pouvez changer votre mot de passe en suivant <a "
+"href=\"${object.signup_url}\">ce lien</a>.</p>\n"
+"\n"
+"<p>Remarque : si vous n'avez pas effectué cette demande, vous pouvez "
+"simplement ignorer ce message.</p>"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${object.company_id.name} vous invite à vous connecter à Odoo"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
@@ -117,7 +154,7 @@ msgid "Back to Login"
 msgstr "Retour à la fenêtre de connexion"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:295
+#: code:addons/auth_signup/res_users.py:294
 #, python-format
 msgid "Cannot send email: user has no email address."
 msgstr ""
@@ -132,7 +169,7 @@ msgstr "Confirmez le mot de passe"
 #: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Impossible de réinitialiser votre mot de passe"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
@@ -166,7 +203,7 @@ msgstr "Partenaire"
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
@@ -186,12 +223,12 @@ msgstr "Réinitialiser le mot de passe"
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Envoyer les instructions de réinitialisation de mot de passe"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Inviter par courriel"
 
 #. module: auth_signup
 #: view:website:auth_signup.signup
@@ -251,14 +288,14 @@ msgstr "Utilisateurs"
 #: view:website:auth_signup.fields
 #: view:website:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Votre courriel"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "Votre nom"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "ex. John Doe"

@@ -169,7 +169,8 @@ class GettextAlias(object):
             return sql_db.db_connect(db_name)
 
     def _get_cr(self, frame, allow_create=True):
-        # try, in order: cr, cursor, self.env.cr, self.cr
+        # try, in order: cr, cursor, self.env.cr, self.cr,
+        # request.env.cr
         if 'cr' in frame.f_locals:
             return frame.f_locals['cr'], False
         if 'cursor' in frame.f_locals:
@@ -179,6 +180,11 @@ class GettextAlias(object):
             return s.env.cr, False
         if hasattr(s, 'cr'):
             return s.cr, False
+        try:
+            from openerp.http import request
+            return request.env.cr, False
+        except RuntimeError:
+            pass
         if allow_create:
             # create a new cursor
             db = self._get_db()
@@ -197,7 +203,7 @@ class GettextAlias(object):
 
     def _get_lang(self, frame):
         # try, in order: context.get('lang'), kwargs['context'].get('lang'),
-        # self.env.lang, self.localcontext.get('lang')
+        # self.env.lang, self.localcontext.get('lang'), request.env.lang
         lang = None
         if frame.f_locals.get('context'):
             lang = frame.f_locals['context'].get('lang')
@@ -212,6 +218,12 @@ class GettextAlias(object):
             if not lang:
                 if hasattr(s, 'localcontext'):
                     lang = s.localcontext.get('lang')
+            if not lang:
+                try:
+                    from openerp.http import request
+                    lang = request.env.lang
+                except RuntimeError:
+                    pass
             if not lang:
                 # Last resort: attempt to guess the language of the user
                 # Pitfall: some operations are performed in sudo mode, and we
@@ -358,6 +370,7 @@ class TinyPoFile(object):
             source = unquote(line[6:])
             line = self.lines.pop(0).strip()
             if not source and self.first:
+                self.first = False
                 # if the source is "" and it's the first msgid, it's the special
                 # msgstr with the informations about the traduction and the
                 # traductor; we skip it
@@ -386,8 +399,6 @@ class TinyPoFile(object):
                 for t, n, r in targets:
                     if t == trans_type == 'code': continue
                     self.extra_lines.append((t, n, r, source, trad, comments))
-
-        self.first = False
 
         if name is None:
             if not fuzzy:
@@ -567,6 +578,7 @@ def trans_parse_view(element, callback):
     for el in element.iter():
         if (not isinstance(el, SKIPPED_ELEMENT_TYPES)
                 and el.tag.lower() not in SKIPPED_ELEMENTS
+                and el.get("translation", '').strip() != "off"
                 and el.text):
             _push(callback, el.text, el.sourceline)
         if el.tail:
@@ -953,10 +965,12 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     # Normally the path looks like /path/to/xxx/i18n/lang.po
                     # and we try to find the corresponding
                     # /path/to/xxx/i18n/xxx.pot file.
+                    # (Sometimes we have 'i18n_extra' instead of just 'i18n')
                     addons_module_i18n, _ = os.path.split(fileobj.name)
-                    addons_module, _ = os.path.split(addons_module_i18n)
+                    addons_module, i18n_dir = os.path.split(addons_module_i18n)
                     addons, module = os.path.split(addons_module)
-                    pot_handle = misc.file_open(os.path.join(addons, module, 'i18n', module + '.pot'))
+                    pot_handle = misc.file_open(os.path.join(
+                        addons, module, i18n_dir, module + '.pot'))
                     pot_reader = TinyPoFile(pot_handle)
                 except:
                     pass

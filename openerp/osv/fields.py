@@ -115,6 +115,7 @@ class _column(object):
         """
         args0 = {
             'string': string,
+            'help': args.pop('help', None),
             'required': required,
             'readonly': readonly,
             '_domain': domain,
@@ -127,6 +128,9 @@ class _column(object):
             'translate': translate,
             'select': select,
             'manual': manual,
+            'group_operator': args.pop('group_operator', None),
+            'groups': args.pop('groups', None),
+            'deprecated': args.pop('deprecated', None),
         }
         for key, val in args0.iteritems():
             if val:
@@ -140,30 +144,23 @@ class _column(object):
         if not self._classic_write or self.deprecated or self.manual:
             self._prefetch = False
 
-    def new(self, **args):
-        """ return a column like `self` with the given parameters """
+    def new(self, _computed_field=False, **args):
+        """ Return a column like `self` with the given parameters; the parameter
+            `_computed_field` tells whether the corresponding field is computed.
+        """
         # memory optimization: reuse self whenever possible; you can reduce the
         # average memory usage per registry by 10 megabytes!
-        return self if self.same_parameters(args) else type(self)(**args)
-
-    def same_parameters(self, args):
-        dummy = object()
-        return all(
-            # either both are falsy, or they are equal
-            (not val1 and not val) or (val1 == val)
-            for key, val in args.iteritems()
-            for val1 in [getattr(self, key, getattr(self, '_' + key, dummy))]
-        )
+        column = type(self)(**args)
+        return self if self.to_field_args() == column.to_field_args() else column
 
     def to_field(self):
         """ convert column `self` to a new-style field """
         from openerp.fields import Field
-        return Field.by_type[self._type](**self.to_field_args())
+        return Field.by_type[self._type](column=self, **self.to_field_args())
 
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
         base_items = [
-            ('column', self),                   # field interfaces self
             ('copy', self.copy),
         ]
         truthy_items = filter(itemgetter(1), [
@@ -320,11 +317,12 @@ class html(text):
             return None
         if not self._sanitize:
             return value
-        return html_sanitize(value)
+        return html_sanitize(value, strip_style=self._strip_style)
 
-    def __init__(self, string='unknown', sanitize=True, **args):
+    def __init__(self, string='unknown', sanitize=True, strip_style=False, **args):
         super(html, self).__init__(string=string, **args)
         self._sanitize = sanitize
+        self._strip_style = strip_style
         # symbol_set redefinition because of sanitize specific behavior
         self._symbol_f = self._symbol_set_html
         self._symbol_set = (self._symbol_c, self._symbol_f)
@@ -349,7 +347,7 @@ class float(_column):
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
 
-    def new(self, **args):
+    def new(self, _computed_field=False, **args):
         # float columns are database-dependent, so always recreate them
         return type(self)(**args)
 
@@ -520,6 +518,11 @@ class datetime(_column):
                               "using the UTC value",
                               exc_info=True)
         return utc_timestamp
+
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        value = datetime.context_timestamp(cr, uid, DT.datetime.strptime(value, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+        return tools.ustr(value.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))
 
 class binary(_column):
     _type = 'binary'
@@ -731,57 +734,58 @@ class one2many(_column):
         result = []
         context = dict(context or {})
         context.update(self._context)
-        context['recompute'] = False    # recomputation is done by outer create/write
         if not values:
             return
         obj = obj.pool[self._obj]
-        _table = obj._table
-        for act in values:
-            if act[0] == 0:
-                act[2][self._fields_id] = id
-                id_new = obj.create(cr, user, act[2], context=context)
-                result += obj._store_get_values(cr, user, [id_new], act[2].keys(), context)
-            elif act[0] == 1:
-                obj.write(cr, user, [act[1]], act[2], context=context)
-            elif act[0] == 2:
-                obj.unlink(cr, user, [act[1]], context=context)
-            elif act[0] == 3:
-                inverse_field = obj._fields.get(self._fields_id)
-                assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
-                # if the model has on delete cascade, just delete the row
-                if inverse_field.ondelete == "cascade":
+        rec = obj.browse(cr, user, [], context=context)
+        with rec.env.norecompute():
+            _table = obj._table
+            for act in values:
+                if act[0] == 0:
+                    act[2][self._fields_id] = id
+                    id_new = obj.create(cr, user, act[2], context=context)
+                    result += obj._store_get_values(cr, user, [id_new], act[2].keys(), context)
+                elif act[0] == 1:
+                    obj.write(cr, user, [act[1]], act[2], context=context)
+                elif act[0] == 2:
                     obj.unlink(cr, user, [act[1]], context=context)
-                else:
-                    cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
-            elif act[0] == 4:
-                # table of the field (parent_model in case of inherit)
-                field = obj.pool[self._obj]._fields[self._fields_id]
-                field_model = field.base_field.model_name
-                field_table = obj.pool[field_model]._table
-                cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
-                if not cr.fetchone():
-                    # Must use write() to recompute parent_store structure if needed and check access rules
-                    obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
-            elif act[0] == 5:
-                inverse_field = obj._fields.get(self._fields_id)
-                assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
-                # if the o2m has a static domain we must respect it when unlinking
-                domain = self._domain(obj) if callable(self._domain) else self._domain
-                extra_domain = domain or []
-                ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
-                # If the model has cascade deletion, we delete the rows because it is the intended behavior,
-                # otherwise we only nullify the reverse foreign key column.
-                if inverse_field.ondelete == "cascade":
-                    obj.unlink(cr, user, ids_to_unlink, context=context)
-                else:
-                    obj.write(cr, user, ids_to_unlink, {self._fields_id: False}, context=context)
-            elif act[0] == 6:
-                # Must use write() to recompute parent_store structure if needed
-                obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
-                ids2 = act[2] or [0]
-                cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
-                ids3 = map(lambda x:x[0], cr.fetchall())
-                obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
+                elif act[0] == 3:
+                    inverse_field = obj._fields.get(self._fields_id)
+                    assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                    # if the model has on delete cascade, just delete the row
+                    if inverse_field.ondelete == "cascade":
+                        obj.unlink(cr, user, [act[1]], context=context)
+                    else:
+                        cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
+                elif act[0] == 4:
+                    # table of the field (parent_model in case of inherit)
+                    field = obj.pool[self._obj]._fields[self._fields_id]
+                    field_model = field.base_field.model_name
+                    field_table = obj.pool[field_model]._table
+                    cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
+                    if not cr.fetchone():
+                        # Must use write() to recompute parent_store structure if needed and check access rules
+                        obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
+                elif act[0] == 5:
+                    inverse_field = obj._fields.get(self._fields_id)
+                    assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                    # if the o2m has a static domain we must respect it when unlinking
+                    domain = self._domain(obj) if callable(self._domain) else self._domain
+                    extra_domain = domain or []
+                    ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
+                    # If the model has cascade deletion, we delete the rows because it is the intended behavior,
+                    # otherwise we only nullify the reverse foreign key column.
+                    if inverse_field.ondelete == "cascade":
+                        obj.unlink(cr, user, ids_to_unlink, context=context)
+                    else:
+                        obj.write(cr, user, ids_to_unlink, {self._fields_id: False}, context=context)
+                elif act[0] == 6:
+                    # Must use write() to recompute parent_store structure if needed
+                    obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
+                    ids2 = act[2] or [0]
+                    cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
+                    ids3 = map(lambda x:x[0], cr.fetchall())
+                    obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
         return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
@@ -1286,10 +1290,15 @@ class function(_column):
                 self._symbol_f = type_class._symbol_f
                 self._symbol_set = type_class._symbol_set
 
-    def new(self, **args):
-        # HACK: function fields are tricky to recreate, simply return a copy
-        import copy
-        return copy.copy(self)
+    def new(self, _computed_field=False, **args):
+        if _computed_field:
+            # field is computed, we need an instance of a non-function column
+            type_class = globals()[self._type]
+            return type_class(**args)
+        else:
+            # HACK: function fields are tricky to recreate, simply return a copy
+            import copy
+            return copy.copy(self)
 
     def to_field_args(self):
         args = super(function, self).to_field_args()

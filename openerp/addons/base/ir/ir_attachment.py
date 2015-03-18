@@ -140,7 +140,9 @@ class ir_attachment(osv.osv):
         return fname
 
     def _file_delete(self, cr, uid, fname):
-        count = self.search_count(cr, 1, [('store_fname','=',fname)])
+        # using SQL to include files hidden through unlink or due to record rules
+        cr.execute("SELECT COUNT(*) FROM ir_attachment WHERE store_fname = %s", (fname,))
+        count = cr.fetchone()[0]
         full_path = self._full_path(cr, uid, fname)
         if not count and os.path.exists(full_path):
             try:
@@ -253,7 +255,7 @@ class ir_attachment(osv.osv):
             ima.check(cr, uid, model, mode)
             self.pool[model].check_access_rule(cr, uid, existing_ids, mode, context=context)
         if require_employee:
-            if not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
+            if not uid == SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
                 raise except_orm(_('Access Denied'), _("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):

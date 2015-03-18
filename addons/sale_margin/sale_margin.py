@@ -52,10 +52,7 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = 0
             if line.product_id:
-                if line.purchase_price:
-                    res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.purchase_price*line.product_uos_qty), 2)
-                else:
-                    res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.product_id.standard_price*line.product_uos_qty), 2)
+                res[line.id] = round(line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uos_qty), 2)
         return res
 
     _columns = {

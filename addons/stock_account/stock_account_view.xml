@@ -46,6 +46,9 @@
                 <xpath expr="//button[@name='do_unreserve']" position="after">
                     <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|',('state','&lt;&gt;','done'),('invoice_state','&lt;&gt;','2binvoiced')]}" type="action" class="oe_highlight" groups="base.group_user"/>
                 </xpath>
+                <field name="move_lines" position="attributes">
+                    <attribute name="context">{'default_invoice_state': invoice_state, 'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}</attribute>
+                </field>
                 <xpath expr="//field[@name='move_type']" position="after">
                     <field name="invoice_state" groups="account.group_account_invoice"/>
                 </xpath>

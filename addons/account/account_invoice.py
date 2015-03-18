@@ -643,7 +643,7 @@ class account_invoice(models.Model):
             partner = invoice.partner_id
             if partner.lang:
                 ctx['lang'] = partner.lang
-            for taxe in account_invoice_tax.compute(invoice).values():
+            for taxe in account_invoice_tax.compute(invoice.with_context(ctx)).values():
                 account_invoice_tax.create(taxe)
         # dummy write on self to trigger recomputations
         return self.with_context(ctx).write({'invoice_line': []})
@@ -1098,6 +1098,7 @@ class account_invoice(models.Model):
         values['date_invoice'] = date or fields.Date.context_today(invoice)
         values['state'] = 'draft'
         values['number'] = False
+        values['origin'] = invoice.number
 
         if period_id:
             values['period_id'] = period_id
@@ -1261,7 +1262,7 @@ class account_invoice_line(models.Model):
     uos_id = fields.Many2one('product.uom', string='Unit of Measure',
         ondelete='set null', index=True)
     product_id = fields.Many2one('product.product', string='Product',
-        ondelete='set null', index=True)
+        ondelete='restrict', index=True)
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('type', 'not in', ['view', 'closed'])],
         default=_default_account,
@@ -1348,7 +1349,7 @@ class account_invoice_line(models.Model):
         if type in ('in_invoice', 'in_refund'):
             values['price_unit'] = price_unit or product.standard_price
         else:
-            values['price_unit'] = product.list_price
+            values['price_unit'] = product.lst_price
 
         values['uos_id'] = uom_id or product.uom_id.id
         domain = {'uos_id': [('category_id', '=', product.uom_id.category_id.id)]}

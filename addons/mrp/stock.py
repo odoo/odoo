@@ -251,7 +251,7 @@ class stock_warehouse(osv.osv):
         route_obj = self.pool.get('stock.location.route')
         data_obj = self.pool.get('ir.model.data')
         try:
-            manufacture_route_id = data_obj.get_object_reference(cr, uid, 'stock', 'route_warehouse0_manufacture')[1]
+            manufacture_route_id = data_obj.get_object_reference(cr, uid, 'mrp', 'route_warehouse0_manufacture')[1]
         except:
             manufacture_route_id = route_obj.search(cr, uid, [('name', 'like', _('Manufacture'))], context=context)
             manufacture_route_id = manufacture_route_id and manufacture_route_id[0] or False

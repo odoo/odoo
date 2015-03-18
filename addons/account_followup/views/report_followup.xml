@@ -4,6 +4,7 @@
 <template id="report_followup">
     <t t-call="report.html_container">
         <t t-foreach="ids_to_objects(data['form']['partner_ids'])" t-as="o">
+            <t t-esc="setLang(o.partner_id.lang)"/>
             <t t-call="report.external_layout">
                 <div class="page">
                     <div class="row">

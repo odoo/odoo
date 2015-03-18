@@ -28,7 +28,8 @@ class contactus(http.Controller):
 
     def create_lead(self, request, values, kwargs):
         """ Allow to be overrided """
-        return request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, values, request.context)
+        cr, context = request.cr, request.context
+        return request.registry['crm.lead'].create(cr, SUPERUSER_ID, values, context=dict(context, mail_create_nosubscribe=True))
 
     def preRenderThanks(self, values, kwargs):
         """ Allow to be overrided """
@@ -59,6 +60,9 @@ class contactus(http.Controller):
         post_description = []  # Info to add after the message
         values = {}
 
+        values['medium_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'crm.crm_medium_website')
+        values['section_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
+
         for field_name, field_value in kwargs.items():
             if hasattr(field_value, 'filename'):
                 post_file.append(field_value)
@@ -75,12 +79,6 @@ class contactus(http.Controller):
         if error:
             values = dict(values, error=error, kwargs=kwargs.items())
             return request.website.render(kwargs.get("view_from", "website.contactus"), values)
-
-        try:
-            values['medium_id'] = request.registry['ir.model.data'].get_object_reference(request.cr, SUPERUSER_ID, 'crm', 'crm_tracking_medium_website')[1]
-            values['section_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
-        except ValueError:
-            pass
 
         # description is required, so it is always already initialized
         if post_description:

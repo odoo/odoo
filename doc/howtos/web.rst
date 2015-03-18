@@ -19,7 +19,7 @@ or extend existing business systems of Odoo, see :doc:`backend`.
     * jQuery_
     * `Underscore.js`_
 
-    It also requires an installed Odoo, and Git_.
+    It also requires :ref:`an installed Odoo <setup/install>`, and Git_.
 
 
 A Simple Module

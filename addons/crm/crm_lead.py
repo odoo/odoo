@@ -313,6 +313,7 @@ class crm_lead(format_address, osv.osv):
             values = {
                 'partner_name': partner.parent_id.name if partner.parent_id else partner.name,
                 'contact_name': partner.name if partner.parent_id else False,
+                'title': partner.title and partner.title.id or False,
                 'street': partner.street,
                 'street2': partner.street2,
                 'city': partner.city,
@@ -323,6 +324,7 @@ class crm_lead(format_address, osv.osv):
                 'mobile': partner.mobile,
                 'fax': partner.fax,
                 'zip': partner.zip,
+                'function': partner.function,
             }
         return {'value': values}
 
@@ -330,7 +332,7 @@ class crm_lead(format_address, osv.osv):
         """ When changing the user, also set a section_id or restrict section id
             to the ones user_id is member of. """
         section_id = self._get_default_section_id(cr, uid, user_id=user_id, context=context) or False
-        if user_id and not section_id:
+        if user_id and self.pool['res.users'].has_group(cr, uid, 'base.group_multi_salesteams') and not section_id:
             section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if section_ids:
                 section_id = section_ids[0]

@@ -1077,7 +1077,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
            
             if( this.pos.config.iface_invoicing ){
                 this.add_action_button({
-                        label: 'Invoice',
+                        label: _t('Invoice'),
                         name: 'invoice',
                         icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
                         click: function(){
@@ -1261,6 +1261,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     'comment': _t('There must be at least one product in your order before it can be validated'),
                 });
                 return;
+            }
+
+            var plines = currentOrder.get('paymentLines').models;
+            for (var i = 0; i < plines.length; i++) {
+                if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
+                    this.pos_widget.screen_selector.show_popup('error',{
+                        'message': _t('Negative Bank Payment'),
+                        'comment': _t('You cannot have a negative amount in a Bank payment. Use a cash payment method to return money to the customer.'),
+                    });
+                    return;
+                }
             }
 
             if(!this.is_paid()){

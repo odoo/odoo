@@ -125,18 +125,18 @@ class document_file(osv.osv):
         if vals.get('res_id', False) and vals.get('res_model', False) and not vals.get('partner_id', False):
             vals['partner_id'] = self.__get_partner_id(cr, uid, vals['res_model'], vals['res_id'], context)
         if vals.get('datas', False):
-            vals['file_type'], vals['index_content'] = self._index(cr, uid, vals['datas'].decode('base64'), vals.get('datas_fname', False), None)
+            vals['file_type'], vals['index_content'] = self._index(cr, uid, vals['datas'].decode('base64'), vals.get('datas_fname', False), vals.get('file_type', None))
         return super(document_file, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
         if vals.get('datas', False):
-            vals['file_type'], vals['index_content'] = self._index(cr, uid, vals['datas'].decode('base64'), vals.get('datas_fname', False), None)
+            vals['file_type'], vals['index_content'] = self._index(cr, uid, vals['datas'].decode('base64'), vals.get('datas_fname', False), vals.get('file_type', None))
         return super(document_file, self).write(cr, uid, ids, vals, context)
 
     def _index(self, cr, uid, data, datas_fname, file_type):
-        mime, icont = cntIndex.doIndex(data, datas_fname,  file_type or None, None)
+        mime, icont = cntIndex.doIndex(data, datas_fname, file_type or None, None)
         icont_u = ustr(icont)
         return mime, icont_u
 

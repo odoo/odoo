@@ -61,6 +61,12 @@ def raise_qweb_exception(etype=None, **kw):
         e.qweb['cause'] = original
         raise
 
+def _build_attribute(name, value):
+    value = escape(value)
+    if isinstance(name, unicode): name = name.encode('utf-8')
+    if isinstance(value, unicode): value = value.encode('utf-8')
+    return ' %s="%s"' % (name, value)
+
 class QWebContext(dict):
     def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
         self.cr = cr
@@ -274,8 +280,6 @@ class QWeb(orm.AbstractModel):
                             self, element, attribute_name, attribute_value, qwebcontext)
                         for att, val in attrs:
                             if not val: continue
-                            if not isinstance(val, str):
-                                val = unicode(val).encode('utf-8')
                             generated_attributes += self.render_attribute(element, att, val, qwebcontext)
                         break
                 else:
@@ -340,7 +344,7 @@ class QWeb(orm.AbstractModel):
             return "<%s%s/>" % (name, generated_attributes)
 
     def render_attribute(self, element, name, value, qwebcontext):
-        return ' %s="%s"' % (name, escape(value))
+        return _build_attribute(name, value)
 
     # Attributes
     def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
@@ -414,6 +418,10 @@ class QWeb(orm.AbstractModel):
                     '%s_odd' % varname: False,
                 })
             ru.append(self.render_element(element, template_attributes, generated_attributes, copy_qwebcontext))
+
+        for k in qwebcontext.keys():
+            qwebcontext[k] = copy_qwebcontext[k]
+
         return "".join(ru)
 
     def render_tag_if(self, element, template_attributes, generated_attributes, qwebcontext):
@@ -602,7 +610,7 @@ class FieldConverter(osv.AbstractModel):
         if inherit_branding:
             # add branding attributes
             g_att += ''.join(
-                ' %s="%s"' % (name, escape(value))
+                _build_attribute(name, value)
                 for name, value in self.attributes(
                     cr, uid, field_name, record, options,
                     source_element, g_att, t_att, qweb_context)

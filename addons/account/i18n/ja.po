@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-11-13 11:55+0000\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2014-11-26 04:58+0000\n"
 "Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-14 06:37+0000\n"
-"X-Generator: Launchpad (build 17241)\n"
+"X-Launchpad-Export-Date: 2015-01-22 07:11+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: account
 #: model:email.template,body_html:account.email_template_edi_invoice
@@ -117,7 +117,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1455
+#: code:addons/account/account.py:1468
 #, python-format
 msgid " Centralisation"
 msgstr ""
@@ -166,7 +166,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1848
+#: code:addons/account/account.py:1861
 #, python-format
 msgid "%s (Copy)"
 msgstr ""
@@ -676,7 +676,7 @@ msgstr ""
 "トリーを記録したくない場合、あるいは税金に関連する計算のためにこの期間をロックしたい場合は期間を閉じて下さい。"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:694
+#: code:addons/account/account_bank_statement.py:736
 #, python-format
 msgid "A selected move line was already reconciled."
 msgstr ""
@@ -713,10 +713,10 @@ msgstr "勘定科目タイプ"
 #: field:account.move.line.reconcile.select,account_id:0
 #: field:account.move.line.unreconcile.select,account_id:0
 #: field:account.statement.operation.template,account_id:0
-#: code:addons/account/static/src/js/account_widgets.js:57
-#: code:addons/account/static/src/js/account_widgets.js:63
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:137
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:159
+#: code:addons/account/static/src/js/account_widgets.js:60
+#: code:addons/account/static/src/js/account_widgets.js:66
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:139
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:161
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 #: field:analytic.entries.report,account_id:0
 #: model:ir.model,name:account.model_account_account
@@ -1187,7 +1187,7 @@ msgstr "会計表"
 #. module: account
 #: view:res.partner:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "会計関連の設定は次で管理"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -1413,7 +1413,7 @@ msgid ""
 msgstr "全ての選択した仕訳帳エントリーは検証され、元帳に記帳されます。このことは、それらの会計範囲はもう変更ができなくなることを意味します。"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:347
+#: code:addons/account/account_bank_statement.py:348
 #, python-format
 msgid ""
 "All the account entries lines must be processed in order to close the "
@@ -1480,10 +1480,10 @@ msgstr "常に"
 #: field:account.tax,amount:0
 #: field:account.tax.template,amount:0
 #: xsl:account.transfer:0
-#: code:addons/account/static/src/js/account_widgets.js:100
-#: code:addons/account/static/src/js/account_widgets.js:105
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:136
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:169
+#: code:addons/account/static/src/js/account_widgets.js:103
+#: code:addons/account/static/src/js/account_widgets.js:108
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:138
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:171
 #: field:analytic.entries.report,amount:0
 #: field:cash.box.in,amount:0
 #: field:cash.box.out,amount:0
@@ -1543,8 +1543,8 @@ msgstr "分析"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:113
-#: code:addons/account/static/src/js/account_widgets.js:120
+#: code:addons/account/static/src/js/account_widgets.js:116
+#: code:addons/account/static/src/js/account_widgets.js:123
 #, python-format
 msgid "Analytic Acc."
 msgstr ""
@@ -1728,22 +1728,22 @@ msgstr "適用"
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
 msgid "Apply automatically this fiscal position."
-msgstr ""
+msgstr "この会計ポジションを自動的に適用します。"
 
 #. module: account
 #: help:account.fiscal.position,country_group_id:0
 msgid "Apply only if delivery or invocing country match the group."
-msgstr ""
+msgstr "配送または請求書を送付する国がグループに一致する場合のみ適用します。"
 
 #. module: account
 #: help:account.fiscal.position,country_id:0
 msgid "Apply only if delivery or invoicing country match."
-msgstr ""
+msgstr "配送または請求書を送付する国が一致する場合のみ適用します。"
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
-msgstr ""
+msgstr "取引先がVAT番号を保有する場合に適用します。"
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -1829,7 +1829,7 @@ msgstr "8月"
 #. module: account
 #: field:account.fiscal.position,auto_apply:0
 msgid "Automatic"
-msgstr ""
+msgstr "自動"
 
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
@@ -1849,7 +1849,7 @@ msgstr "自動フォーマット"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Autopost Created Moves"
-msgstr ""
+msgstr "作成された移動を自動ポスト"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -1868,7 +1868,7 @@ msgid "Average Rate"
 msgstr "平均レート"
 
 #. module: account
-#: code:addons/account/account.py:3437
+#: code:addons/account/account.py:3450
 #: code:addons/account/account_bank.py:94
 #, python-format
 msgid "BNK"
@@ -1876,21 +1876,21 @@ msgstr "銀行"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:53
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:54
 #, python-format
 msgid "Back to statements list"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1174
-#: code:addons/account/account_move_line.py:1258
-#: code:addons/account/account_move_line.py:1325
+#: code:addons/account/account_move_line.py:1173
+#: code:addons/account/account_move_line.py:1257
+#: code:addons/account/account_move_line.py:1324
 #, python-format
 msgid "Bad Account!"
 msgstr "勘定科目が不正です"
 
 #. module: account
-#: code:addons/account/account_invoice.py:807
+#: code:addons/account/account_invoice.py:819
 #, python-format
 msgid "Bad Total!"
 msgstr ""
@@ -1964,7 +1964,7 @@ msgstr "貸借一致"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
 #: selection:account.bank.accounts.wizard,account_type:0
-#: code:addons/account/account.py:3058
+#: code:addons/account/account.py:3071
 #, python-format
 msgid "Bank"
 msgstr "銀行"
@@ -2291,7 +2291,7 @@ msgid ""
 msgstr "すでに消し込みされている請求書は %s できないため、最初に未消し込みにする必要があります。請求の払い戻しのみできます。"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1300
+#: code:addons/account/account_move_line.py:1299
 #, python-format
 msgid ""
 "Cannot create an automatic sequence for this piece.\n"
@@ -2300,19 +2300,19 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1541
+#: code:addons/account/account.py:1554
 #, python-format
 msgid "Cannot create move with currency different from .."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1537
+#: code:addons/account/account.py:1550
 #, python-format
 msgid "Cannot create moves for different companies."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:818
+#: code:addons/account/account_invoice.py:830
 #, python-format
 msgid ""
 "Cannot create the invoice.\n"
@@ -2322,9 +2322,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:442
-#: code:addons/account/account_invoice.py:536
-#: code:addons/account/account_invoice.py:555
+#: code:addons/account/account_invoice.py:453
+#: code:addons/account/account_invoice.py:547
+#: code:addons/account/account_invoice.py:566
 #, python-format
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
@@ -2332,7 +2332,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:546
+#: code:addons/account/account_move_line.py:551
 #, python-format
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should "
@@ -2341,7 +2341,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:580
+#: code:addons/account/account_invoice.py:591
 #, python-format
 msgid ""
 "Cannot find any account journal of type \"%s\" for this company, You should "
@@ -2350,7 +2350,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3442
+#: code:addons/account/account.py:3455
 #, python-format
 msgid "Cannot generate an unused journal code."
 msgstr ""
@@ -2367,7 +2367,7 @@ msgstr "事例コード"
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.entries.report,type:0
 #: selection:account.journal,type:0
-#: code:addons/account/account.py:3058
+#: code:addons/account/account.py:3071
 #, python-format
 msgid "Cash"
 msgstr "現金"
@@ -2422,7 +2422,6 @@ msgid "Category"
 msgstr ""
 
 #. module: account
-#: view:account.invoice:account.view_account_invoice_filter
 #: view:account.invoice.report:account.view_account_invoice_report_search
 #: field:account.invoice.report,categ_id:0
 msgid "Category of Product"
@@ -2656,6 +2655,8 @@ msgid ""
 "legally, some entries may be automatically posted when the source document "
 "is validated (Invoices), whatever the status of this field."
 msgstr ""
+"仕訳帳の記入を自動化するには、このボックスをチェックします。元になる文書(例えば請求書)を検証する場合、いくつかの項目は自動記入されるため、それらの状態が"
+"法的に問題ないか注意してください。"
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -2705,19 +2706,12 @@ msgstr "子"
 #. module: account
 #: view:account.tax:account.view_tax_form
 msgid "Children/Sub Taxes"
-msgstr ""
+msgstr "子/副税"
 
 #. module: account
 #: model:ir.model,name:account.model_account_open_closed_fiscalyear
 msgid "Choose Fiscal Year"
 msgstr "会計年度の選択"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:1257
-#, python-format
-msgid "Choose counterpart"
-msgstr ""
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
@@ -2761,7 +2755,7 @@ msgstr "会計年度と期間を閉じる"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:54
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:55
 #, python-format
 msgid "Close the statement"
 msgstr ""
@@ -2956,7 +2950,7 @@ msgid "Complete set of taxes"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:391
+#: code:addons/account/account_invoice.py:402
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -3006,9 +3000,9 @@ msgid "Configuration Error"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3518
-#: code:addons/account/account_bank_statement.py:329
-#: code:addons/account/account_invoice.py:564
+#: code:addons/account/account.py:3531
+#: code:addons/account/account_bank_statement.py:330
+#: code:addons/account/account_invoice.py:575
 #, python-format
 msgid "Configuration Error!"
 msgstr "設定エラー"
@@ -3083,7 +3077,7 @@ msgstr "確認済"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:499
+#: code:addons/account/static/src/js/account_widgets.js:534
 #, python-format
 msgid "Congrats, you're all done !"
 msgstr ""
@@ -3144,12 +3138,12 @@ msgstr "相手方"
 #. module: account
 #: field:account.fiscal.position,country_id:0
 msgid "Countries"
-msgstr ""
+msgstr "国"
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
 msgid "Country Group"
-msgstr ""
+msgstr "国別グループ"
 
 #. module: account
 #: field:account.invoice.report,country_id:0
@@ -3497,7 +3491,7 @@ msgstr "通貨"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
-#: code:addons/account/account.py:1496
+#: code:addons/account/account.py:1509
 #, python-format
 msgid "Currency Adjustment"
 msgstr "通貨調整"
@@ -3544,7 +3538,7 @@ msgstr ""
 #: view:account.config.settings:account.view_account_config_settings
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice.report:account.view_account_invoice_report_search
-#: code:addons/account/account_invoice.py:354
+#: code:addons/account/account_invoice.py:365
 #, python-format
 msgid "Customer"
 msgstr "顧客"
@@ -3628,8 +3622,8 @@ msgstr "顧客"
 #: selection:account.vat.declaration,filter:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:132
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:162
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:134
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:164
 #: field:analytic.entries.report,date:0
 #: view:website:account.report_analyticjournal
 #: view:website:account.report_generalledger
@@ -3863,7 +3857,7 @@ msgstr "キャッシュレジスタから現金を取り出した理由を説明
 #: field:account.tax.code,info:0
 #: view:account.tax.code.template:account.view_tax_code_template_form
 #: field:account.tax.code.template,info:0
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:135
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:137
 #: field:analytic.entries.report,name:0
 #: field:report.invoice.created,name:0
 #: view:website:account.report_invoice_document
@@ -4047,7 +4041,7 @@ msgstr "期日"
 #. openerp-web
 #: field:account.invoice,date_due:0
 #: field:account.invoice.report,date_due:0
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:163
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:165
 #: field:report.invoice.created,date_due:0
 #, python-format
 msgid "Due Date"
@@ -4065,6 +4059,11 @@ msgid "Due Month"
 msgstr ""
 
 #. module: account
+#: model:ir.actions.report.xml,name:account.action_report_print_overdue
+msgid "Due Payments"
+msgstr ""
+
+#. module: account
 #: field:account.move.line,date_maturity:0
 msgid "Due date"
 msgstr "期日"
@@ -4075,13 +4074,13 @@ msgid "Duration"
 msgstr "期間"
 
 #. module: account
-#: code:addons/account/account.py:3184
+#: code:addons/account/account.py:3197
 #, python-format
 msgid "ECNJ"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3182
+#: code:addons/account/account.py:3195
 #, python-format
 msgid "EXJ"
 msgstr ""
@@ -4098,7 +4097,7 @@ msgstr "有効日"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:503
+#: code:addons/account/static/src/js/account_widgets.js:538
 #, python-format
 msgid "Efficiency at its finest"
 msgstr ""
@@ -4262,7 +4261,7 @@ msgid "Entries Sorted by"
 msgstr "エントリー並び順"
 
 #. module: account
-#: code:addons/account/account_move_line.py:965
+#: code:addons/account/account_move_line.py:964
 #, python-format
 msgid "Entries are not of the same account or already reconciled ! "
 msgstr "エントリーは同じアカウントのものでないか、または既に消し込み済です。 "
@@ -4274,7 +4273,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:148
-#: code:addons/account/account_move_line.py:1070
+#: code:addons/account/account_move_line.py:1069
 #, python-format
 msgid "Entries: "
 msgstr "エントリー： "
@@ -4285,7 +4284,7 @@ msgid "Entry"
 msgstr "エントリー"
 
 #. module: account
-#: code:addons/account/account_move_line.py:943
+#: code:addons/account/account_move_line.py:942
 #, python-format
 msgid "Entry \"%s\" is not valid !"
 msgstr "エントリー %s は有効ではありません。"
@@ -4319,7 +4318,7 @@ msgid "Entry Subscription"
 msgstr "サブスクリプションエントリー"
 
 #. module: account
-#: code:addons/account/account_move_line.py:967
+#: code:addons/account/account_move_line.py:966
 #, python-format
 msgid "Entry is already reconciled."
 msgstr "エントリは既に消込済みです。"
@@ -4336,8 +4335,8 @@ msgid "Equity"
 msgstr "株式"
 
 #. module: account
-#: code:addons/account/account_move_line.py:965
-#: code:addons/account/account_move_line.py:970
+#: code:addons/account/account_move_line.py:964
+#: code:addons/account/account_move_line.py:969
 #, python-format
 msgid "Error"
 msgstr "エラー"
@@ -4351,38 +4350,38 @@ msgstr "エラー"
 #: code:addons/account/account.py:1080
 #: code:addons/account/account.py:1082
 #: code:addons/account/account.py:1124
-#: code:addons/account/account.py:1294
-#: code:addons/account/account.py:1308
-#: code:addons/account/account.py:1332
-#: code:addons/account/account.py:1339
-#: code:addons/account/account.py:1537
-#: code:addons/account/account.py:1541
-#: code:addons/account/account.py:1628
-#: code:addons/account/account.py:2315
-#: code:addons/account/account.py:2629
-#: code:addons/account/account.py:3442
+#: code:addons/account/account.py:1307
+#: code:addons/account/account.py:1321
+#: code:addons/account/account.py:1345
+#: code:addons/account/account.py:1352
+#: code:addons/account/account.py:1550
+#: code:addons/account/account.py:1554
+#: code:addons/account/account.py:1641
+#: code:addons/account/account.py:2328
+#: code:addons/account/account.py:2642
+#: code:addons/account/account.py:3455
 #: code:addons/account/account_analytic_line.py:95
 #: code:addons/account/account_analytic_line.py:104
-#: code:addons/account/account_bank_statement.py:307
-#: code:addons/account/account_bank_statement.py:332
-#: code:addons/account/account_bank_statement.py:347
-#: code:addons/account/account_bank_statement.py:422
-#: code:addons/account/account_bank_statement.py:686
-#: code:addons/account/account_bank_statement.py:694
-#: code:addons/account/account_cash_statement.py:269
-#: code:addons/account/account_cash_statement.py:313
-#: code:addons/account/account_cash_statement.py:318
-#: code:addons/account/account_invoice.py:785
-#: code:addons/account/account_invoice.py:818
-#: code:addons/account/account_invoice.py:984
-#: code:addons/account/account_move_line.py:594
-#: code:addons/account/account_move_line.py:942
-#: code:addons/account/account_move_line.py:967
-#: code:addons/account/account_move_line.py:972
-#: code:addons/account/account_move_line.py:1221
-#: code:addons/account/account_move_line.py:1235
-#: code:addons/account/account_move_line.py:1237
-#: code:addons/account/account_move_line.py:1271
+#: code:addons/account/account_bank_statement.py:308
+#: code:addons/account/account_bank_statement.py:333
+#: code:addons/account/account_bank_statement.py:348
+#: code:addons/account/account_bank_statement.py:428
+#: code:addons/account/account_bank_statement.py:728
+#: code:addons/account/account_bank_statement.py:736
+#: code:addons/account/account_cash_statement.py:271
+#: code:addons/account/account_cash_statement.py:315
+#: code:addons/account/account_cash_statement.py:320
+#: code:addons/account/account_invoice.py:797
+#: code:addons/account/account_invoice.py:830
+#: code:addons/account/account_invoice.py:996
+#: code:addons/account/account_move_line.py:599
+#: code:addons/account/account_move_line.py:941
+#: code:addons/account/account_move_line.py:966
+#: code:addons/account/account_move_line.py:971
+#: code:addons/account/account_move_line.py:1220
+#: code:addons/account/account_move_line.py:1234
+#: code:addons/account/account_move_line.py:1236
+#: code:addons/account/account_move_line.py:1270
 #: code:addons/account/report/common_report_header.py:92
 #: code:addons/account/wizard/account_change_currency.py:38
 #: code:addons/account/wizard/account_change_currency.py:59
@@ -4498,7 +4497,7 @@ msgstr "拡張フィルタ…"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:510
+#: code:addons/account/static/src/js/account_widgets.js:545
 #, python-format
 msgid "Fast reconciler"
 msgstr ""
@@ -4521,7 +4520,7 @@ msgstr "キャッシュレジスタに現金を入れる場合はこのフォー
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:99
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:101
 #, python-format
 msgid "Filter"
 msgstr ""
@@ -4652,6 +4651,11 @@ msgid "Fiscal Position"
 msgstr "会計ポジション"
 
 #. module: account
+#: view:website:account.report_invoice_document
+msgid "Fiscal Position Remark:"
+msgstr ""
+
+#. module: account
 #: view:account.fiscal.position.template:account.view_account_position_template_form
 #: view:account.fiscal.position.template:account.view_account_position_template_search
 #: field:account.fiscal.position.template,name:0
@@ -4663,11 +4667,6 @@ msgstr "会計ポジションテンプレート"
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
 msgstr "会計ポジションテンプレート"
-
-#. module: account
-#: view:website:account.report_invoice_document
-msgid "Fiscal Position:"
-msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
@@ -4859,7 +4858,7 @@ msgid "Foreign Balance"
 msgstr "国外残高"
 
 #. module: account
-#: code:addons/account/account_invoice.py:103
+#: code:addons/account/account_invoice.py:105
 #, python-format
 msgid "Free Reference"
 msgstr "自由参照"
@@ -5032,7 +5031,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:714
+#: code:addons/account/account_invoice.py:726
 #, python-format
 msgid "Global taxes defined, but they are not in invoice lines !"
 msgstr "全体的な税金は定義されていますが、請求書行にそれらが存在しません。"
@@ -5045,11 +5044,11 @@ msgstr "次の取引先へ"
 #. module: account
 #: code:addons/account/account.py:947
 #: code:addons/account/account.py:1040
-#: code:addons/account/account_invoice.py:443
-#: code:addons/account/account_invoice.py:537
-#: code:addons/account/account_invoice.py:556
-#: code:addons/account/account_invoice.py:581
-#: code:addons/account/account_move_line.py:547
+#: code:addons/account/account_invoice.py:454
+#: code:addons/account/account_invoice.py:548
+#: code:addons/account/account_invoice.py:567
+#: code:addons/account/account_invoice.py:592
+#: code:addons/account/account_move_line.py:552
 #, python-format
 msgid "Go to the configuration panel"
 msgstr ""
@@ -5252,7 +5251,7 @@ msgid "Icon"
 msgstr "アイコン"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:422
+#: code:addons/account/account_bank_statement.py:428
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
 msgstr ""
@@ -5268,7 +5267,7 @@ msgstr ""
 msgid ""
 "If checked, the entry won't be created if the entry date is not included "
 "into the selected period"
-msgstr ""
+msgstr "チェックすると、選択された期間に項目の日付が含まれない場合は作成しません。"
 
 #. module: account
 #: help:account.account.template,nocreate:0
@@ -5459,6 +5458,13 @@ msgid "In dispute"
 msgstr "係争中"
 
 #. module: account
+#: code:addons/account/wizard/account_fiscalyear_close_state.py:54
+#, python-format
+msgid ""
+"In order to close a fiscalyear, you must first post related journal entries."
+msgstr ""
+
+#. module: account
 #: code:addons/account/wizard/account_period_close.py:52
 #, python-format
 msgid ""
@@ -5466,7 +5472,7 @@ msgid ""
 msgstr "期間を閉じるためには、まず、関連する仕訳帳エントリーを記帳する必要があります。"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:430
+#: code:addons/account/account_bank_statement.py:436
 #, python-format
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete "
@@ -5474,7 +5480,7 @@ msgid ""
 msgstr "銀行取引明細書行を削除するには、最初に関連する仕訳項目の削除をキャンセルしなければなりません。"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:390
+#: code:addons/account/account_bank_statement.py:392
 #, python-format
 msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
@@ -5563,14 +5569,14 @@ msgid ""
 msgstr "あなたの国に基づき、あなたの会社の会計ニーズに可能な限り近くマッチする、ローカル化会計表をインストールします。"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:644
-#: code:addons/account/account_bank_statement.py:648
+#: code:addons/account/account_bank_statement.py:686
+#: code:addons/account/account_bank_statement.py:690
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:501
+#: code:addons/account/account_invoice.py:512
 #: code:addons/account/wizard/account_invoice_refund.py:153
 #, python-format
 msgid "Insufficient Data!"
@@ -5628,8 +5634,9 @@ msgid "IntraCom"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:389
-#: code:addons/account/account_bank_statement.py:429
+#: code:addons/account/account_bank_statement.py:391
+#: code:addons/account/account_bank_statement.py:435
+#: code:addons/account/wizard/account_fiscalyear_close_state.py:54
 #: code:addons/account/wizard/account_period_close.py:52
 #, python-format
 msgid "Invalid Action!"
@@ -5653,7 +5660,7 @@ msgstr "反転分析残高 -"
 #: view:account.invoice:account.view_account_invoice_filter
 #: view:account.invoice.report:account.view_account_invoice_report_search
 #: field:account.move.line,invoice:0
-#: code:addons/account/account_invoice.py:1008
+#: code:addons/account/account_invoice.py:1020
 #: model:ir.model,name:account.model_account_invoice
 #: model:res.request.link,name:account.req_link_invoice
 #: view:website:account.report_invoice_document
@@ -5746,7 +5753,7 @@ msgid "Invoice is already reconciled."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:565
+#: code:addons/account/account_invoice.py:576
 #, python-format
 msgid "Invoice line account's company and invoice's company does not match."
 msgstr ""
@@ -5762,13 +5769,13 @@ msgid "Invoice paid"
 msgstr "請求書支払い"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1183
+#: code:addons/account/account_invoice.py:1195
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1622
+#: code:addons/account/account_invoice.py:1642
 #, python-format
 msgid "Invoice sent"
 msgstr ""
@@ -5886,7 +5893,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:42
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "It took you"
 msgstr ""
@@ -5941,7 +5948,7 @@ msgstr "1月"
 #: field:account.move.bank.reconcile,journal_id:0
 #: view:account.move.line:account.view_account_move_line_filter
 #: field:account.move.line,journal_id:0
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:160
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:162
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 #: field:analytic.entries.report,journal_id:0
 #: model:ir.actions.report.xml,name:account.action_report_account_journal
@@ -6041,7 +6048,7 @@ msgid "Journal Item"
 msgstr "仕訳項目"
 
 #. module: account
-#: code:addons/account/account_move_line.py:893
+#: code:addons/account/account_move_line.py:892
 #, python-format
 msgid ""
 "Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not "
@@ -6049,7 +6056,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:889
+#: code:addons/account/account_move_line.py:888
 #, python-format
 msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
 msgstr ""
@@ -6058,7 +6065,7 @@ msgstr ""
 #: view:account.bank.statement:account.view_bank_statement_form
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_tree
-#: code:addons/account/account_bank_statement.py:398
+#: code:addons/account/account_bank_statement.py:404
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
 #: model:ir.actions.act_window,name:account.act_account_move_to_account_move_line_open
 #: model:ir.actions.act_window,name:account.action_account_items
@@ -6221,8 +6228,8 @@ msgstr "検証（請求書）日の期間を使うために空のままにしま
 #. module: account
 #. openerp-web
 #: field:account.statement.operation.template,label:0
-#: code:addons/account/static/src/js/account_widgets.js:72
-#: code:addons/account/static/src/js/account_widgets.js:77
+#: code:addons/account/static/src/js/account_widgets.js:75
+#: code:addons/account/static/src/js/account_widgets.js:80
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 #, python-format
@@ -6509,8 +6516,8 @@ msgid "List of all the taxes that have to be installed by the wizard"
 msgstr "ウィザードによりインストールされるべき全ての税金のリスト"
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:304
-#: code:addons/account/account_cash_statement.py:311
+#: code:addons/account/account_cash_statement.py:306
+#: code:addons/account/account_cash_statement.py:313
 #, python-format
 msgid "Loss"
 msgstr ""
@@ -6527,7 +6534,7 @@ msgid "Loss Exchange Rate Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3185
+#: code:addons/account/account.py:3198
 #, python-format
 msgid "MISC"
 msgstr "その他"
@@ -6617,7 +6624,7 @@ msgstr ""
 "その上でパートナを定義して下さい。"
 
 #. module: account
-#: code:addons/account/account.py:2315
+#: code:addons/account/account.py:2328
 #, python-format
 msgid ""
 "Maturity date of entry line generated by model line '%s' of model '%s' is "
@@ -6667,7 +6674,7 @@ msgid "Miscellaneous"
 msgstr "その他"
 
 #. module: account
-#: code:addons/account/account.py:3177
+#: code:addons/account/account.py:3190
 #, python-format
 msgid "Miscellaneous Journal"
 msgstr "その他の仕訳帳"
@@ -6749,7 +6756,7 @@ msgid "Move bank reconcile"
 msgstr "銀行消し込みの移動"
 
 #. module: account
-#: code:addons/account/account.py:1407
+#: code:addons/account/account.py:1420
 #, python-format
 msgid ""
 "Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)"
@@ -6761,7 +6768,7 @@ msgid "Move line reconcile select"
 msgstr "消し込み選択行の移動"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1233
+#: code:addons/account/account_move_line.py:1232
 #, python-format
 msgid "Move name (id): %s (%s)"
 msgstr "移動名（ID）：%s（%s）"
@@ -6803,8 +6810,8 @@ msgstr "生成仕訳名称"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:1745
-#: code:addons/account/static/src/js/account_widgets.js:1751
+#: code:addons/account/static/src/js/account_widgets.js:1789
+#: code:addons/account/static/src/js/account_widgets.js:1795
 #, python-format
 msgid "Never"
 msgstr ""
@@ -6812,7 +6819,7 @@ msgstr ""
 #. module: account
 #. openerp-web
 #: selection:account.bank.statement,state:0
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:111
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:113
 #, python-format
 msgid "New"
 msgstr "新規"
@@ -6865,10 +6872,10 @@ msgid "Next supplier invoice number"
 msgstr "次の仕入先請求書番号"
 
 #. module: account
-#: code:addons/account/account.py:2303
-#: code:addons/account/account_invoice.py:92
-#: code:addons/account/account_invoice.py:662
-#: code:addons/account/account_move_line.py:192
+#: code:addons/account/account.py:2316
+#: code:addons/account/account_invoice.py:94
+#: code:addons/account/account_invoice.py:673
+#: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "No Analytic Journal!"
 msgstr ""
@@ -6903,19 +6910,19 @@ msgid "No Follow-up"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:787
+#: code:addons/account/account_invoice.py:799
 #, python-format
 msgid "No Invoice Lines!"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1299
+#: code:addons/account/account_invoice.py:1311
 #, python-format
 msgid "No Partner Defined!"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1300
+#: code:addons/account/account_move_line.py:1299
 #, python-format
 msgid "No Piece Number!"
 msgstr ""
@@ -6938,14 +6945,14 @@ msgid "No period found on the invoice."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1271
+#: code:addons/account/account_move_line.py:1270
 #, python-format
 msgid "No period found or more than one period found for the given date."
 msgstr "所定の日付のために期間が見つからないか、複数の期間が見つかりました。"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:120
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:122
 #, python-format
 msgid "No result matching '"
 msgstr ""
@@ -7090,7 +7097,7 @@ msgid "OK"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3186
+#: code:addons/account/account.py:3199
 #, python-format
 msgid "OPEJ"
 msgstr ""
@@ -7122,15 +7129,15 @@ msgid "Only One Chart Template Available"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3379
-#: code:addons/account/res_config.py:310
+#: code:addons/account/account.py:3392
+#: code:addons/account/res_config.py:305
 #, python-format
 msgid "Only administrators can change the settings"
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:504
+#: code:addons/account/static/src/js/account_widgets.js:539
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
 msgstr ""
@@ -7178,8 +7185,8 @@ msgstr "仕訳帳を開く"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:1628
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:193
+#: code:addons/account/static/src/js/account_widgets.js:1669
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:195
 #, python-format
 msgid "Open balance"
 msgstr ""
@@ -7230,7 +7237,7 @@ msgstr "期初仕訳収益勘定"
 
 #. module: account
 #: field:account.fiscalyear.close,journal_id:0
-#: code:addons/account/account.py:3178
+#: code:addons/account/account.py:3191
 #, python-format
 msgid "Opening Entries Journal"
 msgstr "期初仕訳帳"
@@ -7246,7 +7253,7 @@ msgid "Opening Entries Reconciliation"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1139
+#: code:addons/account/account_move_line.py:1138
 #, python-format
 msgid ""
 "Opening Entries have already been generated.  Please run \"Cancel Closing "
@@ -7318,7 +7325,6 @@ msgid "Outgoing Currencies Rate"
 msgstr "仕向為替レート"
 
 #. module: account
-#: model:ir.actions.report.xml,name:account.action_report_print_overdue
 #: view:res.company:account.view_company_inherit_form
 msgid "Overdue Payments"
 msgstr "滞納"
@@ -7438,8 +7444,8 @@ msgstr "部分消込エントリ"
 #: field:account.move,partner_id:0
 #: view:account.move.line:account.view_account_move_line_filter
 #: field:account.move.line,partner_id:0
-#: code:addons/account/static/src/js/account_widgets.js:864
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:133
+#: code:addons/account/static/src/js/account_widgets.js:913
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:135
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 #: field:analytic.entries.report,partner_id:0
 #: model:ir.model,name:account.model_res_partner
@@ -7552,8 +7558,8 @@ msgstr "買掛金勘定"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:300
-#: code:addons/account/report/account_partner_ledger.py:275
+#: code:addons/account/report/account_partner_balance.py:253
+#: code:addons/account/report/account_partner_ledger.py:276
 #: view:website:account.report_agedpartnerbalance
 #, python-format
 msgid "Payable Accounts"
@@ -7712,7 +7718,7 @@ msgstr ""
 #: field:account.subscription,period_nbr:0
 #: field:account.tax.chart,period_id:0
 #: field:account.treasury.report,period_id:0
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:161
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:163
 #: field:validate.account.move,period_ids:0
 #, python-format
 msgid "Period"
@@ -7821,31 +7827,31 @@ msgid "Please check that the field 'Journal' is set on the Bank Statement"
 msgstr "銀行取引明細書の仕訳欄が設定されていることを確認"
 
 #. module: account
-#: code:addons/account/account_invoice.py:787
+#: code:addons/account/account_invoice.py:799
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "いくらかの請求書行を作成して下さい。"
 
 #. module: account
-#: code:addons/account/account.py:1308
+#: code:addons/account/account.py:1321
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:785
+#: code:addons/account/account_invoice.py:797
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr "この請求書と関連する仕訳帳上に順序を定義して下さい。"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:329
+#: code:addons/account/account_bank_statement.py:330
 #, python-format
 msgid "Please verify that an account is defined in the journal."
 msgstr "アカウントが仕訳帳に定義されていることを確認して下さい。"
 
 #. module: account
-#: code:addons/account/account_invoice.py:807
+#: code:addons/account/account_invoice.py:819
 #, python-format
 msgid ""
 "Please verify the price of the invoice!\n"
@@ -8023,8 +8029,8 @@ msgid "Products Quantity"
 msgstr "製品数量"
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:304
-#: code:addons/account/account_cash_statement.py:316
+#: code:addons/account/account_cash_statement.py:306
+#: code:addons/account/account_cash_statement.py:318
 #, python-format
 msgid "Profit"
 msgstr ""
@@ -8109,7 +8115,7 @@ msgid "Purchase"
 msgstr "仕入"
 
 #. module: account
-#: code:addons/account/account.py:3174
+#: code:addons/account/account.py:3187
 #, python-format
 msgid "Purchase Journal"
 msgstr "仕入仕訳帳"
@@ -8120,7 +8126,7 @@ msgid "Purchase Refund"
 msgstr "購買返金"
 
 #. module: account
-#: code:addons/account/account.py:3176
+#: code:addons/account/account.py:3189
 #, python-format
 msgid "Purchase Refund Journal"
 msgstr "仕入返金仕訳帳"
@@ -8131,7 +8137,7 @@ msgid "Purchase Tax"
 msgstr "購買税"
 
 #. module: account
-#: code:addons/account/account.py:3369
+#: code:addons/account/account.py:3382
 #, python-format
 msgid "Purchase Tax %.2f%%"
 msgstr "購買税 %.2f%%"
@@ -8244,8 +8250,8 @@ msgstr "売掛金"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:298
-#: code:addons/account/report/account_partner_ledger.py:273
+#: code:addons/account/report/account_partner_balance.py:251
+#: code:addons/account/report/account_partner_ledger.py:274
 #: view:website:account.report_agedpartnerbalance
 #, python-format
 msgid "Receivable Accounts"
@@ -8261,8 +8267,8 @@ msgstr "売掛金"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:302
-#: code:addons/account/report/account_partner_ledger.py:277
+#: code:addons/account/report/account_partner_balance.py:255
+#: code:addons/account/report/account_partner_ledger.py:278
 #: view:website:account.report_agedpartnerbalance
 #, python-format
 msgid "Receivable and Payable Accounts"
@@ -8345,7 +8351,7 @@ msgstr "消し込み済取引"
 #: view:account.move.line:account.view_move_line_form
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
 #: view:account.move.line.reconcile.select:account.view_account_move_line_reconcile_select
-#: code:addons/account/static/src/js/account_widgets.js:26
+#: code:addons/account/static/src/js/account_widgets.js:28
 #: code:addons/account/wizard/account_move_line_reconcile_select.py:45
 #: model:ir.ui.menu,name:account.periodical_processing_reconciliation
 #, python-format
@@ -8443,13 +8449,18 @@ msgstr "この請求書が生成されたドキュメントへの参照"
 #. module: account
 #: field:account.invoice,name:0
 msgid "Reference/Description"
+msgstr "参照/内容"
+
+#. module: account
+#: view:website:account.report_invoice_document
+msgid "Reference:"
 msgstr ""
 
 #. module: account
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 #: view:account.invoice.report:account.view_account_invoice_report_search
-#: code:addons/account/account_invoice.py:1010
+#: code:addons/account/account_invoice.py:1022
 #: view:website:account.report_invoice_document
 #, python-format
 msgid "Refund"
@@ -8465,7 +8476,7 @@ msgstr "返金基本コード"
 #: field:account.tax,ref_base_sign:0
 #: field:account.tax.template,ref_base_sign:0
 msgid "Refund Base Code Sign"
-msgstr ""
+msgstr "返金基本コード符号"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -8504,7 +8515,7 @@ msgstr "返金税コード"
 #: field:account.tax,ref_tax_sign:0
 #: field:account.tax.template,ref_tax_sign:0
 msgid "Refund Tax Code Sign"
-msgstr ""
+msgstr "返金税コード符号"
 
 #. module: account
 #: help:account.invoice.refund,filter_refund:0
@@ -8605,7 +8616,7 @@ msgstr "ドラフトにリセット"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:169
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:171
 #: field:report.invoice.created,residual:0
 #, python-format
 msgid "Residual"
@@ -8687,13 +8698,13 @@ msgid "Running Subscriptions"
 msgstr "有効なサブスクリプション"
 
 #. module: account
-#: code:addons/account/account.py:3181
+#: code:addons/account/account.py:3194
 #, python-format
 msgid "SAJ"
 msgstr "SAJ"
 
 #. module: account
-#: code:addons/account/account.py:3183
+#: code:addons/account/account.py:3196
 #, python-format
 msgid "SCNJ"
 msgstr ""
@@ -8748,13 +8759,13 @@ msgid "Sales"
 msgstr "売上"
 
 #. module: account
-#: code:addons/account/account.py:3173
+#: code:addons/account/account.py:3186
 #, python-format
 msgid "Sales Journal"
 msgstr "売上仕訳帳"
 
 #. module: account
-#: code:addons/account/account.py:3175
+#: code:addons/account/account.py:3188
 #, python-format
 msgid "Sales Refund Journal"
 msgstr "売上返金仕訳帳"
@@ -8763,11 +8774,6 @@ msgstr "売上返金仕訳帳"
 #: field:wizard.multi.charts.accounts,sale_tax_rate:0
 msgid "Sales Tax(%)"
 msgstr "消費税（売上）（%）"
-
-#. module: account
-#: view:account.invoice.report:account.view_account_invoice_report_search
-msgid "Sales Team"
-msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
@@ -8922,7 +8928,7 @@ msgstr "年度末エントリー仕訳帳のために削除したいエントリ
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:926
+#: code:addons/account/static/src/js/account_widgets.js:975
 #, python-format
 msgid "Select Partner"
 msgstr ""
@@ -8978,6 +8984,8 @@ msgid ""
 "that you should have your last line with the type 'Balance' to ensure that "
 "the whole amount will be treated."
 msgstr ""
+"ここでは支払条件に関連した評価の種類を選択します。\r\n"
+"支払総額の処理を確実にするため、最後の行は残高にしてください。"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:account.account_analytic_cost_ledger_journal_view
@@ -9153,6 +9161,13 @@ msgid "Shortcut"
 msgstr "ショートカット"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
+#, python-format
+msgid "Show more... ("
+msgstr ""
+
+#. module: account
 #: help:account.partner.reconcile.process,progress:0
 msgid ""
 "Shows you the progress made today on the reconciliation process. Given by \n"
@@ -9182,7 +9197,7 @@ msgid "Smallest Text"
 msgstr "最小のテキスト"
 
 #. module: account
-#: code:addons/account/account_move_line.py:972
+#: code:addons/account/account_move_line.py:971
 #, python-format
 msgid "Some entries are already reconciled."
 msgstr ""
@@ -9339,7 +9354,7 @@ msgid "Statement"
 msgstr "取引明細書"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:351
+#: code:addons/account/account_bank_statement.py:352
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
 msgstr ""
@@ -9446,7 +9461,7 @@ msgstr ""
 #: view:account.config.settings:account.view_account_config_settings
 #: view:account.invoice:account.invoice_supplier_form
 #: view:account.invoice.report:account.view_account_invoice_report_search
-#: code:addons/account/account_invoice.py:356
+#: code:addons/account/account_invoice.py:367
 #, python-format
 msgid "Supplier"
 msgstr "仕入先"
@@ -9455,7 +9470,7 @@ msgstr "仕入先"
 #: view:account.invoice:account.invoice_supplier_form
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
-#: code:addons/account/account_invoice.py:1009
+#: code:addons/account/account_invoice.py:1021
 #: selection:report.invoice.created,type:0
 #: view:website:account.report_invoice_document
 #, python-format
@@ -9481,7 +9496,7 @@ msgstr "仕入先支払条件"
 #. module: account
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
-#: code:addons/account/account_invoice.py:1011
+#: code:addons/account/account_invoice.py:1023
 #: selection:report.invoice.created,type:0
 #: view:website:account.report_invoice_document
 #, python-format
@@ -9523,7 +9538,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:511
+#: code:addons/account/static/src/js/account_widgets.js:546
 #, python-format
 msgid "Take on average less than 5 seconds to reconcile a transaction."
 msgstr ""
@@ -9575,8 +9590,8 @@ msgstr ""
 #: field:account.move.line,account_tax_id:0
 #: field:account.statement.operation.template,tax_id:0
 #: view:account.tax:account.view_account_tax_search
-#: code:addons/account/static/src/js/account_widgets.js:85
-#: code:addons/account/static/src/js/account_widgets.js:91
+#: code:addons/account/static/src/js/account_widgets.js:88
+#: code:addons/account/static/src/js/account_widgets.js:94
 #: model:ir.model,name:account.model_account_tax
 #: view:website:account.report_invoice_document
 #: view:website:account.report_salepurchasejournal
@@ -9585,7 +9600,7 @@ msgid "Tax"
 msgstr "税"
 
 #. module: account
-#: code:addons/account/account.py:3366
+#: code:addons/account/account.py:3379
 #, python-format
 msgid "Tax %.2f%%"
 msgstr "税金 %.2f%%"
@@ -9746,7 +9761,7 @@ msgid "Tax Use In"
 msgstr "税金の使用"
 
 #. module: account
-#: code:addons/account/account_invoice.py:717
+#: code:addons/account/account_invoice.py:729
 #, python-format
 msgid ""
 "Tax base different!\n"
@@ -9810,7 +9825,7 @@ msgid "Taxes Report"
 msgstr "税レポート"
 
 #. module: account
-#: code:addons/account/account_invoice.py:720
+#: code:addons/account/account_invoice.py:732
 #, python-format
 msgid ""
 "Taxes are missing!\n"
@@ -9877,7 +9892,7 @@ msgstr "条件"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:42
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "That's on average"
 msgstr ""
@@ -9906,19 +9921,19 @@ msgid "The account basis of the tax declaration."
 msgstr "税申告の会計基準"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:332
+#: code:addons/account/account_bank_statement.py:333
 #, python-format
 msgid "The account entries lines are not in valid state."
 msgstr "アカウントエントリー行は有効な状態ではありません。"
 
 #. module: account
-#: code:addons/account/account_move_line.py:970
+#: code:addons/account/account_move_line.py:969
 #, python-format
 msgid "The account is not defined to be reconciled !"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1116
+#: code:addons/account/account_move_line.py:1115
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed."
 msgstr ""
@@ -9958,7 +9973,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:686
+#: code:addons/account/account_bank_statement.py:728
 #, python-format
 msgid "The bank statement line was already reconciled."
 msgstr "銀行取引明細書は一致しています。"
@@ -10126,7 +10141,7 @@ msgid "The partner reference of this invoice."
 msgstr "この請求書の取引先参照"
 
 #. module: account
-#: code:addons/account/account_invoice.py:502
+#: code:addons/account/account_invoice.py:513
 #, python-format
 msgid "The payment term of supplier does not have a payment term line."
 msgstr ""
@@ -10170,7 +10185,7 @@ msgid ""
 msgstr "選択した仕訳のアカウントは第２の通貨の入力を要求しています。アカウントの第２通貨を削除するか、仕訳で多通貨ビューを選択して下さい。"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1379
+#: code:addons/account/account_invoice.py:1391
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -10204,7 +10219,7 @@ msgstr ""
 "となります。"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:308
+#: code:addons/account/account_bank_statement.py:309
 #, python-format
 msgid ""
 "The statement balance is incorrect !\n"
@@ -10240,19 +10255,19 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:313
+#: code:addons/account/account_cash_statement.py:315
 #, python-format
 msgid "There is no Loss Account on the journal %s."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:318
+#: code:addons/account/account_cash_statement.py:320
 #, python-format
 msgid "There is no Profit Account on the journal %s."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1443
+#: code:addons/account/account.py:1456
 #, python-format
 msgid ""
 "There is no default credit account defined \n"
@@ -10260,7 +10275,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1436
+#: code:addons/account/account.py:1449
 #, python-format
 msgid ""
 "There is no default debit account defined \n"
@@ -10288,7 +10303,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2629
+#: code:addons/account/account.py:2642
 #, python-format
 msgid "There is no parent code for the template account."
 msgstr ""
@@ -10716,7 +10731,7 @@ msgstr "このウィザードは特定の仕訳帳と期間の全ての仕訳帳
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
 msgid "Tip : Hit ctrl-enter to validate the whole sheet."
 msgstr ""
@@ -10754,8 +10769,8 @@ msgid "To Review"
 msgstr "レビュー"
 
 #. module: account
-#: code:addons/account/account_move_line.py:880
-#: code:addons/account/account_move_line.py:938
+#: code:addons/account/account_move_line.py:879
+#: code:addons/account/account_move_line.py:937
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
@@ -10765,7 +10780,7 @@ msgstr ""
 #: view:account.analytic.line:account.view_account_analytic_line_tree
 #: view:account.bank.statement:account.view_bank_statement_form2
 #: field:account.invoice,amount_total:0
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:165
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:167
 #: field:report.account.sales,amount_total:0
 #: field:report.account_type.sales,amount_total:0
 #: field:report.invoice.created,amount_total:0
@@ -10907,7 +10922,7 @@ msgstr "合計:"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:134
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:136
 #, python-format
 msgid "Transaction"
 msgstr "取引"
@@ -10976,7 +10991,7 @@ msgid "Unable to adapt the initial balance (negative value)."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1172
+#: code:addons/account/account_move_line.py:1171
 #, python-format
 msgid "Unable to change tax!"
 msgstr ""
@@ -11029,7 +11044,7 @@ msgid "Unit of Measure"
 msgstr "単位"
 
 #. module: account
-#: code:addons/account/report/account_partner_balance.py:116
+#: code:addons/account/report/account_partner_balance.py:125
 #, python-format
 msgid "Unknown Partner"
 msgstr "未知のパートナ"
@@ -11200,12 +11215,12 @@ msgid "User"
 msgstr "ユーザ"
 
 #. module: account
-#: code:addons/account/account.py:1401
-#: code:addons/account/account.py:1406
-#: code:addons/account/account.py:1435
-#: code:addons/account/account.py:1442
-#: code:addons/account/account_invoice.py:881
-#: code:addons/account/account_move_line.py:1115
+#: code:addons/account/account.py:1414
+#: code:addons/account/account.py:1419
+#: code:addons/account/account.py:1448
+#: code:addons/account/account.py:1455
+#: code:addons/account/account_invoice.py:893
+#: code:addons/account/account_move_line.py:1114
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
 #: code:addons/account/wizard/account_fiscalyear_close.py:89
 #: code:addons/account/wizard/account_fiscalyear_close.py:100
@@ -11236,7 +11251,7 @@ msgstr ""
 #. module: account
 #: field:account.fiscal.position,vat_required:0
 msgid "VAT required"
-msgstr ""
+msgstr "VAT(付加価値税)"
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -11296,10 +11311,10 @@ msgstr "アカウント分析行の表示"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/account_move_line.py:889
-#: code:addons/account/account_move_line.py:893
-#: code:addons/account/static/src/js/account_widgets.js:1009
-#: code:addons/account/static/src/js/account_widgets.js:1761
+#: code:addons/account/account_move_line.py:888
+#: code:addons/account/account_move_line.py:892
+#: code:addons/account/static/src/js/account_widgets.js:1058
+#: code:addons/account/static/src/js/account_widgets.js:1805
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -11318,15 +11333,15 @@ msgstr "警告"
 #: code:addons/account/account.py:799
 #: code:addons/account/account.py:1047
 #: code:addons/account/account.py:1067
-#: code:addons/account/account_invoice.py:714
-#: code:addons/account/account_invoice.py:717
-#: code:addons/account/account_invoice.py:720
-#: code:addons/account/account_invoice.py:1378
+#: code:addons/account/account_invoice.py:726
+#: code:addons/account/account_invoice.py:729
+#: code:addons/account/account_invoice.py:732
+#: code:addons/account/account_invoice.py:1390
 #: code:addons/account/account_move_line.py:95
-#: code:addons/account/account_move_line.py:880
-#: code:addons/account/account_move_line.py:938
-#: code:addons/account/account_move_line.py:977
-#: code:addons/account/account_move_line.py:1138
+#: code:addons/account/account_move_line.py:879
+#: code:addons/account/account_move_line.py:937
+#: code:addons/account/account_move_line.py:976
+#: code:addons/account/account_move_line.py:1137
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
 #: code:addons/account/wizard/account_invoice_state.py:41
 #: code:addons/account/wizard/account_invoice_state.py:64
@@ -11369,7 +11384,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:498
+#: code:addons/account/static/src/js/account_widgets.js:533
 #, python-format
 msgid "Whew, that was fast !"
 msgstr ""
@@ -11423,7 +11438,7 @@ msgstr ""
 
 #. module: account
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
-#: code:addons/account/account_move_line.py:992
+#: code:addons/account/account_move_line.py:991
 #, python-format
 msgid "Write-Off"
 msgstr "償却"
@@ -11450,7 +11465,13 @@ msgid "Write-Off amount"
 msgstr "償却勘定"
 
 #. module: account
-#: code:addons/account/account.py:2291
+#: code:addons/account/wizard/account_reconcile.py:115
+#, python-format
+msgid "Write-off"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:2304
 #, python-format
 msgid "Wrong Model!"
 msgstr ""
@@ -11485,7 +11506,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:1011
+#: code:addons/account/static/src/js/account_widgets.js:1060
 #, python-format
 msgid ""
 "You are selecting transactions from both a payable and a receivable "
@@ -11502,7 +11523,7 @@ msgid ""
 msgstr "仕訳項目が関連取引先と係争状態にあることを示すには、このボックスをチェックします。"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1221
+#: code:addons/account/account_move_line.py:1220
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
@@ -11511,6 +11532,11 @@ msgstr ""
 #: code:addons/account/account.py:1047
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
+msgstr ""
+
+#. module: account
+#: constraint:account.fiscal.position:0
+msgid "You can not select a country and a group of countries"
 msgstr ""
 
 #. module: account
@@ -11552,7 +11578,7 @@ msgstr ""
 "この事例の金額を親に統合する時に使用される係数をここで定義できます。例えば、それを加算 / 減算したい場合は、1 / -1 を設定します。"
 
 #. module: account
-#: code:addons/account/account.py:2260
+#: code:addons/account/account.py:2273
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the "
@@ -11574,7 +11600,7 @@ msgstr ""
 "例えば、%(date)s の私のモデル"
 
 #. module: account
-#: code:addons/account/account_invoice.py:984
+#: code:addons/account/account_invoice.py:996
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -11596,7 +11622,7 @@ msgid ""
 msgstr "既に仕訳帳項目に含めれるアカウントの所有会社を変更することはできません。"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1172
+#: code:addons/account/account_move_line.py:1171
 #, python-format
 msgid "You cannot change the tax, you should remove and recreate lines."
 msgstr ""
@@ -11618,7 +11644,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:882
+#: code:addons/account/account_invoice.py:894
 #, python-format
 msgid ""
 "You cannot create an invoice on a centralized journal. Uncheck the "
@@ -11627,7 +11653,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:594
+#: code:addons/account/account_move_line.py:599
 #, python-format
 msgid "You cannot create journal items on a closed account %s %s."
 msgstr ""
@@ -11663,13 +11689,13 @@ msgid "You cannot deactivate an account that contains journal items."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1402
+#: code:addons/account/account.py:1415
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:412
+#: code:addons/account/account_invoice.py:423
 #, python-format
 msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
@@ -11678,7 +11704,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:410
+#: code:addons/account/account_invoice.py:421
 #, python-format
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
@@ -11686,7 +11712,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1235
+#: code:addons/account/account_move_line.py:1234
 #, python-format
 msgid ""
 "You cannot do this modification on a confirmed entry. You can just change "
@@ -11695,7 +11721,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1237
+#: code:addons/account/account_move_line.py:1236
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change "
@@ -11704,7 +11730,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1339
+#: code:addons/account/account.py:1352
 #, python-format
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
@@ -11739,7 +11765,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1628
+#: code:addons/account/account.py:1641
 #, python-format
 msgid ""
 "You cannot unreconcile journal items if they has been generated by the       "
@@ -11748,14 +11774,14 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1174
-#: code:addons/account/account_move_line.py:1258
+#: code:addons/account/account_move_line.py:1173
+#: code:addons/account/account_move_line.py:1257
 #, python-format
 msgid "You cannot use an inactive account."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1325
+#: code:addons/account/account_move_line.py:1324
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -11763,7 +11789,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1294
+#: code:addons/account/account.py:1307
 #, python-format
 msgid ""
 "You cannot validate a non-balanced entry.\n"
@@ -11772,7 +11798,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1333
+#: code:addons/account/account.py:1346
 #, python-format
 msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
@@ -11780,13 +11806,13 @@ msgid ""
 msgstr "勘定科目「%s」は勘定科目表「%s」に含まれないため、この仕訳を確定できません。"
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:269
+#: code:addons/account/account_cash_statement.py:271
 #, python-format
 msgid "You do not have rights to open this %s journal!"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2291
+#: code:addons/account/account.py:2304
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model!"
 msgstr ""
@@ -11800,9 +11826,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2303
-#: code:addons/account/account_invoice.py:663
-#: code:addons/account/account_move_line.py:192
+#: code:addons/account/account.py:2316
+#: code:addons/account/account_invoice.py:674
+#: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "%s 仕訳帳に分析仕訳を定義しなければなりません。"
@@ -11818,14 +11844,14 @@ msgstr ""
 "銀行口座を定義する必要があります。"
 
 #. module: account
-#: code:addons/account/account_move_line.py:977
+#: code:addons/account/account_move_line.py:976
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3518
+#: code:addons/account/account.py:3531
 #, python-format
 msgid ""
 "You have to set a code for the bank account defined on the selected chart of "
@@ -11843,19 +11869,26 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_widgets.js:1763
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:68
+#, python-format
+msgid "You must balance the reconciliation"
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1807
 #, python-format
 msgid "You must choose at least one record."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:93
+#: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
 msgstr "分析仕訳帳のタイプ %s を定義しなければなりません。"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1299
+#: code:addons/account/account_invoice.py:1311
 #, python-format
 msgid "You must first select a partner!"
 msgstr ""
@@ -11893,7 +11926,7 @@ msgid "You should choose the periods that belong to the same company."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:648
+#: code:addons/account/account_bank_statement.py:690
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -11902,7 +11935,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:644
+#: code:addons/account/account_bank_statement.py:686
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -11921,7 +11954,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:44
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:45
 #, python-format
 msgid "You validated"
 msgstr ""
@@ -11947,7 +11980,7 @@ msgid "balance"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:651
+#: code:addons/account/account_bank_statement.py:693
 #, python-format
 msgid "change"
 msgstr ""
@@ -11994,15 +12027,64 @@ msgid "month"
 msgstr "月"
 
 #. module: account
+#: view:account.aged.trial.balance:account.account_aged_balance_view
+#: view:account.analytic.balance:account.account_analytic_balance_view
+#: view:account.analytic.chart:account.account_analytic_chart_view
+#: view:account.analytic.cost.ledger:account.account_analytic_cost_view
+#: view:account.analytic.cost.ledger.journal.report:account.account_analytic_cost_ledger_journal_view
+#: view:account.analytic.inverted.balance:account.account_analytic_invert_balance_view
+#: view:account.analytic.journal.report:account.account_analytic_journal_view
+#: view:account.automatic.reconcile:account.account_automatic_reconcile_view
+#: view:account.change.currency:account.view_account_change_currency
+#: view:account.chart:account.view_account_chart
+#: view:account.common.report:account.account_common_report_view
+#: view:account.config.settings:account.view_account_config_settings
+#: view:account.fiscalyear.close:account.view_account_fiscalyear_close
+#: view:account.fiscalyear.close.state:account.view_account_fiscalyear_close_state
+#: view:account.invoice.cancel:account.account_invoice_cancel_view
+#: view:account.invoice.confirm:account.account_invoice_confirm_view
+#: view:account.invoice.refund:account.view_account_invoice_refund
+#: view:account.journal.select:account.open_journal_button_view
+#: view:account.move.bank.reconcile:account.view_account_move_bank_reconcile
+#: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
+#: view:account.move.line.reconcile.select:account.view_account_move_line_reconcile_select
+#: view:account.move.line.reconcile.writeoff:account.account_move_line_reconcile_writeoff
+#: view:account.move.line.unreconcile.select:account.view_account_move_line_unreconcile_select
+#: view:account.open.closed.fiscalyear:account.view_account_open_closed_fiscalyear
+#: view:account.period.close:account.view_account_period_close
+#: view:account.state.open:account.view_account_state_open
+#: view:account.statement.from.invoice.lines:account.view_account_statement_from_invoice_lines
+#: view:account.subscription.generate:account.view_account_subscription_generate
+#: view:account.tax.chart:account.view_account_tax_chart
+#: view:account.unreconcile:account.account_unreconcile_view
+#: view:account.use.model:account.view_account_use_model
+#: view:account.use.model:account.view_account_use_model_create_entry
+#: view:account.vat.declaration:account.view_account_vat_declaration
+#: view:cash.box.in:account.cash_box_in_form
+#: view:cash.box.out:account.cash_box_out_form
+#: view:project.account.analytic.line:account.view_project_account_analytic_line_form
+#: view:validate.account.move:account.validate_account_move_view
+#: view:validate.account.move.lines:account.validate_account_move_line_view
+msgid "or"
+msgstr "または"
+
+#. module: account
 #: model:ir.model,name:account.model_account_period_close
 msgid "period close"
 msgstr "期間終了"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:44
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:45
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
+#, python-format
+msgid "remaining)"
 msgstr ""
 
 #. module: account
@@ -12012,7 +12094,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:42
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "seconds per transaction."
 msgstr ""
@@ -12029,14 +12111,14 @@ msgstr "タイトル"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:42
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "to reconcile"
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:42
+#: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "transactions."
 msgstr ""

@@ -175,7 +175,7 @@ def init_logger():
     def is_a_tty(stream):
         return hasattr(stream, 'fileno') and os.isatty(stream.fileno())
 
-    if isinstance(handler, logging.StreamHandler) and is_a_tty(handler.stream):
+    if os.name == 'posix' and isinstance(handler, logging.StreamHandler) and is_a_tty(handler.stream):
         formatter = ColoredFormatter(format)
     else:
         formatter = DBFormatter(format)

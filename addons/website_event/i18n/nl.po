@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-11-06 08:17+0000\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-01-22 08:52+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-07 07:35+0000\n"
-"X-Generator: Launchpad (build 17231)\n"
+"X-Launchpad-Export-Date: 2015-01-23 06:52+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: website_event
 #: view:website:website_event.index
@@ -161,8 +161,8 @@ msgstr "Sleep het 'Tekst' blok op uw evenmenten pagina."
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
-msgid "Email Thread"
-msgstr "E-mail discussie"
+msgid "Event"
+msgstr "Evenement"
 
 #. module: website_event
 #: view:website:website_event.introduction-open-days-in-los-angeles
@@ -185,6 +185,18 @@ msgstr "Evenement menu"
 #: view:website:website_event.404
 msgid "Event not found!"
 msgstr "Evenement niet gevonden!"
+
+#. module: website_event
+#: model:mail.message.subtype,description:website_event.mt_event_published
+#: model:mail.message.subtype,name:website_event.mt_event_published
+msgid "Event published"
+msgstr "Evenement gepubliceerd"
+
+#. module: website_event
+#: model:mail.message.subtype,description:website_event.mt_event_unpublished
+#: model:mail.message.subtype,name:website_event.mt_event_unpublished
+msgid "Event unpublished"
+msgstr "Evenement niet gepubliceerd"
 
 #. module: website_event
 #: view:website:website.layout
@@ -236,7 +248,7 @@ msgid "Insert blocks to layout the body of your event."
 msgstr "Voeg nog blokken in om de inhoud van uw evenement op te maken."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:38
+#: code:addons/website_event/models/event.py:44
 #, python-format
 msgid "Introduction"
 msgstr "Introductie"
@@ -263,7 +275,7 @@ msgid "Local Events"
 msgstr "Lokale evenementen"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:39
+#: code:addons/website_event/models/event.py:45
 #, python-format
 msgid "Location"
 msgstr "Locatie"
@@ -369,7 +381,7 @@ msgid "Publish your event"
 msgstr "Publiceer je evenement"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:61
+#: code:addons/website_event/models/event.py:67
 #, python-format
 msgid "Register"
 msgstr "Registreer"
@@ -553,6 +565,12 @@ msgstr "niet gepubliceerd"
 #: view:website:website_event.index
 msgid "pull-right"
 msgstr "trek-rechts"
+
+#. module: website_event
+#: view:website:website_event.event_details
+#: view:website:website_event.index
+msgid "to"
+msgstr "t/m"
 
 #. module: website_event
 #: view:website:website_event.index
