@@ -2574,7 +2574,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
             var domain = instance.web.pyeval.eval('domain', this.get('value'));
             var ds = new instance.web.DataSetStatic(self, model, self.build_context());
-            ds.call('search_count', [domain]).then(function (results) {
+            ds.call('search_count', [domain, self.build_context()]).then(function (results) {
                 $('.oe_domain_count', self.$el).text(results + ' records selected');
                 if (self.get('effective_readonly')) {
                     $('button span', self.$el).text(' See selection');
