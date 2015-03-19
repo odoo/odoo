@@ -24,7 +24,7 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.report import report_sxw
 from openerp.tools import float_compare, float_round
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, RedirectWarning
 
 from operator import add
 import time
@@ -706,7 +706,9 @@ class account_bank_statement_line(osv.osv):
         if currency_diff < 0:
             account_id = st_line.company_id.expense_currency_exchange_account_id.id
             if not account_id:
-                raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_config')
+                msg = _("You need to configure the 'Loss Exchange Rate Account' in order to manage automatically the booking of accounting entries related to differences between exchange rates.")
+                raise RedirectWarning(msg, action_id, _('Go to Account Configuration'))
         else:
             account_id = st_line.company_id.income_currency_exchange_account_id.id
             if not account_id:
@@ -816,7 +818,7 @@ class account_bank_statement_line(osv.osv):
                         credit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['credit'] / st_line_currency_rate)
                     elif st_line.currency_id:
                         #statement is in foreign currency and the transaction is in another one
-                        debit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=ctx)      
+                        debit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=ctx)
                         credit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate, context=ctx)
                     else:
                         #statement is in foreign currency and no extra currency is given for the transaction
