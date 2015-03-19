@@ -21,6 +21,7 @@
 
 import logging
 import time
+from datetime import date
 
 from openerp import tools
 from openerp.osv import fields, osv
@@ -1294,11 +1295,11 @@ class pos_order_line(osv.osv):
        price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                product_id, qty or 1.0, partner_id)[pricelist]
 
-       result = self.onchange_qty(cr, uid, ids, product_id, 0.0, qty, price, context=context)
+       result = self.onchange_qty(cr, uid, ids, product_id, 0.0, qty, price,pricelist,partner_id, context=context)
        result['value']['price_unit'] = price
        return result
 
-    def onchange_qty(self, cr, uid, ids, product, discount, qty, price_unit, context=None):
+    def onchange_qty(self, cr, uid, ids, product, discount, qty, price_unit,pricelist,partner_id, context=None):
         result = {}
         if not product:
             return result
@@ -1307,7 +1308,12 @@ class pos_order_line(osv.osv):
 
         prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
 
-        price = price_unit * (1 - (discount or 0.0) / 100.0)
+        price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+                    product, qty or 1.0, partner_id, {
+                        'uom': prod.product_tmpl_id.uom_id.id or result.get('product_uom'),
+                        'date': date.today(),
+                        })[pricelist]
+
         taxes = account_tax_obj.compute_all(cr, uid, prod.taxes_id, price, qty, product=prod, partner=False)
 
         result['price_subtotal'] = taxes['total']
