@@ -69,11 +69,8 @@ class QWeb(models.AbstractModel):
         return super(QWeb, self).render_attribute(element, name, value, qwebcontext)
 
     def render_tag_snippet(self, element, template_attributes, generated_attributes, qwebcontext):
-        cr = qwebcontext['request'].cr
-        uid = qwebcontext['request'].uid
-        view_reg = self.pool['ir.ui.view']
         page_xmlid = self.eval_format(template_attributes["snippet"], qwebcontext)
-        view = view_reg.browse(cr, uid, view_reg.search(cr, uid, [('key', '=', page_xmlid)]))
+        view = request.env['ir.ui.view'].search([('key', '=', page_xmlid)])
         generated_attributes += " " + "".join([
             'data-oe-name="%s"' % view.name,
             'data-oe-type="snippet"',

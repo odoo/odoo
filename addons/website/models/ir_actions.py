@@ -13,6 +13,7 @@ class ActionsServer(models.Model):
 
     @api.multi
     def _compute_website_url(self):
+        self.ensure_one()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         link = self.website_path or self.xml_id or (self.id and '%d' % self.id) or ''
         if base_url and link:

@@ -184,7 +184,6 @@ class website(models.Model):
 
     @api.model
     def new_page(self, name, template='website.default_page', ispage=True):
-        Imd = self.env['ir.model.data']
         template_module, template_name = template.split('.')
 
         # completely arbitrary max_length
@@ -200,7 +199,7 @@ class website(models.Model):
         page_name += (inc and "-%s" % inc or "")
 
         # new page
-        template_id = Imd.xmlid_to_object(template)
+        template_id = self.env.ref(template)
         website_id = self.env.context.get('website_id')
         key = template_module+'.'+page_name
         page = template_id.copy({'website_id': website_id, 'key': key})

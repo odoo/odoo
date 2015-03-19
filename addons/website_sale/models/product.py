@@ -108,7 +108,6 @@ class product_template(osv.Model):
     _mail_post_access = 'read'
 
     @api.multi
-    @api.depends('name')
     def _website_url(self):
         super(product_template, self)._website_url()
         for product in self:
@@ -180,6 +179,10 @@ class product_template(osv.Model):
 class product_product(osv.Model):
     _inherit = "product.product"
 
+    #FixMe: use related field to fix yml test case, when create product from yml not getting website_url, latter on removed when yml changes in some modules.
+    _columns = {
+        'website_url': fields.related("product_tmpl_id","website_url", string="Website url", type="char"),
+    }
     # Wrapper for call_kw with inherits
     def open_website_url(self, cr, uid, ids, context=None):
         template_ids = list(set(self.browse(cr, uid, ids, context=context).product_tmpl_id.id))

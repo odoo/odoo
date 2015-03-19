@@ -13,7 +13,6 @@ class hr_employee(osv.osv):
     }
 
     @api.multi
-    @api.depends('name')
     def _website_url(self):
         super(hr_employee, self)._website_url()
         for employee in self:

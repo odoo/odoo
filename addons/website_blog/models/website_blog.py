@@ -69,7 +69,6 @@ class BlogPost(osv.Model):
     _mail_post_access = 'read'
 
     @api.multi
-    @api.depends('name')
     def _website_url(self):
         super(BlogPost, self)._website_url()
         for blog_post in self:

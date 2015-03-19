@@ -48,10 +48,9 @@ class IrHttp(models.AbstractModel):
             if website_id:
                 request.uid = self.env['website'].sudo().browse(website_id).user_id.id
             else:
-                request.uid = self.env['ir.model.data'].sudo().xmlid_to_res_id('base', 'public_user')
+                request.uid = self.env.ref('base.public_user').id
         else:
             request.uid = request.session.uid
-
 
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')

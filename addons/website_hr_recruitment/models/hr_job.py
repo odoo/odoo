@@ -9,7 +9,6 @@ class hr_job(osv.osv):
     _inherit = ['hr.job', 'website.seo.metadata', 'website.published.mixin']
 
     @api.multi
-    @api.depends('name')
     def _website_url(self):
         super(hr_job, self)._website_url()
         for job in self:

@@ -13,7 +13,6 @@ class res_partner_grade(osv.osv):
     }
 
     @api.multi
-    @api.depends('name')
     def _website_url(self):
         super(res_partner_grade, self)._website_url()
         for grade in self:

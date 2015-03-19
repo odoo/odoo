@@ -8,7 +8,6 @@ class im_livechat_channel(models.Model):
     _inherit = ['im_livechat.channel', 'website.published.mixin']
 
     @api.multi
-    @api.depends('name')
     def _website_url(self):
         super(im_livechat_channel, self)._website_url()
         for channel in self:

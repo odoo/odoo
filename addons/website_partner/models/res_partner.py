@@ -37,7 +37,6 @@ class WebsiteResPartner(osv.Model):
     }
 
     @api.multi
-    @api.depends('name')
     def _website_url(self):
         super(WebsiteResPartner, self)._website_url()
         for partner in self:
