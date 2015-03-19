@@ -233,7 +233,7 @@ class account_analytic_plan_instance(osv.osv):
 
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+    def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
         this = self.browse(cr, uid, ids[0], context=context)
@@ -369,8 +369,8 @@ class account_invoice(osv.osv):
     _name = "account.invoice"
     _inherit = "account.invoice"
 
-    def line_get_convert(self, cr, uid, x, part, date, context=None):
-        res=super(account_invoice,self).line_get_convert(cr, uid, x, part, date, context=context)
+    def line_get_convert(self, cr, uid, x, part, context=None):
+        res=super(account_invoice,self).line_get_convert(cr, uid, x, part, context=context)
         res['analytics_id'] = x.get('analytics_id', False)
         return res
 

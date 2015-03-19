@@ -8,6 +8,4 @@
     invoice_pool.signal_workflow(cr, uid, invoice_ids, 'invoice_open')
 
     for id in invoice_ids[-4:]:
-        pay = invoice_pool.pay_and_reconcile(cr, uid, [id],
-            9050.0, ref('account.cash'), time.strftime('%Y-%m-%d'),
-            ref('account.bank_journal'), ref('account.cash'))
+        pay = invoice_pool.pay_and_reconcile(cr, uid, [id], ref('account.bank_journal'), 9050.0)

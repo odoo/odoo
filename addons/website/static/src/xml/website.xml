@@ -87,7 +87,7 @@
                     <div class="modal-body">
                         <div class="alert alert-warning alert-dismissible fade in mt16" role="alert">
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-                          <strong>Be careful !</strong> Some dependencies could existed ...
+                          <strong>Be careful !</strong> Some dependencies can exist ...
                         </div>
                         <t t-if="dependencies">
                             <t t-set='tid' t-value='0'/>
@@ -104,10 +104,16 @@
                                       <div t-att-id="'collapseDependencies'+tid" class="panel-collapse collapse in" role="tabpanel" aria-expanded="false" >
                                         <ul class="list-group">
                                             <t t-foreach="dependencies[type]" t-as="error">
-                                              <li class="list-group-item"><a t-att-href="error.link"><i class='fa fa-share fa-flip-vertical'/> <t t-raw="error.text"/></a></li>
+                                                <li class="list-group-item">
+                                                    <i class='fa fa-share fa-flip-vertical'/>
+                                                    <a t-if="!_.contains(['', '#', false,], error.link)" t-att-href="error.link">
+                                                        <t t-raw="error.text"/>
+                                                    </a>
+                                                    <t t-if="_.contains(['', '#', false,], error.link)" t-raw="error.text"/>
+                                                </li>
                                             </t>
                                         </ul>
-                                        <div class="panel-footer"><t t-esc="dependencies[type].length"/> dependencies found</div>
+                                        <div class="panel-footer">Reference(s) found: <t t-esc="dependencies[type].length"/></div>
                                       </div>
                                     </div>
                                 </div>
@@ -117,13 +123,13 @@
                         <form class="form-horizontal" role="form" t-att-id="id">
                             <div class="form-group">
                                 <label class="col-sm-offset-2 col-sm-8 text-left alert alert-danger">
-                                    <input type="checkbox"/> I'm sure, I want to delete this page definitively
+                                    <input type="checkbox" onchange="$('.btn-continue').prop('disabled', !this.checked)"/> I'm sure, I want to delete this page definitively
                                 </label>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Continue</button>
+                        <button type="button" class="btn btn-primary btn-continue" disabled="disabled">Continue</button>
                         <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
                     </div>
                 </div>

@@ -133,29 +133,10 @@ class report_account_generic_tax_report(models.AbstractModel):
         return 'account.report_financial'
 
 
-class account_report_context_tax(models.TransientModel):
+class AccountReportContextTax(models.TransientModel):
     _name = "account.report.context.tax"
     _description = "A particular context for the generic tax report"
     _inherit = "account.report.context.common"
-
-    footnotes = fields.Many2many('account.report.footnote', 'account_context_footnote_tax', string='Footnotes')
-
-    @api.multi
-    def add_footnote(self, type, target_id, column, number, text):
-        footnote = self.env['account.report.footnote'].create(
-            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text}
-        )
-        self.write({'footnotes': [(4, footnote.id)]})
-
-    @api.multi
-    def edit_footnote(self, number, text):
-        footnote = self.footnotes.filtered(lambda s: s.number == number)
-        footnote.write({'text': text})
-
-    @api.multi
-    def remove_footnote(self, number):
-        footnotes = self.footnotes.filtered(lambda s: s.number == number)
-        self.write({'footnotes': [(3, footnotes.id)]})
 
     def get_report_obj(self):
         return self.env['account.generic.tax.report']

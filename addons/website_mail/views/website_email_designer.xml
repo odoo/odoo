@@ -2,82 +2,81 @@
 <openerp>
     <data>
 
-<template id="assets_editor" inherit_id="website.assets_editor" name="Email Designer">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
-    </xpath>
-</template>
+<record id="mail_wizard_invite_form" model="ir.ui.view">
+    <field name="name">Add Followers</field>
+    <field name="model">mail.wizard.invite</field>
+    <field name="inherit_id" ref="mail.mail_wizard_invite_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <field name="message" position="attributes">
+                <attribute name="options">{'editor_url': '/website_mail/field/email'}</attribute>
+            </field>
+        </data>
+    </field>
+</record>
+
+<record id="email_compose_message_wizard_form" model="ir.ui.view">
+    <field name="name">mail.compose.message.form</field>
+    <field name="model">mail.compose.message</field>
+    <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <field name="body" position="attributes">
+                <attribute name="options">{'editor_url': '/website_mail/field/email'}</attribute>
+            </field>
+        </data>
+    </field>
+</record>
 
 <!-- Template Choice page -->
-<template id="email_designer" name="Email Designer">
-    <t t-call="website.layout">
-        <div id="wrap" class="container" t-ignore="True">
-            <div id="email_template" class="mb32" t-att-style="mode != 'email_template' and 'display: none' or ''">
-                <a class="mt16 btn btn-default pull-right css_editable_mode_hidden" 
-                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
-                    Back
-                </a>
+<template id="FieldTextHtmlEmail" name="Editor layout">
+    
+    <t t-set="head">
+        <t t-if="enable_editor">
+            <link rel="stylesheet" href="/website_mail/static/src/css/snippets.css" type="text/css"/>
+            <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
+        </t>
+        <link rel="stylesheet" href="/website_mail/static/src/css/website_mail_iframe.css" type="text/css"/>
+    </t>
+
+    <t t-set="add_html">
+        <t t-if="theme and enable_editor">
+            <span t-if="theme" id="choose_template" class="o_not_editable btn btn-primary"><span>Theme</span><span class="hidden">Cancel selection</span></span>
+        </t>
+    </t>
+
+    <t t-call="website.editor_layout">
+        <div>
+            <div class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html"><t t-raw="content"/></div>
+        </div>
+        <div id="templates" class="o_not_editable hidden" t-if="theme and enable_editor">
+            <h1 class="page-header mt16 email_head panel-primary">
+                Select a theme 
+                <button type="button" class="btn btn-sm btn-default info_popover fa fa-info-circle" data-toggle="popover" data-trigger="focus" title="Help" data-content="Here you can design your own template from scratch by selecting your favorite theme."></button>
+            </h1>  
+            <t t-call="website_mail.mass_mail_theme_list"/>
+
+            <div class="hidden">
                 <h1 class="page-header mt16">
-                    Choose an Email Template
+                    Choose a Template
                 </h1>
-                <div class="row">
-                    <div class="col-md-3 col-sm-4 text-center img-border">
-                        <div class="email_preview_border">
-                            <div class="email_preview js_content"/>
+                <div id="email_template_list">
+                    <div class="hidden">
+                        <div class="theme_thumbnail">
+                            <div class="overlay text-center">
+                                <p>template</p>
+                                <a class="btn btn-primary btn-sm js_template_set"> Select </a>
+                            </div>
+                            <div class="template_preview js_content"/>
                         </div>
-                        <h4>New Template</h4>
-                        <button class="btn btn-primary js_template_set">Select</button>
                     </div>
-                    <div t-foreach="templates" t-as="template" class="col-md-3 col-sm-4 text-center">
-                        <div class="email_preview_border">
-                            <div t-raw="html_sanitize(template.body_html)" class="email_preview js_content"/>
-                        </div>
-                        <h4 t-field="template.name"/>
-                        <button class="btn btn-primary js_template_set">Select</button>
-                    </div>
-                </div>
-            </div>
-            <div id="email_designer" class="mb32" t-att-style="mode != 'email_designer' and 'display: none' or ''">
-                <a class="mt16 btn btn-primary pull-right" id="save_and_continue"
-                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
-                    Back to the mass mailing
-                </a>
-                <h1 class="page-header mt16">
-                    Design Your Email
-                </h1>
-                <div class="form-horizontal">
-                    <!-- email_from fields-->
-                    <div class="form-group" t-if="email_from_field == 'email_from'">
-                        <label class="col-sm-2 control-label">From:</label>
-                        <div class="col-sm-7"><span t-field="record.email_from" class="form-control"/></div>
-                    </div>
-                    <div class="form-group" t-if="email_from_field == 'email'">
-                        <label class="col-sm-2 control-label">From:</label>
-                        <div class="col-sm-7"><span t-field="record.email" class="form-control"/></div>
-                    </div>
-                    <!-- email_from fields-->
-                    <div class="form-group" t-if="subject_field == 'subject'">
-                        <label class="col-sm-2 control-label">Subject:</label>
-                        <div class="col-sm-7"><span t-field="record.subject" class="form-control"/></div>
-                    </div>
-                    <div class="form-group" t-if="subject_field == 'name'">
-                        <label class="col-sm-2 control-label">Subject:</label>
-                        <div class="col-sm-7"><span t-field="record.name" class="form-control"/></div>
-                    </div>
-                </div>
-                <hr/>
-                <!-- body fields -->
-                <div t-if="body_field == 'body_html'" class="col-sm-offset-2">
-                    <div t-field="record.body_html" id="email_body_html" class="o_mail_body"/>
-                </div>
-                <div t-if="body_field == 'body'" class="col-sm-offset-2">
-                    <div t-field="record.body" id="email_body" class="o_mail_body"/>
                 </div>
             </div>
         </div>
+
     </t>
-    <t t-set="website.footer"></t>
 </template>
+
 
     </data>
 </openerp>

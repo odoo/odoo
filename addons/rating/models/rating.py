@@ -36,11 +36,12 @@ class Rating(models.Model):
     def apply_rating(self, rate, res_model=None, res_id=None, token=None):
         """ apply a rating for given res_model/res_id or token. If the res_model is a mail.thread
             object, a message will be posted in the chatter.
-            :param float rating : the rating value to apply
-            :param list res_id : id of the rated object.
-            :param string res_model : name of model.
-            :param string token : access token
-            :return the rating record
+            :param rate : the rating value to apply
+            :type rate : float
+            :param res_id : id of the rated object.
+            :param res_model : name of model.
+            :param token : access token
+            :returns rating.rating record
         """
         domain = [('access_token', '=', token)] if token else [('res_model', '=', res_model), ('res_id', '=', res_id)]
         rating = self.search(domain, limit=1)
@@ -48,9 +49,10 @@ class Rating(models.Model):
             rating.write({'rating' : rate})
             if hasattr(self.env[rating.res_model], 'message_post'):
                 record = self.env[rating.res_model].sudo().browse(rating.res_id)
-                record.message_post(
+                record.sudo().message_post(
                     body="%s %s <br/><img src='/rating/static/src/img/rating_%s.png' style='width:20px;height:20px'/>"
                     % (rating.sudo().partner_id.name, _('rated it'), rate),
+                    subtype='mail.mt_comment',
                     author_id=rating.partner_id and rating.partner_id.id or None # None will set the default author in mail_thread.py
                 )
         return rating
@@ -119,8 +121,6 @@ class RatingMixin(models.AbstractModel):
     @api.multi
     def rating_get_stats(self):
         """ get the repatition of rating grade for the given res_ids.
-            :param list res_ids : optional list of ids. If not given, this will take the ids of the current recordset.
-            :param string res_model : optional name of model. If not given, the one of the current recordset will be used.
             :return dictionnary where the key is the rating value (the note), and the value, the number of object (res_model, res_id) having the value
         """
         data = self.env['rating.rating'].read_group([('res_model', '=', self._name), ('res_id', 'in', self.ids), ('rating', '>=', 0)], ['rating'], ['rating', 'res_id'])
@@ -132,8 +132,6 @@ class RatingMixin(models.AbstractModel):
     @api.multi
     def rating_get_grades(self):
         """ get the repatition of rating grade for the given res_ids.
-            :param list res_ids : optional list of ids. If not given, this will take the ids of the current recordset.
-            :param string res_model : optional name of model. If not given, the one of the current recordset will be used.
             :return dictionnary where the key is the grade (great, okay, bad), and the value, the number of object (res_model, res_id) having the grade
                     the grade are compute as    0-30% : Bad
                                                 31-69%: Okay

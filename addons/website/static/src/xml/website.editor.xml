@@ -24,7 +24,8 @@
                     </div>
                     <div class="modal-body"><t t-raw="0"/></div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary save">Save</button>
+                        <button type="button" class="btn btn-primary save" t-if="!button">Save</button>
+                        <button type="button" class="btn btn-primary save" t-if="button"><t t-raw="button"/></button>
                         <button type="button" class="btn hidden wait" disabled="disabled"/>
                         or
                         <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>

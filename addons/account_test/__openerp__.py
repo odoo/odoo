@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
@@ -23,7 +23,7 @@
 {
     'name': 'Accounting Consistency Tests',
     'version': '1.0',
-    'author': 'OpenERP',
+    'author': 'Odoo S.A.',
     'category': 'Accounting & Finance',
     'website': 'https://www.odoo.com/page/accounting',
     'description': """

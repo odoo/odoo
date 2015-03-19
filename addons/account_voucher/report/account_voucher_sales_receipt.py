@@ -26,7 +26,7 @@ class sale_receipt_report(models.Model):
     _description = "Sales Receipt Statistics"
     _auto = False
     _rec_name = 'date'
-    date = fields.Date('Date', readonly=True)
+    date = fields.Date(readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
@@ -38,7 +38,7 @@ class sale_receipt_report(models.Model):
     type = fields.Selection([
         ('sale', 'Sale'),
         ('purchase', 'Purchase'),
-    ], string='Type', readonly=True)
+    ], readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('proforma', 'Pro-forma'),

@@ -34,15 +34,19 @@ class FormulaLine(object):
         elif type == 'sum':
             if obj._name == 'account.financial.report.line':
                 fields = obj.get_sum()
+                self.amount_residual = fields['amount_residual']
             elif obj._name == 'account.move.line':
-                field_names = ['debit', 'credit', 'balance']
+                self.amount_residual = 0.0
+                field_names = ['debit', 'credit', 'balance', 'amount_residual']
                 res = obj.compute_fields(field_names)
                 if res.get(obj.id):
                     for field in field_names:
                         fields[field] = res[obj.id][field]
+                    self.amount_residual = fields['amount_residual']
         elif type == 'not_computed':
             for field in fields:
                 fields[field] = obj.get(field, 0)
+            self.amount_residual = obj.get('amount_residual', 0)
         self.balance = fields['balance']
         self.credit = fields['credit']
         self.debit = fields['debit']
@@ -75,21 +79,15 @@ class FormulaContext(dict):
         return super(FormulaContext, self).__getitem__(item)
 
 
-def report_safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False):
-    try:
-        res = safe_eval(expr, globals_dict, locals_dict, mode, nocopy, locals_builtins)
-    except ValueError:
-        res = 1
-    return res
-
-
-class report_account_financial_report(models.Model):
+class ReportAccountFinancialReport(models.Model):
     _name = "account.financial.report"
     _description = "Account Report"
 
     name = fields.Char()
     debit_credit = fields.Boolean('Show Credit and Debit Columns')
     line_ids = fields.One2many('account.financial.report.line', 'financial_report_id', string='Lines')
+    default_date_filter = fields.Selection([('default', 'default : month or today'),
+                                            ('year', 'current financial year')], String='Default date filter', default='default')
     report_type = fields.Selection([('date_range', 'Based on date ranges'),
                                     ('date_range_extended', "Based on date ranges with 'older' and 'total' columns and last 3 months"),
                                     ('no_date_range', 'Based on a single date'),
@@ -126,7 +124,7 @@ class report_account_financial_report(models.Model):
         return 'account.report_financial'
 
 
-class account_financial_report_line(models.Model):
+class AccountFinancialReportLine(models.Model):
     _name = "account.financial.report.line"
     _description = "Account Report Line"
     _order = "sequence"
@@ -136,34 +134,27 @@ class account_financial_report_line(models.Model):
     financial_report_id = fields.Many2one('account.financial.report', 'Financial Report')
     parent_id = fields.Many2one('account.financial.report.line', string='Parent')
     children_ids = fields.One2many('account.financial.report.line', 'parent_id', string='Children')
-    sequence = fields.Integer('Sequence')
+    sequence = fields.Integer()
 
-    domain = fields.Char('Domain', default=None)
-    formulas = fields.Char('Formulas')
-    groupby = fields.Char('Group By', default=False)
+    domain = fields.Char(default=None)
+    formulas = fields.Char()
+    groupby = fields.Char(default=False)
     figure_type = fields.Selection([('float', 'Float'), ('percents', 'Percents'), ('no_unit', 'No Unit')],
                                    'Type of the figure', default='float', required=True)
     green_on_positive = fields.Boolean('Is growth good when positive', default=True)
     level = fields.Integer(required=True)
     special_date_changer = fields.Selection([('from_beginning', 'From the beginning'), ('to_beginning_of_fy', 'At the beginning of the Year'), ('normal', 'Use given dates')], default='normal')
     show_domain = fields.Selection([('always', 'Always'), ('never', 'Never'), ('foldable', 'Foldable')], default='foldable')
-    hide_if_zero = fields.Boolean('Hide if zero', default=False)
-
-    @api.model
-    def _ids_to_sql(self, ids):
-        if len(ids) == 0:
-            return '()'
-        if len(ids) == 1:
-            return '(' + str(ids[0]) + ')'
-        return str(tuple(ids))
+    hide_if_zero = fields.Boolean(default=False)
+    action_id = fields.Many2one('ir.actions.actions')
 
     def get_sum(self, field_names=None):
         ''' Returns the sum of the amls in the domain '''
         if not field_names:
-            field_names = ['debit', 'credit', 'balance']
+            field_names = ['debit', 'credit', 'balance', 'amount_residual']
         res = dict((fn, 0.0) for fn in field_names)
         if self.domain:
-            amls = self.env['account.move.line'].search(report_safe_eval(self.domain))
+            amls = self.env['account.move.line'].search(safe_eval(self.domain))
             compute = amls.compute_fields(field_names)
             for aml in amls:
                 if compute.get(aml.id):
@@ -182,7 +173,13 @@ class account_financial_report_line(models.Model):
                 [field, formula] = f.split('=')
                 field = field.strip()
                 if field in field_names:
-                    res[field] = report_safe_eval(formula, c, nocopy=True)
+                    try:
+                        res[field] = safe_eval(formula, c, nocopy=True)
+                    except ValueError as err:
+                        if 'division by zero' in err.args[0]:
+                            res[field] = 0
+                        else:
+                            raise err
         return res
 
     def _format(self, value):
@@ -209,15 +206,13 @@ class account_financial_report_line(models.Model):
 
     def _build_cmp(self, balance, comp):
         if comp != 0:
-            res = round(balance/comp * 100, 1)
-        elif balance >= 0:
-            res = 100.0
+            res = round((balance-comp)/comp * 100, 1)
+            if (res > 0) != self.green_on_positive:
+                return (str(res) + '%', 'color: red;')
+            else:
+                return (str(res) + '%', 'color: green;')
         else:
-            res = -100.0
-        if (res > 0) != self.green_on_positive:
-            return (str(res) + '%', 'color: red;')
-        else:
-            return (str(res) + '%', 'color: green;')
+            return 'n/a'
 
     def _get_footnotes(self, type, target_id, context):
         footnotes = context.footnotes.filtered(lambda s: s.type == type and s.target_id == target_id)
@@ -247,7 +242,7 @@ class account_financial_report_line(models.Model):
             where_clause, where_params = aml_obj._query_get(domain=self.domain)
 
             groupby = self.groupby or 'id'
-            select = ',COALESCE(SUM(\"account_move_line\".debit-\"account_move_line\".credit), 0)'
+            select = ',COALESCE(SUM(\"account_move_line\".debit-\"account_move_line\".credit), 0),SUM(\"account_move_line\".amount_residual)'
             if financial_report.debit_credit and debit_credit:
                 select = ',SUM(\"account_move_line\".debit),SUM(\"account_move_line\".credit)' + select
             if self.env.context.get('cash_basis'):
@@ -258,16 +253,22 @@ class account_financial_report_line(models.Model):
             self.env.cr.execute(query, where_params)
             results = self.env.cr.fetchall()
             if financial_report.debit_credit and debit_credit:
-                results = dict([(k[0], {'debit': k[1], 'credit': k[2], 'balance': k[3]}) for k in results])
+                results = dict([(k[0], {'debit': k[1], 'credit': k[2], 'balance': k[3], 'amount_residual': k[4]}) for k in results])
             else:
-                results = dict([(k[0], {'balance': k[1]}) for k in results])
+                results = dict([(k[0], {'balance': k[1], 'amount_residual': k[2]}) for k in results])
             c = FormulaContext(self.env['account.financial.report.line'])
             if formulas:
                 for key in results:
                     c['sum'] = FormulaLine(results[key], type='not_computed')
                     for col, formula in formulas.items():
                         if col in results[key]:
-                            results[key][col] = report_safe_eval(formula, c, nocopy=True)
+                            results[key][col] = safe_eval(formula, c, nocopy=True)
+            to_del = []
+            for key in results:
+                if self.env.user.company_id.currency_id.is_zero(results[key]['balance']):
+                    to_del.append(key)
+            for key in to_del:
+                del results[key]
 
         results.update({'line': vals})
 
@@ -297,7 +298,7 @@ class account_financial_report_line(models.Model):
             line_comparison_table = comparison_table
             if line.special_date_changer == 'from_beginning':
                 line_comparison_table = [(False, k[1]) for k in comparison_table]
-            if line.special_date_changer == 'to_begining_of_fy':
+            if line.special_date_changer == 'to_beginning_of_fy':
                 for period in line_comparison_table:
                     date_to = datetime.strptime(period[1], "%Y-%m-%d")
                     period[1] = date_to.strftime('%Y-01-01')
@@ -311,7 +312,7 @@ class account_financial_report_line(models.Model):
                 domain_ids.update(set(r.keys()))
 
             res = self._put_columns_together(res, domain_ids)
-            if line.hide_if_zero and sum([k == 0 or [] for k in res['line']], []):
+            if line.hide_if_zero and sum([k == 0 and [True] or [] for k in res['line']], []):
                 continue
 
             # Post-processing ; creating line dictionnary, building comparison, computing total for extended, formatting
@@ -325,6 +326,8 @@ class account_financial_report_line(models.Model):
                 'unfoldable': len(domain_ids) > 1 and line.show_domain != 'always',
                 'unfolded': line in context.unfolded_lines or line.show_domain == 'always',
             }
+            if line.action_id:
+                vals['action_id'] = line.action_id.id
             domain_ids.remove('line')
             lines = [vals]
             groupby = line.groupby or 'aml'
@@ -365,7 +368,7 @@ class account_financial_report_line(models.Model):
         return final_result_table
 
 
-class account_financial_report_context(models.TransientModel):
+class AccountFinancialReportContext(models.TransientModel):
     _name = "account.financial.report.context"
     _description = "A particular context for a financial report"
     _inherit = "account.report.context.common"
@@ -375,24 +378,13 @@ class account_financial_report_context(models.TransientModel):
 
     report_id = fields.Many2one('account.financial.report', 'Linked financial report', help='Only if financial report')
     unfolded_lines = fields.Many2many('account.financial.report.line', 'context_to_line', string='Unfolded lines')
-    footnotes = fields.Many2many('account.report.footnote', 'account_context_footnote_financial', string='Footnotes')
 
-    @api.multi
-    def add_footnote(self, type, target_id, column, number, text):
-        footnote = self.env['account.report.footnote'].create(
-            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text}
-        )
-        self.write({'footnotes': [(4, footnote.id)]})
-
-    @api.multi
-    def edit_footnote(self, number, text):
-        footnote = self.footnotes.filtered(lambda s: s.number == number)
-        footnote.write({'text': text})
-
-    @api.multi
-    def remove_footnote(self, number):
-        footnotes = self.footnotes.filtered(lambda s: s.number == number)
-        self.write({'footnotes': [(3, footnotes.id)]})
+    @api.model
+    def create(self, vals):
+        res = super(AccountFinancialReportContext, self).create(vals)
+        if res.report_id.default_date_filter == 'year':
+            res.write({'date_filter': 'this_year'})
+        return res
 
     @api.multi
     def remove_line(self, line_id):
@@ -422,20 +414,3 @@ class account_financial_report_context(models.TransientModel):
         if self.report_id.report_type == 'date_range_extended':
             columns += ['Older', 'Total']
         return columns
-
-    def render_html(self, data=None):
-        report_obj = self.env['report']
-        module_report = report_obj._get_report_from_name('account.report_financial')
-        docargs = {
-            'doc_ids': self.ids,
-            'doc_model': module_report.model,
-            'docs': self,
-            'data': data,
-            'get_start_date': self._get_start_date,
-            'get_end_date': self._get_end_date,
-            'get_account': self._get_account,
-            'get_fiscalyear': self._get_fiscalyear,
-            'get_target_move': self._get_target_move,
-            'get_lines': self._get_lines
-        }
-        return report_obj.render('account.report_financial', docargs)

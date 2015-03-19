@@ -5,7 +5,11 @@
         <template id="header" inherit_id="website.layout" name="LiveChat Import (internal) Scripts">
             <xpath expr="//body" position="inside">
                 <t t-if="website and website.channel_id">
-                    <t t-raw="website.channel_id.script_internal"/>
+                    <t t-call="im_livechat.internal_loader">
+                        <t t-set="url" t-value="website_livechat_url"/>
+                        <t t-set="dbname" t-value="website_livechat_dbname"/>
+                        <t t-set="channel" t-value="website_livechat_channel"/>
+                    </t>
                 </t>
             </xpath>
         </template>
@@ -22,6 +26,12 @@
             <t t-call="website.layout">
               <div id="wrap">
                 <div class="container">
+                    <!-- published button -->
+                    <t t-call="website.publish_management">
+                        <t t-set="object" t-value="channel"/>
+                        <t t-set="publish_edit" t-value="True"/>
+                    </t>
+
                     <h1><span>Livechat Channel</span>  <small t-field="channel.name" /></h1>
                     <div t-field="channel.website_description" class="oe_structure mt16" />
                     <div class="row mt32">

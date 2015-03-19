@@ -19,11 +19,9 @@
 #
 ##############################################################################
 
-import calendar
 from datetime import datetime, date
 from dateutil import relativedelta
 from lxml import etree
-import json
 import time
 
 from openerp import SUPERUSER_ID
@@ -208,7 +206,7 @@ class project(osv.osv):
         return res
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         res={}
-        for tasks in self.browse(cr, uid, ids, context):
+        for tasks in self.browse(cr, uid, ids, dict(context, active_test=False)):
             res[tasks.id] = len(tasks.task_ids)
         return res
     def _get_alias_models(self, cr, uid, context=None):
@@ -268,17 +266,6 @@ class project(osv.osv):
             month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
             section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
         return section_result
-
-    def _get_project_task_data(self, cr, uid, ids, field_name, arg, context=None):
-        obj = self.pool['project.task']
-        month_begin = date.today().replace(day=1)
-        date_begin = (month_begin - relativedelta.relativedelta(months=self._period_number - 1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        res = {}
-        for id in ids:
-            created_domain = [('project_id', '=', id), ('create_date', '>=', date_begin ), ('create_date', '<=', date_end ), ('stage_id.fold', '=', False)]
-            res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, [ 'create_date'], 'create_date_count', 'create_date', context=context))
-        return res
 
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
@@ -345,8 +332,6 @@ class project(osv.osv):
                                    ('pending','Pending'),
                                    ('close','Closed')],
                                   'Status', required=True, copy=False),
-        'monthly_tasks': fields.function(_get_project_task_data, type='char', readonly=True,
-                                             string='Project Task By Month'),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'
         )
@@ -627,22 +612,7 @@ class task(osv.osv):
     _description = "Task"
     _date_name = "date_start"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-
     _mail_post_access = 'read'
-    _track = {
-        'stage_id': {
-            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
-            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
-            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id.sequence > 1,
-        },
-        'user_id': {
-            'project.mt_task_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
-        },
-        'kanban_state': {
-            'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
-            'project.mt_task_ready': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
-        },
-    }
 
     def _get_default_partner(self, cr, uid, context=None):
         project_id = self._get_default_project_id(cr, uid, context)
@@ -1151,6 +1121,20 @@ class task(osv.osv):
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'kanban_state' in init_values and record.kanban_state == 'blocked':
+            return 'project.mt_task_blocked'
+        elif 'kanban_state' in init_values and record.kanban_state == 'done':
+            return 'project.mt_task_ready'
+        elif 'user_id' in init_values and record.user_id:  # assigned -> new
+            return 'project.mt_task_new'
+        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:  # start stage -> new
+            return 'project.mt_task_new'
+        elif 'stage_id' in init_values:
+            return 'project.mt_task_stage'
+        return super(task, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """

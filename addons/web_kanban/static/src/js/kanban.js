@@ -1332,8 +1332,14 @@ instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
         var self = this;
         this.record_id = self.parent.id;
         this.priorities = self.prepare_priority();
+        var readonly = this.field && this.field.readonly;
+        if (readonly){
+            this.set('readonly', true);
+        }
         this.$el = $(QWeb.render("Priority", {'widget': this}));
-        this.$el.find('li').click(self.do_action.bind(self));
+        if (!readonly){
+            this.$el.find('li').click(self.do_action.bind(self));
+        }
     },
     do_action: function(e) {
         var self = this;
@@ -1367,6 +1373,7 @@ instance.web_kanban.KanbanSelection = instance.web_kanban.AbstractField.extend({
             var leg_opt = self.options && self.options.states_legend || null;
             if (leg_opt && leg_opt[res[0]] && self.parent.group.values && self.parent.group.values[leg_opt[res[0]]]) {
                 value['state_name'] = self.parent.group.values[leg_opt[res[0]]];
+                value['tooltip'] = self.parent.group.values[leg_opt[res[0]]];
             }
             if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
             else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }

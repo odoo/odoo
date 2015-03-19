@@ -330,7 +330,7 @@ instance.web.search.FavoriteMenu.include({
         var $add_to_dashboard = this.$('.add-to-dashboard');
         this.$add_dashboard_btn = $add_to_dashboard.eq(2).find('button');
         this.$add_dashboard_input = $add_to_dashboard.eq(1).find('input');
-        this.$add_dashboard_link = $add_to_dashboard.first().find('a');
+        this.$add_dashboard_link = $add_to_dashboard.first();
         var title = this.searchview.getParent().title;
         this.$add_dashboard_input.val(title);
         this.$add_dashboard_link.click(function () {
@@ -340,7 +340,7 @@ instance.web.search.FavoriteMenu.include({
     },
     toggle_dashboard_menu: function (is_open) {
         this.$add_dashboard_link
-            .toggleClass('closed-menu', !is_open)
+            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('open-menu', is_open);
         this.$add_dashboard_btn.toggle(is_open);
         this.$add_dashboard_input.toggle(is_open);

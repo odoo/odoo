@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 import werkzeug
 
@@ -32,8 +33,6 @@ class MassMailController(http.Controller):
     @http.route(['/mail/mailing/unsubscribe'], type='json', auth='none', website=True)
     def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
-        print mailing
-        print email
         if mailing.exists():
             mailing.update_opt_out(mailing_id, email, opt_in_ids, False)
             mailing.update_opt_out(mailing_id, email, opt_out_ids, True) 
@@ -77,3 +76,13 @@ class MassMailController(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         request.registry['website.links.click'].add_click(cr, uid, code, request.httprequest.remote_addr, request.session['geoip'].get('country_code'), stat_id=stat_id, context=context)
         return werkzeug.utils.redirect(request.registry['website.links'].get_url_from_code(cr, uid, code, context=context), 301)
+
+    @http.route(['/website_mass_mailing/get_content'], type='json', auth="public", website=True)
+    def get_mass_mailing_content(self, newsletter_id, **post):
+        data = self.is_subscriber(newsletter_id, **post)
+        mass_mailing_list = request.registry['mail.mass_mailing.list'].browse(request.cr, SUPERUSER_ID, int(newsletter_id), request.context)
+        data.update({
+            'content': mass_mailing_list.popup_content,
+            'redirect_url': mass_mailing_list.popup_redirect_url
+            })
+        return data

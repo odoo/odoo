@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from openerp import models, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
-class account_invoice_confirm(models.TransientModel):
+
+class AccountInvoiceConfirm(models.TransientModel):
     """
     This wizard will confirm the all the selected draft invoices
     """
@@ -23,7 +24,7 @@ class account_invoice_confirm(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
-class account_invoice_cancel(models.TransientModel):
+class AccountInvoiceCancel(models.TransientModel):
     """
     This wizard will cancel the all the selected invoices.
     If in the journal, the option allow cancelling entry is not selected then it will give warning message.
@@ -38,7 +39,7 @@ class account_invoice_cancel(models.TransientModel):
         active_ids = context.get('active_ids', []) or []
 
         for record in self.env['account.invoice'].browse(active_ids):
-            if record.state in ('cancel','paid'):
+            if record.state in ('cancel', 'paid'):
                 raise UserError(_("Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state."))
             record.signal_workflow('invoice_cancel')
         return {'type': 'ir.actions.act_window_close'}

@@ -184,15 +184,7 @@
                     return def.reject();
                 }
 
-                // if needed, scroll prior to displaying the tip
-                var scroll = _.find(self.$element.parentsUntil('body'), function(el) {
-                    var overflow = $(el).css('overflow-y');
-                    return (overflow === 'auto' || overflow === 'scroll');
-                });
-                if (scroll) {
-                    $(scroll).scrollTo(self.$element);
-                }
-
+                self.scroll_to_tip();
                 self.$helper = $("<div>", { class: 'oe_tip_helper' });
                 self.$element.after(self.$helper);
                 self._set_helper_position();
@@ -261,6 +253,17 @@
             return def;
         },
 
+        scroll_to_tip: function(){
+            var self = this;
+            var scroll = _.find(self.$element.parentsUntil('body'), function(el) {
+                var overflow = $(el).css('overflow-y');
+                return (overflow === 'auto' || overflow === 'scroll');
+            });
+            if (scroll) {
+                $(scroll).scrollTo(self.$element);
+            }
+        },
+
         end_tip: function(tip) {
             var self = this;
             var Tips = new instance.web.Model('web.tip');
@@ -279,6 +282,7 @@
         reposition: function() {
             var self = this;
             if (self.tip_mutex.def.state() === 'pending') {
+                self.scroll_to_tip();
                 self._set_helper_position();
                 self.$element.popover('show');
             }

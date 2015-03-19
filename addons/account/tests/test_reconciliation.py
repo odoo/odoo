@@ -50,6 +50,7 @@ class TestReconciliation(TransactionCase):
             'price_unit': 100,
             'invoice_id': invoice.id,
             'name': 'product that cost 100',
+            'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_revenue').id)])[0].id,
         })
 
         #validate invoice
@@ -120,7 +121,7 @@ class TestReconciliation(TransactionCase):
         bank_stmt = self.make_payment(invoice_record, bank_journal, amount=amount, amount_currency=amount_currency, currency_id=transaction_currency_id)
         customer_move_lines = bank_stmt.move_line_ids
 
-        #we create a supplier invoice in given invoice_currency
+        #we create a supplier bill in given invoice_currency
         invoice_record = self.create_invoice(type='in_invoice', currency_id=invoice_currency_id)
         #we encode a payment on it, on the given bank_journal with amount, amount_currency and trasaction_currency given
         bank_stmt = self.make_payment(invoice_record, bank_journal, amount=-amount, amount_currency=-amount_currency, currency_id=transaction_currency_id)

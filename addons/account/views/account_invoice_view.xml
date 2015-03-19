@@ -130,11 +130,11 @@
                     <field name="user_id" string="Salesperson"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="residual" sum="Residual Amount" widget="monetary"/>
-                    <field name="amount_untaxed" sum="Untaxed Amount" widget="monetary"/>
-                    <field name="amount_total" sum="Total Amount" widget="monetary"/>
+                    <field name="amount_untaxed" groups="base.group_multi_currency"/>
+                    <field name="amount_untaxed_signed" sum="Untaxed Amount" widget="monetary"/>
+                    <field name="amount_total_signed" sum="Total Amount" widget="monetary"/>
+                    <field name="residual_signed" sum="Residual Amount" widget="monetary"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="amount_total_signed" sum="Total Amount" widget="monetary" groups="base.group_multi_currency"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -145,22 +145,22 @@
             <field name="model">account.invoice</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form string="Supplier Invoice">
+                <form string="Supplier Bill">
                 <header>
                         <button name="invoice_open" states="draft,proforma2" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
-                        <button name="%(action_account_register_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
+                        <button name="%(action_account_invoice_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
                         <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid' groups="account.group_account_invoice"/>
                         <button name="invoice_cancel" states="draft,proforma2" string="Cancel Invoice" groups="account.group_account_invoice"/>
                         <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" groups="account.group_account_invoice"/>
                         <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
-                <sheet string="Supplier Invoice">
+                <sheet string="Supplier Bill">
                     <div class="oe_title">
                         <h1>
-                            <label string="Draft Invoice" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_invoice')]}"/>
+                            <label string="Draft Bill" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_invoice')]}"/>
                             <label string="Draft Refund" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_refund')]}"/>
-                            <label string="Invoice" attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_invoice')]}"/>
+                            <label string="Bill" attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_invoice')]}"/>
                             <label string="Refund" attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_refund')]}"/>
                             <field name="number" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
                         </h1>
@@ -193,9 +193,9 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Invoice">
-                            <field context="{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type}" name="invoice_line">
-                                <tree string="Invoice lines" editable="bottom">
+                        <page string="Bill">
+                            <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line">
+                                <tree string="Bill lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
                                     <field name="product_id"
                                         on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" context="{'partner_id': parent.partner_id}"/>
@@ -212,8 +212,7 @@
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
-                                        domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]"/>
-                                    <!-- ??? type_tax_use should not be purchase? -->
+                                        domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>
@@ -282,7 +281,7 @@
                     <button name="invoice_print" string="Print" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}" groups="base.group_user"/>
                     <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}" groups="base.group_user"/>
-                    <button name="%(action_account_register_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
+                    <button name="%(action_account_invoice_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
                     <button name="invoice_open" states="draft" string="Validate" class="oe_highlight" groups="base.group_user"/>
                     <button name="invoice_open" states="proforma2" string="Validate" groups="base.group_user"/>
                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
@@ -328,7 +327,7 @@
                     <field name="sent" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Invoice Lines">
-                            <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}">
+                            <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type, 'journal_id': journal_id}">
                                 <tree string="Invoice Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"
@@ -346,7 +345,7 @@
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
-                                        domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]"/>
+                                        domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>
@@ -421,10 +420,11 @@
             <field name="arch" type="xml">
                 <search string="Search Invoice">
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('supplier_invoice_number', 'ilike', self), ('partner_id', 'child_of', self)]"/>
-                    <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
+                    <filter name="draft" string="Draft" domain="[('state','in',('draft', 'proforma', 'proforma2'))]" help="Draft Invoices"/>
                     <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
                     <filter name="invoices" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
                     <filter name="unpaid" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
+                    <filter name="late" string="Overdue" domain="[('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue Invoices"/>
                     <separator/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id" string="Salesperson"/>
@@ -483,7 +483,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','out_invoice')]</field>
+            <field name="domain">[('type','in',('out_invoice', 'out_refund'))]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
@@ -515,20 +515,20 @@
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
 
-        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables"/>
+        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables" sequence="1"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
-            <field name="name">Supplier Invoices</field>
+            <field name="name">Supplier Bills</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','in_invoice')]</field>
+            <field name="domain">[('type','in',('in_invoice', 'in_refund'))]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to record a new supplier invoice.
+                Click to record a new supplier bill.
               </p><p>
                 You can control the invoice from your supplier according to
                 what you purchased or received. Odoo can also generate
@@ -537,62 +537,6 @@
             </field>
         </record>
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables" sequence="1"/>
-
-        <record id="action_invoice_tree3" model="ir.actions.act_window">
-            <field name="name">Customer Refunds</field>
-            <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,pivot,graph</field>
-            <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','out_refund')]</field>
-            <field name="context">{'default_type':'out_refund', 'type':'out_refund', 'journal_type': 'sale'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a customer refund.
-              </p><p>
-                A refund is a document that credits an invoice completely or
-                partially.
-              </p><p>
-                Instead of manually creating a customer refund, you
-                can generate it directly from the related customer invoice.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="act_window_id" ref="action_invoice_tree3"/>
-        </record>
-
-        <record id="action_invoice_tree3_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="invoice_form"/>
-            <field name="act_window_id" ref="action_invoice_tree3"/>
-        </record>
-        <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="menu_finance_receivables"/>
-
-        <record id="action_invoice_tree4" model="ir.actions.act_window">
-            <field name="name">Supplier Refunds</field>
-            <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,pivot,graph</field>
-            <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','in_refund')]</field>
-            <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to register a refund you received from a supplier.
-              </p><p>
-                Instead of creating the supplier refund manually, you can generate
-                refunds and reconcile them directly from the related supplier invoice.
-              </p>
-            </field>
-        </record>
-        <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables" sequence="2"/>
 
         <act_window
            id="act_account_journal_2_account_invoice_opened"

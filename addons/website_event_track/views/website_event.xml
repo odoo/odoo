@@ -178,7 +178,7 @@
             <div class="container">
                 <div class="row mt8">
                     <div class="col-sm-7" id="event_menu">
-                        <ol class="breadcrumb mb0" id="event_menu" t-if="event.menu_id">
+                        <ol name="Event Menu" class="breadcrumb mb0" id="event_menu" t-if="event.menu_id" t-att-data-content_menu_id="editable and event.menu_id.id">
                             <t t-foreach="event.menu_id.child_id" t-as="submenu">
                                 <t t-call="website.submenu"/>
                             </t>

@@ -26,9 +26,33 @@ from datetime import timedelta, datetime
 import calendar
 
 
-class account_report_context_common(models.TransientModel):
+class AccountReportFootnotesManager(models.TransientModel):
+    _name = 'account.report.footnotes.manager'
+    _description = 'manages footnotes'
+
+    footnotes = fields.One2many('account.report.footnote', 'manager_id')
+
+    @api.multi
+    def add_footnote(self, type, target_id, column, number, text):
+        self.env['account.report.footnote'].create(
+            {'type': type, 'target_id': target_id, 'column': column, 'number': number, 'text': text, 'manager_id': self.id}
+        )
+
+    @api.multi
+    def edit_footnote(self, number, text):
+        footnote = self.footnotes.filtered(lambda s: s.number == number)
+        footnote.write({'text': text})
+
+    @api.multi
+    def remove_footnote(self, number):
+        footnotes = self.footnotes.filtered(lambda s: s.number == number)
+        self.write({'footnotes': [(3, footnotes.id)]})
+
+
+class AccountReportContextCommon(models.TransientModel):
     _name = "account.report.context.common"
     _description = "A particular context for a financial report"
+    _inherits = {'account.report.footnotes.manager': 'footnotes_manager_id'}
 
     @api.model
     def get_context_by_report_name(self, name):
@@ -42,6 +66,10 @@ class account_report_context_common(models.TransientModel):
             return 'account.report.context.tax'
         if name == 'followup_report':
             return 'account.report.context.followup'
+        if name == 'bank_reconciliation':
+            return 'account.report.context.bank.reconciliation'
+        if name == 'general_ledger':
+            return 'account.context.general.ledger'
 
     @api.model
     def get_full_report_name_by_report_name(self, name):
@@ -51,6 +79,10 @@ class account_report_context_common(models.TransientModel):
             return 'account.generic.tax.report'
         if name == 'followup_report':
             return 'account.followup.report'
+        if name == 'bank_reconciliation':
+            return 'account.bank.reconciliation.report'
+        if name == 'general_ledger':
+            return 'account.general.ledger'
 
     def get_report_obj(self):
         raise Warning(_('get_report_obj not implemented'))
@@ -89,6 +121,7 @@ class account_report_context_common(models.TransientModel):
     cash_basis = fields.Boolean('Enable cash basis columns', default=False)
     date_filter_cmp = fields.Char('Comparison date filter used', default='no_comparison')
     periods_number = fields.Integer('Number of periods', default=1)
+    footnotes_manager_id = fields.Many2one('account.report.footnotes.manager', string='Footnotes Manager', required=True, ondelete='cascade')
 
     @api.multi
     def edit_summary(self, text):
@@ -120,14 +153,6 @@ class account_report_context_common(models.TransientModel):
     def get_columns_names(self):
         raise Warning(_('get_columns_names not implemented'))
 
-    @api.multi
-    def add_footnote(self, type, target_id, column, number, text):
-        raise Warning(_('add_footnote not implemented'))
-
-    @api.multi
-    def edit_footnote(self, number, text):
-        raise Warning(_('edit_footnote not implemented'))
-
     def get_full_date_names(self, dt_to, dt_from=None):
         dt_to = datetime.strptime(dt_to, "%Y-%m-%d")
         if dt_from:
@@ -138,14 +163,10 @@ class account_report_context_common(models.TransientModel):
             quarter = (dt_to.month - 1) / 3 + 1
             return dt_to.strftime('Quarter #' + str(quarter) + ' %Y')
         if 'year' in self.date_filter:
-            domain = [('company_id', '=', self.company_id.id), ('date_stop', '=', dt_to.strftime('%Y-%m-%d'))]
-            if dt_from:
-                domain.append(('date_start', '=', dt_from.strftime('%Y-%m-%d')))
-            fy_ids = self.env['account.fiscalyear'].search(domain, limit=1)
-            if fy_ids:
-                return fy_ids.name
-            else:
+            if self.company_id.fiscalyear_last_day == 31 and self.company_id.fiscalyear_last_month == 12:
                 return dt_to.strftime('%Y')
+            else:
+                return str(dt_to.year - 1) + ' - ' + str(dt_to.year)
         if not dt_from:
             return dt_to.strftime('(as at %d %b %Y)')
         return dt_from.strftime('(From %d %b %Y <br />') + dt_to.strftime('to %d %b %Y)')
@@ -158,14 +179,14 @@ class account_report_context_common(models.TransientModel):
     def get_periods(self):
         res = self.get_cmp_periods()
         if self.get_report_obj().get_report_type() == 'no_date_range':
-            res[:0] = [(False, self.date_to)]
+            res[:0] = [[False, self.date_to]]
         else:
-            res[:0] = [(self.date_from, self.date_to)]
+            res[:0] = [[self.date_from, self.date_to]]
             if self.get_report_obj().get_report_type() == 'date_range_extended':
                 dt_from = datetime.strptime(self.date_to, "%Y-%m-%d") + timedelta(days=1)
-                res[:0] = [(dt_from.strftime("%Y-%m-%d"), False)]
+                res[:0] = [[dt_from.strftime("%Y-%m-%d"), False]]
                 dt_to = datetime.strptime(res[-1][0], "%Y-%m-%d") - timedelta(days=1)
-                res.append((False, dt_to.strftime("%Y-%m-%d")))
+                res.append([False, dt_to.strftime("%Y-%m-%d")])
         return res
 
     def get_cmp_periods(self, display=False):
@@ -180,8 +201,8 @@ class account_report_context_common(models.TransientModel):
                 return ['Comparison<br />' + self.get_cmp_date(), '%']
             else:
                 if self.get_report_obj().get_report_type() == 'no_date_range':
-                    return [(False, self.date_to_cmp)]
-                return [(self.date_from_cmp, self.date_to_cmp)]
+                    return [[False, self.date_to_cmp]]
+                return [[self.date_from_cmp, self.date_to_cmp]]
         if self.date_filter_cmp == 'same_last_year':
             columns = []
             for k in xrange(0, self.periods_number):
@@ -194,10 +215,10 @@ class account_report_context_common(models.TransientModel):
                         columns += [self.get_full_date_names(dt_to.strftime("%Y-%m-%d"), dt_from.strftime("%Y-%m-%d"))]
                 else:
                     if self.get_report_obj().get_report_type() == 'no_date_range':
-                        columns += [(False, dt_to.strftime("%Y-%m-%d"))]
+                        columns += [[False, dt_to.strftime("%Y-%m-%d")]]
                     else:
                         dt_from = dt_from.replace(year=dt_from.year - 1)
-                        columns += [(dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d"))]
+                        columns += [[dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d")]]
             return columns
         if 'month' in self.date_filter:
             for k in xrange(0, self.periods_number):
@@ -207,11 +228,11 @@ class account_report_context_common(models.TransientModel):
                     columns += [dt_to.strftime('%b %Y')]
                 else:
                     if self.get_report_obj().get_report_type() == 'no_date_range':
-                        columns += [(False, dt_to.strftime("%Y-%m-%d"))]
+                        columns += [[False, dt_to.strftime("%Y-%m-%d")]]
                     else:
                         dt_from -= timedelta(days=1)
                         dt_from = dt_from.replace(day=1)
-                        columns += [(dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d"))]
+                        columns += [[dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d")]]
         elif 'quarter' in self.date_filter:
             quarter = (dt_to.month - 1) / 3 + 1
             year = dt_to.year
@@ -233,7 +254,7 @@ class account_report_context_common(models.TransientModel):
                     else:
                         dt_to = dt_to.replace(month=12, day=31, year=dt_to.year - 1)
                     if self.get_report_obj().get_report_type() == 'no_date_range':
-                        columns += [(False, dt_to.strftime("%Y-%m-%d"))]
+                        columns += [[False, dt_to.strftime("%Y-%m-%d")]]
                     else:
                         if dt_from.month == 10:
                             dt_from = dt_from.replace(month=7)
@@ -243,46 +264,22 @@ class account_report_context_common(models.TransientModel):
                             dt_from = dt_from.replace(month=1)
                         else:
                             dt_from = dt_from.replace(month=10, year=dt_from.year - 1)
-                        columns += [(dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d"))]
+                        columns += [[dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d")]]
         elif 'year' in self.date_filter:
-            domain = [('company_id', '=', self.company_id.id), ('date_stop', '=', self.date_to)]
-            if self.get_report_obj().get_report_type() != 'no_date_range':
-                domain.append(('date_start', '=', self.date_from))
-            fy_ids = self.env['account.fiscalyear'].search(domain, limit=1)
-            with_fy = False
-            if fy_ids:
-                dt_from = datetime.strptime(fy_ids.date_start, "%Y-%m-%d")
-                dt_to = datetime.strptime(fy_ids.date_stop, "%Y-%m-%d")
-                with_fy = True
+            dt_to = datetime.strptime(self.date_to, "%Y-%m-%d")
             for k in xrange(0, self.periods_number):
-                if with_fy:
-                    dt = dt_from - timedelta(days=1)
-                    domain = [('company_id', '=', self.company_id.id),
-                              ('date_stop', '=', dt.strftime("%Y-%m-%d"))]
-                    fy_ids = self.env['account.fiscalyear'].search(domain, limit=1)
-                    if fy_ids:
-                        dt_from = datetime.strptime(fy_ids.date_start, "%Y-%m-%d")
-                        dt_to = datetime.strptime(fy_ids.date_stop, "%Y-%m-%d")
-                        if display:
-                            columns.append(fy_ids.name)
-                        else:
-                            if self.get_report_obj().get_report_type() == 'no_date_range':
-                                columns += [(False, dt_to.strftime("%Y-%m-%d"))]
-                            else:
-                                columns += [(dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d"))]
-                    else:
-                        with_fy = False
-                if not with_fy:
-                    if display:
-                        dt_to = dt_to.replace(year=dt_to.year - 1)
+                dt_to = dt_to.replace(year=dt_to.year - 1)
+                if display:
+                    if dt_to.strftime("%m-%d") == '12-31':
                         columns += [dt_to.year]
                     else:
-                        dt_to = dt_to.replace(year=dt_to.year - 1)
-                        if self.get_report_obj().get_report_type() == 'no_date_range':
-                            columns += [(False, dt_to.strftime("%Y-%m-%d"))]
-                        else:
-                            dt_from = dt_from.replace(year=dt_from.year - 1)
-                            columns += [(dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d"))]
+                        columns += [str(dt_to.year - 1) + ' - ' + str(dt_to.year)]
+                else:
+                    if self.get_report_obj().get_report_type() == 'no_date_range':
+                        columns += [[False, dt_to.strftime("%Y-%m-%d")]]
+                    else:
+                        dt_from = dt_to.replace(year=dt_to.year - 1) + timedelta(days=1)
+                        columns += [[dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d")]]
         else:
             if self.get_report_obj().get_report_type() != 'no_date_range':
                 dt_from = datetime.strptime(self.date_from, "%Y-%m-%d")
@@ -295,21 +292,21 @@ class account_report_context_common(models.TransientModel):
                     if display:
                         columns += [str((k + 1) * delta_days) + ' - ' + str((k + 2) * delta_days) + ' days ago']
                     else:
-                        columns += [(dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d"))]
+                        columns += [[dt_from.strftime("%Y-%m-%d"), dt_to.strftime("%Y-%m-%d")]]
             else:
                 for k in xrange(0, self.periods_number):
                     dt_to -= timedelta(days=calendar.monthrange(dt_to.year, dt_to.month > 1 and dt_to.month - 1 or 12)[1])
                     if display:
                         columns += [dt_to.strftime('(as at %d %b %Y)')]
                     else:
-                        columns += [(False, dt_to.strftime("%Y-%m-%d"))]
+                        columns += [[False, dt_to.strftime("%Y-%m-%d")]]
         return columns
 
     @api.model
     def create(self, vals):
-        res = super(account_report_context_common, self).create(vals)
+        res = super(AccountReportContextCommon, self).create(vals)
         report_type = res.get_report_obj().get_report_type()
-        if report_type == 'date_range':
+        if report_type == 'date_range' or report_type == 'date_range_cash':
             dt = datetime.today()
             update = {
                 'date_from': datetime.today().replace(day=1),
@@ -436,7 +433,7 @@ class account_report_context_common(models.TransientModel):
         book.save(response.stream)
 
 
-class account_report_footnote(models.TransientModel):
+class AccountReportFootnote(models.TransientModel):
     _name = "account.report.footnote"
     _description = "Footnote for reports"
 
@@ -445,3 +442,4 @@ class account_report_footnote(models.TransientModel):
     column = fields.Integer()
     number = fields.Integer()
     text = fields.Char()
+    manager_id = fields.Many2one('account.report.footnotes.manager')

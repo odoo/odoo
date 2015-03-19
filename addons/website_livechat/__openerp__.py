@@ -17,6 +17,7 @@ It also will include the feedback tool for the livechat, and web pages to displa
         'views/res_config.xml',
         'views/website_livechat_view.xml',
         'security/ir.model.access.csv',
+        'security/website_livechat.xml',
         'website_livechat_data.xml',
     ],
 }

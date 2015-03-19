@@ -74,7 +74,7 @@
                         <field name="product_id"/>
                         <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" help="Analytic Journal Items related to a sale journal."/>
                         <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" help="Analytic Journal Items related to a purchase journal."/>
-                        <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]"/>
+                        <filter name="others" string="Others" domain="[('journal_id.type','not in',('sale', 'purchase'))]"/>
                     </xpath>
                     <xpath expr="//field[@name='account_id']" position="after">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
@@ -105,12 +105,6 @@
             </field>
         </record>
         
-        <menuitem groups="analytic.group_analytic_accounting" id="next_id_40"
-            name="Analytic" parent="account.menu_finance_generic_reporting"
-            sequence="4"/>
-        <menuitem groups="analytic.group_analytic_accounting"
-            action="analytic.action_account_analytic_journal"
-            id="account_analytic_journal_print" parent="account.next_id_40"/>
         <menuitem
             name="Chart of Analytic Accounts"
             parent="account.menu_finance_charts"

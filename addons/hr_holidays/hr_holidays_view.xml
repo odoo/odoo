@@ -37,7 +37,7 @@
                     <separator/>
                     <filter string="My Department Leaves" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                     <field name="employee_id"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="hr.group_multi_departments"/>
                     <field name="holiday_status_id"/>
                     <group expand="0" string="Group By">
                         <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
@@ -87,7 +87,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')], 'required': [('type', '=', 'add')]}"/>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" required="1"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
                                 <label for="number_of_days_temp" string="Duration"/>
                             <div>
@@ -242,11 +242,11 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_holiday_new"/>
             <field name="context">{
-                'default_type': 'remove', 
+                'default_type': 'remove',
                 'search_default_my_leaves':1,
-                'needaction_menu_ref': 
+                'needaction_menu_ref':
                 [
-                    'hr_holidays.menu_open_company_allocation', 
+                    'hr_holidays.menu_open_company_allocation',
                 ]
             }</field>
             <field name="domain">[('type','=','remove'), ('employee_id.user_id','=', uid)]</field>
@@ -291,12 +291,12 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="context">{
-                'default_type': 'remove', 
-                'search_default_approve':1, 
-                'needaction_menu_ref': 
+                'default_type': 'remove',
+                'search_default_approve':1,
+                'needaction_menu_ref':
                 [
-                    'hr_holidays.menu_open_ask_holidays_new', 
-                    'hr_holidays.menu_open_company_allocation', 
+                    'hr_holidays.menu_open_ask_holidays_new',
+                    'hr_holidays.menu_open_company_allocation',
                     'hr_holidays.menu_open_employee_leave',
                 ]
             }</field>
@@ -326,11 +326,11 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="context">{
-                'default_type':'add', 
+                'default_type':'add',
                 'search_default_my_leaves':1,
-                'needaction_menu_ref': 
+                'needaction_menu_ref':
                 [
-                    'hr_holidays.menu_open_company_allocation', 
+                    'hr_holidays.menu_open_company_allocation',
                 ]
             }</field>
             <field name="domain">[('type','=','add'), ('employee_id.user_id','=', uid)]</field>
@@ -359,11 +359,11 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="context">{
-                'default_type': 'add', 
-                'search_default_approve':1, 
-                'needaction_menu_ref': 
+                'default_type': 'add',
+                'search_default_approve':1,
+                'needaction_menu_ref':
                 [
-                    'hr_holidays.menu_open_allocation_holidays', 
+                    'hr_holidays.menu_open_allocation_holidays',
                     'hr_holidays.menu_open_company_allocation'
                 ]
             }</field>
@@ -395,9 +395,9 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_holiday_simple"/>
             <field name="context">{
-                'search_default_group_type': 1, 
+                'search_default_group_type': 1,
                 'search_default_year': 1 ,
-                'needaction_menu_ref': 
+                'needaction_menu_ref':
                 [
                     'hr_holidays.menu_open_ask_holidays_new',
                     'hr_holidays.menu_request_approve_holidays',
@@ -411,7 +411,7 @@
         </record>
 
         <menuitem name="Leaves Summary" parent="menu_open_ask_holidays" id="menu_open_company_allocation" action="open_company_allocation" sequence="40"/>
-        
+
         <record model="ir.actions.act_window" id="open_employee_leaves">
             <field name="name">Employee's Leaves</field>
             <field name="res_model">hr.holidays</field>
@@ -531,7 +531,7 @@
             <field name="domain">[('type','=','remove')]</field>
             <field name="view_id" eval="view_holiday"/>
         </record>
-        
+
         <record id="act_hr_employee_holiday_request_approved" model="ir.actions.act_window">
             <field name="name">Leaves to be reported in Payslip</field>
             <field name="type">ir.actions.act_window</field>
@@ -605,6 +605,18 @@
             </field>
         </record>
 
+        <!--Hr Employee inherit search view-->
+        <record id="hr_employee_view_search" model="ir.ui.view">
+            <field name="name">hr.employee.search.view.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='department_id']" position="after">
+                    <filter name="is_absent_totay" string="Absent Today" domain="[('is_absent_totay', '=', True)]"/>
+                </xpath>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="hr_kanban_view_employees_kanban">
             <field name="name">HR - Employees Kanban with leave status</field>
             <field name="model">hr.employee</field>
@@ -633,6 +645,99 @@
             res_model="calendar.event"
             view_mode="tree,form,calendar,gantt"
             view_type="form"/>
+
+        <record id="hr_holidays_action_request_from_department" model="ir.actions.act_window">
+            <field name="name">Leave Request to Approve</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{
+                'default_type': 'remove',
+                'search_default_department_id': [active_id],
+                'default_department_id': active_id,
+                'search_default_approve':1}
+            </field>
+            <field name="domain">[('type','=','remove')]</field>
+            <field name="view_id" ref="view_holiday"/>
+            <field name="search_view_id" ref="view_hr_holidays_filter"/>
+        </record>
+
+        <record id="hr_holidays_action_allocation_from_department" model="ir.actions.act_window">
+            <field name="name">Allocation Requests to Approve</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{
+                'default_type': 'add',
+                'search_default_department_id': [active_id],
+                'default_department_id': active_id,
+                'search_default_approve':1}
+            </field>
+            <field name="domain">[('type','=','add')]</field>
+            <field name="search_view_id" ref="view_hr_holidays_filter"/>
+        </record>
+
+        <record id="hr_employee_action_from_department" model="ir.actions.act_window">
+            <field name="name">Absent Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{
+                'search_default_is_absent_totay': 1,
+                'search_default_department_id': [active_id],
+                'default_department_id': active_id}
+            </field>
+            <field name="search_view_id" ref="hr_employee_view_search"/>
+        </record>
+
+        <!--Hr Department Inherit Kanban view-->
+        <record id="hr_department_view_kanban" model="ir.ui.view">
+            <field name="name">hr.department.kanban.inherit</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//templates" position="before">
+                        <field name="leave_to_approve_count"/>
+                        <field name="allocation_to_approve_count"/>
+                        <field name="total_employee"/>
+                    </xpath>
+                    <xpath expr="//div[@name='to_approve']" position="attributes">
+                        <attribute name="class">col-md-6 col-xs-6</attribute>
+                    </xpath>
+                    <xpath expr="//div[@name='to_approve']" position="inside">
+                        <div>
+                            <a name="%(hr_holidays_action_request_from_department)d" type="action">
+                                <t t-esc="record.leave_to_approve_count.raw_value or 0"/> Leave Requests
+                            </a>
+                        </div>
+                        <div>
+                            <a name="%(hr_holidays_action_allocation_from_department)d" type="action">
+                                <t t-esc="record.allocation_to_approve_count.raw_value or 0"/> Allocation Requests
+                            </a>
+                        </div>
+                    </xpath>
+                    <xpath expr="//div[@name='gauge_to_approve']" position="attributes">
+                        <attribute name="class">col-md-6 col-xs-6</attribute>
+                    </xpath>
+                    <xpath expr="//div[@name='gauge_to_approve']" position="inside">
+                        <div class="row">
+                            <a name="%(hr_employee_action_from_department)d" type="action">
+                                <field name="absence_of_today"
+                                    options="{
+                                    'max_field': 'total_employee',
+                                    'label': 'Absence(s) of Today',
+                                    'levelcolors': ['#a9d70b', '#f9c802', '#ff0000']}"
+                                    widget="gauge"
+                                    style="width:160px; height: 120px; cursor: pointer;">Absence(s) of Today
+                                </field>
+                            </a>
+                        </div>
+                    </xpath>
+
+                </data>
+            </field>
+        </record>
 
     </data>
 </openerp>

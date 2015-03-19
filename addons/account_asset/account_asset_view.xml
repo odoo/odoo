@@ -145,7 +145,6 @@
                                 <form string="Depreciation Lines"> 
                                     <group>
                                         <group>
-                                            <field name="asset_id" invisible="1"/>
                                             <field name="parent_state" invisible="1"/>
                                             <field name="name"/>
                                             <field name="amount" widget="monetary"/>
@@ -156,8 +155,8 @@
                                         <group>
                                             <field name="sequence"/>
                                             <field name="depreciation_date"/>
-                                            <field name="depreciated_value" readonly="1"/>
-                                            <field name="remaining_value" readonly="1" widget="monetary"/>
+                                            <field name="depreciated_value"/>
+                                            <field name="remaining_value"/>
                                         </group>
                                     </group>
                                 </form>
@@ -304,11 +303,6 @@
         </field>
     </record>
 
-    <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance" sequence="7" groups="account.group_account_user"/>
-    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree"
-        sequence="100"
-        action="action_account_asset_asset_tree"/>
-
     <record model="ir.actions.act_window" id="action_account_asset_asset_form">
         <field name="name">Assets</field>
         <field name="res_model">account.asset.asset</field>
@@ -317,7 +311,7 @@
         <field name="search_view_id" ref="view_account_asset_search"/>
     </record>
 
-    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form"/>
+    <menuitem parent="account.menu_asset_budget" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" name="Assets" groups="account.group_account_user"/>
 
     <act_window id="act_entries_open" name="Entries" res_model="account.move.line" src_model="account.asset.asset" context="{'search_default_asset_id': [active_id], 'default_asset_id': active_id}"/>
 
@@ -330,6 +324,10 @@
     </record>
 
     <menuitem parent="menu_finance_config_assets" id="menu_action_account_asset_asset_list_normal" action="action_account_asset_asset_list_normal"/>
+
+    <menuitem parent="menu_finance_config_assets" id="menu_action_account_asset_asset_tree"
+        sequence="100"
+        action="action_account_asset_asset_tree"/>
 
 </data>
 </openerp>

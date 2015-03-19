@@ -220,17 +220,27 @@ class TestInherits(common.TransactionCase):
     @mute_logger('openerp.models')
     def test_copy(self):
         """ copying a user should automatically copy its partner, too """
-        foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
+        foo_id = self.user.create(self.cr, UID, {
+            'name': 'Foo',
+            'login': 'foo',
+            'password': 'foo',
+            'supplier': True,
+        })
         foo_before, = self.user.read(self.cr, UID, [foo_id])
         del foo_before['__last_update']
-        bar_id = self.user.copy(self.cr, UID, foo_id, {'login': 'bar', 'password': 'bar'})
+        bar_id = self.user.copy(self.cr, UID, foo_id, {
+            'login': 'bar',
+            'password': 'bar',
+        })
         foo_after, = self.user.read(self.cr, UID, [foo_id])
         del foo_after['__last_update']
 
         self.assertEqual(foo_before, foo_after)
 
         foo, bar = self.user.browse(self.cr, UID, [foo_id, bar_id])
+        self.assertEqual(bar.name, 'Foo (copy)')
         self.assertEqual(bar.login, 'bar')
+        self.assertEqual(foo.supplier, bar.supplier)
         self.assertNotEqual(foo.id, bar.id)
         self.assertNotEqual(foo.partner_id.id, bar.partner_id.id)
 

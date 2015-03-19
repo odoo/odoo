@@ -131,12 +131,12 @@ class event_event(models.Model):
         self.tracks_tag_ids = self.track_ids.mapped('tag_ids').ids
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks', copy=True)
-    sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsorships', copy=True)
+    sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors', copy=True)
     blog_id = fields.Many2one('blog.blog', 'Event Blog')
     show_track_proposal = fields.Boolean('Talks Proposals')
     show_tracks = fields.Boolean('Multiple Tracks')
     show_blog = fields.Boolean('News')
-    count_tracks = fields.Integer('# Tracks', compute='_count_tracks')
+    count_tracks = fields.Integer('Tracks', compute='_count_tracks')
     allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Track Tags')
     tracks_tag_ids = fields.Many2many('event.track.tag', relation='event_track_tags_rel', string='Track Tags', compute='_get_tracks_tag_ids', store=True)
     count_sponsor = fields.Integer('# Sponsors', compute='_count_sponsor')

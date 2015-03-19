@@ -46,7 +46,7 @@ _logger = logging.getLogger(__name__)
 try:
     import watchdog
     from watchdog.observers import Observer
-    from watchdog.events import FileCreatedEvent, FileModifiedEvent
+    from watchdog.events import FileCreatedEvent, FileModifiedEvent, FileMovedEvent
 except ImportError:
     watchdog = None
 
@@ -124,9 +124,9 @@ class FSWatcher(object):
             self.observer.schedule(self, path, recursive=True)
 
     def dispatch(self, event):
-        if isinstance(event, (FileCreatedEvent, FileModifiedEvent)):
+        if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent)):
             if not event.is_directory:
-                path = event.src_path
+                path = getattr(event, 'dest_path', event.src_path)
                 if path.endswith('.py'):
                     try:
                         source = open(path, 'rb').read() + '\n'

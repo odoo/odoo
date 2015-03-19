@@ -131,6 +131,12 @@
     </record>
 
     <!-- Job-related subtypes for messaging / Chatter -->
+    <record id="mt_job_new" model="mail.message.subtype">
+        <field name="name">Job Position created</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+    </record>
     <record id="mt_job_applicant_new" model="mail.message.subtype">
         <field name="name">Applicant Created</field>
         <field name="res_model">hr.job</field>
@@ -153,17 +159,26 @@
         <field name="relation_field">job_id</field>
     </record>
 
+    <!-- Department-related (parent) subtypes for messaging / Chatter -->
+    <record id="mt_department_new" model="mail.message.subtype">
+        <field name="name">Job Position Created</field>
+        <field name="res_model">hr.department</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" eval="ref('mt_job_new')"/>
+        <field name="relation_field">department_id</field>
+    </record>
+
     <!-- Applicant Categories(Tag) -->
-    <record id="tag_applicant_reserve" model="hr.applicant_category">
+    <record id="tag_applicant_reserve" model="hr.applicant.category">
         <field name="name">Reserve</field>
     </record>
-    <record id="tag_applicant_manager" model="hr.applicant_category">
+    <record id="tag_applicant_manager" model="hr.applicant.category">
         <field name="name">Manager</field>
     </record>
-    <record id="tag_applicant_it" model="hr.applicant_category">
+    <record id="tag_applicant_it" model="hr.applicant.category">
         <field name="name">IT</field>
     </record>
-    <record id="tag_applicant_sales" model="hr.applicant_category">
+    <record id="tag_applicant_sales" model="hr.applicant.category">
         <field name="name">Sales</field>
     </record>
     <record model="utm.campaign" id="utm_campaign_job">

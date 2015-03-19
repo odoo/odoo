@@ -20,7 +20,9 @@
                         <button attrs="{'invisible': [('probability', '>', 0)]}" string="Convert to Quotation" name="%(action_crm_make_sale)d" type="action"/>
                     </xpath>
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button class="oe_inline oe_stat_button" type="action"  name="%(sale_action_quotations)d" icon="stat_button_icon fa fa-usd">
+                        <button class="oe_inline oe_stat_button" type="action"
+                                name="%(sale_action_quotations)d" icon="stat_button_icon fa fa-usd"
+                                context="{'search_default_partner_id': partner_id, 'default_partner_id': partner_id}">
                             <div><strong><field name="sale_amount_total" widget="monetary"/></strong><br/>Sales</div>
                         </button>
                     </xpath>

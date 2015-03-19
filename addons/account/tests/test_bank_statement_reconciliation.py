@@ -11,7 +11,6 @@ class TestBankStatementReconciliation(TransactionCase):
 
         self.partner_agrolait = self.env.ref("base.res_partner_2")
 
-
     def test_reconciliation_proposition(self):
         rcv_mv_line = self.create_invoice(100)
         st_line = self.create_statement_line(100)
@@ -64,6 +63,7 @@ class TestBankStatementReconciliation(TransactionCase):
             'price_unit': amount,
             'invoice_id': invoice.id,
             'name': '.',
+            'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_revenue').id)])[0].id,
         })
         invoice.signal_workflow('invoice_open')
 

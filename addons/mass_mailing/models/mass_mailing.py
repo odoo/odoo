@@ -11,7 +11,6 @@ from openerp.exceptions import UserError
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import ustr
-from openerp.tools.translate import _
 from openerp.osv import osv, fields
 
 URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
@@ -128,6 +127,23 @@ class MassMailingList(osv.Model):
             _get_contact_nbr, type='integer',
             string='Number of Contacts',
         ),
+        'popup_content': fields.html("Website Popup Content", translate=True, required=True, sanitize=False),
+        'popup_redirect_url': fields.char("Website Popup Redirect URL"),
+    }
+
+    def _get_default_popup_content(self, cr, uid, context=None):
+        return """<div class="o_popup_modal_header text-center">
+    <h3 class="o_popup_modal_title mt8">Odoo Presents</h3>
+</div>
+<div class="o_popup_message">
+    <font>7</font>
+    <strong>Business Hacks</strong>
+    <span> to<br/>boost your marketing</span>
+</div>
+<p class="o_message_paragraph">Join our Marketing newsletter and get <strong>this white paper instantly</strong></p>"""
+
+    _defaults = {
+        'popup_content': _get_default_popup_content,
     }
 
 
@@ -493,7 +509,7 @@ class MassMailing(osv.Model):
         'email_from': fields.char('From', required=True),
         'create_date': fields.datetime('Creation Date'),
         'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
-        'schedule_date': fields.datetime('Scheduled Send Date'),
+        'schedule_date': fields.datetime('Schedule in the Future'),
         'body_html': fields.html('Body'),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
@@ -693,6 +709,7 @@ class MassMailing(osv.Model):
                 value['mailing_domain'] = "[('list_id', '=', False)]"
         else:
             value['mailing_domain'] = False
+        value['body_html'] = "on_change_model_and_list"
         return {'value': value}
 
     def action_duplicate(self, cr, uid, ids, context=None):
@@ -721,19 +738,6 @@ class MassMailing(osv.Model):
             'target': 'new',
             'context': ctx,
         }
-
-    def action_edit_html(self, cr, uid, ids, context=None):
-        if not len(ids) == 1:
-            raise ValueError('One and only one ID allowed for this action')
-        mail = self.browse(cr, uid, ids[0], context=context)
-        url = '/website_mail/email_designer?model=mail.mass_mailing&res_id=%d&template_model=%s&enable_editor=1' % (ids[0], mail.mailing_model)
-        return {
-            'name': _('Open with Visual Editor'),
-            'type': 'ir.actions.act_url',
-            'url': url,
-            'target': 'self',
-        }
-
 
     #------------------------------------------------------
     # Email Sending
@@ -781,10 +785,14 @@ class MassMailing(osv.Model):
                 comp_ctx = dict(context, active_ids=res_ids)
             else:
                 comp_ctx = {'active_ids': res_ids}
+
+            # Convert links in absolute URLs before the application of the shortener
+            self.write(cr, uid, [mailing.id], {'body_html': self.pool['mail.template']._replace_local_links(cr, uid, mailing.body_html, context)}, context=context)
+
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': self.convert_link(cr, uid, [mailing.id], context=context)[mailing.id],
+                'body': self.convert_links(cr, uid, [mailing.id], context=context)[mailing.id],
                 'subject': mailing.name,
                 'model': mailing.mailing_model,
                 'email_from': mailing.email_from,
@@ -799,40 +807,32 @@ class MassMailing(osv.Model):
 
             composer_id = self.pool['mail.compose.message'].create(cr, uid, composer_values, context=comp_ctx)
             self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], auto_commit=True, context=comp_ctx)
-            self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
+            self.write(cr, uid, [mailing.id], {'state': 'done'}, context=context)
         return True
 
-    def convert_link(self, cr, uid, ids, context=None):
-        website_links = self.pool['website.links']
+    def convert_links(self, cr, uid, ids, context=None):
         res = {}
         for mass_mailing in self.browse(cr, uid, ids, context=context):
-            res[mass_mailing.id] = mass_mailing.body_html if mass_mailing.body_html else ''
-            
-            for match in re.findall(URL_REGEX, res[mass_mailing.id]):
-                href = match[0]
-                long_url = match[1]
+            utm_mixin = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
+            html = mass_mailing.body_html if mass_mailing.body_html else ''
 
-                utm_object = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
+            vals = {'mass_mailing_id': mass_mailing.id}
 
-                vals = {'url': long_url}
+            if mass_mailing.mass_mailing_campaign_id:
+                vals['mass_mailing_campaign_id'] = mass_mailing.mass_mailing_campaign_id.id
+            if utm_mixin.campaign_id:
+                vals['campaign_id'] = utm_mixin.campaign_id.id
+            if utm_mixin.source_id:
+                vals['source_id'] = utm_mixin.source_id.id
+            if utm_mixin.medium_id:
+                vals['medium_id'] = utm_mixin.medium_id.id
 
-                if utm_object.campaign_id:
-                    vals['campaign_id'] = utm_object.campaign_id.id
-                if utm_object.source_id:
-                    vals['source_id'] = utm_object.source_id.id
-                if utm_object.medium_id:
-                    vals['medium_id'] = utm_object.medium_id.id
+            res[mass_mailing.id] = self.pool['website.links'].convert_links(cr, uid, html, vals, blacklist=['/unsubscribe_from_list'], context=context)
 
-                link_id = website_links.create(cr, uid, vals, context=context)
-                shorten_url = website_links.browse(cr, uid, link_id, context=context)[0].short_url
-
-                if shorten_url:
-                    new_href = href.replace(long_url, shorten_url)
-                    res[mass_mailing.id] = res[mass_mailing.id].replace(href, new_href)
         return res
 
     def put_in_queue(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'in_queue'}, context=context)
+        self.write(cr, uid, ids, {'sent_date': fields.datetime.now(), 'state': 'in_queue'}, context=context)
 
     def cancel_mass_mailing(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
@@ -866,11 +866,16 @@ class MailMail(models.Model):
     @api.model
     def send_get_mail_body(self, mail, partner=None):
         """Override to add Statistic_id in shorted urls """
-        if mail.mailing_id and mail.body_html:
+
+        links_blacklist = ['/unsubscribe_from_list']
+
+        if mail.mailing_id and mail.body_html and mail.statistics_ids:
             for match in re.findall(URL_REGEX, mail.body_html):
+
                 href = match[0]
                 url = match[1]
-                if mail.statistics_ids:
+                
+                if not [s for s in links_blacklist if s in href]:
                     new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
                     mail.body_html = mail.body_html.replace(href, new_href)
 

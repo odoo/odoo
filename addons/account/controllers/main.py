@@ -13,6 +13,10 @@ class FinancialReportController(http.Controller):
             return request.env['account.financial.report'].sudo(uid)
         if name == 'generic_tax_report':
             return request.env['account.generic.tax.report'].sudo(uid)
+        if name == 'bank_reconciliation':
+            return request.env['account.bank.reconciliation.report'].sudo(uid)
+        if name == 'general_ledger':
+            return request.env['account.general.ledger'].sudo(uid)
 
     @http.route('/account/<string:report_name>/<string:report_id>', type='http', auth='user')
     def report(self, report_name, report_id=None, **kw):
@@ -25,10 +29,15 @@ class FinancialReportController(http.Controller):
             report_obj = report_obj.browse(report_id)
         context_obj = request.env['account.report.context.common'].get_context_by_report_name(report_name)
         context_id = context_obj.sudo(uid).search(domain, limit=1)
+        if context_id and 'force_account' in kw and report_name == 'general_ledger':
+            context_id.unlink()
+            context_id = context_id.exists()
         if not context_id:
             create_vals = {}
             if report_name == 'financial_report':
                 create_vals['report_id'] = report_id
+            if 'force_account' in kw and report_name == 'general_ledger':
+                create_vals['unfolded_accounts'] = [(4, kw['force_account'])]
             context_id = context_obj.sudo(uid).create(create_vals)
         if 'xls' in kw:
             response = request.make_response(None,
@@ -50,6 +59,7 @@ class FinancialReportController(http.Controller):
             context_id.write(update)
         lines = report_obj.get_lines(context_id)
         rcontext = {
+            'res_company': request.env['res.users'].browse(uid).company_id,
             'context': context_id,
             'report': report_obj,
             'lines': lines,

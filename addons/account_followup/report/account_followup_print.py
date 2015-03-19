@@ -99,9 +99,12 @@ class report_rappel(report_sxw.rml_parse):
                 partner_max_text = i.followup_line_id.description
         text = partner_max_delay and partner_max_text or default_text
         if text:
+            lang_obj = self.pool['res.lang']
+            lang_ids = lang_obj.search(self.cr, self.uid, [('code', '=', stat_line.partner_id.lang)], context=context)
+            date_format = lang_ids and lang_obj.browse(self.cr, self.uid, lang_ids[0], context=context).date_format or '%Y-%m-%d'
             text = text % {
                 'partner_name': stat_line.partner_id.name,
-                'date': time.strftime('%Y-%m-%d'),
+                'date': time.strftime(date_format),
                 'company_name': stat_line.company_id.name,
                 'user_signature': self.pool['res.users'].browse(self.cr, self.uid, self.uid, context).signature or '',
             }

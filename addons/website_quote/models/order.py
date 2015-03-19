@@ -71,7 +71,7 @@ class sale_quote_line(osv.osv):
         if product_obj.description_sale:
             name += '\n' + product_obj.description_sale
         vals.update({
-            'price_unit': product_obj.list_price,
+            'price_unit': product_obj.lst_price,
             'product_uom_id': product_obj.uom_id.id,
             'website_description': product_obj and (product_obj.quote_description or product_obj.website_description) or '',
             'name': name,
@@ -172,9 +172,8 @@ class sale_order(osv.osv):
         if not template_id:
             return True
 
-        if context is None:
-            context = {}
         if partner:
+            context = dict(context or {})
             context['lang'] = self.pool['res.partner'].browse(cr, uid, partner, context).lang
 
         lines = [(5,)]

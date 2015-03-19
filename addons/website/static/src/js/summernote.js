@@ -513,7 +513,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             eo = ec.textContent.length;
         }
 
-        var ancestor = dom.commonAncestor(sc.tagName ? sc.parentNode : sc, ec.tagName ? ec.parentNode : ec);
+        var ancestor = dom.commonAncestor(sc.tagName ? sc.parentNode : sc, ec.tagName ? ec.parentNode : ec) || dom.ancestor(sc, dom.isEditable);
 
         if (!dom.isContentEditable(ancestor)) {
             return {
@@ -919,7 +919,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     options.keyMap.mac['ESCAPE'] = 'cancel';
     
     $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
-        var $editable = layoutInfo.editable();
+      var $editable = layoutInfo.editable();
       var dimension = sDim.split('x');
       var rng = range.create();
       rng = rng.deleteContents();
@@ -930,6 +930,8 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
       dom.isBodyContainer = isBodyContainer;
 
       editor.afterCommand($editable);
+      event.preventDefault();
+      return false;
     };
     $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
         var $editable = layoutInfo.editable();
@@ -1692,12 +1694,19 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTagName) {
         var $editable = layoutInfo.editable();
         $editable.data('NoteHistory').recordUndo($editable);
+        event.preventDefault();
 
         var r = range.create();
         if (!r) {
             return;
         }
         r.reRange().select();
+
+        if (sTagName === "blockquote" || sTagName === "pre") {
+          sTagName = $.summernote.core.agent.isMSIE ? '<' + sTagName + '>' : sTagName;
+          document.execCommand('FormatBlock', false, sTagName);
+          return;
+        }
 
         // fix by odoo because if you select a style in a li with no p tag all the ul is wrapped by the style tag
         var nodes = dom.listBetween(r.sc, r.ec);
@@ -1772,6 +1781,15 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             };
         }
 
+        if (startPoint.node.tagName && startPoint.node.childNodes[startPoint.offset]) {
+            startPoint.node = startPoint.node.childNodes[startPoint.offset];
+            startPoint.offset = 0;
+        }
+        if (endPoint.node.tagName && endPoint.node.childNodes[endPoint.offset]) {
+            endPoint.node = endPoint.node.childNodes[endPoint.offset];
+            endPoint.offset = 0;
+        }
+
         // get first and last point
         if (endPoint.offset && endPoint.offset != dom.nodeLength(endPoint.node)) {
           var ancestor = dom.ancestor(endPoint.node, dom.isFont) || endPoint.node;
@@ -1792,8 +1810,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         var nodes = [];
         dom.walkPoint(startPoint, endPoint, function (point) {
           var node = point.node;
-          if ((dom.isText(node) && dom.isVisibleText(node)) ||
-              (dom.isFont(node) && !dom.isVisibleText(node))) {
+          if (((dom.isText(node) && dom.isVisibleText(node)) ||
+              (dom.isFont(node) && !dom.isVisibleText(node))) &&
+              (node != endPoint.node || endPoint.offset)) {
 
               nodes.push(point.node);
 
@@ -1951,6 +1970,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     };
     $.summernote.pluginEvents.fontSize = function (event, editor, layoutInfo, value) {
       var $editable = layoutInfo.editable();
+      event.preventDefault();
       $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, null, null, value);
       editor.afterCommand($editable);
     };
@@ -2051,9 +2071,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         });
 
         var $table = $(table);
-        $dels.on('mousedown', function (event) {
+        $dels.data('table', table).on('mousedown', function (event) {
             var td = $(this).data('td');
-            $(td).closest('.note-editable').data('NoteHistory').recordUndo($editable);
+            $editable.data('NoteHistory').recordUndo($editable);
 
             var newTd;
             if ($(td).siblings().length) {
@@ -2076,9 +2096,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             range.create(newTd[0], 0, newTd[0], 0).select();
             newTd.trigger('mouseup');
         });
-        $adds.on('mousedown', function (event) {
+        $adds.data('table', table).on('mousedown', function (event) {
             var td = $(this).data('td');
-            $(td).closest('.note-editable').data('NoteHistory').recordUndo($editable);
+            $editable.data('NoteHistory').recordUndo($editable);
 
             var newTd;
             if (td) {

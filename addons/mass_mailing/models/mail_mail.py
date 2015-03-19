@@ -60,7 +60,7 @@ class MailMail(osv.Model):
         )
         return '<img src="%s" alt=""/>' % track_url
 
-    def _get_unsubscribe_url(self, cr, uid, mail, email_to, msg=None, context=None):
+    def _get_unsubscribe_url(self, cr, uid, mail, email_to, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         url = urlparse.urljoin(
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
@@ -68,7 +68,7 @@ class MailMail(osv.Model):
                 'params': urllib.urlencode({'db': cr.dbname, 'res_id': mail.res_id, 'email': email_to})
             }
         )
-        return '<small><a href="%s">%s</a></small>' % (url, msg or 'Click to unsubscribe')
+        return url
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
         """ Override to add the tracking URL to the body. """
@@ -88,12 +88,14 @@ class MailMail(osv.Model):
 
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
         res = super(MailMail, self).send_get_email_dict(cr, uid, mail, partner, context=context)
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         if mail.mailing_id and res.get('body') and res.get('email_to'):
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False
-            unsubscribe_url = self._get_unsubscribe_url(cr, uid, mail, email_to, context=context)
-            if unsubscribe_url:
-                res['body'] = tools.append_content_to_html(res['body'], unsubscribe_url, plaintext=False, container_tag='p')
+            unsubscribe_url= self._get_unsubscribe_url(cr, uid, mail, email_to, context=context)
+            link_to_replace =  base_url+'/unsubscribe_from_list'
+            if link_to_replace in res['body']:
+                res['body'] = res['body'].replace(link_to_replace, unsubscribe_url if unsubscribe_url else '#')
         return res
 
     def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):

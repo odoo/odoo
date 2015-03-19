@@ -112,7 +112,7 @@ class purchase_line_invoice(osv.osv_memory):
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,res))+"])]",
-            'name': _('Supplier Invoices'),
+            'name': _('Supplier Bills'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',

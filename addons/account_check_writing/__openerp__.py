@@ -39,6 +39,6 @@ Module for the Check Writing and Check Printing.
     ],
     'demo': ['account_demo.xml'],
     'test': [],
-    'installable': True,
+    'installable': False,
     'active': False,
 }

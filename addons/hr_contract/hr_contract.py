@@ -55,7 +55,7 @@ class hr_employee(osv.osv):
         'vehicle': fields.char('Company Vehicle'),
         'vehicle_distance': fields.integer('Home-Work Dist.', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
-        'contract_id': fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+        'contract_id': fields.function(_get_latest_contract, string='Current Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
         'contracts_count': fields.function(_contracts_count, type='integer', string='Contracts'),
     }
 
@@ -63,8 +63,14 @@ class hr_employee(osv.osv):
 class hr_contract_type(osv.osv):
     _name = 'hr.contract.type'
     _description = 'Contract Type'
+    _order = 'sequence, id'
+
     _columns = {
         'name': fields.char('Contract Type', required=True),
+        'sequence': fields.integer('Sequence', help="Gives the sequence when displaying a list of Contract."),
+    }
+    defaults = {
+        'sequence': 10
     }
 
 
@@ -72,13 +78,6 @@ class hr_contract(osv.osv):
     _name = 'hr.contract'
     _description = 'Contract'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-
-    _track = {
-        'state': {
-            'hr_contract.mt_contract_pending': lambda self, cr, uid, obj, ctx=None: obj.state == 'pending',
-            'hr_contract.mt_contract_close': lambda self, cr, uid, obj, ctx=None: obj.state == 'close',
-        },
-    }
 
     _columns = {
         'name': fields.char('Contract Reference', required=True),
@@ -104,7 +103,7 @@ class hr_contract(osv.osv):
     }
 
     def _get_type(self, cr, uid, context=None):
-        type_ids = self.pool.get('hr.contract.type').search(cr, uid, [('name', '=', 'Employee')])
+        type_ids = self.pool.get('hr.contract.type').search(cr, uid, [], limit=1)
         return type_ids and type_ids[0] or False
 
     _defaults = {
@@ -139,3 +138,11 @@ class hr_contract(osv.osv):
 
     def set_as_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'close'}, context=context)
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'pending':
+            return 'hr_contract.mt_contract_pending'
+        elif 'state' in init_values and record.state == 'close':
+            return 'hr_contract.mt_contract_close'
+        return super(hr_contract, self)._track_subtype(cr, uid, ids, init_values, context=context)

@@ -2,18 +2,16 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     events: {
         'click .fa-pencil-square': 'clickPencil',
         'click .fa-pencil': 'clickPencil',
-        'click .foldable': 'fold',
-        'click .unfoldable': 'unfold',
+        'click .oe-account-foldable': 'fold',
+        'click .oe-account-unfoldable': 'unfold',
         'click .saveFootNote': 'saveFootNote',
-        'click .to_amls': 'displayMoveLinesByAccount',
+        'click .oe-account-to-amls': 'displayMoveLinesByAccount',
         'click span.user_type': 'displayMoveLinesByType',
         'click span.partner_id': 'displayFollowup',
         'click span.aml': 'displayMoveLine',
-        'mouseleave td': 'rmPencil',
-        'mouseleave .footnote': 'rmPencil',
         'click .fa-trash-o': 'rmContent',
         'click .closeSummary': 'rmContent',
-        'click .savedSummary > span': 'editSummary',
+        'click .oe-account-saved-summary > span': 'editSummary',
         "change *[name='date_filter']": 'onChangeDateFilter',
         "change *[name='date_filter_cmp']": 'onChangeCmpDateFilter',
         "change *[name='date_to']": 'onChangeCmpDateFilter',
@@ -23,10 +21,12 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         "click button.saveSummary": 'saveSummary',
         'click button.saveContent': 'saveContent',
         'click button#saveFootNote': 'saveFootNote',
-        'click .add_footnote': 'footnoteFromDropdown',
-        'click .to_graph': 'displayMoveLinesByAccountGraph',
-        'click .to_net': 'displayNetTaxLines',
-        'click .to_tax': 'displayTaxLines',
+        'click .oe-account-add-footnote': 'footnoteFromDropdown',
+        'click .oe-account-to-graph': 'displayMoveLinesByAccountGraph',
+        'click .oe-account-to-net': 'displayNetTaxLines',
+        'click .oe-account-to-tax': 'displayTaxLines',
+        'click .oe-account-to-bank-statement': 'display_bank_statement',
+        'click .move_line_id': 'onClickAML',
         'click .to_invoice': 'displayInvoice',
         'click .to_payment': 'displayPayment',
     },
@@ -40,10 +40,14 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
             var contextModel = new openerp.Model(result);
             contextModel.call('get_next_footnote_number', [[parseInt(context_id)]]).then(function (footNoteSeqNum) {
                 self.curFootNoteTarget.append(openerp.qweb.render("supFootNoteSeqNum", {footNoteSeqNum: footNoteSeqNum}));
-                contextModel.call('add_footnote', [[parseInt(context_id)], $("#footnoteModal #type").val(), $("#footnoteModal #target_id").val(), $("#footnoteModal #column").val(), footNoteSeqNum, note]);
-                $('#footnoteModal').find('form')[0].reset();
-                $('#footnoteModal').modal('hide');
-                $("div.page").append(openerp.qweb.render("savedFootNote", {num: footNoteSeqNum, note: note}));
+                contextModel.query(['footnotes_manager_id'])
+                .filter([['id', '=', context_id]]).first().then(function (context) {
+                    var managerModel = new openerp.Model('account.report.footnotes.manager');
+                    managerModel.call('add_footnote', [[parseInt(context.footnotes_manager_id[0])], $("#type").val(), $("#target_id").val(), $("#column").val(), footNoteSeqNum, note]);
+                    $('#footnoteModal').find('form')[0].reset();
+                    $('#footnoteModal').modal('hide');
+                    $("div.page").append(openerp.qweb.render("savedFootNote", {num: footNoteSeqNum, note: note}));
+                });
             });
         });
     },
@@ -60,7 +64,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     },
     onClickSummary: function(e) {
         e.stopPropagation();
-        $(e.target).parents("div.summary").html(openerp.qweb.render("editSummary"));
+        $(e.target).parents("div.oe-account-summary").html(openerp.qweb.render("editSummary"));
     },
     saveSummary: function(e) {
         e.stopPropagation();
@@ -68,9 +72,9 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
         var summary = this.$("textarea[name='summary']").val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
         if (summary != '')
-            $(e.target).parents("div.summary").html(openerp.qweb.render("savedSummary", {summary : summary}));
+            $(e.target).parents("div.oe-account-summary").html(openerp.qweb.render("savedSummary", {summary : summary}));
         else
-            $(e.target).parents("div.summary").html(openerp.qweb.render("addSummary"));
+            $(e.target).parents("div.oe-account-summary").html(openerp.qweb.render("addSummary"));
         var model = new openerp.Model('account.report.context.common');
         model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextModel = new openerp.Model(result);
@@ -127,36 +131,25 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                     var contextObj = new openerp.Model(result);
                     contextObj.query(['company_id'])
                     .filter([['id', '=', context_id]]).first().then(function (context) {
-                        var fyObj = new openerp.Model('account.fiscalyear');
+                        var compObj = new openerp.Model('res.company');
                         var today = new Date();
-                        var today_last_year = today
-                        today_last_year.setFullYear(today.getFullYear() - 1);
-                        today_last_year = today_last_year.toISOString().substr(0, 10);
-                        fyObj.query(['date_start', 'date_stop'])
-                        .filter([['company_id', '=', context.company_id[1]], ['date_start', '<', today_last_year], ['date_stop', '>', today_last_year]]).all().then(function (fy) {
-                            if (fy.length == 0) {
-                                var dt = new Date();
-                                dt.setMonth(0);
-                                dt.setDate(0);
-                                $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
-                                $(".form-group").prepend(openerp.qweb.render("fiscalYearAlert"));
-                                if (!no_date_range) {
-                                    dt.setDate(1);
-                                    dt.setMonth(0);
-                                    $("input[name='date_from']").val(dt.toISOString().substr(0, 10)); 
-                                }
+                        compObj.query(['fiscalyear_last_day', 'fiscalyear_last_month'])
+                        .filter([['id', '=', context.company_id[0]]]).first().then(function (fy) {
+                            if (today.getMonth() + 1 < fy.fiscalyear_last_month || (today.getMonth() + 1 == fy.fiscalyear_last_month && today.getDate() <= fy.fiscalyear_last_day)) {
+                                var dt = new Date(today.getFullYear() - 1, fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
+                                     
                             }
                             else {
-                                fy = fy[0];
-                                $("input[name='date_to']").val(fy.date_stop);
-                                if (!no_date_range) {
-                                    $("input[name='date_from']").val(fy.date_start); 
-                                }
+                                var dt = new Date(today.getFullYear(), fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
+                            }
+                            $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
+                            if (!no_date_range) {
+                                dt.setDate(dt.getDate() + 1);
+                                dt.setFullYear(dt.getFullYear() - 1)
+                                $("input[name='date_from']").val(dt.toISOString().substr(0, 10));
                             }
                         });
-
                     });
-                    
                 });
                 break;
             case 'this_month':
@@ -175,28 +168,23 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                     var contextObj = new openerp.Model(result);
                     contextObj.query(['company_id'])
                     .filter([['id', '=', context_id]]).first().then(function (context) {
-                        var fyObj = new openerp.Model('account.fiscalyear');
+                        var compObj = new openerp.Model('res.company');
                         var today = new Date();
-                        today = today.toISOString().substr(0, 10);
-                        fyObj.query(['date_start', 'date_stop'])
-                        .filter([['company_id', '=', context.company_id[1]], ['date_start', '<', today], ['date_stop', '>', today]]).all().then(function (fy) {
-                            if (fy.length == 0) {
-                                var dt = new Date();
-                                dt.setDate(1);
-                                dt.setMonth(0);
-                                $("input[name='date_from']").val(dt.toISOString().substr(0, 10)); 
-                                dt.setDate(31);
-                                dt.setMonth(11);
-                                $("input[name='date_to']").val(dt.toISOString().substr(0, 10)); 
-                                $(".form-group").prepend(openerp.qweb.render("fiscalYearAlert"));
+                        compObj.query(['fiscalyear_last_day', 'fiscalyear_last_month'])
+                        .filter([['id', '=', context.company_id[0]]]).first().then(function (fy) {
+                            if (today.getMonth() + 1 < fy.fiscalyear_last_month || (today.getMonth() + 1 == fy.fiscalyear_last_month && today.getDate() <= fy.fiscalyear_last_day)) {
+                                var dt = new Date(today.getFullYear(), fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
                             }
                             else {
-                                fy = fy[0];
-                                $("input[name='date_to']").val(fy.date_stop);
-                                $("input[name='date_from']").val(fy.date_start);
+                                var dt = new Date(today.getFullYear() + 1, fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
+                            }
+                            $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
+                            if (!no_date_range) {
+                                dt.setDate(dt.getDate() + 1);
+                                dt.setFullYear(dt.getFullYear() - 1);
+                                $("input[name='date_from']").val(dt.toISOString().substr(0, 10));
                             }
                         });
-
                     });
                 });
                 break;
@@ -210,6 +198,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         this.onChangeCmpDateFilter();
     },
     onChangeCmpDateFilter: function() {
+        if ($(".date_bank_reconciliation").length > 0) return;
         var date_filter = this.$("select[name='date_filter']").val();
         var cmp_filter = this.$("select[name='date_filter_cmp']").val();
         var no_date_range = this.$("input[name='date_from']").length == 0;
@@ -310,8 +299,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var $el = $(e.target);
         var height = Math.max($el.height(), 100);
         var text = $el.html().replace(/\s+/g, ' ').replace(/\r?\n/g, '').replace(/<br>/g, '\n').replace(/(\n\s*)+$/g, '');
-        var par = $el.parents("div.summary")
-        $el.parents("div.summary").html(openerp.qweb.render("editSummary", {summary: text}));
+        var par = $el.parents("div.oe-account-summary")
+        $el.parents("div.oe-account-summary").html(openerp.qweb.render("editSummary", {summary: text}));
         par.find("textarea").height(height);
     },
     clickPencil: function(e) {
@@ -321,9 +310,10 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         if ($(e.target).parent().is('.oe-account-next-action')) {
             self.setNextAction(e);
         }
-        else if ($(e.target).parents("div.summary, p.footnote").length > 0) {
+        else if ($(e.target).parents("div.oe-account-summary, p.footnote").length > 0) {
             var num = 0;
             if ($(e.target).parent().parent().is("p.footnote")) {
+                $(e.target).parent().parent().attr('class', 'footnoteEdit')
                 var $el = $(e.target).parent().parent().find('span.text');
                 var text = $el.html().replace(/\s+/g, ' ').replace(/\r?\n/g, '').replace(/<br>/g, '\n').replace(/(\n\s*)+$/g, '');
                 text = text.split('.');
@@ -332,7 +322,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                 $el.html(openerp.qweb.render("editContent", {num: num, text: text}));
             }
             else {
-                var $el = $(e.target).parents('div.savedSummary').children('span');
+                var $el = $(e.target).parents('div.oe-account-saved-summary').children('span');
                 var height = $el.height();
                 var text = $el.html().replace(/\s+/g, ' ').replace(/\r?\n/g, '').replace(/<br>/g, '\n').replace(/(\n\s*)+$/g, '');
                 var par = $el.parent()
@@ -366,20 +356,25 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var report_name = $(e.target).parents("div.page").attr("class").split(/\s+/)[2];
         var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
         var text = $(e.target).siblings('textarea').val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
-        var footNoteSeqNum = $(e.target).parents('p.footnote').text().split('.')[0];
-        if ($(e.target).parents("p.footnote").length > 0) {
+        var footNoteSeqNum = $(e.target).parents('p.footnoteEdit').text().split('.')[0];
+        if ($(e.target).parents("p.footnoteEdit").length > 0) {
+            $(e.target).parents("p.footnoteEdit").attr('class', 'footnote')
             $(e.target).siblings('textarea').replaceWith(text);
             var model = new openerp.Model('account.report.context.common');
             model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                 var contextModel = new openerp.Model(result);
-                contextModel.call('edit_footnote', [[parseInt(context_id)], parseInt(footNoteSeqNum), text]);
+                contextModel.query(['footnotes_manager_id'])
+                .filter([['id', '=', context_id]]).first().then(function (context) {
+                    var managerModel = new openerp.Model('account.report.footnotes.manager');
+                    managerModel.call('edit_footnote', [[parseInt(context.footnotes_manager_id[0])], parseInt(footNoteSeqNum), text]);
+                });
             });
         }
         else {
             if (text != '')
-                $(e.target).parents("div.summary").html(openerp.qweb.render("savedSummary", {summary : text}));
+                $(e.target).parents("div.oe-account-summary").html(openerp.qweb.render("savedSummary", {summary : text}));
             else
-                $(e.target).parents("div.summary").html(openerp.qweb.render("addSummary"));
+                $(e.target).parents("div.oe-account-summary").html(openerp.qweb.render("addSummary"));
             var model = new openerp.Model('account.report.context.common');
             model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                 var contextModel = new openerp.Model(result);
@@ -391,7 +386,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     rmContent: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        if ($(e.target).parents("div.summary").length > 0) {
+        if ($(e.target).parents("div.oe-account-summary").length > 0) {
             var report_name = $(e.target).parents("div.page").attr("class").split(/\s+/)[2];
             var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
             $(e.target).parent().parent().replaceWith(openerp.qweb.render("addSummary"));
@@ -410,7 +405,11 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
             var model = new openerp.Model('account.report.context.common');
             model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                 var contextModel = new openerp.Model(result);
-                contextModel.call('remove_footnote', [[parseInt(context_id)], parseInt(num)]);
+                contextModel.query(['footnotes_manager_id'])
+                .filter([['id', '=', context_id]]).first().then(function (context) {
+                    var managerModel = new openerp.Model('account.report.footnotes.manager');
+                    managerModel.call('remove_footnote', [[parseInt(context.footnotes_manager_id[0])], parseInt(num)]);
+                });
             });
         }
     },
@@ -423,16 +422,16 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var $el;
         var $nextEls = $(e.target).parents('tr').nextAll();
         for (el in $nextEls) {
-            $el = $($nextEls[el]).find("td span[style='font-style: italic; margin-left: 70px']");
+            $el = $($nextEls[el]).find("td span.oe-account-domain-line");
             if ($el.length == 0)
                 break;
             else {
                 $($el[0]).parents("tr").hide();
             }
         }
-        var active_id = $(e.target).parents('tr').find('td.foldable').attr("class").split(/\s+/)[1];
-        $(e.target).parents('tr').find('td.foldable').attr('class', 'unfoldable ' + active_id)
-        $(e.target).parents('tr').find('span.foldable').replaceWith(openerp.qweb.render("unfoldable", {lineId: active_id}));
+        var active_id = $(e.target).parents('tr').find('td.oe-account-foldable').attr("class").split(/\s+/)[1];
+        $(e.target).parents('tr').find('td.oe-account-foldable').attr('class', 'oe-account-unfoldable ' + active_id)
+        $(e.target).parents('tr').find('span.oe-account-foldable').replaceWith(openerp.qweb.render("unfoldable", {lineId: active_id}));
         var model = new openerp.Model('account.report.context.common');
         model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextModel = new openerp.Model(result);
@@ -444,7 +443,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         e.preventDefault();
         var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
         var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
-        var active_id = $(e.target).parents('tr').find('td.unfoldable').attr("class").split(/\s+/)[1];
+        var active_id = $(e.target).parents('tr').find('td.oe-account-unfoldable').attr("class").split(/\s+/)[1];
         var commonContext = new openerp.Model('account.report.context.common');
         commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
@@ -454,7 +453,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                 var $nextEls = $(e.target).parents('tr').nextAll();
                 var isLoaded = false;
                 for (el in $nextEls) {
-                    $el = $($nextEls[el]).find("td span.domainLine");
+                    $el = $($nextEls[el]).find("td span.oe-account-domain-line");
                     if ($el.length == 0)
                         break;
                     else {
@@ -485,8 +484,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                         }
                     });
                 }
-                $(e.target).parents('tr').find('td.unfoldable').attr('class', 'foldable ' + active_id)
-                $(e.target).parents('tr').find('span.unfoldable').replaceWith(openerp.qweb.render("foldable", {lineId: active_id}));
+                $(e.target).parents('tr').find('td.oe-account-unfoldable').attr('class', 'oe-account-foldable ' + active_id)
+                $(e.target).parents('tr').find('span.oe-account-unfoldable').replaceWith(openerp.qweb.render("foldable", {lineId: active_id}));
             });
         });
     },
@@ -498,11 +497,14 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var commonContext = new openerp.Model('account.report.context.common');
         commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
-            contextObj.query(['all_entries'])
+            contextObj.query(['all_entries', 'cash_basis'])
             .filter([['id', '=', context_id]]).first().then(function (context) {
                 var action = 'action_move_line_select'
+                if (context.cash_basis) {
+                    action = 'action_move_line_graph_cash_basis'
+                }
                 if (!context.all_entries) {
-                    action = 'action_move_line_select_posted'
+                    action += '_posted'
                 }
                 var model = new openerp.Model('ir.model.data');
                 model.call('get_object_reference', ['account', action]).then(function (result) {
@@ -595,10 +597,18 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var active_id = $(e.target).attr("class").split(/\s+/)[1];
         window.open("/web?#id=" + active_id + "&view_type=form&model=account.tax", "_self");
     },
-    displayMoveLine: function(e) {
+    display_bank_statement: function(e) {
         e.stopPropagation();
         var active_id = $(e.target).attr("class").split(/\s+/)[1];
-        window.open("/web?#id=" + active_id + "&view_type=form&model=account.move.line", "_self");
+        window.open("/web?#id=" + active_id + "&view_type=form&model=account.bank.statement", "_self");
+    },
+    onClickAML: function(e) {
+        e.stopPropagation();
+        var active_id = $(e.target).attr("class").split(/\s+/)[1];
+        var model = new openerp.Model('account.move.line');
+        model.call('get_model_and_id', [[parseInt(active_id)]]).then(function (result) {
+            window.open("/web?#id=" + result[1] + "&view_type=form&model=" + result[0], "_self");
+        })
     },
     displayInvoice: function(e) {
         e.stopPropagation();

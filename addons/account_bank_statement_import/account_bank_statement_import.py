@@ -9,7 +9,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class account_bank_statement_line(models.Model):
+class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
 
     # Ensure transactions can be imported only once (if the import format provides unique transaction ids)
@@ -30,24 +30,25 @@ class AccountBankStatementImport(models.TransientModel):
     def import_file(self):
         """ Process the file chosen in the wizard, create bank statement(s) and go to reconciliation. """
         self.ensure_one()
+        rec = self.with_context(active_id=self.ids[0])
         #set the active_id in the context, so that any extension module could
         #reuse the fields chosen in the wizard if needed (see .QIF for example)
         data_file = self.data_file
         # The appropriate implementation module returns the required data
-        currency_code, account_number, stmts_vals = self.with_context(active_id=self.ids[0])._parse_file(base64.b64decode(data_file))
+        currency_code, account_number, stmts_vals = rec._parse_file(base64.b64decode(data_file))
         # Check raw data
-        self.with_context(active_id=self.ids[0])._check_parsed_data(stmts_vals)
+        rec._check_parsed_data(stmts_vals)
         # Try to find the bank account and currency in odoo
-        currency_id, bank_account_id = self.with_context(active_id=self.ids[0])._find_additional_data(currency_code, account_number)
+        currency_id, bank_account_id = rec._find_additional_data(currency_code, account_number)
         # Find or create the bank journal
-        journal_id = self.with_context(active_id=self.ids[0])._get_journal(currency_id, bank_account_id, account_number)
+        journal_id = rec._get_journal(currency_id, bank_account_id, account_number)
         # Create the bank account if not already existing
         if not bank_account_id and account_number:
-            self.with_context(active_id=self.ids[0])._create_bank_account(account_number, journal_id=journal_id, partner_id=self.env.uid)
+            rec._create_bank_account(account_number, journal_id=journal_id, partner_id=self.env.uid)
         # Prepare statement data to be used for bank statements creation
-        stmts_vals = self.with_context(active_id=self.ids[0])._complete_stmts_vals(stmts_vals, journal_id, account_number)
+        stmts_vals = rec._complete_stmts_vals(stmts_vals, journal_id, account_number)
         # Create the bank statements
-        statement_ids, notifications = self.with_context(active_id=self.ids[0])._create_bank_statements(stmts_vals)
+        statement_ids, notifications = rec._create_bank_statements(stmts_vals)
         # Finally dispatch to reconciliation interface
         action = self.env.ref('account.action_bank_reconcile_bank_statements')
         return {
@@ -144,7 +145,7 @@ class AccountBankStatementImport(models.TransientModel):
 
         # If there is no journal, create one (and its account)
         if not journal_id and account_number:
-            journal_id = self._create_journal(currency_id, account_number)
+            journal_id = self.env.user.company_id._create_bank_account_and_journal(account_number, currency_id)
             if bank_account_id:
                 bank_account.write({'journal_id': journal_id})
 
@@ -152,19 +153,6 @@ class AccountBankStatementImport(models.TransientModel):
         if not journal_id:
             raise UserError(_('Cannot find in which journal import this statement. Please manually select a journal.'))
         return journal_id
-
-    def _create_journal(self, currency_id, account_number):
-        """ Create a journal and its account """
-        MultiChartsAccounts = self.env['wizard.multi.charts.accounts']
-        company = self.env.user.company_id
-
-        vals_account = {'currency_id': currency_id, 'acc_name': account_number, 'account_type': 'bank', 'currency_id': currency_id}
-        vals_account = MultiChartsAccounts._prepare_bank_account(company, vals_account)
-        account_id = self.env['account.account'].create(vals_account).id
-
-        vals_journal = {'currency_id': currency_id, 'acc_name': _('Bank') + ' ' + account_number, 'account_type': 'bank'}
-        vals_journal = MultiChartsAccounts._prepare_bank_journal(company, vals_journal, account_id)
-        return self.env['account.journal'].create(vals_journal).id
 
     def _create_bank_account(self, account_number, journal_id=False, partner_id=False):
         try:

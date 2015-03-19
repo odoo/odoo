@@ -24,11 +24,12 @@ class TestAccountSupplierInvoice(TestMail):
             'price_unit': 100.0,
             'invoice_id': invoice.id,
             'name': 'product that cost 100',
+            'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_expenses').id)])[0].id,
             'invoice_line_tax_id':[(6, 0, [tax.id])],
         })
 
-        # check that Initially supplier invoice state is "Draft"
-        self.assertTrue((invoice.state == 'draft'), "Initially supplier invoice state is Draft")
+        # check that Initially supplier bill state is "Draft"
+        self.assertTrue((invoice.state == 'draft'), "Initially supplier bill state is Draft")
 
         #change the state of invoice to open by clicking Validate button
         invoice.signal_workflow('invoice_open')

@@ -58,7 +58,7 @@ The Dashboard for the Sales Manager will include
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['sales_team','account_voucher', 'procurement', 'report'],
+    'depends': ['sales_team','account', 'procurement', 'report'],
     'data': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',

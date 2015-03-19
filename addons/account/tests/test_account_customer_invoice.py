@@ -37,13 +37,12 @@ class TestAccountCustomerInvoive(AccountTestUsers):
                 {
                     'product_id': self.env.ref('product.product_product_5').id,
                     'quantity': 10.0,
-                    #'account_id': self.env.ref('account.a_sale').id,
+                    'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_revenue').id)])[0].id,
                     'name': 'product test 5',
                     'price_unit': 100.00,
                 }
              )
         ]
-
 
         self.account_invoice_customer0 = self.account_invoice_obj.sudo(self.account_user.id).create(dict(
         #Do product_id_change
@@ -90,10 +89,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         assert self.account_invoice_customer0.move_id, "Move not created for open invoice"
 
         # I totally pay the Invoice
-        pay = self.account_invoice_customer0.pay_and_reconcile(
-            10050.0, self.env.ref('account.cash').id,
-            datetime.date.today(), self.env.ref('account.bank_journal').id,
-        )
+        pay = self.account_invoice_customer0.pay_and_reconcile(self.env.ref('account.bank_journal'), 10050.0)
 
         # I verify that invoice is now in Paid state
         assert (self.account_invoice_customer0.state == 'paid'), "Invoice is not in Paid state"

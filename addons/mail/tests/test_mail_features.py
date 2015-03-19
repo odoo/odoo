@@ -833,29 +833,26 @@ class test_mail(TestMail):
         mt_group_public_id = self.mail_message_subtype.create(cr, uid, {'name': 'group_public', 'description': 'Group changed'})
         self.ir_model_data.create(cr, uid, {'name': 'mt_group_public', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_group_public_id})
 
-        # Data: alter mail_group model for testing purposes (test on classic, selection and many2one fields)
-        cls = type(self.mail_group)
-        self.assertNotIn('_track', cls.__dict__)
-        cls._track = {
-            'public': {
-                'mail.mt_private': lambda self, cr, uid, obj, ctx=None: obj.public == 'private',
-            },
-            'name': {
-                'mail.mt_name_supername': lambda self, cr, uid, obj, ctx=None: obj.name == 'supername',
-            },
-            'group_public_id': {
-                'mail.mt_group_public_set': lambda self, cr, uid, obj, ctx=None: obj.group_public_id,
-                'mail.mt_group_public': lambda self, cr, uid, obj, ctx=None: True,
-            },
-        }
+        def _track_subtype(self, cr, uid, ids, init_values, context=None):
+            record = self.browse(cr, uid, ids[0], context=context)
+            if 'public' in init_values and record.public == 'private':
+                return 'mail.mt_private'
+            elif 'name' in init_values and record.name == 'supername':
+                return 'mail.mt_name_supername'
+            elif 'group_public_id' in init_values and record.group_public_id:
+                return 'mail.mt_group_public_set'
+            elif 'group_public_id' in init_values and not record.group_public_id:
+                return 'mail.mt_group_public'
+            return False
+        self.registry('mail.group')._patch_method('_track_subtype', _track_subtype)
         visibility = {'public': 'onchange', 'name': 'always', 'group_public_id': 'onchange'}
+        cls = type(self.mail_group)
         for key in visibility:
             self.assertFalse(hasattr(getattr(cls, key), 'track_visibility'))
             getattr(cls, key).track_visibility = visibility[key]
 
         @self.addCleanup
         def cleanup():
-            delattr(cls, '_track')
             for key in visibility:
                 del getattr(cls, key).track_visibility
 
@@ -863,51 +860,39 @@ class test_mail(TestMail):
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'public': 'public'})
         self.group_pigs.refresh()
         self.assertEqual(len(self.group_pigs.message_ids), 1, 'tracked: a message should have been produced')
-        # Test: first produced message: no subtype, name change tracked
+        # Test: first produced message: group public tracking
         last_msg = self.group_pigs.message_ids[-1]
-        self.assertFalse(last_msg.subtype_id, 'tracked: message should not have been linked to a subtype')
+        self.assertFalse(last_msg.subtype_id.id, 'tracked: message should not have been linked to a subtype')
         self.assertIn(u"Selectedgroupofusers\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
         self.assertIn('Pigs', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
 
         # Test: change name as supername, public as private -> 2 subtypes
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'name': 'supername', 'public': 'private'})
         self.group_pigs.refresh()
-        self.assertEqual(len(self.group_pigs.message_ids), 3, 'tracked: two messages should have been produced')
+        self.assertEqual(len(self.group_pigs.message_ids), 2, 'tracked: one new tracking message should have been produced')
         # Test: first produced message: mt_name_supername
         last_msg = self.group_pigs.message_ids[-2]
         self.assertEqual(last_msg.subtype_id.id, mt_private_id, 'tracked: message should be linked to mt_private subtype')
         self.assertIn('Private public', last_msg.body, 'tracked: message body does not hold the subtype description')
         self.assertIn(u'Pigs\u2192supername', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
-        # Test: second produced message: mt_name_supername
-        last_msg = self.group_pigs.message_ids[-3]
-        self.assertEqual(last_msg.subtype_id.id, mt_name_supername_id, 'tracked: message should be linked to mt_name_supername subtype')
-        self.assertIn('Supername name', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u"Everyone\u2192Invitedpeopleonly", _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
-        self.assertIn(u'Pigs\u2192supername', _strip_string_spaces(last_msg.body), 'tracked feature: message body does not hold always tracked field')
 
-        # Test: change public as public, group_public_id -> 2 subtypes, name always tracked
+        # Test: change public as public, group_public_id -> 1 subtype, name always tracked
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'public': 'public', 'group_public_id': group_system_id})
         self.group_pigs.refresh()
-        self.assertEqual(len(self.group_pigs.message_ids), 5, 'tracked: one message should have been produced')
+        self.assertEqual(len(self.group_pigs.message_ids), 3, 'tracked: one message should have been produced')
         # Test: first produced message: mt_group_public_set_id, with name always tracked, public tracked on change
-        last_msg = self.group_pigs.message_ids[-4]
+        last_msg = self.group_pigs.message_ids[-3]
         self.assertEqual(last_msg.subtype_id.id, mt_group_public_set_id, 'tracked: message should be linked to mt_group_public_set_id')
         self.assertIn('Group set', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u"Invitedpeopleonly\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
-        self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
-        # Test: second produced message: mt_group_public_id, with name always tracked, public tracked on change
-        last_msg = self.group_pigs.message_ids[-5]
-        self.assertEqual(last_msg.subtype_id.id, mt_group_public_id, 'tracked: message should be linked to mt_group_public_id')
-        self.assertIn('Group changed', last_msg.body, 'tracked: message body does not hold the subtype description')
         self.assertIn(u"Invitedpeopleonly\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
         self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
 
         # Test: change group_public_id to False -> 1 subtype, name always tracked
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'group_public_id': False})
         self.group_pigs.refresh()
-        self.assertEqual(len(self.group_pigs.message_ids), 6, 'tracked: one message should have been produced')
+        self.assertEqual(len(self.group_pigs.message_ids), 4, 'tracked: one message should have been produced')
         # Test: first produced message: mt_group_public_set_id, with name always tracked, public tracked on change
-        last_msg = self.group_pigs.message_ids[-6]
+        last_msg = self.group_pigs.message_ids[-4]
         self.assertEqual(last_msg.subtype_id.id, mt_group_public_id, 'tracked: message should be linked to mt_group_public_id')
         self.assertIn('Group changed', last_msg.body, 'tracked: message body does not hold the subtype description')
         self.assertIn(u'Administration/Settings\u2192', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
@@ -915,4 +900,4 @@ class test_mail(TestMail):
         # Test: change not tracked field, no tracking message
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'description': 'Dummy'})
         self.group_pigs.refresh()
-        self.assertEqual(len(self.group_pigs.message_ids), 6, 'tracked: No message should have been produced')
+        self.assertEqual(len(self.group_pigs.message_ids), 4, 'tracked: No message should have been produced')

@@ -19,7 +19,9 @@
             });
         },
     });
-    if ($('.website_blog').length) {
+
+    openerp.website.if_dom_contains('.website_blog', function() {
+
         website.EditorBar.include({
             edit: function () {
                 var self = this;
@@ -38,7 +40,6 @@
                 return res;
             },
         });
-        
         website.snippet.options.many2one.include({
             select_record: function (li) {
                 var self = this;
@@ -55,30 +56,47 @@
                 }
             }
         });
-    }
 
-    website.snippet.options.website_blog = website.snippet.Option.extend({
-        start : function(type, value, $li) {
-            this._super();
-            this.src = this.$target.css("background-image").replace(/url\(|\)|"|'/g,'').replace(/.*none$/,'');
-            this.$image = $('<image src="'+this.src+'">');
-        },
-        clear : function(type, value, $li) {
-            if (type !== 'click') return;
-            this.src = null;
-            this.$target.css({"background-image": '', 'min-height': $(window).height()});
-            this.$image.removeAttr("src");
-        },
-        change : function(type, value, $li) {
-            if (type !== 'click') return;
-            var self = this;
-            var editor  = new website.editor.MediaDialog(this.$image, this.$image[0], {only_images: true});
-            editor.appendTo('body');
-            editor.on('saved', self, function (event, img) {
-                var url = self.$image.attr('src');
-                self.$target.css({"background-image": url ? 'url(' + url + ')' : "", 'min-height': $(window).height()});
-            });
-        },
+        website.snippet.options.website_blog = website.snippet.Option.extend({
+            start : function(type, value, $li) {
+                this._super();
+                this.src = this.$target.css("background-image").replace(/url\(|\)|"|'/g,'').replace(/.*none$/,'');
+                this.$image = $('<image src="'+this.src+'">');
+            },
+            clear : function(type, value, $li) {
+                if (type !== 'click') return;
+                this.src = null;
+                this.$target.css({"background-image": '', 'min-height': $(window).height()});
+                this.$image.removeAttr("src");
+            },
+            change : function(type, value, $li) {
+                if (type !== 'click') return;
+                var self = this;
+                var editor  = new website.editor.MediaDialog(this.$image, this.$image[0], {only_images: true});
+                editor.appendTo('body');
+                editor.on('saved', self, function (event, img) {
+                    var url = self.$image.attr('src');
+                    self.$target.css({"background-image": url ? 'url(' + url + ')' : "", 'min-height': $(window).height()});
+                });
+            },
+        });
+
+        openerp.define.active();
+        define(['summernote/summernote'], function () {
+            var enter = $.summernote.pluginEvents.enter;
+            $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
+                enter.call(this, event, editor, layoutInfo);
+
+                var r = $.summernote.core.range.create();
+                var node = $.summernote.core.dom.node(r.sc);
+                var $nodes = $(node).data('chatter-id') && $("p[data-chatter-id='"+$(node).data('chatter-id')+"']", layoutInfo.editable()) || $();
+                if($nodes.length > 1) {
+                    $nodes.last().removeAttr('data-chatter-id');
+                }
+            };
+        });
+        openerp.define.desactive();
+
     });
 
 })();

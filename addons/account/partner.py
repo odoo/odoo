@@ -10,14 +10,14 @@ from datetime import datetime, timedelta
 from openerp.tools.misc import formatLang
 
 
-class account_fiscal_position(models.Model):
+class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
     _order = 'sequence'
 
-    sequence = fields.Integer(string='Sequence')
+    sequence = fields.Integer()
     name = fields.Char(string='Fiscal Position', required=True)
-    active = fields.Boolean(string='Active', default=True,
+    active = fields.Boolean(default=True,
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
     company_id = fields.Many2one('res.company', string='Company')
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
@@ -25,7 +25,7 @@ class account_fiscal_position(models.Model):
     note = fields.Text('Notes')
     auto_apply = fields.Boolean(string='Automatic', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
-    country_id = fields.Many2one('res.country', string='Countries', 
+    country_id = fields.Many2one('res.country', string='Countries',
         help="Apply only if delivery or invoicing country match.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery or invocing country match the group.")
@@ -49,7 +49,7 @@ class account_fiscal_position(models.Model):
                 if tax.tax_src_id.id == t.id:
                     if tax.tax_dest_id:
                         result.add(tax.tax_dest_id.id)
-                    ok=True
+                    ok = True
             if not ok:
                 result.add(t.id)
         return list(result)
@@ -120,19 +120,20 @@ class account_fiscal_position(models.Model):
             '|', ('vat_required', '=', False), ('vat_required', '=', partner.vat_subjected),
         ]
 
-        fiscal_position = self.search(domain + [('country_id', '=', delivery.country_id.id)], limit=1)
-        if fiscal_position:
-            return fiscal_position
+        if delivery.country_id.id:
+            fiscal_position = self.search(domain + [('country_id', '=', delivery.country_id.id)], limit=1)
+            if fiscal_position:
+                return fiscal_position
 
-        fiscal_position = self.search(domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], limit=1)
-        if fiscal_position:
-            return fiscal_position
+            fiscal_position = self.search(domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], limit=1)
+            if fiscal_position:
+                return fiscal_position
 
         fiscal_position = self.search(domain + [('country_id', '=', None), ('country_group_id', '=', None)], limit=1)
         return fiscal_position.id or False
 
 
-class account_fiscal_position_tax(models.Model):
+class AccountFiscalPositionTax(models.Model):
     _name = 'account.fiscal.position.tax'
     _description = 'Taxes Fiscal Position'
     _rec_name = 'position_id'
@@ -149,15 +150,14 @@ class account_fiscal_position_tax(models.Model):
     ]
 
 
-class account_fiscal_position_account(models.Model):
+class AccountFiscalPositionAccount(models.Model):
     _name = 'account.fiscal.position.account'
     _description = 'Accounts Fiscal Position'
     _rec_name = 'position_id'
 
-
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
-    account_src_id = fields.Many2one('account.account', string='Account Source', 
+    account_src_id = fields.Many2one('account.account', string='Account Source',
         domain=[('deprecated', '=', False)], required=True)
     account_dest_id = fields.Many2one('account.account', string='Account Destination',
         domain=[('deprecated', '=', False)], required=True)
@@ -169,20 +169,19 @@ class account_fiscal_position_account(models.Model):
     ]
 
 
-class res_partner(models.Model):
+class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
     _description = 'Partner'
 
     @api.multi
     def _credit_debit_get(self):
-        ctx = dict(self._context or {})
-        ctx['all_fiscalyear'] = True
-        query = self.env['account.move.line'].with_context(ctx)._query_get()
+        where_clause, where_params = self.env['account.move.line']._query_get()
         if not self.ids:
             self.debit = 0
             self.credit = 0
             return True
+        where_params = [tuple(self.ids)] + where_params
         self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
@@ -190,17 +189,17 @@ class res_partner(models.Model):
                       WHERE act.type IN ('receivable','payable')
                       AND l.partner_id IN %s
                       AND l.reconciled IS FALSE
-                      """ + query + """
+                      """ + where_clause + """
                       GROUP BY l.partner_id, act.type
-                      """,
-                   (tuple(self.ids),))
-        maps = {'receivable':'credit', 'payable':'debit' }
+                      """, where_params)
+        maps = {'receivable': 'credit', 'payable': 'debit'}
         for partner in self:
             partner.debit = 0
             partner.credit = 0
         for pid, type, val in self._cr.fetchall():
-            if val is None: val=0
-            value = {maps[type]: (type=='receivable') and val or -val}
+            if val is None:
+                val = 0
+            value = {maps[type]: (type == 'receivable') and val or -val}
             self.browse(pid).write(value)
 
     @api.multi
@@ -224,12 +223,12 @@ class res_partner(models.Model):
                     'AND '+query+') AS l ' \
                     'RIGHT JOIN res_partner p ' \
                     'ON p.id = partner_id ) AS pl ' \
-                    'GROUP BY pid HAVING ' + where), 
+                    'GROUP BY pid HAVING ' + where),
                     (type,) + having_values)
         res = self._cr.fetchall()
         if not res:
-            return [('id','=','0')]
-        return [('id','in',map(itemgetter(0), res))]
+            return [('id', '=', '0')]
+        return [('id', 'in', map(itemgetter(0), res))]
 
     @api.multi
     def _credit_search(self, args):
@@ -313,11 +312,11 @@ class res_partner(models.Model):
                                       help="Note regarding the next action.")
     payment_next_action_date = fields.Date('Next Action Date', copy=False, company_dependent=True,
                                            help="The date before which no action should be taken.")
-    vat_subjected = fields.Boolean('VAT Legal Statement', 
+    vat_subjected = fields.Boolean('VAT Legal Statement',
         help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
-    credit = fields.Float(compute='_credit_debit_get', search=_credit_search, 
+    credit = fields.Float(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.")
-    debit = fields.Float(compute='_credit_debit_get', search=_debit_search, string='Total Payable', 
+    debit = fields.Float(compute='_credit_debit_get', search=_debit_search, string='Total Payable',
         help="Total amount you have to pay to this supplier.")
     debit_limit = fields.Float('Payable Limit')
     total_invoiced = fields.Float(compute='_invoice_total', string="Total Invoiced",
@@ -336,15 +335,15 @@ class res_partner(models.Model):
         domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
         required=True)
-    property_account_position = fields.Many2one('account.fiscal.position', company_dependent=True, 
+    property_account_position = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
         help="The fiscal position will determine taxes and accounts used for the partner.")
-    property_payment_term = fields.Many2one('account.payment.term', company_dependent=True, 
+    property_payment_term = fields.Many2one('account.payment.term', company_dependent=True,
         string ='Customer Payment Term',
         help="This payment term will be used instead of the default one for sale orders and customer invoices")
-    property_supplier_payment_term = fields.Many2one('account.payment.term', company_dependent=True, 
+    property_supplier_payment_term = fields.Many2one('account.payment.term', company_dependent=True,
          string ='Supplier Payment Term',
-         help="This payment term will be used instead of the default one for purchase orders and supplier invoices")
+         help="This payment term will be used instead of the default one for purchase orders and supplier bills")
     ref_companies = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
     last_time_entries_checked = fields.Datetime(oldname='last_reconciliation_date',
@@ -355,6 +354,6 @@ class res_partner(models.Model):
 
     @api.model
     def _commercial_fields(self):
-        return super(res_partner, self)._commercial_fields() + \
+        return super(ResPartner, self)._commercial_fields() + \
             ['debit_limit', 'property_account_payable', 'property_account_receivable', 'property_account_position',
              'property_payment_term', 'property_supplier_payment_term', 'last_time_entries_checked']

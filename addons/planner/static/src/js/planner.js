@@ -102,7 +102,7 @@
             this.planner_launcher = parent;
             this.planner = planner;
             this.cookie_name = this.planner['planner_application'] + '_last_page';
-            this.set('progress', 5);
+            this.set('progress', 0);
         },
         start: function() {
             var self = this;
@@ -267,7 +267,7 @@
             var btn = $(ev.currentTarget);
             var page_id = btn.attr('data-pageid');
             var active_menu = self.$(".oe_planner li a[href=#"+page_id+"] span");
-            var active_page = self.$(".oe_planner div[id^='planner_page'].panel-collapse.collapse.in");
+            var active_page = self.$(".oe_planner div[id^='planner_page'].planner-page.show");
 
             var next_button = self.$(".oe_planner a[data-parent="+page_id+"]");
             if (!btn.hasClass('fa-check-square-o')) {

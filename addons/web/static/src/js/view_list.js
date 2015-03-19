@@ -356,7 +356,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         //Sort
         var default_order = this.fields_view.arch.attrs.default_order,
             unsorted = !this.dataset._sort.length;
-        if (unsorted && default_order) {
+        if (unsorted && default_order && !this.grouped) {
             this.dataset.set_sort(default_order.split(','));
         }
 
@@ -404,7 +404,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var total = dataset.size();
         var limit = this.limit() || total;
-        this.$pager.find('.oe-pager-button').toggle(total > limit);
+        this.$pager.find('.oe-pager-buttons').toggle(total > limit);
         this.$pager.find('.oe_pager_value').toggle(total !== 0);
         var spager = '-';
         if (total) {
@@ -1301,7 +1301,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         var $prev = $('<button type="button" data-pager-action="previous">&lt;</button>')
             .click(function (e) {
                 e.stopPropagation();
-                self.page -= 1;
+                if (self.page > 0) {
+                    self.page -= 1;
+                } else {
+                    self.page = self.max_page_index;
+                }
 
                 self.$row.closest('tbody').next()
                     .replaceWith(self.render());
@@ -1309,7 +1313,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         var $next = $('<button type="button" data-pager-action="next">&gt;</button>')
             .click(function (e) {
                 e.stopPropagation();
-                self.page += 1;
+                if (self.page < self.max_page_index) {
+                    self.page += 1;
+                } else {
+                    self.page = 0;
+                }
 
                 self.$row.closest('tbody').next()
                     .replaceWith(self.render());
@@ -1505,19 +1513,19 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                         self.$row.find('td.oe_list_group_pagination').find('button').remove();
                         self.$row.find('td.oe_list_group_pagination').find('span').remove();
                     } else {
-                        var pages = Math.ceil(dataset.size() / limit);
+                        self.max_page_index = Math.ceil(dataset.size() / limit) - 1;
                         self.$row
                             .find('.oe_list_pager_state')
                                 .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
                                     page: page + 1,
-                                    page_count: pages
+                                    page_count: self.max_page_index + 1
                                 }))
                             .end()
                             .find('button[data-pager-action=previous]')
                                 .toggleClass('disabled', page === 0)
                             .end()
                             .find('button[data-pager-action=next]')
-                                .toggleClass('disabled', page === pages - 1);
+                                .toggleClass('disabled', page === self.max_page_index);
                     }
                 }
 
@@ -1608,7 +1616,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 .pluck('name').value(),
             function (groups) {
                 // page count is irrelevant on grouped page, replace by limit
-                self.view.$pager.find('.oe_pager_group').hide();
+                self.view.$pager.find('.oe-pager-buttons').hide();
                 self.view.$pager.find('.oe_list_pager_state').text(self.view._limit ? self.view._limit : '∞');
                 $el[0].appendChild(
                     self.render_groups(groups));
@@ -2230,7 +2238,7 @@ instance.web.list.Column = instance.web.Class.extend({
         }
         if (attrs.invisible) { return ''; }
 
-        if (!(row_data[this.id] && row_data[this.id].value)) {
+        if (!row_data[this.id]) {
             return options.value_if_empty === undefined
                     ? ''
                     : options.value_if_empty;
@@ -2299,8 +2307,12 @@ instance.web.list.Binary = instance.web.list.Column.extend({
     _format: function (row_data, options) {
         var text = _t("Download");
         var value = row_data[this.id].value;
+        if (!value) {
+            return options.value_if_empty || '';
+        }
+
         var download_url;
-        if (value && value.substr(0, 10).indexOf(' ') == -1) {
+        if (value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
             download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});

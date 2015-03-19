@@ -39,52 +39,39 @@
             <field name="model_id" ref="mass_mailing.model_mail_mass_mailing_contact"/>
             <field name="use_default_to" eval="True"/>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[<div style="padding:0px; margin:0px">
-<table cellpadding="0" cellspacing="0" style="margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)">
+            <field name="body_html"><![CDATA[<div>
+<div class="snippet_row" style="padding: 0px; width: 600px; margin: auto; color: rgb(119, 119, 119); height: 80px; overflow: hidden; background-color: rgb(255, 255, 255);">
+<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:inherit;color:inherit" width="100%"><tbody><tr><td style="text-align:center;padding-bottom:10px"><span style="color:#000000;"><span style="font-size:36px"></span></span>
+
+            <h2 style="font-family: arial; color: rgb(51, 51, 51); text-align: center; padding: 0px 5px;">A Punchy Headline</h2>
+            <span style="color:#000000;"><span style="font-size:36px"></span></span></td>
+        </tr><tr><td style="font-size:20px; text-align:center; padding: 0 5px"><span style="color:#000000;"></span></td>
+        </tr></tbody></table></div>
+
+<div style="padding:0px; margin:auto;width:600px;background-color:#fff;color:#777777">
+<table cellpadding="0" cellspacing="0" style="margin:auto;border-collapse:collapse;background:inherit;color:inherit" width="600"><tbody><tr><td align="left" class="col_mv color_picker" style="text-align:center"><img alt="image" src="/website/static/src/img/big_picture.png" style="height: auto; max-width: 600px; width: 535px;"></td>
+        </tr></tbody></table></div>
+
+<div class="snippet_row" style="padding:0px;width:600px;margin:auto;background-color:#fff;color:#777777">
+<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:inherit;color:inherit" width="100%"><tbody><tr><td style="text-align:center;padding-bottom:10px"><span style="font-size:36px"></span>
+
+            <h3 style="font-family: arial; color: rgb(51, 51, 51); text-align: center; padding: 0px 5px; margin-top:20px;">A Small Subtitle for ${object.name}</h3>
+            <span style="font-size:36px"></span></td>
+        </tr><tr><td style="font-size:20px; text-align:center; padding: 0 5px"><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 12px; line-height: 17.142858505249px; text-align: center;"><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 12px; line-height: 17.142858505249px; text-align: center;">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</span></span></td>
+        </tr></tbody></table></div>
+
+<div style="padding:0px;width:600px;margin:auto;background-color:#fff;color:#000;color:#777777">
+<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;background:inherit;color:inherit">
     <tbody>
         <tr>
-            <td style="width:600px" valign="top">
-            <h2 style="text-align: center; padding:0px 5px">A Punchy Headline</h2>
+            <td class="col_mv color_picker" style="padding:30px 15px;width:33%;text-align:center;background-color:#fff;color:#777777"><img alt="column2 image" src="/website/static/src/img/desert_thumb.jpg" style="height: auto; max-width: 600px; padding: 20px 0px 30px; width: 270px;"><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 24px; line-height: 1.1;">Feature One</span>
+
+            <p style="text-align: left;"><span style="font-size:24px;font-weight:bold"></span><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 12px; line-height: 17.142858505249px;">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</span></p>
             </td>
-        </tr>
-        <tr>
-            <td style="width:600px" valign="top"><img src="/website/static/src/img/big_picture.png" style="display:block;border:none;min-height:250px;margin:0 auto;" width="500"></td>
-        </tr>
-        <tr>
-            <td style="width:600px" valign="top">
-            <p style="text-align: center; overflow:hidden"></p>
-
-            <h3 style="text-align: center; padding:0px 5px">A Small Subtitle for ${object.name}</h3>
-
-            <p></p>
-
-            <p style="text-align: center; overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            <td class="col_mv color_picker" style="vertical-align:top; padding: 30px 15px; width:33%;text-align:center;background-color:#fff;color:#777777"><img alt="column3 image" src="/website/static/src/img/deers_thumb.jpg" style="height: auto; max-width: 600px; padding: 20px 0px 30px; width: 270px;"><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 24px; line-height: 1.1;">Feature Two</span>
+            <p style="text-align: left;"><span style="font-size:24px;font-weight:bold"></span><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 12px; line-height: 17.142858505249px;">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</span></p>
             </td>
-        </tr>
-    </tbody>
-</table>
-</div>
-<div style="padding:0px; margin:0px">
-<table cellpadding="0" cellspacing="0" style="margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)">
-    <tbody>
-        <tr>
-            <td style="width:300px" valign="top"><img src="/website/static/src/img/desert_thumb.jpg" style="display:block;border:none;min-height:50px" width="275"></td>
-            <td style="width:300px" valign="top"><img src="/website/static/src/img/deers_thumb.jpg" style="display:block;border:none;min-height:50px" width="275"></td>
-        </tr>
-        <tr>
-            <td style="width:300px" valign="top">
-            <h3 style="text-align: center; padding:0px 5px">Feature One</h3>
-
-            <p style="overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
-            </td>
-            <td style="width:300px" valign="top">
-            <h3 style="text-align: center; padding:0px 5px">Feature Two</h3>
-
-            <p style="overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
-            </td>
-        </tr>
-    </tbody>
-</table>
+        </tr></tbody></table></div>
 </div>]]></field>
         </record>
 
@@ -111,52 +98,43 @@
             <field name="mailing_domain">[('customer', '=', True)]</field>
             <field name="reply_to_mode">email</field>
             <field name="reply_to"><![CDATA[Info <info@yourcompany.example.com>]]></field>
-            <field name="body_html"><![CDATA[<div style="padding:0px; margin:0px">
-<table cellpadding="0" cellspacing="0" style="margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)">
+            <field name="body_html"><![CDATA[<div>
+<div class="snippet_row" style="padding: 0px; width: 600px; margin: auto; color: rgb(119, 119, 119); height: 80px; overflow: hidden; background-color: rgb(255, 255, 255);">
+<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:inherit;color:inherit" width="100%"><tbody><tr><td style="text-align:center;padding-bottom:10px"><span style="color:#000000;"><span style="font-size:36px"></span></span>
+
+            <h2 style="font-family: arial; color: rgb(51, 51, 51); text-align: center; padding: 0px 5px;">A Punchy Headline</h2>
+            <span style="color:#000000;"><span style="font-size:36px"></span></span></td>
+        </tr><tr><td style="font-size:20px; text-align:center; padding: 0 5px"><span style="color:#000000;"></span></td>
+        </tr></tbody></table></div>
+
+<div style="padding:0px; margin:auto;width:600px;background-color:#fff;color:#777777">
+<table cellpadding="0" cellspacing="0" style="margin:auto;border-collapse:collapse;background:inherit;color:inherit" width="600"><tbody><tr><td align="left" class="col_mv color_picker" style="text-align:center"><img alt="image" src="/website/static/src/img/big_picture.png" style="height: auto; max-width: 600px; width: 535px;"></td>
+        </tr></tbody></table></div>
+
+<div class="snippet_row" style="padding:0px;width:600px;margin:auto;background-color:#fff;color:#777777">
+<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:inherit;color:inherit" width="100%"><tbody><tr><td style="text-align:center;padding-bottom:10px"><span style="font-size:36px"></span>
+
+            <h3 style="font-family: arial; color: rgb(51, 51, 51); text-align: center; padding: 0px 5px; margin-top:20px;">A Small Subtitle for ${object.name}</h3>
+            <span style="font-size:36px"></span></td>
+        </tr><tr><td style="font-size:20px; text-align:center; padding: 0 5px"><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 12px; line-height: 17.142858505249px; text-align: center;"><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 12px; line-height: 17.142858505249px; text-align: center;">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</span></span></td>
+        </tr>
+    </tbody>
+</table></div>
+
+<div style="padding:0px;width:600px;margin:auto;background-color:#fff;color:#000;color:#777777">
+<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;background:inherit;color:inherit">
     <tbody>
         <tr>
-            <td style="width:600px" valign="top">
-            <h2 style="text-align: center; padding:0px 5px">A Punchy Headline</h2>
+            <td class="col_mv color_picker" style="padding:30px 15px;width:33%;text-align:center;background-color:#fff;color:#777777"><img alt="column2 image" src="/website/static/src/img/desert_thumb.jpg" style="height: auto; max-width: 600px; padding: 20px 0px 30px; width: 270px;"><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 24px; line-height: 1.1;">Feature One</span>
+
+            <p style="text-align: left;"><span style="font-size:24px;font-weight:bold"></span><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 12px; line-height: 17.142858505249px;">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</span></p>
             </td>
-        </tr>
-        <tr>
-            <td style="width:600px" valign="top"><img src="/website/static/src/img/big_picture.png" style="display:block;border:none;min-height:250px;margin:0 auto;" width="500"></td>
-        </tr>
-        <tr>
-            <td style="width:600px" valign="top">
-            <p style="text-align: center; overflow:hidden"></p>
-
-            <h3 style="text-align: center; padding:0px 5px">A Small Subtitle for ${object.name}</h3>
-
-            <p></p>
-
-            <p style="text-align: center; overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            <td class="col_mv color_picker" style="vertical-align:top; padding: 30px 15px; width:33%;text-align:center;background-color:#fff;color:#777777"><img alt="column3 image" src="/website/static/src/img/deers_thumb.jpg" style="height: auto; max-width: 600px; padding: 20px 0px 30px; width: 270px;"><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 24px; line-height: 1.1;">Feature Two</span>
+            <p style="text-align: left;"><span style="font-size:24px;font-weight:bold"></span><span style="color: rgb(51, 51, 51); font-family: arial; font-size: 12px; line-height: 17.142858505249px;">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</span></p>
             </td>
         </tr>
     </tbody>
-</table>
-</div>
-<div style="padding:0px; margin:0px">
-<table cellpadding="0" cellspacing="0" style="margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)">
-    <tbody>
-        <tr>
-            <td style="width:300px" valign="top"><img src="/website/static/src/img/desert_thumb.jpg" style="display:block;border:none;min-height:50px" width="275"></td>
-            <td style="width:300px" valign="top"><img src="/website/static/src/img/deers_thumb.jpg" style="display:block;border:none;min-height:50px" width="275"></td>
-        </tr>
-        <tr>
-            <td style="width:300px" valign="top">
-            <h3 style="text-align: center; padding:0px 5px">Feature One</h3>
-
-            <p style="overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
-            </td>
-            <td style="width:300px" valign="top">
-            <h3 style="text-align: center; padding:0px 5px">Feature Two</h3>
-
-            <p style="overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
-            </td>
-        </tr>
-    </tbody>
-</table>
+</table></div>
 </div>]]></field>
             <field name="attachment_ids" eval="[(4, ref('mass_mail_attach_1'))]"/>
         </record>

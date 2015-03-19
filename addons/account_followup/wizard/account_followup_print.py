@@ -216,7 +216,7 @@ class account_followup_print(models.TransientModel):
         model_data_ids = mod_obj.search([('model', '=', 'ir.ui.view'),('name', '=', 'view_account_followup_sending_results')])
         resource_id = model_data_ids[0].res_id
         return {
-            'name': _('Send Letters and Emails: Actions Summary'),
+            'name': _('Customer Statements: Actions Summary'),
             'view_type': 'form',
             'context': self.with_context(description=restot['resulttext'], needprinting=restot['needprinting'], report_data=restot['action']).env.context,
             'view_mode': 'tree,form',

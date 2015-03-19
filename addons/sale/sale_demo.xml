@@ -6,7 +6,7 @@
             <field name="invoiced_forecast">52700</field>
             <field name="invoiced_target">60000</field>
         </record>
-        
+
         <record model="crm.team" id="sales_team.crm_team_1">
             <field name="invoiced_forecast">36000</field>
             <field name="invoiced_target">40000</field>
@@ -322,7 +322,7 @@ Could you confirm, please?</field>
             <field name="model">sale.order</field>
             <field name="res_id" ref="sale_order_2"/>
             <field name="parent_id" ref="message_sale_1"/>
-            <field name="body">Hello, 
+            <field name="body">Hello,
 Unfortunately that was a temporary discount that is not available anymore.
 Do you still plan to confirm the order based on the quoted prices?
 Thanks!</field>
@@ -392,13 +392,9 @@ Thanks!</field>
         </record>
         <workflow action="invoice_open" model="account.invoice" ref="test_crm_sale_invoice_1"/>
         <function model="account.invoice" name="pay_and_reconcile">
-            <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_1')]"/>
-            <!-- pay_amount = -->            <value eval="1850"/>
-            <!-- pay_account_id = -->        <value eval="ref('account.cash')"/>
-            <!-- date         = -->            <value eval="time.strftime('%Y-%m-%d')"/>
+            <!-- ids = -->                   <value eval="[ref('test_crm_sale_invoice_1')]"/>
             <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
-            <!-- writeoff_acc_id = -->        <value eval="ref('account.cash')"/>
-            <!-- context = -->              <value eval="{}"/>
+            <!-- pay_amount = -->            <value eval="1850"/>
         </function>
 
         <!-- Invoice for Indirect Marketing -->
@@ -423,13 +419,9 @@ Thanks!</field>
         </record>
         <workflow action="invoice_open" model="account.invoice" ref="test_crm_sale_invoice_2"/>
         <function model="account.invoice" name="pay_and_reconcile">
-            <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_2')]"/>
-            <!-- pay_amount = -->            <value eval="500"/>
-            <!-- pay_account_id = -->        <value eval="ref('account.cash')"/>
-            <!-- date         = -->            <value eval="time.strftime('%Y-%m-%d')"/>
+            <!-- ids = -->                   <value eval="[ref('test_crm_sale_invoice_2')]"/>
             <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
-            <!-- writeoff_acc_id = -->        <value eval="ref('account.cash')"/>
-            <!-- context = -->              <value eval="{}"/>
+            <!-- pay_amount = -->            <value eval="500"/>
         </function>
 
     </data>

@@ -35,8 +35,8 @@
                 </field>
                 <group name="event" position="after">
                     <group string="Origin">
-                        <field name="origin" attrs="{'invisible': [('sale_order_id', '!=', False)]}"/>
                         <field name="sale_order_id"/>
+                        <field name="origin" attrs="{'invisible': [('sale_order_id', '!=', False)]}"/>
                         <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
                     </group>
                 </group>

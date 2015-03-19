@@ -57,13 +57,6 @@ class hr_expense_expense(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Expense"
     _order = "id desc"
-    _track = {
-        'state': {
-            'hr_expense.mt_expense_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'accepted',
-            'hr_expense.mt_expense_refused': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancelled',
-            'hr_expense.mt_expense_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirm',
-        },
-    }
 
     _columns = {
         'name': fields.char('Description', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
@@ -151,6 +144,16 @@ class hr_expense_expense(osv.osv):
 
     def expense_canceled(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'accepted':
+            return 'hr_expense.mt_expense_approved'
+        elif 'state' in init_values and record.state == 'confirm':
+            return 'hr_expense.mt_expense_confirmed'
+        elif 'state' in init_values and record.state == 'cancelled':
+            return 'hr_expense.mt_expense_refused'
+        return super(hr_expense_expense, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
     def account_move_get(self, cr, uid, expense_id, context=None):
         '''
@@ -277,11 +280,9 @@ class hr_expense_expense(osv.osv):
     def move_line_get(self, cr, uid, expense_id, context=None):
         res = []
         tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
         exp = self.browse(cr, uid, expense_id, context=context)
-        company_currency = exp.company_id.currency_id.id
 
         for line in exp.line_ids:
             mres = self.move_line_get_item(cr, uid, line, context)
@@ -307,20 +308,19 @@ class hr_expense_expense(osv.osv):
 
             # Calculate tax lines and adjust base line
             tax_ids = [tax.id for tax in taxes]
-            tax_res = tax_obj.compute_all(cr, uid, tax_ids, line.unit_amount, exp.currency_id.id, line.unit_quantity, line.product_id.id, exp.user_id.partner_id.id)
+            tax_res = tax_obj.browse(cr, uid, tax_ids, context=context).compute_all(line.unit_amount, exp.currency_id, line.unit_quantity, line.product_id, exp.user_id.partner_id)
             res[-1]['price'] = tax_res['total_excluded']
             res[-1]['tax_ids'] = tax_ids
             for tax in tax_res['taxes']:
                 res.append({
                     'type': 'tax',
                     'name': tax['name'],
-                    'price_unit': tax['price_unit'],
+                    'price_unit': tax['amount'],
                     'quantity': 1,
                     'price': tax['amount'],
                     'account_id': tax['account_id'] or mres['account_id'],
                     'tax_line_id': tax['id'],
                 })
-
         return res
 
     def move_line_get_item(self, cr, uid, line, context=None):

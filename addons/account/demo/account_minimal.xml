@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
         <record id="base.main_company" model="res.company">
             <field name="bank_account_code_char">X1100</field>
             <field name="accounts_code_digits">7</field>
@@ -36,7 +36,7 @@
         </record>
         <record id="ova" model="account.account">
             <field name="code">X1013</field>
-            <field name="name">Output VAT - (test)</field>
+            <field name="name">VAT Paid- (test)</field>
             <field name="user_type" ref="data_account_type_current_assets"/>
         </record>
         <record id="bnk" model="account.account">
@@ -59,6 +59,12 @@
             <field name="name">USD Bank Account - (test)</field>
             <field name="user_type" ref="data_account_type_liquidity"/>
             <field name="currency_id" ref="base.USD"/>
+        </record>
+        <record id="transfer_account" model="account.account">
+            <field name="code">X1019</field>
+            <field name="name">Internal Transfert Account - (test)</field>
+            <field name="user_type" ref="data_account_type_current_assets"/>
+            <field name="reconcile">1</field>
         </record>
         <record id="ncas" model="account.account">
             <field name="code">X1020</field>
@@ -84,7 +90,7 @@
 
         <record id="iva" model="account.account">
             <field name="code">X1112</field>
-            <field name="name">Input VAT - (test)</field>
+            <field name="name">VAT Received - (test)</field>
             <field name="user_type" ref="data_account_type_current_liabilities"/>
         </record>
 
@@ -116,7 +122,20 @@
         <record id="a_sale" model="account.account">
             <field name="code">X2020</field>
             <field name="name">Product Sales - (test)</field>
-            <field name="user_type" ref="data_account_type_sales"/>
+            <field name="user_type" ref="data_account_type_revenue"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_operating')])]"/>
+        </record>
+        <record id="a_sale_invest" model="account.account">
+            <field name="code">X2021</field>
+            <field name="name">Sale of Lands - (test)</field>
+            <field name="user_type" ref="data_account_type_revenue"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_investing')])]"/>
+        </record>
+        <record id="a_sale_finance" model="account.account">
+            <field name="code">X2022</field>
+            <field name="name">Bank Accounts Interests - (test)</field>
+            <field name="user_type" ref="data_account_type_revenue"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_financing')])]"/>
         </record>
         <record id="cog" model="account.account">
             <field name="code">X2030</field>
@@ -124,25 +143,44 @@
             <field name="user_type" ref="data_account_type_direct_costs"/>
         </record>
 
-        <record id="a_expense" model="account.account">
-            <field name="code">X2110</field>
-            <field name="name">Expenses - (test)</field>
-            <field name="user_type" ref="data_account_type_expenses"/>
-        </record>
         <record model="account.account" id="income_fx_expense">
             <field name="name">Foreign Exchange Loss - (test)</field>
-            <field name="code">X2111</field>
+            <field name="code">X2110</field>
             <field name="user_type" ref="data_account_type_overheads"/>
             <field name="reconcile" eval="False"/>
         </record>
-
+        <record id="a_expense" model="account.account">
+            <field name="code">X2120</field>
+            <field name="name">Expenses - (test)</field>
+            <field name="user_type" ref="data_account_type_expenses"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_operating')])]"/>
+        </record>
         <record id="a_salary_expense" model="account.account">
-            <field name="code">X2112</field>
+            <field name="code">X2121</field>
             <field name="name">Salary Expenses - (test)</field>
             <field name="user_type" ref="data_account_type_overheads"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_operating')])]"/>
+        </record>
+        <record id="a_expense_invest" model="account.account">
+            <field name="code">X2122</field>
+            <field name="name">Purchase of Equipments - (test)</field>
+            <field name="user_type" ref="data_account_type_fixed_assets"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_investing')])]"/>
+        </record>
+        <record id="a_expense_finance" model="account.account">
+            <field name="code">X2123</field>
+            <field name="name">Bank Fees - (test)</field>
+            <field name="user_type" ref="data_account_type_expenses"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_financing')])]"/>
+        </record>
+        <record id="a_capital" model="account.account">
+            <field name="code">X3001</field>
+            <field name="name">Capital</field>
+            <field name="user_type" ref="data_account_type_equity"/>
+            <field name="tag_ids" eval="[(6,0,[ref('demo_capital_account')])]"/>
         </record>
         <record id="a_dividends" model="account.account">
-            <field name="code">X3001</field>
+            <field name="code">X3002</field>
             <field name="name">Dividends</field>
             <field name="user_type" ref="data_account_type_equity"/>
         </record>
@@ -177,43 +215,38 @@
         -->
 
         <record id="sales_journal" model="account.journal">
-            <field name="name">Sales Journal - (test)</field>
+            <field name="name">Sales</field>
             <field name="code">TSAJ</field>
             <field name="type">sale</field>
             <field name="default_credit_account_id" ref="a_sale"/>
             <field name="default_debit_account_id" ref="a_sale"/>
             <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="refund_sequence" eval="True"/>
+            <field name="show_on_dashboard" eval="True"/>
         </record>
 
         <record id="expenses_journal" model="account.journal">
-            <field name="name">Expenses Journal - (test)</field>
+            <field name="name">Supplier Bills</field>
             <field name="code">TEXJ</field>
             <field name="type">purchase</field>
             <field name="default_debit_account_id" ref="a_expense"/>
             <field name="default_credit_account_id" ref="a_expense"/>
             <field name="analytic_journal_id" ref="exp"/>
             <field name="refund_sequence" eval="True"/>
+            <field name="show_on_dashboard" eval="True"/>
         </record>
 
         <record id="bank_journal" model="account.journal">
-            <field name="name">Bank Journal - (test)</field>
+            <field name="name">Bank</field>
             <field name="code">TBNK</field>
             <field name="type">bank</field>
             <field name="default_debit_account_id" ref="bnk"/>
             <field name="default_credit_account_id" ref="bnk"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
-        </record>
-        <record id="check_journal" model="account.journal">
-            <field name="name">Checks Journal - (test)</field>
-            <field name="code">TCHK</field>
-            <field name="type">bank</field>
-            <field name="default_debit_account_id" ref="cash"/>
-            <field name="default_credit_account_id" ref="cash"/>
-            <field name="analytic_journal_id" ref="analytic.sit"/>
+            <field name="show_on_dashboard" eval="True"/>
         </record>
         <record id="cash_journal" model="account.journal">
-            <field name="name">Cash Journal - (test)</field>
+            <field name="name">Cash</field>
             <field name="code">TCSH</field>
             <field name="type">cash</field>
             <field name="profit_account_id" ref="rsa" />
@@ -223,35 +256,30 @@
             <field name="default_debit_account_id" ref="cash"/>
             <field name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
+            <field name="show_on_dashboard" eval="True"/>
         </record>
         <record id="miscellaneous_journal" model="account.journal">
-            <field name="name">Miscellaneous Journal - (test)</field>
+            <field name="name">Miscellaneous</field>
             <field name="code">TMIS</field>
             <field name="type">general</field>
             <field name="analytic_journal_id" ref="analytic.sit"/>
         </record>
         <record id="currency_diff_journal" model="account.journal">
-            <field name="name">Currency Difference Journal - (test)</field>
+            <field name="name">Currency Difference</field>
             <field name="code">CUR</field>
             <field name="type">general</field>
             <field name="default_debit_account_id" ref="income_fx_income"/>
             <field name="default_credit_account_id" ref="income_fx_expense"/>
         </record>
-        <record id="opening_journal" model="account.journal">
-            <field name="name">Opening Entries Journal - (test)</field>
-            <field name="code">TOEJ</field>
-            <field name="type">situation</field>
-            <field name="default_debit_account_id" ref="o_income"/>
-            <field name="default_credit_account_id" ref="o_expense"/>
-        </record>
 
         <record id="bank_journal_usd" model="account.journal">
-            <field name="name">USD Bank Journal - (test)</field>
+            <field name="name">USD Bank</field>
             <field name="code">TUBK</field>
             <field name="type">bank</field>
             <field name="default_debit_account_id" ref="usd_bnk"/>
             <field name="default_credit_account_id" ref="usd_bnk"/>
             <field name="currency" ref="base.USD"/>
+            <field name="show_on_dashboard" eval="True"/>
         </record>
         <record id="base.main_company" model="res.company">
             <field name="currency_exchange_journal_id" ref="currency_diff_journal"/>

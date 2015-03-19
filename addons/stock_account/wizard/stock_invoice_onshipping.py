@@ -67,7 +67,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         'invoice_date': fields.date('Invoice Date'),
         'invoice_type': fields.selection(selection=[
             ('out_invoice', 'Create Customer Invoice'),
-            ('in_invoice', 'Create Supplier Invoice'),
+            ('in_invoice', 'Create Supplier Bill'),
             ('out_refund', 'Create Customer Refund'),
             ('in_refund', 'Create Supplier Refund'),
         ], string='Invoice type', readonly=True),
@@ -104,14 +104,10 @@ class stock_invoice_onshipping(osv.osv_memory):
         
         inv_type = self.browse(cr, uid, ids[0], context=context).invoice_type
         data_pool = self.pool.get('ir.model.data')
-        if inv_type == "out_invoice":
+        if inv_type in ["out_invoice", "out_refund"]:
             action_id = data_pool.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree1')
-        elif inv_type == "in_invoice":
+        elif inv_type in ["in_invoice", "in_refund"]:
             action_id = data_pool.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree2')
-        elif inv_type == "out_refund":
-            action_id = data_pool.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree3')
-        elif inv_type == "in_refund":
-            action_id = data_pool.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree4')
 
         if action_id:
             action_pool = self.pool['ir.actions.act_window']

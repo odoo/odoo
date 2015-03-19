@@ -195,13 +195,13 @@ class purchase_order(osv.osv):
         ('done', 'Done'),
         ('cancel', 'Cancelled')
     ]
-    _track = {
-        'state': {
-            'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirmed',
-            'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'approved',
-            'purchase.mt_rfq_done': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
-        },
+
+    READONLY_STATES = {
+        'confirmed': [('readonly', True)],
+        'approved': [('readonly', True)],
+        'done': [('readonly', True)]
     }
+
     _columns = {
         'name': fields.char('Order Reference', required=True, select=True, copy=False,
                             help="Unique number of the purchase order, "
@@ -223,16 +223,16 @@ class purchase_order(osv.osv):
                                  copy=False),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, copy=False,
                                    help="Date on which purchase order has been approved"),
-        'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
+        'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states=READONLY_STATES,
             change_default=True, track_visibility='always'),
         'dest_address_id':fields.many2one('res.partner', 'Customer Address (Direct Delivery)',
-            states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
+            states=READONLY_STATES,
             help="Put an address if you want to deliver directly from the supplier to the customer. " \
                 "Otherwise, keep empty to deliver to your own company."
         ),
-        'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage','<>','view')], states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]} ),
-        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
-        'currency_id': fields.many2one('res.currency','Currency', readonly=True, required=True,states={'draft': [('readonly', False)],'sent': [('readonly', False)]}),
+        'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage','<>','view')], states=READONLY_STATES),
+        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states=READONLY_STATES, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
+        'currency_id': fields.many2one('res.currency','Currency', required=True, states=READONLY_STATES),
         'state': fields.selection(STATE_SELECTION, 'Status', readonly=True,
                                   help="The status of the purchase order or the quotation request. "
                                        "A request for quotation is a purchase order in a 'Draft' status. "
@@ -342,6 +342,16 @@ class purchase_order(osv.osv):
 
         return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
 
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'approved':
+            return 'purchase.mt_rfq_approved'
+        elif 'state' in init_values and record.state == 'confirmed':
+            return 'purchase.mt_rfq_confirmed'
+        elif 'state' in init_values and record.state == 'done':
+            return 'purchase.mt_rfq_done'
+        return super(purchase_order, self)._track_subtype(cr, uid, ids, init_values, context=context)
+
     def set_order_line_status(self, cr, uid, ids, status, context=None):
         line = self.pool.get('purchase.order.line')
         order_line_ids = []
@@ -435,7 +445,7 @@ class purchase_order(osv.osv):
         res_id = res and res[1] or False
 
         return {
-            'name': _('Supplier Invoices'),
+            'name': _('Supplier Bills'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': [res_id],
@@ -550,7 +560,16 @@ class purchase_order(osv.osv):
         else:
             acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
         fpos = po_line.order_id.fiscal_position or False
-        return fiscal_obj.map_account(cr, uid, fpos, acc_id)
+        #For anglo-saxon accounting
+        account_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
+        if po_line.company_id.anglo_saxon_accounting and po_line.product_id and not po_line.product_id.type == 'service':
+            acc_id = po_line.product_id.property_stock_account_input and po_line.product_id.property_stock_account_input.id
+            if not acc_id:
+                acc_id = po_line.product_id.categ_id.property_stock_account_input_categ and po_line.product_id.categ_id.property_stock_account_input_categ.id
+            if acc_id:
+                fpos = po_line.order_id.fiscal_position or False
+                account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, acc_id)
+        return account_id
 
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         """Collects require data from purchase order line that is used to create invoice line
@@ -1292,6 +1311,11 @@ class procurement_order(osv.osv):
 
     def _get_product_supplier(self, cr, uid, procurement, context=None):
         ''' returns the main supplier of the procurement's product given as argument'''
+        supplierinfo = self.pool['product.supplierinfo']
+        company_supplier = supplierinfo.search(cr, uid,
+            [('product_tmpl_id', '=', procurement.product_id.product_tmpl_id.id), ('company_id', '=', procurement.company_id.id)], limit=1, context=context)
+        if company_supplier:
+            return supplierinfo.browse(cr, uid, company_supplier[0], context=context).name
         return procurement.product_id.seller_id
 
     def _get_po_line_values_from_procs(self, cr, uid, procurements, partner, schedule_date, context=None):
@@ -1419,8 +1443,8 @@ class procurement_order(osv.osv):
             po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', add_purchase), ('product_id', 'in', [x.product_id.id for x in procurements])], context=context)
             po_lines = po_line_obj.browse(cr, uid, po_line_ids, context=context)
             po_prod_dict = {}
-            for po in po_lines:
-                po_prod_dict[po.product_id.id] = po
+            for pol in po_lines:
+                po_prod_dict[pol.product_id.id] = pol
             procs_to_create = []
             #Check which procurements need a new line and which need to be added to an existing one
             for proc in procurements:
@@ -1534,6 +1558,11 @@ class product_template(osv.Model):
         return res
 
     _columns = {
+        'property_account_creditor_price_difference': fields.property(
+            type='many2one',
+            relation='account.account',
+            string="Price Difference Account",
+            help="This account will be used to value price difference between purchase price and cost price."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Specify if the product can be selected in a purchase order line."),
         'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
     }
@@ -1571,6 +1600,15 @@ class product_product(osv.Model):
         'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
     }
 
+class product_category(osv.Model):
+    _inherit = "product.category"
+    _columns = {
+        'property_account_creditor_price_difference_categ': fields.property(
+            type='many2one',
+            relation='account.account',
+            string="Price Difference Account",
+            help="This account will be used to value price difference between purchase price and cost price."),
+    }
 
 
 class mail_compose_message(osv.Model):
@@ -1630,3 +1668,77 @@ class account_invoice_line(osv.Model):
             'Purchase Order Line', ondelete='set null', select=True,
             readonly=True),
     }
+
+    def move_line_get(self, cr, uid, invoice_id, context=None):
+        res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
+        if self.company_id.anglo_saxon_accounting:
+            if inv.type in ('in_invoice','in_refund'):
+                for i_line in inv.invoice_line:
+                    res.extend(self._anglo_saxon_purchase_move_lines(cr, uid, i_line, res, context=context))
+        return res
+
+    def _anglo_saxon_purchase_move_lines(self, cr, uid, i_line, res, context=None):
+        """Return the additional move lines for purchase invoices and refunds.
+
+        i_line: An account.invoice.line object.
+        res: The move line entries produced so far by the parent move_line_get.
+        """
+        inv = i_line.invoice_id
+        company_currency = inv.company_id.currency_id.id
+        if i_line.product_id and i_line.product_id.valuation == 'real_time':
+            if i_line.product_id.type != 'service':
+                # get the price difference account at the product
+                acc = i_line.product_id.property_account_creditor_price_difference and i_line.product_id.property_account_creditor_price_difference.id
+                if not acc:
+                    # if not found on the product get the price difference account at the category
+                    acc = i_line.product_id.categ_id.property_account_creditor_price_difference_categ and i_line.product_id.categ_id.property_account_creditor_price_difference_categ.id
+                a = None
+
+                # oa will be the stock input account
+                # first check the product, if empty check the category
+                oa = i_line.product_id.property_stock_account_input and i_line.product_id.property_stock_account_input.id
+                if not oa:
+                    oa = i_line.product_id.categ_id.property_stock_account_input_categ and i_line.product_id.categ_id.property_stock_account_input_categ.id
+                if oa:
+                    # get the fiscal position
+                    fpos = i_line.invoice_id.fiscal_position or False
+                    a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
+                diff_res = []
+                account_prec = inv.company_id.currency_id.decimal_places
+                # calculate and write down the possible price difference between invoice price and product price
+                for line in res:
+                    if line.get('invl_id', 0) == i_line.id and a == line['account_id']:
+                        uom = i_line.product_id.uos_id or i_line.product_id.uom_id
+                        valuation_price_unit = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.standard_price, i_line.uos_id.id)
+                        if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
+                            #for average/fifo/lifo costing method, fetch real cost price from incomming moves
+                            stock_move_obj = self.pool.get('stock.move')
+                            valuation_stock_move = stock_move_obj.search(cr, uid, [('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1, context=context)
+                            if valuation_stock_move:
+                                valuation_price_unit = stock_move_obj.browse(cr, uid, valuation_stock_move[0], context=context).price_unit
+                        if inv.currency_id.id != company_currency:
+                            valuation_price_unit = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, valuation_price_unit, context={'date': inv.date_invoice})
+                        if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
+                            # price with discount and without tax included
+                            price_unit = self.pool['account.tax'].compute_all(cr, uid, line['taxes'], i_line.price_unit * (1-(i_line.discount or 0.0)/100.0),
+                                inv.currency_id.id, line['quantity'])['total_excluded']
+                            price_line = round(valuation_price_unit * line['quantity'], account_prec)
+                            price_diff = round(price_unit - price_line, account_prec)
+                            line.update({'price': price_line})
+                            diff_res.append({
+                                'type': 'src',
+                                'name': i_line.name[:64],
+                                'price_unit': round(price_diff / line['quantity'], account_prec),
+                                'quantity': line['quantity'],
+                                'price': price_diff,
+                                'account_id': acc,
+                                'product_id': line['product_id'],
+                                'uos_id': line['uos_id'],
+                                'account_analytic_id': line['account_analytic_id'],
+                                'taxes': line.get('taxes', []),
+                                })
+                return diff_res
+        return []
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

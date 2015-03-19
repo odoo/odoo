@@ -36,7 +36,7 @@
                 <tr class="oe_timesheet_total">
                     <td>
                         <div class="oe_timesheet_weekly_adding_tot">
-                            <div class="oe_timesheet_weekly_adding"><button class="oe_timesheet_button_add">Add a Line</button></div>
+                            <div t-if="!widget.get('effective_readonly')" class="oe_timesheet_weekly_adding"><button class="oe_timesheet_button_add">Add a Line</button></div>
                             <div class="oe_timesheet_weekly_tottot"><span>Total</span></div>
                         </div>
                     </td>

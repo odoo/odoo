@@ -52,10 +52,11 @@
                 <ul class="dropdown-menu oe_content_menu" role="menu">
                     <li groups="base.group_website_designer"><a data-action="edit_menu" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
                     <li class="divider" groups="base.group_website_designer"> </li>
-                    <li groups="base.group_website_designer"><a href="#" data-action="new_page">New Page</a></li>
                     <t t-if="deletable">
-                        <li groups="base.group_website_designer"><a href="#" data-action="delete_page">Delete this page</a></li>
+                        <li groups="base.group_website_designer"><a href="#" data-action="delete_page">Delete Page</a></li>
+                        <li class="divider" groups="base.group_website_designer"> </li>
                     </t>
+                    <li groups="base.group_website_designer"><a href="#" data-action="new_page">New Page</a></li>
                 </ul>
             </li>
 

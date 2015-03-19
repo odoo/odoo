@@ -22,12 +22,14 @@
 import partner
 import account
 import installer
+import account_payment
 import account_invoice
 import account_bank_statement
 import account_bank
 import account_cash_statement
 import account_move_line
 import account_analytic_line
+import account_journal_dashboard
 import product
 import company
 import res_config

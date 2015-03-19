@@ -43,10 +43,11 @@ class account_followup_stat(models.Model):
 
     _order = 'date_move'
 
-    # def search(self, args, offset=0, limit=None, order=None, count=False):
+    # def search(self, cr, uid, args, offset=0, limit=None, order=None,
+    #             context=None, count=False):
     #     for arg in args:
     #         if arg[0] == 'date' and arg[2] == 'current_year':
-    #             current_year = self.pool.get('account.fiscalyear').find(cr, uid)
+    #             #current_year = self.pool.get('account.fiscalyear').find(cr, uid)
     #             # TODO account.period is now removed
     #             # ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
     #             # args.append(['period_id','in',ids])
@@ -57,7 +58,7 @@ class account_followup_stat(models.Model):
     # def read_group(self, cr, uid, domain, *args, **kwargs):
     #     for arg in domain:
     #         if arg[0] == 'date' and arg[2] == 'current_year':
-    #             current_year = self.pool.get('account.fiscalyear').find(cr, uid)
+    #             #current_year = self.pool.get('account.fiscalyear').find(cr, uid)
     #             # TODO account.period is now removed
     #             # ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
     #             # domain.append(['period_id','in',ids])

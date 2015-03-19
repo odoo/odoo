@@ -610,24 +610,31 @@ td.field-body {
   // === columning only on medium+ ===
   @media (min-width: @screen-md-min) {
     // column 1
-    .section > *,
-    .section > .force-left {
+    .section:not(.force-right) > *,
+    .section:not(.force-right) > .force-left {
       width: 49%;
       float: left;
       clear: left;
     }
     // column 2
-    .section > .force-right {
+    .section:not(.force-right) > .force-right {
       padding-left: 1em;
       padding-right: 1em;
     }
-    .section > .force-right,
-    .section > [class*=highlight] {
+    .section:not(.force-right) > .force-right,
+    .section:not(.force-right) > [class*=highlight] {
       float: none;
       clear: none;
       margin-left: 50%;
       width: 50%;
       color: @color-right;
+      legend {
+        color: inherit;
+      }
+      input {
+        color: inherit;
+        background-color: @gray;
+      }
       a {
         color: lighten(@link-color, 30%);
       }
@@ -728,13 +735,16 @@ td.field-body {
     .body > .section > .section {
       border-top: 1px solid @color-right;
     }
-    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
-    .section > h6 {
+    .section:not(.force-right) > h1, .section:not(.force-right) > h2,
+    .section:not(.force-right) > h3, .section:not(.force-right) > h4,
+    .section:not(.force-right) > h5, .section:not(.force-right) > h6 {
       max-width: 50%;
 
     }
-    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
-    .section > h6, .section > .section {
+    .section:not(.force-right) > h1, .section:not(.force-right) > h2,
+    .section:not(.force-right) > h3, .section:not(.force-right) > h4,
+    .section:not(.force-right) > h5, .section:not(.force-right) > h6,
+    .section > .section:not(.force-right) {
       position: relative;
       width: auto;
       float: none;
