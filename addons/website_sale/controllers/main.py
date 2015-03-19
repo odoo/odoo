@@ -8,6 +8,7 @@ from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
 from openerp.addons.web.controllers.main import login_redirect
+from openerp.addons.website.controllers.main import Website
 
 PPG = 20 # Products Per Page
 PPR = 4  # Products Per Row
@@ -978,3 +979,17 @@ class website_sale(http.Controller):
             }
             ret['lines'] = self.order_lines_2_google_api(order.order_line)
         return ret
+
+
+class website(Website):
+
+    @http.route('/website/customize_template_get', type='json', auth='user', website=True)
+    def customize_template_get(self, key, full=False, bundles=False, **kw):
+        result = Website.customize_template_get(self, key, full=full, bundles=bundles, **kw)
+        res = []
+        for data in result:
+            if data['key'] == 'website_sale.products_categories' and data['header'] == True:
+                pass
+            else:
+                res.append(data)
+        return res
