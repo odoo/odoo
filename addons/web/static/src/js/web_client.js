@@ -57,7 +57,7 @@ var WebClient = Widget.extend({
                 self.action_manager.do_action(self.client_options.action);
                 delete(self.client_options.action);
             }
-            self.trigger('web_client_ready');
+            core.bus.trigger('web_client_ready');
         });
     },
     bind_events: function() {
