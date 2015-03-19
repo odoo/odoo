@@ -10,16 +10,18 @@ openerp.account_followup.FollowupReportWidgets = openerp.account.FollowupReportW
         return this._super();
     },
     onKeyPress: function(e) {
-        e.stopPropagation();
-        e.preventDefault();
         var report_name = $("div.page").attr("class").split(/\s+/)[2];
         if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey) && report_name == 'followup_report') {
             $('a.btn-primary.followup-email').trigger('click');
-            $('a.btn-primary.followup-letter').trigger('click');
+            var letter_context_list = [];
+            $('a.btn-primary.followup-letter').each(function() {
+                letter_context_list.push($(this).attr('context'))
+            });
             var action_context_list = [];
             $('a.btn-primary.followup-action').each(function() {
                 action_context_list.push($(this).attr('context'))
             });
+            window.open('?pdf&letter_context_list=' + letter_context_list, '_blank');
             window.open('?partner_done=all&action_context_list=' + action_context_list, '_self');
         }
     },

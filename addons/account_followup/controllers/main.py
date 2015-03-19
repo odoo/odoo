@@ -61,9 +61,9 @@ class FollowupReportController(addons.account.controllers.main.FinancialReportCo
                     partners.update_next_action()
                     context_all_id.write({'valuenow': context_all_id.valuemax})
                     partners = partners - partners
-                    if 'action_partner_list' in kw:
-                        action_partner_list = safe_eval('[' + kw['action_partner_list'] + ']')
-                        action_contexts = request.env['account.report.context.followup'].search([('partner_id', 'in', action_partner_list)])
+                    if 'action_context_list' in kw:
+                        action_context_list = safe_eval('[' + kw['action_context_list'] + ']')
+                        action_contexts = request.env['account.report.context.followup'].browse(action_context_list)
         if context_all_id.valuemax != context_all_id.valuenow + len(partners):
             context_all_id.write({'valuemax': context_all_id.valuenow + len(partners)})
         if context_all_id.partner_filter == 'all':
