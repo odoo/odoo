@@ -53,7 +53,6 @@
     </xpath>
     <xpath expr="//i[@class='fa fa-fw fa-pencil-square']" position='replace'></xpath>
     <xpath expr="//i[@class='fa fa-fw fa-pencil-square']" position='replace'></xpath>
-    <xpath expr="//i[@class='fa fa-fw fa-pencil-square']" position='replace'></xpath>
 </template>
 <template id="report_followup_line_public" inherit_id="account.report_followup_line" primary="True">
     <xpath expr="//ul[@class='dropdown-menu']" position="replace"></xpath>
@@ -93,7 +92,7 @@
     <xpath expr="//t[@t-call='account.report_financial_line']" position="replace">
         <t t-call='account.report_followup_line' />
     </xpath>
-    <xpath expr="//div[@class='summary']" position="before">
+    <xpath expr="//div[@class='oe-account-summary']" position="before">
         <div t-if="mode != 'print'" class='row'>
             <div class='col-sm-5'>
                 <a type="button" class="btn btn-default oe-account-followup-one-week" t-att-partner="str(context.partner_id.id)">One week</a>
@@ -128,7 +127,7 @@
             })();
         </script>
     </xpath>
-    <xpath expr="//div[@class='dropdown exportDropdown']" position="replace">
+    <xpath expr="//div[@class='dropdown oe-account-export-dropdown']" position="replace">
     </xpath>
     <xpath expr="//t[@t-call='account.report_financial_body']" position="replace">
         <t t-call='account.report_followup_body' />
@@ -215,9 +214,9 @@
 <template id="report_followup_public_body" inherit_id="account.report_followup_body" primary="True">
     <xpath expr="//div[@id='public-link']" position="replace"></xpath>
     <xpath expr="//div[@id='action-buttons']" position='replace'></xpath>
-    <xpath expr="//div[@class='summary']" position="replace"></xpath>
-    <xpath expr="//div[@class='summary mt32']" position="replace"></xpath>
-    <xpath expr="//div[@class='savedSummary']" position="attributes">
+    <xpath expr="//div[@class='oe-account-summary']" position="replace"></xpath>
+    <xpath expr="//div[@class='oe-account-summary mt32']" position="replace"></xpath>
+    <xpath expr="//div[@class='oe-account-saved-summary']" position="attributes">
         <attribute name="t-if"></attribute>
         <attribute name="class"></attribute>
     </xpath>
@@ -236,7 +235,8 @@
         <div t-if="len(reports) != 0 or page > 1">
             <t t-if="page == 1"><i class="fa fa-fw fa-chevron-circle-left fa-2x disabled"></i></t>
             <t t-if="page > 1"><a t-att-href="'/account/followup_report/all/page/' + str(page - 1)"><i class="fa fa-fw fa-chevron-circle-left fa-2x"></i></a></t>
-            <a t-att-href="'/account/followup_report/all/page/' + str(page + 1)"><i class="fa fa-fw fa-chevron-circle-right fa-2x"></i></a>
+            <t t-if="not last_page"><a t-att-href="'/account/followup_report/all/page/' + str(page + 1)"><i class="fa fa-fw fa-chevron-circle-right fa-2x"></i></a></t>
+            <t t-if="last_page"><i class="fa fa-fw fa-chevron-circle-right fa-2x disabled"></i></t>
             <t t-foreach="context_all.get_alerts()" t-as="alert">
                 <div class="alert alert-info alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&amp;times;</span></button>
