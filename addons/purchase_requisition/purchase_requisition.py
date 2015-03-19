@@ -221,7 +221,8 @@ class purchase_order(osv.osv):
             if po.requisition_id and all(purchase_id.state in ['draft', 'cancel'] for purchase_id in po.requisition_id.purchase_ids if purchase_id.id != po.id):
                 procurement_ids = self.pool['procurement.order'].search(cr, uid, [('requisition_id', '=', po.requisition_id.id)], context=context)
                 for procurement in proc_obj.browse(cr, uid, procurement_ids, context=context):
-                    procurement.move_id.write({'location_id': procurement.move_id.location_dest_id.id})
+                    if procurement.move_id:
+                        procurement.move_id.write({'location_id': procurement.move_id.location_dest_id.id})
         return res
 
 purchase_order()
