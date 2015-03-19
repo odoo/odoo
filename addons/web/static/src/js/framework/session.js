@@ -156,12 +156,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     set_cookie: function (name, value, ttl) {
         if (!this.name) { return; }
         ttl = ttl || 24*60*60*365;
-        document.cookie = [
-            this.name + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
-            'path=/',
-            'max-age=' + ttl,
-            'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
-        ].join(';');
+        utils.set_cookie(this.name + '|' + name, value, ttl);
     },
     /**
      * Load additional web addons of that instance and init them
@@ -388,7 +383,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             qs = "?" + qs;
         var prefix = _.any(['http://', 'https://', '//'], function(el) {
             return path.length >= el.length && path.slice(0, el.length) === el;
-        }) ? '' : this.prefix; 
+        }) ? '' : this.prefix;
         return prefix + path + qs;
     },
 });

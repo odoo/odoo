@@ -223,6 +223,22 @@ function get_cookie (c_name) {
 }
 
 /**
+ * Create a cookie
+ * @param {String} name : the name of the cookie
+ * @param {String} value : the value stored in the cookie
+ * @param {Integer} ttl : time to live of the cookie in millis. -1 to erase the cookie.
+ */
+function set_cookie(name, value, ttl) {
+    ttl = ttl || 24*60*60*365;
+    document.cookie = [
+        name + '=' + value,
+        'path=/',
+        'max-age=' + ttl,
+        'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
+    ].join(';');
+};
+
+/**
  * Insert "thousands" separators in the provided number (which is actually
  * a string)
  *
@@ -368,6 +384,7 @@ return {
     xml_to_str: xml_to_str,
     Mutex: Mutex,
     get_cookie: get_cookie,
+    set_cookie: set_cookie,
     insert_thousand_seps: insert_thousand_seps,
     is_bin_size: is_bin_size,
     binary_to_binsize: binary_to_binsize,
