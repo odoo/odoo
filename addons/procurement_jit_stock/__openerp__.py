@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,16 +19,26 @@
 #
 ##############################################################################
 
-from openerp.addons.website.controllers.main import Website
-from openerp.http import request, route
 
+{
+    'name': 'Just In Time Scheduling with Stock',
+    'version': '1.0',
+    'category': 'Base',
+    'description': """
+    If you install this module, it can make sure that not only
+    the ship of pick-pack-ship will be created in batch, but
+    the pick and the pack also.  (which will dramatically improve performance)
 
-class Website(Website):
-
-    @route()
-    def customize_template_get(self, xml_id, full=False):
-        res = super(Website, self).customize_template_get(xml_id, full=full)
-        if full:
-            for r in request.session.get('report_view_ids', []):
-                res += super(Website, self).customize_template_get(r.get('xml_id'), full=full)
-        return res
+    Will be removed from Saas-6 and will be put in procurement_jit
+    over there, where procurement_jit will depend on stock
+    """,
+    'author': 'OpenERP SA',
+    'website': 'https://www.odoo.com/page/manufacturing',
+    'depends': ['procurement_jit', 'stock'],
+    'data': [],
+    'demo': [],
+    'test': [],
+    'installable': True,
+    'auto_install': True,
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1076,16 +1076,21 @@ class Text(_String):
 class Html(_String):
     type = 'html'
     sanitize = True                     # whether value must be sanitized
+    strip_style = False                 # whether to strip style attributes
 
     _column_sanitize = property(attrgetter('sanitize'))
     _related_sanitize = property(attrgetter('sanitize'))
     _description_sanitize = property(attrgetter('sanitize'))
 
+    _column_strip_style = property(attrgetter('strip_style'))
+    _related_strip_style = property(attrgetter('strip_style'))
+    _description_strip_style = property(attrgetter('strip_style'))
+
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return False
         if validate and self.sanitize:
-            return html_sanitize(value)
+            return html_sanitize(value, strip_style=self.strip_style)
         return value
 
 
@@ -1262,20 +1267,18 @@ class Selection(Field):
     def set_class_name(self, cls, name):
         super(Selection, self).set_class_name(cls, name)
         # determine selection (applying 'selection_add' extensions)
-        selection = None
         for field in resolve_all_mro(cls, name, reverse=True):
             if isinstance(field, type(self)):
                 # We cannot use field.selection or field.selection_add here
                 # because those attributes are overridden by `set_class_name`.
                 if 'selection' in field._attrs:
-                    selection = field._attrs['selection']
+                    self.selection = field._attrs['selection']
                 if 'selection_add' in field._attrs:
                     # use an OrderedDict to update existing values
                     selection_add = field._attrs['selection_add']
-                    selection = OrderedDict(selection + selection_add).items()
+                    self.selection = OrderedDict(self.selection + selection_add).items()
             else:
-                selection = None
-        self.selection = selection
+                self.selection = None
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are

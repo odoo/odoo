@@ -393,6 +393,9 @@ dt:hover > a > .viewcode-link {
 
 // either that or overwrite visit_attribution/depart_attribution
 blockquote p.attribution:extend(blockquote footer) {}
+blockquote.highlights {
+  border: none;
+}
 
 div.section > h1 {
   .page-header();
@@ -622,7 +625,7 @@ td.field-body {
       padding-right: 1em;
     }
     .section:not(.force-right) > .force-right,
-    .section:not(.force-right) > [class*=highlight] {
+    .section:not(.force-right) > [class*=highlight-] {
       float: none;
       clear: none;
       margin-left: 50%;
@@ -651,6 +654,9 @@ td.field-body {
         border-top-color: @separator-right;
         border-bottom-color: @separator-right;
         border-right-color: @separator-right;
+      }
+      .table th, .table td {
+        border-color: @gray-light;
       }
       .highlight {
         border-color: @gray;

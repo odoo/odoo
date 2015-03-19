@@ -89,7 +89,7 @@ class WebsiteMembership(http.Controller):
         # TODO: Following line can be deleted in master. Kept for retrocompatibility.
         membership_lines = sorted(membership_lines, key=lambda x: x.membership_id.website_sequence)
         partner_ids = [m.partner.id for m in membership_lines]
-        free_partner_ids = partner_obj.search(cr, uid, [('free_member', '=', True), ('website_published', '=', True)], context=context)
+        free_partner_ids = partner_obj.search(cr, SUPERUSER_ID, [('free_member', '=', True), ('website_published', '=', True)], context=context)
         google_map_partner_ids = ",".join(map(str, partner_ids))
         memberships_data = []
         for membership_record in memberships:

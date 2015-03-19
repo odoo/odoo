@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 import simplejson
@@ -239,6 +240,11 @@ class WebsiteForum(http.Controller):
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
         cr, uid, context = request.cr, request.uid, request.context
+
+        # Hide posts from abusers (negative karma), except for moderators
+        if not question.can_view:
+            raise werkzeug.exceptions.NotFound()
+
         # increment view counter
         request.registry['forum.post'].set_viewed(cr, SUPERUSER_ID, [question.id], context=context)
 

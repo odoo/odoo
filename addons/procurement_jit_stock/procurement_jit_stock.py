@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
+#    Copyright (C) 2004-2013 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,16 +19,20 @@
 #
 ##############################################################################
 
-from openerp.addons.website.controllers.main import Website
-from openerp.http import request, route
 
+from openerp.osv import osv
 
-class Website(Website):
+class procurement_order(osv.osv):
+    _inherit = "procurement.order"
 
-    @route()
-    def customize_template_get(self, xml_id, full=False):
-        res = super(Website, self).customize_template_get(xml_id, full=full)
-        if full:
-            for r in request.session.get('report_view_ids', []):
-                res += super(Website, self).customize_template_get(r.get('xml_id'), full=full)
+    def run(self, cr, uid, ids, context=None):
+        context = dict(context or {}, procurement_autorun_defer=True)
+        res = super(procurement_order, self).run(cr, uid, ids, context=context)
+
+        procurement_ids = self.search(cr, uid, [('move_dest_id.procurement_id', 'in', ids)], order='id', context=context)
+
+        if procurement_ids:
+            return self.run(cr, uid, procurement_ids, context=context)
         return res
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

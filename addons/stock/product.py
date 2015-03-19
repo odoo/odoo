@@ -185,7 +185,7 @@ class product_product(osv.osv):
                 operator = '=='
 
             ids = []
-            if name == 'qty_available':
+            if name == 'qty_available' and (value != 0.0 or operator not in  ('==', '>=', '<=')):
                 res.append(('id', 'in', self._search_qty_available(cr, uid, operator, value, context)))
             else:
                 product_ids = self.search(cr, uid, [], context=context)

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,20 +15,8 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-from openerp.addons.website.controllers.main import Website
-from openerp.http import request, route
-
-
-class Website(Website):
-
-    @route()
-    def customize_template_get(self, xml_id, full=False):
-        res = super(Website, self).customize_template_get(xml_id, full=full)
-        if full:
-            for r in request.session.get('report_view_ids', []):
-                res += super(Website, self).customize_template_get(r.get('xml_id'), full=full)
-        return res
+import procurement_jit_stock

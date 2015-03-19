@@ -292,7 +292,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
                 return self.dataset.read_index(fields, {
-                    context: { 'bin_size': true, 'future_display_name' : true }
+                    context: { 'bin_size': true }
                 }).then(function(r) {
                     self.trigger('load_record', r);
                 });
@@ -2842,6 +2842,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
             this.$textarea = this.$el.find('textarea');
             this.auto_sized = false;
             this.default_height = this.$textarea.css('height');
+            if (this.default_height === '0px') this.default_height = '90px';
             if (this.get("effective_readonly")) {
                 this.$textarea.attr('disabled', 'disabled');
             }
@@ -3739,9 +3740,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 200,
         });
-        var appendTo = this.$el.parents('.oe_view_manager_body, .modal-dialog').last();
+        var appendTo = this.$el.parents('.oe_view_manager_body:visible, .modal-dialog:visible').last();
         if (appendTo.length === 0){
-            appendTo = '.oe_application > *';
+            appendTo = '.oe_application > *:visible:last';
         }
         this.$input.autocomplete({
             appendTo: appendTo
@@ -4397,8 +4398,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
 
         this.records
             .bind('add', this.proxy("changed_records"))
-            .bind('edit', this.proxy("changed_records"))
             .bind('remove', this.proxy("changed_records"));
+        this.on('save:after', this, this.proxy("changed_records"));
     },
     start: function () {
         var ret = this._super();
@@ -4415,7 +4416,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         if (!this.fields_view || !this.editable()){
             return true;
         }
-        var r;
         if (_.isEmpty(this.records.records)){
             return true;
         }
@@ -4426,9 +4426,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             current_values[field.name] = field.get('value');
         });
         var valid = _.every(this.records.records, function(record){
-            r = record;
             _.each(self.editor.form.fields, function(field){
-                field.set_value(r.attributes[field.name]);
+                field.set_value(record.attributes[field.name]);
             });
             return _.every(self.editor.form.fields, function(field){
                 field.process_modifiers();

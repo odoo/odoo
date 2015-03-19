@@ -146,7 +146,7 @@ class TestHtmlField(common.TransactionCase):
 % if object.some_field and not object.oriented:
 <table>
     % if object.other_field:
-    <tr>
+    <tr style="border: 10px solid black;">
         ${object.mako_thing}
         <td>
     </tr>
@@ -173,5 +173,11 @@ class TestHtmlField(common.TransactionCase):
         # sanitize should have closed tags left open in the original html
         self.assertIn('</table>', partner.comment, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
         self.assertIn('</td>', partner.comment, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('<tr style="', partner.comment, 'Style attr should not have been stripped')
+
+        self.partner._columns['comment'] = fields.html('Stripped Html', sanitize=True, strip_style=True)
+        self.partner.write(cr, uid, [pid], {'comment': some_ugly_html}, context=context)
+        partner = self.partner.browse(cr, uid, pid, context=context)
+        self.assertNotIn('<tr style="', partner.comment, 'Style attr should have been stripped')
 
         self.partner._columns = old_columns
