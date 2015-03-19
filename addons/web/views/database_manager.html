@@ -31,24 +31,54 @@
         <script src="/web/static/lib/bootstrap/js/bootstrap.js" type="text/javascript"></script>
         <script src="/web/static/lib/backbone/backbone.js" type="text/javascript"></script>
         <script src="/web/static/lib/qweb/qweb2.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/openerpframework.js" type="text/javascript"></script>
         <script src="/web/static/lib/py.js/lib/py.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/boot.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/testing.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/pyeval.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/core.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/formats.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/chrome.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/views.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/data.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/data_export.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/search.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/view_list.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/view_form.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/view_list_editable.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/view_tree.js" type="text/javascript"></script>
-        <script src="/base/static/src/js/apps.js" type="text/javascript"></script>
-        <script src="/web/static/src/js/tour.js" type="text/javascript"></script>
+
+            <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+        <script type="text/javascript">
+            odoo._modules = ['web', 'web_kanban'];
+        </script>
+        <script type="text/javascript" src="/web/static/src/js/framework/class.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/translation.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/ajax.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/time.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/mixins.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/widget.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/session.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/core.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/formats.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/pyeval.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/data.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/misc.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/crash_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/action_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/view_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/web_client.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/database_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/loading.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/sidebar.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/systray_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/user_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/framework/dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list_common.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form_common.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form_widgets.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form_relational_widgets.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list_view_editable.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_filters.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_inputs.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_menus.js"></script>
+
         <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
         <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
         <link rel="stylesheet" href="/web/static/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
@@ -64,10 +94,14 @@
         <link href="/base/static/src/css/modules.css" rel="stylesheet"/>
         <script type="text/javascript">
             $(function() {
-                var s = new openerp.init({{ modules|safe }});
-                var wc = new s.web.WebClient(null, { action: 'database_manager' });
-                wc.setElement($(document.body));
-                wc.start();
+                odoo.define('web.web_client', function (require) {
+                    var WebClient = require('web.WebClient');
+                    var web_client = new WebClient(null, {action: 'database_manager'});
+                    web_client.setElement($(document.body));
+                    web_client.start();
+                    return web_client;
+                });
+                odoo.init();
             });
         </script>
     </head>

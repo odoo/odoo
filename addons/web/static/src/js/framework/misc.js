@@ -206,31 +206,33 @@ core.action_registry.add("reload_context", ReloadContext);
 
 // nvd3 customization
 //-------------------------------------------------------------------------
-nv.dev = false;  // sets nvd3 library in production mode
+if ('nv' in window) {
+    nv.dev = false;  // sets nvd3 library in production mode
 
-// monkey patch nvd3 to allow removing eventhandler on windowresize events
-// see https://github.com/novus/nvd3/pull/396 for more details
+    // monkey patch nvd3 to allow removing eventhandler on windowresize events
+    // see https://github.com/novus/nvd3/pull/396 for more details
 
-// Adds a resize listener to the window.
-nv.utils.onWindowResize = function(fun) {
-    if (fun === null) return;
-    window.addEventListener('resize', fun);
-};
+    // Adds a resize listener to the window.
+    nv.utils.onWindowResize = function(fun) {
+        if (fun === null) return;
+        window.addEventListener('resize', fun);
+    };
 
-// Backwards compatibility with current API.
-nv.utils.windowResize = nv.utils.onWindowResize;
+    // Backwards compatibility with current API.
+    nv.utils.windowResize = nv.utils.onWindowResize;
 
-// Removes a resize listener from the window.
-nv.utils.offWindowResize = function(fun) {
-    if (fun === null) return;
-    window.removeEventListener('resize', fun);
-};
+    // Removes a resize listener from the window.
+    nv.utils.offWindowResize = function(fun) {
+        if (fun === null) return;
+        window.removeEventListener('resize', fun);
+    };
 
-// monkey patch nvd3 to prevent crashes when user changes view and nvd3 tries
-// to remove tooltips after 500 ms...  seriously nvd3, what were you thinking?
-nv.tooltip.cleanup = function () {
-    $('.nvtooltip').remove();
-};
+    // monkey patch nvd3 to prevent crashes when user changes view and nvd3 tries
+    // to remove tooltips after 500 ms...  seriously nvd3, what were you thinking?
+    nv.tooltip.cleanup = function () {
+        $('.nvtooltip').remove();
+    };
+}
 
 // Bootstrap customization
 //-------------------------------------------------------------------------
