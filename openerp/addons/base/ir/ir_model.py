@@ -990,6 +990,10 @@ class ir_model_data(osv.osv):
             if record:
                 id = record.id
                 self.loads[(module,xml_id)] = (model,id)
+                for table, inherit_field in self.pool[model]._inherits.iteritems():
+                    parent_id = record[inherit_field].id
+                    parent_xid = '%s_%s' % (xml_id, table.replace('.', '_'))
+                    self.loads[(module, parent_xid)] = (table, parent_id)
         except Exception:
             pass
         return id

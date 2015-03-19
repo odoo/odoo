@@ -290,7 +290,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
                 return self.dataset.read_index(fields, {
-                    context: { 'bin_size': true, 'future_display_name' : true }
+                    context: { 'bin_size': true }
                 }).then(function(r) {
                     self.trigger('load_record', r);
                 });
@@ -3744,9 +3744,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 200,
         });
-        var appendTo = this.$input.parents('.oe-view-manager-content, .modal-dialog').last();
+        var appendTo = this.$input.parents('.oe-view-manager-content:visible, .modal-dialog:visible').last();
         if (appendTo.length === 0) {
-            appendTo = '.oe_application > *';
+            appendTo = '.oe_application > *:visible:last';
         }
         this.$input.autocomplete({
             appendTo: appendTo

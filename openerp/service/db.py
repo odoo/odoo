@@ -195,10 +195,10 @@ def dump_db(db_name, stream, backup_format='zip'):
             cmd.insert(-1, '--file=' + os.path.join(dump_dir, 'dump.sql'))
             openerp.tools.exec_pg_command(*cmd)
             if stream:
-                openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False)
+                openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
             else:
                 t=tempfile.TemporaryFile()
-                openerp.tools.osutil.zip_dir(dump_dir, t, include_dir=False)
+                openerp.tools.osutil.zip_dir(dump_dir, t, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
                 t.seek(0)
                 return t
     else:
