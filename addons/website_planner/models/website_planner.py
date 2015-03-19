@@ -10,9 +10,9 @@ class WebsitePlanner(models.Model):
 
     @api.model
     def _get_planner_application(self):
-        planner = super(WebsitePlanner, self)._get_planner_application()
-        planner.append(['planner_website', 'Website Planner'])
-        return planner
+        Planner = super(WebsitePlanner, self)._get_planner_application()
+        Planner.append(['planner_website', 'Website Planner'])
+        return Planner
 
     @api.model
     def _prepare_planner_website_data(self):
@@ -22,13 +22,13 @@ class WebsitePlanner(models.Model):
 
     @api.model
     def get_website_planner(self):
-        planner = self.env.ref('website_planner.planner_website')
+        Planner = self.env.ref('website_planner.planner_website')
         return {
-            'id': planner.id,
-            'menu_id': [planner.menu_id.id],
-            'view_id': [planner.view_id.id],
-            'progress': planner.progress,
-            'tooltip_planner': planner.tooltip_planner,
-            'data': planner.data and json.loads(planner.data) or {},
-            'planner_application': planner.planner_application
+            'id': Planner.id,
+            'menu_id': [Planner.menu_id.id],
+            'view_id': [Planner.view_id.id],
+            'progress': Planner.progress,
+            'tooltip_planner': Planner.tooltip_planner,
+            'data': Planner.data and json.loads(Planner.data) or {},
+            'planner_application': Planner.planner_application
         }
