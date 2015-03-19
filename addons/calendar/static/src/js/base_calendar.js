@@ -8,6 +8,7 @@ var Model = require('web.DataModel');
 var WebClient = require('web.WebClient');
 var CalendarView = require('web_calendar.CalendarView');
 var widgets = require('web_calendar.widgets');
+var formats = require('web.formats');
 
 var FieldMany2ManyTags = core.form_widget_registry.get('many2many_tags');
 var _t = core._t;
@@ -75,6 +76,116 @@ function reload_favorite_list(result) {
         });
     });
 }
+    
+widgets.QuickCreate.include({
+
+    start: function() {
+        this._super();
+        if(this.dataset.model == 'calendar.event') {
+            this.$input.attr("placeholder",_t("2h to 4h Meeting, 14pm Meeting at Location"));
+        }
+    },
+
+    prepare_data_pattern:function(data) {
+        var message =  data.name;
+        var start_time, stop_time, start_date_time, stop_date_time, time = null;
+        var result = false;
+
+        //Regular expression for find patters like 3h, 3:00pm, 3:00:00am, 5h40, 4:20, 3:10:00 and etc.
+        var time_expr = /(^|\s|((^|\s)(at)\s)|((^|\s)(from)\s))(((\d{1,2})|(\d{1,2}:\d{2})|(\d{1,2}:\d{2}:\d{2}))(h|[ap]m)
+                        |(\d{1,2})h(\d{1,2})
+                        |(\d{1,2}:\d{2})
+                        |(\d{1,2}:\d{2}:\d{2}))(?=(\s|$))/i;
+        var time_value = message.match(time_expr);
+
+        //Regular expression for find patters like 3h to 8h, 5pm to 9AM, 3:20 to 4:50, 5h30 to 9h10.
+        var time_range = message.match(new RegExp(time_expr.source +  /\s(to)(?=\s)/.source + time_expr.source,'gi'));
+        var time_format = ['hha', 'HH:mm', 'hh:mma', 'HH'];
+
+        var start_date = moment(this.data_template.start.slice(0,10));
+        var stop_date = moment(this.data_template.stop.slice(0,10));
+
+        //Check value of start_datetime and stop_datetime
+        var check_convert_time = function (time_start, time_stop){
+            start_time = (moment(time_start, time_format));
+            if (time_range != null)  {
+                stop_time = (moment(time_stop, time_format));
+                if (start_time.hours() > stop_time.hours()) {
+                    stop_date = stop_date.add(1,'days');
+                }
+            } else if(start_date.valueOf() == stop_date.valueOf()) {
+                stop_time = (moment(time_start, time_format)).add(1, 'hours');
+                if (start_time.hours() >= 23 ) {
+                    stop_date = stop_date.add(1,'days');
+                }
+            } else {
+                stop_time = start_time
+            }
+            if (start_time.isValid() && stop_time.isValid()) {
+                return start_time,stop_time
+            }
+            return false
+        }
+        //Get value of start_datetime and stop_datetime
+        if (time_value != null) {
+            if (time_range != null) {
+                time = time_range[0].split(' to ');
+                message = message.replace(time_range[0], '');
+                result = check_convert_time(time[0],time[1]);
+            } else {
+                message = message.replace(time_value[0], '');
+                result = check_convert_time(time_value[0]);
+            }
+            if (result) {
+                start_date_time = (start_date.hours(start_time.hours()),start_date.minutes(start_time.minutes()));
+                stop_date_time = (stop_date.hours(stop_time.hours()),stop_date.minutes(stop_time.minutes()));
+            }
+        }
+        //Regular expression for find patters like at Gandhinagar, @ Ahmedabad.
+        var location_expr = message.match(/((^|\s)((at|@)\s)|(@)(\w+))/gi);
+        var loc_value, location_data, location_value, loc_data = null;
+
+        //Get value of location
+        if (location_expr != null) {
+            loc_value = location_expr[location_expr.length-1];
+            location_data = loc_value.trim().split(' ');
+
+            if (location_data[0].toLowerCase().indexOf('at') > -1) {
+                location_value = message.substring(message.lastIndexOf(loc_value.substring(0,3)));
+            } else if(loc_value.indexOf('@') > -1) {
+                location_value = message.substring(message.lastIndexOf('@'));
+            } else if(loc_value.indexOf('@ ') > -1) {
+                location_value = message.substring(message.lastIndexOf('@ '));
+            }
+            if (location_value.indexOf('@') > -1) {
+                loc_data = location_value.replace('@','');
+            } else {
+                loc_data = location_value.replace(location_data[0],'');
+            }
+            message = message.replace(location_value,'').trim();
+        }
+        //Set value of start_datetime,stop_datetime,location,and subject in database.
+        if (result) {
+            data.allday = false;
+            data.start_datetime = formats.parse_value(start_date_time, {type: 'datetime'});
+            data.stop_datetime = formats.parse_value(stop_date_time, {type: 'datetime'});
+        }
+        if (location_expr != null && loc_data != null) {
+            data.location = loc_data.trim();
+        }
+        if (time_value != null || location_expr != null) {
+            data.name = message || _t("Meeting Name");
+        }
+    },
+   
+    quick_create: function(data, options) {
+        var self = this;
+        if(this.dataset.model == 'calendar.event') {
+            self.prepare_data_pattern(data, self.data_template);
+        }
+        return this._super.apply(this, arguments)
+    },
+});
 
 CalendarView.include({
     extraSideBar: function(){
