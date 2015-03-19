@@ -33,6 +33,11 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.use_cors = options.use_cors || false;
         this.setup(origin);
         this.debug = ($.deparam($.param.querystring()).debug !== undefined);
+
+        // for historic reasons, the session requires a name to properly work
+        // (see the methods get_cookie and set_cookie).  We should perhaps
+        // remove it totally (but need to make sure the cookies are properly set)
+        this.name = "instance0";
         // TODO: session store in cookie should be optional
         this.qweb_mutex = new utils.Mutex();
     },
