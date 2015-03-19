@@ -147,7 +147,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         return this._super()
     },
     start: function() {
-        ZeroClipboard.config({swfPath: location.origin + "/account/static/lib/zeroclipboard/ZeroClipboard.swf" });
+        ZeroClipboard.config({swfPath: location.origin + "/web/static/lib/zeroclipboard/ZeroClipboard.swf" });
         new ZeroClipboard($(".btn_share_url"));
         $(document).on("keypress", this, this.onKeyPress);
         return this._super();
