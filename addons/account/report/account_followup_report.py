@@ -23,6 +23,7 @@ from openerp import models, fields, api, tools
 from datetime import datetime
 from hashlib import md5
 from openerp.tools.misc import formatLang
+from openerp.tools.translate import _
 
 
 class report_account_followup_report(models.AbstractModel):
@@ -32,26 +33,32 @@ class report_account_followup_report(models.AbstractModel):
     @api.model
     def get_lines(self, context_id, line_id=None, public=False):
         lines = []
-        domain = [('partner_id', '=', context_id.partner_id.id), ('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
-        if public:
-            domain.append(('blocked', '=', False))
-        total = 0
-        total_issued = 0
-        amls = self.env['account.move.line'].search(domain)
-        currencies = self.env['res.currency'].browse([])
-        for aml in amls:
-            currencies |= aml.currency_id or aml.company_id.currency_id
-        for currency in currencies:
-            for aml in amls.filtered(lambda aml: aml.currency_id and aml.currency_id == currency or aml.company_id.currency_id == currency):
-                overdue = aml.date_maturity and datetime.today().strftime('%Y-%m-%d') > aml.date_maturity
-                date_due = overdue and (aml.date_maturity, 'color: red;') or aml.date_maturity
-                total += aml.amount_residual
+        res = {}
+        today = datetime.today().strftime('%Y-%m-%d')
+        line_num = 0
+        for l in context_id.partner_id.unreconciled_aml_ids:
+            if public and l.blocked:
+                continue
+            currency = l.currency_id or l.company_id.currency_id
+            if currency not in res:
+                res[currency] = []
+            res[currency].append(l)
+        for currency, aml_recs in res.items():
+            total = 0
+            total_issued = 0
+            for aml in aml_recs:
+                amount = aml.currency_id and aml.amount_residual_currency or aml.amount_residual
+                date_due = aml.date_maturity or aml.date
+                total += amount
+                overdue = today > aml.date_maturity if aml.date_maturity else today > aml.date
                 if overdue:
-                    total_issued += aml.amount_residual
+                    total_issued += amount
+                    date_due = (date_due, 'color: red;')
                 view_type = total >= 0 and 'invoice' or 'payment'
-                amount = formatLang(self.env, aml.amount_residual, currency_obj=currency)
+                amount = formatLang(self.env, amount, currency_obj=currency)
+                line_num += 1
                 lines.append({
-                    'id': aml.id,
+                    'id': line_num,
                     'name': aml.ref,
                     'type': 'unreconciled_aml',
                     'view_type': view_type,
@@ -60,9 +67,10 @@ class report_account_followup_report(models.AbstractModel):
                     'columns': [aml.date, date_due] + (not public and [aml.expected_pay_date and (aml.expected_pay_date, aml.internal_note) or ('', ''), aml.blocked] or []) + [amount],
                 })
             total = formatLang(self.env, abs(total), currency_obj=currency)
+            line_num += 1
             lines.append({
-                'id': 0,
-                'name': total >= 0 and 'Due Total' or '',
+                'id': line_num,
+                'name': total >= 0 and _('Due Total') or '',
                 'type': 'line',
                 'footnotes': self._get_footnotes('line', 0, context_id),
                 'unfoldable': False,
@@ -71,9 +79,10 @@ class report_account_followup_report(models.AbstractModel):
             })
             if total_issued > 0:
                 total_issued = formatLang(self.env, total_issued, currency_obj=currency)
+                line_num += 1
                 lines.append({
-                    'id': 1,
-                    'name': 'Overdue Total',
+                    'id': line_num,
+                    'name': _('Overdue Total'),
                     'type': 'line',
                     'footnotes': self._get_footnotes('line', 1, context_id),
                     'unfoldable': False,
@@ -138,13 +147,13 @@ class account_report_context_followup_all(models.TransientModel):
         alerts = []
         if self.valuemax > 4 and self.valuemax / 2 == self.valuenow:
             alerts.append({
-                'title': 'Halfway through!',
-                'message': 'The first half took you %ss.' % str(self.get_total_time()),
+                'title': _('Halfway through!'),
+                'message': _('The first half took you %ss.') % str(self.get_total_time()),
             })
         if self.valuemax > 50 and round(self.valuemax * 0.9) == self.valuenow:
             alerts.append({
-                'title': '10% remaining!',
-                'message': "Hang in there, you're nearly done.",
+                'title': _('10% remaining!'),
+                'message': _("Hang in there, you're nearly done."),
             })
         return alerts
 
@@ -161,7 +170,7 @@ class account_report_context_followup(models.TransientModel):
     @api.multi
     def change_next_action(self, date, note):
         self.partner_id.write({'payment_next_action': note, 'payment_next_action_date': date})
-        msg = 'Next action date : ' + date + '.\n' + note
+        msg = _('Next action date: ') + date + '.\n' + note
         self.partner_id.message_post(body=msg, subtype='account.followup_logged_action')
 
     @api.multi
@@ -221,7 +230,7 @@ class account_report_context_followup(models.TransientModel):
             html = self.pool['ir.ui.view'].render(self._cr, self._uid, report_obj.get_template() + '_letter', rcontext, context=context.env.context)
             bodies.append((0, html))
             if log:
-                msg = fields.Date.context_today(self) + ' : Sent a followup letter'
+                msg = fields.Date.context_today(self) + _(': Sent a followup letter')
                 context.partner_id.message_post(body=msg, subtype='account.followup_logged_action')
 
         return self.env['report']._run_wkhtmltopdf([], [], bodies, False, self.env.user.company_id.paperformat_id)
@@ -237,7 +246,7 @@ class account_report_context_followup(models.TransientModel):
                 'name': 'Followup ' + self.partner_id.name,
                 'email_from': self.env.user.email or '',
                 'model_id': 1,
-                'subject':  '%s Payment Reminder' % self.env.user.company_id.name,
+                'subject': _('%s Payment Reminder') % self.env.user.company_id.name,
                 'email_to': email,
                 'lang': self.partner_id.lang,
                 'auto_delete': True,
@@ -245,7 +254,7 @@ class account_report_context_followup(models.TransientModel):
                 'attachment_ids': [(6, 0, [attachment.id])],
             })
             email_template.send_mail(self.id)
-            msg = fields.Date.context_today(self) + ' : Sent a followup email'
+            msg = fields.Date.context_today(self) + _(': Sent a followup email')
             self.partner_id.message_post(body=msg, subtype='account.followup_logged_action')
             return True
         return False

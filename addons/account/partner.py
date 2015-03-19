@@ -257,13 +257,12 @@ class ResPartner(models.Model):
     @api.multi
     def _compute_issued_total(self):
         """ Returns the issued total as will be displayed on partner view """
+        today = fields.Date.context_today(self)
         for partner in self:
+            domain = partner.get_followup_lines_domain(today, overdue_only=True)
             issued_total = 0
-            domain = [('partner_id', '=', partner.id), ('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
             for aml in self.env['account.move.line'].search(domain):
-                overdue = aml.date_maturity and datetime.today().strftime('%Y-%m-%d') > aml.date_maturity
-                if overdue:
-                    issued_total += aml.amount_residual
+                issued_total += aml.amount_residual
             partner.issued_total = formatLang(self.env, issued_total, currency_obj=self.env.user.company_id.currency_id)
 
     @api.multi
@@ -274,7 +273,7 @@ class ResPartner(models.Model):
         result = self.ids
         today = fields.Date.context_today(self)
         partners = self.search(['|', ('payment_next_action_date', '=', False), ('payment_next_action_date', '<=', today)])
-        domain = partners.get_followup_lines_domain(today)
+        domain = partners.get_followup_lines_domain(today, only_unblocked=True)
         for line in self.env['account.move.line'].read_group(domain, ['partner_id'], ['partner_id']):
             result.append(line['partner_id'][0])
         return self.browse(result)
@@ -283,22 +282,24 @@ class ResPartner(models.Model):
         result = self.ids
         today = fields.Date.context_today(self)
         partners = self.search(['|', ('payment_next_action_date', '=', False), ('payment_next_action_date', '<=', today)])
-        domain = partners.get_followup_lines_domain(today, overdue_only=True)
+        domain = partners.get_followup_lines_domain(today, overdue_only=True, only_unblocked=True)
         for line in self.env['account.move.line'].read_group(domain, ['partner_id'], ['partner_id']):
             result.append(line['partner_id'][0])
         return self.browse(result)
 
-    def get_followup_lines_domain(self, date, overdue_only=False):
+    def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
         #TODO use expression.OR 
-        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), ('blocked', '=', False)]
+        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
+        if only_unblocked:
+            domain += [('blocked', '=', False)]
         if self.ids:
             domain += [('partner_id', 'in', self.ids)]
         #adding the overdue lines
         overdue_domain = ['|', '&', ('date_maturity', '!=', False), ('date_maturity', '<=', date), '&', ('date_maturity', '=', False), ('date', '<=', date)]
-        if not overdue_only:
-            domain += ['|'] + overdue_domain + ['&', ('next_action_date', '!=', False), ('next_action_date', '<=', date)]
-        else:
+        if overdue_only:
             domain += overdue_domain
+        else:
+            domain += ['|', '&', ('next_action_date', '=', False)] + overdue_domain + ['&', ('next_action_date', '!=', False), ('next_action_date', '<=', date)]
         return domain
 
     @api.multi
@@ -325,6 +326,8 @@ class ResPartner(models.Model):
                                       help="Note regarding the next action.")
     payment_next_action_date = fields.Date('Next Action Date', copy=False, company_dependent=True,
                                            help="The date before which no action should be taken.")
+    unreconciled_aml_ids = fields.One2many('account.move.line', 'partner_id', domain=['&', ('reconciled', '=', False), '&',
+                                           ('account_id.deprecated', '=', False), '&', ('account_id.internal_type', '=', 'receivable')])
     vat_subjected = fields.Boolean('VAT Legal Statement',
         help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
     credit = fields.Float(compute='_credit_debit_get', search=_credit_search,
