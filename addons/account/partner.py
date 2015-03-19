@@ -270,43 +270,45 @@ class ResPartner(models.Model):
         return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     def get_partners_in_need_of_action(self):
-        result = self.browse()
+        result = self.ids
         today = fields.Date.context_today(self)
-        for partner in self.search([]):
-            if partner.payment_next_action_date > today:
-                continue
-            domain = [('partner_id', '=', partner.id), ('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), ('blocked', '=', False)]
-            for aml in self.env['account.move.line'].search(domain):
-                if (aml.next_action_date and aml.next_action_date < today) or (not aml.next_action_date and aml.date_maturity < today):
-                    result = result | partner
-                    break
-        return result
+        partners = self.search(['|', ('payment_next_action_date', '=', False), ('payment_next_action_date', '<=', today)])
+        domain = partners.get_followup_lines_domain(today)
+        for line in self.env['account.move.line'].read_group(domain, ['partner_id'], ['partner_id']):
+            result.append(line['partner_id'][0])
+        return self.browse(result)
 
     def get_partners_with_overdue(self):
-        result = self.browse()
+        result = self.ids
         today = fields.Date.context_today(self)
-        for partner in self.search([]):
-            if partner.payment_next_action_date > today:
-                continue
-            domain = [('partner_id', '=', partner.id), ('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), ('blocked', '=', False)]
-            for aml in self.env['account.move.line'].search(domain):
-                if aml.date_maturity < today:
-                    result = result | partner
-                    break
-        return result
+        partners = self.search(['|', ('payment_next_action_date', '=', False), ('payment_next_action_date', '<=', today)])
+        domain = partners.get_followup_lines_domain(today, overdue_only=True)
+        for line in self.env['account.move.line'].read_group(domain, ['partner_id'], ['partner_id']):
+            result.append(line['partner_id'][0])
+        return self.browse(result)
+
+    def get_followup_lines_domain(self, date, overdue_only=False):
+        #TODO use expression.OR 
+        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), ('blocked', '=', False)]
+        if self.ids:
+            domain += [('partner_id', 'in', self.ids)]
+        #adding the overdue lines
+        overdue_domain = ['|', '&', ('date_maturity', '!=', False), ('date_maturity', '<=', date), '&', ('date_maturity', '=', False), ('date', '<=', date)]
+        if not overdue_only:
+            domain += ['|'] + overdue_domain + ['&', ('next_action_date', '!=', False), ('next_action_date', '<=', date)]
+        else:
+            domain += overdue_domain
+        return domain
 
     @api.multi
     def update_next_action(self):
-        for partner in self:
-            today = fields.datetime.now()
-            next_action_date = today + timedelta(days=self.env.user.company_id.days_between_two_followups)
-            next_action_date = next_action_date.strftime('%Y-%m-%d')
-            today = today.strftime('%Y-%m-%d')
-            domain = [('partner_id', '=', partner.id), ('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
-            vals = {'next_action_date': next_action_date}
-            for aml in self.env['account.move.line'].search(domain):
-                if (aml.next_action_date and aml.next_action_date <= today) or (not aml.next_action_date and aml.date_maturity <= today):
-                    aml.write(vals)
+        today = fields.datetime.now()
+        next_action_date = today + timedelta(days=self.env.user.company_id.days_between_two_followups)
+        next_action_date = next_action_date.strftime('%Y-%m-%d')
+        today = fields.Date.context_today(self)
+        domain = self.get_followup_lines_domain(today)
+        aml = self.env['account.move.line'].search(domain)
+        aml.write({'next_action_date': next_action_date})
 
     payment_next_action = fields.Text('Next Action', copy=False, track_visibility="onchange", company_dependent=True,
                                       help="Note regarding the next action.")

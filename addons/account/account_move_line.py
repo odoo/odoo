@@ -822,7 +822,7 @@ class AccountMoveLine(models.Model):
         if any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit', 'amount_currency', 'currency_id')):
             self._update_check()
         if vals.get('expected_pay_date'):
-            msg = 'New expected payment date : ' + vals['expected_pay_date'] + '.\n' + vals.get('internal_note', '')
+            msg = _('New expected payment date: ') + vals['expected_pay_date'] + '.\n' + vals.get('internal_note', '')
             self.invoice.message_post(body=msg)
 
         result = super(AccountMoveLine, self).write(vals)
