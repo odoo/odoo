@@ -79,7 +79,9 @@ var _lt = function (s) {
 };
 
 // provide timeago.js with our own translator method
-$.timeago.settings.translator = _t;
+if($.timeago){ // make timeago an optional dependency of translation
+    $.timeago.settings.translator = _t;
+}
 
 qweb.default_dict = {
     '_' : _,
