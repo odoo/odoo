@@ -133,6 +133,9 @@
     <xpath expr="//div[@class='dropdown oe-account-export-dropdown']" position="replace">
     </xpath>
     <xpath expr="//t[@t-call='account.report_financial_body']" position="replace">
+        <div class="alert alert-warning" role="alert" t-if="context and context.partner_id not in context.env['res.partner'].get_partners_in_need_of_action()">
+            <p><strong>Warning!</strong> No action needs to be taken for this partner.</p>
+        </div>
         <t t-call='account.report_followup_body' />
     </xpath>
     <xpath expr="//t[@t-call='account.report_configurator']" position="replace"></xpath>
@@ -229,6 +232,7 @@
     </xpath>
 </template>
 <template id="report_followup_letter">
+    <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
     <t t-call="report.html_container">
         <t t-call="account.report_followup_letter2" />
     </t>

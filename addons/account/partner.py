@@ -256,6 +256,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def _compute_issued_total(self):
+        """ Returns the issued total as will be displayed on partner view """
         for partner in self:
             issued_total = 0
             domain = [('partner_id', '=', partner.id), ('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
@@ -302,6 +303,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def update_next_action(self):
+        """Updates the next_action_date of the right account move lines"""
         today = fields.datetime.now()
         next_action_date = today + timedelta(days=self.env.user.company_id.days_between_two_followups)
         next_action_date = next_action_date.strftime('%Y-%m-%d')

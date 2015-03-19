@@ -602,6 +602,11 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var active_id = $(e.target).attr("class").split(/\s+/)[1];
         window.open("/web?#id=" + active_id + "&view_type=form&model=account.bank.statement", "_self");
     },
+    displayFollowup: function(e) {
+        e.stopPropagation();
+        var active_id = $(e.target).attr("class").split(/\s+/)[1];
+        window.open("/account/followup_report/" + active_id, "_self");
+    },
     onClickAML: function(e) {
         e.stopPropagation();
         var active_id = $(e.target).attr("class").split(/\s+/)[1];
