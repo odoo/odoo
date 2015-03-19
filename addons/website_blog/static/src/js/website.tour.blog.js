@@ -51,7 +51,7 @@ website.ready().done(function () {
                 element:   '#oe_manipulators .oe_overlay.oe_active a.btn.btn-primary.btn-sm',
                 placement: 'left',
                 title:     _t("Customize Cover"),
-                content:   _t("Change and customize your blog post cover"),
+                content:   _t("Change and customize your blog post cover."),
                 popover:   { fixed: true },
             },
             {

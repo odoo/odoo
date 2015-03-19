@@ -80,11 +80,11 @@ website.ready().done(function () {
                 placement: 'right',
                 waitFor:   '.existing-attachment-cell.media_selected',
                 title:       _t("Save"),
-                content:     _t("Click on <em>Save</em> to add the image to the product description"),
+                content:     _t("Click on <em>Save</em> to add the image to the product description."),
             },
             {
                 waitNot:   '.modal-content:visible',
-                snippet:   '#snippet_structure .oe_snippet:eq(9)',
+                snippet:   '#snippet_structure .oe_snippet:eq(8)',
                 placement: 'bottom',
                 title:     _t("Drag & Drop a block"),
                 content:   _t("Drag the 'Big Picture' block and drop it in your page."),

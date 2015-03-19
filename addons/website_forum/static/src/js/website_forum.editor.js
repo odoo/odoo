@@ -27,7 +27,6 @@ contentMenu.EditorBarContent.include({
             }
         }).then(function (forum_name, field, $dialog) {
             var add_menu = ($dialog.find('input[type="checkbox"]').is(':checked'));
-        }).then(function (forum_name) {
             website.form('/forum/new', 'POST', {
                 forum_name: forum_name,
                 add_menu: add_menu || ""

@@ -62,7 +62,7 @@ website.ready().done(function () {
             },
             {
                 waitNot:   '.popover.tour',
-                snippet:   '#snippet_structure .oe_snippet:eq(6)',
+                snippet:   '#snippet_structure .oe_snippet:eq(7)',
                 placement: 'bottom',
                 title:     _t("Drag & Drop This Block"),
                 content:   _t("Drag the <em>'Features'</em> block and drop it below the banner."),

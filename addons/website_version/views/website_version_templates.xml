@@ -11,14 +11,6 @@
                                     <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu version_menu" role="menu">
-                            <li class="dropdown-header" style="text-transform: uppercase;">All versions</li>
-                            <t t-if="website.get_current_version()[0] == 0 ">
-                                <li><a href="#" data-action="change_version"><b>Master</b></a></li>
-                            </t>
-                            <t t-if="website.get_current_version()[0] != 0 ">
-                                <li><a href="#" data-action="change_version">Master</a></li>
-                            </t>
-                            <li class="first_divider divider"> </li>
                             <t t-if="website.get_current_version()[0] == 0 ">
                                 <li><a href="#" data-action="duplicate_version">New Version</a></li>
                             </t>
@@ -28,6 +20,14 @@
                                 <li><a href="#" data-action="diff_version" groups="base.group_no_one">List Modified Pages</a></li>
                             </t>
                             <li class="divider o_publish_version"> </li>
+                            <li class="dropdown-header" style="text-transform: uppercase;">All versions</li>
+                            <t t-if="website.get_current_version()[0] == 0 ">
+                                <li><a href="#" data-action="change_version"><b>Master</b></a></li>
+                            </t>
+                            <t t-if="website.get_current_version()[0] != 0 ">
+                                <li><a href="#" data-action="change_version">Master</a></li>
+                            </t>
+                            <li class="first_divider divider"> </li>
                             <li class="create_experiment"><a href="#" data-action="create_experiment">Launch A/B tests</a></li>
                         </ul>
                     </li>
