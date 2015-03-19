@@ -310,6 +310,15 @@ class ResPartner(models.Model):
         aml = self.env['account.move.line'].search(domain)
         aml.write({'next_action_date': next_action_date})
 
+    @api.multi
+    def button_go_to_followup(self):
+        return {
+            'name': _('Partner followup'),
+            'url': '/account/followup_report/' + str(self.id),
+            'target': 'self',
+            'type': 'ir.actions.act_url',
+        }
+
     payment_next_action = fields.Text('Next Action', copy=False, track_visibility="onchange", company_dependent=True,
                                       help="Note regarding the next action.")
     payment_next_action_date = fields.Date('Next Action Date', copy=False, company_dependent=True,

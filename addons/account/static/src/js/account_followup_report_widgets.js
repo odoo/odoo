@@ -148,7 +148,12 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
     },
     start: function() {
         ZeroClipboard.config({swfPath: location.origin + "/web/static/lib/zeroclipboard/ZeroClipboard.swf" });
-        new ZeroClipboard($(".btn_share_url"));
+        var zc = new ZeroClipboard($(".btn_share_url"));
+        zc.on('ready', function(e) {
+            zc.on('aftercopy', function(e) {
+                $(e.target).text('Copied !');
+            });
+        });
         $(document).on("keypress", this, this.onKeyPress);
         return this._super();
     },

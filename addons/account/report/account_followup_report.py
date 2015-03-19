@@ -73,7 +73,7 @@ class report_account_followup_report(models.AbstractModel):
                 total_issued = formatLang(self.env, total_issued, currency_obj=currency)
                 lines.append({
                     'id': 1,
-                    'name': 'Issued Total',
+                    'name': 'Overdue Total',
                     'type': 'line',
                     'footnotes': self._get_footnotes('line', 1, context_id),
                     'unfoldable': False,
@@ -221,7 +221,7 @@ class account_report_context_followup(models.TransientModel):
             html = self.pool['ir.ui.view'].render(self._cr, self._uid, report_obj.get_template() + '_letter', rcontext, context=context.env.context)
             bodies.append((0, html))
             if log:
-                msg = 'Sent a followup letter'
+                msg = fields.Date.context_today(self) + ' : Sent a followup letter'
                 context.partner_id.message_post(body=msg, subtype='account.followup_logged_action')
 
         return self.env['report']._run_wkhtmltopdf([], [], bodies, False, self.env.user.company_id.paperformat_id)
@@ -245,7 +245,7 @@ class account_report_context_followup(models.TransientModel):
                 'attachment_ids': [(6, 0, [attachment.id])],
             })
             email_template.send_mail(self.id)
-            msg = 'Sent a followup email'
+            msg = fields.Date.context_today(self) + ' : Sent a followup email'
             self.partner_id.message_post(body=msg, subtype='account.followup_logged_action')
             return True
         return False

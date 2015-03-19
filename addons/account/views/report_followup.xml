@@ -53,6 +53,7 @@
     </xpath>
     <xpath expr="//i[@class='fa fa-fw fa-pencil-square']" position='replace'></xpath>
     <xpath expr="//i[@class='fa fa-fw fa-pencil-square']" position='replace'></xpath>
+    <xpath expr="//i[@class='fa fa-fw fa-pencil-square']" position='replace'></xpath>
 </template>
 <template id="report_followup_line_public" inherit_id="account.report_followup_line" primary="True">
     <xpath expr="//ul[@class='dropdown-menu']" position="replace"></xpath>
@@ -69,13 +70,14 @@
                 </div>
             </div>
             <div class='col-sm-7' id='public-link' style='text-align: right;'>
-                <div class="btn-group">
+                <div t-if='context.get_history()' class="btn-group">
                     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         History <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <t t-foreach="context.get_history()" t-as='msg'>
-                            <li><a><t t-raw='msg.body' /></a></li>
+                            <li role="presentation"><t t-raw='msg.body' /></li>
+                            <li role="presentation" class="divider"></li>
                         </t>
                     </ul>
                 </div>
@@ -93,14 +95,15 @@
         <t t-call='account.report_followup_line' />
     </xpath>
     <xpath expr="//div[@class='oe-account-summary']" position="before">
-        <div t-if="mode != 'print'" class='row'>
-            <div class='col-sm-5'>
+        <div t-if="mode != 'print' and not context.env.context.get('public')" class='row'>
+            <div class='col-sm-6'>
+                Follow-up in : 
                 <a type="button" class="btn btn-default oe-account-followup-one-week" t-att-partner="str(context.partner_id.id)">One week</a>
                 <a type="button" class="btn btn-default oe-account-followup-two-weeks" t-att-partner="str(context.partner_id.id)">Two weeks</a>
                 <a type="button" class="btn btn-default oe-account-followup-one-month" t-att-partner="str(context.partner_id.id)">One month</a>
                 <a type="button" class="btn btn-default oe-account-followup-two-months" t-att-partner="str(context.partner_id.id)">Two months</a>
             </div>
-            <div id='action-buttons' style='text-align: right;' class='col-sm-7'>
+            <div id='action-buttons' style='text-align: right;' class='col-sm-6'>
                 <a type="button" class="btn btn-default followup-skip" t-att-partner="str(context.partner_id.id)">Skip</a>
                 <a type="button" class="btn btn-primary followup-letter" t-att-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'" t-att-context="str(context.id)">Print Letter</a>
                 <a type="button" class="btn btn-primary followup-email">Send by email</a>
@@ -249,7 +252,7 @@
                 </div>
             </div>
         </div>
-        <form class="form-inline" t-if="len(reports) != 0 or page > 1">
+        <form class="form-inline">
             <div class="form-group">
                 <select class="form-control" name="partner_filter">
                     <option t-if="context_all.partner_filter != 'all'" value='all'>All partners with overdue invoices</option>

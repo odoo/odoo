@@ -64,7 +64,7 @@
             </div>
             <t t-if="a['type'] == 'line'">
                 <span t-att-style="style" >
-                    <span style="color: black;"><i class="fa fw fa-pencil-square"></i></span>
+                    <span style="color: black;"><i class="fa fa-fw fa-pencil-square"></i></span>
                     <a t-if="a.get('action_id')" t-att-href="'http://localhost:8069/web#action='+str(a.get('action_id'))">
                         <t t-esc="a.get('name')"/>
                     </a>
