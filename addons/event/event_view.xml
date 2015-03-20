@@ -287,6 +287,9 @@
                     <field name="event_id" />
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
+                    <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
+                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
