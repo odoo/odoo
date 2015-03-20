@@ -32,8 +32,8 @@ odoo.define('web_timeline.followers', function (require) {
 
             this.image = this.node.attrs.image || 'image_small';
             this.comment = this.node.attrs.help || false;
-            this.ds_model = new session.web.DataSetSearch(this, this.view.model);
-            this.ds_users = new session.web.DataSetSearch(this, 'res.users');
+            this.ds_model = new data.DataSetSearch(this, this.view.model);
+            this.ds_users = new data.DataSetSearch(this, 'res.users');
 
             this.value = [];
             this.followers = [];
@@ -104,7 +104,7 @@ odoo.define('web_timeline.followers', function (require) {
             var $currentTarget = $(event.currentTarget);
             var user_pid = $currentTarget.data('id');
             $('div.oe_edit_actions').remove();
-            self.$dialog = new session.web.Dialog(this, {
+            self.$dialog = new Dialog(this, {
                             size: 'small',
                             title: _t('Edit Subscription of ') + $currentTarget.siblings('a').text(),
                             buttons: [
@@ -144,7 +144,7 @@ odoo.define('web_timeline.followers', function (require) {
             var partner_id = $(event.target).data('id');
             var name = $(event.target).parent().find("a").html();
             if (confirm(_.str.sprintf(_t("Warning! \n %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"), name))) {
-                var context = new session.web.CompoundContext(this.build_context(), {});
+                var context = new data.CompoundContext(this.build_context(), {});
                 return this.ds_model.call('message_unsubscribe', [[this.view.datarecord.id], 
                                                                   [partner_id], 
                                                                   context])
@@ -160,7 +160,7 @@ odoo.define('web_timeline.followers', function (require) {
                 'id': partner_id,
                 'title': this.record_name
             };
-            session.webclient.action_manager.do_push_state(state);
+            web_client.action_manager.do_push_state(state);
             var action = {
                 type:'ir.actions.act_window',
                 view_type: 'form',
@@ -202,7 +202,7 @@ odoo.define('web_timeline.followers', function (require) {
             var self = this;
             event.preventDefault();
 
-            return this.ds_users.call('read', [[this.session.uid], ['partner_id']])
+            return this.ds_users.call('read', [[session.uid], ['partner_id']])
                 .then(function (results) {
                     var pid = results[0]['partner_id'][0];
                     self.message_is_follower = (_.indexOf(self.value, pid) != -1);
@@ -241,19 +241,19 @@ odoo.define('web_timeline.followers', function (require) {
             var node_user_list = this.$('.oe_tl_follower_list').empty();
             this.$('.oe_tl_follower_title').html(this._format_followers(this.followers.length));
 
-            $(session.web.qweb.render('timeline_followers_add_more', {'widget': self})).appendTo(node_user_list);
+            $(qweb.render('timeline_followers_add_more', {'widget': self})).appendTo(node_user_list);
 
             self.message_is_follower = _.indexOf(this.followers.map(function(rec) {return rec[2]['is_uid']}), true) != -1;
             _(this.followers).each(function (record) {
-                partner = {
+                var partner = {
                     'id': record[0],
                     'name': record[1],
                     'is_uid': record[2]['is_uid'],
                     'is_editable': record[2]['is_editable'],
-                    'avatar_url': mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record[0]),
+                    'avatar_url': mail_utils.get_image(session, 'res.partner', 'image_small', record[0]),
                 }
 
-                $(session.web.qweb.render('timeline_followers_partner', {'record': partner, 
+                $(qweb.render('timeline_followers_partner', {'record': partner, 
                                                                          'widget': self}))
                 .appendTo(node_user_list);
 
@@ -301,7 +301,7 @@ odoo.define('web_timeline.followers', function (require) {
             }
             var id = this.view.datarecord.id;
             this.ds_model.call('message_get_subscription_data', 
-                               [[id], user_pid, new session.web.CompoundContext(this.build_context(), {})])
+                               [[id], user_pid, new data.CompoundContext(this.build_context(), {})])
                 .then(function (data) {self.display_subtypes(data, id, dialog);});
         },
 
@@ -335,18 +335,18 @@ odoo.define('web_timeline.followers', function (require) {
 
                 record.name = record_name;
                 record.followed = record.followed || undefined;
-                $(session.web.qweb.render('timeline_followers_subtype', {'record': record, 
-                                                                         'dialog': dialog}))
+                $(qweb.render('timeline_followers_subtype', {'record': record, 
+                                                             'dialog': dialog}))
                 .appendTo($list);
             });
             }
         },
 
         do_follow: function () {
-            var context = new session.web.CompoundContext(this.build_context(), {});
+            var context = new data.CompoundContext(this.build_context(), {});
             this.$('.oe_tl_subtype_list > .dropdown-toggle').attr('disabled', false);
             this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], 
-                                                           [this.session.uid], 
+                                                           [session.uid], 
                                                            undefined, 
                                                            context])
                 .then(this.proxy('read_value'));
@@ -365,14 +365,14 @@ odoo.define('web_timeline.followers', function (require) {
 
                 var action_unsubscribe = 'message_unsubscribe_users';
                 this.$('.oe_tl_subtype_list > .dropdown-toggle').attr('disabled', true);
-                var follower_ids = [this.session.uid];
+                var follower_ids = [session.uid];
 
                 if (user_pid) {
                     action_unsubscribe = 'message_unsubscribe';
                     follower_ids = [user_pid];
                 }
 
-                var context = new session.web.CompoundContext(this.build_context(), {});
+                var context = new data.CompoundContext(this.build_context(), {});
                 return this.ds_model.call(action_unsubscribe, [[this.view.datarecord.id], 
                                                                follower_ids, context])
                        .then(this.proxy('read_value'));
@@ -385,7 +385,7 @@ odoo.define('web_timeline.followers', function (require) {
             this.data_subtype = {};
 
             var action_subscribe = 'message_subscribe_users';
-            var follower_ids = [this.session.uid];
+            var follower_ids = [session.uid];
             var oe_action = this.$('.oe_actions input[type="checkbox"]');
 
             if (user_pid) {
@@ -408,7 +408,7 @@ odoo.define('web_timeline.followers', function (require) {
                       self.$('.oe_tl_subtype_list ul').empty(); 
             } 
             else {
-                var context = new session.web.CompoundContext(this.build_context(), {});
+                var context = new data.CompoundContext(this.build_context(), {});
                 return this.ds_model.call(action_subscribe, [[this.view.datarecord.id], 
                                                               follower_ids, 
                                                               checklist, 

@@ -19,7 +19,7 @@
     }
 
     .openerp .oe_timeline.oe_tl_inbox .oe_thread {
-        width: 900px;
+        width: 855px;
         display:inline-block;
     }
 
@@ -74,7 +74,7 @@
     /* -------------- parent message -------------- */
 
         .openerp .oe_timeline .oe_tl_thread_parent {
-            width: 870px;
+            width: 850px;
             margin-top: 2px;
             vertical-align: middle;
         }
@@ -82,32 +82,32 @@
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message {
             background-color: white;
             border: solid 1px #CACACA;
-            margin-left: 17%;
+            margin-left: 16.2%;
             padding: 3px;
             white-space: nowrap;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject {
             display: inline-block;
-            width: 455px;
+            width: 442px;
             cursor: pointer;
             vertical-align: middle;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject.oe_tl_small_subject {
-            width: 421px;
+            width: 411px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject .oe_tl_subject {
             display: inline-block;
-            max-width: 425px;
+            max-width: 415px;
             overflow: hidden;
             text-overflow: ellipsis;
             vertical-align: middle;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject.oe_tl_small_subject .oe_tl_subject {
-            max-width: 391px;
+            max-width: 381px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject .oe_tl_nb_unread_msg {
@@ -167,7 +167,6 @@
             font-size: 1.2em;
             padding-top: 1px;
             cursor: pointer;
-            /*text-shadow: 0px 1px blue,0px -1px green, -1px 0px red, 1px 0px black, 0px 3px 3px rgba(0,0,0,0.1);*/
             -webkit-transition: all 0.2s linear;
                -moz-transition: all 0.2s linear;
                  -o-transition: all 0.2s linear;
@@ -277,14 +276,14 @@
         }
 
         .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_composer.oe_tl_write_to_followers {
-            width: 715px;
+            width: 700px;
             margin-top: 0px;
-            margin-left: 8.7%;
+            margin-left: 16.6%;
             border-bottom: none;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg.oe_tl_msg_composer {
-            margin-left: 16.9%;
+            margin-left: 16.8%;
             margin-top: 10px;
             border-bottom: none;
         }
@@ -619,7 +618,7 @@
         .openerp .oe_timeline .oe_tl_parent_expandable span {
             display: inline-block;
             text-align: right;
-            padding-left: 26%;
+            padding-left: 24%;
         }
 
         .openerp .oe_timeline .oe_tl_msg_expandable span {
@@ -1061,15 +1060,43 @@
 /* ----------------------- SIDEBAR ----------------------- */
 
     .openerp .oe_timeline .oe_tl_inbox_aside {
-        margin: 17px;
+        margin-left: 10px;
+        margin-top: 5px;
         position: relative;
         display: inline-block;
         vertical-align: top;
-        width: 150px;
+        width: 200px;
     }
 
-    .openerp .oe_timeline .oe_tl_inbox_aside .oe_tl_sidebar {
-        width: 120px;
-        display: inline-block;
-        border: solid 1px red;
+    .openerp .oe_timeline .oe_tl_inbox_aside .oe_sidebar_suggestion {
+        background-color: #f0eeee;
+        border: solid 1px #CACACA;
+        border-radius: 3px;
+        padding-top: 1px;
+        padding-bottom: 7px;
+    }
+
+    .openerp .oe_timeline .oe_tl_inbox_aside .oe_suggest_title h2 {
+        background-color: #f0eeee;
+        width: 138px;
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 10px;
+        margin-top: -9px;
+        padding-left: 6px;
+        padding-right: 5px;
+    }
+
+    .openerp .oe_sidebar_suggestion .oe_suggest_items .oe_suggested_item {
+        border-radius: 2px;
+        width: 100%;
+        margin-left: 10px;
+        min-height: 67px; 
+        overflow: hidden; 
+        white-space: nowrap;
+    }
+
+    .openerp .oe_sidebar_suggestion .oe_suggest_items .oe_suggested_item .oe_suggested_name {
+        width: 115px;
+        text-overflow: ellipsis;
     }

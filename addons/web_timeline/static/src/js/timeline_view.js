@@ -10,7 +10,7 @@ odoo.define('web_timeline.mail', function (require) {
     var data = require('web.data');
     var form_common = require('web.form_common');
     var pyeval = require('web.pyeval');
-    var real_session = require('web.session');
+    var session = require('web.session');
     var SystrayMenu = require('web.SystrayMenu');
     var time = require('web.time');
     var utils = require('web.utils');
@@ -20,7 +20,7 @@ odoo.define('web_timeline.mail', function (require) {
     var View = require('web.View');
 
     var _t = core._t;
-    var qweb = core.qweb;
+    var QWeb = core.qweb;
 
     var TimelineRecordThread = form_common.AbstractField.extend ({
         className: 'oe_timeline_record_thread',
@@ -29,7 +29,7 @@ odoo.define('web_timeline.mail', function (require) {
             this._super.apply(this, arguments);
 
             this.parent = parent;
-            this.dataset = new session.web.DataSet(this, 'mail.message', this.view.dataset.context);
+            this.dataset = new data.DataSet(this, 'mail.message', this.view.dataset.context);
             this.domain = (this.node.params && this.node.params.domain) || (this.field && this.field.domain) || [];
 
             this.opts = _.extend({
@@ -54,7 +54,7 @@ odoo.define('web_timeline.mail', function (require) {
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
            
-            this.timeline_view = new session.web_timeline.TimelineView(this, this.dataset, false, this.opts);
+            this.timeline_view = new TimelineView(this, this.dataset, false, this.opts);
             this._super.apply(this, arguments);
 
             return this.timeline_view.appendTo(this.$el);
@@ -66,7 +66,7 @@ odoo.define('web_timeline.mail', function (require) {
  
         render_value: function () {
             if (! this.view.datarecord.id || 
-                session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
+                data.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                     return;
             }
 
@@ -86,7 +86,7 @@ odoo.define('web_timeline.mail', function (require) {
     });
 
     var TimelineView = View.extend ({
-        display_name: _lt('Timeline'),
+        display_name: _t('Timeline'),
         view_type: 'timeline',
         template: 'TimelineWall',
 
@@ -127,7 +127,7 @@ odoo.define('web_timeline.mail', function (require) {
     
             this.add_qweb_template(); 
 
-            var wall_sidebar = new openerp.web_timeline.Sidebar(this);
+            var wall_sidebar = new Sidebar(this);
             wall_sidebar.appendTo(this.$('.oe_tl_inbox_aside'));
 
             if (this.options.$buttons) {
@@ -165,7 +165,7 @@ odoo.define('web_timeline.mail', function (require) {
                     $('<span class="oe_timeline-placeholder"/>').insertAfter(self.thread.$el);
                     self.thread.destroy();
                 }
-                self.thread = new openerp.web_timeline.MailThread(self, ds, opts);
+                self.thread = new MailThread(self, ds, opts);
                 self.thread.message_fetch(null, null, self.options.message_ids, self.options.view_inbox ? 'inbox' : 'default');
 
                 return self.thread.replace(self.$('.oe_timeline-placeholder'));
@@ -173,7 +173,7 @@ odoo.define('web_timeline.mail', function (require) {
         },
 
         do_reload_menu_emails: function () {
-            var menu = session.webclient.menu;
+            var menu = web_client.menu;
             if (!menu || !menu.current_menu) {
                 return $.when();
             }
@@ -190,7 +190,7 @@ odoo.define('web_timeline.mail', function (require) {
                 var child = this.fields_view.arch.children[i];
                 if (child.tag === 'templates') {
                     this.transform_qweb_template(child);
-                    this.qweb.add_template(session.web.json_node_to_xml(child));
+                    this.qweb.add_template(utils.json_node_to_xml(child));
                     break;
                 }
             }
@@ -244,7 +244,7 @@ odoo.define('web_timeline.mail', function (require) {
                 target: 'new',
                 context: {},
             };
-            session.client.action_manager.do_action(action);
+            web_client.action_manager.do_action(action);
         },
 
         write_to_followers: function (event, view) {
@@ -261,10 +261,8 @@ odoo.define('web_timeline.mail', function (require) {
             for (var l in attachments) {
                 var attach = attachments[l];
                 if (!attach.formating) {
-                    attach.url = openerp.web_timeline.ChatterUtils
-                                    .get_attachment_url(this.session, this.id, attach.id);
-                    attach.name = openerp.web_timeline.ChatterUtils
-                                    .breakword(attach.name || attach.filename);
+                    attach.url = mail_utils.get_attachment_url(session, this.id, attach.id);
+                    attach.name = mail_utils.breakword(attach.name || attach.filename);
                     attach.formating = true;
                 }
             }
@@ -272,15 +270,15 @@ odoo.define('web_timeline.mail', function (require) {
         },
 
         display_attachments: function (message) {
-            return session.web.qweb.render('ThreadMessageAttachments', {'widget': message, 'thread': this});
+            return QWeb.render('ThreadMessageAttachments', {'widget': message, 'thread': this});
         },
 
         /**
          * Return the link to resized image
          */
         attachments_resize_image: function (id, resize) {
-            return openerp.web_timeline.ChatterUtils.get_image(
-                        this.session, 'ir.attachment', 'datas', id, resize);
+            return mail_utils.get_image(
+                        session, 'ir.attachment', 'datas', id, resize);
         },
     });
 
@@ -311,8 +309,8 @@ odoo.define('web_timeline.mail', function (require) {
             this.context = _.clone(dataset.context) || {};
             this.options = _.clone(options);
             
-            this.root = parent instanceof openerp.web_timeline.TimelineView ? parent : false;
-            this.view = parent instanceof openerp.web_timeline.TimelineView ? parent : parent.view;
+            this.root = parent instanceof TimelineView ? parent : false;
+            this.view = parent instanceof TimelineView ? parent : parent.view;
 
             this.is_ready = $.Deferred();
             this.messages = dataset.messages ? dataset.messages[1] || [dataset.messages] : [];
@@ -361,14 +359,14 @@ odoo.define('web_timeline.mail', function (require) {
 
             this.compose_message = false;
 
-            this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
-            this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
+            this.ds_thread = new data.DataSetSearch(this, this.context.default_model || 'mail.thread');
+            this.ds_message = new data.DataSetSearch(this, 'mail.message');
         },
 
         start: function () {
             var self = this;
             return this.is_ready.then(function () {
-                var $el = $(session.web.qweb.render('MailThread', {'widget': self}));
+                var $el = $(QWeb.render('MailThread', {'widget': self}));
                 self.replaceElement($el);
 
                 if (self.options.show_compose_message) {
@@ -386,7 +384,7 @@ odoo.define('web_timeline.mail', function (require) {
             if (!this.compose_message) {
                 this.context = this.options.compose_as_todo ? 
                     _.extend({'default_starred': true}, this.context) : this.context;
-                this.compose_message = new openerp.web_timeline.ThreadComposeMessage(this, this, this.options);
+                this.compose_message = new ThreadComposeMessage(this, this, this.options);
 
                 if (this.options.view_inbox && option == 'reply') {
                     this.compose_message.insertAfter(this.$('.oe_tl_thread_content'));
@@ -461,7 +459,7 @@ odoo.define('web_timeline.mail', function (require) {
         },
 
         create_thread: function (record) {
-            var thread = new openerp.web_timeline.MailThread(this, _.extend(_.clone(this), {
+            var thread = new MailThread(this, _.extend(_.clone(this), {
                     'messages': record, 
                     }), this.options);
 
@@ -594,7 +592,7 @@ odoo.define('web_timeline.mail', function (require) {
             if ($target.data('liker-list'))
             {
                 voter = $target.data('liker-list');
-                openerp.web_timeline.ChatterUtils.bindTooltipTo($target, voter, 'top');
+                mail_utils.bindTooltipTo($target, voter, 'top');
                 $target.tooltip('hide').tooltip('show');
                 $(".tooltip").on("mouseleave", function () {
                     $(this).remove();
@@ -610,7 +608,7 @@ odoo.define('web_timeline.mail', function (require) {
                         }
                     });
                     $target.data('liker-list', voter);
-                    openerp.web_timeline.ChatterUtils.bindTooltipTo($target, voter, 'top');
+                    mail_utils.bindTooltipTo($target, voter, 'top');
                     $target.tooltip('hide').tooltip('show');
                     $(".tooltip").on("mouseleave", function () {
                         $(this).remove();
@@ -631,7 +629,7 @@ odoo.define('web_timeline.mail', function (require) {
                 'title': record_name
             };
 
-            session.webclient.action_manager.do_push_state(state);
+            web_client.action_manager.do_push_state(state);
             var action = {
                 type:'ir.actions.act_window',
                 view_type: 'form',
@@ -654,7 +652,7 @@ odoo.define('web_timeline.mail', function (require) {
                 'title': this.record_name,
             };
 
-            session.webclient.action_manager.do_push_state(state);
+            web_client.action_manager.do_push_state(state);
 
             this.context.params = {
                 model: this.context.default_model,
@@ -712,14 +710,14 @@ odoo.define('web_timeline.mail', function (require) {
             event.stopPropagation();
 
             if (this.followers_data) {
-                openerp.web_timeline.ChatterUtils.bindTooltipTo($target, this.followers_data, 'right');
+                mail_utils.bindTooltipTo($target, this.followers_data, 'right');
                 $target.tooltip('hide').tooltip('show');
                 $(".tooltip").on("mouseleave", function () {
                     $(this).remove();
                 });
             }
             else {
-                var ds_model = new session.web.DataSetSearch(this, this.model, this.context);
+                var ds_model = new data.DataSetSearch(this, this.model, this.context);
                 ds_model.call('read_followers_data', [this.follower_ids.slice(0, this.options.followers_limit)])
                 .then(function (records) {
                     self.followers_data = [];
@@ -729,7 +727,7 @@ odoo.define('web_timeline.mail', function (require) {
                     if (self.nb_followers - self.followers_limit > 0) {
                         self.followers_data.push('and ' + self.nb_followers - self.followers_limit + 'more ... </br>');  
                     } 
-                    openerp.web_timeline.ChatterUtils.bindTooltipTo($target, self.followers_data, 'right');
+                    mail_utils.bindTooltipTo($target, self.followers_data, 'right');
                     $target.tooltip('hide').tooltip('show');
                     $(".tooltip").on("mouseleave", function () {
                         $(this).remove();
@@ -759,7 +757,7 @@ odoo.define('web_timeline.mail', function (require) {
             }
 
             this.is_ready.then(function () {
-                var $el = $(session.web.qweb.render('MailThread', {'widget': self}));
+                var $el = $(QWeb.render('MailThread', {'widget': self}));
                 self.replaceElement($el);
                 self.options.root_thread.view.do_reload_menu_emails();
             });
@@ -801,7 +799,7 @@ odoo.define('web_timeline.mail', function (require) {
                 this.nb_followers = 0;
                 this.follower_ids = [];
 
-                this.ds_res = new session.web.DataSetSearch(this, this.model, this.context, [['id', '=', this.res_id]]);
+                this.ds_res = new data.DataSetSearch(this, this.model, this.context, [['id', '=', this.res_id]]);
                 this.ds_res.read_slice(['id', 'message_follower_ids']).then(function (data) {
                     self.follower_ids = data[0].message_follower_ids;
                     self.nb_followers = data[0].message_follower_ids.length;
@@ -867,7 +865,7 @@ odoo.define('web_timeline.mail', function (require) {
         },
 
         format_date: function (date) {
-            var d = date ? session.web.str_to_datetime(date) : false;
+            var d = date ? time.str_to_datetime(date) : false;
             if (d) {
                 var display_date = moment(new Date(d).toISOString()).format('ddd MMM DD YYYY LT');
                 date = display_date;
@@ -889,19 +887,19 @@ odoo.define('web_timeline.mail', function (require) {
                 avt = ('/mail/static/src/img/email_icon.png');
             } 
             else if (author) {
-                avt  = openerp.web_timeline.ChatterUtils.get_image(
-                    this.session, 'res.partner', 'image_small', author[0]);
+                avt  = mail_utils.get_image(
+                    session, 'res.partner', 'image_small', author[0]);
             } 
             else {
-                avt = openerp.web_timeline.ChatterUtils.get_image(
-                    this.session, 'res.users', 'image_small', this.session.uid);
+                avt = mail_utils.get_image(
+                    session, 'res.users', 'image_small', session.uid);
             }
             return avt;
         },
 
         format_author: function (author) {
             if (author && author[1]) {
-                var parsed_email = openerp.web_timeline.ChatterUtils.parse_email(author[1]);
+                var parsed_email = mail_utils.parse_email(author[1]);
                 author.push(parsed_email[0], parsed_email[1]);
             }
             return author;
@@ -969,7 +967,7 @@ odoo.define('web_timeline.mail', function (require) {
             this.parent_thread = parent;
             this.view = parent.view;
 
-            session.web.bus.on('clear_uncommitted_changes', this, function (e) {
+            core.bus.on('clear_uncommitted_changes', this, function (e) {
                 if (this.show_composer && !e.isDefaultPrevented()) {
                     if (!confirm(_t("You are currently composing a message, your message will be discarded.\n\nAre you sure you want to leave this page ?"))) {
                         e.preventDefault();
@@ -982,7 +980,7 @@ odoo.define('web_timeline.mail', function (require) {
         },
 
         start: function () {
-            this.ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
+            this.ds_attachment = new data.DataSetSearch(this, 'ir.attachment');
             this.fileupload_id = _.uniqueId('oe_fileupload_temp');
             $(window).on(this.fileupload_id, this.on_attachment_loaded);
             this.$(".oe_tl_msg_attachment_list").html(this.display_attachments(this));
@@ -992,7 +990,7 @@ odoo.define('web_timeline.mail', function (require) {
         },
 
         reinit: function () {
-            var $render = $(session.web.qweb.render('ComposeMessage', {'widget': this}));
+            var $render = $(QWeb.render('ComposeMessage', {'widget': this}));
             this.replaceElement($render);
 
             this.$(".oe_tl_msg_attachment_list").html(this.display_attachments(this));
@@ -1053,7 +1051,7 @@ odoo.define('web_timeline.mail', function (require) {
                         var thread_recipients = additional_recipients[self.context.default_res_id];
 
                         _.each(thread_recipients, function (recipient) {
-                            var parsed_email = openerp.web_timeline.ChatterUtils.parse_email(recipient[1]);
+                            var parsed_email = mail_utils.parse_email(recipient[1]);
                             if (_.indexOf(email_addresses, parsed_email[1]) == -1) {
                                 self.recipients.push({
                                     'checked': true,
@@ -1182,7 +1180,7 @@ odoo.define('web_timeline.mail', function (require) {
                     var partner_id = partner_info.partner_id;
                     var parsed_email = mail.ChatterUtils.parse_email(partner_name);
 
-                    var pop = new session.web.form.FormOpenPopup(this);                    
+                    var pop = new form_common.FormOpenPopup(this);                    
                     pop.show_element(
                         'res.partner',
                         partner_id,
@@ -1253,7 +1251,7 @@ odoo.define('web_timeline.mail', function (require) {
                 console.log("fullmail partners", partner_ids);
                 var context = {
                     'default_parent_id': self.id,
-                    'default_body': openerp.web_timeline.ChatterUtils.get_text2html(
+                    'default_body': mail_utils.get_text2html(
                                         self.$el ? (self.$el.find('textarea:not(.oe_tl_compact)').val() || '') : ''),
                     'default_partner_ids': partner_ids,
                     'default_is_log': self.is_log,
@@ -1341,7 +1339,7 @@ odoo.define('web_timeline.mail', function (require) {
          */
         on_attachment_loaded: function (event, result) {
             if (result.erorr || !result.id ) {
-                this.do_warn( session.web.qweb.render('mail.error_upload'), result.error);
+                this.do_warn(QWeb.render('mail.error_upload'), result.error);
                 this.attachment_ids = _.filter(this.attachment_ids, function (val) { return !val.upload; });
             } 
             else {
@@ -1351,8 +1349,8 @@ odoo.define('web_timeline.mail', function (require) {
                             'id': result.id,
                             'name': result.name,
                             'filename': result.filename,
-                            'url': openerp.web_timeline.ChatterUtils.get_attachment_url(
-                                        this.session, this.id, result.id)
+                            'url': mail_utils.get_attachment_url(
+                                        session, this.id, result.id)
                         };
                     }
                 }
@@ -1392,8 +1390,8 @@ odoo.define('web_timeline.mail', function (require) {
          */
         do_check_attachment_upload: function () {
             if (_.find(this.attachment_ids, function (file) {return file.upload;})) {
-                this.do_warn(session.web.qweb.render('mail.error_upload'), 
-                             session.web.qweb.render('mail.error_upload_please_wait'));
+                this.do_warn(QWeb.render('mail.error_upload'), 
+                             QWeb.render('mail.error_upload_please_wait'));
                 return false;
             } 
             else 
@@ -1417,7 +1415,7 @@ odoo.define('web_timeline.mail', function (require) {
      * is to display group and employees suggestion (if hr is installed).
      */
     var Sidebar = Widget.extend({
-        className: 'oe_tl_sidebar',
+        template: 'TimelineSidebar',
     });
     
     /**

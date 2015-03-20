@@ -16,6 +16,7 @@ Timeline view
 	'qweb' : [
 		"static/src/xml/timeline.xml",
         "static/src/xml/timeline_followers.xml",
+        "static/src/xml/timeline_suggestions.xml",
 	],
     'auto_install': True
 }

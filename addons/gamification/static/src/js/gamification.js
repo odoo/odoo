@@ -2,6 +2,7 @@ odoo.define('gamification.gamification', function(require) {
 "use strict";
 
 var mail = require('mail.mail');
+var web_timeline = require('web_timeline.mail');
 var core = require('web.core');
 var form_common = require('web.form_common');
 var Model = require('web.Model');
@@ -124,6 +125,14 @@ mail.Wall.include({
         this._super();
         var sidebar = new Sidebar(this);
         sidebar.appendTo($('.oe_mail_wall_aside'));
+    },
+});
+
+web_timeline.TimelineView.include({
+    start: function() {
+        this._super();
+        var sidebar = new Sidebar(this);
+        sidebar.appendTo($('.oe_tl_inbox_aside'));
     },
 });
 
