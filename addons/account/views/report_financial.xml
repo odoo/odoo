@@ -90,7 +90,7 @@
     </tr>
 </template>
 <template id="report_financial_body">
-    <div t-att-class="' '.join(['page', 'oe_account_report_widgets', str(report.get_name()), str(context.id)])">
+    <div t-att-data-report-name="str(report.get_name())" t-att-data-context="str(context.id)" t-att-class="' '.join(['page', 'oe_account_report_widgets'])">
         <h2 t-esc="report.get_title()"/>
         <div t-if="mode != 'print' and context.summary == ''" class="oe-account-summary">
             <div class="addSummary" role="alert">

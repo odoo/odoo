@@ -61,7 +61,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         model.call('write', [[parseInt(target_id)], {'blocked': checkbox}])
     },
     onKeyPress: function(e) {
-        var report_name = $("div.page").attr("class").split(/\s+/)[2];
+        var report_name = $("div.page").attr("data-report-name");
         if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey) && report_name == 'followup_report') {
             $('a.btn-primary.followup-email').trigger('click');
             var letter_context_list = [];
@@ -99,7 +99,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
     sendFollowupEmail: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+        var context_id = $(e.target).parents("div.page").attr("data-context");
         var contextModel = new openerp.Model('account.report.context.followup');
         contextModel.call('send_email', [[parseInt(context_id)]]).then (function (result) {
             if (result == true) {

@@ -10,7 +10,7 @@ openerp.account_followup.FollowupReportWidgets = openerp.account.FollowupReportW
         return this._super();
     },
     onKeyPress: function(e) {
-        var report_name = $("div.page").attr("class").split(/\s+/)[2];
+        var report_name = $("div.page").attr("data-report-name");
         if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey) && report_name == 'followup_report') {
             $('a.btn-primary.followup-email').trigger('click');
             var letter_context_list = [];
@@ -45,7 +45,7 @@ openerp.account_followup.FollowupReportWidgets = openerp.account.FollowupReportW
     doManualAction: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+        var context_id = $(e.target).parents("div.page").attr("data-context");
         var contextModel = new openerp.Model('account.report.context.followup');
         contextModel.call('do_manual_action', [[parseInt(context_id)]]).then (function (result) {
             var $skipButton = $(e.target).siblings('a.followup-skip');

@@ -32,8 +32,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     },
     saveFootNote: function(e) {
         self = this;
-        var report_name = $(e.target).parents('#footnoteModal').siblings("div.page").attr("class").split(/\s+/)[2];
-        var context_id = $(e.target).parents('#footnoteModal').siblings("div.page").attr("class").split(/\s+/)[3];
+        var report_name = $(e.target).parents('#footnoteModal').siblings("div.page").attr("data-report-name");
+        var context_id = $(e.target).parents('#footnoteModal').siblings("div.page").attr("data-context");
         var note = $("#note").val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
         var model = new openerp.Model('account.report.context.common');
         model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
@@ -56,7 +56,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         this.$('[data-toggle="tooltip"]').tooltip()
         this.curFootNoteTarget;
         var res = this._super();
-        var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
+        var report_name = window.$("div.page").attr("data-report-name");
         if(report_name != 'followup_report') {
             this.onChangeCmpDateFilter();
         }
@@ -68,8 +68,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     },
     saveSummary: function(e) {
         e.stopPropagation();
-        var report_name = $(e.target).parents("div.page").attr("class").split(/\s+/)[2];
-        var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+        var report_name = $(e.target).parents("div.page").attr("data-report-name");
+        var context_id = $(e.target).parents("div.page").attr("data-context");
         var summary = this.$("textarea[name='summary']").val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
         if (summary != '')
             $(e.target).parents("div.oe-account-summary").html(openerp.qweb.render("savedSummary", {summary : summary}));
@@ -124,8 +124,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                 }
                 break;
             case 'last_year':
-                var report_name = $(e.target).parents("div.page").attr("class").split(/\s+/)[2];
-                var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+                var report_name = $(e.target).parents("div.page").attr("data-report-name");
+                var context_id = $(e.target).parents("div.page").attr("data-context");
                 var commonContext = new openerp.Model('account.report.context.common');
                 commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                     var contextObj = new openerp.Model(result);
@@ -161,8 +161,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                 this.$("input[name='date_to']").val(dt.toISOString().substr(0, 10)); 
                 break;
             case 'this_year':
-                var report_name = $(e.target).parents("div.page").attr("class").split(/\s+/)[2];
-                var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+                var report_name = $(e.target).parents("div.page").attr("data-report-name");
+                var context_id = $(e.target).parents("div.page").attr("data-context");
                 var commonContext = new openerp.Model('account.report.context.common');
                 commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                     var contextObj = new openerp.Model(result);
@@ -275,8 +275,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         e.stopPropagation();
         e.preventDefault();
         self = this;
-        var report_name = $(e.target).parents("div.page").attr("class").split(/\s+/)[2];
-        var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+        var report_name = $(e.target).parents("div.page").attr("data-report-name");
+        var context_id = $(e.target).parents("div.page").attr("data-context");
         var model = new openerp.Model('account.report.context.common');
         model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             self.curFootNoteTarget = $(e.target).parents("div.dropdown").find("span.account_id");
@@ -331,8 +331,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
             }
         }
         else if ($(e.target).parent().parent().find("sup").length == 0) {
-            var report_name = $(e.target).parents("div.page").attr("class").split(/\s+/)[2];
-            var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+            var report_name = $(e.target).parents("div.page").attr("data-report-name");
+            var context_id = $(e.target).parents("div.page").attr("data-context");
             var model = new openerp.Model('account.report.context.common');
             model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                 self.curFootNoteTarget = $(e.target).parent().parent();
@@ -353,8 +353,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     saveContent: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        var report_name = $(e.target).parents("div.page").attr("class").split(/\s+/)[2];
-        var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+        var report_name = $(e.target).parents("div.page").attr("data-report-name");
+        var context_id = $(e.target).parents("div.page").attr("data-context");
         var text = $(e.target).siblings('textarea').val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
         var footNoteSeqNum = $(e.target).parents('p.footnoteEdit').text().split('.')[0];
         if ($(e.target).parents("p.footnoteEdit").length > 0) {
@@ -387,8 +387,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         e.stopPropagation();
         e.preventDefault();
         if ($(e.target).parents("div.oe-account-summary").length > 0) {
-            var report_name = $(e.target).parents("div.page").attr("class").split(/\s+/)[2];
-            var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+            var report_name = $(e.target).parents("div.page").attr("data-report-name");
+            var context_id = $(e.target).parents("div.page").attr("data-context");
             $(e.target).parent().parent().replaceWith(openerp.qweb.render("addSummary"));
             var model = new openerp.Model('account.report.context.common');
             model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
@@ -400,8 +400,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
             var num = $(e.target).parent().parent().text().split('.')[0].replace(/ /g,'').replace(/\r?\n/g,'');
             this.$("sup b a:contains('" + num + "')").remove();
             $(e.target).parent().parent().remove();
-            var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
-            var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
+            var report_name = window.$("div.page").attr("data-report-name");
+            var context_id = window.$("div.page").attr("data-context");
             var model = new openerp.Model('account.report.context.common');
             model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                 var contextModel = new openerp.Model(result);
@@ -416,8 +416,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     fold: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        var report_name = $(e.target).parents("div.page").attr("class").split(/\s+/)[2];
-        var context_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+        var report_name = $(e.target).parents("div.page").attr("data-report-name");
+        var context_id = $(e.target).parents("div.page").attr("data-context");
         var el;
         var $el;
         var $nextEls = $(e.target).parents('tr').nextAll();
@@ -441,8 +441,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     unfold: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
-        var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
+        var report_name = window.$("div.page").attr("data-report-name");
+        var context_id = window.$("div.page").attr("data-context");
         var active_id = $(e.target).parents('tr').find('td.oe-account-unfoldable').attr("class").split(/\s+/)[1];
         var commonContext = new openerp.Model('account.report.context.common');
         commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
@@ -492,8 +492,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     displayMoveLinesByAccount: function(e) {
         e.stopPropagation();
         var active_id = $(e.target).parents("div.dropdown").find("span.account_id").attr("class").split(/\s+/)[1];
-        var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
-        var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
+        var report_name = window.$("div.page").attr("data-report-name");
+        var context_id = window.$("div.page").attr("data-context");
         var commonContext = new openerp.Model('account.report.context.common');
         commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
@@ -516,8 +516,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     displayMoveLinesByAccountGraph: function(e) {
         e.stopPropagation();
         var active_id = $(e.target).parents("div.dropdown").find("span.account_id").attr("class").split(/\s+/)[1];
-        var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
-        var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
+        var report_name = window.$("div.page").attr("data-report-name");
+        var context_id = window.$("div.page").attr("data-context");
         var commonContext = new openerp.Model('account.report.context.common');
         commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
@@ -553,8 +553,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     displayNetTaxLines: function(e) {
         e.stopPropagation();
         var active_id = $(e.target).parents("div.dropdown").find("span.account_id").attr("class").split(/\s+/)[1];
-        var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
-        var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
+        var report_name = window.$("div.page").attr("data-report-name");
+        var context_id = window.$("div.page").attr("data-context");
         var commonContext = new openerp.Model('account.report.context.common');
         commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
@@ -574,8 +574,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
     displayTaxLines: function(e) {
         e.stopPropagation();
         var active_id = $(e.target).parents("div.dropdown").find("span.account_id").attr("class").split(/\s+/)[1];
-        var report_name = window.$("div.page").attr("class").split(/\s+/)[2];
-        var context_id = window.$("div.page").attr("class").split(/\s+/)[3];
+        var report_name = window.$("div.page").attr("data-report-name");
+        var context_id = window.$("div.page").attr("data-context");
         var commonContext = new openerp.Model('account.report.context.common');
         commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
