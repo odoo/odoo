@@ -6,7 +6,7 @@ var Model = require('web.Model');
 var Sidebar = require('web.Sidebar');
 
 Sidebar.include({
-    start: function () {
+    init: function () {
         var self = this;
         var ids;
         this._super.apply(this, arguments);

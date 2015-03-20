@@ -18,7 +18,6 @@ var View = Widget.extend({
         this.ViewManager = parent;
         this.dataset = dataset;
         this.view_id = view_id;
-        this.$buttons = options && options.$buttons;
         this.set_default_options(options);
     },
     start: function () {
@@ -158,9 +157,6 @@ var View = Widget.extend({
     },
     do_show: function () {
         var self = this;
-        if (this.$buttons) {
-            this.$buttons.show();
-        }
         this.$el.show();
         setTimeout(function () {
             self.$el.parent().addClass('in');
@@ -169,15 +165,13 @@ var View = Widget.extend({
         core.bus.trigger('view_shown', this);
     },
     do_hide: function () {
-        if (this.$buttons) {
-            this.$buttons.hide();
-        }
         this.$el.parent().removeClass('in');
         this.$el.hide();
     },
     is_active: function () {
         return this.ViewManager.active_view.controller === this;
-    }, /**
+    },
+    /**
      * Wraps fn to only call it if the current view is the active one. If the
      * current view is not active, doesn't call fn.
      *
@@ -201,6 +195,33 @@ var View = Widget.extend({
     },
     do_load_state: function (state, warm) {
 
+    },
+    /**
+     * This function should render the buttons of the view, set this.$buttons to
+     * the produced jQuery element and define some listeners on it.
+     * This function should be called after start().
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case the View can insert the buttons somewhere else
+     */
+    render_buttons: function($node) {
+    },
+    /**
+     * This function should instantiate and render the sidebar of the view, set this.sidebar to
+     * the instantiated Sidebar Widget and possibly add custom items in it.
+     * This function should be called after start().
+     * @param {jQuery} [$node] a jQuery node where the sidebar should be inserted
+     * $node may be undefined, in which case the View can insert the sidebar somewhere else
+     */
+    render_sidebar: function($node) {
+    },
+    /**
+     * This function should render the pager of the view, set this.$pager to
+     * the produced jQuery element and define some listeners on it.
+     * This function should be called after start().
+     * @param {jQuery} [$node] a jQuery node where the pager should be inserted
+     * $node may be undefined, in which case the View can insert the pager somewhere else
+     */
+    render_pager: function($node) {
     },
     /**
      * Switches to a specific view type

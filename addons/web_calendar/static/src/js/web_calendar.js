@@ -121,19 +121,6 @@ var CalendarView = View.extend({
 
         this.info_fields = [];
 
-        /* buttons */
-        this.$buttons = $(QWeb.render("CalendarView.buttons", {'widget': this}));
-        if (this.options.$buttons) {
-            this.$buttons.appendTo(this.options.$buttons);
-        } else {
-            this.$el.find('.oe_calendar_buttons').replaceWith(this.$buttons);
-        }
-
-        this.$buttons.on('click', 'button.oe_calendar_button_new', function () {
-            self.dataset.index = null;
-            self.do_switch_view('form');
-        });
-
         if (!attrs.date_start) {
             throw new Error(_t("Calendar view has not defined 'date_start' attribute."));
         }
@@ -251,6 +238,28 @@ var CalendarView = View.extend({
             self.trigger('calendar_view_loaded', self.fields_view);
         });
     },
+    /**
+     * Render the buttons according to the CalendarView.buttons template and
+     * add listeners on it.
+     * Set this.$buttons with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case the ListView inserts them into this.options.$buttons
+     * or into a div of its template
+     */
+    render_buttons: function($node) {
+        var self = this;
+        this.$buttons = $(QWeb.render("CalendarView.buttons", {'widget': this}));
+        this.$buttons.on('click', 'button.oe_calendar_button_new', function () {
+            self.dataset.index = null;
+            self.do_switch_view('form');
+        });
+        $node = $node || this.options.$buttons;
+        if ($node) {
+            this.$buttons.appendTo($node);
+        } else {
+            this.$('.oe_calendar_buttons').replaceWith(this.$buttons);
+        }
+    },
     get_fc_init_options: function () {
         //Documentation here : http://arshaw.com/fullcalendar/docs/
         var self = this;
@@ -326,8 +335,8 @@ var CalendarView = View.extend({
 
     init_calendar: function() {
         var self = this;
-         
-        if (!this.sidebar && this.options.$sidebar) {
+
+        if (!this.sidebar) {
             var translate = get_fc_defaultOptions();
             this.sidebar = new widgets.Sidebar(this);
             this.sidebar.appendTo(this.$el.find('.oe_calendar_sidebar_container'));
@@ -679,6 +688,12 @@ var CalendarView = View.extend({
         }
         this.event_source = {
             events: function(start, end, callback) {
+                // catch invalid dates (start/end dates not parseable yet)
+                // => ignore request
+                if (isNaN(start) || isNaN(end)) {
+                    return;
+                }
+
                 var current_event_source = self.event_source;
                 self.dataset.read_slice(_.keys(self.fields), {
                     offset: 0,

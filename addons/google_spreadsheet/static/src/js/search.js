@@ -1,11 +1,13 @@
 odoo.define('google_spreadsheet.google.spreadsheet', function (require) {
 "use strict";
 
+var ActionManager = require('web.ActionManager');
 var core = require('web.core');
 var data = require('web.data');
 var FavoriteMenu = require('web.FavoriteMenu');
 var FormView = require('web.FormView');
 var pyeval = require('web.pyeval');
+var ViewManager = require('web.ViewManager');
 
 var QWeb = core.qweb;
 
@@ -27,14 +29,19 @@ FormView.include({
 FavoriteMenu.include({
     prepare_dropdown_menu: function (filters) {
         this._super(filters);
-        this.$('.favorites-menu').append(QWeb.render('SearchView.addtogooglespreadsheet'));
-        this.$('.add-to-spreadsheet').click(this.add_to_spreadsheet.bind(this));
+        var am = this.findAncestor(function(a) {
+            return a instanceof ActionManager;
+        });
+        if (am && am.get_inner_widget() instanceof ViewManager) {
+            this.view_manager = am.get_inner_widget();
+            this.$('.favorites-menu').append(QWeb.render('SearchView.addtogooglespreadsheet'));
+            this.$('.add-to-spreadsheet').click(this.add_to_spreadsheet.bind(this));
+        }
     },
     add_to_spreadsheet: function () {
         var sv_data = this.searchview.build_search_data(),
             model = this.searchview.dataset.model,
-            view_manager = this.searchview.getParent(),
-            list_view = view_manager.views.list,
+            list_view = this.view_manager.views.list,
             list_view_id = list_view ? list_view.view_id : false,
             context = this.searchview.dataset.get_context() || [],
             compound_context = new data.CompoundContext(context),

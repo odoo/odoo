@@ -1,6 +1,7 @@
 odoo.define('web.form_relational', function (require) {
 "use strict";
 
+var ControlPanel = require('web.ControlPanel');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
@@ -1078,14 +1079,27 @@ var One2ManyFormView = FormView.extend({
 });
 
 var One2ManyViewManager = ViewManager.extend({
-    template: 'One2Many.viewmanager',
     init: function(parent, dataset, views, flags) {
-        this._super(parent, dataset, views, _.extend({}, flags, {$sidebar: false}));
+        // By default, render buttons and pager in O2M fields, but no sidebar
+        var flags = _.extend({}, flags, {
+            headless: false,
+            search_view: false,
+            action_buttons: true,
+            pager: true,
+            sidebar: false,
+        });
+        this.control_panel = new ControlPanel(parent, "One2ManyControlPanel");
+        this.set_cp_bus(this.control_panel.get_bus());
+        this._super(parent, dataset, views, flags);
         this.registry = core.view_registry.extend({
             list: One2ManyListView,
             form: One2ManyFormView,
         });
         this.__ignore_blur = false;
+    },
+    start: function() {
+        this.control_panel.prependTo(this.$el);
+        return this._super();
     },
     switch_mode: function(mode, unused) {
         if (mode !== 'form') {

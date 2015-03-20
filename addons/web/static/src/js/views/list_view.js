@@ -107,6 +107,12 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
 
         this.no_leaf = false;
         this.grouped = false;
+
+        // the view's number of records per page (|| section)
+        this._limit = (this.options.limit ||
+                       this.defaults.limit ||
+                       (this.getParent().action || {}).limit ||
+                       80);
     },
     view_loading: function(r) {
         return this.load_list(r);
@@ -117,23 +123,6 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             GroupsType: ListView.Groups,
             ListType: ListView.List
         });
-    },
-
-    /**
-     * Retrieves the view's number of records per page (|| section)
-     *
-     * options > defaults > parent.action.limit > indefinite
-     *
-     * @returns {Number|null}
-     */
-    limit: function () {
-        if (this._limit === undefined) {
-            this._limit = (this.options.limit
-                        || this.defaults.limit
-                        || (this.getParent().action || {}).limit
-                        || 80);
-        }
-        return this._limit;
     },
     /**
      * Set a custom Group construct as the root of the List View.
@@ -239,7 +228,6 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
      * * Sets up showing/hiding the top-level [Delete] button based on records being selected or not
      * * Sets up event handlers for action buttons and per-row deletion button
      * * Hooks global callback for clicking on a row
-     * * Sets up its sidebar, if any
      *
      * @param {Object} data wrapped fields_view_get result
      * @param {Object} data.fields_view fields_view_get result (processed)
@@ -288,32 +276,85 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
                 'selected', [selection.ids, selection.records]);
         });
 
-        // Add button
-        if (!this.$buttons) {
-            this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
-            if (this.options.$buttons) {
-                this.$buttons.appendTo(this.options.$buttons);
-            } else {
-                this.$el.find('.oe_list_buttons').replaceWith(this.$buttons);
-            }
-            this.$buttons.find('.oe_list_add')
-                    .click(this.proxy('do_add_record'))
-                    .prop('disabled', this.grouped);
+        //Sort
+        var default_order = this.fields_view.arch.attrs.default_order,
+            unsorted = !this.dataset._sort.length;
+        if (unsorted && default_order && !this.grouped) {
+            this.dataset.set_sort(default_order.split(','));
         }
 
-        // Pager
-        if (!this.$pager) {
-            this.$pager = $(QWeb.render("ListView.pager", {'widget':self})).hide();
-            if (this.options.$buttons) {
-                this.$pager.appendTo(this.options.$pager);
-            } else {
-                this.$el.find('.oe_list_pager').replaceWith(this.$pager);
+        if(this.dataset._sort.length){
+            if(this.dataset._sort[0].indexOf('-') == -1){
+                this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");
+            }else {
+                this.$el.find('th[data-id=' + this.dataset._sort[0].split('-')[1] + ']').addClass("sortup");
             }
+        }
+        this.trigger('list_view_loaded', data, this.grouped);
+    },
+    /**
+     * Render the buttons according to the ListView.buttons template and
+     * add listeners on it.
+     * Set this.$buttons with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case the ListView inserts them into this.options.$buttons
+     * or into a div of its template
+     */
+    render_buttons: function($node) {
+        if (!this.$buttons) {
+            this.$buttons = $(QWeb.render("ListView.buttons", {'widget': this}));
 
+            this.$buttons.find('.oe_list_add').click(this.proxy('do_add_record'));
+
+            $node = $node || this.options.$buttons;
+            if ($node) {
+                this.$buttons.appendTo($node);
+            } else {
+                this.$('.oe_list_buttons').replaceWith(this.$buttons);
+            }
+        }
+    },
+    /**
+     * Instantiate and render the sidebar.
+     * Sets this.sidebar
+     * @param {jQuery} [$node] a jQuery node where the sidebar should be inserted
+     * $node may be undefined, in which case the ListView inserts the sidebar in
+     * this.options.$sidebar or in a div of its template
+     **/
+    render_sidebar: function($node) {
+        if (!this.sidebar && this.options.sidebar) {
+            this.sidebar = new Sidebar(this);
+            if (this.fields_view.toolbar) {
+                this.sidebar.add_toolbar(this.fields_view.toolbar);
+            }
+            this.sidebar.add_items('other', _.compact([
+                { label: _t("Export"), callback: this.on_sidebar_export },
+                this.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
+            ]));
+
+            $node = $node || this.options.$sidebar || this.$('.oe_list_sidebar');
+            this.sidebar.appendTo($node);
+
+            // Hide the sidebar by default (it will be shown as soon as a record is selected)
+            this.sidebar.do_hide();
+        }
+    },
+    /**
+     * Render the pager according to the ListView.pager template and add listeners on it.
+     * Set this.$pager with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered pager should be inserted
+     * $node may be undefined, in which case the ListView inserts the pager into this.options.$pager
+     * or into a div of its template
+     */
+    render_pager: function($node) {
+        if (!this.$pager && this.options.pager) {
+            var self =  this;
+
+            this.$pager = $(QWeb.render("ListView.pager", {'widget': self}));
             this.$pager
                 .on('click', 'a[data-pager-action]', function () {
                     var $this = $(this);
-                    var max_page_index = Math.ceil(self.dataset.size() / self.limit()) - 1;
+                    var max_page_index = Math.ceil(self.dataset.size() / self._limit) - 1;
                     switch ($this.data('pager-action')) {
                         case 'first':
                             self.page = 0;
@@ -357,34 +398,15 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
                             })
                             .val(self._limit || 'NaN');
                     });
-        }
+            this.configure_pager(this.dataset);
 
-        // Sidebar
-        if (!this.sidebar && this.options.$sidebar) {
-            this.sidebar = new Sidebar(this);
-            this.sidebar.appendTo(this.options.$sidebar);
-            this.sidebar.add_items('other', _.compact([
-                { label: _t("Export"), callback: this.on_sidebar_export },
-                self.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
-            ]));
-            this.sidebar.add_toolbar(this.fields_view.toolbar);
-            this.sidebar.$el.hide();
-        }
-        //Sort
-        var default_order = this.fields_view.arch.attrs.default_order,
-            unsorted = !this.dataset._sort.length;
-        if (unsorted && default_order && !this.grouped) {
-            this.dataset.set_sort(default_order.split(','));
-        }
-
-        if(this.dataset._sort.length){
-            if(this.dataset._sort[0].indexOf('-') == -1){
-                this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");
-            }else {
-                this.$el.find('th[data-id=' + this.dataset._sort[0].split('-')[1] + ']').addClass("sortup");
+            $node = $node || this.options.$pager;
+            if ($node) {
+                this.$pager.appendTo($node);
+            } else {
+                this.$('.oe_list_pager').replaceWith(this.$pager);
             }
         }
-        this.trigger('list_view_loaded', data, this.grouped);
     },
     sort_by_column: function (e) {
         e.stopPropagation();
@@ -418,25 +440,32 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         if (dataset._length) {
             this.dataset._length = dataset._length;
         }
+        if (this.$pager) {
+            if (this.grouped) {
+                // page count is irrelevant on grouped page, replace by limit
+                this.$pager.find('.oe-pager-buttons').hide();
+                this.$pager.find('.oe_list_pager_state').text(this._limit || '∞');
+            } else {
+                var total = dataset.size();
+                var limit = this._limit || total;
+                this.$pager.find('.oe-pager-buttons').toggle(total > limit);
+                this.$pager.find('.oe_pager_value').toggle(total !== 0);
+                var spager = '-';
+                if (total) {
+                    var range_start = this.page * limit + 1;
+                    var range_stop = range_start - 1 + limit;
+                    if (this.records.length) {
+                        range_stop = range_start - 1 + this.records.length;
+                    }
+                    if (range_stop > total) {
+                        range_stop = total;
+                    }
+                    spager = _.str.sprintf(_t("%d-%d of %d"), range_start, range_stop, total);
+                }
 
-        var total = dataset.size();
-        var limit = this.limit() || total;
-        this.$pager.find('.oe-pager-buttons').toggle(total > limit);
-        this.$pager.find('.oe_pager_value').toggle(total !== 0);
-        var spager = '-';
-        if (total) {
-            var range_start = this.page * limit + 1;
-            var range_stop = range_start - 1 + limit;
-            if (this.records.length) {
-                range_stop = range_start - 1 + this.records.length;
+                this.$pager.find('.oe_list_pager_state').text(spager);
             }
-            if (range_stop > total) {
-                range_stop = total;
-            }
-            spager = _.str.sprintf(_t("%d-%d of %d"), range_start, range_stop, total);
         }
-
-        this.$pager.find('.oe_list_pager_state').text(spager);
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -488,18 +517,10 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
     },
     do_show: function () {
         this._super();
-        if (this.$pager) {
-            this.$pager.show();
-        }
-    },
-    do_hide: function () {
         if (this.sidebar) {
-            this.sidebar.$el.hide();
+            // Hide the sidebar by default (will be shown once a record is selected)
+            this.sidebar.do_hide();
         }
-        if (this.$pager) {
-            this.$pager.hide();
-        }
-        this._super();
     },
     /**
      * Reloads the list view based on the current settings (dataset & al)
@@ -522,7 +543,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         this.records.reset();
         var reloaded = $.Deferred();
         reloaded.then(function () {
-            if (!self.grouped) self.$pager.show();
+            self.configure_pager(self.dataset);
         });
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
@@ -631,7 +652,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
                 //Trigger previous manually to navigate to previous page, 
                 //If all records are deleted on current page.
                 self.$pager.find('ul li:first a').trigger('click');
-            } else if (self.dataset.size() == self.limit()) {
+            } else if (self.dataset.size() == self._limit) {
                 //Reload listview to update current page with next page records 
                 //because pager going to be hidden if dataset.size == limit
                 self.reload();
@@ -656,7 +677,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         if (!ids.length) {
             this.dataset.index = 0;
             if (this.sidebar) {
-                this.sidebar.$el.hide();
+                this.sidebar.do_hide();
             }
             this.compute_aggregates();
             return;
@@ -664,8 +685,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
 
         this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
         if (this.sidebar) {
-            this.options.$sidebar.show();
-            this.sidebar.$el.show();
+            this.sidebar.do_show();
         }
 
         this.compute_aggregates(_(records).map(function (record) {
@@ -915,10 +935,12 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         this.$el.prepend(
             $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
-        var $buttons = this.$buttons;
-        this.$el.find('.oe_view_nocontent').click(function() {
-            $buttons.width($buttons.width() + 1).openerpBounce();
-        });
+        if (this.$buttons) {
+            var $buttons = this.$buttons;
+            this.$el.find('.oe_view_nocontent').click(function() {
+                $buttons.width($buttons.width() + 1).openerpBounce();
+            });
+        }
     }
 });
 core.view_registry.add('list', ListView);
@@ -1515,7 +1537,7 @@ ListView.Groups = Class.extend( /** @lends instance.web.ListView.Groups# */{
         this.bind_child_events(list);
 
         var view = this.view,
-           limit = view.limit(),
+            limit = view._limit,
             page = this.datagroup.openable ? this.page : view.page;
 
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name');
@@ -1637,9 +1659,6 @@ ListView.Groups = Class.extend( /** @lends instance.web.ListView.Groups# */{
                 .filter(function (column) { return column.tag === 'field';})
                 .pluck('name').value(),
             function (groups) {
-                // page count is irrelevant on grouped page, replace by limit
-                self.view.$pager.find('.oe-pager-buttons').hide();
-                self.view.$pager.find('.oe_list_pager_state').text(self.view._limit ? self.view._limit : '∞');
                 $el[0].appendChild(
                     self.render_groups(groups));
                 if (post_render) { post_render(); }

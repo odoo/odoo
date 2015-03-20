@@ -35,7 +35,6 @@ var PivotView = View.extend({
         this._super(parent, dataset, view_id, options);
         this.model = new Model(dataset.model, {group_by_no_leaf: true});
 
-        this.$sidebar = options.$sidebar;
         this.fields = {};
         this.measures = {};
         this.groupable_fields = {};
@@ -62,43 +61,68 @@ var PivotView = View.extend({
         this.last_header_selected = null;
         this.sorted_column = {};
     },
-    start: function () {
+    willStart: function () {
         var self = this;
+        return session.rpc('/web/pivot/check_xlwt').then(function(result) {
+            self.xlwt_installed = result;
+        });
+    },
+    start: function () {
         this.$table_container = this.$('.o-pivot-table');
 
         var load_fields = this.model.call('fields_get', [])
                 .then(this.prepare_fields.bind(this));
 
-        if (this.$sidebar) {
-            this.rpc('/web/pivot/check_xlwt').then(function (result) {
-                if (result) {
-                    self.sidebar = new Sidebar(self);
-                    self.sidebar.appendTo(self.$sidebar);
-                    self.sidebar.add_items('other', [{
-                        label: _t("Download xls"),
-                        callback: self.download_table.bind(self)
-                    }]);
-                }
-            });
-        }
-        return $.when(this._super(), load_fields).then(this.render_buttons.bind(this));
+        return $.when(this._super(), load_fields).then(this.render_field_selection.bind(this));
     },
-    render_buttons: function () {
+    render_field_selection: function () {
         var self = this;
-        var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
-        this.$buttons.html(QWeb.render('PivotView.buttons', context));
-        this.$buttons.click(this.on_button_click.bind(this));
-        this.active_measures.forEach(function (measure) {
-            self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
-        });
 
-        var another_ctx = {fields: _.chain(this.groupable_fields).pairs().sortBy(function(f){return f[1].string;}).value()};
+        var context = {fields: _.chain(this.groupable_fields).pairs().sortBy(function(f){return f[1].string;}).value()};
         this.$field_selection = this.$('.o-field-selection');
-        this.$field_selection.html(QWeb.render('PivotView.FieldSelection', another_ctx));
+        this.$field_selection.html(QWeb.render('PivotView.FieldSelection', context));
         core.bus.on('click', self, function () {
             self.$field_selection.find('ul').first().hide();
         });
-        this.$buttons.find('button').tooltip();
+    },
+    /**
+     * Render the buttons according to the PivotView.buttons template and
+     * add listeners on it.
+     * Set this.$buttons with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case the PivotView does nothing
+     */
+    render_buttons: function ($node) {
+        if ($node) {
+            var self = this;
+
+            var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
+            this.$buttons = $(QWeb.render('PivotView.buttons', context));
+            this.$buttons.click(this.on_button_click.bind(this));
+            this.active_measures.forEach(function (measure) {
+                self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
+            });
+            this.$buttons.find('button').tooltip();
+
+            this.$buttons.appendTo($node);
+        }
+    },
+    /**
+     * Instantiate and render the sidebar.
+     * Sets this.sidebar
+     * @param {jQuery} [$node] a jQuery node where the sidebar should be inserted
+     * $node may be undefined, in which case the PivotView does nothing
+     **/
+    render_sidebar: function($node) {
+        if (this.xlwt_installed && $node && this.options.sidebar) {
+            this.sidebar = new Sidebar(this);
+            this.sidebar.add_items('other', [{
+                label: _t("Download xls"),
+                callback: this.download_table.bind(this),
+            }]);
+
+            this.sidebar.appendTo($node);
+        }
     },
     view_loading: function (fvg) {
         var self = this;
@@ -169,21 +193,12 @@ var PivotView = View.extend({
     },
     do_show: function () {
         var self = this;
-        if (this.sidebar) {
-            this.sidebar.$el.show();
-        }
         this.do_push_state({});
         this.data_loaded.done(function () {
             self.display_table(); 
             self.$el.show();
         });
         return this._super();
-    },
-    do_hide: function () {
-        if (this.sidebar) {
-            this.sidebar.$el.hide();
-        }
-        this._super();
     },
     get_context: function () {
         return !this.ready ? {} : {
@@ -594,7 +609,7 @@ var PivotView = View.extend({
                 .addClass(rows[i].expanded ? 'oe-opened' : 'oe-closed');
             if (rows[i].indent > 0) $header.attr('title', groupby_labels[rows[i].indent - 1]);
             $header.appendTo($row);
-            for (j = 0; j < length; j++) {
+            for (j = 0; j < length; j++) {
                 value = formats.format_value(rows[i].values[j], {type: measure_types[j % nbr_measures]});
                 $cell = $('<td>')
                             .data('id', rows[i].id)
@@ -695,7 +710,7 @@ var PivotView = View.extend({
             traverse_tree(self.main_col.root, add_cells, header.id, values, col_ids);
             if (self.main_col.width > 1) {
                 aggregates = self.get_value(header.id, self.main_col.root.id);
-                for (i = 0; i < self.active_measures.length; i++) {
+                for (i = 0; i < self.active_measures.length; i++) {
                     values.push(aggregates && aggregates[self.active_measures[i]]);
                 }
                 col_ids.push( self.main_col.root.id);

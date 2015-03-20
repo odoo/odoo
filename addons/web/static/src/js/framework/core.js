@@ -170,6 +170,7 @@ return {
 
     // core classes and functions
     Class: Class,
+    Bus: Bus,
     mixins: mixins,
     bus: new Bus (),
     _t: _t,

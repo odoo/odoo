@@ -1,9 +1,7 @@
 <template>
 
-<t t-name="DiagramView.pager">
-        <t t-if="widget.options.pager !== false" t-call="ViewPager">
-            <span class="oe_diagram_pager_state"></span>
-        </t>
+<t t-name="DiagramView.pager" t-if="widget.options.pager !== false" t-call="ViewPager">
+    <span class="oe_diagram_pager_state"></span>
 </t>
 
 <t t-name="DiagramView">
