@@ -697,58 +697,63 @@ class mail_message(osv.Model):
             # newest messages first
             parent_tree.setdefault(tree_parent_id, [])
 
-        for parnt_id in parent_tree:
-            parent_ids.append(parnt_id)
+        if ids and len(ids) > 0:
+            for parnt_id in parent_tree:
+                parent_ids.append(parnt_id)
 
-            if not parnt_id:
-                child_ids = ids;
-                exp_domain = domain + [('id', '<', min(child_ids))]
-            else:
-                child_ids = [msg.id for msg in self.browse(cr, uid, parnt_id, context=context).child_ids][0:child_limit]
-                exp_domain = [('parent_id', '=', parnt_id), ('id', '>', parnt_id)]
-                if len(child_ids):
-                    exp_domain += [('id', '<', min(child_ids))]
+                if not parnt_id:
+                    child_ids = ids;
+                    exp_domain = domain + [('id', '<', min(child_ids))]
+                else:
+                    child_ids = [msg.id for msg in self.browse(cr, uid, parnt_id, context=context).child_ids][0:child_limit]
+                    exp_domain = [('parent_id', '=', parnt_id), ('id', '>', parnt_id)]
+                    if len(child_ids):
+                        exp_domain += [('id', '<', min(child_ids))]
 
-            for cid in child_ids:
-                if cid not in message_tree:
-                    message_tree[cid] = self.browse(cr, uid, cid, context=context)
-                parent_tree[parnt_id].append(self._message_read_dict(cr, uid, message_tree[cid], parent_id=parnt_id, context=context))
+                for cid in child_ids:
+                    if cid not in message_tree:
+                        message_tree[cid] = self.browse(cr, uid, cid, context=context)
+                    parent_tree[parnt_id].append(self._message_read_dict(cr, uid, message_tree[cid], parent_id=parnt_id, context=context))
 
-            if parnt_id:
-                parent_tree[parnt_id].sort(key=lambda item: item['id'])
-                parent_tree[parnt_id].reverse();
-                parent_tree[parnt_id].append(self._message_read_dict(cr, uid, message_tree[parnt_id], context=context))
+                if parnt_id:
+                    parent_tree[parnt_id].sort(key=lambda item: item['id'])
+                    parent_tree[parnt_id].reverse();
+                    parent_tree[parnt_id].append(self._message_read_dict(cr, uid, message_tree[parnt_id], context=context))
 
-            self._message_read_dict_postprocess(cr, uid, parent_tree[parnt_id], message_tree, context=context)
+                self._message_read_dict_postprocess(cr, uid, parent_tree[parnt_id], message_tree, context=context)
 
-            more_count = self.search_count(cr, uid, exp_domain, context=context)
-            if more_count:
-                exp = {'type':'expandable',
-                       'domain': exp_domain,
-                       'nb_messages': more_count,
-                       'parent_id': parnt_id}
+                more_count = self.search_count(cr, uid, exp_domain, context=context)
+                if more_count:
+                    exp = {'type':'expandable',
+                           'domain': exp_domain,
+                           'nb_messages': more_count,
+                           'parent_id': parnt_id}
 
-                if parnt_id : 
-                    parent_tree[parnt_id].insert(len(parent_tree[parnt_id])-1, exp)
-                else :
-                    parent_tree[parnt_id].append(exp)
+                    if parnt_id : 
+                        parent_tree[parnt_id].insert(len(parent_tree[parnt_id])-1, exp)
+                    else :
+                        parent_tree[parnt_id].append(exp)
 
-        # create final ordered parent_list based on parent_tree
-        parent_list = parent_tree.items()
-        parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]), reverse=True)
+            # create final ordered parent_list based on parent_tree
+            parent_list = parent_tree.items()
+            parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]), reverse=True)
 
-        if mode != 'default':
-            exp_domain = domain + [('id', '<', min(ids)), ('id', 'not in', parent_ids), ('parent_id', 'not in', parent_ids)]
-            more_count = self.search_count(cr, uid, exp_domain, context=context)
-            if more_count:
-                parent_list.append({'type':'expandable',
-                                    'domain': exp_domain,
-                                    'nb_messages': more_count,
-                                    'parent_id': parent_id});
+            if mode != 'default':
+                exp_domain = domain + [('id', '<', min(ids)), ('id', 'not in', parent_ids), ('parent_id', 'not in', parent_ids)]
+                more_count = self.search_count(cr, uid, exp_domain, context=context)
+                if more_count:
+                    parent_list.append({'type':'expandable',
+                                        'domain': exp_domain,
+                                        'nb_messages': more_count,
+                                        'parent_id': parent_id});
 
-        nb_read = 0
-        if context and 'mail_read_set_read' in context and context['mail_read_set_read']: 
-            nb_read = self.set_message_read(cr, uid, ids, True, create_missing=False, context=context)    
+            nb_read = 0
+            if context and 'mail_read_set_read' in context and context['mail_read_set_read']: 
+                nb_read = self.set_message_read(cr, uid, ids, True, create_missing=False, context=context)   
+
+        else:
+            nb_read = 0
+            parent_list = [] 
 
         return {'nb_read': nb_read, 'threads': parent_list}
 

@@ -2,6 +2,7 @@ odoo.define('hr.suggestions', function (require) {
 "use strict";
 
 var mail = require('mail.mail');
+var web_timeline = require('web_timeline.mail');
 var core = require('web.core');
 var data = require('web.data');
 var Widget = require('web.Widget');
@@ -73,6 +74,14 @@ var Employees = Widget.extend({
 });
 
 mail.WallSidebar.include({
+    start: function () {
+        this._super.apply(this, arguments);
+        var sug_employees = new Employees(this);
+        return sug_employees.appendTo(this.$('.oe_suggestions_employees'));
+    },
+});
+
+web_timeline.Sidebar.include({
     start: function () {
         this._super.apply(this, arguments);
         var sug_employees = new Employees(this);

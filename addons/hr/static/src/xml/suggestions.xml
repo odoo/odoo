@@ -8,11 +8,17 @@
         </t>
     </t>
 
+    <t t-extend="TimelineSidebar">
+        <t t-jquery=".oe_tl_sidebar" t-operation="append">
+            <div class="oe_suggestions_employees"></div>
+        </t>
+    </t>
+
     <!-- Suggested employees -->
     <div t-name="hr.suggestions.employees" class="oe_sidebar_suggestion oe_suggestion_employee">
         <div class="oe_suggest_title">
             <i class="oe_suggestion_remove oe_suggestion_employee fa fa-remove"/>
-            <h2>Suggested Employees</h2>
+            <span>Suggested Employees</span>
         </div>
         <div class="oe_suggest_items">
             <t t-foreach="widget.employees" t-as="result">
@@ -26,7 +32,9 @@
                         <a class="oe_suggestion_item_name" t-attf-href="#model=hr.employee&amp;id=#{result.id}"><t t-esc="result.name"/></a>
                         <i class="oe_suggestion_remove_item oe_suggestion_employee fa fa-remove" t-att-id="result.id"/>
                         <br/>
-                        <button class="oe_suggestion_follow" t-att-id="result.id">Follow</button>
+                        <div class="btn-group btn-group-sm"> 
+                            <button type="button" class="btn btn-default oe_suggestion_follow" t-att-id="result.id">Follow</button>
+                        </div>
                     </div>
                 </div>
             </t>
