@@ -100,7 +100,7 @@ class account_payment(models.Model):
     def _compute_payment_difference(self):
         amount = 0
         if self.invoice_id:
-            if self.invoice_id.currency_id == self.currency_id:
+            if not self.currency_id or self.invoice_id.currency_id == self.currency_id:
                 amount = self.amount
             else:
                 amount = self.currency_id.with_context(date=self.date).compute(self.amount, self.invoice_id.currency_id)
@@ -112,6 +112,7 @@ class account_payment(models.Model):
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Transfer Money')], default='outbound', required=True)
     payment_method = fields.Many2one('account.payment.method', string='Payment Method', required=True)
     payment_state = fields.Selection([('todo', 'To Process'), ('done', 'Processed'), ('failed', 'Failed')], required=True, default="todo", copy=False)
+    payment_reference = fields.Char(copy=False, readonly=True, help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Supplier')], default='supplier')
     partner_id = fields.Many2one('res.partner', string='Partner')

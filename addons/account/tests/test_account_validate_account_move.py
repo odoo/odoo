@@ -33,7 +33,7 @@ class TestAccountValidateAccount(TestMail):
         self.assertTrue((move.state == 'draft'), "Initially account move state is Draft")
 
         # validate this account move by using the 'Post Journal Entries' wizard
-        validate_account_move = self.env['validate.account.move'].create({'journal_ids':[(6, 0, [journal.id])]})
+        validate_account_move = self.env['validate.account.move'].with_context(active_ids=move.id).create({})
                 
         #click on validate Button
         validate_account_move.validate_move();

@@ -17,7 +17,7 @@
             <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_be_balancesheet0'))"/>
             <field name="target">self</field>
         </record>
-        <menuitem id="menu_action_account_report_bebs" name="Bilan" action="action_account_report_bebs" parent="account.menu_finance_legal_statement"/>
+        <menuitem id="menu_action_account_report_bebs" name="Bilan" action="action_account_report_bebs" parent="account.menu_finance_reports"/>
 
         <record id="account_financial_report_be_actif0" model="account.financial.report.line">
             <field name="name">TOTAL DE L'ACTIF</field>
@@ -665,7 +665,7 @@
             <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_be_profitandloss0'))"/>
             <field name="target">self</field>
         </record>
-        <menuitem id="menu_action_account_report_bepnl" name="Compte des résultats" action="action_account_report_bepnl" parent="account.menu_finance_legal_statement"/>
+        <menuitem id="menu_action_account_report_bepnl" name="Compte des résultats" action="action_account_report_bepnl" parent="account.menu_finance_reports"/>
 
         <record id="account_financial_report_be_produits0" model="account.financial.report.line">
             <field name="name">Produits et charges d'exploitation</field>

@@ -92,7 +92,7 @@
         <menuitem groups="analytic.group_analytic_accounting"
             action="analytic.action_account_analytic_journal_open_form"
             id="account_analytic_journal_entries"
-            parent="menu_finance_entries"/>
+            parent="menu_finance_analytic"/>
             
         <record id="view_account_journal_1" model="ir.ui.view">
             <field name="name">account.journal.form.1</field>
@@ -107,7 +107,7 @@
         
         <menuitem
             name="Chart of Analytic Accounts"
-            parent="account.menu_finance_charts"
+            parent="account.menu_finance_analytic"
             action="analytic.action_account_analytic_chart"
             id="menu_action_analytic_account_tree2"
             icon="STOCK_INDENT"

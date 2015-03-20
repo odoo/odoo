@@ -70,9 +70,17 @@ openerp.account.journal_dashboard = function (instance)
                     .datum(data)
                     .transition().duration(1200)
                     .call(chart);
-                nv.utils.windowResize(function() { d3.select(self.svg).call(chart.width(self.$el.find('svg').width()).height(self.$el.find('svg').height())) });
+                nv.utils.windowResize(function() { d3.select(self.svg).call(chart.width(self.$el.find('svg').width()).height(self.$el.find('svg').height())); self.postprocess(); });
+                
             });
+            //ugly, need to do something else
+            setTimeout(function(){self.postprocess();},2000);
             
+            
+        },
+        postprocess: function(){
+            var low_rect = $(this.svg).find('rect').filter(function(){return $(this).attr('height') < 1.0 })
+            low_rect.attr('height', 1);
         },
     });
     instance.web_kanban.JournalDashboard = instance.web_kanban.AbstractField.extend({
