@@ -619,8 +619,9 @@ class BaseModel(object):
                            for newc in new_constraints)
             ]
 
-            sql_constraints = cls._sql_constraints + \
-                              parent_class._sql_constraints
+            sql_constraints = cls._sql_constraints + [c
+                              for c in parent_class._sql_constraints
+                              if c[0] not in map(operator.itemgetter(0), cls._sql_constraints)]
 
             attrs = {
                 '_name': name,
