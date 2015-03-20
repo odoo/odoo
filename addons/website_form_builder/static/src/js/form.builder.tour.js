@@ -9,7 +9,7 @@ var Session = require('web.Session');
 Tour.register({
     id:   'website_form_builder_tour',
     name: "Try to create some forms",
-    path: '/?debug',
+    path: '',
     mode: 'test',
     steps: [
 
