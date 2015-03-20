@@ -27,7 +27,9 @@
                         <a class="oe_suggestion_item_name" t-attf-href="#model=mail.group&amp;id=#{result.id}"><t t-esc="result.name"/></a>
                         <i class="oe_suggestion_remove_item oe_suggestion_group fa fa-remove" t-att-id="result.id"/>
                         <br/>
-                        <button t-att-id="result.id" class="oe_suggestion_join">Join Group</button>
+                        <div class="btn-group btn-group-sm"> 
+                            <button type="button" class="btn btn-default oe_suggestion_join" t-att-id="result.id">Join Group</button>
+                        </div>
                     </div>
                 </div>
             </t>
