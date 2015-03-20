@@ -105,7 +105,7 @@
                 "__module": "account",
                 "__model": "account.invoice.line",
                 "__id": "account:b33adf8a-decd-11f0-a4de-702a04e25700.account_invoice_line-1RP3so",
-                "uos_id": ["product:b33adf8a-decd-11f0-a4de-702a04e25700.product_uom_unit", "Unit"],
+                "uos_id": ["product:b33adf8a-decd-11f0-a4de-702a04e25700.product_uom_unit", "Unit(s)"],
                 "name": "PC Assemble SC234",
                 "price_unit": 10.0,
                 "product_id": ["product:b33adf8a-decd-11f0-a4de-702a04e25700.product_product_3", "[PCSC234] PC Assemble SC234"],
@@ -115,7 +115,7 @@
                 "__module": "account",
                 "__model": "account.invoice.line",
                 "__id": "account:b33adf8a-decd-11f0-a4de-702a04e25700.account_invoice_line-u2XV5",
-                "uos_id": ["product:b33adf8a-decd-11f0-a4de-702a04e25700.product_uom_unit", "Unit"],
+                "uos_id": ["product:b33adf8a-decd-11f0-a4de-702a04e25700.product_uom_unit", "Unit(s)"],
                 "name": "PC on Demand",
                 "price_unit": 100.0,
                 "product_id": ["product:b33adf8a-decd-11f0-a4de-702a04e25700.product_product_5", "[PC-DEM] PC on Demand"],
@@ -141,12 +141,12 @@
     assert len(invoice_new.invoice_line) == 2, "invoice lines are not same"
     for inv_line in invoice_new.invoice_line:
         if inv_line.name == 'PC Assemble SC234':
-            assert inv_line.uos_id.name == "Unit" , "uom is not same"
+            assert inv_line.uos_id.name == "Unit(s)" , "uom is not same"
             assert float_compare(inv_line.price_unit, 10, precision_digits=2) == 0, "price unit is not same"
             assert float_compare(inv_line.quantity, 1, precision_digits=2) == 0, "product qty is not same"
             assert float_compare(inv_line.price_subtotal, 10, precision_digits=2) == 0, "price sub total is not same"
         elif inv_line.name == 'PC on Demand':
-            assert inv_line.uos_id.name == "Unit" , "uom is not same"
+            assert inv_line.uos_id.name == "Unit(s)" , "uom is not same"
             assert float_compare(inv_line.price_unit, 100, precision_digits=2) == 0, "price unit is not same"
             assert float_compare(inv_line.quantity, 5, precision_digits=2) == 0, "product qty is not same"
             assert float_compare(inv_line.price_subtotal, 500, precision_digits=2) == 0, "price sub total is not same"
@@ -214,20 +214,20 @@
                 "__module": "account",
                 "__model": "account.invoice.line",
                 "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_line-1RP3so",
-                "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "PCE"], 
+                "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "Dozen(s)"],
                 "name": "Basic PC", 
                 "price_unit": 10.0, 
-                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc1", "[PC1] Basic PC"], 
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc1", "[PC1] Basic PC"],
                 "quantity": 1.0
         },
         {
                 "__module": "account",
                 "__model": "account.invoice.line",
                 "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_line-u2XV5",
-                "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "PCE"], 
+                "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "Dozen(s)"],
                 "name": "Medium PC", 
                 "price_unit": 100.0, 
-                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc3", "[PC3] Medium PC"], 
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc3", "[PC3] Medium PC"],
                 "quantity": 5.0
         }]
     }
@@ -250,12 +250,12 @@
     assert len(invoice_new.invoice_line) == 2, "invoice lines are not same"
     for inv_line in invoice_new.invoice_line:
         if inv_line.name == 'Basic PC':
-            assert inv_line.uos_id.name == "PCE" , "uom is not same"
+            assert inv_line.uos_id.name == "Dozen(s)" , "uom is not same"
             assert float_compare(inv_line.price_unit, 10, precision_digits=2) == 0, "price unit is not same"
             assert float_compare(inv_line.quantity, 1, precision_digits=2) == 0, "product qty is not same"
             assert float_compare(inv_line.price_subtotal, 10, precision_digits=2) == 0, "price sub total is not same"
         elif inv_line.name == 'Medium PC':
-            assert inv_line.uos_id.name == "PCE" , "uom is not same"
+            assert inv_line.uos_id.name == "Dozen(s)" , "uom is not same"
             assert float_compare(inv_line.price_unit, 100, precision_digits=2) == 0, "price unit is not same"
             assert float_compare(inv_line.quantity, 5, precision_digits=2) == 0, "product qty is not same"
             assert float_compare(inv_line.price_subtotal, 500, precision_digits=2) == 0, "price sub total is not same"

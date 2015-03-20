@@ -240,6 +240,9 @@
                         <page string="Products">
                             <field name="order_line">
                                 <tree string="Purchase Order Lines" editable="bottom">
+                                    <field name="th_weight" invisible="1"/>
+                                    <field name="real_weight" invisible="1"/>
+                                    <field name="th_volume" invisible="1"/>
                                     <field name="product_id"
                                            on_change="onchange_product_id(parent.pricelist_id, product_id, 0, False,
                                                 parent.partner_id, parent.date_order, parent.fiscal_position, date_planned,

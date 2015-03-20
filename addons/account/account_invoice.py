@@ -1224,6 +1224,16 @@ class account_invoice_line(models.Model):
         if self.invoice_id:
             self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
 
+    @api.one
+    @api.depends('product_id', 'uos_id', 'quantity')
+    def _compute_measure(self):
+        ProductUom = self.env['product.uom']
+        default_uom = self.product_id.uom_id and self.product_id.uom_id.id
+        total_qty = ProductUom._compute_qty(self.uos_id.id, self.quantity, default_uom)
+        self.th_weight = total_qty * self.product_id.weight
+        self.real_weight = total_qty * self.product_id.weight_net
+        self.th_volume = total_qty * self.product_id.volume
+
     @api.model
     def _default_price_unit(self):
         if not self._context.get('check_total'):
@@ -1286,6 +1296,9 @@ class account_invoice_line(models.Model):
         related='invoice_id.company_id', store=True, readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner',
         related='invoice_id.partner_id', store=True, readonly=True)
+    th_weight = fields.Float(string='Gross Weight', store=True, compute='_compute_measure')
+    real_weight = fields.Float(string='Net Weight', store=True, compute='_compute_measure')
+    th_volume = fields.Float(string='Gross Volume', store=True, compute='_compute_measure')
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

@@ -1012,6 +1012,9 @@ class purchase_order_line(osv.osv):
         'partner_id': fields.related('order_id', 'partner_id', string='Partner', readonly=True, type="many2one", relation="res.partner", store=True),
         'date_order': fields.related('order_id', 'date_order', string='Order Date', readonly=True, type="datetime"),
         'procurement_ids': fields.one2many('procurement.order', 'purchase_line_id', string='Associated procurements'),
+        'th_weight': fields.float('Gross Weight', readonly=True, states={'draft': [('readonly', False)]}),
+        'real_weight': fields.float('Net Weight', readonly=True, states={'draft': [('readonly', False)]}),
+        'th_volume': fields.float('Gross Volume', readonly=True, states={'draft': [('readonly', False)]}),
     }
     _defaults = {
         'product_uom' : _get_uom_id,
@@ -1085,7 +1088,7 @@ class purchase_order_line(osv.osv):
         if context is None:
             context = {}
 
-        res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
+        res = {'value': {'th_weight': 0, 'real_weight': 0, 'th_volume': 0, 'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
         if not product_id:
             return res
 
@@ -1151,7 +1154,14 @@ class purchase_order_line(osv.osv):
         qty = qty or 1.0
         res['value'].update({'date_planned': date_planned or dt})
         if qty:
-            res['value'].update({'product_qty': qty})
+            default_uom = product.uom_id and product.uom_id.id
+            total_qty = product_uom._compute_qty(cr, uid, uom_id, qty, default_uom)
+            res['value'].update({
+                'product_qty': qty,
+                'th_weight': total_qty * product.weight,
+                'real_weight': total_qty  * product.weight_net,
+                'th_volume': total_qty * product.volume
+            })
 
         price = price_unit
         if price_unit is False or price_unit is None:

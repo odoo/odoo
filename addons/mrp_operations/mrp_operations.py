@@ -61,6 +61,19 @@ class mrp_production_workcenter_line(osv.osv):
                     res[op.id] = op.date_planned
         return res
 
+    def _measure_calc(self, cr, uid, ids, field_name, arg, context=None):
+        product_uom = self.pool.get('product.uom')
+        result = {}
+        for work_order in self.browse(cr, uid, ids, context=context):
+            default_uom = work_order.product.uom_id and work_order.product.uom_id.id
+            total_qty = product_uom._compute_qty(cr, uid, work_order.uom.id, work_order.qty, default_uom)
+            result[work_order.id] = {
+                'th_weight': total_qty * work_order.product.weight,
+                'real_weight': total_qty * work_order.product.weight_net,
+                'th_volume': total_qty * work_order.product.volume,
+            }
+        return result
+
     def onchange_production_id(self, cr, uid, ids, production_id, context=None):
         if not production_id:
             return {}
@@ -95,6 +108,9 @@ class mrp_production_workcenter_line(osv.osv):
             readonly=True),
        'qty':fields.related('production_id','product_qty',type='float',string='Qty',readonly=True, store=True),
        'uom':fields.related('production_id','product_uom',type='many2one',relation='product.uom',string='Unit of Measure',readonly=True),
+       'th_weight': fields.function(_measure_calc, type='float', string='Gross Weight', multi=True, store=True),
+       'real_weight': fields.function(_measure_calc, type='float', string='Net Weight', multi=True, store=True),
+       'th_volume': fields.function(_measure_calc, type='float', string='Gross Volume', multi=True, store=True),
     }
 
     _defaults = {
