@@ -315,6 +315,7 @@ class Post(models.Model):
     can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
     can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
     can_view = fields.Boolean('Can View', compute='_get_post_karma_rights')
+    can_display_biography = fields.Boolean('Can userbiography of the author be viewed', compute='_get_post_karma_rights')
 
     @api.one
     def _get_post_karma_rights(self):
@@ -341,6 +342,7 @@ class Post(models.Model):
         self.can_comment = user.karma >= self.karma_comment
         self.can_comment_convert = user.karma >= self.karma_comment_convert
         self.can_view = user.karma >= self.karma_close or post.create_uid.karma > 0
+        self.can_display_biography = post.create_uid.karma >= self.forum_id.karma_user_bio
 
     @api.one
     @api.constrains('post_type', 'forum_id')

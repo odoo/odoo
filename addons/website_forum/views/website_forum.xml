@@ -810,8 +810,7 @@
         </div>
         <div class="question-block">
             <div class="pull-right author-box">
-                <div class="o_forum_user_bio_expand" t-if="tooltip_data and tooltip_data[answer.id]['is_established_user']">
-                    <t t-set="tooltip" t-value="tooltip_data[answer.id]"/>
+                <div class="o_forum_user_bio_expand" t-if="answer.can_display_biography">
                     <t t-call="website_forum.forum_user_tooltip"/>
                 </div>
                 <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }" class="o_forum_user_info">
@@ -901,18 +900,9 @@
                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                 style="display: inline-block;"/>
             </h4>
-            <span t-esc="tooltip['company']" class="o_forum_tooltip_line"/><br/>
-            <a t-att-href="tooltip['company_website']" t-if="tooltip['company_website']">
-                <span t-esc="tooltip['company_website']" class="o_forum_tooltip_line"/>
-            </a>
-            <div t-field="answer.create_uid" t-field-options='{"widget": "contact", "badges": true, "fields": ["karma"]}'/>
-            <div class="o_forum_tooltip_line" t-if="tooltip['country'] or tooltip['city']">
-                <span t-esc="tooltip['city']"/><span t-if="tooltip['city'] and tooltip['country']">, </span><span t-esc="tooltip['country']"/>
-            </div>
+            <span t-field="answer.create_uid" t-field-options='{"widget": "contact", "UserBio": true, "badges": true, "fields": ["karma"]}'/>
         </div>
-        <t t-if="tooltip['website_description']">
-            <span t-esc="tooltip['website_description']"/>
-        </t>
+        <div t-field="answer.create_uid" t-field-options='{"widget": "contact", "website_description": true, "fields": ["partner_id"]}'/>
     </div>
 </template>
 

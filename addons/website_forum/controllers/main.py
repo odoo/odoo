@@ -44,22 +44,6 @@ class WebsiteForum(http.Controller):
         values.update(kwargs)
         return values
 
-    def _prepare_toolitp_data(self, answers):
-        if answers:
-            data_tooltip = {}
-            for answer in answers:
-                data_tooltip[answer.id] = {
-                    'is_established_user': answer.create_uid.karma >= answer.forum_id.karma_user_bio,
-                    'company': answer.create_uid.company_id.name,
-                    'company_website': answer.create_uid.company_id.website,
-                    'city': answer.create_uid.partner_id.city,
-                    'country': answer.create_uid.partner_id.country_id.name,
-                    'website_description': tools.html2plaintext(answer.create_uid.partner_id.website_description),
-                }
-            return data_tooltip
-        else:
-            return False
-
     # User and validation
     # --------------------------------------------------
 
@@ -244,7 +228,6 @@ class WebsiteForum(http.Controller):
         values.update({
             'main_object': question,
             'question': question,
-            'tooltip_data': self._prepare_toolitp_data(question.sudo().child_ids),
             'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - datetime.strptime(question.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9),
             'header': {'question_data': True},
             'filters': filters,
