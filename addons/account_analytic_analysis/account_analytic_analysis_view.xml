@@ -372,7 +372,9 @@
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//div[@name="buttons"]' position='inside'>
-                    <button class="oe_inline oe_stat_button" string="Time &amp; Materials to Invoice"
+                    <button class="oe_inline oe_stat_button"
+                        string="To invoice"
+                        icon="fa-money"
                         name="%(action_hr_tree_invoiced_all)d"
                         type="action"
                         context="{'search_default_account_id': [active_id], 'default_account_id': active_id}"/>
