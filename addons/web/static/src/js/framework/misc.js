@@ -204,6 +204,7 @@ function ReloadContext (parent, action) {
 }
 core.action_registry.add("reload_context", ReloadContext);
 
+
 // nvd3 customization
 //-------------------------------------------------------------------------
 if ('nv' in window) {
@@ -322,9 +323,6 @@ $.extend( proto, {
     }
 });
 
-
-
-
 return {
     blockUI: blockUI,
     unblockUI: unblockUI,
@@ -339,3 +337,42 @@ odoo.define('web.session', function (require) {
     return new Session(undefined, undefined, {modules:modules});
 });
 
+odoo.define('web.IFrameWidget', function (require) {
+"use strict";
+
+var Widget = require('web.Widget');
+
+/**
+ * Generic widget to create an iframe that listens for clicks
+ *
+ * It should be extended by overwritting the methods:
+ *      init: function(parent) {
+ *          this._super(parent, <url_of_iframe>
+ *      },
+ *      iframe_clicked: function(e){
+ *          filter the clicks you want to use and apply
+ *          an action on it
+ *      }
+ */
+var IFrameWidget = Widget.extend({
+    tagName: 'iframe',
+    init: function(parent, url) {
+        this._super(parent);
+        this.url = url;
+    },
+    start: function() {
+        this.$el.css({height: '100%', width: '100%', border: 0});
+        this.$el.attr({src: this.url});
+        this.$el.on("load", this.bind_events.bind(this));
+        return this._super();
+    },
+    bind_events: function(){
+        this.$el.contents().click(this.iframe_clicked.bind(this));
+    },
+    iframe_clicked: function(e){
+    }
+});
+
+return IFrameWidget;
+
+});
