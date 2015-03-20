@@ -1,6 +1,4 @@
 /*global $, _, PDFSlidesViewer*/
-odoo.define('website_slides.slides_embed', function (require) {
-
 
 /**
 This file is a minimal version of the PDFViewer widget.
@@ -9,7 +7,6 @@ called when embedding a slide/video/document.
 This code can depend on pdf.js, JQuery and Bootstrap
 (see website_slides.slide_embed_assets bundle, in website_slides_embed.xml)
 **/
-
 $(document).ready(function () {
 
     if($('#PDFViewer') && $('#PDFViewerCanvas')){ // check if presentation only
@@ -198,4 +195,4 @@ $(document).ready(function () {
     }
 });
 
-});
+
