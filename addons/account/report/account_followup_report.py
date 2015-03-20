@@ -101,7 +101,7 @@ class report_account_followup_report(models.AbstractModel):
 
     @api.model
     def get_title(self):
-        return 'Followup Report'
+        return _('Followup Report')
 
     @api.model
     def get_name(self):
@@ -207,8 +207,8 @@ class account_report_context_followup(models.TransientModel):
 
     def get_columns_names(self):
         if self.env.context.get('public'):
-            return ['Date', 'Due Date', 'Total Due']
-        return ['Date', 'Due Date', 'Expected Date', 'Litigated', 'Total Due']
+            return [_('Date'), _('Due Date'), _('Total Due')]
+        return [_('Date'), _('Due Date'), _('Expected Date'), _('Litigated'), _('Total Due')]
 
     def get_pdf(self, log=False):
         bodies = []
@@ -243,7 +243,7 @@ class account_report_context_followup(models.TransientModel):
         email = self.env['res.partner'].browse(self.partner_id.address_get(['invoice'])['invoice']).email
         if email and email.strip():
             email_template = self.env['mail.template'].create({
-                'name': 'Followup ' + self.partner_id.name,
+                'name': _('Followup ') + self.partner_id.name,
                 'email_from': self.env.user.email or '',
                 'model_id': 1,
                 'subject': _('%s Payment Reminder') % self.env.user.company_id.name,
