@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <record id="share_step1_form_portal" model="ir.ui.view">
-            <field name="name">share.step1.form.portal.inherit</field>
+        <record id="inherited_share_wizard_view_step1_form_inherit_portal" model="ir.ui.view">
+            <field name="name">share.wizard.step1.form.inherit</field>
             <field name="model">share.wizard</field>
             <field name="inherit_id" ref="share.share_step1_form"/>
             <field name="arch" type="xml">
@@ -29,8 +29,8 @@
             </field>
         </record>
 
-        <record id="share_step2_form_portal" model="ir.ui.view">
-            <field name="name">share.step2.form.portal.inherit</field>
+        <record id="inherited_share_wizard_view_step2_form_inherit_portal" model="ir.ui.view">
+            <field name="name">share.wizard.step2.form.inherit</field>
             <field name="model">share.wizard</field>
             <field name="inherit_id" ref="share.share_step2_form"/>
             <field name="arch" type="xml">

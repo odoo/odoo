@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api, models, _
-from openerp import SUPERUSER_ID
+from openerp import api, models, SUPERUSER_ID, _
 
 class Mail(models.Model):
     """ Update of mail_mail class, to add the signin URL to notifications. """

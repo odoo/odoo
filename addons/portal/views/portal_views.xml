@@ -115,8 +115,8 @@
         <menuitem name="Projects" id="portal_projects" parent="portal_menu" sequence="40"/>
 
         <!-- extend res.groups search view -->
-        <record id="group_search_view" model="ir.ui.view">
-            <field name="name">Group Search</field>
+        <record id="inherited_view_groups_search_inherit_portal" model="ir.ui.view">
+            <field name="name">res.group.search.inherit</field>
             <field name="model">res.groups</field>
             <field name="inherit_id" ref="base.view_groups_search"/>
             <field name="arch" type="xml">
@@ -129,8 +129,8 @@
         </record>
 
         <!-- extend res.groups form view -->
-        <record id="group_form_view" model="ir.ui.view">
-            <field name="name">Portal Form</field>
+        <record id="inherited_view_groups_form_inherit_portal" model="ir.ui.view">
+            <field name="name">res.groups.form.inherit</field>
             <field name="model">res.groups</field>
             <field name="inherit_id" ref="base.view_groups_form"/>
             <field name="arch" type="xml">
