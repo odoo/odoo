@@ -56,9 +56,6 @@ Note that if you want to check the follow-up level for a given partner/account e
         'views/report_followup.xml',
     ],
     'demo': ['account_followup_demo.xml'],
-    'test': [
-        'test/account_followup.yml',
-    ],
     'installable': True,
     'auto_install': False,
 }
