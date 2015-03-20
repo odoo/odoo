@@ -86,7 +86,7 @@ class sale_order(osv.Model):
             attendees = Attendee.search(
                 cr, uid, [
                     ('state', '!=', 'cancel'),
-                    ('sale_order_id', '=', ids[0])
+                    ('sale_order_id', '=', ids[0]),
                     ('event_ticket_id', '=', ticket.id)
                 ], offset=new_qty, limit=(old_qty-new_qty),
                 order='create_date asc', context=context)
