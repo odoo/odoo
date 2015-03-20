@@ -21,7 +21,6 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <field name="name"/>
-                    <filter domain="[('state','=','draft')]" string="To Confirm"/>
                     <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter domain="[('state','=','validate')]" string="Validated" name="validated"/>
                     <separator/>
