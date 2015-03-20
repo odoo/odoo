@@ -1000,7 +1000,7 @@ odoo.define('web_timeline.mail', function (require) {
         bind_events: function () {
             var self = this;   
             var ev_stay = {};
-            ev_stay.mouseup = ev_stay.keydown = ev_stay.focus = function () { self.stay_open = false; };
+            ev_stay.mouseup = ev_stay.keydown = ev_stay.focus = function () {self.stay_open = false;};
             this.$('textarea').on(ev_stay);
             this.$('textarea').autosize();
         },
@@ -1121,9 +1121,9 @@ odoo.define('web_timeline.mail', function (require) {
             };
 
             if (log) 
-                values['subtype'] = false;
+                values.subtype = false;
             else 
-                values['subtype'] = 'mail.mt_comment';   
+                values.subtype = 'mail.mt_comment';   
             
             this.parent_thread.ds_thread._model.call('message_post', [this.context.default_res_id], values)
                 .done(function (message_id) {
@@ -1258,7 +1258,7 @@ odoo.define('web_timeline.mail', function (require) {
                     'mail_post_autofollow': true,
                     'mail_post_autofollow_partner_ids': partner_ids,
                     'is_private': self.is_private,
-                    'default_attachment_ids': _.map(self.attachment_ids, function (file) { return file.id; }),
+                    'default_attachment_ids': _.map(self.attachment_ids, function (file) {return file.id;}),
                 };
 
                 if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
