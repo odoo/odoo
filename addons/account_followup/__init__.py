@@ -21,6 +21,4 @@
 
 import account_followup
 import account_followup_report
-import wizard
-import report
 import controllers

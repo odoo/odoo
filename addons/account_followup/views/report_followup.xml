@@ -12,6 +12,9 @@
     </xpath>
 </template>
 <template id='report_followup' inherit_id='account.report_followup'>
+    <xpath expr="//div[@class='alert alert-warning']" position='attributes'>
+        <attribute name='t-if'>context and context.partner_id.id not in context.env['res.partner'].get_partners_in_need_of_action().keys()</attribute>
+    </xpath>
     <xpath expr="//script[@id='oe-account-inline-script']" position='replace'>
         <script type="text/javascript" src="/account_followup/static/src/js/account_report_widgets.js"></script>
         <script type="text/javascript" id='oe-account-inline-script'>
@@ -44,7 +47,7 @@
         </span>
     </xpath>
     <xpath expr="//div[@id='action-buttons']" position='replace'>
-        <div id='action-buttons' t-if="mode != 'print'" style='text-align: right;' class='col-sm-7'>
+        <div id='action-buttons' t-if="mode != 'print'" style='text-align: right;' class='col-sm-6'>
             <a type="button" class="btn btn-default followup-skip" t-att-partner="str(context.partner_id.id)">Skip</a>
             <a t-if='context.level.send_letter' type="button" class="btn btn-primary followup-letter" t-att-context="str(context.id)" t-att-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'">Print Letter</a>
             <a t-if='not context.level.send_letter' type="button" class="btn btn-default followup-letter" t-att-context="str(context.id)" t-att-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'">Print Letter</a>
@@ -54,59 +57,5 @@
         </div>
     </xpath>
 </template>
-<!-- <template id="report_followup">
-    <t t-call="report.html_container">
-        <t t-foreach="ids_to_objects(data['form']['partner_ids'])" t-as="o">
-            <t t-esc="setLang(o.partner_id.lang)"/>
-            <t t-call="report.external_layout">
-                <div class="page">
-                    <div class="row">
-                        <div class="col-xs-5 col-xs-offset-7">
-                            <div t-field="o.partner_id" 
-                                t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
-                             <span t-field="o.partner_id.vat"/>
-                        </div>
-                    </div>
-
-                    <p>
-                        Document: Customer account statement<br/>
-                        Date: <span t-esc="formatLang(data['form']['date'], date=True)"/><br/>
-                        Customer ref: <span t-field="o.partner_id.ref"/>
-                    </p>
-
-                    <p t-raw="get_text(o,data['form']['followup_id']).replace('\n', '&lt;br&gt;')"/>
-
-                    <t t-foreach="getLines(o)" t-as="cur_lines">
-                        <table class="table table-condensed" style="margin-top: 50px;">
-                            <thead>
-                                <tr>
-                                    <th>Invoice Date</th>
-                                    <th>Description</th>
-                                    <th class="text-center">Ref</th>
-                                    <th class="text-center">Maturity Date</th>
-                                    <th class="text-right">Amount</th>
-                                    <th class="text-center">Li.</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="cur_lines['line']" t-as="line">
-                                    <td><span t-esc="formatLang(line['date'],date = True)"/></td>
-                                    <td><span t-esc="line['name']"/></td>
-                                    <td><span t-esc="line['ref']"/></td>
-                                    <td class="text-center"><span t-esc="line['date_maturity'] and formatLang(line['date_maturity'], date=True)"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['balance'], currency_obj=line['currency_id'])"/></td>
-                                    <td><span t-esc="line['blocked'] and 'X' or ''"/></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <t t-set="total" t-value="reduce(lambda x,y: x+y['balance'], cur_lines['line'], 0.00)"/>
-                        <p>Total: <span t-esc="formatLang(total, currency_obj=cur_lines['currency'])"/></p>
-                    </t>
-            </div>
-            </t>
-        </t>
-    </t>
-</template> -->
 </data>
 </openerp>
