@@ -9,6 +9,7 @@
                     <field name="id"/>
                     <field name="name"/>
                     <field name="type"/>
+                    <field name="show_on_dashboard"/>
                     <!-- <field name="kanban_graph"/> -->
                     <field name="kanban_dashboard"/>
                     <templates>
@@ -16,7 +17,6 @@
                             <field name="show_on_dashboard" widget="dashboard_journal"/>
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                             <t t-value="record.type.raw_value" t-set="journal_type"/>
-                            <!-- <t t-value="dashboard.draft_invoice_amount or dashboard.overdue_invoice_amount or dashboard.todo_payment_amount or dashboard.paid_invoice_amount" t-set="is_invoice_stats"/> -->
                             <div class="panel panel-default oe_semantic_html_override">
                                 <div class="panel-heading dashboard-journal-head">
                                     <t t-call="JournalTop" />
@@ -185,7 +185,8 @@
                                                     </t>
 
                                                     <li class="divider"></li>
-                                                    <li class="dashboard-align-right"><a type="edit">Settings</a></li>
+                                                    <li>
+                                                        <span><a type="object" name="toggle_favorite"><i t-att-class="(record.show_on_dashboard.raw_value ? 'oe_star_on' : 'oe_star_off') + ' fa fa-star dashboard-star'" title="Click to add/remove from favorite"></i></a></span><span class="pull-right"><a type="edit">Settings</a></span></li>
                                                 </ul>
                                         </div>
                                     </div>
@@ -208,11 +209,12 @@
                             <div class="col-md-6">
                                 <table class="pull-right table-condensed" style="margin-bottom:28px;">
                                     <tr>
-                                        <td class="journal-dashboard-text-right">Account Balance:</td>
-                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.last_balance"></span> €</td>
+                                        <td class="journal-dashboard-text-right">Statement balance:</td>
+                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.last_balance"></span></td>
                                     </tr>
                                     <tr>
-                                        <td class="journal-dashboard-text-right">Open statements:</td>
+                                        <td class="journal-dashboard-text-right">Account balance:</td>
+                                        <!-- (account.default_debit.balance) -->
                                         <td class="journal-dashboard-text-right"><span t-esc="dashboard.number_statement"></span></td>
                                     </tr>
                                 </table>
@@ -232,18 +234,18 @@
                                         <t t-if="journal_type == 'sale'"> draft invoices</t>
                                         <t t-if="journal_type == 'purchase'"> draft bills</t>
                                         </span></a></td>
-                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.sum_draft"></span> €</td>
+                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.sum_draft"></span></td>
                                     </tr>
                                     <tr>
                                         <td class="journal-dashboard-text-right"><a type="object" name="open_action" context="{'search_default_unpaid': '1'}"><span><span t-esc="dashboard.number_waiting"></span>
                                         <t t-if="journal_type == 'sale'"> awaiting payments</t>
                                         <t t-if="journal_type == 'purchase'"> payments to do</t>
                                         </span></a></td>
-                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.sum_waiting"></span> €</td>
+                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.sum_waiting"></span></td>
                                     </tr>
                                     <tr>
                                         <td class="journal-dashboard-text-right"><a type="object" name="open_action" context="{'search_default_late': '1'}"><span><span t-esc="dashboard.number_late"></span> overdue</span></a></td>
-                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.sum_late"></span> €</td>
+                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.sum_late"></span></td>
                                     </tr>
                                 </table>
                             </div>

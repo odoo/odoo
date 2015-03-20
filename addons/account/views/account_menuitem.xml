@@ -15,13 +15,9 @@
         <menuitem id="menu_finance_analytic" name="Analytic" parent="menu_finance" groups="account.group_account_user" sequence="9"/>
         <menuitem id="menu_asset_budget" name="Misc Assets/Bugets" parent="menu_finance" sequence="7"/>
         <menuitem id="menu_finance_reporting" name="Accounting" parent="base.menu_reporting" sequence="35"/>
-        <menuitem id="menu_finance_reporting_budgets" name="Budgets" parent="menu_finance_reporting" groups="group_account_user" sequence="8"/>
         <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="10" groups="group_account_user,group_account_manager"/>
-        <menuitem id="menu_finance_management_belgian_reports" name="Belgian Reports" parent="menu_finance_reporting"/>
         <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="15" groups="group_account_manager"/>
         <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting" sequence="5"/>
-
-        <menuitem id="menu_analytic" parent="menu_analytic_accounting" name="Account" groups="analytic.group_analytic_accounting"/>
         <menuitem id="menu_configuration_recurrent_entries" name="Reccuring Entries" parent="menu_finance_configuration" sequence="54"/>
         <menuitem id="menu_config_multi_currency" name="Multi-Currencies" parent="menu_finance_configuration" sequence="9" groups="base.group_multi_currency"/>
         <menuitem id="menu_config_template" name="Templates" parent="menu_finance_configuration" sequence="10" groups="base.group_no_one"/>
@@ -31,7 +27,6 @@
 
         <menuitem id="account_account_menu" name="Accounting" parent="account.menu_finance_configuration" sequence="2" groups="group_account_manager"/>
         <menuitem id="account_management_menu" name="Management" parent="account.menu_finance_configuration" sequence="3" groups="group_account_manager"/>
-        <menuitem id="menu_account_reports" name="Reports" parent="account.account_account_menu" sequence="400" />
 
     </data>
 </openerp>

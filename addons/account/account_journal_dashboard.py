@@ -5,6 +5,7 @@ from babel.dates import format_datetime, format_date
 from dateutil.relativedelta import relativedelta
 
 from openerp import models, api, _, fields
+from openerp.report import report_sxw
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 class account_journal(models.Model):
@@ -24,6 +25,11 @@ class account_journal(models.Model):
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=False)
+
+    @api.multi
+    def toggle_favorite(self):
+        self.write({'show_on_dashboard': False if self.show_on_dashboard else True})
+        return False
 
     @api.multi
     def get_line_graph_datas(self):
@@ -113,6 +119,7 @@ class account_journal(models.Model):
 
     @api.multi
     def get_journal_dashboard_datas(self):
+        rml_parser = report_sxw.rml_parse(self._cr, self._uid, 'journal_dashboard', context=self._context)
         number_to_reconcile = last_balance = 0
         ac_bnk_stmt = []
         number_draft = number_waiting = number_late = sum_draft = sum_waiting = sum_late = 0
@@ -141,13 +148,13 @@ class account_journal(models.Model):
         return {
             'number_to_reconcile': number_to_reconcile,
             'number_statement': len(ac_bnk_stmt),
-            'last_balance': last_balance,
+            'last_balance': rml_parser.formatLang(last_balance, currency_obj=self.currency or self.company_id.currency_id),
             'number_draft': number_draft,
             'number_waiting': number_waiting,
             'number_late': number_late,
-            'sum_draft': sum_draft,
-            'sum_waiting': sum_waiting,
-            'sum_late': sum_late,
+            'sum_draft': rml_parser.formatLang(sum_draft, currency_obj=self.currency or self.company_id.currency_id),
+            'sum_waiting': rml_parser.formatLang(sum_waiting, currency_obj=self.currency or self.company_id.currency_id),
+            'sum_late': rml_parser.formatLang(sum_late, currency_obj=self.currency or self.company_id.currency_id),
             'currency_id': self.currency and self.currency.id or self.company_id.currency_id.id,
             'show_import': True if self.type in ['bank', 'cash'] and len(ac_bnk_stmt) == 0 and last_balance == 0 else False,
         	}
