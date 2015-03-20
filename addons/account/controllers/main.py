@@ -102,7 +102,7 @@ class FinancialReportController(http.Controller):
         if context_all_id.valuemax != context_all_id.valuenow + len(partners):
             context_all_id.write({'valuemax': context_all_id.valuenow + len(partners)})
         if context_all_id.partner_filter == 'all':
-            partners = request.env['res.partner'].get_partners_with_overdue()
+            partners = request.env['res.partner'].get_partners_in_need_of_action(overdue_only=True)
         for partner in partners[((page - 1) * 3):(page * 3)]:
             context_id = context_obj.sudo(uid).search([('partner_id', '=', partner.id)], limit=1)
             if not context_id:

@@ -269,20 +269,11 @@ class ResPartner(models.Model):
     def mark_as_reconciled(self):
         return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
-    def get_partners_in_need_of_action(self):
+    def get_partners_in_need_of_action(self, overdue_only=False):
         result = self.ids
         today = fields.Date.context_today(self)
         partners = self.search(['|', ('payment_next_action_date', '=', False), ('payment_next_action_date', '<=', today)])
-        domain = partners.get_followup_lines_domain(today, only_unblocked=True)
-        for line in self.env['account.move.line'].read_group(domain, ['partner_id'], ['partner_id']):
-            result.append(line['partner_id'][0])
-        return self.browse(result)
-
-    def get_partners_with_overdue(self):
-        result = self.ids
-        today = fields.Date.context_today(self)
-        partners = self.search(['|', ('payment_next_action_date', '=', False), ('payment_next_action_date', '<=', today)])
-        domain = partners.get_followup_lines_domain(today, overdue_only=True, only_unblocked=True)
+        domain = partners.get_followup_lines_domain(today, overdue_only=overdue_only, only_unblocked=True)
         for line in self.env['account.move.line'].read_group(domain, ['partner_id'], ['partner_id']):
             result.append(line['partner_id'][0])
         return self.browse(result)
