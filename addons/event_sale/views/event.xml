@@ -56,7 +56,7 @@
                                     <field name="auto_confirm" invisible="1"/>
                                     <field name="seats_min" attrs="{'invisible':[('auto_confirm','=', True)]}"/>
                                     <field name="seats_availability" widget='radio'/>
-                                    <field name="seats_max" attrs="{'invisible':[('seats_availability','=','unlimited')]}"/>
+                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
                                 </group>
                             </group>
                             <field name="event_ticket_ids" context="{'default_name': name}">
