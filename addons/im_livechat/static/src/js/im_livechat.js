@@ -2,12 +2,12 @@ odoo.define('im_livechat.im_livechat', function (require) {
 "use strict";
 
 var bus = require('bus.bus');
-var im_chat = require('im_chat.im_chat');
 var core = require('web.core');
-var session = require('web.session');
+var user_session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var im_chat_common = require('im_chat.im_chat_common');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -19,15 +19,11 @@ var COOKIE_NAME = 'livechat_conversation';
 The state of anonymous session is hold by the client and not the server.
 Override the method managing the state of normal conversation.
 */
-im_chat.Conversation.include({
+im_chat_common.Conversation.include({
     init: function(){
         this._super.apply(this, arguments);
         this.shown = true;
-        this.loading_history = true; // since the session is kept after a refresh, anonymous can reload their history
         this.feedback = false;
-    },
-    define_options: function(){
-        // no options for anonymous user
     },
     show: function(){
         this._super.apply(this, arguments);
@@ -37,7 +33,8 @@ im_chat.Conversation.include({
         this._super.apply(this, arguments);
         this.shown = false;
     },
-    update_fold_state: function(state){
+    session_update_state: function(state){
+        // set manually the new state
         if(state === 'closed'){
             this.destroy();
         }else{
@@ -53,10 +50,9 @@ im_chat.Conversation.include({
                 }
             }
         }
-        var session = this.get('session');
-        session.state = state;
-        this.set('session', session);
-        session.set_cookie(COOKIE_NAME, JSON.stringify(session), 60*60);
+        // session and cookie update
+        this._super(state);
+        utils.set_cookie(COOKIE_NAME, JSON.stringify(this.get('session')), 60*60);
     },
     click_close: function(event) {
         if(!this.feedback && (this.get('messages').length > 1)){
@@ -68,20 +64,21 @@ im_chat.Conversation.include({
             this.feedback.on("feedback_sent", this, this.click_close);
         }else{
             this._super.apply(this, arguments);
-            session.set_cookie(COOKIE_NAME, "", -1);
+            utils.set_cookie(COOKIE_NAME, "", -1);
         }
     },
 });
 
 // To avoid exeption when the anonymous has close his
 // conversation and when operator send him a message.
-im_chat.ConversationManager.include({
-    received_message: function(message) {
+im_chat_common.ConversationManager.include({
+    message_receive: function(message) {
         try{
             this._super(message);
         }catch(e){}
     }
 });
+
 
 var LiveSupport = Widget.extend({
     init: function(server_url, db, channel, options, rule) {
@@ -93,11 +90,11 @@ var LiveSupport = Widget.extend({
             defaultMessage: _t("How may I help you?"),
             defaultUsername: _t("Visitor"),
         });
-        session.setup(server_url, {use_cors: false});
+        user_session.setup(server_url, {use_cors: false});
         this.load_template(db, channel, options, rule);
     },
     _get_template_list: function(){
-        return ['/im_live_chat/static/src/xml/im_live_chat.xml', '/im_chat/static/src/xml/im_chat.xml'];
+        return ['/im_livechat/static/src/xml/im_livechat.xml', '/im_chat/static/src/xml/im_chat.xml'];
     },
     load_template: function(db, channel, options, rule){
         var self = this;
@@ -105,7 +102,7 @@ var LiveSupport = Widget.extend({
         var defs = [];
         var templates = this._get_template_list();
         _.each(templates, function(tmpl){
-            defs.push(session.rpc('/web/proxy/load', {path: tmpl}).then(function(xml) {
+            defs.push(user_session.rpc('/web/proxy/load', {path: tmpl}).then(function(xml) {
                 QWeb.add_template(xml);
             }));
         });
@@ -119,7 +116,7 @@ var LiveSupport = Widget.extend({
         if(cookie){
             self.build_button(channel, options, JSON.parse(cookie), rule);
         }else{
-            session.rpc("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
+            user_session.rpc("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
                 if(activated){
                     self.build_button(channel, options, false, rule);
                 }
@@ -154,11 +151,8 @@ var ChatButton = Widget.extend({
     start: function() {
         this.$().append(QWeb.render("im_livechat.chatButton", {widget: this}));
         // set up the manager
-        this.manager = new im_chat.ConversationManager(this, this.options);
+        this.manager = new im_chat_common.ConversationManager(this, this.options);
         this.manager.set("bottom_offset", $('.oe_chat_button').outerHeight());
-        this.manager.notification = function(notif){ // override the notification default function
-            alert(notif);
-        };
         if(this.session){
             this.set_conversation(this.session);
         }
@@ -166,17 +160,17 @@ var ChatButton = Widget.extend({
     click: function() {
         var self = this;
         if (!this.conv){
-            session.rpc("/im_livechat/get_session", {
-                "channel_id" : self.channel, 
+            user_session.rpc("/im_livechat/get_session", {
+                "channel_id" : self.channel,
                 "anonymous_name" : this.options.defaultUsername
             }, {shadow: true}).then(function(session) {
                 if (! session) {
-                    self.manager.notification(self.no_session_message);
+                    alert(self.no_session_message);
                     return;
                 }
                 session.state = 'open';
                 // save the session in a cookie
-                session.set_cookie(COOKIE_NAME, JSON.stringify(session), 60*60);
+                utils.set_cookie(COOKIE_NAME, JSON.stringify(session), 60*60);
                 // create the conversation with the received session
                 self.set_conversation(session, true);
             });
@@ -188,7 +182,7 @@ var ChatButton = Widget.extend({
         if(session.state === 'closed'){
             return;
         }
-        this.conv = this.manager.apply_session(session);
+        this.conv = this.manager.session_apply(session);
         this.conv.on("destroyed", this, function() {
             bus.bus.stop_polling();
             delete self.conv;
@@ -207,7 +201,7 @@ var ChatButton = Widget.extend({
         if(this.session.users.length > 0){
             if (self.options.defaultMessage) {
                 setTimeout(function(){
-                    self.conv.received_message({
+                    self.conv.message_receive({
                         id : 1,
                         type: "message",
                         message: self.options.defaultMessage,
@@ -229,7 +223,7 @@ var Feedback = Widget.extend({
         this.conversation = parent;
         this.reason = false;
         this.rating = false;
-        this.server_origin = session.origin;
+        this.server_origin = user_session.origin;
     },
     start: function(){
         this._super.apply(this.arguments);
@@ -263,7 +257,7 @@ var Feedback = Widget.extend({
     _send_feedback: function(close){
         var self = this;
         var uuid = this.conversation.get('session').uuid;
-        return session.rpc("/rating/livechat/feedback", {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
+        return user_session.rpc("/rating/livechat/feedback", {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
             if(close){
                 self.trigger("feedback_sent"); // will close the conversation
             }

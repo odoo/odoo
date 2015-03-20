@@ -96,9 +96,36 @@
             <!-- OpenERP minimal lib -->
             <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
+            <!-- jQuery -->
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.timeago/jquery.timeago.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+
+            <!-- Qweb2 lib -->
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+            <!-- Odoo JS Framework -->
+            <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/class.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/translation.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/ajax.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/time.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/mixins.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/widget.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/registry.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/session.js"></script>
+            <!--<script type="text/javascript" src="/web/static/src/js/framework/model.js"></script>-->
+            <script type="text/javascript" src="/web/static/src/js/framework/utils.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/core.js"></script>
+
+            <script type="text/javascript">
+                odoo.define('web.session', function (require) {
+                    var Session = require('web.Session');
+                    var modules = odoo._modules;
+                    return new Session(undefined, undefined, {modules:modules});
+                });
+            </script>
+
             <!-- add the internal lib -->
             <t t-call="im_livechat.internal_lib"/>
         </template>
@@ -109,7 +136,7 @@
             <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
             <!-- IM module -->
             <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
-            <script type="text/javascript" src="/im_chat/static/src/js/im_chat.js"></script>
+            <script type="text/javascript" src="/im_chat/static/src/js/im_chat_common.js"></script>
             <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
             <!-- CSS -->
             <link rel="stylesheet" href="/im_chat/static/src/css/im_common.css"></link>
@@ -118,23 +145,25 @@
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Javascript initializing the LiveSupport">
-            odoo.define('im_livechat.livesupport', function (require) {
-                var im_livechat = require('im_livechat.im_livechat');
-                window.livesupport = new im_livechat.LiveSupport(
-                    "<t t-esc="url"/>",
-                    "<t t-esc="dbname"/>",
-                    <t t-esc="channel"/>,
-                    {
-                        buttonText: "<t t-esc="buttonText"/>",
-                        inputPlaceholder: "<t t-esc="inputPlaceholder"/>",
-                        defaultMessage: "<t t-esc="defaultMessage"/>" || '',
-                        auto: window.oe_im_livechat_auto || false,
-                        defaultUsername: "<t t-esc="username"/>" || undefined,
-                    },
-                    <t t-raw="rule"/>
-                );
+            $(function() {
+                odoo.define('im_livechat.livesupport', function (require) {
+                    var im_livechat = require('im_livechat.im_livechat');
+                    window.livesupport = new im_livechat.LiveSupport(
+                        "<t t-esc="url"/>",
+                        "<t t-esc="dbname"/>",
+                        <t t-esc="channel"/>,
+                        {
+                            buttonText: "<t t-esc="buttonText"/>",
+                            inputPlaceholder: "<t t-esc="inputPlaceholder"/>",
+                            defaultMessage: "<t t-esc="defaultMessage"/>" || '',
+                            auto: window.oe_im_livechat_auto || false,
+                            defaultUsername: "<t t-esc="username"/>" || undefined,
+                        },
+                        <t t-raw="rule"/>
+                    );
+                });
+                odoo.init();
             });
-                
         </template>
 
     </data>

@@ -64,67 +64,63 @@
 .oe_im_chatview.oe_im_chatview_disconnected_status .oe_im_chatview_disconnected {
     display: block;
 }
-.oe_im_chatview .oe_im_chatview_header {
+
+
+
+/* ####### Chat View : Header ####### */
+.oe_im_chatview_header {
     padding: 3px 6px 2px;
     background: #DEDEDE;
     background: -moz-linear-gradient(#FCFCFC, #DEDEDE);
     background: -webkit-gradient(linear, left top, left bottom, from(#FCFCFC), to(#DEDEDE));
+    border-radius: 3px 3px 0 0;
     -moz-border-radius: 3px 3px 0 0;
     -webkit-border-radius: 3px 3px 0 0;
-    border-radius: 3px 3px 0 0;
     border-bottom: 1px solid #AEB9BD;
     cursor: pointer;
 }
 
-.oe_im_chatview .oe_im_chatview_header_name{
+.oe_im_chatview_header .header_name{
     max-width: 75%;
     word-wrap: break-word;
     display: inline-block;
     height: 15px;
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.oe_im_chatview .oe_im_chatview_right {
-    padding: 0;
-    background: transparent;
-    border: 0;
+
+.oe_im_chatview_header .right_buttons {
     float: right;
+}
+.oe_im_chatview_header .right_buttons > * {
+    display: inline-block;
+    border: 0;
+    cursor: pointer;
     color: gray ;
+    background: transparent;
+    font-size: 16px;
+    line-height: 16px;
+    margin-left: 5px;
+    -webkit-appearance: none;
 }
 
-/* options */
-.oe_im_chatview .oe_im_chatview_option_group{
-    z-index: 10;
-}
-.oe_im_chatview .oe_im_chatview_option_list{
+.oe_im_chatview_header .right_buttons .dropdown-menu{
     right: 0;
     left: auto;
 }
-.oe_im_chatview .oe_im_chatview_option_list li{
+.oe_im_chatview_header .right_buttons .dropdown-menu > li{
     display: block;
     padding: 3px 20px;
     clear: both;
     font-weight: normal;
     line-height: 1.428571429;
-    color: #333;
+    color: #4c4c4c;
     white-space: nowrap;
 }
 
-.oe_im_chatview .oe_im_chatview_right div, .oe_im_chatview .oe_im_chatview_right button{
-    cursor: pointer;
-    background: transparent;
-    border: 0;
-    margin-left: 5px;
-    -webkit-appearance: none;
-    font-size: 18px;
-    line-height: 16px;
-    font-weight: bold;
-    text-shadow: 0 1px 0 white;
-    opacity: 0.9;
-    display: inline-block;
-}
+
+
 .oe_im_chatview .oe_im_chatview_content {
     overflow: auto;
     height: 287px;
