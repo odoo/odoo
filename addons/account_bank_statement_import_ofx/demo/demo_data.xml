@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="ofx_bank_journal" model="account.journal">
+            <field name="name">Bank Journal - (test ofx)</field>
+            <field name="code">TBNKOFX</field>
+            <field name="type">bank</field>
+            <field name="sequence_id" ref="account.sequence_bank_journal"/>
+            <field name="default_debit_account_id" ref="account.usd_bnk"/>
+            <field name="default_credit_account_id" ref="account.usd_bnk"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="currency" ref="base.USD"/>
+        </record>
+
+        <record id="ofx_company_bank" model="res.partner.bank">
+            <field name="owner_name">Your Company</field>
+            <field name="acc_number">123456</field>
+            <field name="partner_id" ref="base.partner_root"></field>
+            <field name="company_id" ref="base.main_company"></field>
+            <field name="journal_id" ref="ofx_bank_journal"></field>
+            <field name="state">bank</field>
+            <field name="bank" ref="base.res_bank_1"/>
+        </record>
+    </data>
+
+</openerp>
