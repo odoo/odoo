@@ -115,6 +115,12 @@ odoo.define('web_timeline.mail', function (require) {
             this.has_been_loaded = $.Deferred();
         },
 
+        start: function () {
+            this._super.apply(this, arguments);
+            var wall_sidebar = new Sidebar(this);
+            wall_sidebar.appendTo(this.$('.oe_tl_inbox_aside'));
+        },
+
         view_loading: function (fields_view_get) {
             return this.load_timeline(fields_view_get);
         },
@@ -126,9 +132,6 @@ odoo.define('web_timeline.mail', function (require) {
             this.fields_keys = _.keys(this.fields_view.fields);
     
             this.add_qweb_template(); 
-
-            var wall_sidebar = new Sidebar(this);
-            wall_sidebar.appendTo(this.$('.oe_tl_inbox_aside'));
 
             if (this.options.$buttons) {
                 this.$buttons = $(QWeb.render("TimelineView.buttons", {'widget': this}));

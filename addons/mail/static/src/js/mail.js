@@ -1962,7 +1962,7 @@ core.action_registry.add('mail.wall', MailWall);
  *
  * Add a link on the top user bar for write a full mail
  */
-var ComposeMessageTopButton = Widget.extend({
+/*var ComposeMessageTopButton = Widget.extend({
     template:'mail.compose_message_top_button',
     events: {
         "click": "on_compose_message",
@@ -1983,7 +1983,7 @@ var ComposeMessageTopButton = Widget.extend({
 });
 
 // Put the ComposeMessageTopButton widget in the systray menu
-SystrayMenu.Items.push(ComposeMessageTopButton);
+SystrayMenu.Items.push(ComposeMessageTopButton);*/
 
 return {
     Thread: Thread,

@@ -1960,7 +1960,7 @@ class mail_thread(osv.AbstractModel):
             user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
             if any(group.is_portal for group in user.groups_id):
                 return []
-
+        
         threads = []
         if removed_suggested_threads is None:
             removed_suggested_threads = []
