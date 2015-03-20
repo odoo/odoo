@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api, tools
+from openerp import models, fields, api
+from openerp.tools.translate import _
 import time
 
 
@@ -32,7 +33,7 @@ class account_report_context_followup(models.TransientModel):
     @api.multi
     def do_manual_action(self):
         for context in self:
-            msg = 'Manual action done :\n' + context.level.manual_action_note
+            msg = fields.Date.context_today(self) + _(': Manual action done\n') + context.level.manual_action_note
             context.partner_id.message_post(body=msg, subtype='account.followup_logged_action')
 
     def create(self, vals):
