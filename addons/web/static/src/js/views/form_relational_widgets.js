@@ -299,9 +299,9 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             minLength: 0,
             delay: 200,
         });
-        var appendTo = this.$input.parents('.oe-view-manager-content, .modal-dialog').last();
+        var appendTo = this.$input.parents('.oe-view-manager-content:visible, .modal-dialog:visible').last();
         if (appendTo.length === 0) {
-            appendTo = '.oe_application > *';
+            appendTo = '.oe_application > *:visible:last';
         }
         this.$input.autocomplete({
             appendTo: appendTo

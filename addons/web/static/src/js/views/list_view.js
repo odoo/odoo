@@ -1944,7 +1944,7 @@ var ColumnBinary = Column.extend({
             text = _.str.sprintf(_t("Download \"%s\""), formats.format_value(
                     row_data[this.filename].value, {type: 'char'}));
         }
-        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)', {
+        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)')({
             text: text,
             href: download_url,
             size: utils.binary_to_binsize(value),
@@ -1975,7 +1975,7 @@ var ColumnProgressBar = Column.extend({
      */
     _format: function (row_data, options) {
         return _.template(
-            '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
+            '<progress value="<%-value%>" max="100"><%-value%>%</progress>')({
                 value: _.str.sprintf("%.0f", row_data[this.id].value || 0)
             });
     }
@@ -2051,7 +2051,7 @@ var ColumnUrl = Column.extend({
         var value = row_data[this.id].value;
 
         if (value) {
-            return _.template("<a href='<%-href%>' target='_blank'><%-text%></a>", {
+            return _.template("<a href='<%-href%>' target='_blank'><%-text%></a>")({
                 href: value.trim().replace(this.PROTOCOL_REGEX, '//'),
                 text: value
             });

@@ -1872,7 +1872,10 @@ var MailWall = Widget.extend({
     load_searchview: function (defaults) {
         var self = this,
             ds_msg = new data.DataSetSearch(this, 'mail.message'),
-            options = { $buttons: this.$('.oe-search-options') };
+            options = {
+                $buttons: this.$('.oe-search-options'),
+                action: this.action,
+            };
         this.searchview = new SearchView(this, ds_msg, false, defaults || {}, options);
         this.searchview.on('search_data', this, this.do_searchview_search);
         this.searchview.appendTo(this.$('.oe-cp-search-view')).then(function () {

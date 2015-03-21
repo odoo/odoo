@@ -10,11 +10,12 @@ import simplejson
 import openerp
 import cgi
 
-from openerp import tools
+from openerp import tools, _
 from openerp.http import request
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.bus.bus import TIMEOUT
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -257,6 +258,7 @@ class im_chat_message(osv.Model):
             # build and escape the new message
             message_content = self._escape_keep_url(message_content)
             message_content = self.pool['im_chat.shortcode'].replace_shortcode(cr, uid, message_content, context=context)
+
             vals = {
                 "from_id": from_uid,
                 "to_id": session.id,
@@ -293,6 +295,13 @@ class im_chat_shortcode(osv.Model):
         'substitution' : fields.char('Substitution', required=True, select=True, help="The html code replacing the shortcut"),
         'description' : fields.char('Description'),
     }
+
+    def create(self, cr, uid, values, context=None):
+        if values.get('substitution'):
+            values['substitution'] = tools.html_sanitize(values['substitution']).strip()
+        if not values.get('substitution'):
+            raise UserError(_("Substitution contains only forbidden characters. Please fill it with something else."))
+        return super(im_chat_shortcode, self).create(cr, uid, values, context=context)
 
     def replace_shortcode(self, cr, uid, message, context=None):
         ids = self.search(cr, uid, [], context=context)

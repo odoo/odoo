@@ -69,11 +69,11 @@ class Forum(models.Model):
         ('create_date desc', 'Newest'),
         ('write_date desc', 'Last Updated'),
         ('vote_count desc', 'Most Voted'),
-        ('relevancy desc', 'Relevancy'),
+        ('relevancy desc', 'Relevance'),
         ('child_count desc', 'Answered')],
         string='Default Order', required=True, default='write_date desc')
-    relevancy_post_vote = fields.Float('First Relevancy Parameter', default=0.8, help="This formula is used in order to sort by relevancy. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation")
-    relevancy_time_decay = fields.Float('Second Relevancy Parameter', default=1.8)
+    relevancy_post_vote = fields.Float('First Relevance Parameter', default=0.8, help="This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation")
+    relevancy_time_decay = fields.Float('Second Relevance Parameter', default=1.8)
     default_post_type = fields.Selection([
         ('question', 'Question'),
         ('discussion', 'Discussion'),
@@ -212,7 +212,7 @@ class Post(models.Model):
                                      "a write on write_date and therefore bump the post. Directly writing on write_date"
                                      "is currently not supported and this field is a workaround.")
     write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
-    relevancy = fields.Float('Relevancy', compute="_compute_relevancy", store=True)
+    relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
 
     @api.one
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')

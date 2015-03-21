@@ -118,6 +118,14 @@ class WebsiteForum(http.Controller):
         if post_type:
             domain += [('post_type', '=', post_type)]
 
+        if sorting:
+            # check that sorting is valid
+            # retro-compatibily for V8 and google links
+            try:
+                Post._generate_order_by(sorting, None)
+            except ValueError:
+                sorting = False
+
         if not sorting:
             sorting = forum.default_order
 

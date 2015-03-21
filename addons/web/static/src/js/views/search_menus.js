@@ -20,6 +20,11 @@ return Widget.extend({
         },
         'click .oe-save-name button': 'save_favorite',
         'hidden.bs.dropdown': 'close_menus',
+        'keyup .oe-save-name input': function (ev) {
+            if (ev.which === $.ui.keyCode.ENTER) {
+                this.save_favorite();
+            }
+        },
     },
     init: function (parent, query, target_model, action_id) {
         this._super.apply(this,arguments);
@@ -87,12 +92,12 @@ return Widget.extend({
                 .contains(filter_name).value()) {
             this.do_warn(_t("Error"), _t("Filter with same name already exists."));
             this.$inputs.first().focus();
-            return;            
+            return;
         }
         var search = this.searchview.build_search_data(),
-            view_manager = this.findAncestor(function (a) { 
+            view_manager = this.findAncestor(function (a) {
                 // HORRIBLE HACK. PLEASE SAVE ME FROM MYSELF (BUT IN A PAINLESS WAY IF POSSIBLE)
-                return 'active_view' in a; 
+                return 'active_view' in a;
             }),
             view_context = view_manager ? view_manager.active_view.controller.get_context() : {},
             results = pyeval.sync_eval_domains_and_contexts({
@@ -265,6 +270,11 @@ return Widget.extend({
         },
         'click .oe-add-condition': 'append_proposition',
         'click .oe-apply-filter': 'commit_search',
+        'keyup .searchview_extended_prop_value': function (ev) {
+            if (ev.which === $.ui.keyCode.ENTER) {
+                this.commit_search();
+            }
+        },
     },
     init: function (parent, filters, fields_def) {
         this._super(parent);
@@ -299,10 +309,6 @@ return Widget.extend({
             prop.$el.hide();
         });
     },
-    update_max_height: function () {
-        var max_height = $(window).height() - this.$menu[0].getBoundingClientRect().top - 10;
-        this.$menu.css('max-height', max_height);
-    },
     toggle_custom_filter_menu: function (is_open) {
         this.$add_filter
             .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
@@ -312,7 +318,6 @@ return Widget.extend({
             this.append_proposition();
         }
         this.$('.oe-filter-condition').toggle(is_open);
-        this.update_max_height();
     },
     append_proposition: function () {
         var self = this;
@@ -321,7 +326,6 @@ return Widget.extend({
             self.propositions.push(prop);
             prop.insertBefore(self.$add_filter_menu);
             self.$apply_filter.prop('disabled', false);
-            self.update_max_height();
             return prop;
         });
     },

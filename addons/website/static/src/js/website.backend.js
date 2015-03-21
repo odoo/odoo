@@ -24,8 +24,8 @@ core.form_widget_registry.add('website_button', WidgetWebsiteButton);
 var FieldWidget = form_common.AbstractField.extend(form_common.ReinitializeFieldMixin);
 
 
-var FieldTextHtml = FieldWidget.extend({
-    template: 'FieldTextHtml',
+var FieldTextHtmlFrame = FieldWidget.extend({
+    template: 'FieldTextHtmlFrame',
     start: function () {
         var self = this;
 
@@ -172,6 +172,6 @@ var FieldTextHtml = FieldWidget.extend({
     }
 });
 
-core.form_widget_registry.add('html', FieldTextHtml);
+core.form_widget_registry.add('html_frame', FieldTextHtmlFrame);
 
 });

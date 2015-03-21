@@ -179,7 +179,7 @@ class ir_sequence(models.Model):
                 if new_implementation in ('standard', None):
                     # Implementation has NOT changed.
                     # Only change sequence if really requested.
-                    if seq.number_next != n:
+                    if values.get('number_next'):
                         _alter_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, number_next=n)
                     if seq.number_increment != i:
                         _alter_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, number_increment=i)

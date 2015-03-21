@@ -181,7 +181,7 @@ var BuildingBlock = Widget.extend({
                     });
                 },
                 all: function ($from) {
-                    return $from ? $from.find(selector) : self.$editable.filter(selector).add(self.$editable.find(selector));
+                    return $from ? $from.find(selector) : self.$editable.parent().find(selector);
                 },
                 is: function ($from) {
                     return $from.is(selector);
@@ -493,7 +493,7 @@ var BuildingBlock = Widget.extend({
         for (var k in template) {
             var Option = options[template[k]['option']];
             if (Option && Option.prototype.clean_for_save !== dummy) {
-                template[k].selector.all().filter(".o_dirty").each(function () {
+                template[k].selector.all().each(function () {
                     new Option(self, null, $(this), k).clean_for_save();
                 });
             }

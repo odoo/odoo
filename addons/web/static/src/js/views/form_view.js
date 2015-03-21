@@ -324,7 +324,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
                 return self.dataset.read_index(fields, {
-                    context: { 'bin_size': true, 'future_display_name' : true }
+                    context: { 'bin_size': true }
                 }).then(function(r) {
                     self.trigger('load_record', r);
                 });
@@ -953,10 +953,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 fields.push('display_name');
                 return self.dataset.read_index(fields,
                     {
-                        context: {
-                            'bin_size': true,
-                            'future_display_name': true
-                        },
+                        context: { 'bin_size': true },
                         check_access_rule: true
                     }).then(function(r) {
                         self.trigger('load_record', r);

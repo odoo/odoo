@@ -13,7 +13,7 @@ return Widget.extend({
         this._super(parent);
         this.context = options.context;
         this.fields = options.fields;
-        this.fields.__count__ = _t("Quantity");
+        this.fields.__count__ = {string: _t("Quantity"), type: "integer"};
         this.model = new Model(model, {group_by_no_leaf: true});
 
         this.domain = options.domain || [];
@@ -98,11 +98,12 @@ return Widget.extend({
         // prepare data for bar chart
         var data, values,
             measure = this.fields[this.measure].string;
+
         // zero groupbys
         if (this.groupbys.length === 0) {
             data = [{
                 values: [{
-                    x: this.ViewManager.title, 
+                    x: measure,
                     y: this.data[0].value}],
                 key: measure
             }];

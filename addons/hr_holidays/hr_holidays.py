@@ -132,11 +132,8 @@ class hr_holidays_status(osv.osv):
         ids = super(hr_holidays_status, self)._search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count, access_rights_uid=access_rights_uid)
         if not count and not order and context.get('employee_id'):
             leaves = self.browse(cr, uid, ids, context=context)
-            # perform a 2-steps sort because sorting on reminaing leaves is reversed
-            # sorted keep the order and is stable so 2-steps
-            sorted_leaves = leaves.sorted(key=attrgetter('limit'))
-            sorted_leaves = leaves.sorted(key=attrgetter('virtual_remaining_leaves'), reverse=True)
-            return [leave.id for leave in sorted_leaves]
+            sort_key = lambda l: (not l.limit, l.virtual_remaining_leaves)
+            return map(int, leaves.sorted(key=sort_key, reverse=True))
         return ids
 
 

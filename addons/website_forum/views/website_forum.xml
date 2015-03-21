@@ -350,7 +350,7 @@
                   <t t-if="filters == 'unanswered'">Unanswered</t>
                   <t t-if="filters == 'followed'">Followed</t>
                   <t t-if="tag"><span t-field="tag.name"/></t>
-                  <t t-if="sorting == 'relevancy desc'"> by relevancy</t>
+                  <t t-if="sorting == 'relevancy desc'"> by relevance</t>
                   <t t-if="sorting == 'write_date desc'"> by activity date</t>
                   <t t-if="sorting == 'create_date desc'"> by newest</t>
                   <t t-if="sorting == 'child_count desc'"> by most answered</t>
@@ -374,7 +374,7 @@
                   </li>
                   <li class="dropdown-header">Sort by</li>
                   <li t-att-class="sorting == 'relevancy desc' and 'active' or '' ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='relevancy desc')">Relevancy</a>
+                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='relevancy desc')">Relevance</a>
                   </li>
                   <li t-att-class="sorting == 'write_date desc' and 'active' or '' ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date desc')">Last activity date</a>

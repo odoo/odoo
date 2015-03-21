@@ -35,6 +35,7 @@
                 var WebClient = require('web.WebClient');
                 var web_client = new WebClient();
 
+                web_client._title_changed = function() {};
                 web_client.show_application = function() {
                     web_client.action_manager.do_action("pos.ui");
                 };
