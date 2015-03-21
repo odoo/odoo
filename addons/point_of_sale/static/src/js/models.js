@@ -189,7 +189,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },{
             model:  'pos.order',
             call:   'get_all_taxes',
-            args:   function(self){ return [['amount','price_include','type','child_ids','child_depend','include_base_amount'], new instance.web.CompoundContext()]; },
+            args:   function(self){ return [['name','amount','price_include','type','child_ids','child_depend','include_base_amount'], new instance.web.CompoundContext()]; },
             loaded: function(self,taxes){ self.taxes = taxes; },
         },{
             model:  'pos.session',
@@ -1141,6 +1141,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getTaxDetails: function(){
             var details = {};
             var fulldetails = [];
+            var taxes_by_id = {};
+
+            var get_all_taxes_by_id = function(taxes) {
+                if (! taxes || ! taxes.length)
+                    return;
+
+                for (var i = 0; i < taxes.length; i++) {
+                    taxes_by_id[taxes[i].id] = taxes[i];
+                    get_all_taxes_by_id(taxes[i].child_ids);
+                }
+            }
+            get_all_taxes_by_id(this.pos.taxes);
+
 
             this.get('orderLines').each(function(line){
                 var ldetails = line.get_tax_details();
@@ -1153,7 +1166,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             for(var id in details){
                 if(details.hasOwnProperty(id)){
-                    fulldetails.push({amount: details[id], tax: this.pos.taxes_by_id[id], name: this.pos.taxes_by_id[id].name});
+                    fulldetails.push({amount: details[id], tax: taxes_by_id[id], name: taxes_by_id[id].name});
                 }
             }
 
