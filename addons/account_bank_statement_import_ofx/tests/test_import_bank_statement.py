@@ -30,3 +30,11 @@ class TestOfxFile(TransactionCase):
             [('name', '=', '000000123')])[0]
         self.assertEquals(bank_st_record.balance_start, 2156.56)
         self.assertEquals(bank_st_record.balance_end_real, 1796.56)
+
+        line = bank_st_record.line_ids[0]
+        self.assertEquals(line.name, 'Agrolait')
+        self.assertEquals(line.ref, '219378')
+        self.assertEquals(line.partner_id.id, self.ref('base.res_partner_2'))
+        self.assertEquals(
+            line.bank_account_id.id,
+            self.ref('account_bank_statement_import.ofx_partner_bank_1'))
