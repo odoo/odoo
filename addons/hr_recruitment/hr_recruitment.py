@@ -81,7 +81,7 @@ class hr_recruitment_source(osv.osv):
 
     _columns = {
         'source_id': fields.many2one('utm.source', 'Source', ondelete='cascade', required=True),
-        'url': fields.function(_get_url, string='Url', type='char', store={
+        'url': fields.function(_get_url, string='Url Parameters', type='char', store={
             'hr.recruitment.source': (lambda self, cr, uid, ids, ctx: ids, ['source_id'], 20),
             'utm.source': (_get_source, ['name'], 20),
         }),
