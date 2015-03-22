@@ -162,6 +162,19 @@ class stock_move(osv.osv):
             'account_analytic_id': False,
         }
 
+    def _get_moves_taxes(self, cr, uid, moves, context=None):
+        #extra moves with the same picking_id and product_id of a move have the same taxes
+        extra_move_tax = {}
+        is_extra_move = {}
+        for move in moves:
+            if move.picking_id:
+                is_extra_move[move.id] = True
+                if not (move.picking_id, move.product_id) in extra_move_tax:
+                    extra_move_tax[move.picking_id, move.product_id] = 0
+            else:
+                is_extra_move[move.id] = False
+        return (is_extra_move, extra_move_tax)
+
 #----------------------------------------------------------
 # Picking
 #----------------------------------------------------------
@@ -278,6 +291,7 @@ class stock_picking(osv.osv):
         invoice_obj = self.pool.get('account.invoice')
         move_obj = self.pool.get('stock.move')
         invoices = {}
+        is_extra_move, extra_move_tax = move_obj._get_moves_taxes(cr, uid, moves, context=context)
         for move in moves:
             company = move.company_id
             origin = move.picking_id.name
@@ -299,6 +313,8 @@ class stock_picking(osv.osv):
             invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
             invoice_line_vals['invoice_id'] = invoices[key]
             invoice_line_vals['origin'] = origin
+            if is_extra_move[move.id] and extra_move_tax[move.picking_id, move.product_id]:
+                invoice_line_vals['invoice_line_tax_id'] = extra_move_tax[move.picking_id, move.product_id]
 
             move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
             move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
