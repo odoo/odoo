@@ -141,15 +141,8 @@ class account_bank_statement_import(models.TransientModel):
 
         bank_account_id = None
         if account_number and len(account_number) > 4:
-            account_number = account_number.replace(' ', '').replace('-', '')
-            cr = self.env.cr
-            cr.execute(
-                "select id from res_partner_bank "
-                "where replace(replace(acc_number,' ',''),'-','') = %s",
-                (account_number,))
-            bank_account_ids = [val[0] for val in cr.fetchall()]
             bank_account_ids = self.env['res.partner.bank'].search(
-                [('id', 'in', bank_account_ids)], limit=1)
+                [('acc_number', '=', account_number)], limit=1)
             if bank_account_ids:
                 bank_account_id = bank_account_ids[0].id
 
@@ -200,7 +193,6 @@ class account_bank_statement_import(models.TransientModel):
             bank_code = bank_type.code
         except ValueError:
             bank_code = 'bank'
-        account_number = account_number.replace(' ', '').replace('-', '')
         vals_acc = {
             'acc_number': account_number,
             'state': bank_code,
@@ -245,6 +237,7 @@ class account_bank_statement_import(models.TransientModel):
                         banks = bank_model.search(
                             [('acc_number', '=', identifying_string)], limit=1)
                         if banks:
+                            bank_account_id = banks[0].id
                             partner_id = banks[0].partner_id.id
                         else:
                             bank_account_id = self._create_bank_account(
