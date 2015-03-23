@@ -524,7 +524,12 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             };
         }
 
-        if (ancestor.tagName) {
+        if (dom.isEditable(ancestor)) {
+            sc = $("<br/>")[0];
+            so = 0;
+            $(ancestor).html(sc);
+
+        } else if (ancestor.tagName) {
             var ancestor_sc = sc;
             var ancestor_ec = ec;
             while (ancestor !== ancestor_sc && ancestor !== ancestor_sc.parentNode) { ancestor_sc = ancestor_sc.parentNode; }
