@@ -357,10 +357,10 @@ animationRegistry.gallery_slider = Animation.extend({
     }
 });
 
-website.snippet.animationRegistry.countdown = website.snippet.Animation.extend({
+animationRegistry.countdown = Animation.extend({
     selector: ".countdown:not(section.oe_snippet_body)",
     start: function () {
-        website.countdown(this.$target, true);
+        countdown(this.$target, true);
     },
 });
 
@@ -371,4 +371,7 @@ return {
     start_animation: start_animation,
     stop_animation: stop_animation,
     registry: animationRegistry,
+    countdown: countdown,
 };
+
+});

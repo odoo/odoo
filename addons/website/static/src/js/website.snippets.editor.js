@@ -1343,66 +1343,9 @@ options.carousel = options.slider.extend({
     },
 });
 
-options.marginAndResize = Option.extend({
-    start: function () {
-        var self = this;
-        this._super();
-
-        var resize_values = this.getSize();
-        if (resize_values.n) this.$overlay.find(".oe_handle.n").removeClass("readonly");
-        if (resize_values.s) this.$overlay.find(".oe_handle.s").removeClass("readonly");
-        if (resize_values.e) this.$overlay.find(".oe_handle.e").removeClass("readonly");
-        if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
-        if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
-
-        this.$overlay.find(".oe_handle:not(.size), .oe_handle.size .size").on('mousedown', function (event){
-            event.preventDefault();
-
-            var $handle = $(this);
-
-            var resize_values = self.getSize();
-            var compass = false;
-            var XY = false;
-            if ($handle.hasClass('n')) {
-                compass = 'n';
-                XY = 'Y';
-            }
-            else if ($handle.hasClass('s')) {
-                compass = 's';
-                XY = 'Y';
-            }
-            else if ($handle.hasClass('e')) {
-                compass = 'e';
-                XY = 'X';
-            }
-            else if ($handle.hasClass('w')) {
-                compass = 'w';
-                XY = 'X';
-            }
-            else if ($handle.hasClass('size')) {
-                compass = 'size';
-                XY = 'Y';
-            }
-            $select.addClass("active");
-            $clone.css("background-image", $select.data("background") ? "url('"+ $select.data("background") +"')" : "");
-
-            return $clone;
-        },
-        // rebind event to active carousel on edit mode
-        rebind_event: function () {
-            var self = this;
-            this.$target.find('.carousel-control').off('click').on('click', function () {
-                self.$target.carousel( $(this).data('slide')); });
-            this._super();
-
-            /* Fix: backward compatibility saas-3 */
-            this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
-        },
-    });
-
-    website.editor.countdown = website.editor.Dialog.extend({
-        template: 'website.countdown_configuration',
-        events : _.extend({}, website.editor.Dialog.prototype.events, {
+    editor.countdown = editor.Dialog.extend({
+        template: 'countdown_configuration',
+        events : _.extend({}, editor.Dialog.prototype.events, {
             'click button[data-action=set_countdown]': 'set_countdown',
         }),
         init: function (parent) {
@@ -1433,7 +1376,7 @@ options.marginAndResize = Option.extend({
                 self.$el.find(".alert").remove();
                 self.$el.find(".modal-body").append('<div class="alert alert-danger mt8">'+ msg +'</div>');
             };
-            if (!moment(dt_format, 'MM/DD/YYYY HH:mm:ss', true).isValid()) {
+            if (!moment(dt_format, 'MM/DD/YYYY HH:mm:ss', false).isValid()) {
                 add_warning('Invalid Input. Please enter proper DATE, HOURS, MINUTES, SECONDS');
             }
             else {
@@ -1444,7 +1387,7 @@ options.marginAndResize = Option.extend({
         },
     });
 
-    website.snippet.options.countdown = website.snippet.Option.extend({
+    options.countdown = Option.extend({
         start : function () {
             var self = this;
             this._super();
@@ -1481,7 +1424,7 @@ options.marginAndResize = Option.extend({
         },
     });
 
-    website.EditorBar.include({
+    editor.EditorBar.include({
         edit: function () {
             var self = this;
             this._super();
@@ -1500,7 +1443,7 @@ options.marginAndResize = Option.extend({
         },
     });
 
-    website.snippet.options.marginAndResize = website.snippet.Option.extend({
+    options.marginAndResize = Option.extend({
         start: function () {
             var self = this;
             this._super();
@@ -1671,7 +1614,7 @@ options.marginAndResize = Option.extend({
             this.change_cursor();
         }
     });
-    website.snippet.options["margin-y"] = website.snippet.options.marginAndResize.extend({
+    options["margin-y"] = options.marginAndResize.extend({
         getSize: function () {
             this.grid = this._super();
             var grid = [0,4,8,16,32,48,64,92,128];
@@ -1685,7 +1628,7 @@ options.marginAndResize = Option.extend({
             return this.grid;
         },
     });
-    website.snippet.options["margin-x"] = website.snippet.options.marginAndResize.extend({
+    options["margin-x"] = options.marginAndResize.extend({
         getSize: function () {
             this.grid = this._super();
             var width = this.$target.parents(".row:first").first().outerWidth();
@@ -1768,7 +1711,7 @@ options.marginAndResize = Option.extend({
         },
     });
 
-    website.snippet.options.resize = website.snippet.options.marginAndResize.extend({
+    options.resize = options.marginAndResize.extend({
         getSize: function () {
             this.grid = this._super();
             this.grid.size = 8;
@@ -1776,7 +1719,7 @@ options.marginAndResize = Option.extend({
         },
     });
 
-    website.snippet.options.parallax = website.snippet.Option.extend({
+    options.parallax = Option.extend({
         getSize: function () {
             this.grid = this._super();
             this.grid.size = 8;
@@ -1818,7 +1761,7 @@ options.marginAndResize = Option.extend({
         }
     });
 
-    website.snippet.options.transform = website.snippet.Option.extend({
+    options.transform = Option.extend({
         start: function () {
             var self = this;
             this._super();
@@ -1926,12 +1869,11 @@ options.marginAndResize = Option.extend({
             this.on_blur();
             this._super();
         }
->>>>>>> [website_forum][FIX] Issue fixed related to lint and animationRegistry
     });
 
-    website.editor.countdown = website.editor.Dialog.extend({
+    editor.countdown = editor.Dialog.extend({
         template: 'website.countdown_configuration',
-        events : _.extend({}, website.editor.Dialog.prototype.events, {
+        events : _.extend({}, editor.Dialog.prototype.events, {
             'click button[data-action=set_countdown]': 'set_countdown',
         }),
         init: function (parent) {
@@ -1974,7 +1916,7 @@ options.marginAndResize = Option.extend({
         },
     });
     
-    website.snippet.options.countdown = website.snippet.Option.extend({
+    options.countdown = Option.extend({
         start : function () {
             var self = this;
             this._super();
@@ -1983,7 +1925,7 @@ options.marginAndResize = Option.extend({
         on_set_countdown:function(){
             var self = this;
             var release_date = parseInt(this.$target[0].getAttribute("data-release_date"));
-            var set_dialog = new website.editor.countdown(self);
+            var set_dialog = new editor.countdown(self);
             set_dialog.appendTo($(document.body));
             if (release_date){
                 var date = new Date(release_date)
@@ -1993,7 +1935,7 @@ options.marginAndResize = Option.extend({
                 $('input#web_countdown_sec').val(date.getSeconds());
             }
             set_dialog.on('set_countdown', this, function () {
-                website.countdown(self.$target[0], false);
+                animation.countdown(self.$target[0], false);
                 set_dialog.$el.modal('hide');
             });
         },
@@ -2010,7 +1952,7 @@ options.marginAndResize = Option.extend({
             }
         },
     });
-    website.EditorBar.include({
+    editor.EditorBar.include({
         edit: function () {
             var self = this;
             this._super();
@@ -2029,7 +1971,7 @@ options.marginAndResize = Option.extend({
         },
    });
 
-    website.snippet.options.marginAndResize = website.snippet.Option.extend({
+    options.marginAndResize = Option.extend({
         start: function () {
             var self = this;
             this._super();
