@@ -95,7 +95,7 @@ class hr_job(osv.Model):
     _description = "Job Position"
     _inherit = ['mail.thread']
     _columns = {
-        'name': fields.char('Job Name', required=True, select=True),
+        'name': fields.char('Job Name', required=True, select=True, translate=True),
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
