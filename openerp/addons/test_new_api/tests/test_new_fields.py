@@ -424,6 +424,13 @@ class TestNewFields(common.TransactionCase):
         defaults = self.env['test_new_api.mixed'].default_get(['number'])
         self.assertEqual(defaults, {'number': 3.14})
 
+    def test_50_search_many2one(self):
+        """ test search through a path of computed fields"""
+        messages = self.env['test_new_api.message'].search(
+            [('author_partner.name', '=', 'Demo User')])
+        self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
+
+
 
 class TestMagicFields(common.TransactionCase):
 
