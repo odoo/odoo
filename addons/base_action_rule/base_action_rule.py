@@ -208,6 +208,11 @@ class base_action_rule(osv.osv):
                 for action in actions:
                     pre_ids[action] = action_model._filter(cr, uid, action, action.filter_pre_id, ids, domain=action.filter_pre_domain, context=context)
 
+                # read old values before the update
+                old_values = {}
+                for old_vals in self.read(cr, uid, ids, list(vals), context=context):
+                    old_values[old_vals.pop('id')] = old_vals
+
                 # call original method
                 write.origin(self, cr, uid, ids, vals, context=context, **kwargs)
 
@@ -215,7 +220,7 @@ class base_action_rule(osv.osv):
                 for action in actions:
                     post_ids = action_model._filter(cr, uid, action, action.filter_id, pre_ids[action], domain=action.filter_domain, context=context)
                     if post_ids:
-                        action_model._process(cr, uid, action, post_ids, context=context)
+                        action_model._process(cr, uid, action, post_ids, context=dict(context, old_values=old_values))
                 return True
 
             return write
