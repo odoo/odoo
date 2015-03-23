@@ -1455,7 +1455,7 @@ class mail_thread(osv.AbstractModel):
                             notification_obj.create(cr, uid, {
                                 'message_id': message.parent_id.id,
                                 'partner_id': partner_id,
-                                'is_read': True,
+                                'read': True,
                             }, context=context)
 
         return True
