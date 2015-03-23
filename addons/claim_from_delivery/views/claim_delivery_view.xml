@@ -1,6 +1,5 @@
-<openerp>
-    <data>
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <record id="action_claim_from_delivery" model="ir.actions.act_window">
             <field name="name">Claim From Delivery</field>
             <field name="res_model">crm.claim</field>
@@ -10,7 +9,7 @@
             <field name="domain">[('ref','=','stock.picking,'+str(context.get('active_id',False)))]</field>
         </record>
         <record id="crm_claim_from_delivery" model="ir.ui.view">
-            <field name="name">crm.claim.from_delivery.form</field>
+            <field name="name">stock.picking.form.inherit.claim</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
@@ -24,5 +23,4 @@
                 </xpath>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>

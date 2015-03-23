@@ -1,16 +1,15 @@
-from openerp.osv import fields, osv
+# -*- coding: utf-8 -*-
+
+from openerp import api, fields, models
 
 
-class stock_picking(osv.osv):
+class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    def _claim_count_out(self, cr, uid, ids, field_name, arg, context=None):
-        Claim = self.pool['crm.claim']
-        return {
-            id: Claim.search_count(cr, uid, [('ref', '=',('stock.picking,' + str(ids[0])))], context=context)
-            for id in ids
-        }
+    @api.multi
+    def _claim_count_out(self):
+    	Claim = self.env['crm.claim']
+        for picking in self:
+            picking.claim_count_out = Claim.search_count([('ref', '=', ('stock.picking,' + str(picking.id)))])
 
-    _columns = {
-        'claim_count_out': fields.function(_claim_count_out, string='Claims', type='integer'),    
-    }
+    claim_count_out = fields.Integer(compute='_claim_count_out', string='Claims')
