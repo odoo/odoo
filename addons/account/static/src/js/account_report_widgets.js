@@ -57,6 +57,9 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         this.curFootNoteTarget;
         var res = this._super();
         var report_name = window.$("div.page").attr("data-report-name");
+        openerp.session.on('error', this, function(error){
+            $('#report_error').modal('show');
+        });
         if(report_name != 'followup_report') {
             this.onChangeCmpDateFilter();
         }
