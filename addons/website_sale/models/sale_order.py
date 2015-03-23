@@ -113,7 +113,7 @@ class sale_order(osv.Model):
 
     def _cart_accessories(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):
-            s = set(j.id for l in (order.website_order_line or []) for j in (l.product_id.accessory_product_ids or []))
+            s = set(j.id for l in (order.website_order_line or []) for j in (l.product_id.accessory_product_ids or []) if j.website_published)
             s -= set(l.product_id.id for l in order.order_line)
             product_ids = random.sample(s, min(len(s), 3))
             return self.pool['product.product'].browse(cr, uid, product_ids, context=context)
