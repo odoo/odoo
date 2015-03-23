@@ -572,7 +572,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                         ((
                             select
                                 min(hrt.id) as id,
-                                'UTC' as timezone,
+                                p.tz as timezone,
                                 l.date::date as name,
                                 s.id as sheet_id,
                                 sum(l.unit_amount) as total_timesheet,
@@ -582,6 +582,10 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                                 hr_analytic_timesheet hrt
                                 JOIN account_analytic_line l ON l.id = hrt.line_id
                                 LEFT JOIN hr_timesheet_sheet_sheet s ON s.id = hrt.sheet_id
+                                JOIN hr_employee e ON s.employee_id = e.id
+                                JOIN resource_resource r ON e.resource_id = r.id
+                                LEFT JOIN res_users u ON r.user_id = u.id
+                                LEFT JOIN res_partner p ON u.partner_id = p.id
                             group by l.date::date, s.id, timezone
                         ) union (
                             select
