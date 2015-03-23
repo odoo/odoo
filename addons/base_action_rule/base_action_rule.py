@@ -50,6 +50,7 @@ class base_action_rule(osv.osv):
             [('on_create', 'On Creation'),
              ('on_write', 'On Update'),
              ('on_create_or_write', 'On Creation & Update'),
+             ('on_unlink', 'On Deletion'),
              ('on_time', 'Based on Timed Condition')],
             string='When to Run'),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
@@ -91,7 +92,7 @@ class base_action_rule(osv.osv):
 
     def onchange_kind(self, cr, uid, ids, kind, context=None):
         clear_fields = []
-        if kind in ['on_create', 'on_create_or_write']:
+        if kind in ['on_create', 'on_create_or_write', 'on_unlink']:
             clear_fields = ['filter_pre_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_type']
         elif kind in ['on_write', 'on_create_or_write']:
             clear_fields = ['trg_date_id', 'trg_date_range', 'trg_date_range_type']
@@ -225,6 +226,33 @@ class base_action_rule(osv.osv):
 
             return write
 
+        def make_unlink():
+            def unlink(self, cr, uid, ids, context=None, **kwargs):
+                if context and context.get('action'):
+                    return unlink.origin(self, cr, uid, ids, vals, context=context)
+
+                # modify context
+                context = dict(context or {}, action=True)
+                ids = [ids] if isinstance(ids, (int, long, str)) else ids
+
+                # retrieve the action rules to possibly execute
+                action_model = self.pool.get('base.action.rule')
+                action_dom = [('model', '=', self._name),
+                              ('kind', '=', 'on_unlink')]
+                action_ids = action_model.search(cr, uid, action_dom, context=context)
+                actions = action_model.browse(cr, uid, action_ids, context=context)
+
+                # check conditions, and execute actions on the records that satisfy them
+                for action in actions:
+                    pre_ids = action_model._filter(cr, uid, action, action.filter_id, ids, domain=action.filter_domain, context=context)
+                    if pre_ids:
+                        action_model._process(cr, uid, action, pre_ids, context=context)
+
+                # call original method
+                return unlink.origin(self, cr, uid, ids, context=context, **kwargs)
+
+            return unlink
+
         updated = False
         if ids is None:
             ids = self.search(cr, SUPERUSER_ID, [])
@@ -235,6 +263,7 @@ class base_action_rule(osv.osv):
                 # monkey-patch methods create and write
                 model_obj._patch_method('create', make_create())
                 model_obj._patch_method('write', make_write())
+                model_obj._patch_method('unlink', make_unlink())
                 model_obj.base_action_ruled = True
                 updated = True
 
