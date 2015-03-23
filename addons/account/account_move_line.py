@@ -184,7 +184,7 @@ class AccountMoveLine(models.Model):
             return ['account.invoice', self.invoice.id]
         if self.payment_id:
             return ['account.payment', self.payment_id.id]
-        return ['account.move.line', self.id]
+        return ['account.move', self.move_id]
 
     @api.multi
     @api.constrains('account_id')

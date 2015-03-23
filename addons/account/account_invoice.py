@@ -708,6 +708,7 @@ class AccountInvoice(models.Model):
                 'uos_id': line.uos_id.id,
                 'account_analytic_id': line.account_analytic_id.id,
                 'tax_ids': tax_ids,
+                'invoice': self.id,
             }
             if line['account_analytic_id']:
                 move_line_dict['analytic_lines'] = [(0, 0, line._get_analytic_line())]
