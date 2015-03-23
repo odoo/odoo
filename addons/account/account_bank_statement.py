@@ -588,20 +588,16 @@ class account_bank_statement_line(osv.osv):
         if not st_line.partner_id.id:
             return []
 
-        # Look for a set of move line whose amount is <= to the line's amount
+        # Select move lines until their total amount is greater than the statement line amount
         domain += [('account_id.type', 'in', ((amount > 0 and 'receivable' or 'payable'), 'liquidity'))] # Make sure we can't mix receivable and payable
-        if amount_field == 'amount_currency' and amount < 0:
-            domain += [(amount_field, '<', 0), (amount_field, '>', (sign * amount))]
-        else:
-            domain += [(amount_field, '>', 0), (amount_field, '<', (sign * amount))]
+        domain += (amount_field == 'amount_currency' and amount < 0) and [(amount_field, '<', 0)] or [(amount_field, '>', 0)]
         mv_lines = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=domain)
         ret = []
         total = 0
         for line in mv_lines:
             total += abs(line['debit'] - line['credit'])
-            if float_compare(total, abs(amount), precision_digits=precision_digits) != 1:
-                ret.append(line)
-            else:
+            ret.append(line)
+            if float_compare(total, abs(amount), precision_digits=precision_digits) != -1:
                 break
         return ret
 
