@@ -944,7 +944,7 @@ odoo.define('web_timeline.mail', function (require) {
             'mouseup .oe_tl_msg_content':function (event) {
                 this.$('textarea').focus();
             },
-            'change .oe_recipients input':'on_checked_recipient',
+            'change .oe_tl_recipients input':'on_checked_recipient',
         },
 
         init: function (parent, dataset, options) {
