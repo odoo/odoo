@@ -109,6 +109,15 @@
             <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
         </record>
 
+        <record id="user_read_view" model="ir.rule">
+            <field name="name">user: global view</field>
+            <field name="model_id" ref="base.model_ir_ui_view"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
     </data>
 </openerp>
 
