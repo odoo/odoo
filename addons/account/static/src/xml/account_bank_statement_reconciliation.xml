@@ -137,6 +137,7 @@
             <tr><td>Description</td><td><t t-esc="line.name"/></td></tr>
             <tr><td>Amount</td><td><t t-esc="line.amount_str"/><t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td></tr>
             <tr><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
+            <tr t-if="line.note"><td>Note</td><td><t t-esc="line.note"/></td></tr>
         </table>
     </t>
 
@@ -172,6 +173,7 @@
                 <t t-if="line.debit !== 0" t-esc="line.debit_str"/><t t-if="line.credit !== 0" t-esc="line.credit_str"/>
                 <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
             </td></tr>
+             <tr t-if="line.note"><td>Note</td><td><t t-esc="line.note"/></td></tr>
         </table>
     </t>
 
