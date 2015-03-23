@@ -19,10 +19,10 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         var note = $("#nextActionNote").val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
         var target_id = $("#nextActionModal #target_id").val();
         var date = $("#nextActionDate").val();
+        date = openerp.web.parse_value(date, {type:'date'})
         var contextModel = new openerp.Model('account.report.context.followup');
         return contextModel.call('change_next_action', [[parseInt(target_id)], date, note]).then(function (result) {
             $('#nextActionModal').modal('hide');
-            date = new Date(date.substr(0, 4), date.substr(5, 2), date.substr(8, 2), 12, 0, 0, 0).toLocaleDateString();
             $('div.page.' + target_id).find('.oe-account-next-action').html(openerp.qweb.render("nextActionDate", {'note': note, 'date': date}));
         });
     },
@@ -45,7 +45,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
                 dt.setMonth(dt.getMonth() + 2);
                 break;
         }
-        $("#nextActionModal #nextActionDate").val(dt.toISOString().substr(0, 10));
+        $('.oe-account-picker-next-action-date').data("DateTimePicker").setValue(moment(dt));
         $("#nextActionModal #target_id").val(target_id);
         $('#nextActionModal').on('hidden.bs.modal', function (e) {
             $(this).find('form')[0].reset();
@@ -139,8 +139,8 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         e.stopPropagation();
         e.preventDefault();
         var note = $("#internalNote").val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
-        var invoiceModel = new openerp.Model('account.move.line');
-        return invoiceModel.call('write', [[parseInt($("#paymentDateModal #target_id").val())], {expected_pay_date: $("#expectedDate").val(), internal_note: note}]).then(function (result) {
+        var amlModel = new openerp.Model('account.move.line');
+        return amlModel.call('write', [[parseInt($("#paymentDateModal #target_id").val())], {expected_pay_date: openerp.web.parse_value($("#expectedDate").val(), {type:'date'}), internal_note: note}]).then(function (result) {
             $('#paymentDateModal').modal('hide');
             location.reload(true);
         });

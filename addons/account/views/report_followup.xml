@@ -150,7 +150,12 @@
                     <div class="modal-body">
                         <form role="form">
                             <label for="expectedDate">Expected Payment Date</label>
-                            <input type="date" class="form-control" name="expectedDate" id="expectedDate"></input>
+                            <div class="form-group">
+                                <div class='input-group date oe-account-datetimepicker'>
+                                <input type='text' class="form-control" name="expectedDate" id="expectedDate" />
+                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                </div>
+                            </div>
                             <label for='internalNote'>Note</label>
                             <textarea name="internalNote" id="internalNote" rows='4' class="form-control" placeholder="Insert note here"></textarea>
                             <input type='hidden' id='target_id' />
@@ -171,7 +176,12 @@
                     <div class="modal-body">
                         <form role="form">
                             <label for="nextActionDate">Don't follow-up before :</label>
-                            <input type="date" class="form-control" name="nextActionDate" id="nextActionDate"></input>
+                            <div class="form-group">
+                                <div class='input-group date oe-account-datetimepicker oe-account-picker-next-action-date'>
+                                <input type='text' class="form-control" name="nextActionDate" id="nextActionDate" />
+                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                </div>
+                            </div>
                             <label for='nextActionNote'>Note</label>
                             <textarea name="nextActionNote" id="nextActionNote" rows='4' class="form-control" placeholder="Insert note here"></textarea>
                             <input type='hidden' id='target_id' />

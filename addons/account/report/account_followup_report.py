@@ -58,7 +58,7 @@ class report_account_followup_report(models.AbstractModel):
                 amount = formatLang(self.env, amount, currency_obj=currency)
                 line_num += 1
                 lines.append({
-                    'id': line_num,
+                    'id': aml.id,
                     'name': aml.ref,
                     'type': 'unreconciled_aml',
                     'view_type': view_type,

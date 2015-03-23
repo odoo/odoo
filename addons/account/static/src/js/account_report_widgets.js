@@ -63,6 +63,15 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         if(report_name != 'followup_report') {
             this.onChangeCmpDateFilter();
         }
+        var l10n = openerp.web._t.database.parameters;
+        this.$('.oe-account-datetimepicker').datetimepicker({
+            language : moment.locale(),
+            format : openerp.web.normalize_format(l10n.date_format),
+            icons: {
+                date: "fa fa-calendar",
+            },
+            pickTime: false,
+        });
         return res;
     },
     onClickSummary: function(e) {
