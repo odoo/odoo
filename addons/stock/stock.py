@@ -2267,11 +2267,12 @@ class stock_move(osv.osv):
         journal_id = accounts['stock_journal']
 
         if acc_dest == acc_valuation:
-            raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Output Account of this product and Valuation account on category of this product are same.'))
+            raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Output Account of this product and Valuation account on category of this product are same: "%s" (id: %d)') % \
+                                 (move.product_id.name, move.product_id.id,))
 
         if acc_src == acc_valuation:
-            raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Input Account of this product and Valuation account on category of this product are same.'))
-
+            raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Input Account of this product and Valuation account on category of this product are same: "%s" (id: %d)') % \
+                                 (move.product_id.name, move.product_id.id,))
         if not acc_src:
             raise osv.except_osv(_('Error!'),  _('Please define stock input account for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
