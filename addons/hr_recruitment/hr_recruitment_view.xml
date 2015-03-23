@@ -63,6 +63,10 @@
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form">
             <header>
+                <button string="Create Employee" name="create_employee_from_applicant" type="object"
+                        class="oe_highlight" attrs="{'invisible': [('emp_id', '!=', False)]}"/>
+                <button class="oe_highlight" name="button_mail_composer"
+                        string="Send an Email" type="object"/>
                 <field name="stage_id" widget="statusbar" clickable="True"/>
             </header>
             <sheet>
@@ -108,9 +112,6 @@
                     <label for="partner_name" class="oe_edit_only"/>
                     <h2>
                         <field name="partner_name" class="oe_inline"/>
-                        <button string="Create Employee" name="create_employee_from_applicant" type="object"
-                                    class="oe_link oe_inline" style="margin-left: 8px;"
-                                    attrs="{'invisible': [('emp_id', '!=', False)]}"/>
                     </h2>
                 </div>
                 <group>

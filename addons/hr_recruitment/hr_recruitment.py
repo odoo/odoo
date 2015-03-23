@@ -223,6 +223,20 @@ class hr_applicant(osv.Model):
             res[app_id] = self.pool['ir.attachment'].search_count(cr, uid, [('res_model', '=', 'hr.applicant'), ('res_id', '=', app_id)], context=context)
         return res
 
+    def button_mail_composer(self, cr, uid, ids, context=None):
+        ctx = (context or {}).copy()
+        ctx['partner_ids'] = self.browse(cr, uid, ids, context=context).partner_id.id
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Send an Email'),
+            'view_type':'form',
+            'view_mode':'form',
+            'res_model':'mail.compose.message',
+            'views': [[False, 'form']],
+            'target': 'new',
+            'context': ctx,
+        }
+
     _columns = {
         'name': fields.char('Subject / Application Name', required=True),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
