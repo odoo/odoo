@@ -60,3 +60,11 @@ class TestResPartnerBank(TransactionCase):
         self.assertEquals(partner_bank, vals[0])
         self.assertEqual(partner_bank.sanitized_acc_number,
                          sanitized_acc_number)
+
+        # search is case insensitive
+        vals = partner_bank_model.search(
+            [('acc_number', '=', sanitized_acc_number.lower())])
+        self.assertEquals(1, len(vals))
+        vals = partner_bank_model.search(
+            [('acc_number', '=', acc_number.lower())])
+        self.assertEquals(1, len(vals))

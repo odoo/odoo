@@ -35,16 +35,15 @@ class ResPartnerBank(models.Model):
         compute='_get_sanitized_account_number', store=True, index=True)
 
     def _sanitize_account_number(self, acc_number):
-        return re.sub(r'\W+', '', acc_number)
+        if acc_number:
+            return re.sub(r'\W+', '', acc_number).upper()
+        return False
 
     @api.one
     @api.depends('acc_number')
     def _get_sanitized_account_number(self):
-        value = self.acc_number
-        if not value:
-            self.sanitized_acc_number = False
-        else:
-            self.sanitized_acc_number = self._sanitize_account_number(value)
+        self.sanitized_acc_number = self._sanitize_account_number(
+            self.acc_number)
 
     @api.returns('self')
     def search(self, cr, user, args, offset=0, limit=None, order=None,
@@ -59,7 +58,7 @@ class ResPartnerBank(models.Model):
                 else:
                     value = self._sanitize_account_number(value)
                 if 'like' in op:
-                    value = value + '%'
+                    value = '%' + value + '%'
                 args[pos] = ('sanitized_acc_number', op, value)
             pos += 1
         return super(ResPartnerBank, self).search(
