@@ -498,12 +498,6 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
-                <li>
-                    <a href="#" class="js_publish_btn">
-                        <span class="css_unpublish">Unpublish</span>
-                        <span class="css_publish">Publish</span>
-                    </a>
-                </li>
                 <t t-raw="0"/>
                 <li t-if="publish_edit">
                     <a t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
