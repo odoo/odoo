@@ -49,9 +49,13 @@ openerp.account_followup.FollowupReportWidgets = openerp.account.FollowupReportW
         var contextModel = new openerp.Model('account.report.context.followup');
         contextModel.call('do_manual_action', [[parseInt(context_id)]]).then (function (result) {
             var $skipButton = $(e.target).siblings('a.followup-skip');
-            $skipButton.attr('class', 'btn btn-primary followup-skip');
+            var buttonClass = $skipButton.attr('class');
+            buttonClass = buttonClass.replace('btn-default', 'btn-primary');
+            $skipButton.attr('class', buttonClass);
             $skipButton.text('Done');
-            $(e.target).attr('class', 'btn btn-default followup-letter');
+            buttonClass = $(e.target).attr('class');
+            buttonClass = buttonClass.replace('btn-primary', 'btn-default');
+            $(e.target).attr('class', buttonClass);
         });
     }
 });
