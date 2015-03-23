@@ -27,7 +27,7 @@ class LivechatController(http.Controller):
         info["username"] = kwargs.get("username", "Visitor")
         # find the country from the request
         country_id = False
-        country_code = request.session.geoip and request.session.geoip.get('country_name') or False
+        country_code = request.session.geoip and request.session.geoip.get('country_code') or False
         if country_code:
             country_ids = registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
             if country_ids:
