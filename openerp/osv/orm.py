@@ -289,6 +289,9 @@ class browse_null(object):
     def __unicode__(self):
         return u''
 
+    def __iter__(self):
+        raise NotImplementedError("Iteration is not allowed on browse_null")
+
 
 #
 # TODO: execute an object method on browse_record_list
