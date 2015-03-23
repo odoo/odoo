@@ -1026,7 +1026,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
 
         var node = dom.node(r.sc);
         var last = node;
-        while (node && dom.isSplitable(node) && !dom.isList(node)) {
+        while (node && dom.isSplitable(node) && !dom.isList(node) && !dom.isEditable(node)) {
             last = node;
             node = node.parentNode;
         }
