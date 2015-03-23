@@ -1343,648 +1343,146 @@ options.carousel = options.slider.extend({
     },
 });
 
-    editor.countdown = editor.Dialog.extend({
-        template: 'countdown_configuration',
-        events : _.extend({}, editor.Dialog.prototype.events, {
-            'click button[data-action=set_countdown]': 'set_countdown',
-        }),
-        init: function (parent) {
-            this.$target = parent.$target;
-            return this._super();
-        },
-        start: function () {
-            var self = this;
-            this.date_input = self.$el.find("#web_countdown_date").datepicker({
-                minDate: 0,
-            });
-            return this._super();
-        },
-        set_countdown: function () {
-            var self = this;
-            var release_date = this.date_input.datepicker( 'getDate' );
-            var hour = $("#web_countdown_hour").val();
-            var minute = $("#web_countdown_min").val();
-            var second = $("#web_countdown_sec").val();
-            if (!hour)
-                hour = '00';
-            if (!minute)
-                minute = '00';
-            if (!second)
-                second = '00';
-            var dt_format = $("#web_countdown_date").val() +' '+ hour + ':' + minute +':'+ second;
-            var add_warning = function (msg){
-                self.$el.find(".alert").remove();
-                self.$el.find(".modal-body").append('<div class="alert alert-danger mt8">'+ msg +'</div>');
-            };
-            if (!moment(dt_format, 'MM/DD/YYYY HH:mm:ss', false).isValid()) {
-                add_warning('Invalid Input. Please enter proper DATE, HOURS, MINUTES, SECONDS');
-            }
-            else {
-                release_date.setHours(hour, minute, second);
-                self.$target.attr("data-release_date",release_date.getTime());
-                self.trigger('set_countdown');
-            }
-        },
-    });
-
-    options.countdown = Option.extend({
-        start : function () {
-            var self = this;
-            this._super();
-            this.$el.find(".set_countdown").on('click', function () {self.on_set_countdown(); return false;});
-        },
-        on_set_countdown: function () {
-            var self = this;
-            var release_date = parseInt(this.$target[0].getAttribute("data-release_date"));
-            var set_dialog = new website.editor.countdown(self);
-            set_dialog.appendTo($(document.body));
-            if (release_date) {
-                var date = new Date(release_date);
-                $('input#web_countdown_date').val(moment(date).format('MM/DD/YYYY'));
-                $('input#web_countdown_hour').val(moment(date).format('HH'));
-                $('input#web_countdown_min').val(moment(date).format('mm'));
-                $('input#web_countdown_sec').val(moment(date).format('ss'));
-            }
-            set_dialog.on('set_countdown', this, function () {
-                website.countdown(self.$target[0], false);
-                set_dialog.$el.modal('hide');
-            });
-        },
-        add_timer_element: function (type, value) {
-            var $clock_str = {"o_counter_day": "Days", "o_counter_hour": "Hours", "o_counter_min": "Minutes", "o_counter_sec": "Seconds"};
-            if (value && value.length && type == "click"){
-                if (this.$target.find("div."+value).length){
-                    alert('Countdown Timer displaying "' + $clock_str[value] + '" is already there.')
-                }
-                else{
-                    var $clock = "<div class='col-md-2 col-sm-3 col-xs-6 text-center mb16'><div class='"+value+" o_countdown-text img-circle col-xs-12 text-center'><p> <font class='o_count_val' contenteditable='false'>00</font></p><p><font>"+$clock_str[value]+"</font></p></div><div>"
-                    this.$target.find("div.col-last").first().before($clock);
-                }
-            }
-        },
-    });
-
-    editor.EditorBar.include({
-        edit: function () {
-            var self = this;
-            this._super();
-            $('body').on('click',
-                '.o_show_counter',
-                function(){
-                    $(this).closest('.container').find(".o_countdown_start").removeClass('hidden');
-                    $(this).closest('.container').find(".o_countdown_over").addClass('hidden');
-            });
-            $('body').on('click',
-                '.o_show_release',
-                function(){
-                    $(this).closest('.container').find(".o_countdown_start").addClass('hidden');
-                    $(this).closest('.container').find(".o_countdown_over").removeClass('hidden');
-            });
-        },
-    });
-
-    options.marginAndResize = Option.extend({
-        start: function () {
-            var self = this;
-            this._super();
-
-            var resize_values = this.getSize();
-            if (resize_values.n) this.$overlay.find(".oe_handle.n").removeClass("readonly");
-            if (resize_values.s) this.$overlay.find(".oe_handle.s").removeClass("readonly");
-            if (resize_values.e) this.$overlay.find(".oe_handle.e").removeClass("readonly");
-            if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
-            if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
-
-            this.$overlay.find(".oe_handle:not(.size), .oe_handle.size .size").on('mousedown', function (event){
-                event.preventDefault();
-
-                var $handle = $(this);
-
-                var resize_values = self.getSize();
-                var compass = false;
-                var XY = false;
-                if ($handle.hasClass('n')) {
-                    compass = 'n';
-                    XY = 'Y';
-                }
-                else if ($handle.hasClass('s')) {
-                    compass = 's';
-                    XY = 'Y';
-                }
-                else if ($handle.hasClass('e')) {
-                    compass = 'e';
-                    XY = 'X';
-                }
-                else if ($handle.hasClass('w')) {
-                    compass = 'w';
-                    XY = 'X';
-                }
-                else if ($handle.hasClass('size')) {
-                    compass = 'size';
-                    XY = 'Y';
-                }
-
-                var resize = resize_values[compass];
-                if (!resize) return;
-
-
-                if (compass === 'size') {
-                    var offset = self.$target.offset().top;
-                    if (self.$target.css("background").match(/rgba\(0, 0, 0, 0\)/)) {
-                        self.$target.addClass("resize_editor_busy");
-                    }
-                } else {
-                    var xy = event['page'+XY];
-                    var current = resize[2] || 0;
-                    _.each(resize[0], function (val, key) {
-                        if (self.$target.hasClass(val)) {
-                            current = key;
-                        }
-                    });
-                    var begin = current;
-                    var beginClass = self.$target.attr("class");
-                    var regClass = new RegExp("\\s*" + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
-                }
-
-                self.BuildingBlock.editor_busy = true;
-
-                var cursor = $handle.css("cursor")+'-important';
-                var $body = $(document.body);
-                $body.addClass(cursor);
-
-                var body_mousemove = function (event){
-                    event.preventDefault();
-                    if (compass === 'size') {
-                        var dy = event.pageY-offset;
-                        dy = dy - dy%resize;
-                        if (dy <= 0) dy = resize;
-                        self.$target.css("height", dy+"px");
-                        self.$target.css("overflow", "hidden");
-                        self.on_resize(compass, null, dy);
-                        self.BuildingBlock.cover_target(self.$overlay, self.$target);
-                        return;
-                    }
-                    var dd = event['page'+XY] - xy + resize[1][begin];
-                    var next = current+1 === resize[1].length ? current : (current+1);
-                    var prev = current ? (current-1) : 0;
-
-                    var change = false;
-                    if (dd > (2*resize[1][next] + resize[1][current])/3) {
-                        self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
-                        self.$target.addClass(resize[0][next]);
-                        current = next;
-                        change = true;
-                    }
-                    if (prev != current && dd < (2*resize[1][prev] + resize[1][current])/3) {
-                        self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
-                        self.$target.addClass(resize[0][prev]);
-                        current = prev;
-                        change = true;
-                    }
-
-                    if (change) {
-                        self.on_resize(compass, beginClass, current);
-                        self.BuildingBlock.cover_target(self.$overlay, self.$target);
-                    }
-                };
-
-                var body_mouseup = function(){
-                    $body.unbind('mousemove', body_mousemove);
-                    $body.unbind('mouseup', body_mouseup);
-                    $body.removeClass(cursor);
-                    setTimeout(function () {
-                        self.BuildingBlock.editor_busy = false;
-                    },0);
-                    self.$target.removeClass("resize_editor_busy");
-                };
-                $body.mousemove(body_mousemove);
-                $body.mouseup(body_mouseup);
-            });
-            this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event){
-                self.$target.css("height", "");
-                self.$target.css("overflow", "");
-                self.BuildingBlock.cover_target(self.$overlay, self.$target);
-                return false;
-            });
-        },
-        getSize: function () {
-            this.grid = {};
-            return this.grid;
-        },
-
-        on_focus : function () {
-            this._super();
-            this.change_cursor();
-        },
-
-        change_cursor : function () {
-            var _class = this.$target.attr("class") || "";
-
-            var col = _class.match(/col-md-([0-9-]+)/i);
-            col = col ? +col[1] : 0;
-
-            var offset = _class.match(/col-md-offset-([0-9-]+)/i);
-            offset = offset ? +offset[1] : 0;
-
-            var overlay_class = this.$overlay.attr("class").replace(/(^|\s+)block-[^\s]*/gi, '');
-            if (col+offset >= 12) overlay_class+= " block-e-right";
-            if (col === 1) overlay_class+= " block-w-right block-e-left";
-            if (offset === 0) overlay_class+= " block-w-left";
-
-            var mb = _class.match(/mb([0-9-]+)/i);
-            mb = mb ? +mb[1] : 0;
-            if (mb >= 128) overlay_class+= " block-s-bottom";
-            else if (!mb) overlay_class+= " block-s-top";
-
-            var mt = _class.match(/mt([0-9-]+)/i);
-            mt = mt ? +mt[1] : 0;
-            if (mt >= 128) overlay_class+= " block-n-top";
-            else if (!mt) overlay_class+= " block-n-bottom";
-
-            this.$overlay.attr("class", overlay_class);
-        },
-        
-        /* on_resize
-        *  called when the box is resizing and the class change, before the cover_target
-        *  @compass: resize direction : 'n', 's', 'e', 'w'
-        *  @beginClass: attributes class at the begin
-        *  @current: curent increment in this.grid
-        */
-        on_resize: function (compass, beginClass, current) {
-            this.change_cursor();
+editor.countdown = editor.Dialog.extend({
+    template: 'website.countdown_configuration',
+    events : _.extend({}, editor.Dialog.prototype.events, {
+        'click button[data-action=set_countdown]': 'set_countdown',
+    }),
+    init: function (parent) {
+        this.$target = parent.$target;
+        return this._super();
+    },
+    start: function () {
+        var self = this;
+        this.date_input = self.$el.find("#web_countdown_date").datepicker({
+            minDate: 0,
+        });
+        return this._super();
+    },
+    set_countdown: function () {
+        var self = this;
+        var release_date = this.date_input.datepicker( 'getDate' );
+        var hour = $("#web_countdown_hour").val();
+        var minute = $("#web_countdown_min").val();
+        var second = $("#web_countdown_sec").val();
+        if (!hour)
+            hour = '00';
+        if (!minute)
+            minute = '00';
+        if (!second)
+            second = '00';
+        var dt_format = $("#web_countdown_date").val() +' '+ hour + ':' + minute +':'+ second;
+        var add_warning = function (msg){
+            self.$el.find(".alert").remove();
+            self.$el.find(".modal-body").append('<div class="alert alert-danger mt8">'+ msg +'</div>');
+        };
+        if (!moment(dt_format, 'MM/DD/YYYY HH:mm:ss', false).isValid()) {
+            add_warning('Invalid Input. Please enter proper DATE, HOURS, MINUTES, SECONDS');
         }
-    });
-    options["margin-y"] = options.marginAndResize.extend({
-        getSize: function () {
-            this.grid = this._super();
-            var grid = [0,4,8,16,32,48,64,92,128];
-            this.grid = {
-                // list of class (Array), grid (Array), default value (INT)
-                n: [_.map(grid, function (v) {return 'mt'+v;}), grid],
-                s: [_.map(grid, function (v) {return 'mb'+v;}), grid],
-                // INT if the user can resize the snippet (resizing per INT px)
-                size: null
-            };
-            return this.grid;
-        },
-    });
-    options["margin-x"] = options.marginAndResize.extend({
-        getSize: function () {
-            this.grid = this._super();
-            var width = this.$target.parents(".row:first").first().outerWidth();
-
-            var grid = [1,2,3,4,5,6,7,8,9,10,11,12];
-            this.grid.e = [_.map(grid, function (v) {return 'col-md-'+v;}), _.map(grid, function (v) {return width/12*v;})];
-
-            var grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
-            this.grid.w = [_.map(grid, function (v) {return 'col-md-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
-
-            return this.grid;
-        },
-        _drag_and_drop_after_insert_dropzone: function(){
-            var self = this;
-            var $zones = $(".row:has(> .oe_drop_zone)").each(function () {
-                var $row = $(this);
-                var width = $row.innerWidth();
-                var pos = 0;
-                while (width > pos + self.size.width) {
-                    var $last = $row.find("> .oe_drop_zone:last");
-                    $last.each(function () {
-                        pos = $(this).position().left;
-                    });
-                    if (width > pos + self.size.width) {
-                        $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
-                        var $add_drop = $last.clone();
-                        $row.append($add_drop);
-                        self._drag_and_drop_active_drop_zone($add_drop);
-                    }
-                }
-            });
-        },
-        _drag_and_drop_start: function () {
-            this._super();
-            this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, ''));
-        },
-        _drag_and_drop_stop: function () {
-            this.$target.addClass("col-md-offset-" + this.$target.prevAll(".oe_drop_to_remove").length);
-            this._super();
-        },
-        hide_remove_button: function() {
-            this.$overlay.find('.oe_snippet_remove').toggleClass("hidden", !this.$target.siblings().length);
-        },
-        on_focus : function () {
-            this._super();
-            this.hide_remove_button();
-        },
-        on_clone: function ($clone) {
-            var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
-            $clone.attr("class", _class);
-            this.hide_remove_button();
-            return false;
-        },
-        on_remove: function () {
-            this._super();
-            this.hide_remove_button();
-        },
-        on_resize: function (compass, beginClass, current) {
-            if (compass === 'w') {
-                // don't change the right border position when we change the offset (replace col size)
-                var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
-                var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
-                var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
-                if (offset < 0) {
-                    offset = 0;
-                }
-                var colSize = beginCol - (offset - beginOffset);
-                if (colSize <= 0) {
-                    colSize = 1;
-                    offset = beginOffset + beginCol - 1;
-                }
-                this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-|col-md-)([0-9-]+)/g, ''));
-
-                this.$target.addClass('col-md-' + (colSize > 12 ? 12 : colSize));
-                if (offset > 0) {
-                    this.$target.addClass('col-md-offset-' + offset);
-                }
-            }
-            this._super(compass, beginClass, current);
-        },
-    });
-
-    options.resize = options.marginAndResize.extend({
-        getSize: function () {
-            this.grid = this._super();
-            this.grid.size = 8;
-            return this.grid;
-        },
-    });
-
-    options.parallax = Option.extend({
-        getSize: function () {
-            this.grid = this._super();
-            this.grid.size = 8;
-            return this.grid;
-        },
-        on_resize: function (compass, beginClass, current) {
-            this.$target.data("snippet-view").set_values();
-        },
-        start : function () {
-            var self = this;
-            this._super();
-            if (!self.$target.data("snippet-view")) {
-                this.$target.data("snippet-view", new website.snippet.animationRegistry.parallax(this.$target));
-            }
-            this.scroll();
-            this.$target.on('snippet-option-change snippet-option-preview', function () {
-                self.$target.data("snippet-view").set_values();
-            });
-            this.$target.attr('contentEditable', 'false');
-
-            this.$target.find('> div > .oe_structure').attr('contentEditable', 'true'); // saas-3 retro-compatibility
-
-            this.$target.find('> div > div:not(.oe_structure) > .oe_structure').attr('contentEditable', 'true');
-        },
-        scroll: function (type, value) {
-            this.$target.attr('data-scroll-background-ratio', value);
-            this.$target.data("snippet-view").set_values();
-        },
-        set_active: function () {
-            var value = this.$target.attr('data-scroll-background-ratio') || 0;
-            this.$el.find('[data-scroll]').removeClass("active")
-                .filter('[data-scroll="' + (this.$target.attr('data-scroll-background-ratio') || 0) + '"]').addClass("active");
-        },
-        clean_for_save: function () {
-            this._super();
-            this.$target.find(".parallax")
-                .css("background-position", '')
-                .removeAttr("data-scroll-background-offset");
+        else {
+            release_date.setHours(hour, minute, second);
+            self.$target.attr("data-release_date",release_date.getTime());
+            self.trigger('set_countdown');
         }
-    });
+    },
+});
 
-    options.transform = Option.extend({
-        start: function () {
-            var self = this;
-            this._super();
-            this.$overlay.find('.oe_snippet_clone, .oe_handles').addClass('hidden');
-            this.$overlay.find('[data-toggle="dropdown"]')
-                .on("mousedown", function () {
-                    self.$target.transfo("hide");
-                });
-            this.$target.on('attributes_change', function () {
-                self.resetTransfo();
-            });
-
-            // don't unactive transform if rotation and mouseup on an other container
-            var cursor_mousedown = false;
-            $(document).on('mousedown', function (event) {
-                if (self.$overlay.hasClass('oe_active') && $(event.target).closest(".transfo-controls").length) {
-                    cursor_mousedown = event;
-                }
-            });
-            $(document).on('mouseup', function (event) {
-                if (cursor_mousedown) {
-                    event.preventDefault();
-
-                    var dx = event.clientX-cursor_mousedown.clientX;
-                    var dy = event.clientY-cursor_mousedown.clientY;
-                    setTimeout(function () {
-                        self.$target.focusIn().activateBlock();
-                        if (10 < Math.pow(dx, 2)+Math.pow(dy, 2)) {
-                            setTimeout(function () {
-                                self.$target.transfo({ 'hide': false });
-                            },0);
-                        }
-                    },0);
-                    cursor_mousedown = false;
-                }
-            });
-        },
-        style: function (type, value) {
-            if (type !== 'click') return;
-            var settings = this.$target.data("transfo").settings;
-            this.$target.transfo({ 'hide': (settings.hide = !settings.hide) });
-        },
-        clear_style: function (type, value) {
-            if (type !== 'click') return;
-            this.$target.removeClass("fa-spin").attr("style", "");
-            this.resetTransfo();
-        },
-        move_summernote_select: function () {
-            var self = this;
-            var transfo = this.$target.data("transfo");
-            $('body > .note-handle')
-                .attr('style', transfo.$markup.attr('style'))
-                .css({
-                    'z-index': 0,
-                    'pointer-events': 'none'
-                })
-                .off('mousedown mouseup')
-                .on('mousedown mouseup', function (event) {
-                    self.$target.trigger( jQuery.Event( event.type, event ) );
-                })
-                .find('.note-control-selection').attr('style', transfo.$markup.find('.transfo-controls').attr('style'))
-                    .css({
-                        'display': 'block',
-                        'cursor': 'auto'
-                    });
-        },
-        resetTransfo: function () {
-            var self = this;
-            this.$overlay.css('width', '');
-            this.$overlay.data('not-cover_target', true);
-            this.$target.transfo("destroy");
-            this.$target.transfo({
-                hide: true,
-                callback: function () {
-                    var pos = $(this).data("transfo").$center.offset();
-                    self.$overlay.css({
-                        'top': pos.top | 0,
-                        'left': pos.left | 0,
-                        'position': 'absolute',
-                    });
-                    self.$overlay.find(".oe_overlay_options").attr("style", "width:0; left:0!important; top:0;");
-                    self.$overlay.find(".oe_overlay_options > .btn-group").attr("style", "width:160px; left:-80px;");
-
-                    self.move_summernote_select();
-                }});
-            this.$target.data('transfo').$markup
-                .on("mouseover", function () {
-                    self.$target.trigger("mouseover");
-                })
-                .mouseover();
-        },
-        on_focus : function () {
-            var self = this;
-            setTimeout(function () {
-                self.$target.css({"-webkit-animation": "none", "animation": "none"});
-                self.resetTransfo();
-            },0);
-        },
-        on_blur : function () {
-            this.$target.transfo("hide");
-            $('.note-handle').hide(); // hide selection of summernote
-            this.$target.css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
-        },
-        clean_for_save: function () {
-            this.on_blur();
-            this._super();
+options.countdown = Option.extend({
+    start : function () {
+        var self = this;
+        this._super();
+        this.$el.find(".set_countdown").on('click', function () {self.on_set_countdown(); return false;});
+    },
+    on_set_countdown: function () {
+        var self = this;
+        var release_date = parseInt(this.$target[0].getAttribute("data-release_date"));
+        var set_dialog = new editor.countdown(self);
+        set_dialog.appendTo($(document.body));
+        if (release_date) {
+            var date = new Date(release_date);
+            $('input#web_countdown_date').val(moment(date).format('MM/DD/YYYY'));
+            $('input#web_countdown_hour').val(moment(date).format('HH'));
+            $('input#web_countdown_min').val(moment(date).format('mm'));
+            $('input#web_countdown_sec').val(moment(date).format('ss'));
         }
-    });
+        set_dialog.on('set_countdown', this, function () {
+            animation.countdown(self.$target[0], false);
+            set_dialog.$el.modal('hide');
+        });
+    },
+    add_timer_element: function (type, value) {
+        var $clock_str = {"o_counter_day": "Days", "o_counter_hour": "Hours", "o_counter_min": "Minutes", "o_counter_sec": "Seconds"};
+        if (value && value.length && type == "click"){
+            if (this.$target.find("div."+value).length){
+                alert('Countdown Timer displaying "' + $clock_str[value] + '" is already there.')
+            }
+            else{
+                var $clock = "<div class='col-md-2 col-sm-3 col-xs-6 text-center mb16'><div class='"+value+" o_countdown-text img-circle col-xs-12 text-center'><p> <font class='o_count_val' contenteditable='false'>00</font></p><p><font>"+$clock_str[value]+"</font></p></div><div>"
+                this.$target.find("div.col-last").first().before($clock);
+            }
+        }
+    },
+});
 
-    editor.countdown = editor.Dialog.extend({
-        template: 'website.countdown_configuration',
-        events : _.extend({}, editor.Dialog.prototype.events, {
-            'click button[data-action=set_countdown]': 'set_countdown',
-        }),
-        init: function (parent) {
-            this.$target = parent.$target;
-            return this._super();
-        },
-        start: function () {
-            var self = this;
-            this.date_input = self.$el.find("#web_countdown_date").datepicker({
-                minDate: 0,
-            });
-            return this._super();
-        },
-        set_countdown: function () {
-            var self = this;
-            var release_date = this.date_input.datepicker( 'getDate' );
-            var hour = document.getElementById("web_countdown_hour").value;
-            var minute = document.getElementById("web_countdown_min").value;
-            var second = document.getElementById("web_countdown_sec").value;
-            var local_date  = new Date(release_date.getFullYear(),release_date.getMonth(),release_date.getDate(), hour, minute, second);
-            var add_warning = function (msg){
-                self.$el.find(".alert").remove();
-                self.$el.find(".modal-body").append('<div class="alert alert-danger mt8">'+ msg +'</div>');
-            }
-            if(hour > 23 | hour < 0 ){
-                add_warning("Enter valid HOURS (Between 0 to 23)");
-            }
-            else if(minute > 59 | minute < 0 ){
-                add_warning("Enter valid MINUTES (Between 0 to 59)");
-            }
-            else if(second > 59 | second < 0 ){
-                add_warning("Enter valid SECONDS (Between 0 to 59)");
-            }
-            else if(local_date == "Invalid Date" ){
-                add_warning("Invalid date format. Valid Date format is MM/DD/YYYY");
-            }else{
-                self.$target.attr("data-release_date",local_date.getTime())
-                self.trigger('set_countdown');
-            }
-        },
-    });
-    
-    options.countdown = Option.extend({
-        start : function () {
-            var self = this;
-            this._super();
-            this.$el.find(".set_countdown").on('click', function () {self.on_set_countdown(); return false;});
-        },
-        on_set_countdown:function(){
-            var self = this;
-            var release_date = parseInt(this.$target[0].getAttribute("data-release_date"));
-            var set_dialog = new editor.countdown(self);
-            set_dialog.appendTo($(document.body));
-            if (release_date){
-                var date = new Date(release_date)
-                $('input#web_countdown_date').val((date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear());
-                $('input#web_countdown_hour').val(date.getHours());
-                $('input#web_countdown_min').val(date.getMinutes());
-                $('input#web_countdown_sec').val(date.getSeconds());
-            }
-            set_dialog.on('set_countdown', this, function () {
-                animation.countdown(self.$target[0], false);
-                set_dialog.$el.modal('hide');
-            });
-        },
-        add_timer_element: function (type, value) {
-            var $clock_str = {"o_counter_day": "Days", "o_counter_hour": "Hours", "o_counter_min": "Minutes", "o_counter_sec": "Seconds"};
-            if (value && value.length && type == "click"){
-                if (this.$target.find("div."+value).length >= 1){
-                    alert('Countdown Timer displaying "' + $clock_str[value] + '" is already there.')
-                }
-                else{
-                    var $clock = "<div class='col-md-2 col-sm-3 col-xs-6 text-center mb16'><div class='"+value+" o_countdown-text img-circle col-xs-12 text-center'><p> <font class='o_count_val' contenteditable='false'>00</font></p><p><font>"+$clock_str[value]+"</font></p></div><div>"
-                    this.$target.find("div.col-last").first().before($clock);
-                }
-            }
-        },
-    });
-    editor.EditorBar.include({
-        edit: function () {
-            var self = this;
-            this._super();
-            $('body').on('click',
-                '.o_show_counter',
-                function(){
-                    $(this).closest('.container').find(".o_countdown_start").removeClass('hidden');
-                    $(this).closest('.container').find(".o_countdown_over").addClass('hidden');
-            });
-            $('body').on('click',
-                '.o_show_release',
-                function(){
-                    $(this).closest('.container').find(".o_countdown_start").addClass('hidden');
-                    $(this).closest('.container').find(".o_countdown_over").removeClass('hidden');
-            });
-        },
-   });
+editor.EditorBar.include({
+    edit: function () {
+        var self = this;
+        this._super();
+        $('body').on('click',
+            '.o_show_counter',
+            function(){
+                $(this).closest('.container').find(".o_countdown_start").removeClass('hidden');
+                $(this).closest('.container').find(".o_countdown_over").addClass('hidden');
+        });
+        $('body').on('click',
+            '.o_show_release',
+            function(){
+                $(this).closest('.container').find(".o_countdown_start").addClass('hidden');
+                $(this).closest('.container').find(".o_countdown_over").removeClass('hidden');
+        });
+    },
+});
 
-    options.marginAndResize = Option.extend({
-        start: function () {
-            var self = this;
-            this._super();
+options.marginAndResize = Option.extend({
+    start: function () {
+        var self = this;
+        this._super();
 
-            var resize_values = this.getSize();
-            if (resize_values.n) this.$overlay.find(".oe_handle.n").removeClass("readonly");
-            if (resize_values.s) this.$overlay.find(".oe_handle.s").removeClass("readonly");
-            if (resize_values.e) this.$overlay.find(".oe_handle.e").removeClass("readonly");
-            if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
-            if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
+        var resize_values = this.getSize();
+        if (resize_values.n) this.$overlay.find(".oe_handle.n").removeClass("readonly");
+        if (resize_values.s) this.$overlay.find(".oe_handle.s").removeClass("readonly");
+        if (resize_values.e) this.$overlay.find(".oe_handle.e").removeClass("readonly");
+        if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
+        if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
 
-            this.$overlay.find(".oe_handle:not(.size), .oe_handle.size .size").on('mousedown', function (event){
-                event.preventDefault();
+        this.$overlay.find(".oe_handle:not(.size), .oe_handle.size .size").on('mousedown', function (event){
+            event.preventDefault();
+
+            var $handle = $(this);
+
+            var resize_values = self.getSize();
+            var compass = false;
+            var XY = false;
+            if ($handle.hasClass('n')) {
+                compass = 'n';
+                XY = 'Y';
+            }
+            else if ($handle.hasClass('s')) {
+                compass = 's';
+                XY = 'Y';
+            }
+            else if ($handle.hasClass('e')) {
+                compass = 'e';
+                XY = 'X';
+            }
+            else if ($handle.hasClass('w')) {
+                compass = 'w';
+                XY = 'X';
+            }
+            else if ($handle.hasClass('size')) {
+                compass = 'size';
+                XY = 'Y';
+            }
 
             var resize = resize_values[compass];
             if (!resize) return;
@@ -2062,7 +1560,7 @@ options.carousel = options.slider.extend({
             $body.mousemove(body_mousemove);
             $body.mouseup(body_mouseup);
         });
-        this.$overlay.find(".oe_handle.size .auto_size").on('click', function (){
+        this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event){
             self.$target.css("height", "");
             self.$target.css("overflow", "");
             self.BuildingBlock.cover_target(self.$overlay, self.$target);
@@ -2105,7 +1603,7 @@ options.carousel = options.slider.extend({
 
         this.$overlay.attr("class", overlay_class);
     },
-
+    
     /* on_resize
     *  called when the box is resizing and the class change, before the cover_target
     *  @compass: resize direction : 'n', 's', 'e', 'w'
