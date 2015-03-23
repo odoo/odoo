@@ -14,7 +14,7 @@ odoo.define('web.Class', function () {
  *
  * Example:
  *
- * var Person = openerp.Class.extend({
+ * var Person = Class.extend({
  *  init: function(isDancing){
  *     this.dancing = isDancing;
  *   },

@@ -1,6 +1,7 @@
 odoo.define('website_mass_mailing.editor', function (require) {
 'use strict';
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var editor = require('website.editor');
 var snippet_editor = require('website.snippet.editor');
@@ -49,7 +50,7 @@ website.snippet.options.newsletter_popup = website.snippet.Option.extend({
                         .call('name_search', [], { context: website.get_context() });
             },
         }).then(function (mailing_list_id) {
-            openerp.jsonRpc('/web/dataset/call', 'call', {
+            ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'mail.mass_mailing.list',
                 method: 'read',
                 args: [[parseInt(mailing_list_id)], ['popup_content'], website.get_context()],
@@ -87,7 +88,7 @@ editor.EditorBar.include({
             }
             var content = $('#wrapwrap .o_popup_content_dev').html();
             var newsletter_id = $target.parent().attr('data-list-id');
-            openerp.jsonRpc('/web/dataset/call', 'call', {
+            ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'mail.mass_mailing.list',
                 method: 'write',
                 args: [parseInt(newsletter_id),
