@@ -118,21 +118,23 @@
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Javascript initializing the LiveSupport">
-            (function() {
-                window.livesupport = new openerp.im_livechat.LiveSupport(
-                    "<t t-esc="url"/>",
-                    "<t t-esc="dbname"/>",
-                    <t t-esc="channel"/>,
-                    {
-                        buttonText: "<t t-esc="buttonText"/>",
-                        inputPlaceholder: "<t t-esc="inputPlaceholder"/>",
-                        defaultMessage: "<t t-esc="defaultMessage"/>" || '',
-                        auto: window.oe_im_livechat_auto || false,
-                        defaultUsername: "<t t-esc="username"/>" || undefined,
-                    },
-                    <t t-raw="rule"/>
-                );
-            })();
+            <t t-translate="off">
+                (function() {
+                    window.livesupport = new openerp.im_livechat.LiveSupport(
+                        "<t t-esc="url"/>",
+                        "<t t-esc="dbname"/>",
+                        <t t-esc="channel"/>,
+                        {
+                            buttonText: "<t t-esc="buttonText"/>",
+                            inputPlaceholder: "<t t-esc="inputPlaceholder"/>",
+                            defaultMessage: "<t t-esc="defaultMessage"/>" || '',
+                            auto: window.oe_im_livechat_auto || false,
+                            defaultUsername: "<t t-esc="username"/>" || undefined,
+                        },
+                        <t t-raw="rule"/>
+                    );
+                })();
+            </t>
         </template>
 
     </data>
