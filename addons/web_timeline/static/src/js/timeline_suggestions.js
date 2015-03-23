@@ -22,7 +22,6 @@ var Groups = Widget.extend({
         this.mail_group = new data.DataSetSearch(this, 'mail.group');
         this.res_users = new data.DataSetSearch(this, 'res.users');
         this.groups = [];
-        console.log("web_timeline : ", web_timeline);
     },
 
     start: function () {
