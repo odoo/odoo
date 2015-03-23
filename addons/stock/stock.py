@@ -2294,16 +2294,18 @@ class stock_move(osv.osv):
                     procurement_ids = procurement_obj.search(cr, uid, [('move_dest_id', '=', move.id)], context=context)
                     procurement_obj.cancel(cr, uid, procurement_ids, context=context)
             else:
-                if move.move_dest_id:
+                if move.move_dest_id and not move.origin_returned_move_id:
                     if move.propagate:
                         self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
                     elif move.move_dest_id.state == 'waiting':
                         #If waiting, the chain will be broken and we are not sure if we can still wait for it (=> could take from stock instead)
                         self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
+                else:
+                    if move.origin_returned_move_id and move.origin_returned_move_id.move_dest_id:
+                        self.action_assign(cr, uid, [move.origin_returned_move_id.move_dest_id.id], context=context)
                 if move.procurement_id:
                     # Does the same as procurement check, only eliminating a refresh
                     procs_to_check.append(move.procurement_id.id)
-                    
         res = self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
         if procs_to_check:
             procurement_obj.check(cr, uid, procs_to_check, context=context)
