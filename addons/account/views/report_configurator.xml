@@ -30,18 +30,17 @@
                         </t>   
                     </select>
                 </div>
-		<div class="col-sm-3" t-if="report.get_report_type() == 'bank_reconciliation'">
-		  <label for="bank_account_id">Bank Accounts :</label>
-		  <select name="journal_id" class="form-control">
-		    <t t-foreach="context.journals" t-as="bank">
-		      <option t-attf-value="{{ bank.id }}" t-if="context.journal_id == bank" selected="selected"><t t-esc="bank.name"/></option>
-		      <option t-attf-value="{{ bank.id }}" t-if="context.journal_id != bank"><t t-esc="bank.name"/></option>
-
-		    </t>
-		  </select>
-		  <label class="start-date" for="date_from">Date :</label>
-                  <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control date_bank_reconciliation" name="date_from" t-att-value="context.date_from"></input>
-		</div>
+                <div class="col-sm-3" t-if="report.get_report_type() == 'bank_reconciliation'">
+                    <label for="bank_account_id">Bank Accounts :</label>
+                    <select name="journal_id" class="form-control">
+                        <t t-foreach="context.journals" t-as="bank">
+                            <option t-attf-value="{{ bank.id }}" t-if="context.journal_id == bank" selected="selected"><t t-esc="bank.name"/></option>
+                            <option t-attf-value="{{ bank.id }}" t-if="context.journal_id != bank"><t t-esc="bank.name"/></option>
+                        </t>
+                    </select>
+                    <label class="start-date" for="date_from">Date :</label>
+                    <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control date_bank_reconciliation" name="date_from" t-att-value="context.date_from"></input>
+                </div>
                 <div class="col-sm-3" t-if="report.get_report_type() != 'bank_reconciliation'">
                     <label for="date_filter">Date Filter :</label>
                     <select name="date_filter" t-if="report.get_report_type() == 'no_date_range'" class="form-control">
