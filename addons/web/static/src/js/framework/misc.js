@@ -4,7 +4,6 @@ odoo.define('web.framework', function (require) {
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var session = require('web.session');
-var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var _t = core._t;
