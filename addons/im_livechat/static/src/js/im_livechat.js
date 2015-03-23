@@ -267,6 +267,7 @@
             return openerp.session.rpc("/rating/livechat/feedback", {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
                 if(close){
                     self.trigger("feedback_sent"); // will close the conversation
+                    self.conversation.send_message(_.str.sprintf(_t("I rated you with :rating_%d"), self.rating), "message");
                 }
             });
         }

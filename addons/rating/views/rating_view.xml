@@ -7,14 +7,13 @@
             <field name="arch" type="xml">
                 <kanban create="false" class="oe_background_grey">
                     <field name="rating"/>
+                    <field name="res_id"/>
+                    <field name="res_model"/>
                     <field name="res_name"/>
                     <field name="create_date"/>
                     <field name="partner_id"/>
                     <field name="rated_partner_id"/>
                     <field name="feedback"/>
-                    <!-- those 2 are required to redirect to the view form object, in JS -->
-                    <field name="res_id"/>
-                    <field name="res_model"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_card oe_kanban_global_click">
