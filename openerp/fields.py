@@ -618,7 +618,7 @@ class Field(object):
             # add trigger on inverse fields, too
             for invf in field.inverse_fields:
                 #_logger.debug("Add trigger on %s to recompute %s", invf, self)
-                invf.add_trigger((self, '.'.join(path0 + [head])))
+                invf.add_trigger((self, head))
 
             # recursively traverse the dependency
             if tail:
