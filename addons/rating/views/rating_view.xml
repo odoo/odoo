@@ -12,17 +12,21 @@
                     <field name="partner_id"/>
                     <field name="rated_partner_id"/>
                     <field name="feedback"/>
+                    <!-- those 2 are required to redirect to the view form object, in JS -->
+                    <field name="res_id"/>
+                    <field name="res_model"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div style="min-height:100px;width:100px">
-                                <div t-attf-title="Name : #{ record.res_name.raw_value } &lt;br&gt;
-                                        #{ record.partner_id.value ? 'Customer : ' + record.partner_id.value + '&lt;br&gt;' : '' }
-                                        #{ record.rated_partner_id.value ? 'Responsible : ' + record.rated_partner_id.value+'&lt;br&gt;' : '' }
-                                        Date : #{ moment(record.create_date.raw_value).format('L') }
-                                        #{ record.feedback.raw_value ? '&lt;br&gt;'+'Reason : ' + record.feedback.raw_value : '' }"
-                                    data-html="true" data-placement="bottom">
-                                   <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value}.png" class="oe_kanban_image"/>
-                                </div>
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <a t-att-href="_.str.sprintf('/web?#id=%s&amp;view_type=form&amp;model=%s', record.res_id.value, record.res_model.value)">
+                                    <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value}.png"
+                                        t-attf-title="Name : #{ record.res_name.raw_value } &lt;br&gt;
+                                            #{ record.partner_id.value ? 'Customer : ' + record.partner_id.value + '&lt;br&gt;' : '' }
+                                            #{ record.rated_partner_id.value ? 'Responsible : ' + record.rated_partner_id.value+'&lt;br&gt;' : '' }
+                                            Date : #{ moment(record.create_date.raw_value).format('L') }
+                                            #{ record.feedback.raw_value ? '&lt;br&gt;'+'Reason : ' + record.feedback.raw_value : '' }"
+                                        data-html="true" data-placement="bottom"/>
+                                </a>
                             </div>
                         </t>
                     </templates>
