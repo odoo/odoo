@@ -20,7 +20,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         var target_id = $("#nextActionModal #target_id").val();
         var date = $("#nextActionDate").val();
         var contextModel = new openerp.Model('account.report.context.followup');
-        contextModel.call('change_next_action', [[parseInt(target_id)], date, note]).then(function (result) {
+        return contextModel.call('change_next_action', [[parseInt(target_id)], date, note]).then(function (result) {
             $('#nextActionModal').modal('hide');
             date = new Date(date.substr(0, 4), date.substr(5, 2), date.substr(8, 2), 12, 0, 0, 0).toLocaleDateString();
             $('div.page.' + target_id).find('.oe-account-next-action').html(openerp.qweb.render("nextActionDate", {'note': note, 'date': date}));
@@ -76,7 +76,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         var partner_id = $(e.target).attr("partner");
         var model = new openerp.Model('res.partner');
         if ($(e.target).is('a.btn-primary.followup-skip')) {
-            model.call('update_next_action', [[parseInt(partner_id)]]).then(function (result) {
+            return model.call('update_next_action', [[parseInt(partner_id)]]).then(function (result) {
                 window.open('?partner_done=' + partner_id, '_self');
             });
         }
@@ -105,7 +105,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         e.preventDefault();
         var context_id = $(e.target).parents("div.page").attr("data-context");
         var contextModel = new openerp.Model('account.report.context.followup');
-        contextModel.call('send_email', [[parseInt(context_id)]]).then (function (result) {
+        return contextModel.call('send_email', [[parseInt(context_id)]]).then (function (result) {
             if (result == true) {
                 window.$("div.page:first").prepend(openerp.qweb.render("emailSent"));
                 if ($(e.target).is('.btn-primary')) {
@@ -140,7 +140,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         e.preventDefault();
         var note = $("#internalNote").val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
         var invoiceModel = new openerp.Model('account.move.line');
-        invoiceModel.call('write', [[parseInt($("#paymentDateModal #target_id").val())], {expected_pay_date: $("#expectedDate").val(), internal_note: note}]).then(function (result) {
+        return invoiceModel.call('write', [[parseInt($("#paymentDateModal #target_id").val())], {expected_pay_date: $("#expectedDate").val(), internal_note: note}]).then(function (result) {
             $('#paymentDateModal').modal('hide');
             location.reload(true);
         });

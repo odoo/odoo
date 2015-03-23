@@ -36,11 +36,11 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var context_id = $(e.target).parents('#footnoteModal').siblings("div.page").attr("data-context");
         var note = $("#note").val().replace(/\r?\n/g, '<br />').replace(/\s+/g, ' ');
         var model = new openerp.Model('account.report.context.common');
-        model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+        return model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextModel = new openerp.Model(result);
-            contextModel.call('get_next_footnote_number', [[parseInt(context_id)]]).then(function (footNoteSeqNum) {
+            return contextModel.call('get_next_footnote_number', [[parseInt(context_id)]]).then(function (footNoteSeqNum) {
                 self.curFootNoteTarget.append(openerp.qweb.render("supFootNoteSeqNum", {footNoteSeqNum: footNoteSeqNum}));
-                contextModel.query(['footnotes_manager_id'])
+                return contextModel.query(['footnotes_manager_id'])
                 .filter([['id', '=', context_id]]).first().then(function (context) {
                     var managerModel = new openerp.Model('account.report.footnotes.manager');
                     managerModel.call('add_footnote', [[parseInt(context.footnotes_manager_id[0])], $("#type").val(), $("#target_id").val(), $("#column").val(), footNoteSeqNum, note]);
@@ -76,7 +76,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         else
             $(e.target).parents("div.oe-account-summary").html(openerp.qweb.render("addSummary"));
         var model = new openerp.Model('account.report.context.common');
-        model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+        return model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextModel = new openerp.Model(result);
             contextModel.call('edit_summary', [[parseInt(context_id)], summary]);
         });
@@ -278,7 +278,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var report_name = $(e.target).parents("div.page").attr("data-report-name");
         var context_id = $(e.target).parents("div.page").attr("data-context");
         var model = new openerp.Model('account.report.context.common');
-        model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+        return model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             self.curFootNoteTarget = $(e.target).parents("div.dropdown").find("span.account_id");
             var contextModel = new openerp.Model(result);
             var type = $(e.target).parents('tr').attr("class").split(/\s+/)[0];
@@ -334,7 +334,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
             var report_name = $(e.target).parents("div.page").attr("data-report-name");
             var context_id = $(e.target).parents("div.page").attr("data-context");
             var model = new openerp.Model('account.report.context.common');
-            model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+            return model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                 self.curFootNoteTarget = $(e.target).parent().parent();
                 var contextModel = new openerp.Model(result);
                 var type = $(e.target).parents('tr').attr("class").split(/\s+/)[0];
@@ -391,7 +391,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
             var context_id = $(e.target).parents("div.page").attr("data-context");
             $(e.target).parent().parent().replaceWith(openerp.qweb.render("addSummary"));
             var model = new openerp.Model('account.report.context.common');
-            model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+            return model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                 var contextModel = new openerp.Model(result);
                 contextModel.call('edit_summary', [[parseInt(context_id)], '']);
             });
@@ -403,7 +403,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
             var report_name = window.$("div.page").attr("data-report-name");
             var context_id = window.$("div.page").attr("data-context");
             var model = new openerp.Model('account.report.context.common');
-            model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+            return model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                 var contextModel = new openerp.Model(result);
                 contextModel.query(['footnotes_manager_id'])
                 .filter([['id', '=', context_id]]).first().then(function (context) {
@@ -433,9 +433,9 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         $(e.target).parents('tr').find('td.oe-account-foldable').attr('class', 'oe-account-unfoldable ' + active_id)
         $(e.target).parents('tr').find('span.oe-account-foldable').replaceWith(openerp.qweb.render("unfoldable", {lineId: active_id}));
         var model = new openerp.Model('account.report.context.common');
-        model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+        return model.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextModel = new openerp.Model(result);
-            contextModel.call('remove_line', [[parseInt(context_id)], parseInt(active_id)]);
+            return contextModel.call('remove_line', [[parseInt(context_id)], parseInt(active_id)]);
         });
     },
     unfold: function(e) {
@@ -445,9 +445,9 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var context_id = window.$("div.page").attr("data-context");
         var active_id = $(e.target).parents('tr').find('td.oe-account-unfoldable').attr("class").split(/\s+/)[1];
         var commonContext = new openerp.Model('account.report.context.common');
-        commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+        return commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
-            contextObj.call('add_line', [[parseInt(context_id)], parseInt(active_id)]).then(function (result) {
+            return contextObj.call('add_line', [[parseInt(context_id)], parseInt(active_id)]).then(function (result) {
                 var el;
                 var $el;
                 var $nextEls = $(e.target).parents('tr').nextAll();
@@ -495,9 +495,9 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var report_name = window.$("div.page").attr("data-report-name");
         var context_id = window.$("div.page").attr("data-context");
         var commonContext = new openerp.Model('account.report.context.common');
-        commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+        return commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
-            contextObj.query(['all_entries', 'cash_basis'])
+            return contextObj.query(['all_entries', 'cash_basis'])
             .filter([['id', '=', context_id]]).first().then(function (context) {
                 var action = 'action_move_line_select'
                 if (context.cash_basis) {
@@ -507,7 +507,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                     action += '_posted'
                 }
                 var model = new openerp.Model('ir.model.data');
-                model.call('get_object_reference', ['account', action]).then(function (result) {
+                return model.call('get_object_reference', ['account', action]).then(function (result) {
                     window.open("/web?#page=0&limit=80&view_type=list&model=account.move.line&action=" + result[1] + "&active_id=" + active_id, "_self");
                 });
             });
@@ -519,16 +519,16 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var report_name = window.$("div.page").attr("data-report-name");
         var context_id = window.$("div.page").attr("data-context");
         var commonContext = new openerp.Model('account.report.context.common');
-        commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+        return commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
-            contextObj.query(['all_entries'])
+            return contextObj.query(['all_entries'])
             .filter([['id', '=', context_id]]).first().then(function (context) {
                 var action = 'action_move_line_graph'
                 if (!context.all_entries) {
                     action = 'action_move_line_graph_posted'
                 }
                 var model = new openerp.Model('ir.model.data');
-                model.call('get_object_reference', ['account', action]).then(function (result) {
+                return model.call('get_object_reference', ['account', action]).then(function (result) {
                     window.open("/web?#page=0&limit=80&view_type=list&model=account.move.line&action=" + result[1] + "&active_id=" + active_id, "_self");
                 });
             });
@@ -538,7 +538,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         e.stopPropagation();
         var active_id = $(e.target).attr("class").split(/\s+/)[1];
         var model = new openerp.Model('ir.model.data');
-        model.call('get_object_reference', ['account', 'action_move_line_select_by_type']).then(function (result) {
+        return model.call('get_object_reference', ['account', 'action_move_line_select_by_type']).then(function (result) {
             window.open("/web?#page=0&limit=80&view_type=list&model=account.move.line&action=" + result[1] + "&active_id=" + active_id, "_self");
         });
     },
@@ -546,7 +546,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         e.stopPropagation();
         var active_id = $(e.target).attr("class").split(/\s+/)[1];
         var model = new openerp.Model('ir.model.data');
-        model.call('get_object_reference', ['account', 'action_move_line_select_by_partner']).then(function (result) {
+        return model.call('get_object_reference', ['account', 'action_move_line_select_by_partner']).then(function (result) {
             window.open("/web?#page=0&limit=80&view_type=list&model=account.move.line&action=" + result[1] + "&active_id=" + active_id, "_self");
         });
     },
@@ -556,16 +556,16 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var report_name = window.$("div.page").attr("data-report-name");
         var context_id = window.$("div.page").attr("data-context");
         var commonContext = new openerp.Model('account.report.context.common');
-        commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+        return commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
-            contextObj.query(['all_entries'])
+            return contextObj.query(['all_entries'])
             .filter([['id', '=', context_id]]).first().then(function (context) {
                 var action = 'act_account_tax_net'
                 if (!context.all_entries) {
                     action = 'act_account_tax_net_posted'
                 }
                 var model = new openerp.Model('ir.model.data');
-                model.call('get_object_reference', ['account', action]).then(function (result) {
+                return model.call('get_object_reference', ['account', action]).then(function (result) {
                     window.open("/web?#page=0&limit=80&view_type=list&model=account.move.line&action=" + result[1] + "&active_id=" + active_id, "_self");
                 });
             });
@@ -577,16 +577,16 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         var report_name = window.$("div.page").attr("data-report-name");
         var context_id = window.$("div.page").attr("data-context");
         var commonContext = new openerp.Model('account.report.context.common');
-        commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
+        return commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
             var contextObj = new openerp.Model(result);
-            contextObj.query(['all_entries'])
+            return contextObj.query(['all_entries'])
             .filter([['id', '=', context_id]]).first().then(function (context) {
                 var action = 'act_account_tax_tax'
                 if (!context.all_entries) {
                     action = 'act_account_tax_tax_posted'
                 }
                 var model = new openerp.Model('ir.model.data');
-                model.call('get_object_reference', ['account', action]).then(function (result) {
+                return model.call('get_object_reference', ['account', action]).then(function (result) {
                     window.open("/web?#page=0&limit=80&view_type=list&model=account.move.line&action=" + result[1] + "&active_id=" + active_id, "_self");
                 });
             });
@@ -611,7 +611,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         e.stopPropagation();
         var active_id = $(e.target).attr("class").split(/\s+/)[1];
         var model = new openerp.Model('account.move.line');
-        model.call('get_model_and_id', [[parseInt(active_id)]]).then(function (result) {
+        return model.call('get_model_and_id', [[parseInt(active_id)]]).then(function (result) {
             window.open("/web?#id=" + result[1] + "&view_type=form&model=" + result[0], "_self");
         })
     },
@@ -619,7 +619,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         e.stopPropagation();
         var active_id = $(e.target).parents("div.dropdown").find("span.unreconciled_aml").attr("class").split(/\s+/)[1];
         var model = new openerp.Model('account.move.line');
-        model.query(['invoice'])
+        return model.query(['invoice'])
         .filter([['id', '=', active_id]]).first().then(function (result) {
             window.open("/web#id=" + result.invoice[0] + "&view_type=form&model=account.invoice", "_self");
         });
@@ -628,7 +628,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         e.stopPropagation();
         var active_id = $(e.target).parents("div.dropdown").find("span.unreconciled_aml").attr("class").split(/\s+/)[1];
         var model = new openerp.Model('account.move.line');
-        model.query(['statement_id'])
+        return model.query(['statement_id'])
         .filter([['id', '=', active_id]]).first().then(function (result) {
             window.open("/web#id=" + result.statement_id[0] + "&view_type=form&model=account.bank.statement", "_self");
         });
