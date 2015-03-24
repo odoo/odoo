@@ -28,6 +28,7 @@ from openerp.exceptions import UserError
 
 from operator import add
 import time
+import math
 
 class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
@@ -567,9 +568,10 @@ class account_bank_statement_line(osv.osv):
         currency_id = st_line.currency_id.id or st_line.journal_id.currency.id
         # NB : amount can't be == 0 ; so float precision is not an issue for amount > 0 or amount < 0
         amount = st_line.amount_currency or st_line.amount
-        domain = [('reconcile_partial_id', '=', False)]
+        domain = []
         if currency_id:
             domain += [('currency_id', '=', currency_id)]
+        # TODO: make account_move_line._amount_residual_search() accept < and > operators and this method can be greatly simplified
         sign = 1 # correct the fact that st_line.amount is signed and debit/credit is not
         amount_field = 'debit'
         if currency_id == False:
@@ -580,7 +582,8 @@ class account_bank_statement_line(osv.osv):
             amount_field = 'amount_currency'
 
         # Look for a matching amount
-        domain_exact_amount = domain + [(amount_field, '=', float_round(sign * amount, precision_digits=precision_digits))]
+        exact_match_amount_field = amount_field in ('debit', 'credit') and 'amount_residual' or 'amount_residual_currency'
+        domain_exact_amount = domain + [(exact_match_amount_field, '=', float_round(amount, precision_digits=precision_digits))]
         match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=2, additional_domain=domain_exact_amount)
         if match_id and len(match_id) == 1:
             return match_id
@@ -589,6 +592,7 @@ class account_bank_statement_line(osv.osv):
             return []
 
         # Look for a set of move line whose amount is <= to the line's amount
+        domain += [('reconcile_partial_id', '=', False)]
         domain += [('account_id.type', 'in', ((amount > 0 and 'receivable' or 'payable'), 'liquidity'))] # Make sure we can't mix receivable and payable
         if amount_field == 'amount_currency' and amount < 0:
             domain += [(amount_field, '<', 0), (amount_field, '>', (sign * amount))]
@@ -646,8 +650,19 @@ class account_bank_statement_line(osv.osv):
                 '|', ('date_maturity', 'like', str),
                 '&', ('name', '!=', '/'), ('name', 'ilike', str)
             ]
+            # Filter on partner name
             if not st_line.partner_id.id:
                 str_domain = expression.OR([str_domain, [('partner_id.name', 'ilike', str)]])
+            # Filter on amount
+            amount = False
+            try: # Casting a str to float either throws a ValueError or return a float (or nan)
+                amount = float(str)
+            except ValueError:
+                pass
+            if amount and not math.isnan(amount):
+                amount_domain = ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
+                str_domain = expression.OR([str_domain, amount_domain])
+
             domain = expression.AND([domain, str_domain])
 
         return expression.AND([additional_domain, domain])
