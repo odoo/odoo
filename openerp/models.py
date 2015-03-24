@@ -4645,7 +4645,7 @@ class BaseModel(object):
             # hurt performance
             query_str = (
                 'SELECT count(*) FROM (SELECT DISTINCT "%s".id' % self._table +
-                'FROM ' + from_clause + where_str + ') count_tmp'
+                ' FROM ' + from_clause + where_str + ') count_tmp'
             )
             cr.execute(query_str, where_clause_params)
             res = cr.fetchone()
