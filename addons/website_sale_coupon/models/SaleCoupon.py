@@ -132,40 +132,37 @@ class SaleOrderLine(models.Model):
     coupon_program_line_id = fields.Many2one('sale.couponprogram', string="Coupon program")
     generated_from_line_id = fields.Many2one('sale.order.line')
 
+    # _sql_constraints = [
+    #     ('product_id_unique', 'unique(product_id)',
+    #         'Product_id must be unique'),
+    # ]
+
     def _process_coupon(self, sale_order_line):
+        print"==== in process coupon"
         programs = self.order_id.find_coupon_program(sale_order_line)
         print "---- program", programs
-        if programs:
-            print "======", programs, self.order_id.order_line
+        if programs is None:
+            for line in self.order_id.order_line:
+                if line.product_id.id == self.env.ref('website_sale_coupon.product_product_reward').id and line.generated_from_line_id.id == sale_order_line.id:
+                    line.with_context(nocoupon=True).write({'product_uom_qty': 0})
+        else:
             self[0].order_id._process_rewards(programs)
-
-        #= (line = self.id and progarm_id = program)
-        # if programs:
-        #     for reward_program in programs:
-        #         if reward_program.purchase_type == 'product':
-        #             reward_qty = math.floor(abs(qty)/reward_program[1].product_quantity)
-        #             if qty <= 0:
-        #                 getattr(self.order_id, '_process_reward_' + reward_program[1].reward_type)(reward_program, -reward_qty)
-        #             else:
-        #                 getattr(self.order_id, '_process_reward_' + reward_program[1].reward_type)(reward_program, reward_qty)
-        #         if reward_program.purchase_type == 'category':
-        #             pass
-                #self[0].order_id._process_rewards(programs)
-                #other_line = program.reward.product_id
-
-    #     # reqrd line: line id (1) + program id(1)
-    #     # line2 = line id(2) + program id (1)
-    #     # line 3 = line id (1) + program id (2)
-
-    #     # line 4 = line id (1) + program id (1) (No)
 
     @api.multi
     def write(self, vals):
-        print"----- here in line", vals
         res = super(SaleOrderLine, self).write(vals)
-        # if self.context.get('nocopuon'):
-        #     return res
-        #self._process_coupon(self)
+        if self._context.get('nocoupon'):
+            return res
+        self._process_coupon(self)
+        return res
+
+    @api.model
+    def create(self, vals):
+        res = super(SaleOrderLine, self).create(vals)
+        print"-----im in line create"
+        if res._context.get('nocoupon'):
+            return res
+        res._process_coupon(res)
         return res
 
 
@@ -190,6 +187,17 @@ class SaleOrder(models.Model):
         if res:
             return res
 
+    def find_coupon_program_for_amount(self, domain=[]):
+        res = []
+        CouponProgram = self.env['sale.couponprogram']
+        reward_programs = CouponProgram.search(domain + [
+            '&', ('purchase_type', '=', 'amount'), '|',
+            '&', ('reward_tax', '=', 'tax_excluded'), ('minimum_amount', '<=', self.amount_total),
+            '&', ('reward_tax', '=', 'tax_included'), ('minimum_amount', '<=', self.amount_untaxed)])
+        if reward_programs:
+            res.append((False, reward_programs))
+            return res
+
     def _search_rewards(self, domain=[]):
         res = []
         CouponProgram = self.env['sale.couponprogram']
@@ -206,6 +214,7 @@ class SaleOrder(models.Model):
                                                                 ['&', ('purchase_type', '=', 'product')] + self._make_product_domain(sale_line) +
                                                                 ['&', ('purchase_type', '=', 'category')] + self._make_product_category_domain(sale_line))
                 if reward_programs:
+                    print"======line_id", sale_line.id
                     res.append((sale_line.id, reward_programs))
         if res:
             return res
@@ -244,21 +253,20 @@ class SaleOrder(models.Model):
             return math.floor((product_qty/program.product_quantity))
 
     def _process_reward_product(self, reward_data, quantity):
-        print "-----in reward_product"
         reward = reward_data[1].reward_id
-        context = {'nocopuon': True}
+        #context = {'nocopuon': True}
         for line in self.order_line:
             if line.product_id == reward.reward_product_product_id:
                 if reward_data[1].product_id.id == reward.reward_product_product_id.id:
-                    print"------", line, self
-                    line.with_context(context).write({'product_uom_qty': line.product_uom_qty + (reward.reward_quantity * quantity)})
+                    line.with_context(nocoupon=True).write({'product_uom_qty': line.product_uom_qty + (reward.reward_quantity * quantity)})
+                    # line.write({'product_uom_qty': line.product_uom_qty + (reward.reward_quantity * quantity)})
                 elif line.product_uom_qty < quantity:
-                    print "---", line.product_uom_qty, quantity
-                    line.with_context(context).write({'product_uom_qty': quantity})
+                    line.with_context(nocoupon=True).write({'product_uom_qty': quantity})
                 self._create_so_reward_line(line.price_unit, reward.reward_quantity * quantity, reward_data[0], reward_data[1])
                 return True
         price_unit = self.env['product.template'].search([('product_variant_ids', '=', reward.reward_product_product_id.id)]).list_price
         self._create_so_reward_product_line(reward.reward_product_product_id, price_unit, quantity, reward_data[0], reward_data[1])
+        print"------line", reward_data[0]
         self._create_so_reward_line(price_unit, reward.reward_quantity * quantity, reward_data[0], reward_data[1])
         return True
 
@@ -282,13 +290,12 @@ class SaleOrder(models.Model):
                 if line.product_uom_qty + quantity <= 0:
                     line.unlink()
                 if reward_data[0] is False:
-                    line.update({'product_uom_qty': line.product_uom_qty + (reward.reward_quantity * quantity),
-                                 'generated_from_line_id': reward_data[1]})
+                    line.with_context(nocoupon=True).write({'product_uom_qty': line.product_uom_qty + (reward.reward_quantity * quantity),
+                                                            'generated_from_line_id': reward_data[1]})
                 else:
-                    line.update({'product_uom_qty': line.product_uom_qty + (reward.reward_quantity * quantity),
-                                 'generated_from_line_id': reward_data[0],
-                                 'coupon_program_line_id': reward_data[1]
-                                 })
+                    line.with_context(nocoupon=True).write({'product_uom_qty': line.product_uom_qty + (reward.reward_quantity * quantity),
+                                                            'generated_from_line_id': reward_data[0],
+                                                            'coupon_program_line_id': reward_data[1]})
                 self._create_so_reward_line(line.price_unit * (reward.reward_discount_percentage) / 100, quantity, reward_data[0], reward_data[1])
                 return True
         price_unit = self.env['product.template'].search([('product_variant_ids', '=', reward.reward_discount_on_product_id.id)]).list_price
@@ -320,13 +327,13 @@ class SaleOrder(models.Model):
     def _create_so_reward_line(self, amount, quantity, line, program):
         order_line_obj = self.env['sale.order.line']
         #if so already have product
-        for line in self.order_line:
-            if line.product_id.id == self.env.ref('website_sale_coupon.product_product_reward').id and line.coupon_program_line_id.id == program.id:
-                if line.product_uom_qty + quantity <= 0:
-                    line.unlink()
+        for line_data in self.order_line:
+            if line_data.product_id.id == self.env.ref('website_sale_coupon.product_product_reward').id and line_data.coupon_program_line_id.id == program.id:
+                if line_data.product_uom_qty + quantity <= 0:
+                    line_data.unlink()
                     return True
-                return line.update({'product_uom_qty': quantity})
-        if line.id is False:
+                return line_data.with_context(nocoupon=True).write({'product_uom_qty': quantity})
+        if line is False:
             return order_line_obj.create({'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
                                           'order_id': self.id,
                                           'price_unit': -amount,
@@ -338,14 +345,14 @@ class SaleOrder(models.Model):
                                       'price_unit': -amount,
                                       'product_uom_qty': quantity,
                                       'product_uom_id': self.env.ref('website_sale_coupon.product_product_reward').product_tmpl_id.uom_id,
-                                      'generated_from_line_id': line.id,
+                                      'generated_from_line_id': line,
                                       'coupon_program_line_id': program.id})
 
-    # def _delete_so_reward_line(self, sale_order_line):
-    #     sale_order_line.unlink()
-
-    # def _delete_so_reward_product_line(self, sale_order_line):
-    #     sale_order_line.unlink()
+    def delete_reward_amount_line(self):
+        for line in self.order_line:
+            if line.product_id.id == self.env.ref('website_sale_coupon.product_product_reward').id and line.generated_from_line_id.id is False:
+                line.with_context(nocoupon=True).unlink()
+                return True
 
     def apply_immediately_reward(self):
         if self.order_line:
@@ -361,11 +368,13 @@ class SaleOrder(models.Model):
 
     @api.multi
     def write(self, vals):
+        print '----- in write so'
         res = super(SaleOrder, self).write(vals)
-        print"----- here in line so"
-        # #self.apply_immediately_reward()
-        # line_id = vals['order_line'][1][1]
-        # print "--------------", line_id
+        programs = self.find_coupon_program_for_amount([('program_type', '=', 'apply_immediately')])
+        if not programs:
+            self.delete_reward_amount_line()
+            return res
+        self._process_rewards(programs)
         return res
 
 
