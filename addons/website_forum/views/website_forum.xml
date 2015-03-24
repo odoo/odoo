@@ -43,7 +43,7 @@
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
-        <div t-if="is_public_user and not no_introduction_message" class="alert alert-success alert-dismissible" id="oe_forum_intro">
+        <div t-if="is_public_user and not no_introduction_message" class="alert alert-success" id="oe_forum_intro">
             <div class="container">
                 <h1 class="mt0">Welcome!</h1>
                 <div t-field="forum.description"/>
