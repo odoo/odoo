@@ -159,9 +159,9 @@ class Registry(Mapping):
 
         # load custom models
         ir_model = self['ir.model']
-        cr.execute('select model from ir_model where state=%s', ('manual',))
-        for (model_name,) in cr.fetchall():
-            ir_model.instanciate(cr, SUPERUSER_ID, model_name, {})
+        cr.execute('select model, transient from ir_model where state=%s', ('manual',))
+        for (model_name, transient) in cr.fetchall():
+            ir_model.instanciate(cr, SUPERUSER_ID, model_name, transient, {})
 
         # prepare the setup on all models
         for model in self.models.itervalues():

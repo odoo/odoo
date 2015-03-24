@@ -32,7 +32,7 @@
                         <group>
                             <field name="name"/>
                             <field name="model"/>
-                            <field name="osv_memory"/>
+                            <field name="transient"/>
                         </group>
                         <group>
                             <field name="state"/>
@@ -116,7 +116,7 @@
                     <field name="model"/>
                     <field name="name"/>
                     <field name="state"/>
-                    <field name="osv_memory"/>
+                    <field name="transient"/>
                 </tree>
             </field>
         </record>
@@ -126,8 +126,8 @@
                 <search string="Model Description">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="Model"/>
                     <filter icon="terp-camera_test"
-                        string="In Memory"
-                        domain="[('osv_memory', '=', True)]"/>
+                        string="Transient"
+                        domain="[('transient', '=', True)]"/>
                     <separator/>
                     <filter icon="terp-stock_align_left_24"
                         string="Custom"

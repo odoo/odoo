@@ -13,8 +13,8 @@
                         </td>
                         <td colspan="8">
                             <p>Type: <span t-field="o.state"/></p>
-                            <p t-if="o.osv_memory">In-memory: True</p>
-                            <p t-if="not o.osv_memory">In-memory: False</p>
+                            <p t-if="o.transient">Transient: True</p>
+                            <p t-if="not o.transient">Transient: False</p>
                             <p>Modules: <span t-field="o.modules"/></p>
                         </td>
                     </tr>

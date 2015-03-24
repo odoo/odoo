@@ -19,6 +19,7 @@ CREATE TABLE ir_model (
   name varchar,
   state varchar,
   info text,
+  transient boolean,
   primary key(id)
 );
 

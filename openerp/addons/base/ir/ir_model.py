@@ -57,27 +57,6 @@ class ir_model(osv.osv):
     _description = "Models"
     _order = 'model'
 
-    def _is_osv_memory(self, cr, uid, ids, field_name, arg, context=None):
-        models = self.browse(cr, uid, ids, context=context)
-        res = dict.fromkeys(ids)
-        for model in models:
-            if model.model in self.pool:
-                res[model.id] = self.pool[model.model].is_transient()
-            else:
-                _logger.error('Missing model %s' % (model.model, ))
-        return res
-
-    def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
-        if not domain:
-            return []
-        __, operator, value = domain[0]
-        if operator not in ['=', '!=']:
-            raise UserError(_("Invalid Search Criteria") + ": " + _("The osv_memory field can only be compared with = and != operator."))
-        value = bool(value) if operator == '=' else not bool(value)
-        all_model_ids = self.search(cr, uid, [], context=context)
-        is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
-        return [('id', 'in', [id for id in is_osv_mem if bool(is_osv_mem[id]) == value])]
-
     def _view_ids(self, cr, uid, ids, field_name, arg, context=None):
         models = self.browse(cr, uid, ids)
         res = {}
@@ -103,9 +82,7 @@ class ir_model(osv.osv):
             help="The list of models that extends the current model."),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type', readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
-        'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
-            fnct_search=_search_osv_memory,
-            help="This field specifies whether the model is transient or not (i.e. if records are automatically deleted from the database or not)"),
+        'transient': fields.boolean(string="Transient Model"),
         'modules': fields.function(_in_modules, type='char', string='In Modules', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, type='one2many', obj='ir.ui.view', string='Views'),
     }
@@ -195,7 +172,7 @@ class ir_model(osv.osv):
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
             # add model in registry
-            self.instanciate(cr, user, vals['model'], context)
+            self.instanciate(cr, user, vals['model'], vals.get('transient', False), context)
             self.pool.setup_models(cr, partial=(not self.pool.ready))
             # update database schema
             model = self.pool[vals['model']]
@@ -209,7 +186,7 @@ class ir_model(osv.osv):
             RegistryManager.signal_registry_change(cr.dbname)
         return res
 
-    def instanciate(self, cr, user, model, context=None):
+    def instanciate(self, cr, user, model, transient, context=None):
         if isinstance(model, unicode):
             model = model.encode('utf-8')
 
@@ -217,6 +194,7 @@ class ir_model(osv.osv):
             _name = model
             _module = False
             _custom = True
+            _transient = bool(transient)
 
         CustomModel._build_model(self.pool, cr)
 

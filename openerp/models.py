@@ -353,7 +353,8 @@ class BaseModel(object):
         if not cr.rowcount:
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
             model_id = cr.fetchone()[0]
-            cr.execute("INSERT INTO ir_model (id,model, name, info,state) VALUES (%s, %s, %s, %s, %s)", (model_id, self._name, self._description, self.__doc__, 'base'))
+            cr.execute("INSERT INTO ir_model (id, model, name, info, state, transient) VALUES (%s, %s, %s, %s, %s, %s)",
+                       (model_id, self._name, self._description, self.__doc__, 'base', self._transient))
         else:
             model_id = cr.fetchone()[0]
         if 'module' in context:
