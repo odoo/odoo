@@ -1728,12 +1728,19 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, value) {
         var $editable = layoutInfo.editable();
         $editable.data('NoteHistory').recordUndo($editable);
+
         var node = range.create().sc.parentNode;
         document.execCommand('removeFormat');
-        document.execCommand('removeFormat');
+        document.execCommand('removeFormat'); // 2 times because some browser don't clean all in one time
         var r = range.create();
         r = dom.merge(node, r.sc, r.so, r.ec, r.eo, null, true);
-        range.create(r.sc, r.so, r.ec, r.eo).select();
+        r = range.create(r.sc, r.so, r.ec, r.eo);
+        r.select();
+
+        $.summernote.pluginEvents.justify(event, editor, layoutInfo, "");
+
+        r.clean().select();
+
         event.preventDefault();
         return false;
     };
