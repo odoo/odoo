@@ -867,14 +867,10 @@ class expression(object):
                 else:
                     # Let the field generate a domain.
                     if len(path) > 1:
-                        recs = comodel.browse(
-                            cr, uid,
-                            comodel.search(
-                                cr, uid, [(path[1], operator, right)],
-                                context=context),
+                        right = comodel.search(
+                            cr, uid, [(path[1], operator, right)],
                             context=context)
                         operator = 'in'
-                        right = recs.ids
                     recs = model.browse(cr, uid, [], context=context)
                     domain = field.determine_domain(recs, operator, right)
 
