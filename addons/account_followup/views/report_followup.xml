@@ -48,12 +48,12 @@
     </xpath>
     <xpath expr="//div[@id='action-buttons']" position='replace'>
         <div id='action-buttons' t-if="mode != 'print'" style='text-align: right;' class='col-sm-6'>
-            <a type="button" class="btn btn-default followup-skip" t-att-partner="str(context.partner_id.id)">Skip</a>
-            <a t-if='context.level.send_letter' type="button" class="btn btn-primary followup-letter" t-att-context="str(context.id)" t-att-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'">Print Letter</a>
-            <a t-if='not context.level.send_letter' type="button" class="btn btn-default followup-letter" t-att-context="str(context.id)" t-att-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'">Print Letter</a>
-            <a t-if='context.level.send_email' type="button" class="btn btn-primary followup-email">Send by email</a>
-            <a t-if='not context.level.send_email' type="button" class="btn btn-default followup-email">Send by email</a>
-            <a t-if='context.level.manual_action' type="button" class="btn btn-primary followup-action" t-att-context="str(context.id)"><t t-esc='context.level.manual_action_note'/></a>
+            <a data-primary='0' type="button" class="btn btn-default followup-skip" t-att-partner="str(context.partner_id.id)">Skip</a>
+            <a t-if='context.level.send_letter' data-primary='1' type="button" class="btn btn-primary followup-letter" t-att-context="str(context.id)" t-att-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'">Print Letter</a>
+            <a t-if='not context.level.send_letter' data-primary='0' type="button" class="btn btn-default followup-letter" t-att-context="str(context.id)" t-att-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'">Print Letter</a>
+            <a t-if='context.level.send_email' data-primary='1' type="button" class="btn btn-primary followup-email">Send by email</a>
+            <a t-if='not context.level.send_email' data-primary='0' type="button" class="btn btn-default followup-email">Send by email</a>
+            <a t-if='context.level.manual_action' data-primary='1' type="button" class="btn btn-primary followup-action" t-att-context="str(context.id)"><t t-esc='context.level.manual_action_note'/></a>
         </div>
     </xpath>
 </template>

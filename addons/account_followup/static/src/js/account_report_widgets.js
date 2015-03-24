@@ -12,13 +12,13 @@ openerp.account_followup.FollowupReportWidgets = openerp.account.FollowupReportW
     onKeyPress: function(e) {
         var report_name = $("div.page").attr("data-report-name");
         if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey) && report_name == 'followup_report') {
-            $('a.btn-primary.followup-email').trigger('click');
+            $("*[data-primary='1'].followup-email").trigger('click');
             var letter_context_list = [];
-            $('a.btn-primary.followup-letter').each(function() {
+            $("*[data-primary='1'].followup-letter").each(function() {
                 letter_context_list.push($(this).attr('context'))
             });
             var action_context_list = [];
-            $('a.btn-primary.followup-action').each(function() {
+            $("*[data-primary='1'].followup-action").each(function() {
                 action_context_list.push($(this).attr('context'))
             });
             window.open('?pdf&letter_context_list=' + letter_context_list, '_blank');
@@ -51,10 +51,12 @@ openerp.account_followup.FollowupReportWidgets = openerp.account.FollowupReportW
             var $skipButton = $(e.target).siblings('a.followup-skip');
             var buttonClass = $skipButton.attr('class');
             buttonClass = buttonClass.replace('btn-default', 'btn-primary');
+            $skipButton.data('primary', '1');
             $skipButton.attr('class', buttonClass);
             $skipButton.text('Done');
             buttonClass = $(e.target).attr('class');
             buttonClass = buttonClass.replace('btn-primary', 'btn-default');
+            $(e.target).data('primary', '0');
             $(e.target).attr('class', buttonClass);
         });
     }

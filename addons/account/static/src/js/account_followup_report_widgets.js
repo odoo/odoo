@@ -60,9 +60,9 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
     onKeyPress: function(e) {
         var report_name = $("div.page").attr("data-report-name");
         if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey) && report_name == 'followup_report') {
-            $('a.btn-primary.followup-email').trigger('click');
+            $("*[data-primary='1'].followup-email").trigger('click');
             var letter_context_list = [];
-            $('a.btn-primary.followup-letter').each(function() {
+            $("*[data-primary='1'].followup-letter").each(function() {
                 letter_context_list.push($(this).attr('context'))
             });
             window.open('?pdf&letter_context_list=' + letter_context_list, '_blank');
@@ -72,7 +72,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
     skipPartner: function(e) {
         var partner_id = $(e.target).attr("partner");
         var model = new openerp.Model('res.partner');
-        if ($(e.target).is('a.btn-primary.followup-skip')) {
+        if ($(e.target).data('primary') == '1') {
             return model.call('update_next_action', [[parseInt(partner_id)]]).then(function (result) {
                 window.open('?partner_done=' + partner_id, '_self');
             });
@@ -90,10 +90,12 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
             var $skipButton = $(e.target).siblings('a.followup-skip');
             var buttonClass = $skipButton.attr('class');
             buttonClass = buttonClass.replace('btn-default', 'btn-primary');
+            $skipButton.data('primary', '1');
             $skipButton.attr('class', buttonClass);
             $skipButton.text('Done');
             buttonClass = $(e.target).attr('class');
             buttonClass = buttonClass.replace('btn-primary', 'btn-default');
+            $(e.target).data('primary', '0');
             $(e.target).attr('class', buttonClass);
         }
     },
@@ -109,10 +111,12 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
                     var $skipButton = $(e.target).siblings('a.followup-skip');
                     var buttonClass = $skipButton.attr('class');
                     buttonClass = buttonClass.replace('btn-default', 'btn-primary');
+                    $skipButton.data('primary', '1');
                     $skipButton.attr('class', buttonClass);
                     $skipButton.text('Done');
                     buttonClass = $(e.target).attr('class');
                     buttonClass = buttonClass.replace('btn-primary', 'btn-default');
+                    $(e.target).data('primary', '0');
                     $(e.target).attr('class', buttonClass);
                 }
             }

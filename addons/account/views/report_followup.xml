@@ -104,9 +104,9 @@
                 <a type="button" data-time='two-months' class="btn btn-default oe-account-followup-set-next-action" t-att-partner="str(context.partner_id.id)">Two months</a>
             </div>
             <div id='action-buttons' style='text-align: right;' class='col-sm-6'>
-                <a type="button" class="btn btn-default followup-skip" t-att-partner="str(context.partner_id.id)">Skip</a>
-                <a type="button" class="btn btn-primary followup-letter" t-att-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'" t-att-context="str(context.id)">Print Letter</a>
-                <a type="button" class="btn btn-primary followup-email">Send by email</a>
+                <a type="button" data-primary='0' class="btn btn-default followup-skip" t-att-partner="str(context.partner_id.id)">Skip</a>
+                <a type="button" data-primary='1' class="btn btn-primary followup-letter" t-att-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'" t-att-context="str(context.id)">Print Letter</a>
+                <a type="button" data-primary='1' class="btn btn-primary followup-email">Send by email</a>
             </div>
         </div>
     </xpath>
