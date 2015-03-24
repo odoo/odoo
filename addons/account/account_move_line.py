@@ -813,7 +813,7 @@ class account_move_line(osv.osv):
             # For already reconciled lines, don't use amount_residual(_currency)
             if line.account_id.type == 'liquidity':
                 amount = abs(debit - credit)
-                amount_currency = line.amount_currency
+                amount_currency = abs(line.amount_currency)
 
             # Get right debit / credit:
             target_currency = target_currency or company_currency
