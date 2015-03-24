@@ -1349,39 +1349,37 @@ editor.countdown = editor.Dialog.extend({
         'click button[data-action=set_countdown]': 'set_countdown',
     }),
     init: function (parent) {
+        $('.countdown').parent().addClass('o_dirty');
         this.$target = parent.$target;
         return this._super();
     },
     start: function () {
         var self = this;
-        this.date_input = self.$el.find("#web_countdown_date").datepicker({
-            minDate: 0,
+        $("div.input-group span.fa-calendar").on('click', function(e) {
+            $(e.currentTarget).closest("div.date").datetimepicker({
+                useSeconds: true,
+                icons : {
+                    time: 'fa fa-clock-o',
+                    date: 'fa fa-calendar',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down'
+                },
+            });
         });
         return this._super();
     },
-    set_countdown: function () {
+    set_countdown: function (e) {
         var self = this;
-        var release_date = this.date_input.datepicker( 'getDate' );
-        var hour = $("#web_countdown_hour").val();
-        var minute = $("#web_countdown_min").val();
-        var second = $("#web_countdown_sec").val();
-        if (!hour)
-            hour = '00';
-        if (!minute)
-            minute = '00';
-        if (!second)
-            second = '00';
-        var dt_format = $("#web_countdown_date").val() +' '+ hour + ':' + minute +':'+ second;
+        var release_date = $("#web_countdown_date").val();
         var add_warning = function (msg){
             self.$el.find(".alert").remove();
             self.$el.find(".modal-body").append('<div class="alert alert-danger mt8">'+ msg +'</div>');
         };
-        if (!moment(dt_format, 'MM/DD/YYYY HH:mm:ss', false).isValid()) {
+        if (!moment(release_date, 'YYYY-MM-DD HH:mm:ss', true).isValid()) {
             add_warning('Invalid Input. Please enter proper DATE, HOURS, MINUTES, SECONDS');
         }
         else {
-            release_date.setHours(hour, minute, second);
-            self.$target.attr("data-release_date",release_date.getTime());
+            self.$target.attr("data-release_date", new Date(release_date).getTime());
             self.trigger('set_countdown');
         }
     },
@@ -1400,10 +1398,7 @@ options.countdown = Option.extend({
         set_dialog.appendTo($(document.body));
         if (release_date) {
             var date = new Date(release_date);
-            $('input#web_countdown_date').val(moment(date).format('MM/DD/YYYY'));
-            $('input#web_countdown_hour').val(moment(date).format('HH'));
-            $('input#web_countdown_min').val(moment(date).format('mm'));
-            $('input#web_countdown_sec').val(moment(date).format('ss'));
+            $('input#web_countdown_date').val(moment(date).format('YYYY-MM-DD HH:mm:ss'));
         }
         set_dialog.on('set_countdown', this, function () {
             animation.countdown(self.$target[0], false);

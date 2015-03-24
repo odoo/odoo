@@ -608,21 +608,10 @@
                         <h3 class="modal-title">Set Release Date</h3>
                     </div>
                     <div class="modal-body">
-                         <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <span style="display: table-cell;width:45%">
-                                <input type="text" class="form-control hidden"/>
-                                <input type="text" class="form-control" id="web_countdown_date" placeholder="Date" style="z-index:inherit;"/>
-                            </span>
-                            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-                            <span style="display: table-cell;width:15%">
-                                <input type="number" min="0" max="23" class="form-control" id="web_countdown_hour" placeholder="HH"/>
-                            </span>
-                            <span style="display: table-cell;width:15%">
-                                <input type="number" min="0" max="59" class="form-control" id="web_countdown_min" placeholder="MM"/>
-                            </span>
-                                <input type="number" min="0" max="59" class="form-control" id="web_countdown_sec" placeholder="SS"/>
-                          </div>
+                        <div class='input-group date'>
+                            <input type="text" id="web_countdown_date" class="form-control" data-date-format="YYYY-MM-DD hh:mm:ss" t-att-name="prefix" placeholder="YYYY-MM-DD hh:mm:ss" />
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" data-action="set_countdown" class="btn btn-primary">Save</button>
