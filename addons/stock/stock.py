@@ -2904,7 +2904,7 @@ class stock_inventory(osv.osv):
         for inv in self.browse(cr, uid, ids, context=context):
             move_obj.action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
             for move in inv.move_ids:
-                 account_move_ids = account_move_obj.search(cr, uid, [('name', '=', move.name)])
+                 account_move_ids = account_move_obj.search(cr, uid, [('line_id.name', '=', move.name)])
                  if account_move_ids:
                      account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'], context=context)
                      for account_move in account_move_data_l:
