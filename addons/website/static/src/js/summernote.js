@@ -2014,6 +2014,60 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
       editor.afterCommand($editable);
     };
 
+    $.summernote.pluginEvents.justify = function (event, editor, layoutInfo, align) {
+        var rng = range.create();
+        var startPoint = rng.getStartPoint();
+        var endPoint = rng.getEndPoint();
+
+        // get list of nodes to change
+        var nodes = [];
+        nodes.push(dom.ancestor(startPoint.node, dom.isPara) || dom.ancestor(startPoint.node, dom.isCell));
+        nodes.push(dom.ancestor(endPoint.node, dom.isPara) || dom.ancestor(endPoint.node, dom.isCell));
+        dom.walkPoint(startPoint, endPoint, function (point) {
+          var node = point.node;
+          if (dom.isPara(node) || dom.isCell(node)) {
+              nodes.push(point.node);
+          }
+        });
+        nodes = list.unique(nodes);
+
+        $(nodes).not(":has(div,p,li,h1,h2,h3,h4,h5,h6,h7,td,th)").each(function () {
+            var $node = $(this).css('text-align', '');
+            var css = window.getComputedStyle(this);
+            var textAlign = css.textAlign;
+            if (textAlign === "start") {
+                textAlign = css.direction === "ltr" ? "left" : "right";
+            }
+            if(textAlign !== align) {
+                $node.css('text-align', align);
+            }
+        }).find("*").css('text-align', "");
+    };
+    $.summernote.pluginEvents.justifyLeft = function (event, editor, layoutInfo) {
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable);
+        $.summernote.pluginEvents.justify(event, editor, layoutInfo, 'left');
+        editor.afterCommand($editable);
+    };
+    $.summernote.pluginEvents.justifyCenter = function (event, editor, layoutInfo) {
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable);
+        $.summernote.pluginEvents.justify(event, editor, layoutInfo, 'center');
+        editor.afterCommand($editable);
+    };
+    $.summernote.pluginEvents.justifyRight = function (event, editor, layoutInfo) {
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable);
+        $.summernote.pluginEvents.justify(event, editor, layoutInfo, 'right');
+        editor.afterCommand($editable);
+    };
+    $.summernote.pluginEvents.justifyFull = function (event, editor, layoutInfo) {
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable);
+        $.summernote.pluginEvents.justify(event, editor, layoutInfo, 'justify');
+        editor.afterCommand($editable);
+    };
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     options.onCreateLink = function (sLinkUrl) {
