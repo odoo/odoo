@@ -1306,7 +1306,7 @@ openerp.account = function (instance) {
             self.is_valid = false;
             self.$(".tip_reconciliation_not_balanced").show();
             self.$(".tbody_open_balance").empty();
-            self.$(".button_ok").text("OK").removeClass("btn-primary").attr("disabled", "disabled");
+            self.$(".button_ok").text("Reconcile").removeClass("btn-primary").hide();
 
             // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
             var balance_type = undefined;
@@ -1323,7 +1323,7 @@ openerp.account = function (instance) {
                 if (self.st_line.has_no_partner) {
                     createOpenBalance("Choose counterpart");
                 } else {
-                    displayValidState(false, "Keep open");
+                    displayValidState(false, "Register Payment");
                     createOpenBalance("Open balance");
                 }
             }
@@ -1342,7 +1342,7 @@ openerp.account = function (instance) {
             function displayValidState(higlight_ok_button, ok_button_text) {
                 self.is_valid = true;
                 self.$(".tip_reconciliation_not_balanced").hide();
-                self.$(".button_ok").removeAttr("disabled");
+                self.$(".button_ok").show();
                 if (higlight_ok_button) self.$(".button_ok").addClass("btn-primary");
                 if (ok_button_text !== undefined) self.$(".button_ok").text(ok_button_text)
             }
