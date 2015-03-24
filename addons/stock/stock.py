@@ -366,8 +366,7 @@ class stock_location(osv.osv):
             states = ['done']
         # build the list of ids of children of the location given by id
         ids = id and [id] or []
-        location_ids = self.search(cr, uid, [('location_id', 'child_of', ids)])
-        return self._product_get_multi_location(cr, uid, location_ids, product_ids, context, states)
+        return self._product_get_multi_location(cr, uid, ids, product_ids, context=context, states=states)
 
     def _product_virtual_get(self, cr, uid, id, product_ids=False, context=None, states=None):
         if states is None:
