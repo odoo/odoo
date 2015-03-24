@@ -245,6 +245,9 @@ class ir_model_fields(osv.osv):
                                                                            "structure of the serialization field, instead "
                                                                            "of having its own database column. This cannot be "
                                                                            "changed after creation."),
+        'relation_table': fields.char("Relation Table", help="Used for custom many2many fields to define a custom relation table name"),
+        'column1': fields.char("Column 1", help="Column referring to the record in the model table"),
+        'column2': fields.char("Column 2", help="Column referring to the record in the comodel table"),
     }
     _rec_name='field_description'
     _defaults = {
@@ -287,25 +290,74 @@ class ir_model_fields(osv.osv):
         ('size_gt_zero', 'CHECK (size>=0)',_size_gt_zero_msg ),
     ]
 
+    @api.model
+    def _custom_many2many_names(self, model_name, comodel_name):
+        """ Return default names for the table and columns of a custom many2many field. """
+        rel1 = self.env[model_name]._table
+        rel2 = self.env[comodel_name]._table
+        table = 'x_%s_%s_rel' % tuple(sorted([rel1, rel2]))
+        if rel1 == rel2:
+            return (table, 'id1', 'id2')
+        else:
+            return (table, '%s_id' % rel1, '%s_id' % rel2)
+
+    @api.onchange('ttype', 'model_id', 'relation')
+    def _onchange_ttype(self):
+        if self.ttype == 'many2many' and self.model_id and self.relation:
+            names = self._custom_many2many_names(self.model_id.model, self.relation)
+            self.relation_table, self.column1, self.column2 = names
+        else:
+            self.relation_table = False
+            self.column1 = False
+            self.column2 = False
+
+    @api.onchange('relation_table')
+    def _onchange_relation_table(self):
+        if self.relation_table:
+            # check whether other fields use the same table
+            others = self.search([('ttype', '=', 'many2many'),
+                                  ('relation_table', '=', self.relation_table),
+                                  ('id', 'not in', self._origin.ids)])
+            if others:
+                for other in others:
+                    if (other.model, other.relation) == (self.relation, self.model):
+                        # other is a candidate inverse field
+                        self.column1 = other.column2
+                        self.column2 = other.column1
+                        return
+                return {'warning':{
+                    'title': _("Warning"),
+                    'message': _("The table %r if used for other, possibly incompatible fields.") % self.relation_table,
+                }}
+
     def _drop_column(self, cr, uid, ids, context=None):
+        tables_to_drop = set()
+
         for field in self.browse(cr, uid, ids, context):
             if field.name in MAGIC_COLUMNS:
                 continue
             model = self.pool[field.model]
-            cr.execute('select relkind from pg_class where relname=%s', (model._table,))
+            cr.execute('SELECT relkind FROM pg_class WHERE relname=%s', (model._table,))
             result = cr.fetchone()
-            cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='%s' and column_name='%s'" %(model._table, field.name))
+            cr.execute("""SELECT column_name FROM information_schema.columns
+                          WHERE table_name=%s AND column_name=%s""",
+                       (model._table, field.name))
             column_name = cr.fetchone()
             if column_name and (result and result[0] == 'r'):
                 cr.execute('ALTER table "%s" DROP column "%s" cascade' % (model._table, field.name))
-            # remove m2m relation table for custom fields
-            # we consider the m2m relation is only one way as it's not possible
-            # to specify the relation table in the interface for custom fields
-            # TODO master: maybe use ir.model.relations for custom fields
             if field.state == 'manual' and field.ttype == 'many2many':
-                rel_name = model._fields[field.name].relation
-                cr.execute('DROP table "%s"' % (rel_name))
+                rel_name = field.relation_table or model._fields[field.name].relation
+                tables_to_drop.add(rel_name)
             model._pop_field(cr, uid, field.name, context=context)
+
+        if tables_to_drop:
+            # drop the relation tables that are not used by other fields
+            cr.execute("""SELECT relation_table FROM ir_model_fields
+                          WHERE relation_table IN %s AND id NOT IN %s""",
+                       (tuple(tables_to_drop), tuple(ids)))
+            tables_to_keep = set(row[0] for row in cr.fetchall())
+            for rel_name in tables_to_drop - tables_to_keep:
+                cr.execute('DROP TABLE "%s"' % rel_name)
 
         return True
 

@@ -68,6 +68,9 @@
                                             <field name="ttype"/>
                                             <field name="relation" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],'readonly': [('ttype','!=','one2many'), ('ttype','!=','many2one'), ('ttype','!=','many2many')]}"/>
                                             <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
+                                            <field name="relation_table" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
+                                            <field name="column1" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
+                                            <field name="column2" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
                                             <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
                                             <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
                                             <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
@@ -171,6 +174,9 @@
                             <field name="relation" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
                             <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
+                            <field name="relation_table" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
+                            <field name="column1" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
+                            <field name="column2" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
                             <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
                             <field name="size" attrs="{'invisible': [('ttype','not in',['char','text','reference'])]}"/>
                             <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>

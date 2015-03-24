@@ -391,6 +391,9 @@ class BaseModel(object):
                 'translate': bool(getattr(f, 'translate', False)),
                 'relation_field': f.type == 'one2many' and f.inverse_name or None,
                 'serialization_field_id': None,
+                'relation_table': f.type == 'many2many' and f.relation or None,
+                'column1': f.type == 'many2many' and f.column1 or None,
+                'column2': f.type == 'many2many' and f.column2 or None,
             }
             if getattr(f, 'serialization_field', None):
                 # resolve link to serialization_field if specified by name
@@ -696,11 +699,10 @@ class BaseModel(object):
                 if partial and field['relation'] not in self.pool:
                     continue
                 attrs['comodel_name'] = field['relation']
-                _rel1 = field['relation'].replace('.', '_')
-                _rel2 = field['model'].replace('.', '_')
-                attrs['relation'] = 'x_%s_%s_%s_rel' % (_rel1, _rel2, name)
-                attrs['column1'] = 'id1'
-                attrs['column2'] = 'id2'
+                rel, col1, col2 = self.env['ir.model.fields']._custom_many2many_names(field['model'], field['relation'])
+                attrs['relation'] = field['relation_table'] or rel
+                attrs['column1'] = field['column1'] or col1
+                attrs['column2'] = field['column2'] or col2
                 attrs['domain'] = eval(field['domain']) if field['domain'] else None
             self._add_field(name, Field.by_type[field['ttype']](**attrs))
 
