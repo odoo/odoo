@@ -504,7 +504,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         if (sc.tagName) {
             sc = sc.childNodes[so] || dom.firstChild(ec);
             so = 0;
-            if (!dom.hasContentBefore(sc)) {
+            if (!dom.hasContentBefore(sc) && towrite) {
                 sc.parentNode.insertBefore(document.createTextNode('\u00A0'), sc);
             }
         }
@@ -524,12 +524,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             };
         }
 
-        if (dom.isEditable(ancestor)) {
-            sc = $("<br/>")[0];
-            so = 0;
-            $(ancestor).html(sc);
-
-        } else if (ancestor.tagName) {
+        if (ancestor.tagName) {
             var ancestor_sc = sc;
             var ancestor_ec = ec;
             while (ancestor !== ancestor_sc && ancestor !== ancestor_sc.parentNode) { ancestor_sc = ancestor_sc.parentNode; }
@@ -564,18 +559,19 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             sc = before ? dom.lastChild(before) : dom.firstChild(after);
             so = sc.textContent.length;
 
-            if (before) {
+            if (towrite && !node.firstChild && node.parentNode && !dom.isNotBreakable(node)) {
+                sc = $("<br/>")[0];
+                so = 0;
+                node.appendChild(br);
+            } else if (!ancestor.children.length && !ancestor.textContent.match(/\S|\u00A0/)) {
+                sc = $("<br/>")[0];
+                so = 0;
+                $(ancestor).prepend(sc);
+            } else if (before) {
                 var text = sc.textContent.replace(/[ \t\n\r]+$/, '\u00A0');
                 so -= sc.textContent.length - text.length;
                 sc.textContent = text;
             }
-            if (towrite && !node.firstChild && node.parentNode && !dom.isNotBreakable(node)) {
-                var br = $("<br/>")[0];
-                node.appendChild(br);
-                sc = br;
-                so = 0;
-            }
-            dom.autoMerge(sc, false);
 
         } else {
 
@@ -711,7 +707,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             (nodeName === "SPAN" && (
                 node.className.match(/(^|\s)fa(\s|$)/i) ||
                 node.className.match(/(^|\s)(text|bg)-/i) ||
-                (node.attributes.style && node.attributes.style.value.match(/(^|\s)(color|background-color):/i)))) );
+                (node.attributes.style && node.attributes.style.value.match(/(^|\s)(color|background-color|font-size):/i)))) );
     };
     dom.isVisibleText = function (textNode) {
       return !!textNode.textContent.match(/\S|\u00A0/);
@@ -1165,8 +1161,6 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             }
             r = r.deleteContents();
             r.select();
-            event.preventDefault();
-            return false;
         }
 
         var target = r.ec;
@@ -1291,8 +1285,6 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             }
             r = r.deleteContents();
             r.select();
-            event.preventDefault();
-            return false;
         }
 
         var target = r.sc;
