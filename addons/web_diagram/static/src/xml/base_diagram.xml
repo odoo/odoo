@@ -4,16 +4,18 @@
     <span class="oe_diagram_pager_state"></span>
 </t>
 
+<t t-name="DiagramView.buttons">
+    <div t-if="widget.is_action_enabled('create')" class="oe_diagram_buttons">
+        <button type="button" id="new_node" class="oe_diagram_button_new btn btn-default btn-sm">New Node</button>
+    </div>
+</t>
+
 <t t-name="DiagramView">
     <div class="oe_diagram_header" t-att-id="widget.element_id + '_header'">
-        <h3 class="oe_diagram_title"/>
-        <div t-if="widget.is_action_enabled('create')" class="oe_diagram_buttons">
-            <button type="button" id="new_node" class="oe_button oe_diagram_button_new">New Node</button>
-        </div>
-        <div class="clear"></div>
     </div>
     <div class="diagram-container">
         <div class="oe_diagram_diagram"/>
     </div>
 </t>
+
 </template>

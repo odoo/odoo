@@ -13,6 +13,9 @@ var View = Widget.extend({
      * Define a view type for each view to allow automatic call to fields_view_get.
      */
     view_type: undefined,
+    // multi_record is used to distinguish views displaying a single record
+    // (e.g. FormView) from those that display several records (e.g. ListView)
+    multi_record: true,
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
         this.ViewManager = parent;

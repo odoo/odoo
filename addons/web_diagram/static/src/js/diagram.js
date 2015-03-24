@@ -17,6 +17,7 @@ var DiagramView = View.extend({
     display_name: _lt('Diagram'),
     view_type: 'diagram',
     searchable: false,
+    multi_record: false,
     init: function(parent, dataset, view_id, options) {
         var self = this;
         this._super(parent);
@@ -45,12 +46,12 @@ var DiagramView = View.extend({
             this.id = this.ids[self.dataset.index || 0];
         }
 
-        this.fields_view = result,
-        this.view_id = this.fields_view.view_id,
-        this.fields = this.fields_view.fields,
-        this.nodes = this.fields_view.arch.children[0],
-        this.connectors = this.fields_view.arch.children[1],
-        this.node = this.nodes.attrs.object,
+        this.fields_view = result;
+        this.view_id = this.fields_view.view_id;
+        this.fields = this.fields_view.fields;
+        this.nodes = this.fields_view.arch.children[0];
+        this.connectors = this.fields_view.arch.children[1];
+        this.node = this.nodes.attrs.object;
         this.connector = this.connectors.attrs.object;
         this.labels = _.filter(this.fields_view.arch.children, function(label) {
             return label.tag == "label";
@@ -64,8 +65,6 @@ var DiagramView = View.extend({
             self.$el.find('.oe_diagram_header').append(html_label);
         });
 
-        // New Node,Edge
-        this.$el.find('#new_node.oe_diagram_button_new').click(function(){self.add_node();});
 
         if(this.id) {
             self.get_diagram_info();
@@ -113,6 +112,9 @@ var DiagramView = View.extend({
     },
 
     on_diagram_loaded: function(record) {
+        // title is displayed in breadcrumbs
+        this.set({ 'title' : record.id ? record.name : _t("New") });
+
         var id_record = record['id'];
         if (id_record) {
             this.id = id_record;
@@ -141,7 +143,6 @@ var DiagramView = View.extend({
         var res_nodes  = result['nodes'];
         var res_edges  = result['conn'];
         this.parent_field = result.parent_field;
-        this.$el.find('h3.oe_diagram_title').text(result.name);
 
         var id_to_node = {};
 
@@ -357,6 +358,24 @@ var DiagramView = View.extend({
             form_controller.fields[self.connectors.attrs.destination].set_value(node_dest_id);
             form_controller.fields[self.connectors.attrs.destination].dirty = true;
        });
+    },
+
+    /**
+     * Render the buttons according to the DiagramView.buttons template and add listeners on it.
+     * Set this.$buttons with the produced jQuery element
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
+     * $node may be undefined, in which case they are inserted into this.options.$buttons
+     */
+    render_buttons: function($node) {
+        var self = this;
+
+        this.$buttons = $(QWeb.render("DiagramView.buttons", {'widget': this}));
+        this.$buttons.on('click', '.oe_diagram_button_new', function() {
+            self.add_node();
+        });
+
+        $node = $node || this.options.$buttons;
+        this.$buttons.appendTo($node);
     },
     
     /**

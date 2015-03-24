@@ -33,6 +33,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
     template: "FormView",
     display_name: _lt('Form'),
     view_type: "form",
+    multi_record: false,
     /**
      * @constructs instance.web.FormView
      * @extends instance.web.View

@@ -45,7 +45,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         this.active_view = null;
         this.registry = core.view_registry;
         this.title = this.action && this.action.name;
-
         _.each(views, function (view) {
             var view_type = view[1] || view.view_type;
             var View = core.view_registry.get(view_type, true);
@@ -59,6 +58,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                     embedded_view: view.embedded_view,
                     title: self.title,
                     button_label: View ? _.str.sprintf(_t('%(view_type)s view'), {'view_type': (view_label || view_type)}) : (void 'nope'),
+                    multi_record: View ? View.prototype.multi_record : undefined,
                 };
             self.view_order.push(view_descr);
             self.views[view_type] = view_descr;
@@ -118,10 +118,13 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         if (!view) {
             return $.Deferred().reject();
         }
-        if ((view_type !== 'form') && (view_type !== 'diagram')) {
-            this.view_stack = [];
-        }
 
+        if (view.multi_record) {
+            this.view_stack = [];
+        } else if (this.view_stack.length > 0 && !(_.last(this.view_stack).multi_record)) {
+            // Replace the last view by the new one if both are mono_record
+            this.view_stack.pop();
+        }
         this.view_stack.push(view);
 
         // Hide active view (at first rendering, there is no view to hide)
