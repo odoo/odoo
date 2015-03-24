@@ -427,6 +427,7 @@ class account_asset_depreciation_line(osv.osv):
             move_id = move_obj.create(cr, uid, move_vals, context=context)
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
             created_move_ids.append(move_id)
+            move_obj.post(cr, uid, [move_id], context=context)
             asset_ids.append(line.asset_id.id)
         # we re-evaluate the assets to determine whether we can close them
         for asset in asset_obj.browse(cr, uid, list(set(asset_ids)), context=context):

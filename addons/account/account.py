@@ -266,9 +266,6 @@ class AccountJournal(models.Model):
 
     groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency = fields.Many2one('res.currency', help='The currency used to enter statement')
-    entry_posted = fields.Boolean(string='Autopost Created Moves',
-        help="Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the "
-            "source document is validated (Invoices), whatever the status of this field.")
     company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id,
         help="Company related to this journal")
 

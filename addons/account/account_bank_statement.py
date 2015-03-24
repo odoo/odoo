@@ -690,6 +690,7 @@ class AccountBankStatementLine(models.Model):
             move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
             move_vals = self._prepare_reconciliation_move(move_name)
             move = self.env['account.move'].create(move_vals)
+            move.post()
             counterpart_moves = (counterpart_moves | move)
 
             # Complete dicts to create both counterpart move lines and write-offs

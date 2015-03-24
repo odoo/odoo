@@ -653,6 +653,7 @@ class AccountMoveLine(models.Model):
             'state': 'draft',
             'line_id': [(0, 0, first_line_dict), (0, 0, second_line_dict)],
         })
+        writeoff_move.post()
 
         # Return the writeoff move.line which is to be reconciled
         line = writeoff_move.line_id.filtered(lambda r: r.account_id == self[0].account_id)
@@ -793,8 +794,6 @@ class AccountMoveLine(models.Model):
         if self._context.get('check_move_validity', True):
             move = MoveObj.browse(vals['move_id'])
             move.with_context(context)._post_validate()
-            if journal.entry_posted:
-                move.with_context(context).post()
 
         return new_line
 
@@ -988,6 +987,7 @@ class AccountPartialReconcile(models.Model):
                         'amount_currency': 0.0,
                         'currency_id': rec.debit_move_id.currency_id.id,
                     })
+                    move.post()
 
     @api.model
     def create(self, vals):
