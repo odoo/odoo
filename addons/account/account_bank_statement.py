@@ -415,7 +415,7 @@ class AccountBankStatementLine(models.Model):
         """ Returns a function that can create the appropriate domain to search on move.line amount based on statement.line currency/amount """
         company_currency = self.journal_id.company_id.currency_id
         st_line_currency = self.currency_id or self.journal_id.currency
-        currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency or False
+        currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency.id or False
         field = currency and 'amount_residual_currency' or 'amount_residual'
         precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
 

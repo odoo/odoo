@@ -256,7 +256,7 @@ openerp.account.reconciliation = function (instance) {
                 .call("get_object_reference", ['account', 'action_account_operation_template'])
                 .then(function (result) {
                     self.action_manager.do_action({
-                        name: "Operation Templates",
+                        name: _t("Operation Templates"),
                         res_model: "account.operation.template",
                         views: [[false, 'form']],
                         type: 'ir.actions.act_window',
@@ -273,7 +273,7 @@ openerp.account.reconciliation = function (instance) {
                 .call("get_object_reference", ['account', 'action_account_operation_template'])
                 .then(function (result) {
                     self.action_manager.do_action({
-                        name: "Operation Templates",
+                        name: _t("Operation Templates"),
                         res_model: "account.operation.template",
                         views: [[false, 'list'], [false, 'form']],
                         type: 'ir.actions.act_window',
@@ -806,8 +806,12 @@ openerp.account.reconciliation = function (instance) {
                     var floatFromFilter = false;
                     try { floatFromFilter = instance.web.parse_value(self.filter, {type: 'float'}); } catch(e){}
                     return o.name.indexOf(self.filter) !== -1
-                    || (o.ref && o.ref.indexOf(self.filter) !== -1)
-                    || (isFinite(floatFromFilter) && (o.debit === floatFromFilter || o.credit === floatFromFilter) )})
+                        || (o.ref && o.ref.indexOf(self.filter) !== -1)
+                        || (isFinite(floatFromFilter)
+                            && (o.debit === floatFromFilter
+                            || o.credit === floatFromFilter
+                            || o.debit_currency === floatFromFilter
+                            || o.credit_currency === floatFromFilter ))})
                 .slice(slice_start, slice_end)).each(function(line){
                 var $line = $(QWeb.render(template_name, {line: line, selected: false}));
                 self.bindPopoverTo($line.find(".line_info_button"));
@@ -1469,7 +1473,7 @@ openerp.account.reconciliation = function (instance) {
             var self = this;
 
             if (all_was_auto_reconciled) {
-                var title = "There you go, it's all done !";
+                var title = _t("There you go, it's all done !");
             } else {
                 var sec_taken = Math.round((Date.now()-self.time_widget_loaded)/1000);
                 var sec_per_item = Math.round(sec_taken/self.reconciled_lines);
@@ -1477,7 +1481,7 @@ openerp.account.reconciliation = function (instance) {
 
                 var time_taken;
                 if (sec_taken/60 >= 1) time_taken = Math.floor(sec_taken/60) +"' "+ sec_taken%60 +"''";
-                else time_taken = sec_taken%60 +" seconds";
+                else time_taken = sec_taken%60 +_t(" seconds");
 
                 var title;
                 if (sec_per_item < 5) title = _t("Whew, that was fast !") + " <i class='fa fa-trophy congrats_icon'></i>";
@@ -1768,7 +1772,7 @@ openerp.account.reconciliation = function (instance) {
             var selected_lines_account_types = _.collect(self.get("mv_lines_selected").concat(line), function(l) { return l.account_type });
             if (selected_lines_account_types.indexOf("payable") != -1 && selected_lines_account_types.indexOf("receivable") != -1) {
                 new instance.web.CrashManager().show_warning({data: {
-                    exception_type: "Incorrect Operation",
+                    exception_type: _t("Incorrect Operation"),
                     message: _t("You cannot mix items from receivable and payable accounts.")
                 }});
                 return;
@@ -1827,7 +1831,7 @@ openerp.account.reconciliation = function (instance) {
             self.is_valid = false;
             self.$(".tip_reconciliation_not_balanced").show();
             self.$(".tbody_open_balance").empty();
-            self.$(".button_ok").text("OK").removeClass("btn-primary").attr("disabled", "disabled");
+            self.$(".button_ok").text(_t("OK")).removeClass("btn-primary").attr("disabled", "disabled");
 
             // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
             var balance_type = undefined;
@@ -1840,13 +1844,13 @@ openerp.account.reconciliation = function (instance) {
                 displayValidState(true);
             } else if (! self.is_rapprochement) {
                 if (balance_type === "greater") {
-                    createOpenBalance("Create Write-off");
+                    createOpenBalance(_t("Create Write-off"));
                 } else if (balance_type === "lower") {
                     if (self.st_line.has_no_partner) {
-                        createOpenBalance("Choose counterpart");
+                        createOpenBalance(_t("Choose counterpart"));
                     } else {
-                        displayValidState(false, "Keep open");
-                        createOpenBalance("Open balance");
+                        displayValidState(false, _t("Keep open"));
+                        createOpenBalance(_t("Open balance"));
                     }
                 }
             }
@@ -1877,7 +1881,7 @@ openerp.account.reconciliation = function (instance) {
                     debit: balance > 0 ? amount : "",
                     credit: balance < 0 ? amount : "",
                     account_code: self.map_account_id_code[self.st_line.open_balance_account_id],
-                    label: name || "Open balance"
+                    label: name || _t("Open balance")
                 }));
                 self.$(".tbody_open_balance").empty().append($line);
             }
