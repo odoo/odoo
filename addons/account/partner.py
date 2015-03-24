@@ -123,22 +123,24 @@ class account_fiscal_position(osv.osv):
         else:
             delivery = partner
 
-        domain = [
-            ('auto_apply', '=', True),
-            '|', ('vat_required', '=', False), ('vat_required', '=', partner.vat_subjected),
-        ]
-        if delivery.country_id.id:
-            fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', delivery.country_id.id)], context=context, limit=1)
+        domains = [[('auto_apply', '=', True), ('vat_required', '=', partner.vat_subjected)]]
+        if partner.vat_subjected:
+            # Possibly allow fallback to non-VAT positions, if no VAT-required position matches
+            domains += [[('auto_apply', '=', True), ('vat_required', '=', False)]]
+
+        for domain in domains:
+            if delivery.country_id.id:
+                fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', delivery.country_id.id)], context=context, limit=1)
+                if fiscal_position_ids:
+                    return fiscal_position_ids[0]
+
+                fiscal_position_ids = self.search(cr, uid, domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], context=context, limit=1)
+                if fiscal_position_ids:
+                    return fiscal_position_ids[0]
+
+            fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', None), ('country_group_id', '=', None)], context=context, limit=1)
             if fiscal_position_ids:
                 return fiscal_position_ids[0]
-
-            fiscal_position_ids = self.search(cr, uid, domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], context=context, limit=1)
-            if fiscal_position_ids:
-                return fiscal_position_ids[0]
-
-        fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', None), ('country_group_id', '=', None)], context=context, limit=1)
-        if fiscal_position_ids:
-            return fiscal_position_ids[0]
         return False
 
 class account_fiscal_position_tax(osv.osv):
