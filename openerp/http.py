@@ -50,7 +50,9 @@ from openerp.tools import ustr
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
+xmlrpc_request = logging.getLogger(__name__ + '.rpc.request.xml')
 rpc_response = logging.getLogger(__name__ + '.rpc.response')
+xmlrpc_response = logging.getLogger(__name__ + '.rpc.request.xml')
 
 # 1 week cache for statics as advised by Google Page Speed
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -89,8 +91,8 @@ def dispatch_rpc(service_name, method, params):
     in a upper layer.
     """
     try:
-        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
-        rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
+        rpc_request_flag = xmlrpc_request.isEnabledFor(logging.DEBUG)
+        rpc_response_flag = xmlrpc_response.isEnabledFor(logging.DEBUG)
         if rpc_request_flag or rpc_response_flag:
             start_time = time.time()
             start_rss, start_vms = 0, 0
@@ -120,9 +122,9 @@ def dispatch_rpc(service_name, method, params):
                 end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
             logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
             if rpc_response_flag:
-                openerp.netsvc.log(rpc_response, logging.DEBUG, logline, result)
+                openerp.netsvc.log(xmlrpc_response, logging.DEBUG, logline, result)
             else:
-                openerp.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
+                openerp.netsvc.log(xmlrpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
     except NO_POSTMORTEM:
@@ -186,6 +188,7 @@ class WebRequest(object):
         self.endpoint = None
         self.auth_method = None
         self._cr = None
+        self.params = None
 
         # prevents transaction commit, use when you catch an exception during handling
         self._failed = None
@@ -277,7 +280,6 @@ class WebRequest(object):
         raise
 
     def _call_function(self, *args, **kwargs):
-        request = self
         if self.endpoint.routing['type'] != self._request_type:
             msg = "%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'"
             params = (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type)
@@ -288,7 +290,11 @@ class WebRequest(object):
 
         # Backward for 7.0
         if self.endpoint.first_arg_is_req:
-            args = (request,) + args
+            args = (self,) + args
+
+        endpoint = self.endpoint
+        if rpc_request.isEnabledFor(logging.DEBUG) or rpc_response.isEnabledFor(logging.DEBUG):
+            endpoint = self._log_request_wrapper(endpoint)
 
         # Correct exception handling and concurency retry
         @service_model.check
@@ -297,11 +303,11 @@ class WebRequest(object):
             # case, the request cursor is unusable. Rollback transaction to create a new one.
             if self._cr:
                 self._cr.rollback()
-            return self.endpoint(*a, **kw)
+            return endpoint(*a, **kw)
 
         if self.db:
             return checked_call(self.db, *args, **kwargs)
-        return self.endpoint(*args, **kwargs)
+        return endpoint(*args, **kwargs)
 
     @property
     def debug(self):
@@ -355,6 +361,56 @@ class WebRequest(object):
             Use :attr:`.session` instead.
         """
         return self.session
+
+    def _log_request_wrapper(self, fn, placeholder=object()):
+        def wrapper(*args, **kwargs):
+            # log dispatch entry
+            rpc_request.debug("%s", self._log_request_endpoint())
+
+            # collect prelude info
+            start_vms = 0
+            if psutil:
+                _, start_vms = psutil.Process(os.getpid()).get_memory_info()
+            start_time = time.time()
+
+            result = fn(*args, **kwargs)
+
+            # collect postinfo
+            end_time = time.time()
+            end_vms = 0
+            if psutil:
+                _, end_vms = psutil.Process(os.getpid()).get_memory_info()
+
+            # format data
+            pattern = "%s time:%.3fs mem:%sk->%sk diff:%sk %s"
+            args = (
+                self._log_request_endpoint(),
+                end_time - start_time,
+                start_vms / 1024,
+                end_vms / 1024,
+                (end_vms - start_vms) / 1024,
+                self._log_request_param()
+            )
+            if not rpc_response.isEnabledFor(logging.DEBUG):
+                rpc_request._log(logging.DEBUG, pattern, args)
+            else:
+                rpc_response._log(
+                    logging.DEBUG,
+                    pattern + ' -> %s',
+                    args + (self._log_request_result(result),)
+                )
+
+            return result
+        return wrapper
+
+    def _log_request_endpoint(self):
+        return self.httprequest.path
+    def _log_request_param(self):
+        return "%r" % (self.params,)
+    def _log_request_result(self, result):
+        if isinstance(result, basestring):
+            return result[:500] + ' [...]'
+        return repr(result)
 
 def route(route=None, **kw):
     """
@@ -548,39 +604,25 @@ class JsonRequest(WebRequest):
         if self.jsonp_handler:
             return self.jsonp_handler()
         try:
-            rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
-            rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
-            if rpc_request_flag or rpc_response_flag:
-                endpoint = self.endpoint.method.__name__
-                model = self.params.get('model')
-                method = self.params.get('method')
-                args = self.params.get('args', [])
-
-                start_time = time.time()
-                _, start_vms = 0, 0
-                if psutil:
-                    _, start_vms = psutil.Process(os.getpid()).get_memory_info()
-                if rpc_request and rpc_response_flag:
-                    rpc_request.debug('%s: %s %s, %s',
-                        endpoint, model, method, pprint.pformat(args))
-
             result = self._call_function(**self.params)
-
-            if rpc_request_flag or rpc_response_flag:
-                end_time = time.time()
-                _, end_vms = 0, 0
-                if psutil:
-                    _, end_vms = psutil.Process(os.getpid()).get_memory_info()
-                logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
-                    endpoint, model, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
-                if rpc_response_flag:
-                    rpc_response.debug('%s, %s', logline, pprint.pformat(result))
-                else:
-                    rpc_request.debug(logline)
 
             return self._json_response(result)
         except Exception, e:
             return self._handle_exception(e)
+
+    def _log_request_endpoint(self):
+        if not (self.params.get('model') and self.params.get('method')):
+            return super(JsonRequest, self)._log_request_endpoint()
+        return "%(model)s:%(method)s" % self.params
+    def _log_request_param(self):
+        if not (self.params.get('model') and self.params.get('method')):
+            return super(JsonRequest, self)._log_request_param()
+        return "%r|%r" % (
+            self.params.get('args'),
+            self.params.get('kwargs')
+        )
+    def _log_request_result(self, result):
+        return repr(result)
 
 def serialize_exception(e):
     tmp = {
@@ -1230,6 +1272,11 @@ class Response(werkzeug.wrappers.Response):
         """
         self.response.append(self.render())
         self.template = None
+
+    def __repr__(self):
+        if self.is_qweb:
+            return '<LazyResponse QWeb [%s]>' % self.status
+        return super(Response, self).__repr__()
 
 class DisableCacheMiddleware(object):
     def __init__(self, app):
