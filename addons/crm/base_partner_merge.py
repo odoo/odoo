@@ -9,6 +9,7 @@ import operator
 import psycopg2
 import re
 from ast import literal_eval
+from openerp.exceptions import ValidationError
 from openerp.tools import mute_logger
 
 # Validation Library https://pypi.python.org/pypi/validate_email/1.1
