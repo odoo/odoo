@@ -4643,7 +4643,10 @@ class BaseModel(object):
         if count:
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
-            query_str = 'SELECT count(1) FROM ' + from_clause + where_str
+            query_str = (
+                'SELECT count(*) FROM (SELECT DISTINCT "%s".id' % self._table +
+                'FROM ' + from_clause + where_str + ') count_tmp'
+            )
             cr.execute(query_str, where_clause_params)
             res = cr.fetchone()
             return res[0]
