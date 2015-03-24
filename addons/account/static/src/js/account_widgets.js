@@ -546,7 +546,7 @@ openerp.account = function (instance) {
 
             var time_taken;
             if (sec_taken/60 >= 1) time_taken = Math.floor(sec_taken/60) +"' "+ sec_taken%60 +"''";
-            else time_taken = sec_taken%60 +" seconds";
+            else time_taken = sec_taken%60 + _t(" seconds");
 
             var title;
             if (sec_per_item < 5) title = _t("Whew, that was fast !") + " <i class='fa fa-trophy congrats_icon'></i>";
@@ -1074,7 +1074,7 @@ openerp.account = function (instance) {
             selected_lines_account_types = _.collect(self.get("mv_lines_selected").concat(line), function(l) { return l.account_type });
             if (selected_lines_account_types.indexOf("payable") != -1 && selected_lines_account_types.indexOf("receivable") != -1) {
                 new instance.web.CrashManager().show_warning({data: {
-                    exception_type: "Incorrect Operation",
+                    exception_type: _t("Incorrect Operation"),
                     message: _t("You cannot mix items from receivable and payable accounts.")
                 }});
                 return;
@@ -1306,7 +1306,7 @@ openerp.account = function (instance) {
             self.is_valid = false;
             self.$(".tip_reconciliation_not_balanced").show();
             self.$(".tbody_open_balance").empty();
-            self.$(".button_ok").text("Reconcile").removeClass("btn-primary").hide();
+            self.$(".button_ok").text(_t("Reconcile")).removeClass("btn-primary").hide();
 
             // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
             var balance_type = undefined;
@@ -1318,13 +1318,13 @@ openerp.account = function (instance) {
             if (balance_type === "equal") {
                 displayValidState(true);
             } else if (balance_type === "greater") {
-                createOpenBalance("Create Write-off");
+                createOpenBalance(_t("Create Write-off"));
             } else if (balance_type === "lower") {
                 if (self.st_line.has_no_partner) {
-                    createOpenBalance("Choose counterpart");
+                    createOpenBalance(_t("Choose counterpart"));
                 } else {
-                    displayValidState(false, "Register Payment");
-                    createOpenBalance("Open balance");
+                    displayValidState(false, _t("Register Payment"));
+                    createOpenBalance(_t("Open balance"));
                 }
             }
 
