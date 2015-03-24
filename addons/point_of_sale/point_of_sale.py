@@ -1183,6 +1183,7 @@ class pos_order(osv.osv):
                 all_lines.append((0, 0, value),)
         if move_id: #In case no order was changed
             self.pool.get("account.move").write(cr, uid, [move_id], {'line_id':all_lines}, context=context)
+            self.pool.get("account.move").post(cr, uid, [move_id], context=context)
 
         return True
 

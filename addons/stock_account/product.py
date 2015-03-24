@@ -127,6 +127,7 @@ class product_template(osv.osv):
                                         'credit': amount_diff,
                                         'move_id': move_id
                                         }, context=context)
+                        move_obj.post(cr, uid, [move_id], context=context)
             self.write(cr, uid, rec_id, {'standard_price': new_price})
         return True
 

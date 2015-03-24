@@ -210,6 +210,7 @@ class stock_landed_cost(osv.osv):
                         qty_out += quant.qty
                 self._create_accounting_entries(cr, uid, line, move_id, qty_out, context=context)
             self.write(cr, uid, cost.id, {'state': 'done', 'account_move_id': move_id}, context=context)
+            self.pool.get('account.move').post(cr, uid, [move_id], context=context)
         return True
 
     def button_cancel(self, cr, uid, ids, context=None):
