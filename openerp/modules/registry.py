@@ -174,9 +174,9 @@ class Registry(Mapping):
         """
         # load custom models
         ir_model = self['ir.model']
-        cr.execute('select model from ir_model where state=%s', ('manual',))
-        for (model_name,) in cr.fetchall():
-            ir_model.instanciate(cr, SUPERUSER_ID, model_name, {})
+        cr.execute('select model, create_osv_memory from ir_model where state=%s', ('manual',))
+        for (model_name, create_osv_memory) in cr.fetchall():
+            ir_model.instanciate(cr, SUPERUSER_ID, model_name, create_osv_memory, {})
 
         # prepare the setup on all models
         for model in self.models.itervalues():

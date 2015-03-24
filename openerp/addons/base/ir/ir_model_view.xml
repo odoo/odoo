@@ -32,7 +32,9 @@
                         <group>
                             <field name="name"/>
                             <field name="model"/>
-                            <field name="osv_memory"/>
+                            <field name="id" invisible="1"/>
+                            <field name="osv_memory" attrs="{'invisible': [('id', '=', False)]}"/>
+                            <field name="create_osv_memory" attrs="{'invisible': [('id', '!=', False)]}"/>
                         </group>
                         <group>
                             <field name="state"/>

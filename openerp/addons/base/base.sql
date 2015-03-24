@@ -19,6 +19,7 @@ CREATE TABLE ir_model (
   name varchar,
   state varchar,
   info text,
+  create_osv_memory boolean,
   primary key(id)
 );
 
