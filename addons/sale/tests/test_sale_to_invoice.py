@@ -26,82 +26,58 @@ from datetime import datetime
 
 class TestSale(TestMail):
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
-    
     def setUp(self):
         super(TestSale, self).setUp()
-        
+
     def test_sale_to_invoice(self):
         """ Testing for invoice create,validate and pay with invoicing and payment user."""
-        cr, uid = self.cr, self.uid   
-        
         # Usefull models
-        data_obj = self.registry('ir.model.data')
-        user_obj = self.registry('res.users')
-        partner_obj = self.registry('res.partner')
-        sale_obj = self.registry('sale.order')
-        sale_order_line = self.registry('sale.order.line')
-        sale_advance_payment_inv = self.registry('sale.advance.payment.inv')
-        invoice_obj = self.registry('account.invoice')
-        voucher_obj = self.registry('account.voucher')
-        
+        IrModelData = self.env['ir.model.data']
         # Usefull record id
-        group_id = data_obj.get_object_reference(cr, uid, 'account', 'group_account_invoice')[1]
-        product_ref = data_obj.get_object_reference(cr, uid, 'product', 'product_category_3')
-        product_id = product_ref and product_ref[1] or False
-        account_id = data_obj.get_object_reference(cr, uid, 'account', 'cash')[1]
-        company_id = data_obj.get_object_reference(cr, uid, 'base', 'main_company')[1]
-        journal_id = data_obj.get_object_reference(cr, uid, 'account', 'bank_journal')[1]
-        period_id = data_obj.get_object_reference(cr, uid, 'account', 'period_8')[1]
-        
+        group_id = IrModelData.xmlid_to_res_id('account.group_account_invoice') or False
+        product_id = IrModelData.xmlid_to_res_id('product.product_category_3') or False
+        account_id = IrModelData.xmlid_to_res_id('account.cash') or False
+        company_id = IrModelData.xmlid_to_res_id('base.main_company') or False
+        journal_id = IrModelData.xmlid_to_res_id('account.bank_journal') or False
+        period_id = IrModelData.xmlid_to_res_id('account.period_8') or False
+
         # In order to test, I create new user and applied Invoicing & Payments group.
-        user_id = user_obj.create(cr, uid, {
+        user = self.env['res.users'].create({
             'name': 'Test User',
             'login': 'test@test.com',
             'company_id': 1,
-            'groups_id': [(6, 0, [group_id])]
-        })
-        assert user_id, "User will not created."
-        
+            'groups_id': [(6, 0, [group_id])]})
+        assert user, "User will not created."
         # I create partner for sale order.
-        partner_id = partner_obj.create(cr, uid, {
+        partner = self.env['res.partner'].create({
             'name': 'Test Customer',
-            'email': 'testcustomer@test.com',
-        })
-        
+            'email': 'testcustomer@test.com'})
         # In order to test I create sale order and confirmed it.
-        order_id = sale_obj.create(cr, uid, {
-            'partner_id': partner_id,
-            'date_order': datetime.today(),
-        })
-        order_line = sale_order_line.create(cr, uid, {
-                'order_id': order_id, 
-                'product_id': product_id,
-        })
-        assert order_id, "Sale order will not created."
-        
-        context = {"active_model": 'sale.order', "active_ids": [order_id], "active_id":order_id}
-        sale_obj.action_button_confirm(cr, uid, [order_id], context=context)
-        
+        order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'date_order': datetime.today()})
+        order_line = self.env['sale.order.line'].create({
+            'order_id': order.id,
+            'product_id': product_id})
+        assert order, "Sale order will not created."
+        context = {"active_model": 'sale.order', "active_ids": [order.id], "active_id": order.id}
+        order.with_context(context).action_button_confirm()
         # Now I create invoice.
-        pay_id = sale_advance_payment_inv.create(cr, uid, {'advance_payment_method': 'fixed', 'amount': 5})
-        inv = sale_advance_payment_inv.create_invoices(cr, uid, [pay_id], context=context)
-        invoice_ids = sale_obj.browse(cr, uid, order_id).invoice_ids
-        assert invoice_ids,"No any invoice is created for this sale order"
-        
+        payment = self.env['sale.advance.payment.inv'].create({'advance_payment_method': 'fixed', 'amount': 5})
+        invoice = payment.with_context(context).create_invoices()
+        assert order.invoice_ids, "No any invoice is created for this sale order"
         # Now I validate pay invoice wihth Test User(invoicing and payment).
-        for invoice in invoice_ids:
-            invoice_obj.invoice_validate(cr, uid, [invoice.id], context=context)
-        
+        for invoice in order.invoice_ids:
+            invoice.with_context(context).invoice_validate()
         # Now I create and post an account voucher of amount 75.0 for the partner Test Customer.
-        voucher_id = voucher_obj.create(cr, uid, {
+        voucher = self.env['account.voucher'].create({
             'account_id': account_id,
             'amount': 75.0,
             'company_id': company_id,
             'journal_id': journal_id,
-            'partner_id': partner_id,
+            'partner_id': partner.id,
             'period_id': period_id,
             'type': 'receipt',
         })
-        assert voucher_id,"Voucher will not created."
-        voucher = voucher_obj.browse(cr, uid, voucher_id)
+        assert voucher, "Voucher will not created."
         voucher.signal_workflow('proforma_voucher')
