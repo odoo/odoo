@@ -380,7 +380,21 @@ class AccountFinancialReportContext(models.TransientModel):
     def create(self, vals):
         res = super(AccountFinancialReportContext, self).create(vals)
         if res.report_id.default_date_filter == 'year':
-            res.write({'date_filter': 'this_year'})
+            dt = datetime.today()
+            last_month = self.env.user.company_id.fiscalyear_last_month
+            last_day = self.env.user.company_id.fiscalyear_last_day
+            if (dt.month < last_month or (dt.month == last_month and dt.date <= last_day)):
+                dt = dt.replace(month=last_month, day=last_day)
+            else:
+                dt = dt.replace(month=last_month, day=last_day, year=dt.year+1)
+            dt_to = dt
+            dt_from = dt + timedelta(days=1)
+            dt_from = dt_from.replace(year=dt_from.year-1)
+            res.write({
+                'date_from': dt_from,
+                'date_to': dt_to,
+                'date_filter': 'this_year'
+            })
         return res
 
     @api.multi
