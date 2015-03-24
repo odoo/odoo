@@ -322,7 +322,7 @@ openerp.account = function (instance) {
         keyboardShortcutsHandler: function(e) {
             var self = this;
             if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
-                self.persistReconciliations(_.filter(self.getChildren(), function(o) { return o.is_valid; }));
+                self.persistReconciliations(_.filter(self.getChildren(), function(o) { return o.get("balance").toFixed(3) === "0.000"; }));
             }
         },
 
