@@ -1772,6 +1772,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
 
     options.fontSizes = [_t('Default'), 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 62];
     $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color, bgcolor, size) {
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable);
+
         var rng = range.create();
         var startPoint = rng.getStartPoint();
         var endPoint = rng.getEndPoint();
@@ -1961,7 +1964,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
           if (i>0 && (font = dom.ancestor(nodes[i-1], dom.isFont))) {
             className2 = font.getAttribute('class');
             style2 = font.getAttribute('style');
-            if (node !== font && className == className2 && style == style2) {
+            if (node !== font && className == className2 && style == style2 && (node.parentNode === font.parentNode || node.parentNode === font)) {
               remove(node, font);
               nodes.splice(i,1);
               i--;
@@ -1974,6 +1977,8 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     };
     $.summernote.pluginEvents.fontSize = function (event, editor, layoutInfo, value) {
       var $editable = layoutInfo.editable();
+      $editable.data('NoteHistory').recordUndo($editable);
+
       event.preventDefault();
       $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, null, null, value);
       editor.afterCommand($editable);
