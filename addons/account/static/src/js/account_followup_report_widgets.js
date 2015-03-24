@@ -8,10 +8,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         "change *[name='blocked']": 'onChangeBlocked',
         'click .oe-account-set-next-action': 'setNextAction',
         'click #saveNextAction': 'saveNextAction',
-        'click .oe-account-followup-one-week': 'setNextAction',
-        'click .oe-account-followup-two-weeks': 'setNextAction',
-        'click .oe-account-followup-one-month': 'setNextAction',
-        'click .oe-account-followup-two-months': 'setNextAction',
+        'click .oe-account-followup-set-next-action': 'setNextAction',
     }, openerp.account.ReportWidgets.prototype.events),
     saveNextAction: function(e) {
         e.stopPropagation();
@@ -29,19 +26,19 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
     setNextAction: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        var target_id = $(e.target).parents("div.page").attr("class").split(/\s+/)[3];
+        var target_id = $(e.target).parents("div.page").data('context');
         var dt = new Date();
-        switch($(e.target).attr("class").split(/\s+/)[2]) {
-            case 'oe-account-followup-one-week':
+        switch($(e.target).data('time')) {
+            case 'one-week':
                 dt.setDate(dt.getDate() + 7);
                 break;
-            case 'oe-account-followup-two-weeks':
+            case 'two-weeks':
                 dt.setDate(dt.getDate() + 14);
                 break;
-            case 'oe-account-followup-one-month':
+            case 'one-month':
                 dt.setMonth(dt.getMonth() + 1);
                 break;
-            case 'oe-account-followup-two-months':
+            case 'two-months':
                 dt.setMonth(dt.getMonth() + 2);
                 break;
         }
@@ -56,7 +53,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         e.stopPropagation();
         e.preventDefault();
         var checkbox = $(e.target).is(":checked")
-        var target_id = $(e.target).parents('tr').attr("class").split(/\s+/)[1];
+        var target_id = $(e.target).parents('tr').data('id');
         var model = new openerp.Model('account.move.line');
         model.call('write', [[parseInt(target_id)], {'blocked': checkbox}])
     },
@@ -127,7 +124,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
     displayExpNoteModal: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        var target_id = $(e.target).parents('tr').attr("class").split(/\s+/)[1];
+        var target_id = $(e.target).parents('tr').data('id');
         $("#paymentDateLabel").text($(e.target).parents("div.dropdown").find("span.invoice_id").text());
         $("#paymentDateModal #target_id").val(target_id);
         $('#paymentDateModal').on('hidden.bs.modal', function (e) {

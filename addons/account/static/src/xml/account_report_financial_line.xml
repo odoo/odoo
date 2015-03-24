@@ -68,12 +68,12 @@
     <t t-name="editContent"><t t-if="num > 0"><t t-esc="num" />. </t><textarea t-att-name="edit" rows='4' class="form-control"><t t-esc="text" /></textarea><button class="btn btn-primary saveContent">Save</button></t>
     <t t-name="report_financial_line">
         <t t-set="column" t-value="0" />
-        <tr t-att-class="l.type + ' ' + l.id">
+        <tr t-att-class="l.type" t-att-data-type="l.type" t-att-data-id="l.id" >
             <td>
-                <a t-if="l.type != 'account_id' &amp; l.type != 'tax_id'"><span t-att-class="l.type + ' ' + l.id + ' oe-account-domain-line'"><t t-esc="l.name"/></span></a>
+                <a t-if="l.type != 'account_id' &amp; l.type != 'tax_id'"><span t-att-data-id="l.id" t-att-class="l.type + ' oe-account-domain-line'"><t t-esc="l.name"/></span></a>
                 <div class="dropdown" t-if="l.type == 'account_id'">
                     <a data-toggle="dropdown">
-                        <span t-att-class="l.type + ' ' + l.id + ' oe-account-domain-line'"><t t-esc="l.name"></t></span><span class="caret"></span>
+                        <span t-att-data-id="l.id" t-att-class="l.type + ' oe-account-domain-line'"><t t-esc="l.name"></t></span><span class="caret"></span>
                     </a>
                     <t t-if="l.footnotes[column] != undefined">
                         <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />
