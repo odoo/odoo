@@ -141,7 +141,7 @@ class mrp_routing_workcenter(osv.osv):
     """
     _name = 'mrp.routing.workcenter'
     _description = 'Work Center Usage'
-    _order = 'sequence'
+    _order = 'sequence, id'
     _columns = {
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'name': fields.char('Name', required=True),
@@ -158,6 +158,7 @@ class mrp_routing_workcenter(osv.osv):
     _defaults = {
         'cycle_nbr': lambda *a: 1.0,
         'hour_nbr': lambda *a: 0.0,
+        'sequence': 100,
     }
 
 class mrp_bom(osv.osv):
