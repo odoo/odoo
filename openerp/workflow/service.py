@@ -21,6 +21,7 @@
 from helpers import Session
 from helpers import Record
 import sys
+from importlib import import_module
 
 from openerp.workflow.instance import WorkflowInstance
 # import instance
@@ -69,6 +70,25 @@ class WorkflowService(object):
         WorkflowInstance(self.session, self.record, {}).delete()
 
     def create(self):
+        def load_module(module):
+            """
+            Check if the module is loaded and load it if it isn't.
+
+            Has the modules are addons, we have to check if
+            the module is present in sys.modules using the form:
+
+                openerp.addons.module_name
+
+            :param module: The id of the workflow with the module that
+                           created it.
+            :type module: tuple (res_id, module_name)
+            :returns: python module or None
+            """
+            module_name = 'openerp.addons.%s' % module[1]
+            if not sys.modules.get(module_name):
+                import_module(module_name)
+
+            return module
 
         def check_module(module):
             """
@@ -119,8 +139,8 @@ class WorkflowService(object):
             # Created on the system programmatically or manually
             dynamic_ids = list(all_ids - static_ids)
 
-            filtered_modules = filter(check_module, modules)
-            wkf_ids = map(to_record, filtered_modules) + dynamic_ids
+            loaded_modules = map(load_module, modules)
+            wkf_ids = map(to_record, loaded_modules) + dynamic_ids
 
         for (wkf_id, ) in wkf_ids:
             WorkflowInstance.create(self.session, self.record, wkf_id)
