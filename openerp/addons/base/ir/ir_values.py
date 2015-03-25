@@ -387,7 +387,7 @@ class ir_values(osv.osv):
             'value': action,
         })
 
-    @tools.ormcache_context(accepted_keys=('lang',))
+    @tools.ormcache_context('uid', 'action_slot', 'model', 'res_id', keys=('lang',))
     def get_actions(self, cr, uid, action_slot, model, res_id=False, context=None):
         """Retrieves the list of actions bound to the given model's action slot.
            See the class description for more details about the various action
