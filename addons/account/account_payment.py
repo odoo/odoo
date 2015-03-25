@@ -5,6 +5,21 @@ import time
 from openerp import models, fields, api, _
 from openerp.exceptions import UserError, ValidationError
 
+MAP_INVOICE_TYPE_PARTNER_TYPE = {
+    'out_invoice': 'customer',
+    'out_refund': 'customer',
+    'in_invoice': 'supplier',
+    'in_refund': 'supplier',
+}
+# Since invoice amounts are unsigned, this is how we know if money comes in or goes out
+MAP_INVOICE_TYPE_PAYMENT_SIGN = {
+    'out_invoice': 1,
+    'in_refund': 1,
+    'in_invoice': -1,
+    'out_refund': -1,
+}
+
+# TODO : multicurrency
 
 class account_payment_method(models.Model):
     _name = "account.payment.method"
@@ -18,6 +33,11 @@ class account_payment_method(models.Model):
 class account_register_payments(models.TransientModel):
     _name = "account.register.payments"
     _description = "Register payments on multiple invoices"
+
+    amount = fields.Float(string='Payment Amount', required=True, digits=0, readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True)
+    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Supplier')], readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')])
     payment_method = fields.Many2one('account.payment.method', string='Payment Method', required=True)
@@ -45,35 +65,49 @@ class account_register_payments(models.TransientModel):
         active_model = context.get('active_model')
         active_ids = context.get('active_ids')
 
+        # Checks on context parameters
         if not active_model or not active_ids:
             raise osv.except_osv(_("Programmation error : wizard action executed without active_model or active_ids in context."))
         if active_model != 'account.invoice':
             raise osv.except_osv(_("Programmation error : the expected model for this action is 'account.invoice'. The provided one is '%d'." % active_model))
-        records = self.env[active_model].browse(active_ids)
-        if any(invoice.state != 'open' for invoice in records):
-            raise UserError(_("You can only register payments for open invoices"))
-        if len(set(r.type for r in records)) > 1:
-            raise UserError(_("You can only register batch payments for invoices of the same type."))
 
+        # Checks on received invoice records
+        invoices = self.env[active_model].browse(active_ids)
+        if any(invoice.state != 'open' for invoice in invoices):
+            raise UserError(_("You can only register payments for open invoices"))
+        if any(inv.partner_id != invoices[0].partner_id for inv in invoices):
+            raise UserError(_("In order to pay multiple invoices at once, they must belong to the same partner."))
+        if any(MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type] for inv in invoices):
+            raise UserError(_("You cannot mix customer and supplier invoices in a single payment."))
+        if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
+            raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
+
+        total_amount = sum(inv.residual * MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] for inv in invoices)
         rec.update({
-            'payment_type': records[0].type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound',
+            'amount': total_amount,
+            'currency_id': invoices[0].currency_id.id,
+            # TOCHECK: what if the amount actually is 0 ?
+            'payment_type': total_amount > 0 and 'inbound' or 'outbound',
+            'partner_id': invoices[0].partner_id.id,
+            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
         })
         return rec
 
     @api.multi
     def button_register_payments(self):
-        for invoice in self.env['account.invoice'].browse(self._context.get('active_ids')):
-            payment = self.env['account.payment'].create({
-                'journal_id': self.journal_id.id,
-                'payment_method': self.payment_method.id,
-                'date': self.date,
-                'invoice_id': invoice.id,
-                'payment_type': self.payment_type,
-                'amount': invoice.residual,
-                'partner_id': invoice.partner_id.id,
-                'partner_type': invoice.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier'
-            })
-            payment.post()
+        invoices = self.env['account.invoice'].browse(self._context.get('active_ids'))
+        payment = self.env['account.payment'].create({
+            'journal_id': self.journal_id.id,
+            'payment_method': self.payment_method.id,
+            'date': self.date,
+            'invoice_ids': [(4, inv.id, None) for inv in invoices],
+            'payment_type': self.payment_type,
+            'amount': self.amount,
+            'currency_id': self.currency_id.id,
+            'partner_id': self.partner_id.id,
+            'partner_type': self.partner_type,
+        })
+        payment.post()
 
 
 class account_payment(models.Model):
@@ -81,10 +115,10 @@ class account_payment(models.Model):
     _description = "Payments"
 
     @api.one
-    @api.depends('invoice_id', 'payment_type', 'partner_type', 'partner_id')
+    @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
     def _compute_destination_account_id(self):
-        if self.invoice_id:
-            self.destination_account_id = self.invoice_id.account_id.id
+        if self.invoice_ids:
+            self.destination_account_id = self.invoice_ids[0].account_id.id
         elif self.payment_type == 'transfer':
             if not self.company_id.transfer_account_id.id:
                 raise UserError(_('Transfer account not defined on the company.'))
@@ -96,15 +130,16 @@ class account_payment(models.Model):
                 self.destination_account_id = self.partner_id.property_account_payable.id
 
     @api.one
-    @api.depends('invoice_id', 'amount', 'date', 'currency_id')
+    @api.depends('invoice_ids', 'amount', 'date', 'currency_id')
     def _compute_payment_difference(self):
-        amount = 0
-        if self.invoice_id:
-            if not self.currency_id or self.invoice_id.currency_id == self.currency_id:
-                amount = self.amount
-            else:
-                amount = self.currency_id.with_context(date=self.date).compute(self.amount, self.invoice_id.currency_id)
-        self.payment_difference = self.invoice_id and self.invoice_id.residual - amount or 0
+        if len(self.invoice_ids) != 1:
+            self.payment_difference = 0
+            return
+        if self.invoice_ids[0].currency_id == self.currency_id:
+            amount = self.amount
+        else:
+            amount = self.currency_id.with_context(date=self.date).compute(self.amount, self.invoice_ids[0].currency_id)
+        self.payment_difference = self.invoice_ids[0].residual - amount
 
     name = fields.Char(readonly=True, copy=False)
     state = fields.Selection([('draft','Draft'), ('confirmed','Confirmed')], readonly=True, default='draft', copy=False)
@@ -128,12 +163,12 @@ class account_payment(models.Model):
     destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain=[('type', '=', 'bank')])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
-    invoice_id = fields.Many2one('account.invoice', string="Invoice", domain=[('state', '=', 'open')], copy=False)
+    invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", readonly=True)
     payment_difference = fields.Float(compute='_compute_payment_difference')
     payment_difference_handling = fields.Selection([('open', 'Keep Open'), ('reconcile', 'Reconcile Payment Balance')], default='open', string="Payment Difference", copy=False)
     writeoff_account = fields.Many2one('account.account', string="Counterpart Account", domain=[('deprecated', '=', False)], copy=False)
 
-    move_line_ids = fields.One2many('account.move.line', 'payment_id', copy=False, readonly=True, ondelete='restrict')
+    move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, ondelete='restrict')
 
     @api.one
     @api.constrains('amount')
@@ -156,10 +191,12 @@ class account_payment(models.Model):
             self.partner_type = 'supplier'
         # Set payment method domain
         # TODO: set journal_id domain in order to hide journal with no inbound/outbound payment method
+        # This interface is a mess. Maybe all onchange should call a single method where it would be easier to sort things out
         return self._onchange_journal()
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
+        import pprint; pp = pprint.PrettyPrinter(indent=4); pp.pprint(self.journal_id)
         if self.journal_id:
             self.currency_id = self.journal_id.currency and self.journal_id.currency or self.company_id.currency_id
             # Set default payment method (we consider the first to be the default one)
@@ -169,14 +206,14 @@ class account_payment(models.Model):
             payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
             return {'domain': {'payment_method': [('payment_type', '=', payment_type), ('id', 'in', payment_methods.ids)]}}
 
-    @api.onchange('invoice_id')
+    @api.onchange('invoice_ids')
     def _onchange_invoice(self):
-        if self.invoice_id:
-            self.amount = self.invoice_id.residual
-            self.currency_id = self.invoice_id.currency_id
-            self.payment_type = self.invoice_id.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
-            self.partner_type = self.invoice_id.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier'
-            self.partner_id = self.invoice_id.partner_id
+        if len(self.invoice_ids) == 1:
+            self.amount = self.invoice_ids[0].residual
+            self.currency_id = self.invoice_ids[0].currency_id
+            self.payment_type = self.amount < 0 and 'inbound' or 'outbound'
+            self.partner_type = MAP_INVOICE_TYPE_PARTNER_TYPE[self.invoice_ids[0].type]
+            self.partner_id = self.invoice_ids[0].partner_id
 
     @api.model
     def create(self, vals):
@@ -214,7 +251,7 @@ class account_payment(models.Model):
     def cancel(self):
         for rec in self:
             for move in rec.move_line_ids.mapped('move_id'):
-                if rec.invoice_id:
+                if rec.invoice_ids:
                     move.line_id.remove_move_reconcile()
                 move.button_cancel()
                 move.unlink()
@@ -227,75 +264,95 @@ class account_payment(models.Model):
             raise UserError(_("In order to delete a payment, it must first be canceled."))
         return super(account_payment, self).unlink()
 
-# Warning: below this point lies crappy that code that generates journal entries and craves refactoring
-
     @api.multi
     def post(self):
         """ Create the journal items for the payment and update the payment's state.
             A journal entry is created containing an item in the source liquidity account (selected journal's default_debit or default_credit)
             and another in the destination reconciliable account (see _compute_destination_account_id).
-            If an invoice is specified, it is reconciled with the payment.
+            If invoice_ids is not empty, create a payment journal entry for each invoice to reconcile with.
             If the payment is a transfer, a second journal entry is created in the destination journal to receive money from the transfer account.
         """
-        aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
         for rec in self:
-            # Create the journal entry
             amount = rec.amount * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
-            debit, credit, amount_currency = aml_obj.with_context(date=rec.date).compute_amount_fields(amount, rec.currency_id, rec.company_id.currency_id)
-
-            move = rec.env['account.move'].create(rec._get_move_vals())
-
-            liquidity_aml_dict = rec._get_shared_move_line_vals(credit, debit, -amount_currency, move.id)
-            liquidity_aml_dict.update(rec._get_liquidity_move_line_vals())
-            aml_obj.create(liquidity_aml_dict)
-
-            counterpart_aml_dict = rec._get_shared_move_line_vals(debit, credit, amount_currency, move.id)
-            counterpart_aml_dict.update(rec._get_counterpart_move_line_vals())
-            counterpart_aml = aml_obj.create(counterpart_aml_dict)
-
-            move.post()
-
-            # Reconcile the invoice, if present
-            if rec.invoice_id:
-                if rec.payment_difference != 0.0 and rec.payment_difference_handling == 'reconcile':
-                    rec.invoice_id.register_payment(counterpart_aml, rec.writeoff_account, rec.journal_id)
+            if rec.invoice_ids:
+                if len(rec.invoice_ids) == 1:
+                    amount = -rec.amount * MAP_INVOICE_TYPE_PAYMENT_SIGN[rec.invoice_ids[0].type]
+                    counterpart_aml = rec._create_payment_entry(amount, rec.invoice_ids[0])
+                    if rec.payment_difference != 0.0 and rec.payment_difference_handling == 'reconcile':
+                        rec.invoice_ids[0].register_payment(counterpart_aml, rec.writeoff_account, rec.journal_id)
+                    else:
+                        rec.invoice_ids[0].register_payment(counterpart_aml)
                 else:
-                    rec.invoice_id.register_payment(counterpart_aml)
-
-            # In case of a transfer, the first journal entry created debited the source liquidity account and credited
-            # the transfer account. Now we debit the transfer account and credit the destination liquidity account.
-            if rec.payment_type == 'transfer':
-                amount_currency = rec.destination_journal_id.currency and rec.currency_id.with_context(date=rec.date).compute(amount, rec.destination_journal_id.currency) or 0
-
-                dst_move = rec.env['account.move'].create(rec._get_move_vals(rec.destination_journal_id))
-
-                dst_liquidity_aml_dict = rec._get_shared_move_line_vals(debit, credit, amount_currency, dst_move.id)
-                dst_liquidity_aml_dict.update({
-                    'name': _('Transfer from %s') % self.journal_id.name,
-                    'account_id': rec.destination_journal_id.default_credit_account_id.id,
-                    'currency_id': rec.destination_journal_id.currency.id,
-                    'payment_id': rec.id,
-                    'journal_id': rec.destination_journal_id.id})
-                aml_obj.create(dst_liquidity_aml_dict)
-
-                transfer_debit_aml_dict = rec._get_shared_move_line_vals(credit, debit, -amount_currency, dst_move.id)
-                transfer_debit_aml_dict.update({
-                    'name': '/',
-                    'payment_id': rec.id,
-                    'account_id': self.company_id.transfer_account_id.id,
-                    'currency_id': rec.destination_journal_id.currency.id,
-                    'journal_id': rec.destination_journal_id.id})
-                transfer_debit_aml = aml_obj.create(transfer_debit_aml_dict)
-
-                dst_move.post()
-                (counterpart_aml + transfer_debit_aml).reconcile()
+                    for invoice in rec.invoice_ids:
+                        amount = -invoice.residual * MAP_INVOICE_TYPE_PAYMENT_SIGN[invoice.type]
+                        counterpart_aml = rec._create_payment_entry(amount, invoice)
+                        invoice.register_payment(counterpart_aml)
+            else:
+                counterpart_aml = rec._create_payment_entry(amount)
+                # In case of a transfer, the first journal entry created debited the source liquidity account and credited
+                # the transfer account. Now we debit the transfer account and credit the destination liquidity account.
+                if rec.payment_type == 'transfer':
+                    transfer_debit_aml = rec._create_transfer_entry(-amount)
+                    (counterpart_aml + transfer_debit_aml).reconcile()
 
             rec.state = 'confirmed'
             if rec.payment_method.code == 'manual':
                 rec.payment_state = 'done'
 
+    def _create_payment_entry(self, amount, invoice_id=False):
+        """ Create a journal entry corresponding to a payment, return the reconciliable move line
+        """
+        aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
+        debit, credit, amount_currency = aml_obj.with_context(date=self.date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
+
+        move = self.env['account.move'].create(self._get_move_vals())
+
+        liquidity_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, move.id, invoice_id)
+        liquidity_aml_dict.update(self._get_liquidity_move_line_vals())
+        aml_obj.create(liquidity_aml_dict)
+
+        counterpart_aml_dict = self._get_shared_move_line_vals(debit, credit, amount_currency, move.id, invoice_id)
+        counterpart_aml_dict.update(self._get_counterpart_move_line_vals(invoice_id))
+        counterpart_aml = aml_obj.create(counterpart_aml_dict)
+
+        move.post()
+
+        return counterpart_aml
+
+    def _create_transfer_entry(self, amount):
+        """ Create the journal entry corresponding to the 'incoming money' part of an internal transfer, return the reconciliable move line
+        """
+        aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
+        debit, credit, amount_currency = aml_obj.with_context(date=self.date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
+        amount_currency = self.destination_journal_id.currency and self.currency_id.with_context(date=self.date).compute(amount, self.destination_journal_id.currency) or 0
+
+        dst_move = self.env['account.move'].create(self._get_move_vals(self.destination_journal_id))
+
+        dst_liquidity_aml_dict = self._get_shared_move_line_vals(debit, credit, amount_currency, dst_move.id)
+        dst_liquidity_aml_dict.update({
+            'name': _('Transfer from %s') % self.journal_id.name,
+            'account_id': self.destination_journal_id.default_credit_account_id.id,
+            'currency_id': self.destination_journal_id.currency.id,
+            'payment_id': self.id,
+            'journal_id': self.destination_journal_id.id})
+        aml_obj.create(dst_liquidity_aml_dict)
+
+        transfer_debit_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, dst_move.id)
+        transfer_debit_aml_dict.update({
+            'name': '/',
+            'payment_id': self.id,
+            'account_id': self.company_id.transfer_account_id.id,
+            'currency_id': self.destination_journal_id.currency.id,
+            'journal_id': self.destination_journal_id.id})
+        transfer_debit_aml = aml_obj.create(transfer_debit_aml_dict)
+
+        dst_move.post()
+
+        return transfer_debit_aml
+
     def _get_move_vals(self, journal=None):
-        """ Return dict to create the payment move """
+        """ Return dict to create the payment move
+        """
         journal = journal or self.journal_id
         if not journal.sequence_id:
             raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
@@ -311,12 +368,13 @@ class account_payment(models.Model):
         }
 
 
-    def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id):
-        """ Returns values common to both move lines (except for debit, credit and amount_currency which are reversed) """
+    def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):
+        """ Returns values common to both move lines (except for debit, credit and amount_currency which are reversed)
+        """
         return {
             'partner_id': self.payment_type in ('inbound', 'outbound') and self.partner_id.commercial_partner_id.id or False,
             'date': self.date,
-            'invoice': self.invoice_id and self.invoice_id.id or False,
+            'invoice': invoice_id and invoice_id.id or False,
             'move_id': move_id,
             'debit': debit,
             'credit': credit,
@@ -324,9 +382,9 @@ class account_payment(models.Model):
             'amount_currency': amount_currency or False,
         }
 
-    def _get_counterpart_move_line_vals(self):
+    def _get_counterpart_move_line_vals(self, invoice_id=False):
         return {
-            'name': self.invoice_id and self.invoice_id.number or '/',
+            'name': invoice_id and invoice_id.number or '/',
             'account_id': self.destination_account_id.id,
             'journal_id': self.journal_id.id,
             'payment_id': self.id,
