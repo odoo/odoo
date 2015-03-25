@@ -46,7 +46,7 @@
                                                 class="oe_inline" context="{'default_model_id': model}"
                                                 on_change="onchange_filter_id(filter_id, context)"/></div>
                                     </div>
-                                    <field name="on_change_field_ids"
+                                    <field name="on_change_fields"
                                         attrs="{'invisible': [('kind', '!=', 'on_change')], 'required': [('kind', '=', 'on_change')]}"/>
                                     <field name="trg_date_id"
                                         attrs="{'invisible': [('kind', '!=', 'on_time')], 'required': [('kind', '=', 'on_time')]}"/>

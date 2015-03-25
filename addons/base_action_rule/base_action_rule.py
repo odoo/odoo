@@ -100,7 +100,7 @@ class base_action_rule(osv.osv):
             help="If present, this condition must be satisfied before executing the action rule."),
         'filter_domain': fields.char(string='Domain', help="If present, this condition must be satisfied before executing the action rule."),
         'last_run': fields.datetime('Last Run', readonly=1, copy=False),
-        'on_change_field_ids' : fields.many2many('ir.model.fields', domain="[('model_id', '=', model_id)]", string="On Change Fields Trigger"),
+        'on_change_fields' : fields.char(string="On Change Fields Trigger"),
     }
 
     _defaults = {
@@ -186,8 +186,8 @@ class base_action_rule(osv.osv):
             if action_rule.kind != 'on_change':
                 continue
             model = self.env[action_rule.model_id.model]
-            for field in action_rule.on_change_field_ids:
-                model._onchange_methods[field.name].append(make_onchange(action_rule.id))
+            for field_name in eval(action_rule.on_change_fields):
+                model._onchange_methods[field_name].append(make_onchange(action_rule.id))
 
     def _register_hook(self, cr, ids=None):
         """ Wrap the methods `create` and `write` of the models specified by
@@ -292,9 +292,9 @@ class base_action_rule(osv.osv):
         if self.kind != 'on_change':
             return
         model = self.env[self.model_id.model]
-        for field in self.on_change_field_ids:
-            if model._onchange_methods.get(field.name):
-                model._onchange_methods[field.name] = [method for method in model._onchange_methods[field.name] if method.func_name != 'base_action_rule_onchange']
+        for field_name in eval(self.on_change_fields):
+            if model._onchange_methods.get(field_name):
+                model._onchange_methods[field_name] = [method for method in model._onchange_methods[field_name] if method.func_name != 'base_action_rule_onchange']
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
@@ -319,7 +319,7 @@ class base_action_rule(osv.osv):
         return res
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
-        data = {'model': False, 'filter_pre_id': False, 'filter_id': False, 'on_change_field_ids': False}
+        data = {'model': False, 'filter_pre_id': False, 'filter_id': False}
         if model_id:
             model = self.pool.get('ir.model').browse(cr, uid, model_id, context=context)
             data.update({'model': model.model})
