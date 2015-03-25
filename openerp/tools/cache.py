@@ -143,15 +143,35 @@ class ormcache_context(ormcache):
 
 
 class ormcache_multi(ormcache):
-    def __init__(self, skiparg=2, size=8192, multi=3):
-        assert skiparg <= multi
-        super(ormcache_multi, self).__init__(skiparg, size)
-        self.multi = multi
+    """ This LRU cache decorator is a variant of :class:`ormcache`, with an
+    extra parameter ``multi`` that gives the name of a parameter. Upon call, the
+    corresponding argument is iterated on, and every value leads to a cache
+    entry under its own key.
+    """
+    def __init__(self, *args, **kwargs):
+        super(ormcache_multi, self).__init__(*args, **kwargs)
+        self.multi = kwargs['multi']
+
+    def determine_key(self):
+        """ Determine the function that computes a cache key from arguments. """
+        assert self.skiparg is None, "ormcache_multi() no longer supports skiparg"
+        assert isinstance(self.multi, basestring), "ormcache_multi() parameter multi must be an argument name"
+
+        super(ormcache_multi, self).determine_key()
+
+        # key_multi computes the extra element added to the key
+        spec = getargspec(self.method)
+        args = formatargspec(*spec)[1:-1]
+        code_multi = "lambda %s: %s" % (args, self.multi)
+        self.key_multi = eval(code_multi)
+
+        # self.multi_pos is the position of self.multi in args
+        self.multi_pos = spec.args.index(self.multi)
 
     def lookup(self, method, *args, **kwargs):
         d, key0, counter = self.lru(args[0])
-        base_key = key0 + args[self.skiparg:self.multi] + args[self.multi+1:]
-        ids = args[self.multi]
+        base_key = key0 + self.key(*args, **kwargs)
+        ids = self.key_multi(*args, **kwargs)
         result = {}
         missed = []
 
@@ -166,9 +186,11 @@ class ormcache_multi(ormcache):
                 missed.append(i)
 
         if missed:
-            # call the method for the ids that were not in the cache
+            # call the method for the ids that were not in the cache; note that
+            # thanks to decorator(), the multi argument will be bound and passed
+            # positionally in args.
             args = list(args)
-            args[self.multi] = missed
+            args[self.multi_pos] = missed
             result.update(method(*args, **kwargs))
 
             # store those new results back in the cache
