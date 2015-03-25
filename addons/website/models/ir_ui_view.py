@@ -152,7 +152,7 @@ class view(osv.osv):
 
         return arch
 
-    @tools.ormcache_context(accepted_keys=('website_id',))
+    @tools.ormcache_context('uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, cr, uid, xml_id, context=None):
         if context and 'website_id' in context and not isinstance(xml_id, (int, long)):
             domain = [('key', '=', xml_id), '|', ('website_id', '=', context['website_id']), ('website_id', '=', False)]
