@@ -145,14 +145,3 @@ class Versioning_Controller(Website):
             exp_obj = request.env['website_version.experiment']
             exp_obj.create(vals)
         return existing_experiment
-
-    @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, key, full=False, bundles=False, **kw):
-        result = Website.customize_template_get(self, key, full=full, bundles=bundles, **kw)
-        check = []
-        res = []
-        for data in result:
-            if data['name'] not in check:
-                check.append(data['name'])
-                res.append(data)
-        return res

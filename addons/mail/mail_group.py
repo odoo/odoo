@@ -34,6 +34,7 @@ class mail_group(osv.Model):
     _description = 'Discussion group'
     _name = 'mail.group'
     _mail_flat_thread = False
+    _mail_post_access = 'read'
     _inherit = ['mail.thread']
     _inherits = {'mail.alias': 'alias_id'}
 

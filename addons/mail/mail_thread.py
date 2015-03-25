@@ -635,9 +635,11 @@ class mail_thread(osv.AbstractModel):
         if not msg_id and not (model and res_id):
             return action
         if msg_id and not (model and res_id):
-            msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
-            if msg.exists():
+            msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context).exists()
+            try:
                 model, res_id = msg.model, msg.res_id
+            except AccessError:
+                pass
 
         # if model + res_id found: try to redirect to the document or fallback on the Inbox
         if model and res_id:
@@ -1570,7 +1572,7 @@ class mail_thread(osv.AbstractModel):
                 isinstance(thread_id, (int, long)) or \
                 (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), \
                 "Invalid thread_id; should be 0, False, an ID or a list with one ID"
-        if isinstance(thread_id, (list, tuple)):
+        if thread_id and isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
 
         # if we're processing a message directly coming from the gateway, the destination model was

@@ -90,7 +90,7 @@
                         <field name="team_id" completion="1" groups="base.group_multi_salesteams"/>
                     </field>
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button class="oe_inline oe_stat_button" type="action"
+                        <button class="oe_inline oe_stat_button o_res_partner_tip_opp" type="action"
                             attrs="{'invisible': [('customer', '=', False)]}"
                             name="%(crm.crm_lead_opportunities)d"
                             icon="fa-star"

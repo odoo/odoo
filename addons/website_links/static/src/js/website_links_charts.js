@@ -1,14 +1,19 @@
-(function () {
-   'use strict';
+odoo.define('website_links.charts', function (require) {
+'use strict';
 
-openerp.website.if_dom_contains('div.o_website_links_chart', function() {
+var Widget = require('web.Widget');
+var website = require('website.website');
 
-    var QWeb = openerp.qweb;
-    var website = openerp.website;
+var moment = window.moment;
+var nv = window.nv;
+var d3 = window.d3;
 
-    openerp.website_links_chart = {};
+var exports = {};
+
+website.if_dom_contains('div.o_website_links_chart', function() {
+
     
-    openerp.website_links_chart.BarChart = openerp.Widget.extend({
+    var BarChart = Widget.extend({
         init: function($element, begin_date, end_date, dates) {
             this.$element = $element;
             this.begin_date = begin_date;
@@ -29,7 +34,7 @@ openerp.website.if_dom_contains('div.o_website_links_chart', function() {
                 var keep_one_of = Math.max(1, Math.floor(nb_values / nb_desired_ticks));
 
                 return _.filter(ticks, function(d, i) {
-                    return i % keep_one_of == 0;
+                    return i % keep_one_of === 0;
                 });
             }
 
@@ -70,7 +75,7 @@ openerp.website.if_dom_contains('div.o_website_links_chart', function() {
 
                 chart.yAxis
                     .tickFormat(d3.format("d"))
-                    .ticks(chart_data[0]['values'].length - 1)
+                    .ticks(chart_data[0]['values'].length - 1);
 
                 d3.select(self.$element + ' svg')
                     .datum(chart_data)
@@ -83,7 +88,7 @@ openerp.website.if_dom_contains('div.o_website_links_chart', function() {
         },
     });
 
-    openerp.website_links_chart.PieChart = openerp.Widget.extend({
+    var PieChart = Widget.extend({
         init: function($element, data) {
             this.data = data;
             this.$element = $element;
@@ -103,8 +108,8 @@ openerp.website.if_dom_contains('div.o_website_links_chart', function() {
 
             nv.addGraph(function() {
                 var chart = nv.models.pieChart()
-                    .x(function(d) { return d.label })
-                    .y(function(d) { return d.value })
+                    .x(function(d) { return d.label; })
+                    .y(function(d) { return d.value; })
                     .showLabels(true);
 
                 d3.select(self.$element + ' svg')
@@ -118,10 +123,7 @@ openerp.website.if_dom_contains('div.o_website_links_chart', function() {
         },
     });
 
-   website.ready().done(function() {
-
-        var self = this;
-
+    website.ready().done(function() {
         // Resize the chart when a tab is opened, because NVD3 automatically reduce the size
         // of the chart to 5px width when the bootstrap tab is closed.
         $(".graph-tabs li a").click(function (e) {
@@ -131,7 +133,6 @@ openerp.website.if_dom_contains('div.o_website_links_chart', function() {
         });
 
         // Get the code of the link
-        var code = $('#code').val();
         var link_id = $('#link_id').val();
 
         var clicks = website.session.model('website.links.click');
@@ -175,7 +176,7 @@ openerp.website.if_dom_contains('div.o_website_links_chart', function() {
                 var begin_date, end_date;
                 for(var i = 0 ; i < clicks_by_day.length ; i++) {
                     var date = moment(clicks_by_day[i]['create_date:day'], "DD MMMM YYYY");
-                    if (i == 0) { begin_date = date; }
+                    if (i === 0) { begin_date = date; }
                     if (i == clicks_by_day.length - 1) { end_date = date; }
                     formatted_clicks_by_day[date.format("YYYY-MM-DD")] = clicks_by_day[i]['create_date_count'];
                 }
@@ -183,27 +184,27 @@ openerp.website.if_dom_contains('div.o_website_links_chart', function() {
                 // Process all time line chart data
                 var now = moment();
 
-                var all_time_chart = new openerp.website_links_chart.BarChart('#all_time_clicks_chart', begin_date, now, formatted_clicks_by_day);
+                var all_time_chart = new BarChart('#all_time_clicks_chart', begin_date, now, formatted_clicks_by_day);
                 all_time_chart.start();
 
                 // Process month line chart data
-                var begin_date = moment().subtract(30, 'days');
-                var month_chart = new openerp.website_links_chart.BarChart('#last_month_clicks_chart', begin_date, now, formatted_clicks_by_day);
+                begin_date = moment().subtract(30, 'days');
+                var month_chart = new BarChart('#last_month_clicks_chart', begin_date, now, formatted_clicks_by_day);
                 month_chart.start();
 
                 // Process week line chart data
-                var begin_date = moment().subtract(7, 'days');
-                var week_chart = new openerp.website_links_chart.BarChart('#last_week_clicks_chart', begin_date, now, formatted_clicks_by_day);
+                begin_date = moment().subtract(7, 'days');
+                var week_chart = new BarChart('#last_week_clicks_chart', begin_date, now, formatted_clicks_by_day);
                 week_chart.start();
 
                 // Process pie charts
-                var all_time_pie_chart = new openerp.website_links_chart.PieChart('#all_time_countries_charts', clicks_by_country);
+                var all_time_pie_chart = new PieChart('#all_time_countries_charts', clicks_by_country);
                 all_time_pie_chart.start();
 
-                var last_month_pie_chart = new openerp.website_links_chart.PieChart('#last_month_countries_charts', last_month_clicks_by_country);
+                var last_month_pie_chart = new PieChart('#last_month_countries_charts', last_month_clicks_by_country);
                 last_month_pie_chart.start();
 
-                var last_week_pie_chart = new openerp.website_links_chart.PieChart('#last_week_countries_charts', last_week_clicks_by_country);
+                var last_week_pie_chart = new PieChart('#last_week_countries_charts', last_week_clicks_by_country);
                 last_week_pie_chart.start();
             }
             else {
@@ -244,6 +245,10 @@ openerp.website.if_dom_contains('div.o_website_links_chart', function() {
                 }
         });
     });
+
+    exports.BarChart = BarChart;
+    exports.PieChart = PieChart;
 });
 
-})();
+return exports;
+});

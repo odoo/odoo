@@ -1,9 +1,9 @@
+/* TODO: make this a server side controller
 
 openerp.auth_openid = function(instance) {
 
 var QWeb = instance.web.qweb;
 
-/* TODO: make this a server side controller
 instance.web.Login = instance.web.Login.extend({
     start: function() {
         var self = this;
@@ -150,7 +150,7 @@ instance.web.Login = instance.web.Login.extend({
     }
 
 });
-*/
 
 
 };
+*/

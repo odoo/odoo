@@ -20,9 +20,11 @@
             <field name="website_published" eval="True"/>
             <field name="website_meta_keywords">Odoo, email</field>
             <field name="website_meta_description">The Future of Emails</field>
-            <field name="background_image">/website_blog/static/src/img/post1.jpg</field>
+            <field name="cover_properties">{"background-image": "url(/website_blog/static/src/img/library/flower_texture.jpg)", "background-color": "oe_yellow" ,"opacity": "1.0", "resize_class": "cover container cover_narrow"}</field>
             <field name="content"><![CDATA[
+    <div class="container">
         <section class="mt16 mb16 readable">
+            <iframe width="100%" height="250" src="http://www.youtube.com/embed/EkbBFmIWoTE" frameborder="0" allowfullscreen></iframe>
             <p>
                 Emails are broken.
             </p><p>
@@ -110,6 +112,7 @@
                 </li>
             </ul>
         </section>
+    </div>
 ]]>
 </field>
         </record>
@@ -120,22 +123,20 @@
             <field name="blog_id" ref="blog_blog_1"/>
             <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
-            <field name="background_image">/website_blog/static/src/img/post2.jpg</field>
+            <field name="cover_properties">{"background-image": "url(/website/static/src/img/library/ship_sea.jpg)", "background-color": "oe_green" ,"opacity": "0.8", "resize_class": "cover cover_full"}</field>
             <field name="content">
-<![CDATA[<section class="row readable">
-            <div class="col-md-12 mb32">
-                <img class="img-responsive" src="/website_blog/static/src/img/CMS_WMS_screens.jpg"/>
-            </div>
-            <div class="col-md-6 col-md-offset-3 mb16 mt16">
-                <p class="text-center">
-                    New Features Launched
-                </p>
-                <p class="text-center">
-                    To add to an already comprehensive set of Odoo
+<![CDATA[<section><div class="container">
+            <div class="row">
+                <div class="col-md-6 mt16"><img class="img img-responsive mb16" src="/website_blog/static/src/img/CMS_WMS_screens.jpg" style=""></div>
+
+                <div class="col-md-6 mt16">
+                    <h3>New Features Launched</h3>
+
+                    <p data-chatter-id="counter_0/section/div/div/div">To add to an already comprehensive set of Odoo
                     features, a website content management system (CMS
                     or WMS) has been developed and a beta release is
-                    available from today, 31st January 2014.
-                </p>
+                    available from today, 31st January 2014.</p>
+                </div>
             </div>
         </section>
         <section class="readable">

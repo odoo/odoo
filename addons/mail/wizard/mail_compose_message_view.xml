@@ -35,8 +35,6 @@
                         <!-- visible wizard -->
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
-                        <field name="subject" placeholder="Subject..." required="True"/>
-                        <!-- recipients -->
                         <label for="partner_ids" string="Recipients"  attrs="{'invisible': [('is_log', '=', True)]}" groups="base.group_user"/>
                         <div groups="base.group_user" attrs="{'invisible': [('is_log', '=', True)]}">
                             <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
@@ -49,6 +47,7 @@
                                 context="{'force_email':True, 'show_email':True}"
                                 attrs="{'invisible': [('composition_mode', '!=', 'comment')]}"/>
                         </div>
+                        <field name="subject" placeholder="Subject..." required="True"/>
                         <!-- mass post -->
                         <field name="notify"
                             attrs="{'invisible':['|', ('composition_mode', '!=', 'mass_post')]}"/>

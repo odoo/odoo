@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import json
 import urllib
 import werkzeug
 
 from openerp import tools
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models.website import slug
+from openerp.addons.website.models.website import slug, unslug
 from openerp.exceptions import UserError
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
@@ -117,7 +118,8 @@ class WebsiteBlog(http.Controller):
 
         # build the domain for blog post to display
         domain = []
-        active_tag_ids = tag and map(int, tag.split(',')) or []
+        # retrocompatibility to accept tag as slug
+        active_tag_ids = tag and map(int, [unslug(t)[1] for t in tag.split(',')]) or []
         if active_tag_ids:
             domain += [('tag_ids', 'in', active_tag_ids)]
         if blog:
@@ -150,7 +152,8 @@ class WebsiteBlog(http.Controller):
                 tag_ids.remove(current_tag)
             else:
                 tag_ids.append(current_tag)
-            return ','.join(map(str, tag_ids))
+            tag_ids = request.registry['blog.tag'].browse(cr, uid, tag_ids, context=context).exists()
+            return ','.join(map(slug, tag_ids))
 
         values = {
             'blog': blog,
@@ -225,10 +228,12 @@ class WebsiteBlog(http.Controller):
             'tag': tag,
             'blog': blog,
             'blog_post': blog_post,
+            'blog_post_cover_properties': json.loads(blog_post.cover_properties),
             'main_object': blog_post,
             'nav_list': self.nav_list(blog),
             'enable_editor': enable_editor,
             'next_post': next_post,
+            'next_post_cover_properties': json.loads(next_post.cover_properties) if next_post else {},
             'date': date_begin,
             'blog_url': blog_url,
             'pager': pager,
@@ -314,9 +319,6 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         new_blog_post_id = request.registry['blog.post'].create(cr, uid, {
             'blog_id': blog_id,
-            'name': _("Blog Post Title"),
-            'subtitle': _("Subtitle"),
-            'content': '',
             'website_published': False,
         }, context=context)
         new_blog_post = request.registry['blog.post'].browse(cr, uid, new_blog_post_id, context=context)
@@ -360,10 +362,10 @@ class WebsiteBlog(http.Controller):
         return ret
 
     @http.route('/blog/post_change_background', type='json', auth="public", website=True)
-    def change_bg(self, post_id=0, image=None, **post):
+    def change_bg(self, post_id=0, cover_properties={}, **post):
         if not post_id:
             return False
-        return request.registry['blog.post'].write(request.cr, request.uid, [int(post_id)], {'background_image': image}, request.context)
+        return request.registry['blog.post'].write(request.cr, request.uid, [int(post_id)], {'cover_properties': cover_properties}, request.context)
 
     @http.route('/blog/get_user/', type='json', auth="public", website=True)
     def get_user(self, **post):

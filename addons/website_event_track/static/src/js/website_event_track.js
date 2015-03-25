@@ -1,6 +1,9 @@
+odoo.define('website_event_track.website_event_track', function (require) {
+"use strict";
+
 $(document).ready(function() {
 
-    $("#event_track_search").bind('keyup', function(e){
+    $("#event_track_search").bind('keyup', function(){
         var change_text = $(this).val();
         $('.event_track').removeClass('invisible');
 
@@ -14,5 +17,7 @@ $(document).ready(function() {
 
         event.preventDefault();
     });
+
+});
 
 });

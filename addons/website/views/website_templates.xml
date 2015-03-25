@@ -7,8 +7,6 @@
 <template id="website.assets_frontend" name="Website assets">
     <t t-call="website.theme"/>
 
-    <script type="text/javascript" src="/web/static/src/js/watch.js"></script>
-
     <script type="text/javascript" src="/website/static/src/js/website.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.share.js"></script>
 
@@ -190,59 +188,58 @@
 
 <template id="summernote" name="Summernote">
     <script type="text/javascript" src="/website/static/src/js/openerp.define.js"></script>
-    <script>openerp.define.active();</script>
-    <script>openerp.define.next = 'summernote/core/async';</script>
+    <script>odoo.enable_website_define();</script>
+    <script>odoo.website_next_define = 'summernote/core/async';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/async.js"></script>
-    <script>openerp.define.next = 'summernote/core/func';</script>
+    <script>odoo.website_next_define = 'summernote/core/func';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/func.js"></script>
-    <script>openerp.define.next = 'summernote/core/agent';</script>
+    <script>odoo.website_next_define = 'summernote/core/agent';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/agent.js"></script>
-    <script>openerp.define.next = 'summernote/core/list';</script>
+    <script>odoo.website_next_define = 'summernote/core/list';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/list.js"></script>
-    <script>openerp.define.next = 'summernote/core/dom';</script>
+    <script>odoo.website_next_define = 'summernote/core/dom';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/dom.js"></script>
-    <script>openerp.define.next = 'summernote/core/key';</script>
+    <script>odoo.website_next_define = 'summernote/core/key';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/key.js"></script>
-    <script>openerp.define.next = 'summernote/core/range';</script>
+    <script>odoo.website_next_define = 'summernote/core/range';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/range.js"></script>
 
-    <script>openerp.define.next = 'summernote/editing/Bullet';</script>
+    <script>odoo.website_next_define = 'summernote/editing/Bullet';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Bullet.js"></script>
-    <script>openerp.define.next = 'summernote/editing/History';</script>
+    <script>odoo.website_next_define = 'summernote/editing/History';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/History.js"></script>
-    <script>openerp.define.next = 'summernote/editing/Style';</script>
+    <script>odoo.website_next_define = 'summernote/editing/Style';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Style.js"></script>
-    <script>openerp.define.next = 'summernote/editing/Table';</script>
+    <script>odoo.website_next_define = 'summernote/editing/Table';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Table.js"></script>
-    <script>openerp.define.next = 'summernote/editing/Typing';</script>
+    <script>odoo.website_next_define = 'summernote/editing/Typing';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Typing.js"></script>
-    <script>openerp.define.next = 'summernote/editing/Editor';</script>
+    <script>odoo.website_next_define = 'summernote/editing/Editor';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Editor.js"></script>
 
-    <script>openerp.define.next = 'summernote/module/Button';</script>
+    <script>odoo.website_next_define = 'summernote/module/Button';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Button.js"></script>
-    <script>openerp.define.next = 'summernote/module/Dialog';</script>
+    <script>odoo.website_next_define = 'summernote/module/Dialog';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Dialog.js"></script>
-    <script>openerp.define.next = 'summernote/module/Handle';</script>
+    <script>odoo.website_next_define = 'summernote/module/Handle';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Handle.js"></script>
-    <script>openerp.define.next = 'summernote/module/Popover';</script>
+    <script>odoo.website_next_define = 'summernote/module/Popover';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Popover.js"></script>
-    <script>openerp.define.next = 'summernote/module/Toolbar';</script>
+    <script>odoo.website_next_define = 'summernote/module/Toolbar';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Toolbar.js"></script>
 
-    <script>openerp.define.next = 'summernote/Renderer';</script>
+    <script>odoo.website_next_define = 'summernote/Renderer';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/Renderer.js"></script>
-    <script>openerp.define.next = 'summernote/EventHandler';</script>
+    <script>odoo.website_next_define = 'summernote/EventHandler';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/EventHandler.js"></script>
 
-    <script>openerp.define.next = 'summernote/settings';</script>
+    <script>odoo.website_next_define = 'summernote/settings';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/settings.js"></script>
 
-    <script>openerp.define.next = 'summernote/summernote';</script>
+    <script>odoo.website_next_define = 'summernote/summernote';</script>
     <script type="text/javascript" src="/website/static/lib/summernote/src/js/summernote.js"></script>
-    <script>openerp.define.next = 'summernote/openerp';</script>
+    <script>odoo.disable_website_define();</script>
     <script type="text/javascript" src="/website/static/src/js/summernote.js"></script>
-    <script>openerp.define.desactive();</script>
 
     <!--link rel="stylesheet" href="/website/static/lib/summernote/src/less/summernote.less"/-->
     <link rel="stylesheet" href="/website/static/lib/summernote/summernote.css"/>

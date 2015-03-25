@@ -516,13 +516,13 @@ The javascript QWeb implementation provides a few debugging hooks:
 Helpers
 -------
 
-.. js:attribute:: openerp.qweb
+.. js:attribute:: core.qweb
 
-    An instance of :js:class:`QWeb2.Engine` with all module-defined template
+    (core is the ``web.core`` module) An instance of :js:class:`QWeb2.Engine` with all module-defined template
     files loaded, and references to standard helper objects ``_``
     (underscore), ``_t`` (translation function) and JSON_.
 
-    :js:func:`openerp.qweb.render <QWeb2.Engine.render>` can be used to
+    :js:func:`core.qweb.render <QWeb2.Engine.render>` can be used to
     easily render basic module templates
 
 API
@@ -533,9 +533,9 @@ API
     The QWeb "renderer", handles most of QWeb's logic (loading,
     parsing, compiling and rendering templates).
 
-    OpenERP Web instantiates one for the user, and sets it to
-    ``instance.web.qweb``. It also loads all the template files of the
-    various modules into that QWeb instance.
+    OpenERP Web instantiates one for the user in the core module, and 
+    exports it to ``core.qweb``. It also loads all the template files 
+    of the various modules into that QWeb instance.
 
     A :js:class:`QWeb2.Engine` also serves as a "template namespace".
 

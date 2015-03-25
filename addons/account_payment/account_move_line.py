@@ -27,8 +27,13 @@ from operator import itemgetter
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
-    def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
-        return self._amount_residual(self, cr, uid, ids, field_names, args, context=context)
+    # delegate to parent, used for local fields.function redefinition
+    def _amount_to_pay(self, cr, uid, ids, field_names, args, context=None):
+        return {
+            id: value['amount_residual']
+            for id, value in self._amount_residual(cr, uid, ids, field_names, args,
+                                                   context=context).items()
+        }
 
     def _to_pay_search(self, cr, uid, obj, name, args, context=None):
         if not args:
@@ -94,6 +99,6 @@ class account_move_line(osv.osv):
         return line2bank
 
     _columns = {
-        'amount_to_pay': fields.function(_amount_residual,
+        'amount_to_pay': fields.function(_amount_to_pay,
             type='float', string='Amount to pay', fnct_search=_to_pay_search),
     }

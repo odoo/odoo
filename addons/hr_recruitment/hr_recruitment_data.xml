@@ -36,6 +36,23 @@
          ${object.user_id and object.user_id.signature | safe or ''}]]></field>
     </record>
 
+    <record id="hr_welcome_new_employee" model="mail.template">
+        <field name="name">Welcome New Employee</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="subject">Welcoming ${object.name} </field>
+        <field name="body_html"><![CDATA[
+            <p>
+                %if user.has_group('hr.group_multi_departments') and object.department_id:
+                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}
+                    in ${object.department_id.name}.
+                %else:
+                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}.
+                %endif
+            </p>
+            <p>Please welcome him/her and help him/her finding his/her marks.</p>
+            ]]></field>
+    </record>
+
     <record id="applicant_interest" model="mail.template">
         <field name="name">Application approved</field>
         <field name="subject">Application approved</field>
