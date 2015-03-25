@@ -474,6 +474,11 @@ define([
           return this.normalize();
         }
 
+        // if apply the editor to a P, LI...
+        if (dom.isText(sc) && /^P|^LI|^H[1-7]/.test(sc.parentNode.nodeName.toUpperCase())) {
+          return this.normalize();
+        }
+
         // find inline top ancestor
         var topAncestor;
         if (dom.isInline(sc)) {

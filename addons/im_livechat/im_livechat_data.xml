@@ -56,5 +56,25 @@
         </record>
 
 
+        <!-- Smiley for rating to be displayed in the conversation -->
+        <record id="im_livechat_rating_0" model="im_chat.shortcode">
+            <field name="source">:rating_0</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_0.png'/&gt;</field>
+            <field name="description">Rating Smiley Bad</field>
+        </record>
+
+        <record id="im_livechat_rating_5" model="im_chat.shortcode">
+            <field name="source">:rating_5</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_5.png'/&gt;</field>
+            <field name="description">Rating Smiley Okay</field>
+        </record>
+
+        <record id="im_livechat_rating_10" model="im_chat.shortcode">
+            <field name="source">:rating_10</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_10.png'/&gt;</field>
+            <field name="description">Rating Smiley Good</field>
+        </record>
+
+
     </data>
 </openerp>

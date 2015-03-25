@@ -41,7 +41,7 @@ var ForumShare = SocialShare.extend({
 website.ready().done(function() {
 
     // Store social share data to display modal on next page
-    $(document.body).on('click', '.oe_social_share_call', function() {
+    $(document.body).on('click', ':not(.karma_required).oe_social_share_call', function() {
         var social_data = {};
         social_data['target_type'] = $(this).data('social-target-type');
         sessionStorage.setItem('social_share', JSON.stringify(social_data));

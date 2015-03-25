@@ -213,16 +213,6 @@ var BuildingBlock = Widget.extend({
             throw new Error("Wrong snippets xml definition");
         }
 
-        $ul.children().tooltip({
-                delay: { "show": 500, "hide": 100 },
-                container: 'body',
-                title: function () {
-                    return (navigator.appVersion.indexOf('Mac') > -1 ? 'CMD' : 'CTRL')+'+SHIFT+'+($(this).index()+1);
-                },
-                trigger: 'hover',
-                placement: 'top'
-            }).on('click', function () {$(this).tooltip('hide');});
-
         // t-snippet
         $html.find('[data-oe-type="snippet"][data-oe-name]').each(function () {
             $('<div/>').insertAfter(this).append(this).attr('name', $(this).data('oe-name'));

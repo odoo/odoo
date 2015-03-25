@@ -7,6 +7,8 @@
             <field name="arch" type="xml">
                 <kanban create="false" class="oe_background_grey">
                     <field name="rating"/>
+                    <field name="res_id"/>
+                    <field name="res_model"/>
                     <field name="res_name"/>
                     <field name="create_date"/>
                     <field name="partner_id"/>
@@ -14,15 +16,16 @@
                     <field name="feedback"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div style="min-height:100px;width:100px">
-                                <div t-attf-title="Name : #{ record.res_name.raw_value } &lt;br&gt;
-                                        #{ record.partner_id.value ? 'Customer : ' + record.partner_id.value + '&lt;br&gt;' : '' }
-                                        #{ record.rated_partner_id.value ? 'Responsible : ' + record.rated_partner_id.value+'&lt;br&gt;' : '' }
-                                        Date : #{ moment(record.create_date.raw_value).format('L') }
-                                        #{ record.feedback.raw_value ? '&lt;br&gt;'+'Reason : ' + record.feedback.raw_value : '' }"
-                                    data-html="true" data-placement="bottom">
-                                   <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value}.png" class="oe_kanban_image"/>
-                                </div>
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <a t-att-href="_.str.sprintf('/web?#id=%s&amp;view_type=form&amp;model=%s', record.res_id.raw_value, record.res_model.raw_value)">
+                                    <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value}.png"
+                                        t-attf-title="Name : #{ record.res_name.raw_value } &lt;br&gt;
+                                            #{ record.partner_id.value ? 'Customer : ' + record.partner_id.value + '&lt;br&gt;' : '' }
+                                            #{ record.rated_partner_id.value ? 'Responsible : ' + record.rated_partner_id.value+'&lt;br&gt;' : '' }
+                                            Date : #{ moment(record.create_date.raw_value).format('L') }
+                                            #{ record.feedback.raw_value ? '&lt;br&gt;'+'Reason : ' + record.feedback.raw_value : '' }"
+                                        data-html="true" data-placement="bottom"/>
+                                </a>
                             </div>
                         </t>
                     </templates>

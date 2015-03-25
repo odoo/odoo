@@ -296,12 +296,25 @@ class im_chat_shortcode(osv.Model):
         'description' : fields.char('Description'),
     }
 
+    def _sanitize_shorcode(self, substitution):
+        """ Sanitize the shortcode substitution :
+                 - HTML substitution : only allow the img tag (smiley)
+                 - escape other substitutions to avoid XSS
+        """
+        is_img_tag = re.match(r'''^<img\s+src=('|")([^'"]*)\1\s*/?>$''', substitution, re.M|re.I)
+        if is_img_tag:
+            return substitution
+        return cgi.escape(substitution)
+
     def create(self, cr, uid, values, context=None):
         if values.get('substitution'):
-            values['substitution'] = tools.html_sanitize(values['substitution']).strip()
-        if not values.get('substitution'):
-            raise UserError(_("Substitution contains only forbidden characters. Please fill it with something else."))
+            values['substitution'] = self._sanitize_shorcode(values['substitution'])
         return super(im_chat_shortcode, self).create(cr, uid, values, context=context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        if values.get('substitution'):
+            values['substitution'] = self._sanitize_shorcode(values['substitution'])
+        return super(im_chat_shortcode, self).write(cr, uid, ids, values, context=context)
 
     def replace_shortcode(self, cr, uid, message, context=None):
         ids = self.search(cr, uid, [], context=context)
