@@ -58,7 +58,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         model.call('write', [[parseInt(target_id)], {'blocked': checkbox}])
     },
     onKeyPress: function(e) {
-        var report_name = $("div.page").attr("data-report-name");
+        var report_name = $("div.page").data("report-name");
         if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey) && report_name == 'followup_report') {
             $("*[data-primary='1'].followup-email").trigger('click');
             var letter_context_list = [];
@@ -86,17 +86,15 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         e.preventDefault();
         var url = $(e.target).data("target");
         window.open(url, '_blank');
-        if ($(e.target).is('.btn-primary')) {
+        if ($(e.target).data('primary') == '1') {
             var $skipButton = $(e.target).siblings('a.followup-skip');
             var buttonClass = $skipButton.attr('class');
             buttonClass = buttonClass.replace('btn-default', 'btn-primary');
             $skipButton.data('primary', '1');
             $skipButton.attr('class', buttonClass);
             $skipButton.text('Done');
-            buttonClass = $(e.target).attr('class');
-            buttonClass = buttonClass.replace('btn-primary', 'btn-default');
+            $(e.target).toggleClass('btn-primary btn-default');
             $(e.target).data('primary', '0');
-            $(e.target).attr('class', buttonClass);
         }
     },
     sendFollowupEmail: function(e) {
@@ -107,17 +105,15 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         return contextModel.call('send_email', [[parseInt(context_id)]]).then (function (result) {
             if (result == true) {
                 window.$("div.page:first").prepend(openerp.qweb.render("emailSent"));
-                if ($(e.target).is('.btn-primary')) {
+                if ($(e.target).data('primary') == '1') {
                     var $skipButton = $(e.target).siblings('a.followup-skip');
                     var buttonClass = $skipButton.attr('class');
                     buttonClass = buttonClass.replace('btn-default', 'btn-primary');
                     $skipButton.data('primary', '1');
                     $skipButton.attr('class', buttonClass);
                     $skipButton.text('Done');
-                    buttonClass = $(e.target).attr('class');
-                    buttonClass = buttonClass.replace('btn-primary', 'btn-default');
+                    $(e.target).toggleClass('btn-primary btn-default');
                     $(e.target).data('primary', '0');
-                    $(e.target).attr('class', buttonClass);
                 }
             }
             else {
@@ -150,7 +146,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
         e.stopPropagation();
         e.preventDefault();
         self = this;
-        if ($(e.target).parent().is('.oe-account-next-action')) {
+        if ($(e.target).parent().hasClass('oe-account-next-action')) {
             self.setNextAction(e);
         }
         return this._super()
