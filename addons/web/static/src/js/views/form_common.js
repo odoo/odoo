@@ -1057,7 +1057,7 @@ var SelectCreatePopup = AbstractFormPopup.extend({
     },
     new_object: function() {
         if (this.searchview) {
-            this.searchview.do_hide();
+            this.searchview.toggle_visibility(false);
         }
         if (this.view_list) {
             this.view_list.do_hide();
