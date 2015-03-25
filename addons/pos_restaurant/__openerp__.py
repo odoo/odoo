@@ -51,6 +51,9 @@ This module adds several restaurant features to the Point of Sale:
         'static/src/xml/notes.xml',
         'static/src/xml/floors.xml',
     ],
+    'demo': [
+        'restaurant_demo.xml',
+    ],
     'installable': True,
     'auto_install': False,
 }
