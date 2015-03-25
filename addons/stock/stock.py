@@ -2134,7 +2134,8 @@ class stock_move(osv.osv):
         return {'value': {'location_id': self.pool['stock.picking.type'].browse(cr, uid, picking_type, context=context).default_location_src_id.id}}
 
     def onchange_location_id(self, cr, uid, ids, location, picking_type, context=None):
-        if picking_type and location != self.pool['stock.picking.type'].browse(cr, uid, picking_type, context=context).default_location_src_id.id:
+        location_id = picking_type and self.pool['stock.picking.type'].browse(cr, uid, picking_type, context=context).default_location_src_id.id
+        if location_id and location != location_id:
             raise UserError(_("Unless it is a scrap move, these should be the same."))
 
     def attribute_price(self, cr, uid, move, context=None):
