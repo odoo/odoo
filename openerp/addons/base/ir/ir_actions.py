@@ -259,6 +259,7 @@ class ir_actions_act_window(osv.osv):
     _order = 'name'
 
     def _check_model(self, cr, uid, ids, context=None):
+        tmp =  self.browse(cr, uid, ids, context)
         for action in self.browse(cr, uid, ids, context):
             if action.res_model not in self.pool:
                 return False

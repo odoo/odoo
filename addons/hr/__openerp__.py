@@ -54,7 +54,6 @@ You can manage:
         'resource',
         'board',
         'web_kanban',
-        'web_timeline',
     ],
     'data': [
         'security/hr_security.xml',

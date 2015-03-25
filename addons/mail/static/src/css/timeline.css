@@ -1056,7 +1056,6 @@
     }
     
 
-
 /* ----------------------- SIDEBAR ----------------------- */
 
     .openerp .oe_timeline .oe_tl_inbox_aside {
@@ -1120,4 +1119,25 @@
 
     .openerp .oe_timeline .oe_tl_inbox_aside a {
         color: #337ab7;
-}   }
+    }   
+
+    .openerp .oe_sidebar_suggestion .oe_suggest_title .oe_suggestion_remove {
+        line-height: 15px;
+        margin-top: -2px;
+        float: right;
+        visibility: hidden;
+        margin-right: 7px;
+    }
+
+    .openerp .oe_sidebar_suggestion .oe_suggest_items .oe_suggested_item_content .oe_suggestion_remove_item {
+        line-height: 21px;
+        margin-top: -2px;
+        float: right;
+        visibility: hidden;
+        margin-right: 16px;
+    }
+    
+    .openerp .oe_sidebar_suggestion .oe_suggest_title:hover .oe_suggestion_remove,
+    .openerp .oe_sidebar_suggestion .oe_suggest_items:hover .oe_suggestion_remove_item {
+        visibility: visible;
+    }

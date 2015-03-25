@@ -274,11 +274,11 @@
 		</field>
 	</record>
 
-    <menuitem id="web_timeline.mail_feeds_main" name="Messaging (New)"
+    <menuitem id="mail.mail_feeds_main" name="Messaging"
               groups="base.group_user" sequence="10"/>
 
-    <menuitem id="web_timeline.mail_feeds" name="Messaging" 
-              parent="web_timeline.mail_feeds_main" groups="base.group_user" sequence="10"/>
+    <menuitem id="mail.mail_feeds" name="Messaging" 
+              parent="mail.mail_feeds_main" groups="base.group_user" sequence="10"/>
 
     <record model="ir.actions.act_window" id="action_timeline_to_read">
         <field name="name">Inbox</field>
@@ -304,8 +304,10 @@
         <field name="name">Inbox</field>
         <field name="sequence" eval="10"/>
         <field name="action" ref="action_timeline_to_read"/>
-        <field name="parent_id" ref="web_timeline.mail_feeds"/>
+        <field name="parent_id" ref="mail.mail_feeds"/>
     </record>
+
+    <menuitem id="mail_my_stuff" name="Organizer" parent="mail.mail_feeds_main"/>
 
 </data>
 </openerp>

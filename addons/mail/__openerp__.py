@@ -45,7 +45,7 @@ Main Features
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/enterprise-social-network',
-    'depends': ['base', 'base_setup'],
+    'depends': ['web', 'base', 'base_setup'],
     'data': [
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
@@ -53,7 +53,8 @@ Main Features
         'mail_message_view.xml',
         'mail_mail_view.xml',
         'mail_followers_view.xml',
-        'mail_thread_view.xml',
+        'mail.xml',
+        #'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_config_view.xml',
         'data/mail_data.xml',
@@ -67,7 +68,7 @@ Main Features
         'views/email_template_view.xml',
         'views/ir_actions_view.xml',
         'views/res_partner_view.xml',
-        'contacts_view.xml'
+        'contacts_view.xml',
     ],
     'demo': [
         'data/mail_demo.xml',
@@ -76,9 +77,13 @@ Main Features
     'installable': True,
     'application': True,
     'qweb': [
-        'static/src/xml/mail.xml',
-        'static/src/xml/mail_followers.xml',
+        #'static/src/xml/mail.xml',
+        #'static/src/xml/mail_followers.xml',
         'static/src/xml/announcement.xml',
-        'static/src/xml/suggestions.xml',
+        #'static/src/xml/suggestions.xml',
+
+        'static/src/xml/timeline.xml',
+        'static/src/xml/timeline_followers.xml',
+        'static/src/xml/timeline_suggestions.xml',
     ],
 }

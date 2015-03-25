@@ -19,6 +19,7 @@
 </div>
 
 <div t-name="TimelineWall" t-attf-class="oe_timeline #{widget.options.view_inbox ? 'oe_tl_inbox' : 'oe_tl_chatter'}">
+    <div class="oe_timeline_buttons"/>
     <div class="oe_timeline-placeholder"></div>
     <t t-if="widget.options.view_inbox">
         <aside class="oe_tl_inbox_aside"></aside>
@@ -222,6 +223,9 @@
         </t>
     </t>
 </t>
+
+<t t-name="mail.error_upload">Uploading error</t>
+<t t-name="mail.error_upload_please_wait">Please, wait while the file is uploading.</t>
 
 <t t-name="NoMessage">
     <div class="oe_view_nocontent">No message.</div>

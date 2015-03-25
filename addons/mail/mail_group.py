@@ -27,6 +27,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
+import pdb
 
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
@@ -139,25 +140,24 @@ class mail_group(osv.Model):
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'action_mail_group_feeds')
         if ref:
             search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search')
-            params = {
-                'search_view_id': search_ref and search_ref[1] or False,
-                'domain': [
-                    ('model', '=', 'mail.group'),
-                    ('res_id', '=', mail_group_id),
-                ],
-                'context': {
-                    'default_model': 'mail.group',
-                    'default_res_id': mail_group_id,
-                },
-                'res_model': 'mail.message',
-                'thread_level': 1,
-                'header_description': self._generate_header_description(cr, uid, group, context=context),
-                'view_mailbox': True,
-                'compose_placeholder': 'Send a message to the group',
-            }
-            cobj = self.pool.get('ir.actions.client')
-            newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
-            mobj.write(cr, SUPERUSER_ID, menu_id, {'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
+            act_domain = [('model', '=', 'mail.group'), ('res_id', '=', mail_group_id)]
+            act_context = {'default_model': 'mail.group',
+                           'default_res_id': mail_group_id,
+                           'options': {'view_mailbox': True,
+                                       'view_inbox': True,
+                                       'read_action': 'read',
+                                       'compose_placeholder': 'Send a message to the group'}
+                          }
+            act_res_model = 'mail.message'
+            act_search_view_id = search_ref and search_ref[1] or False
+
+            cobj = self.pool.get('ir.actions.act_window')
+            newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'domain': act_domain, 
+                                                                  'context': act_context,
+                                                                  'res_model': act_res_model,
+                                                                  'search_view_id': act_search_view_id,
+                                                                  'name': vals['name']}, context=context)
+            mobj.write(cr, SUPERUSER_ID, menu_id, {'action': 'ir.actions.act_window,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
 
         if vals.get('group_ids'):
             self._subscribe_users(cr, uid, [mail_group_id], context=context)
