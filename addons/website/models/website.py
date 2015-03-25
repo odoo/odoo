@@ -333,8 +333,8 @@ class website(osv.osv):
         except:
             return False
 
-    @openerp.tools.ormcache(skiparg=3)
-    def _get_languages(self, cr, uid, id):
+    @openerp.tools.ormcache('id')
+    def _get_languages(self, cr, uid, id, context=None):
         website = self.browse(cr, uid, id)
         return [(lg.code, lg.name) for lg in website.language_ids]
 
@@ -375,9 +375,9 @@ class website(osv.osv):
                 lang['hreflang'] = lang['short']
         return langs
 
-    @openerp.tools.ormcache(skiparg=3)
-    def _get_current_website_id(self, cr, uid, domain_name):
-        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1)
+    @openerp.tools.ormcache('domain_name')
+    def _get_current_website_id(self, cr, uid, domain_name, context=None):
+        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
         if ids:
             return ids[0]
         else:
