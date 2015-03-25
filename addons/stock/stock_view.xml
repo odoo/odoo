@@ -1050,7 +1050,7 @@
                                 </div>
                             </group>
                             <group name="main_grp_col2">
-                                <field name="picking_type_id"/>
+                                <field name="picking_type_id" on_change="onchange_picking_type(picking_type_id)"/>
                                 <field name="priority"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
@@ -1059,7 +1059,7 @@
                         </group>
                         <group name="origin_grp" string="Origin">
                             <field name="origin"/>
-                            <field name="location_id" groups="stock.group_locations"/>
+                            <field name="location_id" groups="stock.group_locations" on_change="onchange_location_id(location_id, picking_type_id)"/>
                             <field name="picking_id" domain="[('picking_type_id','=',picking_type_id)]"/>
                             <field name="create_date" groups="base.group_no_one"/>
                             <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>

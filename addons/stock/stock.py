@@ -2130,6 +2130,13 @@ class stock_move(osv.osv):
             date_expected = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': {'date': date_expected}}
 
+    def onchange_picking_type(self, cr, uid, ids, picking_type, context=None):
+        return {'value': {'location_id': self.pool['stock.picking.type'].browse(cr, uid, picking_type, context=context).default_location_src_id.id}}
+
+    def onchange_location_id(self, cr, uid, ids, location, picking_type, context=None):
+        if picking_type and location != self.pool['stock.picking.type'].browse(cr, uid, picking_type, context=context).default_location_src_id.id:
+            raise UserError(_("Unless it is a scrap move, these should be the same."))
+
     def attribute_price(self, cr, uid, move, context=None):
         """
             Attribute price to move, important in inter-company moves or receipts with only one partner
