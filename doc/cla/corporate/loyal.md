@@ -8,7 +8,7 @@ declaration.
 
 Signed,
 
-Kevin Wang kevin@loyal-info.com https://github.com/kevin3274
+Kevin Wang kevin_327@163.com https://github.com/kevin3274
 
 List of contributors:
 
