@@ -913,7 +913,7 @@ class ir_model_data(osv.osv):
             cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
 
     # NEW V8 API
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('xmlid')
     def xmlid_lookup(self, cr, uid, xmlid):
         """Low level xmlid lookup
         Return (id, res_model, res_id) or raise ValueError if not found
