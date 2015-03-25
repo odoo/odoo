@@ -39,7 +39,7 @@ class decimal_precision(orm.Model):
         ('name_uniq', 'unique (name)', """Only one value can be defined for each given usage!"""),
     ]
 
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('application')
     def precision_get(self, cr, uid, application):
         cr.execute('select digits from decimal_precision where name=%s', (application,))
         res = cr.fetchone()
