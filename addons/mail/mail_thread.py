@@ -1830,7 +1830,7 @@ class mail_thread(osv.AbstractModel):
                             notification_obj.create(cr, uid, {
                                 'message_id': message.parent_id.id,
                                 'partner_id': partner_id,
-                                'read': True,
+                                'is_read': True,
                             }, context=context)
 
     def message_auto_subscribe(self, cr, uid, ids, updated_fields, context=None, values=None):
