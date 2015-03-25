@@ -21,10 +21,12 @@
 
 import threading
 
+import openerp
 from openerp.osv import osv, fields
 from openerp import tools, SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools.mail import plaintext2html
+
 
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside
@@ -51,6 +53,87 @@ class mail_followers(osv.Model):
             help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall."),
     }
 
+    def _add_follower_command(self, cr, uid, model_name, res_ids, partner_ids, subtype_data=None, context=None):
+        print 'beginning command computation', model_name, res_ids, partner_ids, subtype_data
+        if subtype_data is None:
+            subtype_data = {}
+        result = {}
+        existing = {}  # {res_id: partner_ids}
+        if res_ids:
+            fol_ids = self.search(
+                cr, SUPERUSER_ID, [
+                    '&',
+                    '&', ('res_model', '=', model_name), ('res_id', 'in', res_ids),
+                    ('partner_id', 'in', partner_ids)
+                ], context=context)
+            for fol in self.browse(cr, SUPERUSER_ID, fol_ids, context=context):
+                existing.setdefault(fol.res_id, list()).append(fol)
+
+        if not res_ids:
+            res_ids = [0]  # TDE FIXME: well, figure out something later for record in creation
+        default_subtype_ids = None
+        for res_id in res_ids:
+            command = []
+            existing_subscriptions = existing.get(res_id, list())
+            for sub in existing_subscriptions:
+                if sub.partner_id.id in subtype_data:
+                    command.append((1, sub.id, {'subtype_ids': [(6, 0, subtype_data[sub.partner_id.id])]}))
+
+            new_pids = set(partner_ids) - set([sub.partner_id.id for sub in existing_subscriptions])
+            if default_subtype_ids is None:
+                default_subtype_ids = self.pool['mail.message.subtype'].search(
+                    cr, uid, [
+                        ('default', '=', True),
+                        '|', ('res_model', '=', model_name), ('res_model', '=', False)
+                    ], context=context)
+            # subscribe new followers
+            for new_pid in new_pids:
+                command.append((0, 0, {
+                    'res_model': model_name,
+                    'partner_id': new_pid,
+                    'subtype_ids': [(6, 0, default_subtype_ids)],
+                }))
+            result[res_id] = command
+
+        return result
+
+    def _subscribe(self, cr, uid, model_name, res_ids, partner_ids, subtypes_ids=None, context=None):
+        pass
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        """ Access rules of mail.followers: based on related documents
+            - if user modifies its own subscription: 'read' on related documents
+            - else: 'write' on related documents
+        """
+        print 'check_access_rule', uid, ids, operation
+        if uid == SUPERUSER_ID or True:
+            print '\t-->bypassing'
+            return
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
+        validated = set()
+
+        checks = {}
+        cr.execute('SELECT DISTINCT id, res_model, res_id, partner_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
+        for id, rmod, rid, partner_id in cr.fetchall():
+            access = 'read' if partner_id == user_pid else 'write'
+            checks.setdefault(rmod, dict()).setdefault(access, set()).add((id, rid))
+
+        for rmod, rmod_checks in checks.iteritems():
+            for access_type, values in rmod_checks.iteritems():
+                self.pool[rmod].check_access_rights(cr, uid, access_type)
+                self.pool[rmod].check_access_rule(cr, uid, [val[1] for val in values], access_type, context=context)
+                validated += set(val[0] for val in values)
+
+        # Calculate remaining ids: if not void, raise an error
+        if set(ids).difference(validated):
+            raise openerp.exceptions.AccessError(
+                _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
+                (self._description, operation))
+        return
+
     #
     # Modifying followers change access rights to individual documents. As the
     # cache may contain accessible/inaccessible data, one has to refresh it.
@@ -71,6 +154,7 @@ class mail_followers(osv.Model):
         return res
 
     _sql_constraints = [('mail_followers_res_partner_res_model_id_uniq','unique(res_model,res_id,partner_id)','Error, a partner cannot follow twice the same object.')]
+
 
 class mail_notification(osv.Model):
     """ Class holding notifications pushed to partners. Followers and partners
