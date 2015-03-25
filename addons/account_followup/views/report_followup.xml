@@ -47,8 +47,9 @@
         </span>
     </xpath>
     <xpath expr="//div[@id='action-buttons']" position='replace'>
-        <div id='action-buttons' t-if="mode != 'print'" style='text-align: right;' class='col-sm-6'>
-            <a data-primary='0' type="button" class="btn btn-default followup-skip" t-att-data-partner="str(context.partner_id.id)">Skip</a>
+        <div id='action-buttons' t-if="mode != 'print'" style='text-align: right;' class='col-sm-6 oe-account-followup-not-clicked'>
+            <a type="button" class="btn btn-primary followup-done" t-att-data-partner="str(context.partner_id.id)">Done</a>
+            <a type="button" class="btn btn-default followup-skip" t-att-data-partner="str(context.partner_id.id)">Skip</a>
             <a t-if='context.level.send_letter' data-primary='1' type="button" class="btn btn-primary followup-letter" t-att-data-context="str(context.id)" t-att-data-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'">Print Letter</a>
             <a t-if='not context.level.send_letter' data-primary='0' type="button" class="btn btn-default followup-letter" t-att-data-context="str(context.id)" t-att-data-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'">Print Letter</a>
             <a t-if='context.level.send_email' data-primary='1' type="button" class="btn btn-primary followup-email">Send by email</a>

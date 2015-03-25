@@ -103,8 +103,9 @@
                 <a type="button" data-time='one-month' class="btn btn-default oe-account-followup-set-next-action" t-att-data-partner="str(context.partner_id.id)">One month</a>
                 <a type="button" data-time='two-months' class="btn btn-default oe-account-followup-set-next-action" t-att-data-partner="str(context.partner_id.id)">Two months</a>
             </div>
-            <div id='action-buttons' style='text-align: right;' class='col-sm-6'>
-                <a type="button" data-primary='0' class="btn btn-default followup-skip" t-att-data-partner="str(context.partner_id.id)">Skip</a>
+            <div id='action-buttons' style='text-align: right;' class='col-sm-6 oe-account-followup-not-clicked'>
+                <a type="button" class="btn btn-primary followup-done" t-att-data-partner="str(context.partner_id.id)">Done</a>
+                <a type="button" class="btn btn-default followup-skip" t-att-data-partner="str(context.partner_id.id)">Skip</a>
                 <a type="button" data-primary='1' class="btn btn-primary followup-letter" t-att-data-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'" t-att-data-context="str(context.id)">Print Letter</a>
                 <a type="button" data-primary='1' class="btn btn-primary followup-email">Send by email</a>
             </div>
