@@ -2,6 +2,13 @@
 <openerp>
     <data noupdate="1">
 
+        <record id="transfer_account_id" model="account.account.template">
+            <field name="code">1017</field>
+            <field name="name">Liquidity Transfers</field>
+            <field name="reconcile" eval='True'/>
+            <field name="user_type" ref="data_account_type_current_assets"/>
+        </record>
+
         <record id="configurable_chart_template" model="account.chart.template">
             <field name="name">Configurable Account Chart Template</field>
             <field name="code_digits">6</field>
@@ -69,10 +76,6 @@
         </record>
 
         <record id="transfer_account_id" model="account.account.template">
-            <field name="code">1017</field>
-            <field name="name">Liquidity Transfers</field>
-            <field name="reconcile" eval='True'/>
-            <field name="user_type" ref="data_account_type_current_assets"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
