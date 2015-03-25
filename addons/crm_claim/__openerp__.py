@@ -25,9 +25,5 @@ automatically new claims based on incoming emails.
         'data/crm_claim_data.xml',
     ],
     'demo': ['data/crm_claim_demo.xml'],
-    'test': [
-        'test/process/claim.yml',
-        'test/ui/claim_demo.yml'
-    ],
     'installable': True,
 }
