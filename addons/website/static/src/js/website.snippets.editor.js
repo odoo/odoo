@@ -1376,7 +1376,6 @@ editor.countdown = editor.Dialog.extend({
             self.$el.find(".modal-body").append('<div class="alert alert-danger mt8">'+ msg +'</div>');
         };
         var matches = release_date.match(/^(\d{4})\-(\d{2}|\d{1})\-(\d{2}|\d{1}) (\d{2}|\d{1}):(\d{2}|\d{1}):(\d{2}|\d{1})$/);
-        console.log(matches);
         if(matches === null)
         {
             add_warning('Invalid Input. Please enter proper DATE, HOURS, MINUTES, SECONDS');
