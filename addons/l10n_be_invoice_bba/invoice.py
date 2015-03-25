@@ -194,13 +194,10 @@ class account_invoice(osv.osv):
                 reference_type = vals['reference_type']
             else:
                 reference_type = inv.reference_type or ''
-            if reference_type == 'bba':
-                if vals.has_key('reference'):
-                    bbacomm = vals['reference']
-                else:
-                    bbacomm = inv.reference or ''
-                if self.check_bbacomm(bbacomm):
-                    reference = re.sub('\D', '', bbacomm)
+
+            if reference_type == 'bba' and 'reference' in vals:
+                if self.check_bbacomm(vals['reference']):
+                    reference = re.sub('\D', '', vals['reference'])
                     vals['reference'] = '+++' + reference[0:3] + '/' + reference[3:7] + '/' + reference[7:] + '+++'
                     same_ids = self.search(cr, uid,
                         [('id', '!=', inv.id), ('type', '=', 'out_invoice'),
