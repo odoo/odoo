@@ -255,7 +255,8 @@ class test_integer_field(ImporterCase):
             'type': 'error',
             'rows': {'from': 0, 'to': 0},
             'record': 0,
-            'message': "integer out of range\n"
+            'moreinfo': 'Resolve other errors first',
+            'message': "Unknown error during import: <class 'openerp.exceptions.UserError'>: The value you entered is out of range (from -2147483648 to +2147483647)."
         }])
 
         result = self.import_(['value'], [[str(-2**32)]])
@@ -264,7 +265,8 @@ class test_integer_field(ImporterCase):
             'type': 'error',
             'rows': {'from': 0, 'to': 0},
             'record': 0,
-            'message': "integer out of range\n"
+            'moreinfo': 'Resolve other errors first',
+            'message': "Unknown error during import: <class 'openerp.exceptions.UserError'>: The value you entered is out of range (from -2147483648 to +2147483647)."
         }])
 
     def test_nonsense(self):

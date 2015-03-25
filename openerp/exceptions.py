@@ -48,7 +48,8 @@ class except_orm(Exception):
 
 class UserError(except_orm):
     def __init__(self, msg):
-        super(UserError, self).__init__(msg)
+        self.name = msg
+        self.args = (msg,)
 
 
 # deprecated due to collision with builtins, kept for compatibility

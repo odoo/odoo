@@ -225,15 +225,14 @@ class test_integer_field(ImporterCase):
     def test_out_of_range(self):
         self.assertEqual(
             self.import_(['value'], [[str(2**31)]]),
-            error(1, "integer out of range\n"))
+            error(1, "The value you entered is out of range (from -2147483648 to +2147483647)."))
         # auto-rollbacks if error is in process_liness, but not during
         # ir.model.data write. Can differentiate because former ends lines
         # error lines with "!"
         self.cr.rollback()
         self.assertEqual(
             self.import_(['value'], [[str(-2**32)]]),
-            error(1, "integer out of range\n"))
-
+            error(1, "The value you entered is out of range (from -2147483648 to +2147483647)."))
 
     def test_nonsense(self):
         self.assertEqual(

@@ -52,6 +52,7 @@ from openerp.tools import float_round, float_repr
 from openerp.tools import html_sanitize
 import simplejson
 from openerp import SUPERUSER_ID
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -235,12 +236,22 @@ class boolean(_column):
 class integer(_column):
     _type = 'integer'
     _symbol_c = '%s'
-    _symbol_f = lambda x: int(x or 0)
-    _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0
+
+    MAX_INT = 2**31-1
+    MIN_INT = -2**31
+
+    def _symbol_set_integer(self, value):
+        value = int(value or 0)
+        if value and (value > self.MAX_INT or value < self.MIN_INT):
+            raise UserError(_("The value you entered is out of range (from -2147483648 to +2147483647)."))
+        return value
 
     def __init__(self, string='unknown', required=False, **args):
         super(integer, self).__init__(string=string, required=required, **args)
+        # symbol_set redefinition to check value overflow
+        self._symbol_f = self._symbol_set_integer
+        self._symbol_set = (self._symbol_c, self._symbol_f)
 
 class reference(_column):
     _type = 'reference'
