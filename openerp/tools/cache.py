@@ -23,7 +23,7 @@
 # this is important for the openerp.api.guess() that relies on signatures
 from collections import defaultdict
 from decorator import decorator
-from inspect import getargspec
+from inspect import formatargspec, getargspec
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -47,16 +47,45 @@ STAT = defaultdict(ormcache_counter)
 
 
 class ormcache(object):
-    """ LRU cache decorator for orm methods. """
+    """ LRU cache decorator for model methods.
+    The parameters are strings that represent expressions referring to the
+    signature of the decorated method, and are used to compute a cache key::
 
-    def __init__(self, skiparg=2, size=8192, multi=None, timeout=None):
-        self.skiparg = skiparg
+        @ormcache('model_name', 'mode')
+        def _compute_domain(self, cr, uid, model_name, mode="read"):
+            ...
+
+    For the sake of backward compatibility, the decorator supports the named
+    parameter `skiparg`::
+
+        @ormcache(skiparg=3)
+        def _compute_domain(self, cr, uid, model_name, mode="read"):
+            ...
+    """
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.skiparg = kwargs.get('skiparg')
 
     def __call__(self, method):
         self.method = method
+        self.determine_key()
         lookup = decorator(self.lookup, method)
         lookup.clear_cache = self.clear
         return lookup
+
+    def determine_key(self):
+        """ Determine the function that computes a cache key from arguments. """
+        if self.skiparg is None:
+            # build a string that represents function code and evaluate it
+            args = formatargspec(*getargspec(self.method))[1:-1]
+            if self.args:
+                code = "lambda %s: (%s,)" % (args, ", ".join(self.args))
+            else:
+                code = "lambda %s: ()" % (args,)
+            self.key = eval(code)
+        else:
+            # backward-compatible function that uses self.skiparg
+            self.key = lambda *args, **kwargs: args[self.skiparg:]
 
     def lru(self, model):
         counter = STAT[(model.pool.db_name, model._name, self.method)]
@@ -64,7 +93,7 @@ class ormcache(object):
 
     def lookup(self, method, *args, **kwargs):
         d, key0, counter = self.lru(args[0])
-        key = key0 + args[self.skiparg:]
+        key = key0 + self.key(*args, **kwargs)
         try:
             r = d[key]
             counter.hit += 1

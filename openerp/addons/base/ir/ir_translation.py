@@ -333,7 +333,7 @@ class ir_translation(osv.osv):
         
         return (query, params)
 
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('name', 'types', 'lang', 'source', 'res_id')
     def __get_source(self, cr, uid, name, types, lang, source, res_id):
         # res_id is a tuple or None, otherwise ormcache cannot cache it!
         query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)

@@ -337,7 +337,7 @@ class ir_values(osv.osv):
         return defaults.values()
 
     # use ormcache: this is called a lot by BaseModel.default_get()!
-    @tools.ormcache(skiparg=2)
+    @tools.ormcache('uid', 'model', 'condition')
     def get_defaults_dict(self, cr, uid, model, condition=False):
         """ Returns a dictionary mapping field names with their corresponding
             default value. This method simply improves the returned value of
