@@ -849,7 +849,7 @@ class AccountChartTemplate(models.Model):
     account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
-    bank_account_code_char = fields.Char(string='Code of the main bank account')
+    bank_account_code_char = fields.Char(string='Code of the main bank account', default='BNK123456')
     transfer_account_id = fields.Many2one('account.account.template', string='Transfer Account',
         domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         default=lambda self: self.env.ref('account.transfer_account_id'),
