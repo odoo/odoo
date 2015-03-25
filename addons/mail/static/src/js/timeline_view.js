@@ -40,6 +40,7 @@ var TimelineRecordThread = form_common.AbstractField.extend ({
             'show_compact_message': true,
             'compose_as_todo' : false,
             'view_inbox': false,
+            'view_mailbox': false, 
             'emails_from_on_composer': true,
             'fetch_limit': 20,
             'readonly': this.node.attrs.readonly || false,
@@ -181,6 +182,8 @@ var TimelineView = View.extend ({
     },
 
     render_buttons: function($node) {
+        var self = this;
+        
         this.$buttons = $(QWeb.render("TimelineView.buttons", {'widget': this}));
         this.$buttons
             .on('click', 'button.oe_timeline_button_new', this.on_compose_message)
@@ -659,6 +662,8 @@ var MailThread = Common.extend ({
         event.preventDefault();
         event.stopPropagation();
 
+        console.log("on record clicked 1");
+
         var self = this;
         var state = {
             'model': this.context.default_model,
@@ -668,6 +673,8 @@ var MailThread = Common.extend ({
 
         web_client.action_manager.do_push_state(state);
 
+        console.log("on record clicked 2");
+
         this.context.params = {
             model: this.context.default_model,
             res_id: this.context.default_res_id,
@@ -675,6 +682,7 @@ var MailThread = Common.extend ({
 
         this.ds_thread.call("message_redirect_action", {context: this.context})
             .then(function(action){
+                console.log("on record clicked 3");
                 self.do_action(action); 
             });
     },

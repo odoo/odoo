@@ -143,7 +143,7 @@ class mail_group(osv.Model):
             act_domain = [('model', '=', 'mail.group'), ('res_id', '=', mail_group_id)]
             act_context = {'default_model': 'mail.group',
                            'default_res_id': mail_group_id,
-                           'options': {'view_mailbox': True,
+                           'options': {'view_mailbox': False,
                                        'view_inbox': True,
                                        'read_action': 'read',
                                        'compose_placeholder': 'Send a message to the group'}

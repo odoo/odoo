@@ -54,7 +54,6 @@ Main Features
         'mail_mail_view.xml',
         'mail_followers_view.xml',
         'mail.xml',
-        #'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_config_view.xml',
         'data/mail_data.xml',
@@ -77,11 +76,7 @@ Main Features
     'installable': True,
     'application': True,
     'qweb': [
-        #'static/src/xml/mail.xml',
-        #'static/src/xml/mail_followers.xml',
         'static/src/xml/announcement.xml',
-        #'static/src/xml/suggestions.xml',
-
         'static/src/xml/timeline.xml',
         'static/src/xml/timeline_followers.xml',
         'static/src/xml/timeline_suggestions.xml',

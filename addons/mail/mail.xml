@@ -280,7 +280,7 @@
     <menuitem id="mail.mail_feeds" name="Messaging" 
               parent="mail.mail_feeds_main" groups="base.group_user" sequence="10"/>
 
-    <record model="ir.actions.act_window" id="action_timeline_to_read">
+    <record model="ir.actions.act_window" id="action_mail_inbox_feeds">
         <field name="name">Inbox</field>
         <field name="res_model">mail.message</field>
         <field name="view_type">form</field>
@@ -303,7 +303,7 @@
     <record id="timeline_inboxfeeds" model="ir.ui.menu">
         <field name="name">Inbox</field>
         <field name="sequence" eval="10"/>
-        <field name="action" ref="action_timeline_to_read"/>
+        <field name="action" ref="action_mail_inbox_feeds"/>
         <field name="parent_id" ref="mail.mail_feeds"/>
     </record>
 

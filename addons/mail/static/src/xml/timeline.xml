@@ -11,7 +11,12 @@
             <span class="oe_alternative">
                 <span class="oe_fade">or</span>
                 <div class="oe_bounce_container">
-                    <a class="oe_timeline_share text-info">Write to my followers</a>
+                    <t t-if="widget.options.compose_placeholder">
+                        <a class="oe_timeline_share text-info"><t t-raw="widget.options.compose_placeholder"/></a>
+                    </t>
+                    <t t-if="! widget.options.compose_placeholder">
+                        <a class="oe_timeline_share text-info">Write to my followers</a>
+                    </t>
                 </div>
             </span>
         </t>
@@ -116,9 +121,9 @@
                     Followers of 
                     <t t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'"/>
                 </t>
-                <t t-if="!widget.parent_thread.parent_message.record_name and widget.options.view_inbox">
+                <t t-if="!widget.parent_thread.parent_message.record_name and widget.options.view_mailbox">
                     My Followers </t>
-                <t t-if="!widget.parent_thread.parent_message.record_name and !widget.options.view_inbox">
+                <t t-if="!widget.parent_thread.parent_message.record_name and !widget.options.view_mailbox">
                     Followers of this document </t>
             </span>
         </t>

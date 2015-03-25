@@ -1,23 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!-- this record will be dynamically adapted to each new menu created -->
-        <!--<record id="action_mail_group_feeds" model="ir.actions.client">
-            <field name="name">Discussion Group</field>
-            <field name="tag">mail.wall</field>
-            <field name="res_model">mail.message</field>
-            <field name="context">{
-            }</field>
-            <field name="params">{
-                'read_action': 'read'
-            }</field>
-            <field name="help" type="html">
-                <p>
-                    No message in this group.
-                </p>
-            </field>
-        </record>-->
-
         <record model="ir.actions.act_window" id="action_mail_group_feeds">
             <field name="name">Discussion Group</field>
             <field name="res_model">mail.message</field>
