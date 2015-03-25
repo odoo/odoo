@@ -292,7 +292,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
                 return self.dataset.read_index(fields, {
-                    context: { 'bin_size': true, 'future_display_name' : true }
+                    context: { 'bin_size': true }
                 }).then(function(r) {
                     self.trigger('load_record', r);
                 });
@@ -961,10 +961,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 fields.push('display_name');
                 return self.dataset.read_index(fields,
                     {
-                        context: {
-                            'bin_size': true,
-                            'future_display_name': true
-                        },
+                        context: { 'bin_size': true },
                         check_access_rule: true
                     }).then(function(r) {
                         self.trigger('load_record', r);
@@ -2574,7 +2571,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
             var domain = instance.web.pyeval.eval('domain', this.get('value'));
             var ds = new instance.web.DataSetStatic(self, model, self.build_context());
-            ds.call('search_count', [domain]).then(function (results) {
+            ds.call('search_count', [domain, self.build_context()]).then(function (results) {
                 $('.oe_domain_count', self.$el).text(results + ' records selected');
                 if (self.get('effective_readonly')) {
                     $('button span', self.$el).text(' See selection');
@@ -3740,9 +3737,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 200,
         });
-        var appendTo = this.$el.parents('.oe_view_manager_body, .modal-dialog').last();
+        var appendTo = this.$el.parents('.oe_view_manager_body:visible, .modal-dialog:visible').last();
         if (appendTo.length === 0){
-            appendTo = '.oe_application > *';
+            appendTo = '.oe_application > *:visible:last';
         }
         this.$input.autocomplete({
             appendTo: appendTo

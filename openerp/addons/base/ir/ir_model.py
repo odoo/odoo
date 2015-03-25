@@ -383,12 +383,12 @@ class ir_model_fields(osv.osv):
             if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
+            self.pool.clear_manual_fields()
+
             if vals['model'] in self.pool:
                 model = self.pool[vals['model']]
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
                     model._rec_name = 'x_name'
-
-                self.pool.clear_manual_fields()
 
                 # re-initialize model in registry
                 model.__init__(self.pool, cr)
@@ -992,6 +992,10 @@ class ir_model_data(osv.osv):
             if record:
                 id = record.id
                 self.loads[(module,xml_id)] = (model,id)
+                for table, inherit_field in self.pool[model]._inherits.iteritems():
+                    parent_id = record[inherit_field].id
+                    parent_xid = '%s_%s' % (xml_id, table.replace('.', '_'))
+                    self.loads[(module, parent_xid)] = (table, parent_id)
         except Exception:
             pass
         return id

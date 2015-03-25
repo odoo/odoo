@@ -28,6 +28,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.group_by_field = {};
         this.grouped_by_m2o = false;
         this.many2manys = [];
+        this.m2m_context = {};
         this.state = {
             groups : {},
             records : {}
@@ -123,6 +124,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 this.aggregates[node.attrs.name] = node.attrs[this.group_operators[j]];
                 break;
             }
+        };
+        var ftype = node.attrs.widget || this.fields_view.fields[node.attrs.name].type;
+        if(ftype == "many2many" && "context" in node.attrs) {
+          this.m2m_context[node.attrs.name] = node.attrs.context;
         }
     },
     transform_qweb_template: function(node) {
@@ -541,7 +546,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     var field = record.record[name];
                     var $el = record.$('.oe_form_field.oe_tags[name=' + name + ']').empty();
                     if (!relations[field.relation]) {
-                        relations[field.relation] = { ids: [], elements: {}};
+                        relations[field.relation] = { ids: [], elements: {}, context: self.m2m_context[name]};
                     }
                     var rel = relations[field.relation];
                     field.raw_value.forEach(function(id) {
@@ -555,7 +560,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             });
         });
        _.each(relations, function(rel, rel_name) {
-            var dataset = new instance.web.DataSetSearch(self, rel_name, self.dataset.get_context());
+            var dataset = new instance.web.DataSetSearch(self, rel_name, self.dataset.get_context(rel.context));
             dataset.name_get(_.uniq(rel.ids)).done(function(result) {
                 result.forEach(function(nameget) {
                     $(rel.elements[nameget[0]]).append('<span class="oe_tag">' + _.str.escapeHTML(nameget[1]) + '</span>');
