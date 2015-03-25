@@ -8,7 +8,7 @@ class hr_employee(osv.osv):
     _inherit = ['hr.employee', 'website.published.mixin']
 
     _columns = {
-        'public_info': fields.text('Public Info'),
+        'public_info': fields.char('Public Info'),
     }
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
