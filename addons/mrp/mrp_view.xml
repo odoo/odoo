@@ -389,7 +389,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Properties" groups="product.group_mrp_properties">
+                        <page string="Properties">
                             <group>
                                 <group>
                                     <field name="position"/>
@@ -404,8 +404,8 @@
                                     <field name="product_efficiency"/>
                                 </group>
                             </group>
-                            <separator string="Properties"/>
-                            <field name="property_ids" widget="many2many_tags"/>
+                            <separator string="Properties" groups="product.group_mrp_properties"/>
+                            <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                         </page>
                     </notebook>
                     <div class="oe_chatter">
