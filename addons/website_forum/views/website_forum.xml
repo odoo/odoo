@@ -454,8 +454,8 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-8">
-                    <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''}" disabled="True" id="btn_post_your_article"
-                        data-hashtags="#link" data-social-target-type="other">Post</button>
+                    <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt;= forum.karma_editor) and not is_public_user and 'karma_required' or ''}"
+                        t-attf-data-karma="#{forum.karma_editor}" disabled="True" id="btn_post_your_article"  data-hashtags="#link" data-social-target-type="other">Post</button>
                 </div>
             </div>
         </form>

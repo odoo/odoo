@@ -349,13 +349,15 @@ class Post(models.Model):
                 or (self.post_type == 'link' and not self.forum_id.allow_link):
             raise UserError(_('This forum does not allow %s' % self.post_type))
 
-    def _update_content(self, content, forum_id):
+    def _update_content(self, content, forum_id, post_type):
         forum = self.env['forum.forum'].browse(forum_id)
         if content and self.env.user.karma < forum.karma_dofollow:
             for match in re.findall(r'<a\s.*href=".*?">', content):
                 content = re.sub(match, match[:3] + 'rel="nofollow" ' + match[3:], content)
 
         if self.env.user.karma <= forum.karma_editor:
+            if post_type == 'link':
+                raise KarmaError('User karma not sufficient to submit link.')
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'
             content_match = re.search(filter_regexp, content, re.I)
             if content_match:
@@ -365,7 +367,7 @@ class Post(models.Model):
     @api.model
     def create(self, vals):
         if 'content' in vals and vals.get('forum_id'):
-            vals['content'] = self._update_content(vals['content'], vals['forum_id'])
+            vals['content'] = self._update_content(vals['content'], vals['forum_id'], vals.get('post_type', 'question'))
 
         post = super(Post, self.with_context(mail_create_nolog=True)).create(vals)
         # deleted or closed questions
@@ -407,7 +409,7 @@ class Post(models.Model):
     @api.multi
     def write(self, vals):
         if 'content' in vals:
-            vals['content'] = self._update_content(vals['content'], self.forum_id.id)
+            vals['content'] = self._update_content(vals['content'], self.forum_id.id, vals.get('post_type', 'question'))
         if 'state' in vals:
             if vals['state'] in ['active', 'close'] and any(not post.can_close for post in self):
                 raise KarmaError('Not enough karma to close or reopen a post.')
