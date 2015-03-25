@@ -852,7 +852,6 @@ class AccountChartTemplate(models.Model):
     bank_account_code_char = fields.Char(string='Code of the main bank account')
     transfer_account_id = fields.Many2one('account.account.template', string='Transfer Account',
         domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
-        default=lambda self: self.env.ref('account.transfer_account_id'),
         help="Intermediary account used when moving money from a liquidity account to another")
     property_account_receivable = fields.Many2one('account.account.template', string='Receivable Account')
     property_account_payable = fields.Many2one('account.account.template', string='Payable Account')
@@ -1300,7 +1299,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
     bank_accounts_id = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True)
     bank_account_code_char = fields.Char('Bank Accounts Code')
     code_digits = fields.Integer(string='# of Digits', required=True, help="No. of Digits to use for account code")
-    sale_tax = fields.Many2one('account.tax.template', string='Default Sale Tax')
+    sale_tax = fields.Many2one('account.tax.template', string='Default Sales Tax')
     purchase_tax = fields.Many2one('account.tax.template', string='Default Purchase Tax')
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
     use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
