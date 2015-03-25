@@ -989,6 +989,8 @@ class ir_actions_server(osv.osv):
         obj = None
         if context.get('active_model') == action.model_id.model and context.get('active_id'):
             obj = model.browse(context['active_id'])
+        if context.get('onchange_self'):
+            obj = context['onchange_self']
         eval_context.update({
             # orm
             'env': env,

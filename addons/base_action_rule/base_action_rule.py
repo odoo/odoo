@@ -51,6 +51,7 @@ class base_action_rule(osv.osv):
              ('on_write', 'On Update'),
              ('on_create_or_write', 'On Creation & Update'),
              ('on_unlink', 'On Deletion'),
+             ('on_change', 'Based on Form Modification'),
              ('on_time', 'Based on Timed Condition')],
             string='When to Run'),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
@@ -83,6 +84,7 @@ class base_action_rule(osv.osv):
             help="If present, this condition must be satisfied before executing the action rule."),
         'filter_domain': fields.char(string='Domain', help="If present, this condition must be satisfied before executing the action rule."),
         'last_run': fields.datetime('Last Run', readonly=1, copy=False),
+        'on_change_field_ids' : fields.many2many('ir.model.fields', domain="[('model_id', '=', model_id)]", string="On Change Fields Trigger"),
     }
 
     _defaults = {
@@ -147,6 +149,29 @@ class base_action_rule(osv.osv):
                 action_server_obj.run(cr, uid, server_action_ids, context=ctx)
 
         return True
+
+    @openerp.api.multi
+    def _register_onchange(self):
+        def make_onchange(action_rule_id):
+            def base_action_rule_onchange(self):
+                action_rule = self.env['base.action.rule'].search([('id', '=', action_rule_id)])
+                if not action_rule:
+                    return
+                server_actions = action_rule.server_action_ids.with_context(active_model=self._name, onchange_self=self)
+                vals = {}
+                for server_action in server_actions:
+                    res = server_action.run()
+                    vals.update(res and res.get('value') or {})
+                vals.pop('id', None)
+                self.update(self._convert_to_cache(vals, validate=False))
+            return base_action_rule_onchange
+
+        for action_rule in self:
+            if action_rule.kind != 'on_change':
+                continue
+            model = self.env[action_rule.model_id.model]
+            for field in action_rule.on_change_field_ids:
+                model._onchange_methods[field.name].append(make_onchange(action_rule.id))
 
     def _register_hook(self, cr, ids=None):
         """ Wrap the methods `create` and `write` of the models specified by
@@ -256,6 +281,7 @@ class base_action_rule(osv.osv):
         updated = False
         if ids is None:
             ids = self.search(cr, SUPERUSER_ID, [])
+        self._register_onchange(cr, SUPERUSER_ID, ids)
         for action_rule in self.browse(cr, SUPERUSER_ID, ids):
             model = action_rule.model_id.model
             model_obj = self.pool.get(model)
@@ -278,6 +304,15 @@ class base_action_rule(osv.osv):
 
         return cron.toggle(model=self._name, domain=[('kind', '=', 'on_time')])
 
+    @openerp.api.one
+    def _purge_custom_onchange(self):
+        if self.kind != 'on_change':
+            return
+        model = self.env[self.model_id.model]
+        for field in self.on_change_field_ids:
+            if model._onchange_methods.get(field.name):
+                model._onchange_methods[field.name] = [method for method in model._onchange_methods[field.name] if method.func_name != 'base_action_rule_onchange']
+
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
         if self._register_hook(cr, [res_id]):
@@ -288,6 +323,7 @@ class base_action_rule(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        self._purge_custom_onchange(cr, uid, ids, context=context)
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
         if self._register_hook(cr, ids):
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
@@ -300,7 +336,7 @@ class base_action_rule(osv.osv):
         return res
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
-        data = {'model': False, 'filter_pre_id': False, 'filter_id': False}
+        data = {'model': False, 'filter_pre_id': False, 'filter_id': False, 'on_change_field_ids': False}
         if model_id:
             model = self.pool.get('ir.model').browse(cr, uid, model_id, context=context)
             data.update({'model': model.model})
