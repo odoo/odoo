@@ -155,7 +155,7 @@ class website(osv.osv):
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
-        'name': fields.char('Website Name'),
+        'name': fields.char('Website Name', required=True),
         'domain': fields.char('Website Domain'),
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
@@ -185,9 +185,11 @@ class website(osv.osv):
         'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
     }
 
-    # cf. Wizard hack in website_views.xml
-    def noop(self, *args, **kwargs):
-        pass
+    _sql_constraints = [
+        ('name_unique',
+         'unique(name)',
+         'Choose another name - it has to be unique!')
+    ]
 
     def write(self, cr, uid, ids, vals, context=None):
         self._get_languages.clear_cache(self)
