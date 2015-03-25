@@ -850,8 +850,9 @@ class AccountChartTemplate(models.Model):
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
     bank_account_code_char = fields.Char(string='Code of the main bank account')
-    transfer_account_id = fields.Many2one('account.account.template',
+    transfer_account_id = fields.Many2one('account.account.template', string='Transfer Account',
         domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
+        default=lambda self: self.env.ref('account.transfer_account_id'),
         help="Intermediary account used when moving money from a liquidity account to another")
     property_account_receivable = fields.Many2one('account.account.template', string='Receivable Account')
     property_account_payable = fields.Many2one('account.account.template', string='Payable Account')
@@ -1303,7 +1304,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
     purchase_tax = fields.Many2one('account.tax.template', string='Default Purchase Tax')
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
     use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
-    transfer_account_id = fields.Many2one('account.account.template', required=True,
+    transfer_account_id = fields.Many2one('account.account.template', required=True, string='Transfer Account',
         domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
     purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
@@ -1333,29 +1334,29 @@ class WizardMultiChartsAccounts(models.TransientModel):
     def onchange_chart_template_id(self):
         res = {}
         tax_templ_obj = self.env['account.tax.template']
-        res['value'] = {'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False}
         if self.chart_template_id:
             currency_id = self.chart_template_id.currency_id and self.chart_template_id.currency_id.id or self.env.user.company_id.currency_id.id
-            res['value'].update({'complete_tax_set': self.chart_template_id.complete_tax_set, 'currency_id': currency_id})
+            self.complete_tax_set = self.chart_template_id.complete_tax_set
+            self.currency_id = currency_id
             if self.chart_template_id.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 chart_ids = self._get_chart_parent_ids(self.chart_template_id)
                 base_tax_domain = [('chart_template_id', 'in', chart_ids)]
                 sale_tax_domain = base_tax_domain + [('type_tax_use', '=', 'sale')]
                 purchase_tax_domain = base_tax_domain + [('type_tax_use', '=', 'purchase')]
-                sale_taxes = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
-                purchase_taxes = tax_templ_obj.search(purchase_tax_domain, order="sequence, id desc", limit=1)
-                res['value']['sale_tax'] = sale_taxes.ids and sale_taxes.ids[0] or False
-                res['value']['purchase_tax'] = purchase_taxes.ids and purchase_taxes.ids[0] or False
+                sale_tax = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
+                purchase_tax = tax_templ_obj.search(purchase_tax_domain, order="sequence, id desc", limit=1)
+                self.sale_tax = sale_tax.id
+                self.purchase_tax = purchase_tax.id
                 res.setdefault('domain', {})
                 res['domain']['sale_tax'] = repr(sale_tax_domain)
                 res['domain']['purchase_tax'] = repr(purchase_tax_domain)
             if self.chart_template_id.transfer_account_id:
-                res['value']['transfer_account_id'] = self.chart_template_id.transfer_account_id.id
+                self.transfer_account_id = self.chart_template_id.transfer_account_id.id
             if self.chart_template_id.code_digits:
-                res['value']['code_digits'] = self.chart_template_id.code_digits
+                self.code_digits = self.chart_template_id.code_digits
             if self.chart_template_id.bank_account_code_char:
-                res['value']['bank_account_code_char'] = self.chart_template_id.bank_account_code_char
+                self.bank_account_code_char = self.chart_template_id.bank_account_code_char
         return res
 
     @api.model
