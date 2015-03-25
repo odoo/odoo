@@ -373,7 +373,7 @@
                 <label class="col-sm-2 control-label" for="content_link">URL to Share</label>
                 <div class="col-sm-8">
                     <input type="text" name="content_link" required="True" t-attf-value="#{post_name}"
-                        class="form-control mb16 link_url" placeholder="e.g. https://www.odoo.com"/>
+                        class="form-control mb16 o_forum_post_link" placeholder="e.g. https://www.odoo.com"/>
                 </div>
             </div>
             <div class="form-group">
@@ -392,8 +392,9 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-8">
-                    <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''}" disabled="True" id="btn_post_your_article"
-                        data-hashtags="#link" data-social-target-type="other">Post</button>
+                    <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
+                        t-att-data-karma="forum.karma_ask"
+                        disabled="True" data-hashtags="#link" data-social-target-type="other">Post</button>
                 </div>
             </div>
         </form>
@@ -418,7 +419,8 @@
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <input type="text" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
-            <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''}"
+            <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
+                t-att-data-karma="forum.karma_ask"
                 data-hashtags="#discussion" data-social-target-type="default">Post Your Topic</button>
         </form>
     </t>

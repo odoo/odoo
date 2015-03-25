@@ -127,7 +127,7 @@
             return true;
         });
 
-        $('.link_url').on('change', function (ev) {
+        $('.link_url, .o_forum_post_link').on('change', function (ev) {  // keep .link_url for compat
             ev.preventDefault();
             var display_error = function(){
                 var $warning = $('<div class="alert alert-danger alert-dismissable" style="position:absolute; margin-top: -180px; margin-left: 90px;">'+
@@ -135,17 +135,17 @@
                     'Please enter valid URL. Example: http://www.odoo.com'+
                     '</div>');
                 $link.parent().append($warning);
-                $("button#btn_post_your_article")[0].disabled = true;
+                $link.parents('form').find('button')[0].disabled = true;
             };
             var $link = $(ev.currentTarget);
             if ($link.val().search("^http(s?)://.*")) {
                 display_error();
             } else {
                 openerp.jsonRpc("/forum/get_url_title", 'call', {'url': $link.val()}).then(function (data) {
-                    if(data){
+                    if (data) {
                         $("input[name='post_name']")[0].value = data;
-                        $('button#btn_post_your_article').prop('disabled', false);
-                    }else{
+                        $link.parents('form').find('button')[0].disabled = false;
+                    } else {
                         display_error();
                     }
                 });
