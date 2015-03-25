@@ -160,7 +160,7 @@ website.if_dom_contains('.website_forum', function () {
         if (url.search("^http(s?)://.*")) {
             url = 'http://'+url;
         }
-        var regex = new RegExp("(http(s)?://.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)");
+        var regex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
         if(regex.test(url)){
             ajax.jsonRpc("/forum/get_url_title", 'call', {'url': url}).then(function (data) {
                 if(data){
