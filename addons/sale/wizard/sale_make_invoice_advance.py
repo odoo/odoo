@@ -51,10 +51,12 @@ class sale_advance_payment_inv(osv.osv_memory):
                     invoiced += invoice.amount_total
                 if invoice.state == 'paid':
                     paid += invoice.amount_total
+                if invoice.state == 'open':
+                    paid += invoice.amount_total - invoice.residual
             amount_paid = (paid, order.currency_id.symbol)
             if order.currency_id.position == 'before':
                 amount_paid = amount_paid[::-1]
-            paid = _('(Including %s%s paid)') % amount_paid
+            paid = _('(Including %s %s paid)') % amount_paid
             vals.update({'currency_id': order.currency_id.id, 'amount_total': order.amount_total, 'amount_paid': paid, 'amount_invoiced': invoiced, 'amount_tobe_invoice': order.amount_total-invoiced})
         return vals
 
