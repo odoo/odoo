@@ -118,41 +118,28 @@ class ormcache(object):
 
 
 class ormcache_context(ormcache):
-    def __init__(self, skiparg=2, size=8192, accepted_keys=()):
-        super(ormcache_context,self).__init__(skiparg,size)
-        self.accepted_keys = accepted_keys
+    """ This LRU cache decorator is a variant of :class:`ormcache`, with an
+    extra parameter ``keys`` that defines a sequence of dictionary keys. Those
+    keys are looked up in the ``context`` parameter and combined to the cache
+    key made by :class:`ormcache`.
+    """
+    def __init__(self, *args, **kwargs):
+        super(ormcache_context, self).__init__(*args, **kwargs)
+        self.keys = kwargs['keys']
 
-    def __call__(self, method):
-        # remember which argument is context
-        args = getargspec(method)[0]
-        self.context_pos = args.index('context')
-        return super(ormcache_context, self).__call__(method)
-
-    def lookup(self, method, *args, **kwargs):
-        d, key0, counter = self.lru(args[0])
-
-        # Note. The decorator() wrapper (used in __call__ above) will resolve
-        # arguments, and pass them positionally to lookup(). This is why context
-        # is not passed through kwargs!
-        if self.context_pos < len(args):
-            context = args[self.context_pos] or {}
+    def determine_key(self):
+        """ Determine the function that computes a cache key from arguments. """
+        assert self.skiparg is None, "ormcache_context() no longer supports skiparg"
+        # build a string that represents function code and evaluate it
+        spec = getargspec(self.method)
+        args = formatargspec(*spec)[1:-1]
+        cont_expr = "(context or {})" if 'context' in spec.args else "self._context"
+        keys_expr = "tuple(map(%s.get, %r))" % (cont_expr, self.keys)
+        if self.args:
+            code = "lambda %s: (%s, %s)" % (args, ", ".join(self.args), keys_expr)
         else:
-            context = kwargs.get('context') or {}
-        ckey = [(k, context[k]) for k in self.accepted_keys if k in context]
-
-        # Beware: do not take the context from args!
-        key = key0 + args[self.skiparg:self.context_pos] + tuple(ckey)
-        try:
-            r = d[key]
-            counter.hit += 1
-            return r
-        except KeyError:
-            counter.miss += 1
-            value = d[key] = self.method(*args, **kwargs)
-            return value
-        except TypeError:
-            counter.err += 1
-            return self.method(*args, **kwargs)
+            code = "lambda %s: (%s,)" % (args, keys_expr)
+        self.key = eval(code)
 
 
 class ormcache_multi(ormcache):
