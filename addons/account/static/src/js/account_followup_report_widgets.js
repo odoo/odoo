@@ -63,14 +63,14 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
             $("*[data-primary='1'].followup-email").trigger('click');
             var letter_context_list = [];
             $("*[data-primary='1'].followup-letter").each(function() {
-                letter_context_list.push($(this).attr('context'))
+                letter_context_list.push($(this).data('context'))
             });
             window.open('?pdf&letter_context_list=' + letter_context_list, '_blank');
             window.open('?partner_done=all', '_self');
         }
     },
     skipPartner: function(e) {
-        var partner_id = $(e.target).attr("partner");
+        var partner_id = $(e.target).data("partner");
         var model = new openerp.Model('res.partner');
         if ($(e.target).data('primary') == '1') {
             return model.call('update_next_action', [[parseInt(partner_id)]]).then(function (result) {
@@ -84,7 +84,7 @@ openerp.account.FollowupReportWidgets = openerp.account.ReportWidgets.extend({
     printFollowupLetter: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        var url = $(e.target).attr("target");
+        var url = $(e.target).data("target");
         window.open(url, '_blank');
         if ($(e.target).is('.btn-primary')) {
             var $skipButton = $(e.target).siblings('a.followup-skip');
