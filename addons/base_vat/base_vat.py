@@ -119,9 +119,6 @@ class res_partner(osv.osv):
                 return False
         return True
 
-    def vat_change(self, cr, uid, ids, value, context=None):
-        return {'value': {'vat_subjected': bool(value)}}
-
     def _commercial_fields(self, cr, uid, context=None):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['vat_subjected']
 
@@ -130,7 +127,10 @@ class res_partner(osv.osv):
             # by default, a VAT number is valid if:
             #  it starts with 2 letters
             #  has more than 3 characters
+            if len(cn) <= 1:
+                return False
             return cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
+
         vat_country, vat_number = self._split_vat(self.browse(cr, uid, ids)[0].vat)
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
         error_partner = self.browse(cr, uid, ids, context=context)
