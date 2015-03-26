@@ -115,12 +115,11 @@ class Channel(models.Model):
         self.can_upload = self.can_see and (not self.upload_group_ids or bool(self.upload_group_ids & self.env.user.groups_id))
 
     @api.multi
-    @api.depends('name')
-    def _website_url(self, name, arg):
-        res = super(Channel, self)._website_url(name, arg)
+    def _website_url(self):
+        super(Channel, self)._website_url()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        res.update({(channel.id, '%s/slides/%s' % (base_url, slug(channel))) for channel in self})
-        return res
+        for channel in self:
+            channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
     @api.onchange('visibility')
     def change_visibility(self):
@@ -310,12 +309,11 @@ class Slide(models.Model):
                 record.embed_code = False
 
     @api.multi
-    @api.depends('name')
-    def _website_url(self, name, arg):
-        res = super(Slide, self)._website_url(name, arg)
+    def _website_url(self):
+        super(Slide, self)._website_url()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        res.update({(slide.id, '%s/slides/slide/%s' % (base_url, slug(slide))) for slide in self})
-        return res
+        for slide in self:
+            slide.website_url = '%s/slides/slide/%s' % (base_url, slug(slide))
 
 
     @api.model

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from openerp import api
 from openerp.osv import osv, fields
 from openerp.addons.website.models.website import slug
 
@@ -35,11 +36,11 @@ class WebsiteResPartner(osv.Model):
         'self': fields.function(_get_ids, type='many2one', relation=_name),
     }
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(WebsiteResPartner, self)._website_url(cr, uid, ids, field_name, arg, context=context)
-        for partner in self.browse(cr, uid, ids, context=context):
-            res[partner.id] = "/partners/%s" % slug(partner)
-        return res
+    @api.multi
+    def _website_url(self):
+        super(WebsiteResPartner, self)._website_url()
+        for partner in self:
+            partner.website_url = "/partners/%s" % slug(partner)
 
     _defaults = {
         'website_published': True

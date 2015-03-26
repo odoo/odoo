@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import tools
+from openerp import tools, api
 from openerp.osv import osv, fields
 
 class product_style(osv.Model):
@@ -107,11 +107,11 @@ class product_template(osv.Model):
     _name = 'product.template'
     _mail_post_access = 'read'
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(product_template, self)._website_url(cr, uid, ids, field_name, arg, context=context)
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = "/shop/product/%s" % (product.id,)
-        return res
+    @api.multi
+    def _website_url(self):
+        super(product_template, self)._website_url()
+        for product in self:
+            product.website_url = "/shop/product/%s" % (product.id,)
 
     _columns = {
         # TODO FIXME tde: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
@@ -179,6 +179,10 @@ class product_template(osv.Model):
 class product_product(osv.Model):
     _inherit = "product.product"
 
+    #FixMe: use related field to fix yml test case, when create product from yml not getting website_url, latter on removed when yml changes in some modules.
+    _columns = {
+        'website_url': fields.related("product_tmpl_id","website_url", string="Website url", type="char"),
+    }
     # Wrapper for call_kw with inherits
     def open_website_url(self, cr, uid, ids, context=None):
         template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id

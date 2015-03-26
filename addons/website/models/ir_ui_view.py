@@ -4,58 +4,54 @@ import logging
 
 from lxml import etree, html
 
-from openerp import SUPERUSER_ID, api, tools
+from openerp import models, fields, api, tools
 from openerp.addons.website.models import website
 from openerp.http import request
-from openerp.osv import osv, fields
 
 _logger = logging.getLogger(__name__)
 
 
-class view(osv.osv):
+class View(models.Model):
     _inherit = "ir.ui.view"
-    _columns = {
-        'page': fields.boolean("Whether this view is a web page template (complete)"),
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
-        'customize_show': fields.boolean("Show As Optional Inherit"),
-        'website_id': fields.many2one('website', ondelete='cascade', string="Website"),
-    }
 
-    _defaults = {
-        'page': False,
-        'customize_show': False,
-    }
+    page = fields.Boolean("Whether this view is a web page template (complete)", default=False)
+    website_meta_title = fields.Char("Website meta title", translate=True)
+    website_meta_description = fields.Text("Website meta description", translate=True)
+    website_meta_keywords = fields.Char("Website meta keywords", translate=True)
+    customize_show = fields.Boolean("Show As Optional Inherit", default=False)
+    website_id = fields.Many2one('website', ondelete='cascade', string="Website")
 
-    def unlink(self, cr, uid, ids, context=None):
-        res = super(view, self).unlink(cr, uid, ids, context=context)
+    @api.multi
+    def unlink(self):
+        res = super(View, self).unlink()
         self.clear_caches()
         return res
 
-    def _view_obj(self, cr, uid, view_id, context=None):
+    @api.model
+    def _view_obj(self, view_id):
         if isinstance(view_id, basestring):
             try:
-                return self.pool['ir.model.data'].xmlid_to_object(
-                    cr, uid, view_id, raise_if_not_found=True, context=context
+                return self.env['ir.model.data'].xmlid_to_object(
+                    view_id, raise_if_not_found=True
                 )
             except:
                 # Try to fallback on key instead of xml_id
-                rec_id = self.search(cr, uid, [('key', '=', view_id)], context=context)
-                if rec_id:
+                rec = self.search([('key', '=', view_id)])
+                if rec:
                     _logger.info("Could not find view with `xml_id´ '%s', fallback on `key´" % (view_id))
-                    return self.browse(cr, uid, rec_id, context=context)[0]
+                    return rec
                 else:
                     raise
         elif isinstance(view_id, (int, long)):
-            return self.browse(cr, uid, view_id, context=context)
+            return self.browse(view_id)
 
         # assume it's already a view object (WTF?)
         return view_id
 
     # Returns all views (called and inherited) related to a view
     # Used by translation mechanism, SEO and optional templates
-    def _views_get(self, cr, uid, view_id, options=True, bundles=False, context=None, root=True):
+    @api.model
+    def _views_get(self, view_id, options=True, bundles=False, root=True):
         """ For a given view ``view_id``, should return:
 
         * the view itself
@@ -65,7 +61,7 @@ class view(osv.osv):
         """
 
         try:
-            view = self._view_obj(cr, uid, view_id, context=context)
+            view = self._view_obj(view_id)
         except ValueError:
             _logger.warning("Could not find view object with view_id '%s'" % (view_id))
             # Shall we log that ? Yes, you should !
@@ -82,11 +78,11 @@ class view(osv.osv):
             xpath += "| //t[@t-call-assets]"
         for child in node.xpath(xpath):
             try:
-                called_view = self._view_obj(cr, uid, child.get('t-call', child.get('t-call-assets')), context=context)
+                called_view = self._view_obj(child.get('t-call', child.get('t-call-assets')))
             except ValueError:
                 continue
             if called_view not in result:
-                result += self._views_get(cr, uid, called_view, options=options, bundles=bundles, context=context)
+                result += self._views_get(called_view, options=options, bundles=bundles)
 
         extensions = view.inherit_children_ids
         if not options:
@@ -96,31 +92,34 @@ class view(osv.osv):
         # Keep options in a deterministic order regardless of their applicability
         for extension in sorted(extensions, key=lambda v: v.id):
             for r in self._views_get(
-                    cr, uid, extension,
+                    extension,
                     # only return optional grandchildren if this child is enabled
                     options=extension.active,
-                    context=context, root=False):
+                    root=False):
                 if r not in result:
                     result.append(r)
         return result
 
-    def extract_embedded_fields(self, cr, uid, arch, context=None):
+    @api.model
+    def extract_embedded_fields(self, arch):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
-    def save_embedded_field(self, cr, uid, el, context=None):
-        Model = self.pool[el.get('data-oe-model')]
+    @api.model
+    def save_embedded_field(self, el):
+        Model = self.env[el.get('data-oe-model')]
         field = el.get('data-oe-field')
 
-        converter = self.pool['website.qweb'].get_converter_for(el.get('data-oe-type'))
-        value = converter.from_html(cr, uid, Model, Model._fields[field], el)
+        converter = self.env['website.qweb'].get_converter_for(el.get('data-oe-type'))
+        value = converter.from_html(self.env.cr, self.env.uid, Model, Model._fields[field], el)
 
         if value is not None:
             # TODO: batch writes?
-            Model.write(cr, uid, [int(el.get('data-oe-id'))], {
+            Model.browse([int(el.get('data-oe-id'))]).write({
                 field: value
-            }, context=context)
+            })
 
-    def to_field_ref(self, cr, uid, el, context=None):
+    @api.model
+    def to_field_ref(self, el):
         # filter out meta-information inserted in the document
         attributes = dict((k, v) for k, v in el.items()
                           if not k.startswith('data-oe-'))
@@ -130,11 +129,12 @@ class view(osv.osv):
         out.tail = el.tail
         return out
 
-    def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
+    @api.model
+    def replace_arch_section(self, view_id, section_xpath, replacement):
         # the root of the arch section shouldn't actually be replaced as it's
         # not really editable itself, only the content truly is editable.
 
-        [view] = self.browse(cr, uid, [view_id], context=context)
+        [view] = self.browse([view_id])
         arch = etree.fromstring(view.arch.encode('utf-8'))
         # => get the replacement root
         if not section_xpath:
@@ -160,25 +160,23 @@ class view(osv.osv):
             if not view_id:
                 raise ValueError('View %r in website %r not found' % (xml_id, context['website_id']))
         else:
-            view_id = super(view, self).get_view_id(cr, uid, xml_id, context=context)
+            view_id = super(View, self).get_view_id(cr, uid, xml_id, context=context)
         return view_id
 
-    def _prepare_qcontext(self, cr, uid, context=None):
-        if not context:
-            context = {}
-
-        company = self.pool['res.company'].browse(cr, SUPERUSER_ID, request.website.company_id.id, context=context)
+    @api.model
+    def _prepare_qcontext(self):
+        company = self.env['res.company'].sudo().browse(request.website.company_id.id)
 
         qcontext = dict(
-            context.copy(),
+            self.env.context.copy(),
             website=request.website,
             url_for=website.url_for,
             slug=website.slug,
             res_company=company,
-            user_id=self.pool.get("res.users").browse(cr, uid, uid),
-            translatable=context.get('lang') != request.website.default_lang_code,
+            user_id=self.env.user,
+            translatable=self.env.context.get('lang') != request.website.default_lang_code,
             editable=request.website.is_publisher(),
-            menu_data=self.pool['ir.ui.menu'].load_menus_root(cr, uid, context=context) if request.website.is_user() else None,
+            menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
         )
         return qcontext
 
@@ -208,8 +206,9 @@ class view(osv.osv):
 
             values = qcontext
 
-        return super(view, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)
+        return super(View, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)
 
+    @api.model
     def _pretty_arch(self, arch):
         # remove_blank_string does not seem to work on HTMLParser, and
         # pretty-printing with lxml more or less requires stripping
@@ -222,7 +221,8 @@ class view(osv.osv):
         return etree.tostring(
             arch_no_whitespace, encoding='unicode', pretty_print=True)
 
-    def save(self, cr, uid, res_id, value, xpath=None, context=None):
+    @api.model
+    def save(self, res_id, value, xpath=None):
         """ Update a view section. The view section may embed fields to write
 
         :param str model:
@@ -236,37 +236,34 @@ class view(osv.osv):
 
         if xpath is None:
             # value is an embedded field on its own, not a view section
-            self.save_embedded_field(cr, uid, arch_section, context=context)
+            self.save_embedded_field(arch_section)
             return
 
-        for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
-            self.save_embedded_field(cr, uid, el, context=context)
+        for el in self.extract_embedded_fields(arch_section):
+            self.save_embedded_field(el)
 
             # transform embedded field back to t-field
-            el.getparent().replace(el, self.to_field_ref(cr, uid, el, context=context))
+            el.getparent().replace(el, self.to_field_ref(el))
 
-        arch = self.replace_arch_section(cr, uid, res_id, xpath, arch_section, context=context)
-        self.write(cr, uid, res_id, {
+        arch = self.replace_arch_section(res_id, xpath, arch_section)
+        self.browse(res_id).write({
             'arch': self._pretty_arch(arch)
-        }, context=context)
+        })
 
-        view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
+        view = self.sudo().browse(res_id)
         if view.model_data_id:
             view.model_data_id.write({'noupdate': True})
 
-    def customize_template_get(self, cr, uid, key, full=False, bundles=False, context=None):
+    def customize_template_get(self, key, full=False, bundles=False):
         """ Get inherit view's informations of the template ``key``. By default, only
         returns ``customize_show`` templates (which can be active or not), if
         ``full=True`` returns inherit view's informations of the template ``key``.
         ``bundles=True`` returns also the asset bundles
         """
-        imd = self.pool['ir.model.data']
-        theme_view_id = imd.xmlid_to_res_id(cr, uid, 'website.theme')
-        user = self.pool['res.users'].browse(cr, uid, context=context)
-        user_groups = set(user.groups_id)
-        views = self._views_get(
-            cr, uid, key, bundles=bundles,
-            context=dict(context or {}, active_test=False))
+        theme_view_id = self.env['ir.model.data'].xmlid_to_res_id('website.theme')
+        user_groups = set(self.env.user.groups_id)
+        views = self.with_context(active_test=False)._views_get(
+            key, bundles=bundles)
         done = set()
         result = []
         for v in views:
@@ -293,9 +290,9 @@ class view(osv.osv):
                 })
         return result
 
-    def get_view_translations(self, cr, uid, xml_id, lang, field=['id', 'res_id', 'value', 'state', 'gengo_translation'], context=None):
-        views = self.customize_template_get(cr, uid, xml_id, full=True, context=context)
+    def get_view_translations(self, xml_id, lang, field=['id', 'res_id', 'value', 'state', 'gengo_translation']):
+        views = self.customize_template_get(xml_id, full=True)
         views_ids = [view.get('id') for view in views if view.get('active')]
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
-        return self.pool['ir.translation'].search_read(cr, uid, domain, field, context=context)
+        return self.env['ir.translation'].search_read(domain, field)
 

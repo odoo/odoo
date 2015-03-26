@@ -1,49 +1,44 @@
 
-from openerp.osv import fields, osv
+from openerp import models, fields, api
 
-class website_config_settings(osv.osv_memory):
+
+class WebsiteConfigSettings(models.TransientModel):
     _name = 'website.config.settings'
     _inherit = 'res.config.settings'
 
-    _columns = {
-        'website_id': fields.many2one('website', string="website", required=True),
-        'website_name': fields.related('website_id', 'name', type="char", string="Website Name"),
+    website_id = fields.Many2one('website', string="website", required=True, default=lambda self: self.env['website'].search([])[0])
+    website_name = fields.Char(related='website_id.name', string="Website Name")
 
-        'language_ids': fields.related('website_id', 'language_ids', type='many2many', relation='res.lang', string='Languages'),
-        'default_lang_id': fields.related('website_id', 'default_lang_id', type='many2one', relation='res.lang', string='Default language'),
-        'default_lang_code': fields.related('website_id', 'default_lang_code', type="char", string="Default language code"),
-        'google_analytics_key': fields.related('website_id', 'google_analytics_key', type="char", string='Google Analytics Key'),
-        
-        'social_twitter': fields.related('website_id', 'social_twitter', type="char", string='Twitter Account'),
-        'social_facebook': fields.related('website_id', 'social_facebook', type="char", string='Facebook Account'),
-        'social_github': fields.related('website_id', 'social_github', type="char", string='GitHub Account'),
-        'social_linkedin': fields.related('website_id', 'social_linkedin', type="char", string='LinkedIn Account'),
-        'social_youtube': fields.related('website_id', 'social_youtube', type="char", string='Youtube Account'),
-        'social_googleplus': fields.related('website_id', 'social_googleplus', type="char", string='Google+ Account'),
-        'compress_html': fields.related('website_id', 'compress_html', type="boolean", string='Compress HTML'),
-        'cdn_activated': fields.related('website_id', 'cdn_activated', type="boolean", string='Use CDN'),
-        'cdn_url': fields.related('website_id', 'cdn_url', type="char", string='CDN Base URL'),
-        'cdn_filters': fields.related('website_id', 'cdn_filters', type="text", string='CDN Filters'),
-    }
+    language_ids = fields.Many2many('res.lang', related='website_id.language_ids', string='Languages')
+    default_lang_id = fields.Many2one('res.lang', related='website_id.default_lang_id', string='Default language')
+    default_lang_code = fields.Char(related='website_id.default_lang_code', string="Default language code")
+    google_analytics_key = fields.Char(related='website_id.google_analytics_key', string='Google Analytics Key')
 
-    def on_change_website_id(self, cr, uid, ids, website_id, context=None):
-        if not website_id:
-            return {'value': {}}
-        website_data = self.pool.get('website').read(cr, uid, [website_id], [], context=context)[0]
-        values = {'website_name': website_data['name']}
-        for fname, v in website_data.items():
-            if fname in self._columns:
-                values[fname] = v[0] if v and self._columns[fname]._type == 'many2one' else v
-        return {'value' : values}
+    social_twitter = fields.Char(related='website_id.social_twitter', string='Twitter Account')
+    social_facebook = fields.Char(related='website_id.social_facebook', string='Facebook Account')
+    social_github = fields.Char(related='website_id.social_github', string='GitHub Account')
+    social_linkedin = fields.Char(related='website_id.social_linkedin', string='LinkedIn Account')
+    social_youtube = fields.Char(related='website_id.social_youtube', string='Youtube Account')
+    social_googleplus = fields.Char(related='website_id.social_googleplus', string='Google+ Account')
+    compress_html = fields.Boolean(related='website_id.compress_html', string='Compress HTML')
+    cdn_activated = fields.Boolean(related='website_id.cdn_activated', string='Use CDN')
+    cdn_url = fields.Char(related='website_id.cdn_url', string='CDN Base URL')
+    cdn_filters = fields.Text(related='website_id.cdn_filters', string='CDN Filters')
+
+    @api.onchange('website_id')
+    def on_change_website_id(self):
+        if self.website_id:
+            website_data = self.website_id.read([])[0]
+            self.website_name = website_data['name']
+            for fname, v in website_data.items():
+                if fname in self._columns:
+                    self.fname = v[0] if v and self._columns[fname]._type == 'many2one' else v
 
     # FIXME in trunk for god sake. Change the fields above to fields.char instead of fields.related, 
     # and create the function set_website who will set the value on the website_id
     # create does not forward the values to the related many2one. Write does.
-    def create(self, cr, uid, vals, context=None):
-        config_id = super(website_config_settings, self).create(cr, uid, vals, context=context)
-        self.write(cr, uid, config_id, vals, context=context)
-        return config_id
-
-    _defaults = {
-        'website_id': lambda self,cr,uid,c: self.pool.get('website').search(cr, uid, [], context=c)[0],
-    }
+    @api.model
+    def create(self, vals):
+        config = super(WebsiteConfigSettings, self).create(vals)
+        config.write(vals)
+        return config

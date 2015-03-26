@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from openerp import api
 from openerp.osv import osv, fields
 
 
@@ -11,7 +12,8 @@ class hr_employee(osv.osv):
         'public_info': fields.text('Public Info'),
     }
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(hr_employee, self)._website_url(cr, uid, ids, field_name, arg, context=context)
-        res.update({(employee_id, '/page/website.aboutus#team') for employee_id in ids})
-        return res
+    @api.multi
+    def _website_url(self):
+        super(hr_employee, self)._website_url()
+        for employee in self:
+            employee.website_url = '/page/website.aboutus#team'

@@ -6,11 +6,11 @@
     'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',
     'description': """
-OpenERP Website CMS
+Odoo Website CMS
 ===================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['web', 'share', 'mail'],
     'installable': True,
     'data': [
