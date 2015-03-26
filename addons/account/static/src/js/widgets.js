@@ -151,7 +151,7 @@ var bankStatementReconciliation = Widget.extend({
         // Retreive statement infos and reconciliation data from the model
         var lines_filter = [['journal_entry_ids', '=', false], ['account_id', '=', false]];
         var deferred_promises = [];
-        
+
         // Working on specified statement(s)
         if (self.statement_ids && self.statement_ids.length > 0) {
             lines_filter.push(['statement_id', 'in', self.statement_ids]);
@@ -175,7 +175,7 @@ var bankStatementReconciliation = Widget.extend({
                 })
             );
         }
-        
+
         // Get operation templates
         deferred_promises.push(new Model("account.statement.operation.template")
             .query(['id','name','account_id','label','amount_type','amount','tax_id','analytic_account_id'])
@@ -309,7 +309,7 @@ var bankStatementReconciliation = Widget.extend({
         var name = this.$(".change_statement_name_field").val();
         if (name === "") this.$(".change_statement_name_button").attr("disabled", "disabled");
         else this.$(".change_statement_name_button").removeAttr("disabled");
-        
+
         if (name !== "" && e.which === 13) // Enter
             this.$(".change_statement_name_button").trigger("click");
         if (e.which === 27) { // Escape
@@ -398,7 +398,7 @@ var bankStatementReconciliation = Widget.extend({
     excludeMoveLines: function(source_child, partner_id, lines) {
         var self = this;
         var line_ids = _.collect(lines, function(o) { return o.id; });
-    
+
         var excluded_ids = this.excluded_move_lines_ids[partner_id];
         var excluded_move_lines_changed = false;
         _.each(line_ids, function(line_id){
@@ -409,7 +409,7 @@ var bankStatementReconciliation = Widget.extend({
         });
         if (! excluded_move_lines_changed)
             return;
-    
+
         // Function that finds if an array of line objects contains at least a line identified by its id
         var contains_lines = function(lines_array, line_ids) {
             for (var i = 0; i < lines_array.length; i++)
@@ -418,7 +418,7 @@ var bankStatementReconciliation = Widget.extend({
                         return true;
             return false;
         };
-    
+
         // Update children if needed
         _.each(self.getChildren(), function(child){
             if (child === source_child || child.st_line === undefined) return;
@@ -434,7 +434,7 @@ var bankStatementReconciliation = Widget.extend({
             }
         });
     },
-    
+
     unexcludeMoveLines: function(source_child, partner_id, lines) {
         var self = this;
         var line_ids = _.collect(lines, function(o) { return o.id; });
@@ -443,7 +443,7 @@ var bankStatementReconciliation = Widget.extend({
         this.excluded_move_lines_ids[partner_id] = _.difference(this.excluded_move_lines_ids[partner_id], line_ids);
         if (this.excluded_move_lines_ids[partner_id].length === initial_excluded_lines_num)
             return;
-    
+
         // Update children if needed
         _.each(self.getChildren(), function(child){
             if (child.st_line === undefined) return;
@@ -522,7 +522,7 @@ var bankStatementReconciliation = Widget.extend({
         if (self.reconciled_lines === self.st_lines.length) {
             self.displayDoneMessage();
         }
-    
+
         // Put the first line in match mode
         if (self.reconciled_lines !== self.st_lines.length) {
             var first_child = self.getChildren()[0];
@@ -772,7 +772,7 @@ var bankStatementReconciliationLine = Widget.extend({
                     self.animation_speed = self.getParent().animation_speed;
                     self.aestetic_animation_speed = self.getParent().aestetic_animation_speed;
                     if (self.context.animate_entrance) {
-                        return self.$el.stop(true, true).fadeIn({ duration: self.aestetic_animation_speed, queue: false }).css('display', 'none').slideDown(self.aestetic_animation_speed); 
+                        return self.$el.stop(true, true).fadeIn({ duration: self.aestetic_animation_speed, queue: false }).css('display', 'none').slideDown(self.aestetic_animation_speed);
                     }
                 });
             });
@@ -820,7 +820,7 @@ var bankStatementReconciliationLine = Widget.extend({
             mode: self.context.mode,
             presets: presets_array
         }));
-        
+
         // Stuff that require the template to be rendered
         self.$(".match").slideUp(0);
         self.$(".create").slideUp(0);
@@ -842,7 +842,7 @@ var bankStatementReconciliationLine = Widget.extend({
             self.$el.animate({opacity: 1}, self.aestetic_animation_speed);
             return;
         }
-        
+
         // TODO : the .on handler's returned deferred is lost
         return $.when(self.set("mode", self.context.mode)).then(function(){
             // Make sure the display is OK
@@ -1111,11 +1111,11 @@ var bankStatementReconciliationLine = Widget.extend({
         // add the line to mv_lines_deselected and remove it from mv_lines_selected
         self.mv_lines_deselected.unshift(line);
         var mv_lines_selected = _.filter(self.get("mv_lines_selected"), function(o) { return o.id != line_id; });
-        
+
         // remove partial reconciliation stuff if necessary
         if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
         if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
-        
+
         self.$el.removeClass("no_match");
         self.set("mode", "match");
         self.set("mv_lines_selected", mv_lines_selected);
@@ -1129,7 +1129,7 @@ var bankStatementReconciliationLine = Widget.extend({
         if (self.get("pager_index") === 0) { return; }
         self.set("pager_index", self.get("pager_index")-1 );
     },
-    
+
     pagerControlRightHandler: function() {
         var self = this;
         if (self.$(".pager_control_right").hasClass("disabled")) { return; /* shouldn't happen, anyway*/ }
@@ -1162,7 +1162,7 @@ var bankStatementReconciliationLine = Widget.extend({
     addLineBeingEdited: function() {
         var self = this;
         if (! self.islineCreatedBeingEditedValid()) return;
-        
+
         self.set("lines_created", self.get("lines_created").concat(self.get("line_created_being_edited")));
         // Add empty created line
         var new_id = self.get("line_created_being_edited")[0].id + 1;
@@ -1277,7 +1277,7 @@ var bankStatementReconciliationLine = Widget.extend({
         var self = this;
         var table = self.$(".match table");
         var nothing_displayed = true;
-    
+
         // Display move lines
         $.each(self.$(".match table .bootstrap_popover"), function(){ $(this).popover('destroy'); });
         table.empty();
@@ -1303,7 +1303,7 @@ var bankStatementReconciliationLine = Widget.extend({
 
     updatePagerControls: function() {
         var self = this;
-    
+
         if (self.get("pager_index") === 0)
             self.$(".pager_control_left").addClass("disabled");
         else
@@ -1319,7 +1319,7 @@ var bankStatementReconciliationLine = Widget.extend({
     // Updates the validation button, the "open balance" line and the  partial reconciliation sign
     balanceChanged: function() {
         var self = this;
-            
+
         // 'reset' the widget to invalid state
         self.is_valid = false;
         self.$(".tip_reconciliation_not_balanced").show();
@@ -1404,6 +1404,8 @@ var bankStatementReconciliationLine = Widget.extend({
                     self.animation_speed = 0;
                     self.set("mode", "create");
                     return;
+                } else {
+                    self.animation_speed = self.getParent().animation_speed;
                 }
                 self.$(".match").slideDown(self.animation_speed);
                 self.$(".create").slideUp(self.animation_speed);
@@ -1429,7 +1431,7 @@ var bankStatementReconciliationLine = Widget.extend({
         if (self.get("pager_index") !== 0 && self.get("mv_lines").length === 0 && ! self.can_fetch_more_move_lines) {
             self.set("pager_index", 0);
         }
-    
+
         // If there is no match to display, disable match view and pass in mode inactive
         if (self.get("mv_lines").length + self.mv_lines_deselected.length === 0 && !self.can_fetch_more_move_lines && self.filter === "") {
             self.$el.addClass("no_match");
@@ -1462,7 +1464,7 @@ var bankStatementReconciliationLine = Widget.extend({
 
         var added_lines = _.difference(val.newValue, val.oldValue);
         var removed_lines = _.difference(val.oldValue, val.newValue);
-    
+
         self.getParent().excludeMoveLines(self, self.partner_id, added_lines);
         self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
 
@@ -1642,7 +1644,7 @@ var bankStatementReconciliationLine = Widget.extend({
             for (var i=0; i<globally_excluded_ids.length; i++)
                 if (excluded_ids.indexOf(globally_excluded_ids[i]) === -1)
                     excluded_ids.push(globally_excluded_ids[i]);
-        
+
         limit += 1; // Let's fetch 1 more item than requested
         if (limit > 0) {
             return self.model_bank_statement_line
@@ -1823,7 +1825,7 @@ var ReconciliationListView = ListView.extend({
     search_by_partner: function() {
         var self = this;
         var fct = function() {
-            return self.old_search(new data.CompoundDomain(self.last_domain, 
+            return self.old_search(new data.CompoundDomain(self.last_domain,
                 [["partner_id", "in", self.current_partner === null ? [] :
                 [self.partners[self.current_partner][0]] ]]), self.last_context, self.last_group_by);
         };
@@ -1833,7 +1835,7 @@ var ReconciliationListView = ListView.extend({
         } else {
             return new Model("res.partner").call("read",
                 [self.partners[self.current_partner][0], ["last_reconciliation_date"]]).then(function(res) {
-                self.last_reconciliation_date = 
+                self.last_reconciliation_date =
                     formats.format_value(res.last_reconciliation_date, {"type": "datetime"}, _t("Never"));
                 return fct();
             });
