@@ -6,6 +6,7 @@ var snippets_editor = require('website.snippets.editor');
 var website = require('website.website');
 
 var _t = core._t;
+var QWeb = core.qweb;
 
 /*--------------------------------------------------------------------------
  Template files to load
@@ -202,7 +203,7 @@ snippets_editor.options.gallery = snippets_editor.Option.extend({
                 interval : this.$target.data("interval") || false,
                 id: "slideshow_" + (uuid+1)
             },
-            $slideshow = $(openerp.qweb.render('website.gallery.slideshow', params));
+            $slideshow = $(QWeb.render('website.gallery.slideshow', params));
         this.replace($slideshow);
         this.$target.find(".item img").each(function (index) {
             $(this).attr('data-index', index).data('index', index);
