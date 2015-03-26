@@ -1078,7 +1078,7 @@ class AccountInvoice(models.Model):
             raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
 
         payment = self.env['account.payment'].create({
-            'invoice_id': self.id,
+            'invoice_ids': [(6, 0, self.ids)],
             'amount': pay_amount or self.residual,
             'date': date or fields.Date.context_today(self),
             'reference': self.type in ('in_invoice', 'in_refund') and self.reference or self.number,
