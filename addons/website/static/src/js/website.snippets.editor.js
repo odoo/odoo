@@ -280,7 +280,9 @@
                         }
                         // end
                     }
-                    $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
+                    if (!$(this).data("selector")) {
+                        $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
+                    }
                 });
 
             // select all default text to edit (if snippet default text)
@@ -1118,6 +1120,11 @@
 
             if (!this.$el.find('.colorpicker').length) {
                 this.$el.find('li').append( openerp.qweb.render('website.colorpicker') );
+            }
+
+            if (this.$el.data('area')) {
+                this.$target = this.$target.find(this.$el.data('area'));
+                this.$el.removeData('area').removeAttr('area');
             }
 
             var classes = [];
