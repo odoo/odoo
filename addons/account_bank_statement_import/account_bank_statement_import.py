@@ -289,7 +289,7 @@ class account_bank_statement_import(models.TransientModel):
         num_ignored = len(ignored_statement_lines_import_ids)
         if num_ignored > 0:
             notifications += [{
-                'type': 'UserError',
+                'type': 'warning',
                 'message': _("%d transactions had already been imported and "
                              "were ignored.") % num_ignored
                         if num_ignored > 1
