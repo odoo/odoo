@@ -90,10 +90,30 @@ class ir_http(orm.AbstractModel):
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
+
+            def is_a_bot():
+                ua = request.httprequest.environ.get('HTTP_USER_AGENT', '').lower()
+                bots = "bot|crawl|slurp|spider|curl|wget"
+
+                try:
+                    return any(bot in ua for bot in bots.split('|'))
+                except UnicodeDecodeError:
+                    return any(bot in ua.encode('ascii', 'ignore') for bot in bots.split('|'))
+
+            def auto_redirect():
+                return not self.pool['ir.config_parameter'].get_param(
+                    request.cr,
+                    openerp.SUPERUSER_ID,
+                    'website.auto_redirect_disabled',
+                    False,
+                    context=request.context
+                )
+
             if first_pass:
                 if request.website_multilang:
                     # If the url doesn't contains the lang and that it's the first connection, we to retreive the user preference if it exists.
-                    if not path[1] in langs and not request.httprequest.cookies.get('session_id'):
+                    if not path[1] in langs and not request.httprequest.cookies.get('session_id')\
+                       and not is_a_bot() and auto_redirect():
                         if request.lang not in langs:
                             # Try to find a similar lang. Eg: fr_BE and fr_FR
                             short = request.lang.split('_')[0]
