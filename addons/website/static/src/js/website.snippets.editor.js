@@ -299,7 +299,7 @@
             // end
 
             // clean t-oe
-            $html.find('[data-oe-model]').each(function () {
+            $html.find('[data-oe-model], [data-oe-type]').each(function () {
                 for (var k=0; k<this.attributes.length; k++) {
                     if (this.attributes[k].name.indexOf('data-oe-') === 0) {
                         $(this).removeAttr(this.attributes[k].name);
