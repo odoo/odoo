@@ -146,6 +146,31 @@
                 <footer>
                     <div id="footer">
                     </div>
+                    <table class="table table-condensed table-hover"
+                           style="width: 100%; table-layout: fixed;">
+                        <caption>
+                            <p>total time: <t t-esc="int((time.time() - request.start) * 1e6)"/>µs</p>
+                            <p>total render time: <t t-esc="int((time.time() - render_start) * 1e6)"/>µs</p>
+                            <p>
+                                <t t-esc="len(request.queries)"/> queries
+                                <t t-esc="sum(t for _, t in request.queries)"/>µs total
+                            </p>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th>Query</th>
+                                <th style="width: 8em;">Duration (µs)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="request.queries" t-as="query">
+                                <td style="word-wrap: break-word;"><t t-esc="query[0]"/></td>
+                                <td style="text-align: right">
+                                    <t t-esc="query[1]"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </footer>
             </div>
             <script id='tracking_code' t-if="website and website.google_analytics_key and not editable">

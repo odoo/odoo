@@ -32,6 +32,7 @@ from functools import wraps
 import logging
 import urlparse
 import uuid
+import time
 import psycopg2.extras
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
@@ -64,7 +65,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 import tools
 from tools.func import frame_codeinfo
-from datetime import datetime as mdt
 from datetime import timedelta
 import threading
 from inspect import currentframe
@@ -226,8 +226,7 @@ class Cursor(object):
             _logger.info("SQL query parameters should be a tuple, list or dict; got %r", params)
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
-        if self.sql_log:
-            now = mdt.now()
+        now = time.time()
 
         try:
             params = params or None
@@ -244,11 +243,18 @@ class Cursor(object):
         # simple query count is always computed
         self.sql_log_count += 1
 
+        # integer microseconds
+        delay = int((time.time() - now) * 1e6)
+
+        from .http import request
+        if request:
+            request.queries.append((
+                self._obj.query,
+                delay
+            ))
+
         # advanced stats only if sql_log is enabled
         if self.sql_log:
-            delay = mdt.now() - now
-            delay = delay.seconds * 1E6 + delay.microseconds
-
             _logger.debug("query: %s", self._obj.query)
             res_from = re_from.match(query.lower())
             if res_from:

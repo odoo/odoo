@@ -199,6 +199,9 @@ class WebRequest(object):
         if self.session.uid:
             threading.current_thread().uid = self.session.uid
 
+        self.start = time.time()
+        self.queries = []
+
     @lazy_property
     def env(self):
         """

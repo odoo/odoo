@@ -1107,6 +1107,7 @@ class view(osv.osv):
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
+        qcontext['render_start'] = time.time()
         return self.pool[engine].render(cr, uid, id_or_xml_id, qcontext, loader=loader, context=context)
 
     #------------------------------------------------------
