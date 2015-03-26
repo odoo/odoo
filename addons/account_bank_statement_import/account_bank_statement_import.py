@@ -200,7 +200,7 @@ class account_bank_statement_import(models.TransientModel):
         # Odoo users bank accounts (which we import statement from) have
         # company_id and journal_id set while 'counterpart' bank accounts
         # (from which statement transactions originate) don't.
-        # UserError : if company_id is set, the method post_write of class
+        # Warning : if company_id is set, the method post_write of class
         # bank will create a journal
         if journal_id:
             company_id = self.env['account.journal'].browse(
