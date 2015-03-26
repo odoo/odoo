@@ -120,14 +120,6 @@ var Sidebar = Widget.extend({
     }
 });
 
-mail.Wall.include({
-    start: function() {
-        this._super();
-        var sidebar = new Sidebar(this);
-        sidebar.appendTo($('.oe_mail_wall_aside'));
-    },
-});
-
 web_timeline.TimelineView.include({
     start: function() {
         this._super();
