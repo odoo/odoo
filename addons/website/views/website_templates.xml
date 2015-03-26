@@ -323,9 +323,14 @@
                     </div>
                     <ul class="list-inline js_language_selector mt16" t-if="(request.website_multilang and len(languages) &gt; 1) or editable">
                         <li t-foreach="languages" t-as="lg">
-                            <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
-                             t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
-                             <t t-esc="lg[1].split('/').pop()"/></a>
+                            <a
+                                t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                                t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None"
+                                t-att-data-lang="lg[0]"
+                                class="js_change_lang"
+                            >
+                              <t t-esc="lg[1].split('/').pop()"/>
+                            </a>
                         </li>
                         <li groups="base.group_website_publisher">
                             <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
