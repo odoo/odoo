@@ -233,6 +233,12 @@ class AccountJournal(models.Model):
     _description = "Journal"
     _order = 'sequence, code'
 
+    def _default_inbound_payment_methods(self):
+        return [(4, self.env.ref('account.account_payment_method_manual_in').id, None)]
+
+    def _default_outbound_payment_methods(self):
+        return [(4, self.env.ref('account.account_payment_method_manual_out').id, None)]
+
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(size=5, required=True, help="The code will be displayed on reports.")
     type = fields.Selection([
@@ -273,9 +279,9 @@ class AccountJournal(models.Model):
     refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal")
 
     inbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
-        domain=[('payment_type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_in').id])
+        domain=[('payment_type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: self._default_inbound_payment_methods())
     outbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
-        domain=[('payment_type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_out').id])
+        domain=[('payment_type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: self._default_outbound_payment_methods())
     at_least_one_inbound = fields.Boolean(compute='_methods_compute', store=True)
     at_least_one_outbound = fields.Boolean(compute='_methods_compute', store=True)
 
