@@ -433,7 +433,7 @@
             var self = this;
             var on_write_callback = self.fields_view.arch.attrs.on_write;
             if (!on_write_callback) { return $.when(); }
-            return this.dataset.call(on_write_callback, [source_record.get('id')])
+            return this.dataset.call(on_write_callback, [source_record.get('id'), {'domain': self.dataset.domain}])
                 .then(function (ids) {
                     return $.when.apply(
                         null, _(ids).map(

@@ -305,7 +305,8 @@ class account_move_line(osv.osv):
         if not id:
             return []
         ml = self.browse(cr, uid, id, context=context)
-        return map(lambda x: x.id, ml.move_id.line_id)
+        domain = (context or {}).get('domain', [])
+        return ml.search(domain + [['id', 'in', ml.move_id.line_id.ids]]).ids
 
     def _balance(self, cr, uid, ids, name, arg, context=None):
         if context is None:
