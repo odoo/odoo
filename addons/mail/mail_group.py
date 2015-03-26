@@ -193,7 +193,8 @@ class mail_group(osv.Model):
                 #new_context = action.context
                 #new_context['params']['header_description'] = self._generate_header_description(cr, uid, group, context=context)
                 #cobj.write(cr, SUPERUSER_ID, [action.id], {'context': str(new_context)}, context=context)
-                cobj.write(cr, SUPERUSER_ID, [action.id], {'name': vals.get('name')}, context=context)
+                if vals.get('name'):
+                    cobj.write(cr, SUPERUSER_ID, [action.id], {'name': vals.get('name')}, context=context)
         # if name is changed: update menu
         if vals.get('name'):
             mobj = self.pool.get('ir.ui.menu')
