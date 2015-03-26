@@ -242,7 +242,7 @@ class res_partner(osv.osv):
         result = {}
         account_invoice_report = self.pool.get('account.invoice.report')
         for partner in self.browse(cr, uid, ids, context=context):
-            domain = [('partner_id', 'child_of', partner.id)]
+            domain = [('partner_id', 'child_of', partner.id), ('state', 'not in', ['draft', 'cancel'])]
             invoice_ids = account_invoice_report.search(cr, uid, domain, context=context)
             invoices = account_invoice_report.browse(cr, uid, invoice_ids, context=context)
             result[partner.id] = sum(inv.user_currency_price_total for inv in invoices)

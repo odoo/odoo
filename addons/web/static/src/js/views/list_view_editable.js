@@ -9,6 +9,7 @@ odoo.define('web.ListEditor', function (require) {
  */
 
 var core = require('web.core');
+var data = require('web.data');
 var FormView = require('web.FormView');
 var common = require('web.list_common');
 var ListView = require('web.ListView');
@@ -584,7 +585,8 @@ ListView.include(/** @lends instance.web.ListView# */{
         var self = this;
         var on_write_callback = self.fields_view.arch.attrs.on_write;
         if (!on_write_callback) { return $.when(); }
-        return this.dataset.call(on_write_callback, [source_record.get('id')])
+        var context = new data.CompoundContext(self.dataset.get_context(), {'on_write_domain': self.dataset.domain}).eval();
+        return this.dataset.call(on_write_callback, [source_record.get('id'), context])
             .then(function (ids) {
                 return $.when.apply(
                     null, _(ids).map(

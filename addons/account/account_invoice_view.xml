@@ -145,6 +145,7 @@
                     <field name="amount_untaxed" sum="Untaxed Amount"/>
                     <field name="amount_total" sum="Total Amount"/>
                     <field name="state"/>
+                    <field name="type" invisible="context.get('type',True)"/>
                 </tree>
             </field>
         </record>
@@ -501,6 +502,17 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="view_id" ref="invoice_tree"/>
             <field name="context">{'type':'out_invoice'}</field>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+        </record>
+
+        <record id="action_invoice_refund_out_tree" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_id" ref="invoice_tree"/>
+            <field name="domain">[('type','in', ['out_invoice', 'out_refund']), ('state', 'not in', ['draft', 'cancel'])]</field>
+            <field name="context">{'type':False}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
 

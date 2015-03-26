@@ -1008,8 +1008,8 @@ class pos_order(osv.osv):
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name
-                if line.tax_ids:
-                    inv_line['invoice_line_tax_id'] = [(6, 0, [x.id for x in line.tax_ids])]
+                if inv_line['invoice_line_tax_id']:
+                    inv_line['invoice_line_tax_id'] = [(6, 0, inv_line['invoice_line_tax_id'])]
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
             self.signal_workflow(cr, uid, [order.id], 'invoice')
