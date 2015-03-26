@@ -131,17 +131,17 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                 break;
             case 'last_month':
                 var dt = new Date();
-                dt.setDate(0);
+                dt.setDate(0); // Go to last day of last month (date to)
                 this.$("input[name='date_to']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 if (!no_date_range) {
-                    dt.setDate(1);
+                    dt.setDate(1); // and then first day of last month (date from)
                     this.$("input[name='date_from']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 }
                 break;
             case 'last_quarter':
                 var dt = new Date();
-                dt.setMonth((Math.floor((dt.getMonth())/3)) * 3);
-                dt.setDate(0);
+                dt.setMonth((Math.floor((dt.getMonth())/3)) * 3); // Go to the first month of this quarter
+                dt.setDate(0); // Then last day of last month (= last day of last quarter)
                 this.$("input[name='date_to']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 if (!no_date_range) {
                     dt.setDate(1);
