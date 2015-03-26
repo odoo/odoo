@@ -945,6 +945,7 @@ class ir_actions_server(osv.osv):
         :param action: the current server action
         :type action: browse record
         :returns: dict -- evaluation context given to (safe_)eval """
+        from lxml import etree
         obj_pool = self.pool[action.model_id.model]
         env = openerp.api.Environment(cr, uid, context)
         model = env[action.model_id.model]
@@ -956,6 +957,7 @@ class ir_actions_server(osv.osv):
             'time': time,
             'datetime': datetime,
             'dateutil': dateutil,
+            'etree': etree,
             # orm
             'env': env,
             'model': model,
