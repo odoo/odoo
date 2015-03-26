@@ -731,8 +731,12 @@ class ir_model_access(osv.osv):
                         a.perm_''' + access_mode, (model_name,))
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
 
-    @tools.ormcache()
-    def _check(self, cr, uid, model, mode='read', raise_exception=True):
+    # The context parameter is useful when the method translates error messages.
+    # But as the method raises an exception in that case,  the key 'lang' might
+    # not be really necessary as a cache key, unless the `ormcache_context`
+    # decorator catches the exception (it does not at the moment.)
+    @tools.ormcache_context(accepted_keys=('lang',))
+    def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
         if uid==1:
             # User root have all accesses
             # TODO: exclude xml-rpc requests
@@ -796,9 +800,6 @@ class ir_model_access(osv.osv):
             raise openerp.exceptions.AccessError(msg % msg_params)
         return bool(r)
 
-    def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
-        return self._check(cr, uid, model, mode, raise_exception)
-
     __cache_clearing_methods = []
 
     def register_cache_clearing_method(self, model, method):
@@ -813,7 +814,7 @@ class ir_model_access(osv.osv):
 
     def call_cache_clearing_methods(self, cr):
         self.invalidate_cache(cr, SUPERUSER_ID)
-        self._check.clear_cache(self)   # clear the cache of check function
+        self.check.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
             if model in self.pool:
                 getattr(self.pool[model], method)()

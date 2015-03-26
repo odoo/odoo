@@ -105,7 +105,7 @@ class ormcache_context(ormcache):
         # arguments, and pass them positionally to lookup(). This is why context
         # is not passed through kwargs!
         if self.context_pos < len(args):
-            context = args[self.context_pos]
+            context = args[self.context_pos] or {}
         else:
             context = kwargs.get('context') or {}
         ckey = [(k, context[k]) for k in self.accepted_keys if k in context]
