@@ -45,7 +45,7 @@ class ir_filters(osv.osv):
         # only global ones
         return [('action_id', '=', False)]
 
-    def get_filters(self, cr, uid, model, action_id=None):
+    def get_filters(self, cr, uid, model, action_id=None, context=None):
         """Obtain the list of filters available for the user on the given model.
 
         :param action_id: optional ID of action to restrict filters to this action
@@ -62,7 +62,7 @@ class ir_filters(osv.osv):
         filter_ids = self.search(cr, uid, action_domain +
             [('model_id','=',model),('user_id','in',[uid, False])])
         my_filters = self.read(cr, uid, filter_ids,
-            ['name', 'is_default', 'domain', 'context', 'user_id'])
+            ['name', 'is_default', 'domain', 'context', 'user_id'], context=context)
         return my_filters
 
     def _check_global_default(self, cr, uid, vals, matching_filters, context=None):
