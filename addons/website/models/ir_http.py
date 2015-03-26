@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import datetime
-import hashlib
 import logging
 import os
 import re
@@ -169,7 +167,6 @@ class ir_http(orm.AbstractModel):
                 if request.httprequest.query_string:
                     path += '?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(path, code=301)
-
 
     def _handle_exception(self, exception, code=500):
         is_website_request = bool(getattr(request, 'website_enabled', False) and request.website)

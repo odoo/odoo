@@ -58,6 +58,7 @@ class ir_filters(osv.osv):
         """
         # available filters: private filters (user_id=uid) and public filters (uid=NULL),
         # and filters for the action (action_id=action_id) or global (action_id=NULL)
+        context = self.pool['res.users'].context_get(cr, uid)
         action_domain = self._get_action_domain(cr, uid, action_id)
         filter_ids = self.search(cr, uid, action_domain +
             [('model_id','=',model),('user_id','in',[uid, False])])
