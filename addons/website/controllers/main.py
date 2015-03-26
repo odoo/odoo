@@ -428,7 +428,9 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route([
         '/website/image',
         '/website/image/<xmlid>',
+        '/website/image/<xmlid>/<int:max_width>x<int:max_height>',
         '/website/image/<xmlid>/<field>',
+        '/website/image/<xmlid>/<field>/<int:max_width>x<int:max_height>',
         '/website/image/<model>/<id>/<field>',
         '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
         ], auth="public", website=True)
