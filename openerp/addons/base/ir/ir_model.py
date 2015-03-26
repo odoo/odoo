@@ -732,7 +732,7 @@ class ir_model_access(osv.osv):
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
 
     @tools.ormcache()
-    def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
+    def _check(self, cr, uid, model, mode='read', raise_exception=True):
         if uid==1:
             # User root have all accesses
             # TODO: exclude xml-rpc requests
@@ -796,6 +796,9 @@ class ir_model_access(osv.osv):
             raise openerp.exceptions.AccessError(msg % msg_params)
         return bool(r)
 
+    def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
+        return self._check(cr, uid, model, mode, raise_exception)
+
     __cache_clearing_methods = []
 
     def register_cache_clearing_method(self, model, method):
@@ -810,7 +813,7 @@ class ir_model_access(osv.osv):
 
     def call_cache_clearing_methods(self, cr):
         self.invalidate_cache(cr, SUPERUSER_ID)
-        self.check.clear_cache(self)    # clear the cache of check function
+        self._check.clear_cache(self)   # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
             if model in self.pool:
                 getattr(self.pool[model], method)()
