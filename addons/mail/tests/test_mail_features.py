@@ -67,7 +67,7 @@ class TestMailFeatures(TestMail):
         inbox_act_id = self.ref('mail.action_mail_inbox_feeds')
         action = self.env['mail.thread'].with_context({'params': {}}).sudo(self.user_employee).message_redirect_action()
         self.assertEqual(
-            action.get('type'), 'ir.actions.client',
+            action.get('type'), 'ir.actions.act_window',
             'URL redirection: action without parameters should redirect to client action Inbox'
         )
         self.assertEqual(
@@ -114,7 +114,7 @@ class TestMailFeatures(TestMail):
             'params': {'message_id': msg_id}
         }).sudo(self.user_public).message_redirect_action()
         self.assertEqual(
-            action.get('type'), 'ir.actions.client',
+            action.get('type'), 'ir.actions.act_window',
             'URL redirection: action without parameters should redirect to client action Inbox'
         )
         self.assertEqual(
@@ -130,7 +130,7 @@ class TestMailFeatures(TestMail):
             'params': {'model': 'mail.group', 'res_id': self.group_pigs.id}
         }).sudo(self.user_public).message_redirect_action()
         self.assertEqual(
-            action.get('type'), 'ir.actions.client',
+            action.get('type'), 'ir.actions.act_window',
             'URL redirection: action without parameters should redirect to client action Inbox'
         )
         self.assertEqual(

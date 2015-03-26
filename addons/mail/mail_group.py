@@ -27,7 +27,6 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
-import pdb
 
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
@@ -146,7 +145,9 @@ class mail_group(osv.Model):
                            'options': {'view_mailbox': False,
                                        'view_inbox': True,
                                        'read_action': 'read',
-                                       'compose_placeholder': 'Send a message to the group'}
+                                       'compose_placeholder': 'Send a message to the group'},
+                            'params': {'header_description': self._generate_header_description(cr, uid, group, context=context),
+                                       'name': vals['name'],}
                           }
             act_res_model = 'mail.message'
             act_search_view_id = search_ref and search_ref[1] or False
@@ -187,11 +188,12 @@ class mail_group(osv.Model):
             self._subscribe_users(cr, uid, ids, context=context)
         # if description, name or alias is changed: update client action
         if vals.get('description') or vals.get('name') or vals.get('alias_id') or vals.get('alias_name'):
-            cobj = self.pool.get('ir.actions.client')
+            cobj = self.pool.get('ir.actions.act_window')
             for action in [group.menu_id.action for group in self.browse(cr, uid, ids, context=context)]:
-                new_params = action.params
-                new_params['header_description'] = self._generate_header_description(cr, uid, group, context=context)
-                cobj.write(cr, SUPERUSER_ID, [action.id], {'params': str(new_params)}, context=context)
+                #new_context = action.context
+                #new_context['params']['header_description'] = self._generate_header_description(cr, uid, group, context=context)
+                #cobj.write(cr, SUPERUSER_ID, [action.id], {'context': str(new_context)}, context=context)
+                cobj.write(cr, SUPERUSER_ID, [action.id], {'name': vals.get('name')}, context=context)
         # if name is changed: update menu
         if vals.get('name'):
             mobj = self.pool.get('ir.ui.menu')
