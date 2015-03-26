@@ -132,39 +132,46 @@ class SaleOrderLine(models.Model):
     coupon_program_line_id = fields.Many2one('sale.couponprogram', string="Coupon program")
     generated_from_line_id = fields.Many2one('sale.order.line')
 
-    # _sql_constraints = [
-    #     ('product_id_unique', 'unique(product_id)',
-    #         'Product_id must be unique'),
-    # ]
-
     def _process_coupon(self, sale_order_line):
-        programs = sale_order_line.order_id.find_coupon_program(sale_order_line)
-        print "---- program", programs
+        programs = sale_order_line.order_id.find_coupon_program(sale_order_line, [('program_type', '=', 'apply_immediately')])
         if programs is None:
-            #to update the reward with qty 0 if current qty of applicable product is changed
-            #and is not satisfying the applicability
-            for line in self.order_id.order_line:
-                if line.product_id.id == self.env.ref('website_sale_coupon.product_product_reward').id and line.generated_from_line_id.id == sale_order_line.id:
-                    line.with_context(nocoupon=True).write({'product_uom_qty': 0})
-                    return True
-            #to update the reward qty if reward product qty is updated manually
-            #i.e. if qty of cover is updated manualy
-            for line in self.order_id.order_line:
-                program = line.coupon_program_line_id
-                if line.product_id.id == self.env.ref('website_sale_coupon.product_product_reward').id:
-                    if program.reward_product_product_id.id or program.reward_discount_on_product_id.id == sale_order_line.product_id.id:
-                        if sale_order_line.product_uom_qty < line.product_uom_qty:
-                            line.with_context(nocoupon=True).write({'product_uom_qty': sale_order_line.product_uom_qty})
-                        # if sale_order_line.product_uom_qty > line.product_uom_qty:
-                        #     for line1 in self.order_id.order_line:
-                        #         if line1.product_id == program.product_id.id and line1.product_uom_qty >= program.product_quantity:
-                        #             self._process_coupon(line1)
-        else:
-            self[0].order_id._process_rewards(programs)
+            self._check_updated_line_applicability(sale_order_line)
+            return True
+        #Process rewards if program is found
+        self[0].order_id._process_rewards(programs)
+
+    def _check_updated_line_applicability(self, sale_order_line):
+        reward_product_id = self.env.ref('website_sale_coupon.product_product_reward').id
+        order_lines = self.order_id.order_line
+        #to update the reward with qty 0 if current qty of applicable product is changed
+        #and is not satisfying the applicability
+        for line in order_lines:
+            if line.product_id.id == reward_product_id and line.generated_from_line_id.id == sale_order_line.id:
+                line.with_context(nocoupon=True).write({'product_uom_qty': 0})
+        #to update the reward qty if reward product qty is updated manually
+        #i.e. if qty of cover is updated manualy
+        for line in order_lines:
+            program = line.coupon_program_line_id
+            if line.product_id.id == reward_product_id:
+                if (program.reward_product_product_id.id or program.reward_discount_on_product_id.id) == sale_order_line.product_id.id:
+                    if sale_order_line.product_uom_qty < line.product_uom_qty:
+                        line.with_context(nocoupon=True).write({'product_uom_qty': sale_order_line.product_uom_qty})
+        #To check if updated line belongs to purchase type = category then check on whole cart
+        #for the reward qty
+        #i.e if coca cola = 2, reward = 2, pepsi = 2, then if I make the pepsi's qty 1 then reward
+        #should caculated for remaining qty of that category
+        for line in order_lines:
+            program = line.coupon_program_line_id
+            if (line.product_id.id == reward_product_id) and (program.purchase_type == 'category'):
+                category_id = self.env['product.template'].search([('product_variant_ids', '=', sale_order_line.product_id.id)]).categ_id
+                if program.product_category_id.id == category_id.id:
+                    qty = self.order_id._compute_reward_quantity([line.id, program])
+                    line.with_context(nocoupon=True).write({'product_uom_qty': qty * program.reward_quantity})
 
     @api.multi
     def write(self, vals):
         res = super(SaleOrderLine, self).write(vals)
+        #To stop the execution on confirm button click
         if self[0].order_id.state == 'draft':
             if self._context.get('nocoupon'):
                 return res
@@ -173,6 +180,11 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def create(self, vals):
+        # print "-----in line", self, vals
+        # order_id = self.env['sale.order'].browse([vals.get('order_id')])
+        # for line in order_id.order_line:
+        #     if line.product_id.id == vals.get('product_id'):
+        #         line.with_context(nocoupon=True).write({'product_uom_qty': 2})
         res = super(SaleOrderLine, self).create(vals)
         if res._context.get('nocoupon'):
             return res
@@ -186,31 +198,11 @@ class SaleOrder(models.Model):
     typed_code = fields.Char(string="Coupon", help="Please enter the coupon code")
     coupon_program_id = fields.Many2one('sale.couponprogram', string="Coupon program")
 
-    def find_coupon_program(self, so_line):
-        domain = [('program_type', '=', 'apply_immediately')]
-        res = []
-        CouponProgram = self.env['sale.couponprogram']
-        if so_line.product_id.id != self.env.ref('website_sale_coupon.product_product_reward').id:
-            reward_programs = CouponProgram.search(domain + ['|'] +
-                                                            ['&', ('purchase_type', '=', 'product')] + self._make_product_domain(so_line) +
-                                                            ['&', ('purchase_type', '=', 'category')] + self._make_product_category_domain(so_line))
-            if reward_programs:
-                for line in self.order_line:
-                    if line.product_id.id == so_line.product_id.id:
-                        res.append((line.id, reward_programs))
-        if res:
-            return res
-
-    def find_coupon_program_for_amount(self, domain=[]):
-        res = []
-        CouponProgram = self.env['sale.couponprogram']
-        reward_programs = CouponProgram.search(domain + [
-            '&', ('purchase_type', '=', 'amount'), '|',
-            '&', ('reward_tax', '=', 'tax_excluded'), ('minimum_amount', '<=', self.amount_total),
-            '&', ('reward_tax', '=', 'tax_included'), ('minimum_amount', '<=', self.amount_untaxed)])
-        if reward_programs:
-            res.append((False, reward_programs))
-            return res
+    def apply_immediately_reward(self):
+        if self.order_line:
+            programs = self._search_rewards([('program_type', '=', 'apply_immediately')])
+            if programs:
+                self._process_rewards(programs)
 
     def _search_rewards(self, domain=[]):
         res = []
@@ -309,7 +301,7 @@ class SaleOrder(models.Model):
         list_of_unit_price = []
         for line in self.order_line:
             list_of_unit_price.append(line.price_unit)
-        self._create_so_reward_line((min(list_of_unit_price) * (reward_data[1].reward_id.reward_discount_percentage) / 100), quantity, reward_data)
+        self._create_so_reward_line((min(list_of_unit_price) * (reward_data[1].reward_discount_percentage) / 100), quantity, reward_data)
         return True
 
     def _create_so_reward_product_line(self, product, unit_price, quantity):
@@ -326,24 +318,67 @@ class SaleOrder(models.Model):
         #unlink if the applicable product has been deducted
         #i.e HD 1 from HD 2
         for line_data in self.order_line:
-            if line_data.product_id.id == self.env.ref('website_sale_coupon.product_product_reward').id and line_data.coupon_program_line_id.id == reward_data[1].id:
+            reward_id = self.env.ref('website_sale_coupon.product_product_reward').id
+            if line_data.product_id.id == reward_id and line_data.coupon_program_line_id.id == reward_data[1].id:
                 if line_data.product_uom_qty + quantity <= 0:
                     line_data.unlink()
                     return True
                 return line_data.with_context(nocoupon=True).write({'product_uom_qty': quantity})
         if reward_data[0] is False:
             #if reward is on amount
-            return order_line_obj.with_context(nocoupon=True).create({'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
+            return order_line_obj.with_context(nocoupon=True).create({'product_id': reward_id,
                                                                       'order_id': self.id,
                                                                       'price_unit': -amount,
                                                                       'product_uom_qty': quantity,
                                                                       'coupon_program_line_id': reward_data[1].id})
-        return order_line_obj.with_context(nocoupon=True).create({'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
+        return order_line_obj.with_context(nocoupon=True).create({'product_id': reward_id,
                                                                   'order_id': self.id,
                                                                   'price_unit': -amount,
                                                                   'product_uom_qty': quantity,
                                                                   'generated_from_line_id': reward_data[0],
                                                                   'coupon_program_line_id': reward_data[1].id})
+
+    def find_coupon_program(self, so_line, domain=[]):
+        res = []
+        CouponProgram = self.env['sale.couponprogram']
+        if so_line.product_id.id != self.env.ref('website_sale_coupon.product_product_reward').id:
+            reward_programs = CouponProgram.search(domain + ['|'] +
+                                                            ['&', ('purchase_type', '=', 'product')] + self._make_product_domain(so_line) +
+                                                            ['&', ('purchase_type', '=', 'category')] + self._make_product_category_domain(so_line))
+            if reward_programs:
+                for line in self.order_line:
+                    if line.product_id.id == so_line.product_id.id:
+                        res.append((line.id, reward_programs))
+        if res:
+            return res
+
+    def find_coupon_program_for_amount(self, domain=[]):
+        res = []
+        CouponProgram = self.env['sale.couponprogram']
+        reward_programs = CouponProgram.search(domain + [
+            '&', ('purchase_type', '=', 'amount'), '|',
+            '&', ('reward_tax', '=', 'tax_excluded'), ('minimum_amount', '<=', self.amount_total),
+            '&', ('reward_tax', '=', 'tax_included'), ('minimum_amount', '<=', self.amount_untaxed)])
+        if reward_programs:
+            res.append((False, reward_programs))
+            return res
+
+    #To delete reward line if reward product has been deleted
+    def delete_reward_line(self):
+        reward_id = self.env.ref('website_sale_coupon.product_product_reward')
+        for line in self.order_line:
+            #if purchase type is category and 2 diffrent applicable products are present on cart
+            #then one reward line will be there, with originated from id with 1st category product
+            #if any product is deleted then to update the reward qty
+            if line.product_id == reward_id and line.coupon_program_line_id.purchase_type == 'category':
+                qty = self._compute_reward_quantity([line.id, line.coupon_program_line_id])
+                line.with_context(nocoupon=True).write({'product_uom_qty': qty * line.coupon_program_line_id.reward_quantity})
+            #If reward product line is deleted then check for applicability and delete the line
+            #if reward cover line is deleted then delete the reward line
+            if line.product_id == reward_id and line.coupon_program_line_id.reward_type == 'product':
+                if not self.check_product_on_cart(line.coupon_program_line_id, line.product_uom_qty):
+                    line.with_context(nocoupon=True).unlink()
+                    return True
 
     #To check reward product is on cart or not in given qty
     def check_product_on_cart(self, program, qty):
@@ -352,27 +387,14 @@ class SaleOrder(models.Model):
                 return True
         return False
 
-    #To delete reward line if reward product has been deleted
-    def delete_reward_line(self):
-        for line in self.order_line:
-            if line.product_id == self.env.ref('website_sale_coupon.product_product_reward') and line.coupon_program_line_id.reward_type == 'product':
-                if not self.check_product_on_cart(line.coupon_program_line_id, line.product_uom_qty):
-                    line.with_context(nocoupon=True).unlink()
-                    return True
-
     #if current amount does not satisfy the applicability of amount rule then delete
     #the reward line of purchase type amount
     def delete_reward_amount_line(self):
+        reward_id = self.env.ref('website_sale_coupon.product_product_reward')
         for line in self.order_line:
-            if line.product_id.id == self.env.ref('website_sale_coupon.product_product_reward').id and line.generated_from_line_id.id is False:
+            if line.product_id.id == reward_id and line.generated_from_line_id.id is False:
                 line.with_context(nocoupon=True).unlink()
                 return True
-
-    def apply_immediately_reward(self):
-        if self.order_line:
-            programs = self._search_rewards([('program_type', '=', 'apply_immediately')])
-            if programs:
-                self._process_rewards(programs)
 
     #Check if line is deleted from So then check the applicability of all reward lines,
     #if the reward product line is deleted then make the reward qty 0
@@ -395,6 +417,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def write(self, vals):
+        print"===== in so write"
         res = super(SaleOrder, self).write(vals)
         self.check_line_deletion(vals)
         #to stop the excecution on click of confirm sale
