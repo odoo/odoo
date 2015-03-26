@@ -60,18 +60,32 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         openerp.session.on('error', this, function(error){
             $('#report_error').modal('show');
         });
-        if(report_name != 'followup_report') {
-            this.onChangeCmpDateFilter();
-        }
         var l10n = openerp.web._t.database.parameters;
-        this.$('.oe-account-datetimepicker').datetimepicker({
+        $datetimepickers = this.$('.oe-account-datetimepicker');
+        options = {
             language : moment.locale(),
             format : openerp.web.normalize_format(l10n.date_format),
             icons: {
                 date: "fa fa-calendar",
             },
             pickTime: false,
-        });
+        }
+        $("*[name='form']").submit(function () {
+            $('.oe-account-datetimepicker input').each(function () {
+                $(this).val(openerp.web.parse_value($(this).val(), {type: 'date'}));
+            })
+        })
+        $datetimepickers.each(function () {
+            $(this).datetimepicker(options);
+            if($(this).data('default-value')) {
+                $(this).data("DateTimePicker").setValue(moment($(this).data('default-value')));
+            }
+            delete options.linkFormat;
+            delete options.linkField;
+        })
+        if(report_name != 'followup_report') {
+            this.onChangeCmpDateFilter();
+        }
         return res;
     },
     onClickSummary: function(e) {
@@ -113,31 +127,31 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         switch(filter) {
             case 'today':
                 var dt = new Date();
-                this.$("input[name='date_to']").val(dt.toISOString().substr(0, 10));
+                this.$("input[name='date_to']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 break;
             case 'last_month':
                 var dt = new Date();
                 dt.setDate(0);
-                this.$("input[name='date_to']").val(dt.toISOString().substr(0, 10)); 
+                this.$("input[name='date_to']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 if (!no_date_range) {
                     dt.setDate(1);
-                    this.$("input[name='date_from']").val(dt.toISOString().substr(0, 10)); 
+                    this.$("input[name='date_from']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 }
                 break;
             case 'last_quarter':
                 var dt = new Date();
                 dt.setMonth((Math.floor((dt.getMonth())/3)) * 3);
                 dt.setDate(0);
-                this.$("input[name='date_to']").val(dt.toISOString().substr(0, 10));
+                this.$("input[name='date_to']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 if (!no_date_range) {
                     dt.setDate(1);
                     dt.setMonth(dt.getMonth() - 2);
-                    this.$("input[name='date_from']").val(dt.toISOString().substr(0, 10)); 
+                    this.$("input[name='date_from']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 }
                 break;
             case 'last_year':
-                var report_name = $(e.target).parents("div.page").attr("data-report-name");
-                var context_id = $(e.target).parents("div.page").attr("data-context");
+                var report_name = window.$("div.page").attr("data-report-name");
+                var context_id = window.$("div.page").attr("data-context");
                 var commonContext = new openerp.Model('account.report.context.common');
                 commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                     var contextObj = new openerp.Model(result);
@@ -148,17 +162,16 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                         compObj.query(['fiscalyear_last_day', 'fiscalyear_last_month'])
                         .filter([['id', '=', context.company_id[0]]]).first().then(function (fy) {
                             if (today.getMonth() + 1 < fy.fiscalyear_last_month || (today.getMonth() + 1 == fy.fiscalyear_last_month && today.getDate() <= fy.fiscalyear_last_day)) {
-                                var dt = new Date(today.getFullYear() - 1, fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
-                                     
+                                var dt = new Date(today.getFullYear() - 1, fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)    
                             }
                             else {
                                 var dt = new Date(today.getFullYear(), fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
                             }
-                            $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
+                            $("input[name='date_to']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                             if (!no_date_range) {
                                 dt.setDate(dt.getDate() + 1);
                                 dt.setFullYear(dt.getFullYear() - 1)
-                                $("input[name='date_from']").val(dt.toISOString().substr(0, 10));
+                                $("input[name='date_from']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                             }
                         });
                     });
@@ -167,14 +180,14 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
             case 'this_month':
                 var dt = new Date();
                 dt.setDate(1);
-                this.$("input[name='date_from']").val(dt.toISOString().substr(0, 10)); 
+                this.$("input[name='date_from']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 dt.setMonth(dt.getMonth() + 1);
                 dt.setDate(0);
-                this.$("input[name='date_to']").val(dt.toISOString().substr(0, 10)); 
+                this.$("input[name='date_to']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 break;
             case 'this_year':
-                var report_name = $(e.target).parents("div.page").attr("data-report-name");
-                var context_id = $(e.target).parents("div.page").attr("data-context");
+                var report_name = window.$("div.page").attr("data-report-name");
+                var context_id = window.$("div.page").attr("data-context");
                 var commonContext = new openerp.Model('account.report.context.common');
                 commonContext.call('get_context_name_by_report_name', [report_name]).then(function (result) {
                     var contextObj = new openerp.Model(result);
@@ -190,11 +203,11 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                             else {
                                 var dt = new Date(today.getFullYear() + 1, fy.fiscalyear_last_month - 1, fy.fiscalyear_last_day, 12, 0, 0, 0)
                             }
-                            $("input[name='date_to']").val(dt.toISOString().substr(0, 10));
+                            $("input[name='date_to']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                             if (!no_date_range) {
                                 dt.setDate(dt.getDate() + 1);
                                 dt.setFullYear(dt.getFullYear() - 1);
-                                $("input[name='date_from']").val(dt.toISOString().substr(0, 10));
+                                $("input[name='date_from']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                             }
                         });
                     });
@@ -226,11 +239,12 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
         else {
             this.$(".custom-cmp").css("display", "none");
             this.$("input[name='periods_number']").parent().attr('style', '');
-            var dtTo = this.$("input[name='date_to']").val(); 
-            dtTo = new Date(dtTo.substr(0, 4), dtTo.substr(5, 2) - 1, dtTo.substr(8, 2), 12, 0, 0, 0);
+            var dtTo = this.$("input[name='date_to']").val();
+            dtTo = moment(dtTo).toDate();
             if (!no_date_range) {
                 var dtFrom = this.$("input[name='date_from']").val();
-                dtFrom = new Date(dtFrom.substr(0, 4), dtFrom.substr(5, 2) - 1, dtFrom.substr(8, 2), 12, 0, 0, 0);
+                dtFrom = openerp.web.parse_value(dtFrom, {type:'date'})
+                dtFrom = moment(dtFrom).toDate();
             }   
             if (cmp_filter == 'previous_period') {
                 if (date_filter.search("quarter") > -1) {
@@ -277,9 +291,9 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                 }
             }
             if (!no_date_range) {
-                this.$("input[name='date_from_cmp']").val(dtFrom.toISOString().substr(0, 10)); 
+                this.$("input[name='date_from_cmp']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dtFrom));
             }
-            this.$("input[name='date_to_cmp']").val(dtTo.toISOString().substr(0, 10)); 
+            this.$("input[name='date_to_cmp']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dtTo));
 
         }
     },

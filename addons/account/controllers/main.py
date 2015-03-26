@@ -1,8 +1,9 @@
-from openerp import http
+from openerp import http, fields
 from openerp.http import request
 from hashlib import md5
 from openerp.tools.safe_eval import safe_eval
 import time
+from datetime import datetime
 
 
 class FinancialReportController(http.Controller):
