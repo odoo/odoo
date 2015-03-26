@@ -4,7 +4,7 @@ from openerp import api, fields, models, _
 from openerp.osv import osv, expression
 from openerp.report import report_sxw
 from openerp.tools import float_compare, float_round
-from openerp.exceptions import UserError, ValidationError
+from openerp.exceptions import UserError, ValidationError, RedirectWarning
 
 import time
 
@@ -575,7 +575,6 @@ class AccountBankStatementLine(models.Model):
                 amount_currency = self.amount * ratio
             elif st_line_currency != company_currency:
                 amount_currency = self.amount_currency * ratio
-
         return {
             'name': self.name,
             'date': self.date,

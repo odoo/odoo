@@ -76,14 +76,11 @@ class AccountPaymentTermLine(models.Model):
             ('percent', 'Percent'),
             ('fixed', 'Fixed Amount')
         ], string='Computation', required=True, default='balance',
-        help="Select here the kind of valuation related to this payment term line. Note that you should have your last "
-            "line with the type 'Balance' to ensure that the whole amount will be treated.")
+        help="Select here the kind of valuation related to this payment term line.")
     value_amount = fields.Float(string='Amount To Pay', digits=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100.")
-    days = fields.Integer(string='Number of Days', required=True, default=30, help="Number of days to add before computation of the day of month." \
-        "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02.")
+    days = fields.Integer(string='Number of Days', required=True, default=30, help="Number of days to add before computing the day of the month.")
     days2 = fields.Integer(string='Day of the Month', required=True, default='0',
-        help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. "
-            "Set 0 for net days (otherwise it's based on the beginning of the month).")
+        help="Day of the month \n\n Set : \n1)-1 for the last day of the current month. \n2) 0 for net days\n3) A positive number for the specific day of the next month.\n\nExample : if Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02.")
     payment_id = fields.Many2one('account.payment.term', string='Payment Term', required=True, index=True, ondelete='cascade')
 
     @api.one
@@ -617,9 +614,9 @@ class AccountTax(models.Model):
 
         if context.get('type'):
             if context.get('type') in ('out_invoice', 'out_refund'):
-                args += [('type_tax_use', '=', 'sale')]
+                args += [('type_tax_use', 'in',['sale','all'])]
             elif context.get('type') in ('in_invoice', 'in_refund'):
-                args += [('type_tax_use', '=', 'purchase')]
+                args += [('type_tax_use', 'in',['purchase','all'])]
 
         if context.get('journal_id'):
             journal = self.env['account.journal'].browse(context.get('journal_id'))

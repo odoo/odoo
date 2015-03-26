@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Odoo, Open Source Management Solution
+#    Copyright (C) 2004-TODAY Odoo S.A. (<https://www.odoo.com/>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -27,7 +27,7 @@
     'website': 'https://www.odoo.com/page/manufacturing',
     'category': 'Manufacturing',
     'sequence': 18,
-    'summary': 'Manufacturing Orders, Bill of Materials, Routing',
+    'summary': 'Manufacturing Orders, Bill of Materials, Work Order Operations',
     'depends': ['product', 'procurement', 'stock_account', 'resource', 'report'],
     'description': """
 Manage the Manufacturing process in OpenERP
@@ -42,7 +42,7 @@ Key Features
 * Make to Stock/Make to Order
 * Multi-level bill of materials, no limit
 * Multi-level routing, no limit
-* Routing and work center integrated with analytic accounting
+* Work Order Operations and work center integrated with analytic accounting
 * Periodical scheduler computation 
 * Allows to browse bills of materials in a complete structure that includes child and phantom bills of materials
 
@@ -59,7 +59,6 @@ Dashboard / Reports for MRP will include:
         'mrp_data.xml',
         'wizard/mrp_product_produce_view.xml',
         'wizard/change_production_qty_view.xml',
-        'wizard/mrp_price_view.xml',
         'wizard/stock_move_view.xml',
         'mrp_view.xml',
         'mrp_report.xml',

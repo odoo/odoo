@@ -31,7 +31,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         search = post.get('search', '')
 
         base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
-        if request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_website_publisher'):
+        if not request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_website_publisher'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
             base_partner_domain += ['|', ('name', 'ilike', search), ('website_description', 'ilike', search)]

@@ -4,14 +4,19 @@
         <template id="assets_backend" name="account assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/account/static/src/css/account_bank_and_cash.css"/>
-                <link rel="stylesheet" href="/account/static/src/css/account_reconciliation.css"/>
+                <link rel="stylesheet" href="/account/static/src/css/account_bank_statement_reconciliation.css"/>
                 <link rel="stylesheet" href="/account/static/src/css/account.css"/>
                 <link rel="stylesheet" href="/account/static/src/css/account_journal_dashboard.css"/>
-                <script type="text/javascript" src="/account/static/src/js/account_main.js"></script>
+                <script type="text/javascript" src="/account/static/src/js/reconciliation.js"></script>
+                <script type="text/javascript" src="/account/static/src/js/move_line_quickadd.js"></script>
+                <script type="text/javascript" src="/account/static/src/js/tour_bank_statement_reconciliation.js"></script>
+
+                <!-- To convert to new webclient api -->
+                <!-- <script type="text/javascript" src="/account/static/src/js/account_main.js"></script>
                 <script type="text/javascript" src="/account/static/src/js/account_widgets.js"></script>
-                <script type="text/javascript" src="/account/static/src/js/account_tour_bank_statement_reconciliation.js"></script>
-                <script type="text/javascript" src="/account/static/src/js/account_payment_widget.js"></script>
                 <script type="text/javascript" src="/account/static/src/js/account_journal_dashboard_widget.js"></script>
+                <script type="text/javascript" src="/account/static/src/js/account_payment_widget.js"></script>
+                -->
             </xpath>
         </template>
     </data>

@@ -89,6 +89,12 @@ class sale_order(osv.osv):
         invoice_vals['incoterms_id'] = order.incoterm.id or False
         return invoice_vals
 
+    def _get_delivery_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = len([picking for picking in order.picking_ids if picking.picking_type_id.code == 'outgoing'])
+        return res
+
     _columns = {
         'incoterm': fields.many2one('stock.incoterms', 'Incoterms', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
@@ -105,6 +111,7 @@ class sale_order(osv.osv):
             }),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
+        'delivery_count': fields.function(_get_delivery_count, type='integer', string='Delivery Orders'),
     }
     _defaults = {
         'warehouse_id': _get_default_warehouse,
@@ -136,8 +143,8 @@ class sale_order(osv.osv):
         #compute the number of delivery orders to display
         pick_ids = []
         for so in self.browse(cr, uid, ids, context=context):
-            pick_ids += [picking.id for picking in so.picking_ids]
-            
+            pick_ids += [picking.id for picking in so.picking_ids if picking.picking_type_id.code == 'outgoing']
+
         #choose the view_mode accordingly
         if len(pick_ids) > 1:
             result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
@@ -155,19 +162,6 @@ class sale_order(osv.osv):
                 for picking in order.picking_ids:
                     move_obj.write(cr, uid, [x.id for x in picking.move_lines], {'invoice_state': 'invoiced'}, context=context)
         return res
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        sale_order_line_obj = self.pool.get('sale.order.line')
-        proc_obj = self.pool.get('procurement.order')
-        stock_obj = self.pool.get('stock.picking')
-        for sale in self.browse(cr, uid, ids, context=context):
-            for pick in sale.picking_ids:
-                if pick.state not in ('draft', 'cancel'):
-                    raise UserError(_('Cannot cancel sales order!') + '\n' + _('You must first cancel all delivery order(s) attached to this sales order.'))
-            stock_obj.signal_workflow(cr, uid, [p.id for p in sale.picking_ids], 'button_cancel')
-        return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
     def action_wait(self, cr, uid, ids, context=None):
         res = super(sale_order, self).action_wait(cr, uid, ids, context=context)
@@ -306,6 +300,14 @@ class sale_order_line(osv.osv):
             res['value'].update({'product_packaging': False})
             return res
 
+        # set product uom in context to get virtual stock in current uom
+        if 'product_uom' in res.get('value', {}):
+            # use the uom changed by super call
+            context = dict(context, uom=res['value']['product_uom'])
+        elif uom:
+            # fallback on selected
+            context = dict(context, uom=uom)
+
         #update of result obtained in super function
         product_obj = product_obj.browse(cr, uid, product, context=context)
         res['value'].update({'product_tmpl_id': product_obj.product_tmpl_id.id, 'delay': (product_obj.sale_delay or 0.0)})
@@ -377,7 +379,7 @@ class stock_move(osv.osv):
             })
             sale_line_obj = self.pool.get('sale.order.line')
             invoice_line_obj = self.pool.get('account.invoice.line')
-            sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', '=', move.procurement_id.sale_line_id.order_id.id), ('product_id.type', '=', 'service'), ('invoiced', '=', False)], context=context)
+            sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', '=', move.procurement_id.sale_line_id.order_id.id), ('invoiced', '=', False), '|', ('product_id', '=', False), ('product_id.type', '=', 'service')], context=context)
             if sale_line_ids:
                 created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
                 invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_line_vals['invoice_id']}, context=context)

@@ -124,7 +124,7 @@ class AccountMoveLine(models.Model):
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
         ondelete="cascade", domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
-        help="The move of this entry line.", index=True, required=True)
+        help="The move of this entry line.", index=True, required=True, auto_join=True)
     narration = fields.Text(related='move_id.narration', string='Internal Note')
     ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False)
     payment_id = fields.Many2one('account.payment', string="Originator Payment", help="Payment that created this entry")

@@ -560,6 +560,16 @@ form: module.record_id""" % (xml_id,)
                     groups_value.append((4, group_id))
             values['groups_id'] = groups_value
 
+        if not values.get('parent_id'):
+            if rec.get('icon'):
+                values['icon'] = rec.get('icon')
+            else:
+                default_icon = 'fa-cube' # default icon if not specified any for top-level menu
+                try:
+                    values['icon'] = self.pool.get('ir.ui.menu').read(cr,self.uid,res,['icon'])[0].get('icon')
+                except:
+                    values['icon'] = default_icon
+
         pid = self.pool['ir.model.data']._update(cr, self.uid, 'ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
 
         if rec_id and pid:

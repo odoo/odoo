@@ -59,7 +59,7 @@ class event_event(models.Model):
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Available Seats', oldname='register_max',
-        readonly=True, states={'draft': [('readonly', False)]},
+        readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
     seats_availability = fields.Selection(
         [('limited', 'Limited'), ('unlimited', 'Unlimited')],

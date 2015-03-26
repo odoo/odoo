@@ -9,3 +9,4 @@ from . import test_manual_reconciliation
 from . import test_bank_statement_reconciliation
 #TODO fix the test and re-enable it
 #from . import test_account_move_closed_period
+from . import test_fiscal_position

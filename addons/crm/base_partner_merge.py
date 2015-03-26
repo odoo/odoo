@@ -9,6 +9,7 @@ import operator
 import psycopg2
 import re
 from ast import literal_eval
+from openerp.exceptions import ValidationError
 from openerp.tools import mute_logger
 
 # Validation Library https://pypi.python.org/pypi/validate_email/1.1
@@ -246,12 +247,12 @@ class MergePartnerAutomatic(osv.TransientModel):
         for record in proxy.browse(cr, openerp.SUPERUSER_ID, record_ids, context=context):
             try:
                 proxy_model = self.pool[record.model]
-                field_type = proxy_model._columns[record.name].__class__._type
+                column = proxy_model._columns[record.name]
             except KeyError:
                 # unknown model or field => skip
                 continue
 
-            if field_type == 'function':
+            if isinstance(column, fields.function):
                 continue
 
             for partner in src_partners:

@@ -7,6 +7,7 @@ import re
 
 from openerp import tools
 from openerp import models, api, _
+from openerp import SUPERUSER_ID
 from openerp.exceptions import UserError
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
@@ -498,7 +499,7 @@ class MassMailing(osv.Model):
         result = {}
         for mass_mailing in mass_mailings:
             mailing = self.browse(cr, uid, mass_mailing.id, context=context)
-            result[mass_mailing.id] = len(self.get_recipients(cr, uid, mailing, context=context))
+            result[mass_mailing.id] = len(self.get_recipients(cr, SUPERUSER_ID, mailing, context=context))
         return result
 
     # indirections for inheritance

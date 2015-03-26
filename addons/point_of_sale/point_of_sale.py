@@ -24,6 +24,8 @@ import time
 import uuid
 import sets
 
+from functools import partial
+
 from openerp import tools, models
 from openerp.osv import fields, osv
 from openerp.tools import float_is_zero
@@ -565,11 +567,12 @@ class pos_order(osv.osv):
     _order = "id desc"
 
     def _order_fields(self, cr, uid, ui_order, context=None):
+        process_line = partial(self.pool['pos.order.line']._order_line_fields, cr, uid, context=context)
         return {
             'name':         ui_order['name'],
             'user_id':      ui_order['user_id'] or False,
             'session_id':   ui_order['pos_session_id'],
-            'lines':        ui_order['lines'],
+            'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'pos_reference':ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
         }
@@ -996,7 +999,8 @@ class pos_order(osv.osv):
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name
-                inv_line['invoice_line_tax_id'] = [(6, 0, [x.id for x in line.product_id.taxes_id] )]
+                if line.tax_ids:
+                    inv_line['invoice_line_tax_id'] = [(6, 0, [x.id for x in line.tax_ids])]
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.compute_taxes(cr, uid, [inv_id], context=context)
             self.signal_workflow(cr, uid, [order.id], 'invoice')
@@ -1102,10 +1106,15 @@ class pos_order(osv.osv):
                     if not grouped_data[key]:
                         grouped_data[key].append(values)
                     else:
-                        current_value = grouped_data[key][0]
-                        current_value['quantity'] = current_value.get('quantity', 0.0) +  values.get('quantity', 0.0)
-                        current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
-                        current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
+                        for line in grouped_data[key]:
+                            if line.get('tax_code_id') == values.get('tax_code_id'):
+                                current_value = line
+                                current_value['quantity'] = current_value.get('quantity', 0.0) +  values.get('quantity', 0.0)
+                                current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
+                                current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
+                                break
+                        else:
+                            grouped_data[key].append(values)
                 else:
                     grouped_data[key].append(values)
 
@@ -1224,6 +1233,12 @@ class pos_order_line(osv.osv):
     _description = "Lines of Point of Sale"
     _rec_name = "product_id"
 
+    def _order_line_fields(self, cr, uid, line, context=None):
+        if line and 'tax_ids' not in line[2]:
+            product = self.pool['product.product'].browse(cr, uid, line[2]['product_id'], context=context)
+            line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
+        return line
+
     def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
         res = dict([(i, {}) for i in ids])
         account_tax_obj = self.pool.get('account.tax')
@@ -1286,6 +1301,7 @@ class pos_order_line(osv.osv):
         'discount': fields.float('Discount (%)', digits=0),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
+        'tax_ids': fields.many2many('account.tax', string='Taxes', readonly=True),
     }
 
     _defaults = {

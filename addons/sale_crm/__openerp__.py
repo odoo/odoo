@@ -38,13 +38,11 @@ modules.
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['sale', 'crm', 'web_kanban_gauge'],
     'data': [
-        'wizard/crm_make_sale_view.xml',
         'sale_crm_view.xml',
         'security/sale_crm_security.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [],
-    'test': ['test/sale_crm.yml'],
     'installable': True,
     'auto_install': True,
 }

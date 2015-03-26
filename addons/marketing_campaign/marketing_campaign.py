@@ -50,13 +50,13 @@ DT_FMT = '%Y-%m-%d %H:%M:%S'
 class marketing_campaign(osv.osv):
     _name = "marketing.campaign"
     _description = "Marketing Campaign"
-    
+
     def _count_segments(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         try:
             for segments in self.browse(cr, uid, ids, context=context):
                 res[segments.id] = len(segments.segment_ids)
-        except: 
+        except:
             pass
         return res
 
@@ -230,6 +230,7 @@ class marketing_campaign_segment(osv.osv):
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign', required=True, select=1, ondelete="cascade"),
         'object_id': fields.related('campaign_id','object_id', type='many2one', relation='ir.model', string='Resource'),
         'ir_filter_id': fields.many2one('ir.filters', 'Filter', ondelete="restrict",
+                            domain=lambda self: [('model_id', '=', self.object_id._name)],
                             help="Filter to select the matching resource records that belong to this segment. "\
                                  "New filters can be created and saved using the advanced search on the list view of the Resource. "\
                                  "If no filter is set, all records are selected without filtering. "\

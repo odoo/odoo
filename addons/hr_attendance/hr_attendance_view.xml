@@ -51,7 +51,7 @@
                 <search string="Hr Attendance Search">
                     <field name="name" string="Attendance"/>
                     <field name="action"/>
-                    <filter string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
+                    <filter string="Today" name="today" domain="[('name','&gt;=',datetime.datetime.now().replace(hour=0, minute=0, second=0)),('name','&lt;=',datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
                     <filter string="Current Month" domain="[('name','&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
                     <separator/>
                     <filter string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />

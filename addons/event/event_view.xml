@@ -97,7 +97,7 @@
                                         <field name="auto_confirm" invisible="1"/>
                                         <field name="seats_min" attrs="{'invisible':[('auto_confirm','=', True)]}"/>
                                         <field name="seats_availability" widget='radio'/>
-                                        <field name="seats_max" attrs="{'invisible':[('seats_availability','=','unlimited')]}"/>
+                                        <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
                                     </group>
                                 </group>
                             </page>
@@ -233,7 +233,7 @@
                     <separator/>
                     <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>
-                    <filter string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Upcoming events from today" />
+                    <filter string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=',datetime.datetime.now().replace(hour=0, minute=0, second=0))]" help="Upcoming events from today" />
                     <field name="type"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
@@ -287,6 +287,9 @@
                     <field name="event_id" />
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
+                    <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
+                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>

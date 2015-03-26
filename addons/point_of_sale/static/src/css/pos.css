@@ -648,7 +648,7 @@ td {
 .pos .actionpad .button.pay {
     height: 162px;
 }
-.pos .actionpad .button.pay .fa {
+.pos .actionpad .button.pay .pay-circle {
     display: block;
     font-size: 32px;
     line-height: 54px;
@@ -659,6 +659,11 @@ td {
     margin: auto;
     border-radius: 30px;
     margin-bottom: 10px;
+}
+.pos .actionpad .button.pay .pay-circle .fa {
+    position: relative;
+    top: -1px;
+    left: 3px;
 }
 
 /*  ********* The Numpad ********* */
@@ -1852,7 +1857,7 @@ td {
 }
 .paymentmethods .button {
     background: #e2e2e2;
-    line-height: 49px;
+    line-height: 74px;
     font-size: 16px;
     border: solid 1px rgb(202, 202, 202);
     border-top-width: 0px;
@@ -2189,7 +2194,7 @@ td {
 .pos .popup-numpad {
     margin: 12px auto;
     text-align: left;
-    width: 250px;
+    width: 254px;
 }
 .pos .popup-number .title {
     margin-top: 0;

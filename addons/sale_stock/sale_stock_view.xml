@@ -12,11 +12,16 @@
                        <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
                        <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
                    </xpath>
-                   <xpath expr="//button[@name='action_view_invoice']" position="after">
+                   <xpath expr="//button[@name='action_view_invoice']" position="before">
                        <field name="picking_ids" invisible="1"/>
-                       <button name="action_view_delivery" string="View Delivery Order" type="object" class="oe_highlight"
-                           attrs="{'invisible': ['|',('picking_ids','=',False),('picking_ids','=',[])]}" groups="base.group_user"/>
-                   </xpath>
+                       <button type="object"
+                           name="action_view_delivery"
+                           class="oe_stat_button"
+                           icon="fa-truck"
+                           attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="base.group_user">
+                           <field name="delivery_count" widget="statinfo" string="Transfers" help="Delivery Orders"/>
+                       </button>
+                    </xpath>
                     <xpath expr="//button[@name='action_cancel']" position="after">
                         <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
                     </xpath>
@@ -56,7 +61,6 @@
                    </xpath>
                    <xpath expr="//group[@name='technical']" position="inside">
                        <field name="shipped" groups="base.group_no_one"/>
-                       <field name="invoice_exists" invisible="1" groups="base.group_no_one"/>
                    </xpath>
                    <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='tax_id']" position="after">
                        <label for="delay"/>

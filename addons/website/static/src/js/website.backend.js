@@ -1,7 +1,12 @@
-openerp.website = function(instance) {
-    'use strict';
+odoo.define('website.backend', function (require) {
+"use strict";
 
-instance.web.form.WidgetWebsiteButton = instance.web.form.AbstractField.extend({
+var core = require('web.core');
+var form_common = require('web.form_common');
+var form_widgets = require('web.form_widgets'); // required to guarantee that
+    // the overrride of fieldtexthtml works
+
+var WidgetWebsiteButton = form_common.AbstractField.extend({
     template: 'WidgetWebsiteButton',
     render_value: function() {
         this._super();
@@ -13,25 +18,25 @@ instance.web.form.WidgetWebsiteButton = instance.web.form.AbstractField.extend({
         }
     },
 });
-instance.web.form.widgets = instance.web.form.widgets.extend({
-    'website_button': 'instance.web.form.WidgetWebsiteButton',
-});
 
-var widget = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin);
-instance.web.form.FieldTextHtml = widget.extend({
-    template: 'FieldTextHtml',
+core.form_widget_registry.add('website_button', WidgetWebsiteButton);
+
+var FieldWidget = form_common.AbstractField.extend(form_common.ReinitializeFieldMixin);
+
+
+var FieldTextHtmlFrame = FieldWidget.extend({
+    template: 'FieldTextHtmlFrame',
     start: function () {
         var self = this;
 
         this.callback = _.uniqueId('FieldTextHtml_');
-        window.openerp[this.callback+"_editor"] = function (EditorBar) {
+        odoo[this.callback+"_editor"] = function (EditorBar) {
             self.on_editor_loaded(EditorBar);
         };
-        window.openerp[this.callback+"_content"] = function (EditorBar) {
+        odoo[this.callback+"_content"] = function () {
             self.on_content_loaded();
         };
-        window.openerp[this.callback+"_updown"] = null;
-        window.openerp[this.callback+"_downup"] = function (value) {
+        odoo[this.callback+"_downup"] = function (value) {
             self.dirty = true;
             self.internal_set_value(value);
             self.trigger('changed_value');
@@ -39,14 +44,16 @@ instance.web.form.FieldTextHtml = widget.extend({
         };
 
         // init jqery objects
-        this.$iframe = this.$el.find('iframe');
+        this.$iframe = this.$('iframe');
         this.document = null;
         this.$body = $();
         this.$content = $();
 
         // init resize
         this.resize = function resize() {
-            if (self.get('effective_readonly')) { return; }
+            if (self.get('effective_readonly')) {
+               $("body").removeClass("o_form_FieldTextHtml_fullscreen");
+            }
             if ($("body").hasClass("o_form_FieldTextHtml_fullscreen")) {
                 self.$iframe.css('height', $("body").hasClass('o_form_FieldTextHtml_fullscreen') ? (document.body.clientHeight - self.$iframe.offset().top) + 'px' : '');
             } else {
@@ -68,13 +75,13 @@ instance.web.form.FieldTextHtml = widget.extend({
             'callback': this.callback
         };
         if (this.options.snippets) {
-            attr['snippets'] = this.options.snippets;
+            attr.snippets = this.options.snippets;
         }
         if (!this.get("effective_readonly")) {
-            attr['enable_editor'] = 1;
+            attr.enable_editor = 1;
         }
-        if (openerp.session.debug) {
-            attr['debug'] = 1;
+        if (core.debug) {
+            attr.debug = 1;
         }
 
         for (var k in attr) {
@@ -94,13 +101,11 @@ instance.web.form.FieldTextHtml = widget.extend({
             this.$content = $();
             this.dirty = false;
             this.editor = false;
-            window.openerp[this.callback+"_set_value"] = function () {};
-
+            odoo[this.callback+"_set_value"] = null;
             this.$iframe.attr("src", this.get_url());
         }
     },
     on_content_loaded: function () {
-        var self = this;
         this.document = this.$iframe.contents()[0];
         this.$body = $("body", this.document);
         this.$content = this.$body.find("#wrapwrap .o_editable:first");
@@ -119,9 +124,13 @@ instance.web.form.FieldTextHtml = widget.extend({
             }
         });
 
+        if (this.get('value') && window.odoo[this.callback+"_set_value"] && !(this.$content.prop('innerHTML')||"").length) {
+            this.render_value();
+        }
+
         setTimeout(function () {
             var $fullscreen = $('<span class="btn btn-primary" style="margin: 5px;padding: 1px; position: fixed; top: 0; right: 0; z-index: 2000;"><span class="o_fullscreen fa fa-arrows-alt" style="color: white;margin: 3px 5px;"></span></span>');
-            var $nav = $("#website-top-navbar", self.document).append($fullscreen);
+            $("#website-top-navbar", self.document).append($fullscreen);
             $fullscreen.on('click', function () {
                 $("body").toggleClass("o_form_FieldTextHtml_fullscreen");
                 self.resize();
@@ -130,16 +139,17 @@ instance.web.form.FieldTextHtml = widget.extend({
         }, 500);
     },
     render_value: function() {
+        var value = (this.get('value') || "").replace(/^<p[^>]*>\s*<\/p>$/, '');
         if (!this.get("effective_readonly")) {
             if (!this.$content) {
                 return;
             }
-            if(window.openerp[this.callback+"_set_value"]) {
-                window.openerp[this.callback+"_set_value"](this.get('value') || '', this.view.get_fields_values());
+            if(window.odoo[this.callback+"_set_value"]) {
+                window.odoo[this.callback+"_set_value"](value || '', this.view.get_fields_values(), this.name);
                 this.resize();
             }
         } else {
-            this.$el.html(this.get('value'));
+            this.$el.html(value);
         }
     },
     is_false: function() {
@@ -153,11 +163,15 @@ instance.web.form.FieldTextHtml = widget.extend({
         return this.get('value');
     },
     destroy: function () {
+        $("body").removeClass("o_form_FieldTextHtml_fullscreen");
         $(window).off('resize', self.resize);
-        delete window.openerp[this.callback];
-        delete window.openerp[this.callback+"_content"];
-        delete window.openerp[this.callback+"_updown"];
+        $(window).off('keydown', self.escape);
+        delete window.odoo[this.callback+"_content"];
+        delete window.odoo[this.callback+"_downup"];
+        delete window.odoo[this.callback+"_set_value"];
     }
 });
 
-};
+core.form_widget_registry.add('html_frame', FieldTextHtmlFrame);
+
+});

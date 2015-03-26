@@ -1,9 +1,16 @@
-(function () {
-    'use strict';
+odoo.define('website.tour.banner', function (require) {
+'use strict';
 
-    var _t = openerp._t;
+var core = require('web.core');
+var Tour = require('web.Tour');
+var website = require('website.website');
 
-    openerp.Tour.register({
+
+var _t = core._t;
+
+website.ready().done(function () {
+
+    Tour.register({
         id:   'banner',
         name: _t("Build a page"),
         path: '/page/homepage',
@@ -100,5 +107,6 @@
             },
         ]
     });
+});
 
-}());
+});

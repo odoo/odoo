@@ -25,9 +25,9 @@ from openerp.tools import mute_logger
 
 
 EMAIL_TPL = """Return-Path: <whatever-2a840@postmaster.twitter.com>
-X-Original-To: {email_to}
-Delivered-To: {email_to}
-To: {email_to}
+X-Original-To: {to}
+Delivered-To: {to}
+To: {to}
 cc: {cc}
 Received: by mail1.openerp.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
@@ -53,120 +53,80 @@ Integrator at Agrolait"""
 class TestProjectFlow(TestProjectBase):
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
-    def test_00_project_process(self):
-        """ Testing project management """
-        cr, uid, user_projectuser_id, user_projectmanager_id, project_pigs_id = self.cr, self.uid, self.user_projectuser_id, self.user_projectmanager_id, self.project_pigs_id
+    def test_project_process_project_user(self):
+        self.assertRaises(AccessError, self.project_pigs.sudo(self.user_projectuser).set_template)
 
-        # ProjectUser: set project as template -> raise
-        self.assertRaises(AccessError, self.project_project.set_template, cr, user_projectuser_id, [project_pigs_id])
+    def test_project_process_project_manager_set_template(self):
+        pigs = self.project_pigs.sudo(self.user_projectmanager)
+        pigs.set_template()
+        self.assertEqual(pigs.state, 'template')
+        self.assertEqual(len(pigs.tasks), 0, 'project: set_template: project tasks should have been set inactive')
 
-        # Other tests are done using a ProjectManager
-        project = self.project_project.browse(cr, user_projectmanager_id, project_pigs_id)
-        self.assertNotEqual(project.state, 'template', 'project: incorrect state, should not be a template')
+        # pigs.reset_project()
+        # self.assertEqual(pigs.state, 'open')
+        # self.assertEqual(len(pigs.tasks), 2, 'project: reset_project: project tasks should have been set active')
 
-        # Set test project as template
-        self.project_project.set_template(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'template', 'project: set_template: project state should be template')
-        self.assertEqual(len(project.tasks), 0, 'project: set_template: project tasks should have been set inactive')
-
-        # Duplicate template
-        new_template_act = self.project_project.duplicate_template(cr, user_projectmanager_id, [project_pigs_id])
-        new_project = self.project_project.browse(cr, user_projectmanager_id, new_template_act['res_id'])
-        self.assertEqual(new_project.state, 'open', 'project: incorrect duplicate_template')
+    def test_project_process_project_manager_duplicate(self):
+        pigs = self.project_pigs.sudo(self.user_projectmanager)
+        new_template_act = pigs.duplicate_template()
+        new_project = self.env['project.project'].sudo(self.user_projectmanager).browse(new_template_act['res_id'])
+        self.assertEqual(new_project.state, 'open')
         self.assertEqual(len(new_project.tasks), 2, 'project: duplicating a project template should duplicate its tasks')
 
-        # Convert into real project
-        self.project_project.reset_project(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'open', 'project: resetted project should be in open state')
-        self.assertEqual(len(project.tasks), 2, 'project: reset_project: project tasks should have been set active')
-
-        # Put as pending
-        self.project_project.set_pending(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'pending', 'project: should be in pending state')
-
+    def test_project_process_project_manager_state(self):
+        pigs = self.project_pigs.sudo(self.user_projectmanager)
+        pigs.set_pending()
+        self.assertEqual(pigs.state, 'pending')
         # Re-open
-        self.project_project.set_open(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'open', 'project: reopened project should be in open state')
-
+        pigs.set_open()
+        self.assertEqual(pigs.state, 'open')
         # Close project
-        self.project_project.set_done(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'close', 'project: closed project should be in close state')
-
+        pigs.set_done()
+        self.assertEqual(pigs.state, 'close')
         # Re-open
-        self.project_project.set_open(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-
+        pigs.set_open()
         # Re-convert into a template and schedule tasks
-        self.project_project.set_template(cr, user_projectmanager_id, [project_pigs_id])
-        self.project_project.schedule_tasks(cr, user_projectmanager_id, [project_pigs_id])
-
+        pigs.set_template()
+        pigs.schedule_tasks()
         # Copy the project
-        new_project_id = self.project_project.copy(cr, user_projectmanager_id, project_pigs_id)
-        new_project = self.project_project.browse(cr, user_projectmanager_id, new_project_id)
+        new_project = pigs.copy()
         self.assertEqual(len(new_project.tasks), 2, 'project: copied project should have copied task')
-
         # Cancel the project
-        self.project_project.set_cancel(cr, user_projectmanager_id, [project_pigs_id])
-        self.assertEqual(project.state, 'cancelled', 'project: cancelled project should be in cancel state')
+        pigs.set_cancel()
+        self.assertEqual(pigs.state, 'cancelled', 'project: cancelled project should be in cancel state')
 
-    def test_10_task_process(self):
-        """ Testing task creation and management """
-        cr, uid, user_projectuser_id, user_projectmanager_id, project_pigs_id = self.cr, self.uid, self.user_projectuser_id, self.user_projectmanager_id, self.project_pigs_id
-
-        # create new partner
-        self.partner_id = self.registry('res.partner').create(cr, uid, {
-            'name': 'Pigs',
-            'email': 'otherid@gmail.com',
-        }, {'mail_create_nolog': True})
-
-        def format_and_process(template, email_to='project+pigs@mydomain.com, other@gmail.com', cc='otherid@gmail.com', subject='Frogs',
-                               email_from='Patrick Ratatouille <patrick.ratatouille@agrolait.com>',
-                               msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>'):
-            self.assertEqual(self.project_task.search(cr, uid, [('name', '=', subject)]), [])
-            mail = template.format(email_to=email_to, cc=cc, subject=subject, email_from=email_from, msg_id=msg_id)
-            self.mail_thread.message_process(cr, uid, None, mail)
-            return self.project_task.search(cr, uid, [('name', '=', subject)])
-
+    @mute_logger('openerp.addons.mail.mail_thread')
+    def test_task_process(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Frogs'
-        frogs = format_and_process(EMAIL_TPL)
+        task = self.format_and_process(
+            EMAIL_TPL, to='project+pigs@mydomain.com, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
+            email_from='%s' % self.user_projectuser.email,
+            subject='Frogs', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
+            target_model='project.task')
 
         # Test: one task created by mailgateway administrator
-        self.assertEqual(len(frogs), 1, 'project: message_process: a new project.task should have been created')
-        task = self.project_task.browse(cr, user_projectuser_id, frogs[0])
-        
+        self.assertEqual(len(task), 1, 'project: message_process: a new project.task should have been created')
         # Test: check partner in message followers
-        self.assertTrue((self.partner_id in [follower.id for follower in task.message_follower_ids]),"Partner in message cc is not added as a task followers.")
-        
-        res = self.project_task.get_metadata(cr, uid, [task.id])[0].get('create_uid') or [None]
-        self.assertEqual(res[0], uid,
-                         'project: message_process: task should have been created by uid as alias_user_id is False on the alias')
+        self.assertIn(self.partner_2, task.message_follower_ids, "Partner in message cc is not added as a task followers.")
         # Test: messages
         self.assertEqual(len(task.message_ids), 2,
                          'project: message_process: newly created task should have 2 messages: creation and email')
         self.assertEqual(task.message_ids[1].subtype_id.name, 'Task Opened',
                          'project: message_process: first message of new task should have Task Created subtype')
-        self.assertEqual(task.message_ids[0].author_id.id, self.email_partner_id,
+        self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
                          'project: message_process: second message should be the one from Agrolait (partner failed)')
         self.assertEqual(task.message_ids[0].subject, 'Frogs',
                          'project: message_process: second message should be the one from Agrolait (subject failed)')
         # Test: task content
         self.assertEqual(task.name, 'Frogs', 'project_task: name should be the email subject')
-        self.assertEqual(task.project_id.id, self.project_pigs_id, 'project_task: incorrect project')
+        self.assertEqual(task.project_id.id, self.project_pigs.id, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, 1, 'project_task: should have a stage with sequence=1')
-
         # Open the delegation wizard
-        delegate_id = self.project_task_delegate.create(cr, user_projectuser_id, {
-            'user_id': user_projectuser_id,
-            'planned_hours': 12.0,
-            'planned_hours_me': 2.0,
-        }, {'active_id': task.id})
-        self.project_task_delegate.delegate(cr, user_projectuser_id, [delegate_id], {'active_id': task.id})
-
+        self.env['project.task.delegate'].with_context({
+            'active_id': task.id}).sudo(self.user_projectuser).create({
+                'user_id': self.user_projectuser.id,
+                'planned_hours': 12.0,
+                'planned_hours_me': 2.0,
+            }).with_context({'active_id': task.id}).delegate()
         # Check delegation details
-        task.refresh()
         self.assertEqual(task.planned_hours, 2, 'project_task_delegate: planned hours is not correct after delegation')

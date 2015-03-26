@@ -12,9 +12,9 @@
         </table>
     </div>
 </t>
-<div t-name="KanbanView.buttons" class="oe_kanban_buttons">
-    <t t-if="widget.options.action_buttons !== false">
-        <t t-if="widget.is_action_enabled('create')">
+<t t-name="KanbanView.buttons">
+    <t t-if="widget.options.action_buttons !== false and widget.is_action_enabled('create')">
+        <div class="oe_kanban_buttons">
             <button type="button" class="oe_kanban_button_new btn btn-primary btn-sm">
                 <t t-esc="widget.options.create_text || _t('Create')"/>
             </button>
@@ -24,9 +24,9 @@
                     <a href="#" class="oe_kanban_add_column text-info">Add a new column</a>
                 </div>
             </span>
-        </t>
+        </div>
     </t>
-</div>
+</t>
 <t t-name="KanbanView.group_header">
     <td class="oe_kanban_group_header">
         <t t-if="widget.view.group_by">

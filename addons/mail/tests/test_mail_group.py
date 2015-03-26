@@ -1,71 +1,79 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp.addons.mail.tests.common import TestMail
 from openerp.exceptions import AccessError
+from openerp.exceptions import except_orm
 from openerp.tools import mute_logger
 
 
 class TestMailGroup(TestMail):
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
-    def test_00_mail_group_access_rights(self):
-        """ Testing mail_group access rights and basic mail_thread features """
-        cr, uid, user_noone_id, user_employee_id = self.cr, self.uid, self.user_noone_id, self.user_employee_id
+    def test_access_rights_public(self):
+        # Read public group -> ok
+        self.group_public.sudo(self.user_public).read()
 
-        # Do: Bert reads Jobs -> ok, public
-        self.mail_group.read(cr, user_noone_id, [self.group_jobs_id])
-        # Do: Bert read Pigs -> ko, restricted to employees
-        with self.assertRaises(AccessError):
-            self.mail_group.read(cr, user_noone_id, [self.group_pigs_id])
-        # Do: Raoul read Pigs -> ok, belong to employees
-        self.mail_group.read(cr, user_employee_id, [self.group_pigs_id])
+        # Read Pigs -> ko, restricted to employees
+        # TODO: Change the except_orm to Warning ( Because here it's call check_access_rule
+        # which still generate exception in except_orm.So we need to change all
+        # except_orm to warning in mail module.)
+        with self.assertRaises(except_orm):
+            self.group_pigs.sudo(self.user_public).read()
 
-        # Do: Bert creates a group -> ko, no access rights
-        with self.assertRaises(AccessError):
-            self.mail_group.create(cr, user_noone_id, {'name': 'Test'})
-        # Do: Raoul creates a restricted group -> ok
-        new_group_id = self.mail_group.create(cr, user_employee_id, {'name': 'Test'})
-        # Do: Bert added in followers, read -> ok, in followers
-        self.mail_group.message_subscribe_users(cr, uid, [new_group_id], [user_noone_id])
-        self.mail_group.read(cr, user_noone_id, [new_group_id])
+        # Read a private group when being a follower: ok
+        self.group_private.message_subscribe_users(user_ids=[self.user_public.id])
+        self.group_private.sudo(self.user_public).read()
 
-        # Do: Raoul reads Priv -> ko, private
+        # Create group: ko, no access rights
         with self.assertRaises(AccessError):
-            self.mail_group.read(cr, user_employee_id, [self.group_priv_id])
-        # Do: Raoul added in follower, read -> ok, in followers
-        self.mail_group.message_subscribe_users(cr, uid, [self.group_priv_id], [user_employee_id])
-        self.mail_group.read(cr, user_employee_id, [self.group_priv_id])
+            self.env['mail.group'].sudo(self.user_public).create({'name': 'Test'})
 
-        # Do: Raoul write on Jobs -> ok
-        self.mail_group.write(cr, user_employee_id, [self.group_priv_id], {'name': 'modified'})
-        # Do: Bert cannot write on Private -> ko (read but no write)
+        # Update group: ko, no access rights
         with self.assertRaises(AccessError):
-            self.mail_group.write(cr, user_noone_id, [self.group_priv_id], {'name': 're-modified'})
-        # Test: Bert cannot unlink the group
+            self.group_public.sudo(self.user_public).write({'name': 'Broutouschnouk'})
+
+        # Unlink group: ko, no access rights
         with self.assertRaises(AccessError):
-            self.mail_group.unlink(cr, user_noone_id, [self.group_priv_id])
-        # Do: Raoul unlinks the group, there are no followers and messages left
-        self.mail_group.unlink(cr, user_employee_id, [self.group_priv_id])
-        fol_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', self.group_priv_id)])
-        self.assertFalse(fol_ids, 'unlinked document should not have any followers left')
-        msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_priv_id)])
-        self.assertFalse(msg_ids, 'unlinked document should not have any followers left')
+            self.group_public.sudo(self.user_public).unlink()
+
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    def test_access_rights_groups(self):
+        # Employee read employee-based group: ok
+        # TODO Change the except_orm to Warning
+        self.group_pigs.sudo(self.user_employee).read()
+
+        # Employee can create a group
+        self.env['mail.group'].sudo(self.user_employee).create({'name': 'Test'})
+
+        # Employee update employee-based group: ok
+        self.group_pigs.sudo(self.user_employee).write({'name': 'modified'})
+
+        # Employee unlink employee-based group: ok
+        self.group_pigs.sudo(self.user_employee).unlink()
+
+        # Employee cannot read a private group
+        with self.assertRaises(except_orm):
+            self.group_private.sudo(self.user_employee).read()
+
+        # Employee cannot write on private
+        with self.assertRaises(AccessError):
+            self.group_private.sudo(self.user_employee).write({'name': 're-modified'})
+
+    def test_access_rights_followers_ko(self):
+        with self.assertRaises(AccessError):
+            self.group_private.sudo(self.user_portal).name
+
+    def test_access_rights_followers_portal(self):
+        # Do: Chell is added into Pigs followers and browse it -> ok for messages, ko for partners (no read permission)
+        self.group_private.message_subscribe_users(user_ids=[self.user_portal.id])
+        chell_pigs = self.group_private.sudo(self.user_portal)
+        trigger_read = chell_pigs.name
+        for message in chell_pigs.message_ids:
+            trigger_read = message.subject
+        for partner in chell_pigs.message_follower_ids:
+            if partner.id == self.user_portal.partner_id.id:
+                # Chell can read her own partner record
+                continue
+            # TODO Change the except_orm to Warning
+            with self.assertRaises(except_orm):
+                trigger_read = partner.name

@@ -19,6 +19,5 @@
 #
 ##############################################################################
 
-import price
 import bom_structure
 import mrp_report
