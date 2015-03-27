@@ -501,6 +501,8 @@ class sale_order(osv.osv):
 
     def test_no_product(self, cr, uid, order, context):
         for line in order.order_line:
+            if line.state == 'cancel':
+                continue
             if line.product_id and (line.product_id.type<>'service'):
                 return False
         return True
@@ -606,14 +608,14 @@ class sale_order(osv.osv):
     def action_wait(self, cr, uid, ids, context=None):
         context = context or {}
         for o in self.browse(cr, uid, ids):
-            if not o.order_line:
+            if not any(line.state != 'cancel' for line in o.order_line):
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a sales order which has no line.'))
             noprod = self.test_no_product(cr, uid, o, context)
             if (o.order_policy == 'manual') or noprod:
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
-            self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
+            self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line if x.state != 'cancel'])
         return True
 
     def action_quotation_send(self, cr, uid, ids, context=None):
@@ -652,7 +654,7 @@ class sale_order(osv.osv):
 
     def action_done(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):
-            self.pool.get('sale.order.line').write(cr, uid, [line.id for line in order.order_line], {'state': 'done'}, context=context)
+            self.pool.get('sale.order.line').write(cr, uid, [line.id for line in order.order_line if line.state != 'cancel'], {'state': 'done'}, context=context)
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
@@ -685,7 +687,7 @@ class sale_order(osv.osv):
         sale_line_obj = self.pool.get('sale.order.line')
         res = []
         for order in self.browse(cr, uid, ids, context=context):
-            res.append(sale_line_obj.need_procurement(cr, uid, [line.id for line in order.order_line], context=context))
+            res.append(sale_line_obj.need_procurement(cr, uid, [line.id for line in order.order_line if line.state != 'cancel'], context=context))
         return any(res)
 
     def action_ignore_delivery_exception(self, cr, uid, ids, context=None):
@@ -712,6 +714,8 @@ class sale_order(osv.osv):
                 order.write({'procurement_group_id': group_id})
 
             for line in order.order_line:
+                if line.state == 'cancel':
+                    continue
                 #Try to fix exception procurement (possible when after a shipping exception the user choose to recreate)
                 if line.procurement_ids:
                     #first check them to see if they are in exception or not (one of the related moves is cancelled)
@@ -793,6 +797,8 @@ class sale_order(osv.osv):
     def test_procurements_done(self, cr, uid, ids, context=None):
         for sale in self.browse(cr, uid, ids, context=context):
             for line in sale.order_line:
+                if line.state == 'cancel':
+                    continue
                 if not all([x.state == 'done' for x in line.procurement_ids]):
                     return False
         return True
@@ -800,6 +806,8 @@ class sale_order(osv.osv):
     def test_procurements_except(self, cr, uid, ids, context=None):
         for sale in self.browse(cr, uid, ids, context=context):
             for line in sale.order_line:
+                if line.state == 'cancel':
+                    continue
                 if any([x.state == 'cancel' for x in line.procurement_ids]):
                     return True
         return False
