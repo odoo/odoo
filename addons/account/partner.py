@@ -120,17 +120,17 @@ class AccountFiscalPosition(models.Model):
 
         for domain in domains:
             if delivery.country_id.id:
-                fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', delivery.country_id.id)], context=context, limit=1)
-                if fiscal_position_ids:
-                    return fiscal_position_ids[0]
+                fiscal_position = self.search(domain + [('country_id', '=', delivery.country_id.id)], limit=1)
+                if fiscal_position:
+                    return fiscal_position.id
 
-                fiscal_position_ids = self.search(cr, uid, domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], context=context, limit=1)
-                if fiscal_position_ids:
-                    return fiscal_position_ids[0]
+                fiscal_position = self.search(domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], limit=1)
+                if fiscal_position:
+                    return fiscal_position.id
 
-            fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', None), ('country_group_id', '=', None)], context=context, limit=1)
-            if fiscal_position_ids:
-                return fiscal_position_ids[0]
+            fiscal_position = self.search(domain + [('country_id', '=', None), ('country_group_id', '=', None)], limit=1)
+            if fiscal_position:
+                return fiscal_position.id
         return False
 
 
