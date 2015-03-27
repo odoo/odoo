@@ -59,7 +59,8 @@ return Widget.extend({
             this.prepare_dropdown_menu([]);
             return $.when();
         }
-        return this.model.call('get_filters', [this.target_model, this.action_id])
+        return this.model.call('get_filters', [this.target_model, this.action_id],
+                               {context: this.searchview.dataset.context})
             .done(this.proxy('prepare_dropdown_menu'));
     },
     prepare_dropdown_menu: function (filters) {

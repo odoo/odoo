@@ -729,7 +729,11 @@ class ir_model_access(osv.osv):
                         a.perm_''' + access_mode, (model_name,))
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
 
-    @tools.ormcache()
+    # The context parameter is useful when the method translates error messages.
+    # But as the method raises an exception in that case,  the key 'lang' might
+    # not be really necessary as a cache key, unless the `ormcache_context`
+    # decorator catches the exception (it does not at the moment.)
+    @tools.ormcache_context(accepted_keys=('lang',))
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
         if uid==1:
             # User root have all accesses

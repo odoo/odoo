@@ -20,3 +20,5 @@
 ##############################################################################
 import google_account
 import controllers
+
+from .google_account import TIMEOUT     # noqa

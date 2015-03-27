@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import datetime
-import hashlib
 import logging
 import os
 import re
@@ -39,10 +37,9 @@ class ir_http(orm.AbstractModel):
 
     def _auth_method_public(self):
         if not request.session.uid:
-            domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
-            website_id = self.pool['website']._get_current_website_id(request.cr, openerp.SUPERUSER_ID, domain_name, context=request.context)
-            if website_id:
-                request.uid = self.pool['website'].browse(request.cr, openerp.SUPERUSER_ID, website_id, request.context).user_id.id
+            website = self.pool['website'].get_current_website(request.cr, openerp.SUPERUSER_ID, context=request.context)
+            if website:
+                request.uid = website.user_id.id
             else:
                 request.uid = self.pool['ir.model.data'].xmlid_to_res_id(request.cr, openerp.SUPERUSER_ID, 'base', 'public_user')
         else:
@@ -169,7 +166,6 @@ class ir_http(orm.AbstractModel):
                 if request.httprequest.query_string:
                     path += '?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(path, code=301)
-
 
     def _handle_exception(self, exception, code=500):
         is_website_request = bool(getattr(request, 'website_enabled', False) and request.website)

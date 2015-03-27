@@ -246,7 +246,7 @@ class ResPartner(models.Model):
             self.total_invoiced = 0.0
             return True
         for partner in self:
-            invoices = account_invoice_report.search([('partner_id', 'child_of', partner.id)])
+            invoices = account_invoice_report.search([('partner_id', 'child_of', partner.id), ('state', 'not in', ['draft', 'cancel'])])
             partner.total_invoiced = sum(inv.user_currency_price_total for inv in invoices)
 
     @api.multi
