@@ -41,10 +41,10 @@ class AcquirerAlipay(osv.Model):
         return providers
 
     _columns = {
-        'alipay_email_account': fields.char('Alipay Email ID', required_if_provider='alipay'),
-        'alipay_seller_account': fields.char(
-            'Alipay Merchant ID',
-            help='The Merchant ID is used to ensure communications coming from Alipay are valid and secured.'),
+        'alipay_partner_account': fields.char('Alipay Partner Account', required_if_provider='alipay'),
+        'alipay_seller_email': fields.char(
+            'Alipay Seller Email',
+            help='The Seller Email is used to ensure communications coming from Alipay are valid and secured.'),
         'alipay_use_ipn': fields.boolean('Use IPN', help='Alipay Instant Payment Notification'),
         # Server 2 server
         'alipay_api_enabled': fields.boolean('Use Rest API'),
@@ -72,13 +72,13 @@ class AcquirerAlipay(osv.Model):
             if company_alipay_account:
                 company_alipay_ids = self.search(cr, uid, [('company_id', '=', company_id), ('provider', '=', 'alipay')], limit=1, context=context)
                 if company_alipay_ids:
-                    self.write(cr, uid, company_alipay_ids, {'alipay_email_account': company_alipay_account}, context=context)
+                    self.write(cr, uid, company_alipay_ids, {'alipay_partner_account': company_alipay_account}, context=context)
                 else:
                     alipay_view = self.pool['ir.model.data'].get_object(cr, uid, 'payment_alipay', 'alipay_acquirer_button')
                     self.create(cr, uid, {
                         'name': 'Alipay',
                         'provider': 'alipay',
-                        'alipay_email_account': company_alipay_account,
+                        'alipay_partner_account': company_alipay_account,
                         'view_template_id': alipay_view.id,
                     }, context=context)
         return True
@@ -111,26 +111,12 @@ class AcquirerAlipay(osv.Model):
 
         alipay_tx_values = dict(tx_values)
         alipay_tx_values.update({
-            # 'cmd': '_xclick',
-            # 'business': acquirer.alipay_email_account,
-            # 'item_name': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
-            # 'item_number': tx_values['reference'],
-            # 'amount': tx_values['amount'],
-            # 'currency_code': tx_values['currency'] and tx_values['currency'].name or '',
-            # 'address1': partner_values['address'],
-            # 'city': partner_values['city'],
-            # 'country': partner_values['country'] and partner_values['country'].name or '',
-            # 'state': partner_values['state'] and partner_values['state'].name or '',
-            # 'email': partner_values['email'],
-            # 'zip': partner_values['zip'],
-            # 'first_name': partner_values['first_name'],
-            # 'last_name': partner_values['last_name'],
             'service': 'create_direct_pay_by_user',
             'payment_type': '1',
-            'partner': acquirer.alipay_seller_account,
-            'seller_email': acquirer.alipay_email_account,
-            '_input_charset': 'UTF-8',
-            'show_url': True,
+            'partner': acquirer.alipay_seller_email,
+            'seller_email': acquirer.alipay_partner_account,
+            '_input_charset': 'utf-8',
+            'show_url': '',
             'out_trade_no': tx_values['reference'],
             'subject': tx_values['reference'],
             'body': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
@@ -144,7 +130,6 @@ class AcquirerAlipay(osv.Model):
             'royalty_parameters': '',
             'return_url': '%s' % urlparse.urljoin(base_url, AlipayController._return_url),
             'notify_url': '%s' % urlparse.urljoin(base_url, AlipayController._notify_url),
-           
         })
         if acquirer.fees_active:
             alipay_tx_values['handling'] = '%.2f' % alipay_tx_values.pop('fees', 0.0)
@@ -157,11 +142,6 @@ class AcquirerAlipay(osv.Model):
         return self._get_alipay_urls(cr, uid, acquirer.environment, context=context)['alipay_form_url']
 
     def _alipay_s2s_get_access_token(self, cr, uid, ids, context=None):
-        """
-        Note: see # see http://stackoverflow.com/questions/2407126/python-urllib2-basic-auth-problem
-        for explanation why we use Authorization header instead of urllib2
-        password manager
-        """
         res = dict.fromkeys(ids, False)
         parameters = werkzeug.url_encode({'grant_type': 'client_credentials'})
 
@@ -169,7 +149,6 @@ class AcquirerAlipay(osv.Model):
             tx_url = self._get_alipay_urls(cr, uid, acquirer.environment)['alipay_rest_url']
             request = urllib2.Request(tx_url, parameters)
 
-            # add other headers (https://developer.alipay.com/webapps/developer/docs/integration/direct/make-your-first-call/)
             request.add_header('Accept', 'application/json')
             request.add_header('Accept-Language', 'en_US')
 
@@ -244,10 +223,10 @@ class TxAlipay(osv.Model):
         if tx.partner_reference and data.get('payer_id') != tx.partner_reference:
             invalid_parameters.append(('payer_id', data.get('payer_id'), tx.partner_reference))
         # check seller
-        if data.get('receiver_email') != tx.acquirer_id.alipay_email_account:
-            invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.alipay_email_account))
-        if data.get('receiver_id') and tx.acquirer_id.alipay_seller_account and data['receiver_id'] != tx.acquirer_id.alipay_seller_account:
-            invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.alipay_seller_account))
+        if data.get('receiver_email') != tx.acquirer_id.alipay_partner_account:
+            invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.alipay_partner_account))
+        if data.get('receiver_id') and tx.acquirer_id.alipay_seller_email and data['receiver_id'] != tx.acquirer_id.alipay_seller_email:
+            invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.alipay_seller_email))
 
         return invalid_parameters
 

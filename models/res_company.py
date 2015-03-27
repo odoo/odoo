@@ -16,7 +16,7 @@ class ResCompany(osv.Model):
         ], limit=1, context=context)
         if alipay_ids:
             alipay = Acquirer.browse(cr, uid, alipay_ids[0], context=context)
-            return dict.fromkeys(ids, alipay.alipay_email_account)
+            return dict.fromkeys(ids, alipay.alipay_partner_account)
         return dict.fromkeys(ids, False)
 
     def _set_alipay_account(self, cr, uid, id, name, value, arg, context=None):
@@ -25,11 +25,11 @@ class ResCompany(osv.Model):
         alipay_account = self.browse(cr, uid, id, context=context).alipay_account
         alipay_ids = Acquirer.search(cr, uid, [
             ('website_published', '=', True),
-            ('alipay_email_account', '=', alipay_account),
+            ('alipay_partner_account', '=', alipay_account),
             ('company_id', '=', company_id),
         ], context=context)
         if alipay_ids:
-            Acquirer.write(cr, uid, alipay_ids, {'alipay_email_account': value}, context=context)
+            Acquirer.write(cr, uid, alipay_ids, {'alipay_partner_account': value}, context=context)
         return True
 
     _columns = {
