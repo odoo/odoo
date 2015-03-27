@@ -436,6 +436,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 record.do_reload();
                 new_group.do_save_sequences();
             }).fail(function(error, evt) {
+                evt.preventDefault();
+                alert(_t("An error has occured while moving the record to this group: ") + data.fault_code);
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
@@ -647,10 +649,12 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     },
     do_show_more: function(evt) {
         var self = this;
+        var ids = self.view.dataset.ids.slice(0);
         return this.dataset.read_slice(this.view.fields_keys.concat(['__last_update']), {
             'limit': self.view.limit,
             'offset': self.dataset_offset += self.view.limit
         }).then(function(records) {
+            self.view.dataset.ids = ids.concat(_.difference(self.dataset.ids, ids));
             self.do_add_records(records);
             self.compute_cards_auto_height();
             self.view.postprocess_m2m_tags();

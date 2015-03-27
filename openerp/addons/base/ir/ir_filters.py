@@ -44,10 +44,11 @@ class ir_filters(osv.osv):
             ``context`` of the matching ``ir.filters``.
         """
         # available filters: private filters (user_id=uid) and public filters (uid=NULL) 
+        context = self.pool['res.users'].context_get(cr, uid)
         filter_ids = self.search(cr, uid,
             [('model_id','=',model),('user_id','in',[uid, False])])
         my_filters = self.read(cr, uid, filter_ids,
-            ['name', 'is_default', 'domain', 'context', 'user_id'])
+            ['name', 'is_default', 'domain', 'context', 'user_id'], context=context)
         return my_filters
 
     def _check_global_default(self, cr, uid, vals, matching_filters, context=None):

@@ -104,10 +104,13 @@ class document_file(osv.osv):
         visible_parent_ids = self.pool.get('document.directory').search(cr, uid, [('id', 'in', list(parent_ids))])
 
         # null parents means allowed
+        orig_ids = ids # save the ids, to keep order
         ids = parents.get(None,[])
         for parent_id in visible_parent_ids:
             ids.extend(parents[parent_id])
 
+        # sort result according to the original sort ordering
+        ids = [id for id in orig_ids if id in ids]
         return len(ids) if count else ids
 
     def copy(self, cr, uid, id, default=None, context=None):
