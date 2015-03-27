@@ -167,7 +167,7 @@ class AccountBankStatement(models.Model):
         # Try to automatically reconcile statement lines
         automatic_reconciliation_entries = []
         st_lines_left = self.env['account.bank.statement.line']
-        for st_line in bsl_obj.search(st_lines_filter, order='statement_id, id'):
+        for st_line in bsl_obj.search(st_lines_filter):
             res = st_line.auto_reconcile()
             if not res:
                 st_lines_left = (st_lines_left | st_line)
