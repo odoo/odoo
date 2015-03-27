@@ -86,13 +86,10 @@ class account_bank_reconciliation_report(models.AbstractModel):
         lines = []
         #Start amount
         account_ids = list(set([self.env.context['journal_id'].default_debit_account_id.id, self.env.context['journal_id'].default_credit_account_id.id]))
-        lines_already_accounted = self.env['account.move.line'].search(['|', ('move_id.journal_id.type', '=', 'general'),
-                                                                        '&', ('move_id.journal_id', '=', self.env.context['journal_id'].id),
-                                                                             ('move_id.statement_line_id', '!=', False),
-                                                                        ('account_id', 'in', account_ids),
+        lines_already_accounted = self.env['account.move.line'].search([('account_id', 'in', account_ids),
                                                                         ('date', '<=', self.env.context['date_from'])])
         start_amount = sum([line.balance for line in lines_already_accounted])
-        lines.append(self.add_title_line(_("Initial balance"), start_amount))
+        lines.append(self.add_title_line(_("Balance in Odoo"), start_amount))
 
         # Outstanding plus
         not_reconcile_plus = self.env['account.bank.statement.line'].search([('statement_id.journal_id', '=', self.env.context['journal_id'].id),
@@ -114,10 +111,10 @@ class account_bank_reconciliation_report(models.AbstractModel):
                                                                              ('amount', '<', 0)])
         outstanding_less_tot = 0
         if not_reconcile_less:
-            lines.append(self.add_subtitle_line(_("Less outstanding receipt")))
+            lines.append(self.add_subtitle_line(_("Less Outstanding Receipt")))
             for line in not_reconcile_less:
-                lines.append(self.add_bank_statement_line(line, abs(line.amount)))
-                outstanding_less_tot += abs(line.amount)
+                lines.append(self.add_bank_statement_line(line, line.amount))
+                outstanding_less_tot += line.amount
             lines.append(self.add_total_line(outstanding_less_tot))
 
         # Un-reconcilied bank statement lines
@@ -127,7 +124,7 @@ class account_bank_reconciliation_report(models.AbstractModel):
                                                            ('date', '<=', self.env.context['date_from'])])
         unrec_tot = 0
         if move_lines:
-            lines.append(self.add_subtitle_line(_("Un-Reconciled bank-statement lines")))
+            lines.append(self.add_subtitle_line(_("Plus Un-Reconciled Bank Statement Lines")))
             for line in move_lines:
                 self.line_number += 1
                 lines.append({
@@ -136,14 +133,14 @@ class account_bank_reconciliation_report(models.AbstractModel):
                     'type': 'move_line_id',
                     'name': line.name,
                     'footnotes': self._get_footnotes('move_line_id', self.line_number),
-                    'columns': [line.date, line.ref, -line.balance],
+                    'columns': [line.date, line.ref, line.balance],
                     'level': 3,
                 })
-                unrec_tot += -line.balance
+                unrec_tot += line.balance
             lines.append(self.add_total_line(unrec_tot))
 
         # Final
-        lines.append(self.add_title_line(_("Final balance"), start_amount + outstanding_plus_tot - outstanding_less_tot + unrec_tot))
+        lines.append(self.add_title_line(_("Statement Balance"), start_amount + outstanding_plus_tot + outstanding_less_tot + unrec_tot))
         return lines
 
     @api.model

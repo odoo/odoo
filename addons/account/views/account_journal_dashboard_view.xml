@@ -93,10 +93,10 @@
                                                                         <td><a type="object" name="open_action">Receive Money</a></td>
                                                                         <td>
                                                                             <t t-if="dashboard.number_to_reconcile > 0">
-                                                                                <a type="object" name="action_open_reconcile">Process</a>
+                                                                                <a type="object" name="action_open_reconcile">Reconcile</a>
                                                                             </t>
                                                                             <t t-if="dashboard.number_to_reconcile == 0">
-                                                                                <a href="#" style="color:grey;">Nothing to Process</a>
+                                                                                <a href="#" style="color:grey;">Nothing to Reconcile</a>
                                                                             </t>
                                                                         </td>
                                                                     </tr>
@@ -197,31 +197,31 @@
                             <div class="col-md-6">
                                     <t t-if="dashboard.number_to_reconcile > 0">
                                         <button type="object" name="action_open_reconcile" class="btn btn-primary btn-sm">
-                                            Process <span t-esc="dashboard.number_to_reconcile"></span> items
+                                            Reconcile <span t-esc="dashboard.number_to_reconcile"></span> items
                                         </button>
                                     </t>
                                     <t t-if="dashboard.number_to_reconcile == 0">
                                         <button type="object" name="action_open_reconcile" class="btn btn-default btn-sm disabled">
-                                            Nothing to process
+                                            Nothing to reconcile
                                         </button>
                                     </t>
                             </div>
                             <div class="col-md-6">
                                 <table class="pull-right table-condensed" style="margin-bottom:28px;">
                                     <tr>
-                                        <td class="journal-dashboard-text-right">Statement balance:</td>
-                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.last_balance"></span></td>
+                                        <td class="journal-dashboard-text-right">Balance in Odoo:</td>
+                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.account_balance"></span></td>
                                     </tr>
                                     <tr>
-                                        <td class="journal-dashboard-text-right">Account balance:</td>
+                                        <td class="journal-dashboard-text-right">Statement Balance:</td>
                                         <td class="journal-dashboard-text-right">
                                             <t t-if="dashboard.account_balance != dashboard.last_balance">
                                                 <a type="action" name="%(action_account_report_bank_reconciliation)d">
-                                                    <span t-esc="dashboard.account_balance"></span>
+                                                    <span t-esc="dashboard.last_balance"></span>
                                                 </a>
                                             </t>
                                             <t t-if="dashboard.account_balance == dashboard.last_balance">
-                                                <span t-esc="dashboard.account_balance"></span>
+                                                <span t-esc="dashboard.last_balance"></span>
                                             </t>
                                         </td>
                                     </tr>
