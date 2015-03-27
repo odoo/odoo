@@ -21,16 +21,21 @@
 
 import logging
 
-from openerp import tools
-
 from email.header import decode_header
 from email.utils import formataddr
 from openerp import SUPERUSER_ID, api
-from openerp.osv import osv, fields
+# <<<<<<< HEAD
+# from openerp.osv import osv, fields
+# =======
+from openerp import fields
+from openerp.osv import osv, orm
+# >>>>>>> [WIP] Migrate
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 from HTMLParser import HTMLParser
 from openerp.exceptions import UserError, AccessError
+
+from openerp import tools
 
 _logger = logging.getLogger(__name__)
 
@@ -42,19 +47,24 @@ def decode(text):
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
 
+
 class MLStripper(HTMLParser):
     def __init__(self):
         self.reset()
         self.fed = []
+
     def handle_data(self, d):
         self.fed.append(d)
+
     def get_data(self):
         return ''.join(self.fed)
+
 
 def strip_tags(html):
     s = MLStripper()
     s.feed(html)
     return s.get_data()
+
 
 class mail_message(osv.Model):
     """ Messages model: system notification (replacing res.log notifications),
@@ -64,144 +74,124 @@ class mail_message(osv.Model):
     _inherit = ['ir.needaction_mixin']
     _order = 'id desc'
     _rec_name = 'record_name'
+    _message_read_limit = 30  # message when reading from chatter widget
 
-    _message_read_limit = 30
-    _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read', 'email_from',
-        'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name']
-    _message_record_name_length = 18
-    _message_read_more_limit = 1024
+    # type -> msg_type
+    # def default_get(self, cr, uid, fields, context=None):
+    #     # protection for `default_type` values leaking from menu action context (e.g. for invoices)
+    #     if context and context.get('default_type') and context.get('default_type') not in [
+    #             val[0] for val in self._columns['type'].selection]:
+    #         context = dict(context, default_type=None)
+    #     return super(mail_message, self).default_get(cr, uid, fields, context=context)
 
-    def default_get(self, cr, uid, fields, context=None):
-        # protection for `default_type` values leaking from menu action context (e.g. for invoices)
-        if context and context.get('default_type') and context.get('default_type') not in [
-                val[0] for val in self._columns['type'].selection]:
-            context = dict(context, default_type=None)
-        return super(mail_message, self).default_get(cr, uid, fields, context=context)
-
-    def _get_to_read(self, cr, uid, ids, name, arg, context=None):
+    @api.multi
+    def _get_to_read(self):
         """ Compute if the message is unread by the current user. """
-        res = dict((id, False) for id in ids)
-        partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
-        notif_obj = self.pool.get('mail.notification')
-        notif_ids = notif_obj.search(cr, uid, [
-            ('partner_id', 'in', [partner_id]),
-            ('message_id', 'in', ids),
-            ('is_read', '=', False),
-        ], context=context)
-        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
-            res[notif.message_id.id] = True
-        return res
+        for notif in self.env['mail.notification'].sudo().search([
+                ('partner_id', '=', self.env.user.partner_id.id),
+                ('message_id', 'in', self.ids),
+                ('is_read', '=', False)]):
+            notif.message_id.to_read = True
 
-    def _search_to_read(self, cr, uid, obj, name, domain, context=None):
+    def _search_to_read(self, operator, value):
         """ Search for messages to read by the current user. Condition is
             inversed because we search unread message on a is_read column. """
-        return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.is_read', '=', not domain[0][2])]
+        return ['&', ('notification_ids.partner_id.user_ids', 'in', [self._uid]), ('notification_ids.is_read', '=', not value)]
 
-    def _get_starred(self, cr, uid, ids, name, arg, context=None):
+    @api.multi
+    def _get_starred(self):
         """ Compute if the message is unread by the current user. """
-        res = dict((id, False) for id in ids)
-        partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
-        notif_obj = self.pool.get('mail.notification')
-        notif_ids = notif_obj.search(cr, uid, [
-            ('partner_id', 'in', [partner_id]),
-            ('message_id', 'in', ids),
-            ('starred', '=', True),
-        ], context=context)
-        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
-            res[notif.message_id.id] = True
-        return res
+        for notif in self.env['mail.notification'].sudo().search([
+                ('partner_id', '=', self.env.user.partner_id.id),
+                ('message_id', 'in', self.ids),
+                ('starred', '=', True)]):
+            notif.message_id.starred = True
 
-    def _search_starred(self, cr, uid, obj, name, domain, context=None):
+    def _search_starred(self, operator, value):
         """ Search for starred messages by the current user."""
-        return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.starred', '=', domain[0][2])]
+        return ['&', ('notification_ids.partner_id.user_ids', 'in', [self._uid]), ('notification_ids.starred', '=', value)]
 
-    _columns = {
-        'type': fields.selection([
-                        ('email', 'Email'),
-                        ('comment', 'Comment'),
-                        ('notification', 'System notification'),
-                        ], 'Type', size=12, 
-            help="Message type: email for email message, notification for system "\
-                 "message, comment for other messages such as user replies"),
-        'email_from': fields.char('From',
-            help="Email address of the sender. This field is set when no matching partner is found for incoming emails."),
-        'reply_to': fields.char('Reply-To',
-            help='Reply email address. Setting the reply_to bypasses the automatic thread creation.'),
-        'no_auto_thread': fields.boolean('No threading for answers',
-            help='Answers do not go in the original document\' discussion thread. This has an impact on the generated message-id.'),
-        'author_id': fields.many2one('res.partner', 'Author', select=1,
-            ondelete='set null',
-            help="Author of the message. If not set, email_from may hold an email address that did not match any partner."),
-        'author_avatar': fields.related('author_id', 'image_small', type="binary", string="Author's Avatar"),
-        'partner_ids': fields.many2many('res.partner', string='Recipients'),
-        'notified_partner_ids': fields.many2many('res.partner', 'mail_notification',
-            'message_id', 'partner_id', 'Notified partners',
-            help='Partners that have a notification pushing this message in their mailboxes'),
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel',
-            'message_id', 'attachment_id', 'Attachments'),
-        'parent_id': fields.many2one('mail.message', 'Parent Message', select=True,
-            ondelete='set null', help="Initial thread message."),
-        'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
-        'model': fields.char('Related Document Model', size=128, select=1),
-        'res_id': fields.integer('Related Document ID', select=1),
-        'record_name': fields.char('Message Record Name', help="Name get of the related document."),
-        'notification_ids': fields.one2many('mail.notification', 'message_id',
-            string='Notifications', auto_join=True,
-            help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.'),
-        'subject': fields.char('Subject'),
-        'date': fields.datetime('Date'),
-        'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1, copy=False),
-        'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
-        'to_read': fields.function(_get_to_read, fnct_search=_search_to_read,
-            type='boolean', string='To read',
-            help='Current user has an unread notification linked to this message'),
-        'starred': fields.function(_get_starred, fnct_search=_search_starred,
-            type='boolean', string='Starred',
-            help='Current user has a starred notification linked to this message'),
-        'subtype_id': fields.many2one('mail.message.subtype', 'Subtype',
-            ondelete='set null', select=1,),
-        'vote_user_ids': fields.many2many('res.users', 'mail_vote',
-            'message_id', 'user_id', string='Votes',
-            help='Users that voted for this message'),
-        'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
-    }
+    subject = fields.Char('Subject')
+    # date = fields.Datetime('Date', default=fields.datetime.now)
+    date = fields.Datetime('Date')
+    body = fields.Html('Contents', help='Automatically sanitized HTML contents', default='')
+    email_from = fields.Char(
+        'From', default=lambda self: self._get_default_from(),
+        help="Email address of the sender. This field is set when no matching partner is found for incoming emails.")
+    author_id = fields.Many2one(
+        'res.partner', 'Author', select=1, ondelete='set null',
+        default=lambda self: self.env.user.partner_id.id,
+        help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
+    author_avatar = fields.Binary('Author\'s Avatar', related='author_id.image_small')  # check for related
+    reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
+    no_auto_thread = fields.Boolean('No threading for answers', help='Answers do not go in the original document\' discussion thread. This has an impact on the generated message-id.')
+    partner_ids = fields.Many2many('res.partner', string='Recipients')
+    notified_partner_ids = fields.Many2many(
+        'res.partner', 'mail_notification',
+        'message_id', 'partner_id', 'Notified partners',
+        help='Partners that have a notification pushing this message in their mailboxes')
+    notification_ids = fields.One2many(
+        'mail.notification', 'message_id',
+        string='Notifications', auto_join=True,
+        help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.')
+    attachment_ids = fields.Many2many(
+        'ir.attachment', 'message_attachment_rel',
+        'message_id', 'attachment_id', 'Attachments')
+    type = fields.Selection([
+        ('email', 'Email'),
+        ('comment', 'Comment'),
+        ('notification', 'System notification'),
+    ], 'Type', size=12, oldname='type',
+        default='email',
+        help="Message type: email for email message, notification for system "
+             "message, comment for other messages such as user replies")  # rename type into msg_type, otherwise override type ?
+    subtype_id = fields.Many2one(
+        'mail.message.subtype', 'Subtype',
+        ondelete='set null', select=1,)
+    parent_id = fields.Many2one(
+        'mail.message', 'Parent Message', select=True,
+        ondelete='set null', help="Initial thread message.")
+    child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
+    model = fields.Char('Related Document Model', select=1)
+    res_id = fields.Integer('Related Document ID', select=1)
+    record_name = fields.Char('Message Record Name', help="Name get of the related document.")  # function field ?
+    message_id = fields.Char('Message-Id', help='Message unique identifier', select=1, readonly=1, copy=False)
+    to_read = fields.Boolean('To Read', compute='_get_to_read', search='_search_to_read',
+                             help='Current user has an unread notification linked to this message')
+    starred = fields.Boolean('Starred', compute='_get_starred', search='_search_starred',
+                             help='Current user has a starred notification linked to this message')
+    vote_user_ids = fields.Many2many(
+        'res.users', 'mail_vote',
+        'message_id', 'user_id', string='Votes',
+        help='Users that voted for this message')
+    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server', readonly=1)
 
-    def _needaction_domain_get(self, cr, uid, context=None):
+    @api.model
+    def _needaction_domain_get(self):
         return [('to_read', '=', True)]
 
-    def _get_default_from(self, cr, uid, context=None):
-        this = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        if this.alias_name and this.alias_domain:
-            return formataddr((this.name, '%s@%s' % (this.alias_name, this.alias_domain)))
-        elif this.email:
-            return formataddr((this.name, this.email))
+    @api.model
+    def _get_default_from(self):
+        if self.env.user.alias_name and self.env.user.alias_domain:
+            return formataddr((self.env.user.name, '%s@%s' % (self.env.user.alias_name, self.env.user.alias_domain)))
+        elif self.env.user.email:
+            return formataddr((self.env.user.name, self.env.user.email))
         raise UserError(_("Unable to send email, please configure the sender's email address or alias."))
-
-    def _get_default_author(self, cr, uid, context=None):
-        return self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
-
-    _defaults = {
-        'type': 'email',
-        'date': fields.datetime.now,
-        'author_id': lambda self, cr, uid, ctx=None: self._get_default_author(cr, uid, ctx),
-        'body': '',
-        'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
-    }
 
     #------------------------------------------------------
     # Vote/Like
     #------------------------------------------------------
 
-    def vote_toggle(self, cr, uid, ids, context=None):
+    def vote_toggle(self):
         ''' Toggles vote. Performed using read to avoid access rights issues.
             Done as SUPERUSER_ID because uid may vote for a message he cannot modify. '''
-        for message in self.read(cr, uid, ids, ['vote_user_ids'], context=context):
-            new_has_voted = not (uid in message.get('vote_user_ids'))
+        for message in self.sudo().browse(self.ids):
+            new_has_voted = not (self.user in message.vote_user_ids)
             if new_has_voted:
-                self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(4, uid)]}, context=context)
+                message.write({'vote_user_ids': [(4, self._uid)]})
             else:
-                self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(3, uid)]}, context=context)
-        return new_has_voted or False
+                message.write({'vote_user_ids': [(3, self._uid)]})
+        return new_has_voted
 
     #------------------------------------------------------
     # download an attachment
@@ -224,8 +214,7 @@ class mail_message(osv.Model):
     # Notification API
     #------------------------------------------------------
 
-    @api.cr_uid_ids_context
-    def set_message_read(self, cr, uid, msg_ids, read, create_missing=True, context=None):
+    def set_message_read(self, read, create_missing=True):
         """ Set messages as (un)read. Technically, the notifications related
             to uid are set to (un)read. If for some msg_ids there are missing
             notifications (i.e. due to load more or thread parent fetching),
@@ -237,28 +226,23 @@ class mail_message(osv.Model):
 
             :return number of message mark as read
         """
-        notification_obj = self.pool.get('mail.notification')
-        user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
-        domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
+        Notification = self.env('mail.notification')
+        domain = [('partner_id', '=', self.env.user.partner_id.id), ('message_id', 'in', self.ids)]
         if not create_missing:
             domain += [('is_read', '=', not read)]
-        notif_ids = notification_obj.search(cr, uid, domain, context=context)
-
-        # all message have notifications: already set them as (un)read
-        if len(notif_ids) == len(msg_ids) or not create_missing:
-            notification_obj.write(cr, uid, notif_ids, {'is_read': read}, context=context)
-            return len(notif_ids)
+        notifications = Notification.search(domain)
 
         # some messages do not have notifications: find which one, create notification, update read status
-        notified_msg_ids = [notification.message_id.id for notification in notification_obj.browse(cr, uid, notif_ids, context=context)]
-        to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
-        for msg_id in to_create_msg_ids:
-            notification_obj.create(cr, uid, {'partner_id': user_pid, 'is_read': read, 'message_id': msg_id}, context=context)
-        notification_obj.write(cr, uid, notif_ids, {'is_read': read}, context=context)
-        return len(notif_ids)
+        if len(notifications) != len(self.ids) and create_missing:
+            notified_msg_ids = [notification.message_id.id for notification in notifications]
+            to_create_msg_ids = list(set(self.ids) - set(notified_msg_ids))
+            for msg_id in to_create_msg_ids:
+                Notification.create({'partner_id': self.env.user.partner_id.id, 'is_read': read, 'message_id': msg_id})
 
-    @api.cr_uid_ids_context
-    def set_message_starred(self, cr, uid, msg_ids, starred, create_missing=True, context=None):
+        notifications.write({'is_read': read})
+        return len(notifications)
+
+    def set_message_starred(self, starred, create_missing=True):
         """ Set messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
 
@@ -779,7 +763,7 @@ class mail_message(osv.Model):
             if hasattr(model_obj, 'check_mail_message_access'):
                 model_obj.check_mail_message_access(cr, uid, mids, operation, context=context)
             else:
-                self.pool['mail.thread'].check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
+                self.pool['mail.thread'].check_mail_message_access(cr, uid, mids, operation, model=model, context=context)
             document_related_ids += [mid for mid, message in message_values.iteritems()
                                      if message.get('model') == model and message.get('res_id') in mids]
 
@@ -805,9 +789,12 @@ class mail_message(osv.Model):
         """ Return a specific reply_to: alias of the document through message_get_reply_to
             or take the email_from
         """
-        model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
-        ctx = dict(context, thread_model=model)
-        return self.pool['mail.thread'].message_get_reply_to(cr, uid, [res_id], default=email_from, context=ctx)[res_id]
+        if context is None:
+            context = {}
+        return False
+        # model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
+        # ctx = dict(context, thread_model=model)
+        # return self.pool['mail.thread'].message_get_reply_to(cr, uid, [res_id], default=email_from, context=ctx)[res_id]
 
     def _get_message_id(self, cr, uid, values, context=None):
         if values.get('no_auto_thread', False) is True:
