@@ -8,6 +8,7 @@ import logging
 import re
 import sys
 
+import werkzeug
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.urls

@@ -14,6 +14,7 @@ import werkzeug.wrappers
 from PIL import Image
 
 import openerp
+from openerp.addons.web.controllers.main import WebClient
 from openerp.addons.web import http
 from openerp.http import request, STATIC_CACHE
 from openerp.tools import image_save_for_web
@@ -269,6 +270,13 @@ class Website(openerp.addons.web.controllers.main.Home):
                     irt.create(request.cr, request.uid, new_trans)
         return True
 
+    @http.route('/website/translations', type='json', auth="public", website=True)
+    def get_website_translations(self, lang):
+        module_obj = request.registry['ir.module.module']
+        module_ids = module_obj.search(request.cr, request.uid, [('name', 'ilike', 'website'), ('state', '=', 'installed')], context=request.context)
+        modules = [x['name'] for x in module_obj.read(request.cr, request.uid, module_ids, ['name'], context=request.context)]
+        return WebClient().translations(mods=modules, lang=lang)
+
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
     def attach(self, func, upload=None, url=None, disable_optimization=None):
         # the upload argument doesn't allow us to access the files if more than
@@ -472,7 +480,10 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Server actions
     #------------------------------------------------------
-    @http.route('/website/action/<path_or_xml_id_or_id>', type='http', auth="public", website=True)
+    @http.route([
+        '/website/action/<path_or_xml_id_or_id>',
+        '/website/action/<path_or_xml_id_or_id>/<path:path>',
+        ], type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         res, action_id, action = None, None, None

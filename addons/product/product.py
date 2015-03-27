@@ -22,7 +22,6 @@
 import math
 import re
 import time
-from collections import OrderedDict
 from _common import ceiling
 
 
@@ -664,7 +663,7 @@ class product_template(osv.osv):
                 temp_variants = []
                 for variant in all_variants:
                     for value_id in variant_id.value_ids:
-                        temp_variants.append(variant + [int(value_id)])
+                        temp_variants.append(sorted(variant + [int(value_id)]))
                 if temp_variants:
                     all_variants = temp_variants
 
@@ -682,7 +681,7 @@ class product_template(osv.osv):
             variants_active_ids = []
             variants_inactive = []
             for product_id in tmpl_id.product_variant_ids:
-                variants = map(int,product_id.attribute_value_ids)
+                variants = sorted(map(int,product_id.attribute_value_ids))
                 if variants in all_variants:
                     variants_active_ids.append(product_id.id)
                     all_variants.pop(all_variants.index(variants))
@@ -779,14 +778,6 @@ class product_template(osv.osv):
                 return False
         return True
 
-    def _check_uos(self, cursor, user, ids, context=None):
-        for product in self.browse(cursor, user, ids, context=context):
-            if product.uos_id \
-                    and product.uos_id.category_id.id \
-                    == product.uom_id.category_id.id:
-                return False
-        return True
-
     _constraints = [
         (_check_uom, 'Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category.', ['uom_id', 'uom_po_id']),
     ]
@@ -799,6 +790,12 @@ class product_template(osv.osv):
         return super(product_template, self).name_get(cr, user, ids, context)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        # Only use the product.product heuristics if there is a search term and the domain
+        # does not specify a match on `product.template` IDs.
+        if not name or any(term[0] == 'id' for term in (args or [])):
+            return super(product_template, self).name_search(
+                cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
+
         product_product = self.pool['product.product']
         results = product_product.name_search(
             cr, user, name, args, operator=operator, context=context, limit=limit)
@@ -806,8 +803,11 @@ class product_template(osv.osv):
         template_ids = [p.product_tmpl_id.id
                             for p in product_product.browse(
                                 cr, user, product_ids, context=context)]
-        uniq_ids = OrderedDict.fromkeys(template_ids).keys()
-        return self.name_get(cr, user, uniq_ids, context=context)
+
+        # re-apply product.template order + name_get
+        return super(product_template, self).name_search(
+            cr, user, '', args=[('id', 'in', template_ids)],
+            operator=operator, context=context, limit=limit)
 
 class product_product(osv.osv):
     _name = "product.product"

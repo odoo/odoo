@@ -1,7 +1,11 @@
-(function () {
-    'use strict';
+odoo.define('website_event_sale.tour', function (require) {
+'use strict';
 
-    openerp.Tour.register({
+var Tour = require('web.Tour');
+var website = require('website.website');
+
+website.ready().done(function () {
+    Tour.register({
         id:   'event_buy_tickets',
         name: "Buy tickets for the Conference on Business Apps",
         path: '/event',
@@ -65,7 +69,7 @@
             {
                 title:     "Complete the checkout",
                 element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-                onload: function (tour) {
+                onload: function () {
                     if ($("input[name='name']").val() === "")
                         $("input[name='name']").val("website_sale-test-shoptest");
                     if ($("input[name='email']").val() === "")
@@ -92,4 +96,6 @@
             }
         ]
     });
-}());
+});
+
+});

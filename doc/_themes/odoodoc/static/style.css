@@ -6609,6 +6609,9 @@ body {
 dt:hover > a > .viewcode-link {
   display: inline;
 }
+blockquote.highlights {
+  border: none;
+}
 div.section > h1 {
   padding-bottom: 9px;
   margin: 40px 0 20px;
@@ -6822,7 +6825,7 @@ td.field-body > ul {
     padding-right: 1em;
   }
   .stripe .section:not(.force-right) > .force-right,
-  .stripe .section:not(.force-right) > [class*=highlight] {
+  .stripe .section:not(.force-right) > [class*=highlight-] {
     float: none;
     clear: none;
     margin-left: 50%;
@@ -6830,39 +6833,45 @@ td.field-body > ul {
     color: #eeeeee;
   }
   .stripe .section:not(.force-right) > .force-right legend,
-  .stripe .section:not(.force-right) > [class*=highlight] legend {
+  .stripe .section:not(.force-right) > [class*=highlight-] legend {
     color: inherit;
   }
   .stripe .section:not(.force-right) > .force-right input,
-  .stripe .section:not(.force-right) > [class*=highlight] input {
+  .stripe .section:not(.force-right) > [class*=highlight-] input {
     color: inherit;
     background-color: #555555;
   }
   .stripe .section:not(.force-right) > .force-right a,
-  .stripe .section:not(.force-right) > [class*=highlight] a {
+  .stripe .section:not(.force-right) > [class*=highlight-] a {
     color: #d9a8cc;
   }
   .stripe .section:not(.force-right) > .force-right code,
-  .stripe .section:not(.force-right) > [class*=highlight] code,
+  .stripe .section:not(.force-right) > [class*=highlight-] code,
   .stripe .section:not(.force-right) > .force-right .literal,
-  .stripe .section:not(.force-right) > [class*=highlight] .literal {
+  .stripe .section:not(.force-right) > [class*=highlight-] .literal {
     color: #f9f2f4;
     background-color: #555555;
   }
   .stripe .section:not(.force-right) > .force-right:not(.highlight-json) .highlight,
-  .stripe .section:not(.force-right) > [class*=highlight]:not(.highlight-json) .highlight {
+  .stripe .section:not(.force-right) > [class*=highlight-]:not(.highlight-json) .highlight {
     border-bottom-color: #777777;
   }
   .stripe .section:not(.force-right) > .force-right.admonition,
-  .stripe .section:not(.force-right) > [class*=highlight].admonition {
+  .stripe .section:not(.force-right) > [class*=highlight-].admonition {
     margin-left: 51%;
     width: 49%;
     border-top-color: #777777;
     border-bottom-color: #777777;
     border-right-color: #777777;
   }
+  .stripe .section:not(.force-right) > .force-right .table th,
+  .stripe .section:not(.force-right) > [class*=highlight-] .table th,
+  .stripe .section:not(.force-right) > .force-right .table td,
+  .stripe .section:not(.force-right) > [class*=highlight-] .table td {
+    border-color: #777777;
+  }
   .stripe .section:not(.force-right) > .force-right .highlight,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight {
     border-color: #555555;
     border-style: solid;
     border-width: 1px 0;
@@ -6940,281 +6949,281 @@ td.field-body > ul {
     /* Literal.Number.Integer.Long */
   }
   .stripe .section:not(.force-right) > .force-right .highlight .lineno,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .lineno {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .lineno {
     color: #586e75;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .c,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .c {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .c {
     color: #586e75;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .err,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .err {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .err {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .g,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .g {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .g {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .k,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .k {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .k {
     color: #859900;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .l,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .l {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .l {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .n,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .n {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .n {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .o,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .o {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .o {
     color: #859900;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .x,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .x {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .x {
     color: #cb4b16;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .p,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .p {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .p {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .cm,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .cm {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .cm {
     color: #586e75;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .cp,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .cp {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .cp {
     color: #859900;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .c1,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .c1 {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .c1 {
     color: #586e75;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .cs,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .cs {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .cs {
     color: #859900;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .gd,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gd {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gd {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .ge,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ge {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ge {
     color: #cccccc;
     font-style: italic;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .gr,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gr {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gr {
     color: #dc322f;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .gh,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gh {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gh {
     color: #cb4b16;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .gi,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gi {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gi {
     color: #859900;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .go,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .go {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .go {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .gp,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gp {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gp {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .gs,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gs {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gs {
     color: #cccccc;
     font-weight: bold;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .gu,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gu {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gu {
     color: #cb4b16;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .gt,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .gt {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gt {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .kc,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kc {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kc {
     color: #cb4b16;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .kd,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kd {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kd {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .kn,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kn {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kn {
     color: #859900;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .kp,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kp {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kp {
     color: #859900;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .kr,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kr {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kr {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .kt,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .kt {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kt {
     color: #dc322f;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .ld,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ld {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ld {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .m,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .m {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .m {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .s,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .s {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .s {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .na,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .na {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .na {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .nb,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nb {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nb {
     color: #b58900;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .nc,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nc {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nc {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .no,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .no {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .no {
     color: #cb4b16;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .nd,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nd {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nd {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .ni,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ni {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ni {
     color: #cb4b16;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .ne,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ne {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ne {
     color: #cb4b16;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .nf,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nf {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nf {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .nl,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nl {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nl {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .nn,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nn {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nn {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .nx,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nx {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nx {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .py,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .py {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .py {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .nt,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nt {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nt {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .nv,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .nv {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nv {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .ow,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ow {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ow {
     color: #859900;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .w,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .w {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .w {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .mf,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .mf {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .mf {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .mh,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .mh {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .mh {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .mi,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .mi {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .mi {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .mo,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .mo {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .mo {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .sb,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sb {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sb {
     color: #586e75;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .sc,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sc {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sc {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .sd,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sd {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sd {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .s2,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .s2 {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .s2 {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .se,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .se {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .se {
     color: #cb4b16;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .sh,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sh {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sh {
     color: #cccccc;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .si,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .si {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .si {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .sx,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sx {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sx {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .sr,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .sr {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sr {
     color: #dc322f;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .s1,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .s1 {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .s1 {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .ss,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .ss {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ss {
     color: #2aa198;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .bp,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .bp {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .bp {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .vc,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .vc {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .vc {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .vg,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .vg {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .vg {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .vi,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .vi {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .vi {
     color: #268bd2;
   }
   .stripe .section:not(.force-right) > .force-right .highlight .il,
-  .stripe .section:not(.force-right) > [class*=highlight] .highlight .il {
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .il {
     color: #2aa198;
   }
   .stripe .body > .section > .section {

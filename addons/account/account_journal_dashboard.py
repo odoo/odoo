@@ -120,7 +120,7 @@ class account_journal(models.Model):
     @api.multi
     def get_journal_dashboard_datas(self):
         rml_parser = report_sxw.rml_parse(self._cr, self._uid, 'journal_dashboard', context=self._context)
-        number_to_reconcile = last_balance = 0
+        number_to_reconcile = last_balance = account_sum = 0
         ac_bnk_stmt = []
         number_draft = number_waiting = number_late = sum_draft = sum_waiting = sum_late = 0
         if self.type in ['bank', 'cash']:
@@ -131,6 +131,9 @@ class account_journal(models.Model):
                 for line in ac_bnk.line_ids:
                     if not line.journal_entry_ids or not line.account_id:
                         number_to_reconcile += 1
+            account = [self.default_debit_account_id.id, self.default_credit_account_id.id]
+            acm_lines = self.env['account.move.line'].search([('account_id', 'in', account)])
+            account_sum = sum([line.balance for line in acm_lines]) or 0
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
             invoices = self.env['account.invoice'].search([('journal_id', 'in', self.ids), ('state', 'not in', ('paid', 'cancel'))])
@@ -147,7 +150,7 @@ class account_journal(models.Model):
 
         return {
             'number_to_reconcile': number_to_reconcile,
-            'number_statement': len(ac_bnk_stmt),
+            'account_balance': rml_parser.formatLang(account_sum, currency_obj=self.currency or self.company_id.currency_id),
             'last_balance': rml_parser.formatLang(last_balance, currency_obj=self.currency or self.company_id.currency_id),
             'number_draft': number_draft,
             'number_waiting': number_waiting,

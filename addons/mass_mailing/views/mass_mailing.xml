@@ -261,7 +261,7 @@
                         </div>
                         <notebook>
                             <page string="Popup Content">
-                                <field name="popup_content" options="{'editor_url': '/website_mass_mailing/field/popup_content'}"/>
+                                <field name="popup_content" options="{'editor_url': '/website_mass_mailing/field/popup_content'}" widget="html_frame"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -443,7 +443,7 @@
                         </group>
                         <notebook>
                             <page string="Mail Body">
-                                <field name="body_html" options="{'editor_url': '/website_mail/field/email_template'}"/>
+                                <field name="body_html" options="{'editor_url': '/website_mail/field/email_template'}"  widget="html_frame"/>
                                 <field name="attachment_ids"  widget="many2many_binary" string="Attach a file"/>
                             </page>
                             <page string="Options">

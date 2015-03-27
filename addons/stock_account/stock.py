@@ -295,9 +295,13 @@ class stock_picking(osv.osv):
         for move in moves:
             company = move.company_id
             origin = move.picking_id.name
-            partner, user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
+            partner, _user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
 
-            key = (partner, currency_id, company.id, user_id)
+            # Force user_id to be current user, to avoid creating multiple invoices when lines
+            # have been sold by different salesmen
+            _user_id = uid
+
+            key = (partner, currency_id, company.id, _user_id)
             invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
 
             if key not in invoices:
@@ -329,3 +333,20 @@ class stock_picking(osv.osv):
         if op.linked_move_operation_ids:
             res.update({'price_unit': op.linked_move_operation_ids[-1].move_id.price_unit})
         return res
+
+
+class stock_picking_type(osv.Model):
+    _inherit = "stock.picking.type"
+
+    def _compute_count_picking_invoiced(self, cr, uid, ids, field_name, arg, context=None):
+        result = dict.fromkeys(ids, 0)
+        picking_data = self.pool['stock.picking'].read_group(
+            cr, uid, [('picking_type_id', 'in', ids), ('invoice_state', '=', '2binvoiced')],
+            ['picking_type_id'], ['picking_type_id'], context=context)
+        for data in picking_data:
+            result[data['picking_type_id'][0]] = data['picking_type_id_count']
+        return result
+
+    _columns = {
+        'count_picking_invoiced': fields.function(_compute_count_picking_invoiced, type='integer'),
+    }

@@ -188,13 +188,18 @@ class stock_quant(osv.osv):
         '''
         if context is None:
             context = {}
+        account_move_obj = self.pool['account.move']
         super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
-        ctx = context.copy()
         for quant in self.browse(cr, uid, quant_ids, context=context):
             move = self._get_latest_move(cr, uid, quant, context=context)
-            # this is where we post accounting entries for adjustment
-            ctx['force_valuation_amount'] = newprice - quant.cost
-            self._account_entry_move(cr, uid, [quant], move, context=ctx)
+            valuation_update = newprice - quant.cost
+            # this is where we post accounting entries for adjustment, if needed
+            if not quant.company_id.currency_id.is_zero(valuation_update):
+                # If neg quant period already closed (likely with manual valuation), skip update
+                if account_move_obj._check_lock_date(cr, uid, [move.id], context=context):
+                    ctx = dict(context, force_valuation_amount=valuation_update)
+                    self._account_entry_move(cr, uid, [quant], move, context=ctx)
+
             #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
             #1) the product cost's method is 'real'
             #2) we just fixed a negative quant caused by an outgoing shipment
@@ -347,12 +352,13 @@ class stock_quant(osv.osv):
         move_obj = self.pool.get('account.move')
         for cost, qty in quant_cost_qty.items():
             move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
-            date= context.get('force_period_date', move.date)
-            move_obj.create(cr, uid, {'journal_id': journal_id,
+            date = context.get('force_period_date', move.date)
+            new_move = move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
                                       'date': date,
                                       'date': move.date,
                                       'ref': move.picking_id.name}, context=context)
+            move_obj.post(cr, uid, [new_move], context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
     #    move = self._get_latest_move(cr, uid, to_solve_quant, context=context)

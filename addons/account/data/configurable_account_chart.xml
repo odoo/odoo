@@ -34,7 +34,7 @@
 
         <record id="conf_a_recv" model="account.account.template">
             <field name="code">1012</field>
-            <field name="name">Debtors</field>
+            <field name="name">Account Receivable</field>
             <field eval="True" name="reconcile"/>
             <field name="user_type" ref="data_account_type_receivable"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
@@ -94,7 +94,7 @@
 
         <record id="conf_a_pay" model="account.account.template">
             <field name="code">1111</field>
-            <field name="name">Creditors</field>
+            <field name="name">Account Payable</field>
             <field eval="True" name="reconcile"/>
             <field name="user_type" ref="data_account_type_payable"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>

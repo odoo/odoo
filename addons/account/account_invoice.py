@@ -708,6 +708,7 @@ class AccountInvoice(models.Model):
                 'uos_id': line.uos_id.id,
                 'account_analytic_id': line.account_analytic_id.id,
                 'tax_ids': tax_ids,
+                'invoice': self.id,
             }
             if line['account_analytic_id']:
                 move_line_dict['analytic_lines'] = [(0, 0, line._get_analytic_line())]
@@ -1077,7 +1078,7 @@ class AccountInvoice(models.Model):
             raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
 
         payment = self.env['account.payment'].create({
-            'invoice_id': self.id,
+            'invoice_ids': [(6, 0, self.ids)],
             'amount': pay_amount or self.residual,
             'date': date or fields.Date.context_today(self),
             'reference': self.type in ('in_invoice', 'in_refund') and self.reference or self.number,
@@ -1286,7 +1287,7 @@ class AccountInvoiceLine(models.Model):
         if type in ('in_invoice', 'in_refund'):
             values['price_unit'] = price_unit or product.standard_price
         else:
-            values['price_unit'] = product.list_price
+            values['price_unit'] = product.lst_price
 
         values['uos_id'] = uom_id or product.uom_id.id
         domain = {'uos_id': [('category_id', '=', product.uom_id.category_id.id)]}

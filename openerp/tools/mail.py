@@ -53,7 +53,7 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
      ])
 
 
-def html_sanitize(src, silent=True, strict=False):
+def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_classes=False):
     if not src:
         return src
     src = ustr(src, errors='replace')
@@ -69,7 +69,7 @@ def html_sanitize(src, silent=True, strict=False):
 
     kwargs = {
         'page_structure': True,
-        'style': False,             # do not remove style attributes
+        'style': strip_style,       # True = remove style tags/attrs
         'forms': True,              # remove form tags
         'remove_unknown_tags': False,
         'allow_tags': allowed_tags,
@@ -88,9 +88,13 @@ def html_sanitize(src, silent=True, strict=False):
     if strict:
         if etree.LXML_VERSION >= (3, 1, 0):
             # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
+            if strip_classes:
+                current_safe_attrs = safe_attrs - frozenset(['class'])
+            else:
+                current_safe_attrs = safe_attrs
             kwargs.update({
                 'safe_attrs_only': True,
-                'safe_attrs': safe_attrs,
+                'safe_attrs': current_safe_attrs,
             })
     else:
         kwargs['safe_attrs_only'] = False    # keep oe-data attributes + style

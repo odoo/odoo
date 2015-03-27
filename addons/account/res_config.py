@@ -63,7 +63,6 @@ class AccountConfigSettings(models.TransientModel):
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], related='company_id.fiscalyear_last_month', default=12)
     period_lock_date = fields.Date(related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
     fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
-
     sale_journal_id = fields.Many2one('account.journal', string='Sale journal')
     sale_sequence_prefix = fields.Char(related='sale_journal_id.sequence_id.prefix', string='Invoice sequence')
     sale_sequence_next = fields.Integer(related='sale_journal_id.sequence_id.number_next',
@@ -132,11 +131,21 @@ class AccountConfigSettings(models.TransientModel):
     income_currency_exchange_account_id = fields.Many2one('account.account',
         related='company_id.income_currency_exchange_account_id',
         string="Gain Exchange Rate Account",
-        domain="[('internal_type', '=', 'other'), ('deprecated', '=', False)]")
+        domain=[('internal_type', '=', 'other'), ('company_id', '=', company_id), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account',
         related='company_id.expense_currency_exchange_account_id',
         string="Loss Exchange Rate Account",
-        domain="[('internal_type', '=', 'other'), ('deprecated', '=', False)]")
+        domain=[('internal_type', '=', 'other'), ('company_id', '=', company_id), ('deprecated', '=', False)])
+
+    @api.multi
+    @api.constrains('income_currency_exchange_account_id', 'expense_currency_exchange_account_id')
+    def _check_account_gain_loss(self):
+        for element in self:
+            if element.income_currency_exchange_account_id.company_id and element.company_id != element.income_currency_exchange_account_id.company_id:
+                return False
+            if element.expense_currency_exchange_account_id.company_id and element.company_id != element.expense_currency_exchange_account_id.company_id:
+                return False
+        return True
 
     @api.model
     def _default_has_default_company(self):

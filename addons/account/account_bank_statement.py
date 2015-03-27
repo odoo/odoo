@@ -4,7 +4,7 @@ from openerp import api, fields, models, _
 from openerp.osv import osv, expression
 from openerp.report import report_sxw
 from openerp.tools import float_compare, float_round
-from openerp.exceptions import UserError, ValidationError
+from openerp.exceptions import UserError, ValidationError, RedirectWarning
 
 import time
 
@@ -415,7 +415,7 @@ class AccountBankStatementLine(models.Model):
         """ Returns a function that can create the appropriate domain to search on move.line amount based on statement.line currency/amount """
         company_currency = self.journal_id.company_id.currency_id
         st_line_currency = self.currency_id or self.journal_id.currency
-        currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency or False
+        currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency.id or False
         field = currency and 'amount_residual_currency' or 'amount_residual'
         precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
 
@@ -575,7 +575,6 @@ class AccountBankStatementLine(models.Model):
                 amount_currency = self.amount * ratio
             elif st_line_currency != company_currency:
                 amount_currency = self.amount_currency * ratio
-
         return {
             'name': self.name,
             'date': self.date,
@@ -690,6 +689,7 @@ class AccountBankStatementLine(models.Model):
             move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
             move_vals = self._prepare_reconciliation_move(move_name)
             move = self.env['account.move'].create(move_vals)
+            move.post()
             counterpart_moves = (counterpart_moves | move)
 
             # Complete dicts to create both counterpart move lines and write-offs

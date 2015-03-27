@@ -74,21 +74,21 @@
             <div class="oe_rate">
                 <img src='/rating/static/src/img/rating_10.png' alt="Happy Feedback" class="pull-left" style="width:24px"/>
                 <div class="progress mt4">
-                    <div t-attf-class="progress-bar" role="progressbar" t-attf-style="width: #{stats[duration][10]}%;">
+                    <div t-attf-class="progress-bar progress-bar-success" role="progressbar" t-attf-style="width: #{stats[duration][10]}%;">
                         <t t-esc="stats[duration][10]"/>%%
                     </div>
                 </div>
             </div><div class="oe_rate mt16">
-                <img src='/rating/static/src/img/rating_5.png' alt="Happy Feedback" class="pull-left" style="width:24px"/>
+                <img src='/rating/static/src/img/rating_5.png' alt="Normal Feedback" class="pull-left" style="width:24px"/>
                 <div class="progress mt4">
-                    <div t-attf-class="progress-bar" role="progressbar" t-attf-style="width: #{stats[duration][5]}%;">
+                    <div t-attf-class="progress-bar progress-bar-warning" role="progressbar" t-attf-style="width: #{stats[duration][5]}%;">
                         <t t-esc="stats[duration][5]"/>%%
                     </div>
                 </div>
             </div><div class="oe_rate mt16">
-                <img src='/rating/static/src/img/rating_0.png' alt="Happy Feedback" class="pull-left" style="width:24px"/>
+                <img src='/rating/static/src/img/rating_0.png' alt="Bad Feedback" class="pull-left" style="width:24px"/>
                 <div class="progress mt4">
-                    <div t-attf-class="progress-bar" role="progressbar" t-attf-style="width: #{stats[duration][0]}%;">
+                    <div t-attf-class="progress-bar progress-bar-danger" role="progressbar" t-attf-style="width: #{stats[duration][0]}%;">
                         <t t-esc="stats[duration][0]"/>%%
                     </div>
                 </div>
@@ -131,7 +131,7 @@
                                 <h3 class="page-header">Team</h3>
                                 <div class="media" t-foreach="team" t-as="user">
                                     <div class="pull-left">
-                                        <img t-att-src="'data:image/png;base64,' + user.image_small" class="img-rounded" t-att-alt="user.name" style="width: 32px"/>
+                                        <img t-att-src="website.image_url(user, 'image_small')" class="img-rounded" t-att-alt="user.name" style="width: 32px"/>
                                     </div>
                                     <div class="media-body">
                                         <h5><t t-esc="user.name"/></h5>

@@ -124,7 +124,7 @@ class AccountMoveLine(models.Model):
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
         ondelete="cascade", domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
-        help="The move of this entry line.", index=True, required=True)
+        help="The move of this entry line.", index=True, required=True, auto_join=True)
     narration = fields.Text(related='move_id.narration', string='Internal Note')
     ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False)
     payment_id = fields.Many2one('account.payment', string="Originator Payment", help="Payment that created this entry")
@@ -187,7 +187,7 @@ class AccountMoveLine(models.Model):
             return ['account.invoice', self.invoice.id]
         if self.payment_id:
             return ['account.payment', self.payment_id.id]
-        return ['account.move.line', self.id]
+        return ['account.move', self.move_id]
 
     @api.multi
     @api.constrains('account_id')
@@ -438,7 +438,7 @@ class AccountMoveLine(models.Model):
             # For already reconciled lines, don't use amount_residual(_currency)
             if line.account_id.internal_type == 'liquidity':
                 amount = abs(debit - credit)
-                amount_currency = line.amount_currency
+                amount_currency = abs(line.amount_currency)
 
             # Get right debit / credit:
             target_currency = target_currency or company_currency
@@ -656,6 +656,7 @@ class AccountMoveLine(models.Model):
             'state': 'draft',
             'line_id': [(0, 0, first_line_dict), (0, 0, second_line_dict)],
         })
+        writeoff_move.post()
 
         # Return the writeoff move.line which is to be reconciled
         line = writeoff_move.line_id.filtered(lambda r: r.account_id == self[0].account_id)
@@ -796,8 +797,6 @@ class AccountMoveLine(models.Model):
         if self._context.get('check_move_validity', True):
             move = MoveObj.browse(vals['move_id'])
             move.with_context(context)._post_validate()
-            if journal.entry_posted:
-                move.with_context(context).post()
 
         return new_line
 
@@ -994,6 +993,7 @@ class AccountPartialReconcile(models.Model):
                         'amount_currency': 0.0,
                         'currency_id': rec.debit_move_id.currency_id.id,
                     })
+                    move.post()
 
     @api.model
     def create(self, vals):

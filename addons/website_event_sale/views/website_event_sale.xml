@@ -62,12 +62,12 @@
                         </span>
                     </td>
                     <td>
-                        <select t-if="ticket.seats_available or ticket.seats_availability == 'unlimited'" t-attf-name="nb_register-#{ticket.id}" class="form-control">
+                        <select t-if="(event.seats_available or event.seats_availability == 'unlimited') and (ticket.seats_available or ticket.seats_availability == 'unlimited')" t-attf-name="nb_register-#{ticket.id}" class="form-control">
                             <t t-foreach="range(0, (ticket.seats_availability == 'unlimited' or ticket.seats_available > 9) and 10 or ticket.seats_available + 1)" t-as="nb">
                                 <option t-esc="nb"/>
                             </t>
                         </select>
-                        <span t-if="ticket.seats_availability == 'limited' and not ticket.seats_available">Sold Out</span>
+                        <span t-if="(not event.seats_available and event.seats_availability == 'limited') or (ticket.seats_availability == 'limited' and not ticket.seats_available)">Sold Out</span>
                     </td>
                 </tr>
             </t>

@@ -153,7 +153,7 @@ class mail_thread(osv.AbstractModel):
         for id in ids:
             if res[id]['message_unread_count']:
                 title = res[id]['message_unread_count'] > 1 and _("You have %d unread messages") % res[id]['message_unread_count'] or _("You have one unread message")
-                res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><i class='fa fa-comments'/> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
+                res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><i class='fa fa-comments'/> %d</span>" % (title, res[id].pop('message_unread_count'))
             res[id].pop('message_unread_count', None)
         return res
 
@@ -635,9 +635,11 @@ class mail_thread(osv.AbstractModel):
         if not msg_id and not (model and res_id):
             return action
         if msg_id and not (model and res_id):
-            msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
-            if msg.exists():
+            msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context).exists()
+            try:
                 model, res_id = msg.model, msg.res_id
+            except AccessError:
+                pass
 
         # if model + res_id found: try to redirect to the document or fallback on the Inbox
         if model and res_id:
@@ -1573,7 +1575,7 @@ class mail_thread(osv.AbstractModel):
                 isinstance(thread_id, (int, long)) or \
                 (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), \
                 "Invalid thread_id; should be 0, False, an ID or a list with one ID"
-        if isinstance(thread_id, (list, tuple)):
+        if thread_id and isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
 
         # if we're processing a message directly coming from the gateway, the destination model was
@@ -1821,7 +1823,17 @@ class mail_thread(osv.AbstractModel):
                         ('model', '=', self._name),
                         ('res_id', '=', record_id)], limit=1, context=context)
                 if msg_ids:
-                    self.pool.get('mail.notification')._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
+                    notification_obj = self.pool.get('mail.notification')
+                    notification_obj._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
+                    message = message_obj.browse(cr, uid, msg_ids[0], context=context)
+                    if message.parent_id:
+                        partner_ids_to_parent_notify = set(partner_ids).difference(partner.id for partner in message.parent_id.notified_partner_ids)
+                        for partner_id in partner_ids_to_parent_notify:
+                            notification_obj.create(cr, uid, {
+                                'message_id': message.parent_id.id,
+                                'partner_id': partner_id,
+                                'is_read': True,
+                            }, context=context)
 
     def message_auto_subscribe(self, cr, uid, ids, updated_fields, context=None, values=None):
         """ Handle auto subscription. Two methods for auto subscription exist:
@@ -1902,6 +1914,7 @@ class mail_thread(osv.AbstractModel):
             self.message_subscribe(cr, uid, ids, [pid], subtypes, context=context)
 
         self._message_auto_subscribe_notify(cr, uid, ids, user_pids, context=context)
+
 
         return True
 

@@ -48,10 +48,11 @@ from psycopg2 import Binary
 import openerp
 import openerp.tools as tools
 from openerp.tools.translate import _
-from openerp.tools import float_round, float_repr
-from openerp.tools import html_sanitize
+from openerp.tools import float_repr, float_round, frozendict, html_sanitize
 import simplejson
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, registry
+
+EMPTY_DICT = frozendict()
 
 _logger = logging.getLogger(__name__)
 
@@ -73,7 +74,6 @@ class _column(object):
     _classic_read = True
     _classic_write = True
     _auto_join = False
-    _prefetch = True
     _properties = False
     _type = 'unknown'
     _obj = None
@@ -84,65 +84,94 @@ class _column(object):
     _symbol_get = None
     _deprecated = False
 
-    copy = True                 # whether value is copied by BaseModel.copy()
-    string = None
-    help = ""
-    required = False
-    readonly = False
-    _domain = []
-    _context = {}
-    states = None
-    priority = 0
-    change_default = False
-    size = None
-    ondelete = None
-    translate = False
-    select = False
-    manual = False
-    write = False
-    read = False
-    selectable = True
-    group_operator = False
-    groups = False              # CSV list of ext IDs of groups
-    deprecated = False          # Optional deprecation warning
+    __slots__ = [
+        'copy',                 # whether value is copied by BaseModel.copy()
+        'string',
+        'help',
+        'required',
+        'readonly',
+        '_domain',
+        '_context',
+        'states',
+        'priority',
+        'change_default',
+        'size',
+        'ondelete',
+        'translate',
+        'select',
+        'manual',
+        'write',
+        'read',
+        'selectable',
+        'group_operator',
+        'groups',               # CSV list of ext IDs of groups
+        'deprecated',           # Optional deprecation warning
+        '_args',
+        '_prefetch',
+    ]
 
-    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, **args):
+    def __init__(self, string='unknown', required=False, readonly=False, domain=[], context={}, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, **args):
         """
 
         The 'manual' keyword argument specifies if the field is a custom one.
         It corresponds to the 'state' column in ir_model_fields.
 
         """
-        args0 = {
-            'string': string,
-            'help': args.pop('help', None),
-            'required': required,
-            'readonly': readonly,
-            '_domain': domain,
-            '_context': context,
-            'states': states,
-            'priority': priority,
-            'change_default': change_default,
-            'size': size,
-            'ondelete': ondelete.lower() if ondelete else None,
-            'translate': translate,
-            'select': select,
-            'manual': manual,
-            'group_operator': args.pop('group_operator', None),
-            'groups': args.pop('groups', None),
-            'deprecated': args.pop('deprecated', None),
-        }
-        for key, val in args0.iteritems():
-            if val:
-                setattr(self, key, val)
+        # add parameters and default values
+        args['copy'] = args.get('copy', True)
+        args['string'] = string
+        args['help'] = args.get('help', '')
+        args['required'] = required
+        args['readonly'] = readonly
+        args['_domain'] = domain
+        args['_context'] = context
+        args['states'] = states
+        args['priority'] = priority
+        args['change_default'] = change_default
+        args['size'] = size
+        args['ondelete'] = ondelete.lower() if ondelete else None
+        args['translate'] = translate
+        args['select'] = select
+        args['manual'] = manual
+        args['write'] = args.get('write', False)
+        args['read'] = args.get('read', False)
+        args['selectable'] = args.get('selectable', True)
+        args['group_operator'] = args.get('group_operator', None)
+        args['groups'] = args.get('groups', None)
+        args['deprecated'] = args.get('deprecated', None)
+        args['_prefetch'] = args.get('_prefetch', True)
 
-        self._args = args
+        self._args = EMPTY_DICT
         for key, val in args.iteritems():
             setattr(self, key, val)
 
         # prefetch only if _classic_write, not deprecated and not manual
         if not self._classic_write or self.deprecated or self.manual:
             self._prefetch = False
+
+    def __getattr__(self, name):
+        """ Access a non-slot attribute. """
+        try:
+            return self._args[name]
+        except KeyError:
+            raise AttributeError(name)
+
+    def __setattr__(self, name, value):
+        """ Set a slot or non-slot attribute. """
+        try:
+            object.__setattr__(self, name, value)
+        except AttributeError:
+            if self._args:
+                self._args[name] = value
+            else:
+                self._args = {name: value}     # replace EMPTY_DICT
+
+    def __delattr__(self, name):
+        """ Remove a non-slot attribute. """
+        try:
+            del self._args[name]
+        except KeyError:
+            raise AttributeError(name)
 
     def new(self, _computed_field=False, **args):
         """ Return a column like `self` with the given parameters; the parameter
@@ -223,6 +252,7 @@ class boolean(_column):
     _symbol_c = '%s'
     _symbol_f = bool
     _symbol_set = (_symbol_c, _symbol_f)
+    __slots__ = []
 
     def __init__(self, string='unknown', required=False, **args):
         super(boolean, self).__init__(string=string, required=required, **args)
@@ -238,6 +268,7 @@ class integer(_column):
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0
+    __slots__ = []
 
     def __init__(self, string='unknown', required=False, **args):
         super(integer, self).__init__(string=string, required=required, **args)
@@ -245,6 +276,7 @@ class integer(_column):
 class reference(_column):
     _type = 'reference'
     _classic_read = False # post-process to handle missing target
+    __slots__ = ['selection']
 
     def __init__(self, string, selection, size=None, **args):
         if callable(selection):
@@ -297,6 +329,7 @@ def _symbol_set_char(self, symb):
 
 class char(_column):
     _type = 'char'
+    __slots__ = ['_symbol_f', '_symbol_set', '_symbol_set_char']
 
     def __init__(self, string="unknown", size=None, **args):
         _column.__init__(self, string=string, size=size or None, **args)
@@ -306,22 +339,25 @@ class char(_column):
 
 class text(_column):
     _type = 'text'
+    __slots__ = []
 
 
 class html(text):
     _type = 'html'
     _symbol_c = '%s'
+    __slots__ = ['_sanitize', '_strip_style', '_symbol_f', '_symbol_set']
 
     def _symbol_set_html(self, value):
         if value is None or value is False:
             return None
         if not self._sanitize:
             return value
-        return html_sanitize(value)
+        return html_sanitize(value, strip_style=self._strip_style)
 
-    def __init__(self, string='unknown', sanitize=True, **args):
+    def __init__(self, string='unknown', sanitize=True, strip_style=False, **args):
         super(html, self).__init__(string=string, **args)
         self._sanitize = sanitize
+        self._strip_style = strip_style
         # symbol_set redefinition because of sanitize specific behavior
         self._symbol_f = self._symbol_set_html
         self._symbol_set = (self._symbol_c, self._symbol_f)
@@ -333,39 +369,47 @@ class html(text):
 
 import __builtin__
 
+def _symbol_set_float(self, x):
+    result = __builtin__.float(x or 0.0)
+    digits = self.digits
+    if digits:
+        precision, scale = digits
+        result = float_repr(float_round(result, precision_digits=scale), precision_digits=scale)
+    return result
+
 class float(_column):
     _type = 'float'
     _symbol_c = '%s'
-    _symbol_f = lambda x: __builtin__.float(x or 0.0)
-    _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0.0
+    __slots__ = ['_digits', '_digits_compute', '_symbol_f', '_symbol_set']
+
+    @property
+    def digits(self):
+        if self._digits_compute:
+            with registry().cursor() as cr:
+                return self._digits_compute(cr)
+        else:
+            return self._digits
 
     def __init__(self, string='unknown', digits=None, digits_compute=None, required=False, **args):
         _column.__init__(self, string=string, required=required, **args)
-        self.digits = digits
         # synopsis: digits_compute(cr) ->  (precision, scale)
-        self.digits_compute = digits_compute
-
-    def new(self, _computed_field=False, **args):
-        # float columns are database-dependent, so always recreate them
-        return type(self)(**args)
+        self._digits = digits
+        self._digits_compute = digits_compute
+        self._symbol_f = lambda x: _symbol_set_float(self, x)
+        self._symbol_set = (self._symbol_c, self._symbol_f)
 
     def to_field_args(self):
         args = super(float, self).to_field_args()
-        args['digits'] = self.digits_compute or self.digits
+        args['digits'] = self._digits_compute or self._digits
         return args
 
     def digits_change(self, cr):
-        if self.digits_compute:
-            self.digits = self.digits_compute(cr)
-        if self.digits:
-            precision, scale = self.digits
-            self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0),
-                                                                       precision_digits=scale),
-                                                           precision_digits=scale))
+        pass
 
 class date(_column):
     _type = 'date'
+    __slots__ = []
 
     MONTHS = [
         ('01', 'January'),
@@ -456,6 +500,7 @@ class date(_column):
 
 class datetime(_column):
     _type = 'datetime'
+    __slots__ = []
 
     MONTHS = [
         ('01', 'January'),
@@ -525,7 +570,7 @@ class datetime(_column):
 
 class binary(_column):
     _type = 'binary'
-    _symbol_c = '%s'
+    _classic_read = False
 
     # Binary values may be byte strings (python 2.6 byte array), but
     # the legacy OpenERP convention is to transfer and store binaries
@@ -533,17 +578,16 @@ class binary(_column):
     # unicode in some circumstances, hence the str() cast in symbol_f.
     # This str coercion will only work for pure ASCII unicode strings,
     # on purpose - non base64 data must be passed as a 8bit byte strings.
+    _symbol_c = '%s'
     _symbol_f = lambda symb: symb and Binary(str(symb)) or None
-
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self, x: x and str(x)
 
-    _classic_read = False
-    _prefetch = False
+    __slots__ = ['filters']
 
     def __init__(self, string='unknown', filters=None, **args):
-        _column.__init__(self, string=string, **args)
-        self.filters = filters
+        args['_prefetch'] = args.get('_prefetch', False)
+        _column.__init__(self, string=string, filters=filters, **args)
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
         if not context:
@@ -571,13 +615,13 @@ class binary(_column):
 
 class selection(_column):
     _type = 'selection'
+    __slots__ = ['selection']
 
     def __init__(self, selection, string='unknown', **args):
         if callable(selection):
             from openerp import api
             selection = api.expected(api.cr_uid_context, selection)
-        _column.__init__(self, string=string, **args)
-        self.selection = selection
+        _column.__init__(self, string=string, selection=selection, **args)
 
     def to_field_args(self):
         args = super(selection, self).to_field_args()
@@ -638,9 +682,10 @@ class many2one(_column):
     _symbol_f = lambda x: x or None
     _symbol_set = (_symbol_c, _symbol_f)
 
-    ondelete = 'set null'
+    __slots__ = ['_obj', '_auto_join']
 
     def __init__(self, obj, string='unknown', auto_join=False, **args):
+        args['ondelete'] = args.get('ondelete', 'set null')
         _column.__init__(self, string=string, **args)
         self._obj = obj
         self._auto_join = auto_join
@@ -686,13 +731,14 @@ class many2one(_column):
 class one2many(_column):
     _classic_read = False
     _classic_write = False
-    _prefetch = False
     _type = 'one2many'
 
-    # one2many columns are not copied by default
-    copy = False
+    __slots__ = ['_obj', '_fields_id', '_limit', '_auto_join']
 
     def __init__(self, obj, fields_id, string='unknown', limit=None, auto_join=False, **args):
+        # one2many columns are not copied by default
+        args['copy'] = args.get('copy', False)
+        args['_prefetch'] = args.get('_prefetch', False)
         _column.__init__(self, string=string, **args)
         self._obj = obj
         self._fields_id = fields_id
@@ -833,12 +879,14 @@ class many2many(_column):
     """
     _classic_read = False
     _classic_write = False
-    _prefetch = False
     _type = 'many2many'
+
+    __slots__ = ['_obj', '_rel', '_id1', '_id2', '_limit', '_auto_join']
 
     def __init__(self, obj, rel=None, id1=None, id2=None, string='unknown', limit=None, **args):
         """
         """
+        args['_prefetch'] = args.get('_prefetch', False)
         _column.__init__(self, string=string, **args)
         self._obj = obj
         if rel and '.' in rel:
@@ -848,6 +896,7 @@ class many2many(_column):
         self._id1 = id1
         self._id2 = id2
         self._limit = limit
+        self._auto_join = False
 
     def to_field_args(self):
         args = super(many2many, self).to_field_args()
@@ -1230,43 +1279,79 @@ class function(_column):
         }
 
     """
-    _classic_read = False
-    _classic_write = False
-    _prefetch = False
-    _type = 'function'
     _properties = True
 
-    # function fields are not copied by default
-    copy = False
+    __slots__ = [
+        '_type',
+        '_classic_read',
+        '_classic_write',
+        '_symbol_c',
+        '_symbol_f',
+        '_symbol_set',
+        '_symbol_get',
+
+        '_fnct',
+        '_arg',
+        '_fnct_inv',
+        '_fnct_inv_arg',
+        '_fnct_search',
+        '_multi',
+        'store',
+
+        '_digits',
+        '_digits_compute',
+        'selection',
+        '_obj',
+    ]
+
+    @property
+    def digits(self):
+        if self._digits_compute:
+            with registry().cursor() as cr:
+                return self._digits_compute(cr)
+        else:
+            return self._digits
 
 #
 # multi: compute several fields in one call
 #
     def __init__(self, fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='float', fnct_search=None, obj=None, store=False, multi=False, **args):
+        self._classic_read = False
+        self._classic_write = False
+        self._prefetch = False
+        self._symbol_c = '%s'
+        self._symbol_f = _symbol_set
+        self._symbol_set = (self._symbol_c, self._symbol_f)
+        self._symbol_get = None
+
+        # pop attributes that should not be assigned to self
+        self._digits = args.pop('digits', (16,2))
+        self._digits_compute = args.pop('digits_compute', None)
+        self._obj = args.pop('relation', obj)
+
+        # function fields are not copied by default
+        args['copy'] = args.get('copy', False)
+
         _column.__init__(self, **args)
-        self._obj = obj
-        self._fnct = fnct
-        self._fnct_inv = fnct_inv
-        self._arg = arg
-        self._multi = multi
-        if 'relation' in args:
-            self._obj = args['relation']
 
-        self.digits = args.get('digits', (16,2))
-        self.digits_compute = args.get('digits_compute', None)
-        if callable(args.get('selection')):
-            from openerp import api
-            self.selection = api.expected(api.cr_uid_context, args['selection'])
-
-        self._fnct_inv_arg = fnct_inv_arg
-        if not fnct_inv:
-            self.readonly = 1
         self._type = type
+        self._fnct = fnct
+        self._arg = arg
+        self._fnct_inv = fnct_inv
+        self._fnct_inv_arg = fnct_inv_arg
         self._fnct_search = fnct_search
         self.store = store
+        self._multi = multi
+
+        if not fnct_inv:
+            self.readonly = 1
 
         if not fnct_search and not store:
             self.selectable = False
+
+        if callable(args.get('selection')):
+            from openerp import api
+            self.selection = api.expected(api.cr_uid_context, args['selection'])
 
         if store:
             if self._type != 'many2one':
@@ -1281,6 +1366,10 @@ class function(_column):
         if type == 'char':
             self._symbol_c = char._symbol_c
             self._symbol_f = lambda x: _symbol_set_char(self, x)
+            self._symbol_set = (self._symbol_c, self._symbol_f)
+        elif type == 'float':
+            self._symbol_c = float._symbol_c
+            self._symbol_f = lambda x: _symbol_set_float(self, x)
             self._symbol_set = (self._symbol_c, self._symbol_f)
         else:
             type_class = globals().get(type)
@@ -1303,7 +1392,7 @@ class function(_column):
         args = super(function, self).to_field_args()
         args['store'] = bool(self.store)
         if self._type in ('float',):
-            args['digits'] = self.digits_compute or self.digits
+            args['digits'] = self._digits_compute or self._digits
         elif self._type in ('selection', 'reference'):
             args['selection'] = self.selection
         elif self._type in ('many2one', 'one2many', 'many2many'):
@@ -1311,14 +1400,7 @@ class function(_column):
         return args
 
     def digits_change(self, cr):
-        if self._type == 'float':
-            if self.digits_compute:
-                self.digits = self.digits_compute(cr)
-            if self.digits:
-                precision, scale = self.digits
-                self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0),
-                                                                           precision_digits=scale),
-                                                               precision_digits=scale))
+        pass
 
     def search(self, cr, uid, obj, name, args, context=None):
         if not self._fnct_search:
@@ -1406,14 +1488,15 @@ class related(function):
            'bar': fields.related('foo_id', 'frol', type='char', string='Frol of Foo'),
         }
     """
+    __slots__ = ['arg', '_relations']
 
-    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
+    def _related_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         # assume self._arg = ('foo', 'bar', 'baz')
         # domain = [(name, op, val)]   =>   search [('foo.bar.baz', op, val)]
         field = '.'.join(self._arg)
         return map(lambda x: (field, x[1], x[2]), domain)
 
-    def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
+    def _related_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for instance in obj.browse(cr, uid, ids, context=context):
@@ -1424,7 +1507,7 @@ class related(function):
                 # write on the last field of the target record
                 instance.write({self.arg[-1]: values})
 
-    def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
+    def _related_read(self, obj, cr, uid, ids, field_name, args, context=None):
         res = {}
         for record in obj.browse(cr, SUPERUSER_ID, ids, context=context):
             value = record
@@ -1451,13 +1534,14 @@ class related(function):
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(related, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, fnct_search=self._fnct_search, **args)
+        super(related, self).__init__(self._related_read, arg, self._related_write, fnct_inv_arg=arg, fnct_search=self._related_search, **args)
         if self.store is True:
             # TODO: improve here to change self.store = {...} according to related objects
             pass
 
 
-class sparse(function):   
+class sparse(function):
+    __slots__ = ['serialization_field']
 
     def convert_value(self, obj, cr, uid, record, value, read_value, context=None):        
         """
@@ -1506,8 +1590,7 @@ class sparse(function):
             return read_value
         return value
 
-
-    def _fnct_write(self,obj,cr, uid, ids, field_name, value, args, context=None):
+    def _sparse_write(self,obj,cr, uid, ids, field_name, value, args, context=None):
         if not type(ids) == list:
             ids = [ids]
         records = obj.browse(cr, uid, ids, context=context)
@@ -1522,7 +1605,7 @@ class sparse(function):
             obj.write(cr, uid, ids, {self.serialization_field: serialized}, context=context)
         return True
 
-    def _fnct_read(self, obj, cr, uid, ids, field_names, args, context=None):
+    def _sparse_read(self, obj, cr, uid, ids, field_names, args, context=None):
         results = {}
         records = obj.browse(cr, uid, ids, context=context)
         for record in records:
@@ -1548,8 +1631,7 @@ class sparse(function):
 
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
-        super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
-     
+        super(sparse, self).__init__(self._sparse_read, fnct_inv=self._sparse_write, multi='__sparse_multi', **kwargs)
 
 
 # ---------------------------------------------------------
@@ -1557,19 +1639,21 @@ class sparse(function):
 # ---------------------------------------------------------
 
 class dummy(function):
-    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
+    __slots__ = ['arg', '_relations']
+
+    def _dummy_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         return []
 
-    def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
+    def _dummy_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
         return False
 
-    def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
+    def _dummy_read(self, obj, cr, uid, ids, field_name, args, context=None):
         return {}
 
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, fnct_search=self._fnct_search, **args)
+        super(dummy, self).__init__(self._dummy_read, arg, self._dummy_write, fnct_inv_arg=arg, fnct_search=self._dummy_search, **args)
 
 # ---------------------------------------------------------
 # Serialized fields
@@ -1580,42 +1664,46 @@ class serialized(_column):
     
         Note: only plain components allowed.
     """
-    
+    _type = 'serialized'
+    __slots__ = []
+
     def _symbol_set_struct(val):
         return simplejson.dumps(val)
 
     def _symbol_get_struct(self, val):
         return simplejson.loads(val or '{}')
-    
-    _prefetch = False
-    _type = 'serialized'
 
     _symbol_c = '%s'
     _symbol_f = _symbol_set_struct
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = _symbol_get_struct
 
+    def __init__(self, *args, **kwargs):
+        kwargs['_prefetch'] = kwargs.get('_prefetch', False)
+        super(serialized, self).__init__(*args, **kwargs)
+
 # TODO: review completly this class for speed improvement
 class property(function):
+    __slots__ = []
 
     def to_field_args(self):
         args = super(property, self).to_field_args()
         args['company_dependent'] = True
         return args
 
-    def _fnct_search(self, tobj, cr, uid, obj, name, domain, context=None):
+    def _property_search(self, tobj, cr, uid, obj, name, domain, context=None):
         ir_property = obj.pool['ir.property']
         result = []
         for field, operator, value in domain:
             result += ir_property.search_multi(cr, uid, name, tobj._name, operator, value, context=context)
         return result
 
-    def _fnct_write(self, obj, cr, uid, id, prop_name, value, obj_dest, context=None):
+    def _property_write(self, obj, cr, uid, id, prop_name, value, obj_dest, context=None):
         ir_property = obj.pool['ir.property']
         ir_property.set_multi(cr, uid, prop_name, obj._name, {id: value}, context=context)
         return True
 
-    def _fnct_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
+    def _property_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
         ir_property = obj.pool['ir.property']
 
         res = {id: {} for id in ids}
@@ -1644,9 +1732,9 @@ class property(function):
         args = dict(args)
         args['obj'] = args.pop('relation', '') or args.get('obj', '')
         super(property, self).__init__(
-            fnct=self._fnct_read,
-            fnct_inv=self._fnct_write,
-            fnct_search=self._fnct_search,
+            fnct=self._property_read,
+            fnct_inv=self._property_write,
+            fnct_search=self._property_search,
             multi='properties',
             **args
         )
@@ -1680,6 +1768,8 @@ class column_info(object):
             contains it i.e in case of multilevel inheritance, ``None`` for
             local columns.
     """
+    __slots__ = ['name', 'column', 'parent_model', 'parent_column', 'original_parent']
+
     def __init__(self, name, column, parent_model=None, parent_column=None, original_parent=None):
         self.name = name
         self.column = column

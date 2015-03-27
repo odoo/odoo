@@ -1,9 +1,15 @@
-(function () {
-    'use strict';
+odoo.define('website_event.tour', function (require) {
+'use strict';
 
-    var _t = openerp._t;
+var core = require('web.core');
+var Tour = require('web.Tour');
+var website = require('website.website');
 
-    openerp.Tour.register({
+
+var _t = core._t;
+
+website.ready().done(function () {
+    Tour.register({
         id:   'event',
         name: _t("Create an event"),
         steps: [
@@ -86,5 +92,6 @@
             },
         ]
     });
+});
 
-}());
+});

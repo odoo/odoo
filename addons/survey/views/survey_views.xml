@@ -113,11 +113,15 @@
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
                 <form string="Survey">
+                    <field name="id" invisible="1"/>
+                    <field name="tot_start_survey" invisible="1"/>
                     <header groups="base.group_survey_manager">
-                        <button name="action_test_survey" string="Test Survey" type="object"/>
-                        <button name="action_print_survey" string="Print Survey" type="object"/>
-                        <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight" />
-                        <button name="action_result_survey" string="View results" type="object" class="oe_highlight" />
+                        <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>
+                        <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>
+                        <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True" />
                     </header>
                     <sheet>
@@ -135,11 +139,10 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Select Options">
+                            <page string="Options">
                                 <group colspan="4">
                                     <field name="users_can_go_back" string="User can come back in the previous page" />
                                     <field name="auth_required" />
-                                    <field name="res_model" groups="base.group_no_one"/>
                                     <field name="quizz_mode" groups="base.group_no_one"/>
                                 </group>
                             </page>
@@ -180,7 +183,7 @@
                     <field name="auth_required" />
                     <field name="public_url" />
                     <templates>
-                        <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
+                        <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
                                 <i class="fa fa-bars fa-lg"/>
                                 <ul class="oe_dropdown_menu">
@@ -288,6 +291,12 @@
         </record>
         <act_window context="{'search_default_page_id': active_id, 'default_page_id': active_id}" id="act_survey_page_question" name="Questions" res_model="survey.question" src_model="survey.page"/>
 
+        <template id="assets_backend" name="survey assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/survey/static/src/css/survey_result.css"/>
+            </xpath>
+        </template>
+
         <!-- QUESTIONS -->
         <record model="ir.ui.view" id="survey_question_form">
             <field name="name">Form view for survey question</field>
@@ -301,18 +310,80 @@
                             <separator />
                         </div>
                         <group>
-                            <field name="type" widget="radio" />
+                            <group>
+                                <field name="type" widget="radio" />
+                            </group>
+                            <group>
+                                <div class="col-md-6 col-md-offset-3 o_preview_questions">
+                                    <!-- Multiple Lines Text Zone -->
+                                    <div attrs="{'invisible': [('type', '!=', 'free_text')]}">
+                                            <i class="fa fa-align-justify fa-4x"/>
+                                    </div>
+                                    <!-- Single Line Text Zone -->
+                                    <div attrs="{'invisible': [('type', '!=', 'textbox')]}">
+                                        <i class="fa fa-minus fa-4x"/>
+                                    </div>
+                                    <!-- Numerical Value -->
+                                    <div attrs="{'invisible': [('type', '!=', 'numerical_box')]}">
+                                        <i class="fa fa-2x">123..</i>
+                                    </div>
+                                    <!-- Date and Time -->
+                                    <div attrs="{'invisible': [('type', '!=', 'datetime')]}">
+                                        <p class="o_datetime">YYYY-MM-DD hh:mm:ss
+                                            <i class="fa fa-calendar fa-2x"/>
+                                        </p>
+                                    </div>
+                                    <!-- Multiple choice: only one answer -->
+                                    <div attrs="{'invisible': [('type', '!=', 'simple_choice')]}">
+                                        <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
+                                        <div class="row"><i class="fa fa-dot-circle-o fa-lg"/> answer</div>
+                                        <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
+                                    </div>
+                                    <!-- Multiple choice: multiple answers allowed -->
+                                    <div attrs="{'invisible': [('type', '!=', 'multiple_choice')]}">
+                                        <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
+                                        <div class="row"><i class="fa fa-check-square-o fa-lg"/> answer</div>
+                                        <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
+                                    </div>
+                                    <!-- Matrix -->
+                                    <div attrs="{'invisible': [('type', '!=', 'matrix')]}">
+                                        <div class="row o_matrix_head">
+                                            <div class="col-md-3"></div>
+                                            <div class="col-md-3">ans</div>
+                                            <div class="col-md-3">ans</div>
+                                            <div class="col-md-3">ans</div>
+                                        </div>
+                                        <div class="row o_matrix_row">
+                                            <div class="col-md-3">Row1</div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                        </div>
+                                        <div class="row o_matrix_row">
+                                            <div class="col-md-3">Row2</div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
+                                        </div>
+                                        <div class="row o_matrix_row">
+                                            <div class="col-md-3">Row3</div>
+                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Answers">
-                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}" on_change="onchange_validation_email(validation_email)"/>
                                 <label for="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                 <separator />
-                                <label for="labels_ids" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}" />
                                 <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="value" string="Answers"/>
+                                        <field name="value" string="Choices"/>
                                         <field name="quizz_mark" groups="base.group_no_one"/>
                                     </tree>
                                 </field>
@@ -321,7 +392,7 @@
                                 <field name="labels_ids_2" context="{'default_question_id_2': active_id}" attrs="{'invisible': [('type', '!=', 'matrix')]}">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="value" string="Answers"/>
+                                        <field name="value" string="Rows"/>
                                     </tree>
                                 </field>
                             </page>
@@ -330,7 +401,7 @@
                                     <field name="constr_mandatory" string="Mandatory Answer"/>
                                     <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                     <group colspan="2" nolabel="1" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
-                                        <field name="validation_required"/>
+                                        <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('type', '=', 'textbox')]}"/>
                                         <group colspan="2" nolabel="1" attrs="{'invisible': [('validation_required', '=', False)]}">
                                         <field name="validation_length_min" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                         <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
@@ -528,5 +599,18 @@
         <menuitem name="Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
         <menuitem name="Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
         <menuitem name="User Input Lines" id="menu_survey_response_line_form" action="action_survey_user_input_line" parent="menu_surveys_configuration" sequence="4"/>
+    </data>
+
+    <data noupdate="1">
+    <!-- After installation of the module, open the related menu -->
+        <record id="action_client_survey_menu" model="ir.actions.client">
+            <field name="name">Open Survey Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_survey_form')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_survey_menu"/>
+            <field name="state">open</field>
+        </record>
     </data>
 </openerp>

@@ -77,7 +77,7 @@ class delivery_carrier(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Delivery Method', required=True),
+        'name': fields.char('Delivery Method', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Determine the display order"),
         'partner_id': fields.many2one('res.partner', 'Transport Company', required=True, help="The partner that is doing the delivery service."),
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
@@ -212,15 +212,18 @@ class delivery_grid(osv.osv):
         weight = 0
         volume = 0
         quantity = 0
+        total_delivery = 0.0
         product_uom_obj = self.pool.get('product.uom')
         for line in order.order_line:
+            if line.is_delivery:
+                total_delivery += line.price_subtotal + self.pool['sale.order']._amount_line_tax(cr, uid, line, context=context)
             if not line.product_id or line.is_delivery:
                 continue
             q = product_uom_obj._compute_qty(cr, uid, line.product_uom.id, line.product_uom_qty, line.product_id.uom_id.id)
             weight += (line.product_id.weight or 0.0) * q
             volume += (line.product_id.volume or 0.0) * q
             quantity += q
-        total = order.amount_total or 0.0
+        total = (order.amount_total or 0.0) - total_delivery
 
         return self.get_price_from_picking(cr, uid, id, total,weight, volume, quantity, context=context)
 

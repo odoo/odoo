@@ -20,9 +20,12 @@
 ##############################################################################
 
 import time
+from collections import OrderedDict
+
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 from openerp import tools, SUPERUSER_ID
 from openerp.addons.product import _common
@@ -96,12 +99,22 @@ class mrp_workcenter(osv.osv):
             value = {'costs_hour': cost.standard_price}
         return {'value': value}
 
+    def _check_capacity_per_cycle(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.capacity_per_cycle <= 0.0:
+                return False
+        return True
+
+    _constraints = [
+        (_check_capacity_per_cycle, 'The capacity per cycle must be strictly positive.', ['capacity_per_cycle']),
+    ]
+
 class mrp_routing(osv.osv):
     """
     For specifying the routings of Work Centers.
     """
     _name = 'mrp.routing'
-    _description = 'Routing'
+    _description = 'Work Order Operations'
     _columns = {
         'name': fields.char('Name', required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the routing without removing it."),
@@ -136,9 +149,9 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': fields.float('Number of Cycles', required=True,
             help="Number of iterations this work center has to do in the specified operation of the routing."),
         'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this Work Center to achieve the operation of the specified routing."),
-        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
-             help="Routing indicates all the Work Centers used, for how long and/or cycles." \
-                "If Routing is indicated then,the third tab of a production order (Work Centers) will be automatically pre-completed."),
+        'routing_id': fields.many2one('mrp.routing', 'Parent Work Order Operations', select=True, ondelete='cascade',
+             help="Work Order Operations indicates all the Work Centers used, for how long and/or cycles." \
+                "If Work Order Operations is indicated then,the third tab of a production order (Work Centers) will be automatically pre-completed."),
         'note': fields.text('Description'),
         'company_id': fields.related('routing_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
@@ -172,7 +185,7 @@ class mrp_bom(osv.osv):
         'date_start': fields.date('Valid From', help="Validity of this BoM. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of this BoM. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bills of material."),
-        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of work centers) to produce the finished product. "\
+        'routing_id': fields.many2one('mrp.routing', 'Work Order Operations', help="The list of operations (list of work centers) to produce the finished product. "\
                 "The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% during the production process."),
@@ -356,6 +369,7 @@ class mrp_bom(osv.osv):
 class mrp_bom_line(osv.osv):
     _name = 'mrp.bom.line'
     _order = "sequence"
+    _rec_name = "product_id"
 
     def _get_child_bom_lines(self, cr, uid, ids, field_name, arg, context=None):
         """If the BOM line refers to a BOM, return the ids of the child BOM lines"""
@@ -387,7 +401,7 @@ class mrp_bom_line(osv.osv):
         'date_start': fields.date('Valid From', help="Validity of component. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of component. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying."),
-        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
+        'routing_id': fields.many2one('mrp.routing', 'Work Order Operations', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% within the production process."),
         'property_ids': fields.many2many('mrp.property', string='Properties'), #Not used
@@ -546,7 +560,7 @@ class mrp_production(osv.osv):
         'date_finished': fields.datetime('End Date', select=True, readonly=True, copy=False),
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', readonly=True, states={'draft': [('readonly', False)]},
             help="Bill of Materials allow you to define the list of required raw materials to make a finished product."),
-        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft': [('readonly', False)]},
+        'routing_id': fields.many2one('mrp.routing', string='Work Order Operations', on_delete='set null', readonly=True, states={'draft': [('readonly', False)]},
             help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
         'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True, copy=False),
         'move_lines': fields.one2many('stock.move', 'raw_material_production_id', 'Products to Consume',
@@ -566,17 +580,18 @@ class mrp_production(osv.osv):
                 ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
             string='Status', readonly=True,
             track_visibility='onchange', copy=False,
-            help="When the production order is created the status is set to 'Draft'.\n\
-                If the order is confirmed the status is set to 'Waiting Goods'.\n\
-                If any exceptions are there, the status is set to 'Picking Exception'.\n\
-                If the stock is available then the status is set to 'Ready to Produce'.\n\
-                When the production gets started then the status is set to 'In Production'.\n\
-                When the production is over, the status is set to 'Done'."),
+            help="When the production order is created the status is set to 'Draft'.\n"
+                "If the order is confirmed the status is set to 'Waiting Goods.\n"
+                "If any exceptions are there, the status is set to 'Picking Exception.\n"
+                "If the stock is available then the status is set to 'Ready to Produce.\n"
+                "When the production gets started then the status is set to 'In Production.\n"
+                "When the production is over, the status is set to 'Done'."),
         'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store=True),
         'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store=True),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'ready_production': fields.function(_moves_assigned, type='boolean', string="Ready for production", store={'stock.move': (_mrp_from_move, ['state'], 10)}),
+        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product'),
     }
 
     _defaults = {
@@ -645,7 +660,8 @@ class mrp_production(osv.osv):
                 'bom_id': False,
                 'routing_id': False,
                 'product_uos_qty': 0,
-                'product_uos': False
+                'product_uos': False,
+                'product_tmpl_id': False
             }}
         bom_obj = self.pool.get('mrp.bom')
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
@@ -655,7 +671,7 @@ class mrp_production(osv.osv):
             bom_point = bom_obj.browse(cr, uid, bom_id, context=context)
             routing_id = bom_point.routing_id.id or False
         product_uom_id = product.uom_id and product.uom_id.id or False
-        result['value'] = {'product_uos_qty': 0, 'product_uos': False, 'product_uom': product_uom_id, 'bom_id': bom_id, 'routing_id': routing_id}
+        result['value'] = {'product_uos_qty': 0, 'product_uos': False, 'product_uom': product_uom_id, 'bom_id': bom_id, 'routing_id': routing_id, 'product_tmpl_id': product.product_tmpl_id}
         if product.uos_id.id:
             result['value']['product_uos_qty'] = product_qty * product.uos_coeff
             result['value']['product_uos'] = product.uos_id.id
@@ -851,7 +867,7 @@ class mrp_production(osv.osv):
             product_qty = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.product_id.uom_id.id) - produced_qty
         production_qty = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.product_id.uom_id.id)
 
-        scheduled_qty = {}
+        scheduled_qty = OrderedDict()
         for scheduled in production.product_lines:
             if scheduled.product_id.type == 'service':
                 continue
@@ -860,7 +876,7 @@ class mrp_production(osv.osv):
                 scheduled_qty[scheduled.product_id.id] += qty
             else:
                 scheduled_qty[scheduled.product_id.id] = qty
-        dicts = {}
+        dicts = OrderedDict()
         # Find product qty to be consumed and consume it
         for product_id in scheduled_qty.keys():
 
@@ -903,7 +919,7 @@ class mrp_production(osv.osv):
                         else:
                             dicts[product_id][lot_id] = quant_qty
                         qty -= quant_qty
-            if qty > 0:
+            if float_compare(qty, 0, self.pool['decimal.precision'].precision_get(cr, uid, 'Product Unit of Measure')) == 1:
                 if dicts[product_id].get(False):
                     dicts[product_id][False] += qty
                 else:
@@ -941,7 +957,6 @@ class mrp_production(osv.osv):
                 if not produced_products.get(produced_product.product_id.id, False):
                     produced_products[produced_product.product_id.id] = 0
                 produced_products[produced_product.product_id.id] += produced_product.product_qty
-
             for produce_product in production.move_created_ids:
                 subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
                 lot_id = False
@@ -954,11 +969,10 @@ class mrp_production(osv.osv):
                 remaining_qty = subproduct_factor * production_qty_uom - qty
                 if remaining_qty: # In case you need to make more than planned
                     #consumed more in wizard than previously planned
-                    extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'state': 'confirmed',
-                                                                                             'product_uom_qty': remaining_qty,
+                    extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'product_uom_qty': remaining_qty,
                                                                                              'production_id': production_id}, context=context)
-                    if extra_move_id:
-                        stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+                    stock_mov_obj.action_confirm(cr, uid, [extra_move_id], context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
                 if produce_product.product_id.id == production.product_id.id:
                     main_production_move = produce_product.id
@@ -973,6 +987,8 @@ class mrp_production(osv.osv):
             for consume in consume_lines:
                 remaining_qty = consume['product_qty']
                 for raw_material_line in production.move_lines:
+                    if raw_material_line.state in ('done', 'cancel'):
+                        continue
                     if remaining_qty <= 0:
                         break
                     if consume['product_id'] != raw_material_line.product_id.id:
@@ -985,10 +1001,9 @@ class mrp_production(osv.osv):
                     #consumed more in wizard than previously planned
                     product = self.pool.get('product.product').browse(cr, uid, consume['product_id'], context=context)
                     extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, False, 0, context=context)
-                    if extra_move_id:
-                        if consume['lot_id']:
-                            stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id']}, context=context)
-                        stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+                    stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id'],
+                                                                    'consumed_for': main_production_move}, context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
         self.signal_workflow(cr, uid, [production_id], 'button_produce_done')
@@ -1092,14 +1107,27 @@ class mrp_production(osv.osv):
         #is 1 element long, so we can take the first.
         return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
 
-    def _get_raw_material_procure_method(self, cr, uid, product, context=None):
-        '''This method returns the procure_method to use when creating the stock move for the production raw materials'''
+    def _get_raw_material_procure_method(self, cr, uid, product, location_id=False, location_dest_id=False, context=None):
+        '''This method returns the procure_method to use when creating the stock move for the production raw materials
+        Besides the standard configuration of looking if the product or product category has the MTO route,
+        you can also define a rule e.g. from Stock to Production (which might be used in the future like the sale orders)
+        '''
         warehouse_obj = self.pool['stock.warehouse']
+        routes = product.route_ids + product.categ_id.total_route_ids
+
+        if location_id and location_dest_id:
+            pull_obj = self.pool['procurement.rule']
+            pulls = pull_obj.search(cr, uid, [('route_id', 'in', [x.id for x in routes]),
+                                            ('location_id', '=', location_dest_id),
+                                            ('location_src_id', '=', location_id)], limit=1, context=context)
+            if pulls:
+                return pull_obj.browse(cr, uid, pulls[0], context=context).procure_method
+
         try:
             mto_route = warehouse_obj._get_mto_route(cr, uid, context=context)
         except:
             return "make_to_stock"
-        routes = product.route_ids + product.categ_id.total_route_ids
+
         if mto_route in [x.id for x in routes]:
             return "make_to_order"
         return "make_to_stock"
@@ -1131,7 +1159,8 @@ class mrp_production(osv.osv):
         move = stock_move.copy(cr, uid, move_id, default = {
             'location_id': source_location_id,
             'location_dest_id': dest_location_id,
-            'procure_method': self._get_raw_material_procure_method(cr, uid, product, context=context),
+            'procure_method': self._get_raw_material_procure_method(cr, uid, product, location_id=source_location_id,
+                                                                    location_dest_id=dest_location_id, context=context),
             'raw_material_production_id': False, 
             'move_dest_id': move_id,
             'picking_type_id': types and types[0] or False,
@@ -1164,7 +1193,8 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'company_id': production.company_id.id,
-            'procure_method': prev_move and 'make_to_stock' or self._get_raw_material_procure_method(cr, uid, product, context=context), #Make_to_stock avoids creating procurement
+            'procure_method': prev_move and 'make_to_stock' or self._get_raw_material_procure_method(cr, uid, product, location_id=source_location_id,
+                                                                                                     location_dest_id=destination_location_id, context=context), #Make_to_stock avoids creating procurement
             'raw_material_production_id': production.id,
             #this saves us a browse in create()
             'price_unit': product.standard_price,

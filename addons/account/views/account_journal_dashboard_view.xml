@@ -209,13 +209,21 @@
                             <div class="col-md-6">
                                 <table class="pull-right table-condensed" style="margin-bottom:28px;">
                                     <tr>
-                                        <td class="journal-dashboard-text-right">Statement balance:</td>
-                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.last_balance"></span></td>
+                                        <td class="journal-dashboard-text-right">Balance in Odoo:</td>
+                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.account_balance"></span></td>
                                     </tr>
                                     <tr>
-                                        <td class="journal-dashboard-text-right">Account balance:</td>
-                                        <!-- (account.default_debit.balance) -->
-                                        <td class="journal-dashboard-text-right"><span t-esc="dashboard.number_statement"></span></td>
+                                        <td class="journal-dashboard-text-right">Statement Balance:</td>
+                                        <td class="journal-dashboard-text-right">
+                                            <t t-if="dashboard.account_balance != dashboard.last_balance">
+                                                <a type="action" name="%(action_account_report_bank_reconciliation)d">
+                                                    <span t-esc="dashboard.last_balance"></span>
+                                                </a>
+                                            </t>
+                                            <t t-if="dashboard.account_balance == dashboard.last_balance">
+                                                <span t-esc="dashboard.last_balance"></span>
+                                            </t>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>

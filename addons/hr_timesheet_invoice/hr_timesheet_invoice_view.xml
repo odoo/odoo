@@ -184,5 +184,8 @@
             id="hr_timesheet_invoice_factor_view"
             parent="account.menu_analytic_accounting" sequence="99" groups="base.group_no_one"/>
 
+        <record id="hr_timesheet.act_hr_timesheet_accounts_form" model="ir.actions.act_window">
+            <field name="context">{'invoice_on_timesheets':1, 'default_type': 'contract'}</field>
+        </record>
     </data>
 </openerp>

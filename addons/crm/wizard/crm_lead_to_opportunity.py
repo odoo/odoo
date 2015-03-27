@@ -79,6 +79,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 res.update({'user_id': lead.user_id.id})
             if lead.team_id:
                 res.update({'team_id': lead.team_id.id})
+            if not partner_id and not lead.contact_name:
+                res.update({'action': 'nothing'})
         return res
 
     def on_change_user(self, cr, uid, ids, user_id, team_id, context=None):

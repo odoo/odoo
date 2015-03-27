@@ -56,11 +56,15 @@ del time
 # The hard-coded super-user id (a.k.a. administrator, or root user).
 SUPERUSER_ID = 1
 
-def registry(database_name):
+def registry(database_name=None):
     """
-    Return the model registry for the given database. If the registry does not
-    exist yet, it is created on the fly.
+    Return the model registry for the given database, or the database mentioned
+    on the current thread. If the registry does not exist yet, it is created on
+    the fly.
     """
+    if database_name is None:
+        import threading
+        database_name = threading.currentThread().dbname
     return modules.registry.RegistryManager.get(database_name)
 
 #----------------------------------------------------------

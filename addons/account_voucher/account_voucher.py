@@ -368,8 +368,7 @@ class AccountVoucher(models.Model):
                 'state': 'posted',
                 'number': move.name
             })
-            if voucher.journal_id.entry_posted:
-                move.post()
+            move.post()
         return True
 
     @api.multi

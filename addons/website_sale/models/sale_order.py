@@ -63,7 +63,9 @@ class sale_order(osv.Model):
             values['name'] = line.name
         else:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            values['name'] = "%s\n%s" % (product.display_name, product.description_sale)
+            values['name'] = product.display_name
+            if product.description_sale:
+                values['name'] += '\n'+product.description_sale
 
         values['product_id'] = product_id
         values['order_id'] = order_id
@@ -131,7 +133,7 @@ class website(orm.Model):
         sale_order_id = request.session.get('sale_order_id')
         sale_order = None
         # create so if needed
-        if not sale_order_id and (force_create or code):  
+        if not sale_order_id and (force_create or code):
             # TODO cache partner_id session
             partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
 

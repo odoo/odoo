@@ -76,14 +76,11 @@ class AccountPaymentTermLine(models.Model):
             ('percent', 'Percent'),
             ('fixed', 'Fixed Amount')
         ], string='Computation', required=True, default='balance',
-        help="Select here the kind of valuation related to this payment term line. Note that you should have your last "
-            "line with the type 'Balance' to ensure that the whole amount will be treated.")
+        help="Select here the kind of valuation related to this payment term line.")
     value_amount = fields.Float(string='Amount To Pay', digits=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100.")
-    days = fields.Integer(string='Number of Days', required=True, default=30, help="Number of days to add before computation of the day of month." \
-        "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02.")
+    days = fields.Integer(string='Number of Days', required=True, default=30, help="Number of days to add before computing the day of the month.")
     days2 = fields.Integer(string='Day of the Month', required=True, default='0',
-        help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. "
-            "Set 0 for net days (otherwise it's based on the beginning of the month).")
+        help="Day of the month \n\n Set : \n1)-1 for the last day of the current month. \n2) 0 for net days\n3) A positive number for the specific day of the next month.\n\nExample : if Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02.")
     payment_id = fields.Many2one('account.payment.term', string='Payment Term', required=True, index=True, ondelete='cascade')
 
     @api.one
@@ -233,6 +230,12 @@ class AccountJournal(models.Model):
     _description = "Journal"
     _order = 'sequence, code'
 
+    def _default_inbound_payment_methods(self):
+        return [(4, self.env.ref('account.account_payment_method_manual_in').id, None)]
+
+    def _default_outbound_payment_methods(self):
+        return [(4, self.env.ref('account.account_payment_method_manual_out').id, None)]
+
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(size=5, required=True, help="The code will be displayed on reports.")
     type = fields.Selection([
@@ -266,9 +269,6 @@ class AccountJournal(models.Model):
 
     groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency = fields.Many2one('res.currency', help='The currency used to enter statement')
-    entry_posted = fields.Boolean(string='Autopost Created Moves',
-        help="Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the "
-            "source document is validated (Invoices), whatever the status of this field.")
     company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id,
         help="Company related to this journal")
 
@@ -276,9 +276,9 @@ class AccountJournal(models.Model):
     refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal")
 
     inbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
-        domain=[('payment_type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_in').id])
+        domain=[('payment_type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: self._default_inbound_payment_methods())
     outbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
-        domain=[('payment_type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: [self.env.ref('account.account_payment_method_manual_out').id])
+        domain=[('payment_type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: self._default_outbound_payment_methods())
     at_least_one_inbound = fields.Boolean(compute='_methods_compute', store=True)
     at_least_one_outbound = fields.Boolean(compute='_methods_compute', store=True)
 
@@ -853,7 +853,7 @@ class AccountChartTemplate(models.Model):
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
     bank_account_code_char = fields.Char(string='Code of the main bank account')
-    transfer_account_id = fields.Many2one('account.account.template',
+    transfer_account_id = fields.Many2one('account.account.template', string='Transfer Account',
         domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
     property_account_receivable = fields.Many2one('account.account.template', string='Receivable Account')
@@ -1302,11 +1302,11 @@ class WizardMultiChartsAccounts(models.TransientModel):
     bank_accounts_id = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True)
     bank_account_code_char = fields.Char('Bank Accounts Code')
     code_digits = fields.Integer(string='# of Digits', required=True, help="No. of Digits to use for account code")
-    sale_tax = fields.Many2one('account.tax.template', string='Default Sale Tax')
+    sale_tax = fields.Many2one('account.tax.template', string='Default Sales Tax')
     purchase_tax = fields.Many2one('account.tax.template', string='Default Purchase Tax')
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
     use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
-    transfer_account_id = fields.Many2one('account.account.template', required=True,
+    transfer_account_id = fields.Many2one('account.account.template', required=True, string='Transfer Account',
         domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
     purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
@@ -1336,29 +1336,29 @@ class WizardMultiChartsAccounts(models.TransientModel):
     def onchange_chart_template_id(self):
         res = {}
         tax_templ_obj = self.env['account.tax.template']
-        res['value'] = {'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False}
         if self.chart_template_id:
             currency_id = self.chart_template_id.currency_id and self.chart_template_id.currency_id.id or self.env.user.company_id.currency_id.id
-            res['value'].update({'complete_tax_set': self.chart_template_id.complete_tax_set, 'currency_id': currency_id})
+            self.complete_tax_set = self.chart_template_id.complete_tax_set
+            self.currency_id = currency_id
             if self.chart_template_id.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 chart_ids = self._get_chart_parent_ids(self.chart_template_id)
                 base_tax_domain = [('chart_template_id', 'in', chart_ids)]
                 sale_tax_domain = base_tax_domain + [('type_tax_use', '=', 'sale')]
                 purchase_tax_domain = base_tax_domain + [('type_tax_use', '=', 'purchase')]
-                sale_taxes = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
-                purchase_taxes = tax_templ_obj.search(purchase_tax_domain, order="sequence, id desc", limit=1)
-                res['value']['sale_tax'] = sale_taxes.ids and sale_taxes.ids[0] or False
-                res['value']['purchase_tax'] = purchase_taxes.ids and purchase_taxes.ids[0] or False
+                sale_tax = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
+                purchase_tax = tax_templ_obj.search(purchase_tax_domain, order="sequence, id desc", limit=1)
+                self.sale_tax = sale_tax.id
+                self.purchase_tax = purchase_tax.id
                 res.setdefault('domain', {})
                 res['domain']['sale_tax'] = repr(sale_tax_domain)
                 res['domain']['purchase_tax'] = repr(purchase_tax_domain)
             if self.chart_template_id.transfer_account_id:
-                res['value']['transfer_account_id'] = self.chart_template_id.transfer_account_id.id
+                self.transfer_account_id = self.chart_template_id.transfer_account_id.id
             if self.chart_template_id.code_digits:
-                res['value']['code_digits'] = self.chart_template_id.code_digits
+                self.code_digits = self.chart_template_id.code_digits
             if self.chart_template_id.bank_account_code_char:
-                res['value']['bank_account_code_char'] = self.chart_template_id.bank_account_code_char
+                self.bank_account_code_char = self.chart_template_id.bank_account_code_char
         return res
 
     @api.model
@@ -1443,10 +1443,10 @@ class WizardMultiChartsAccounts(models.TransientModel):
         if not self.chart_template_id.complete_tax_set:
             value = self.sale_tax_rate
             ref_taxs = obj_tax_temp.search([('type_tax_use', '=', 'sale'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
-            ref_taxs.write({'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
+            ref_taxs.write({'amount': value, 'name': _('Tax %.2f%%') % value})
             value = self.purchase_tax_rate
             ref_taxs = obj_tax_temp.search([('type_tax_use', '=', 'purchase'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
-            ref_taxs.write({'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
+            ref_taxs.write({'amount': value, 'name': _('Purchase Tax %.2f%%') % value})
         return True
 
     @api.multi

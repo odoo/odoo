@@ -40,7 +40,7 @@ In that case, you can not use priorities any more on the different picking.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/manufacturing',
-    'depends': ['procurement'],
+    'depends': ['procurement', 'stock'],
     'data': [],
     'demo': [],
     'test': ['test/procurement_jit.yml'],

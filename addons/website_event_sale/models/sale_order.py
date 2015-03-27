@@ -65,13 +65,13 @@ class sale_order(osv.Model):
 
         # case: buying tickets for a sold out ticket
         values = {}
-        if ticket and ticket.seats_available <= 0:
+        if ticket and ticket.seats_availability == 'limited' and ticket.seats_available <= 0:
             values['warning'] = _('Sorry, The %(ticket)s tickets for the %(event)s event are sold out.') % {
                 'ticket': ticket.name,
                 'event': ticket.event_id.name}
             new_qty, set_qty, add_qty = 0, 0, 0
         # case: buying tickets, too much attendees
-        elif ticket and new_qty > ticket.seats_available:
+        elif ticket and ticket.seats_availability == 'limited' and new_qty > ticket.seats_available:
             values['warning'] = _('Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event.') % {
                 'remaining_seats': ticket.seats_available,
                 'ticket': ticket.name,
@@ -86,7 +86,7 @@ class sale_order(osv.Model):
             attendees = Attendee.search(
                 cr, uid, [
                     ('state', '!=', 'cancel'),
-                    ('sale_order_id', '=', ids[0])
+                    ('sale_order_id', '=', ids[0]),
                     ('event_ticket_id', '=', ticket.id)
                 ], offset=new_qty, limit=(old_qty-new_qty),
                 order='create_date asc', context=context)

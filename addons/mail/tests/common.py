@@ -1,23 +1,6 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+
+import socket
 
 from openerp.tests import common
 
@@ -25,108 +8,162 @@ from openerp.tests import common
 class TestMail(common.TransactionCase):
 
     def _init_mock_build_email(self):
-        self._build_email_args_list = []
-        self._build_email_kwargs_list = []
+        self._mails_args = []
+        self._mails = []
+
+    def format_and_process(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
+                           extra='', email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>',
+                           cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
+                           model=None, target_model='mail.group', target_field='name'):
+        self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
+        mail = template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
+        self.env['mail.thread'].message_process(model, mail)
+        return self.env[target_model].search([(target_field, '=', subject)])
 
     def setUp(self):
         super(TestMail, self).setUp()
-        cr, uid = self.cr, self.uid
-
-        # Install mock SMTP gateway
-        test = self
+        Test = self
 
         def build_email(self, *args, **kwargs):
-            test._build_email_args_list.append(args)
-            test._build_email_kwargs_list.append(kwargs)
+            Test._mails_args.append(args)
+            Test._mails.append(kwargs)
             return build_email.origin(self, *args, **kwargs)
 
         def send_email(self, cr, uid, message, *args, **kwargs):
             return message['Message-Id']
 
-        self._init_mock_build_email()
-        self.registry('ir.mail_server')._patch_method('build_email', build_email)
-        self.registry('ir.mail_server')._patch_method('send_email', send_email)
+        self.env['ir.mail_server']._patch_method('build_email', build_email)
+        self.env['ir.mail_server']._patch_method('send_email', send_email)
 
-        # Usefull models
-        self.ir_model = self.registry('ir.model')
-        self.ir_model_data = self.registry('ir.model.data')
-        self.ir_attachment = self.registry('ir.attachment')
-        self.mail_alias = self.registry('mail.alias')
-        self.mail_thread = self.registry('mail.thread')
-        self.mail_group = self.registry('mail.group')
-        self.mail_mail = self.registry('mail.mail')
-        self.mail_message = self.registry('mail.message')
-        self.mail_notification = self.registry('mail.notification')
-        self.mail_followers = self.registry('mail.followers')
-        self.mail_message_subtype = self.registry('mail.message.subtype')
-        self.res_users = self.registry('res.users')
-        self.res_partner = self.registry('res.partner')
-
-        # Find Employee group
-        group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
-        self.group_employee_id = group_employee_ref and group_employee_ref[1] or False
-
-        # Partner Data
+        # User groups
+        user_group_employee = self.env.ref('base.group_user')
+        user_group_portal = self.env.ref('base.group_portal')
+        user_group_public = self.env.ref('base.group_public')
 
         # User Data: employee, noone
-        self.user_employee_id = self.res_users.create(cr, uid, {
+        Users = self.env['res.users'].with_context({'no_reset_password': True})
+        self.user_employee = Users.create({
             'name': 'Ernest Employee',
             'login': 'ernest',
             'alias_name': 'ernest',
             'email': 'e.e@example.com',
             'signature': '--\nErnest',
             'notify_email': 'always',
-            'groups_id': [(6, 0, [self.group_employee_id])]
-        }, {'no_reset_password': True})
-        self.user_noone_id = self.res_users.create(cr, uid, {
+            'groups_id': [(6, 0, [user_group_employee.id])]})
+        self.user_employee_2 = Users.create({
+            'name': 'Raoul Grosbedon',
+            'login': 'raoul',
+            'alias_name': 'raoul',
+            'email': 'r.g@example.com',
+            'signature': 'SignRaoul',
+            'notify_email': 'always',
+            'groups_id': [(6, 0, [user_group_employee.id])]})
+        self.user_noone = Users.create({
             'name': 'Noemie NoOne',
             'login': 'noemie',
             'alias_name': 'noemie',
             'email': 'n.n@example.com',
             'signature': '--\nNoemie',
             'notify_email': 'always',
-            'groups_id': [(6, 0, [])]
-        }, {'no_reset_password': True})
-
-        # Test users to use through the various tests
-        self.res_users.write(cr, uid, [uid], {'name': 'Administrator'})
-        self.user_raoul_id = self.res_users.create(cr, uid, {
-            'name': 'Raoul Grosbedon',
-            'signature': 'SignRaoul',
-            'email': 'raoul@raoul.fr',
-            'login': 'raoul',
-            'alias_name': 'raoul',
-            'groups_id': [(6, 0, [self.group_employee_id])]
-        })
-        self.user_bert_id = self.res_users.create(cr, uid, {
+            'groups_id': [(6, 0, [])]})
+        self.user_public = Users.create({
             'name': 'Bert Tartignole',
-            'signature': 'SignBert',
-            'email': 'bert@bert.fr',
             'login': 'bert',
             'alias_name': 'bert',
-            'groups_id': [(6, 0, [])]
+            'email': 'b.t@example.com',
+            'signature': 'SignBert',
+            'notify_email': 'always',
+            'groups_id': [(6, 0, [user_group_public.id])]})
+        self.user_portal = Users.create({
+            'name': 'Chell Gladys',
+            'login': 'chell',
+            'alias_name': 'chell',
+            'email': 'chell@gladys.portal',
+            'signature': 'SignChell',
+            'notify_email': 'always',
+            'groups_id': [(6, 0, [user_group_portal.id])]})
+        self.user_admin = self.env.user
+        # Update admin
+        # Set an email address for the user running the tests, used as Sender for outgoing mails
+        self._company_name = 'TestCompany'
+        self._admin_name = 'Administrator'
+        self._admin_email = 'test@localhost'
+        self.user_admin.write({
+            'email': self._admin_email,
+            'name': self._admin_name,
+            'signature': 'SignAdmin',
+            'notify_email': 'always',
         })
-        self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
-        self.user_bert = self.res_users.browse(cr, uid, self.user_bert_id)
-        self.user_admin = self.res_users.browse(cr, uid, uid)
-        self.partner_admin_id = self.user_admin.partner_id.id
-        self.partner_raoul_id = self.user_raoul.partner_id.id
-        self.partner_bert_id = self.user_bert.partner_id.id
+        self.user_admin.company_id.write({
+            'name': self._company_name,
+        })
 
-        # Test 'pigs' group to use through the various tests
-        self.group_pigs_id = self.mail_group.create(
-            cr, uid,
-            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !', 'alias_name': 'group+pigs'},
-            {'mail_create_nolog': True}
-        )
-        self.group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-        # Test mail.group: public to provide access to everyone
-        self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
-        # Test mail.group: private to restrict access
-        self.group_priv_id = self.mail_group.create(cr, uid, {'name': 'Private', 'public': 'private'})
+        # Test Data for Partners
+        self.partner_1 = self.env['res.partner'].create({
+            'name': 'Valid Lelitre',
+            'email': 'valid.lelitre@agrolait.com',
+            'notify_email': 'always'})
+        self.partner_2 = self.env['res.partner'].create({
+            'name': 'Valid Poilvache',
+            'email': 'valid.other@gmail.com',
+            'notify_email': 'always'})
+
+        # Create test groups without followers and messages by default
+        TestMailGroup = self.env['mail.group'].with_context({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True
+        })
+        # Pigs: base group for tests
+        self.group_pigs = TestMailGroup.create({
+            'name': 'Pigs',
+            'description': 'Fans of Pigs, unite !',
+            'public': 'groups',
+            'group_public_id': user_group_employee.id,
+            'alias_name': 'pigs',
+            'alias_contact': 'followers'}
+        ).with_context({'mail_create_nosubscribe': False})
+        # Jobs: public group
+        self.group_public = TestMailGroup.create({
+            'name': 'Jobs',
+            'description': 'NotFalse',
+            'public': 'public',
+            'alias_name': 'public',
+            'alias_contact': 'everyone'}
+        ).with_context({'mail_create_nosubscribe': False})
+        # Private: private group
+        self.group_private = TestMailGroup.create({
+            'name': 'Private',
+            'public': 'private'}
+        ).with_context({'mail_create_nosubscribe': False})
+        # Portal: group-based group using portal group
+        self.group_portal = TestMailGroup.create({
+            'name': 'PigsPortal',
+            'public': 'groups',
+            'group_public_id': user_group_portal.id}
+        ).with_context({'mail_create_nosubscribe': False})
+
+        # groups@.. will cause the creation of new mail groups
+        self.mail_group_model = self.env['ir.model'].search([('model', '=', 'mail.group')], limit=1)
+        self.alias = self.env['mail.alias'].create({
+            'alias_name': 'groups',
+            'alias_user_id': False,
+            'alias_model_id': self.mail_group_model.id,
+            'alias_contact': 'everyone'})
+
+        # Set a first message on public group to test update and hierarchy
+        self.fake_email = self.env['mail.message'].create({
+            'model': 'mail.group',
+            'res_id': self.group_public.id,
+            'subject': 'Public Discussion',
+            'type': 'email',
+            'author_id': self.partner_1.id,
+            'message_id': '<123456-openerp-%s-mail.group@%s>' % (self.group_public.id, socket.gethostname()),
+        })
+
+        self._init_mock_build_email()
 
     def tearDown(self):
         # Remove mocks
-        self.registry('ir.mail_server')._revert_method('build_email')
-        self.registry('ir.mail_server')._revert_method('send_email')
+        self.env['ir.mail_server']._revert_method('build_email')
+        self.env['ir.mail_server']._revert_method('send_email')
         super(TestMail, self).tearDown()

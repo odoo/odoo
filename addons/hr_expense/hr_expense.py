@@ -105,6 +105,23 @@ class hr_expense_expense(osv.osv):
         'currency_id': _get_currency,
     }
 
+    def add_follower(self, cr, uid, ids, employee_id, context=None):
+        employee = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+        if employee and employee.user_id:
+            self.message_subscribe_users(cr, uid, ids, user_ids=[employee.user_id.id], context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        employee_id = vals.get('employee_id', False)
+        hr_expense_id = super(hr_expense_expense, self).create(cr, uid, vals, context=context)
+        self.add_follower(cr, uid, [hr_expense_id], employee_id, context=context)
+        return hr_expense_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        employee_id = vals.get('employee_id', False)
+        hr_expense_id = super(hr_expense_expense, self).write(cr, uid, ids, vals, context=context)
+        self.add_follower(cr, uid, ids, employee_id, context=context)
+        return hr_expense_id
+
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state != 'draft':
@@ -271,10 +288,9 @@ class hr_expense_expense(osv.osv):
             lines = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, exp.employee_id.company_id.partner_id, exp.date_confirm, context=context)), eml)
             journal_id = move_obj.browse(cr, uid, move_id, context).journal_id
             # post the journal entry if 'Skip 'Draft' State for Manual Entries' is checked
-            if journal_id.entry_posted:
-                move_obj.button_validate(cr, uid, [move_id], context)
             move_obj.write(cr, uid, [move_id], {'line_id': lines}, context=context)
             self.write(cr, uid, ids, {'account_move_id': move_id, 'state': 'done'}, context=context)
+            move_obj.post(cr, uid, [move_id], context=context)
         return True
 
     def move_line_get(self, cr, uid, expense_id, context=None):

@@ -118,7 +118,7 @@ class ir_attachment(osv.osv):
         return self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'ir_attachment.location', 'file')
 
     @tools.ormcache(skiparg=3)
-    def _filestore(self, cr, uid, context=None):
+    def _filestore(self, cr, uid):
         return tools.config.filestore(cr.dbname)
 
     def force_storage(self, cr, uid, context=None):
@@ -184,7 +184,9 @@ class ir_attachment(osv.osv):
         return fname
 
     def _file_delete(self, cr, uid, fname):
-        count = self.search_count(cr, 1, [('store_fname','=',fname)])
+        # using SQL to include files hidden through unlink or due to record rules
+        cr.execute("SELECT COUNT(*) FROM ir_attachment WHERE store_fname = %s", (fname,))
+        count = cr.fetchone()[0]
         full_path = self._full_path(cr, uid, fname)
         if not count and os.path.exists(full_path):
             try:
