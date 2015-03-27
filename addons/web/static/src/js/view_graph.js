@@ -61,6 +61,7 @@ instance.web.GraphView = instance.web.View.extend({
                 self.initial_groupbys.push(name);
             }
         });
+        this.active_mode = fvg.arch.attrs.type || 'bar';
     },
     do_show: function () {
         this.do_push_state({});
