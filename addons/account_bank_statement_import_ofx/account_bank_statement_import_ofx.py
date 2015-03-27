@@ -60,7 +60,9 @@ class account_bank_statement_import(osv.TransientModel):
         vals_bank_statement = {
             'name': ofx.account.routing_number,
             'transactions': transactions,
-            'balance_start': ofx.account.statement.balance,
-            'balance_end_real': float(ofx.account.statement.balance) + total_amt,
+            # WARNING: the provided ledger balance is not necessarily the ending balance of the statement
+            # see https://github.com/odoo/odoo/issues/3003
+            'balance_start': float(ofx.account.statement.balance) - total_amt,
+            'balance_end_real': ofx.account.statement.balance,
         }
         return ofx.account.statement.currency, ofx.account.number, [vals_bank_statement]
