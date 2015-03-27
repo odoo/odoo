@@ -19,9 +19,8 @@
                 self.$target.removeClass("hidden");
             });
 
-            // not if editable mode to allow designer to edit alert field
+            // not if editable mode to allow designer to edit
             if (!editable_mode) {
-                $('.js_follow > .alert').addClass("hidden");
                 $('.js_follow > .input-group-btn.hidden').removeClass("hidden");
                 this.$target.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
                     event.preventDefault();
