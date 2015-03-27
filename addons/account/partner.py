@@ -254,7 +254,7 @@ class res_partner(osv.osv):
         return {
             partner_id: {
                 'journal_item_count': MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
-                'contracts_count': AnalyticAccount.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
+                'contracts_count': AnalyticAccount.search_count(cr, uid, [('partner_id', 'child_of', partner_id)], context=context)
             }
             for partner_id in ids
         }
