@@ -1,21 +1,22 @@
-(function() {
+odoo.define(['account.payment'], function (require) {
     "use strict";
-    var QWeb = openerp.web.qweb;
-    var _t = openerp.web._t;
-    /**
-     * Create new payment widget method.
-     * Used to show payments and outstanding credit/debit on invoice
-     */
-    openerp.web.form.ShowPaymentLineWidget = openerp.web.form.AbstractField.extend({
+
+    var core = require('web.core');
+    var form_common = require('web.form_common');
+    var formats = require('web.formats');
+    var Model = require('web.Model');
+    var QWeb = core.QWeb;
+
+    ShowPaymentLineWidget = form_common.AbstractField.extend({
         render_value: function() {
             var self = this;
             var info = JSON.parse(this.get('value'));
             var invoice_id = info.invoice_id;
             if (info !== false) {
                 _.each(info.content, function(k,v){
-                    k.amount = openerp.web.format_value(k.amount, {type: "float", digits: k.digits});
+                    k.amount = formats.format_value(k.amount, {type: "float", digits: k.digits});
                     if (k.date){
-                        k.date = openerp.web.format_value(k.date, {type: "date"});
+                        k.date = formats.format_value(k.date, {type: "date"});
                     }
                 });
                 this.$el.html(QWeb.render('ShowPaymentInfo', {
@@ -25,7 +26,7 @@
                 }));
                 this.$('.outstanding_credit_assign').click(function(){
                     var id = $(this).data('id') || false;
-                    new openerp.web.Model("account.invoice")
+                    new Model("account.invoice")
                         .call("assign_outstanding_credit", [invoice_id, id])
                         .then(function (result) {
                             self.view.reload();
@@ -38,9 +39,6 @@
         },
     });
 
-/**
- * Registry of form fields
- */
-openerp.web.form.widgets.add('payment', 'openerp.web.form.ShowPaymentLineWidget');
+    core.view_registry.add('payment', ShowPaymentLineWidget);
 
-})();
+});
