@@ -41,6 +41,11 @@ class website_crm_score(models.Model):
     name = fields.Char('Name', required=True)
     value = fields.Float('Value', required=True)
     domain = fields.Char('Domain', required=True)
+    tempo_rule = fields.Boolean('Temporel rule',
+        help='Check this, only if you need to check again the domain for each lead which don\'t ' +
+             'have already this rule assigned during previous run ! Can reduce performance !',
+        default=False
+    )
     running = fields.Boolean('Active', default=True)
     leads_count = fields.Integer(compute='_count_leads')
 
@@ -63,6 +68,10 @@ class website_crm_score(models.Model):
 
             where_clause += """ AND (id NOT IN (SELECT lead_id FROM crm_lead_score_rel WHERE score_id = %s)) """
             where_params.append(score['id'])
+
+            if not self.tempo_rule:
+                where_clause += """ AND (id > (SELECT COALESCE(max(lead_id), 0) FROM crm_lead_score_rel WHERE score_id = %s)) """
+                where_params.append(score['id'])
 
             self._cr.execute("""INSERT INTO crm_lead_score_rel
                                     SELECT crm_lead.id as lead_id, %s as score_id
