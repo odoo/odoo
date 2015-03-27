@@ -3,5 +3,3 @@
 import mail_mail
 import mail_thread
 import portal
-import portal_wizard
-import share_wizard

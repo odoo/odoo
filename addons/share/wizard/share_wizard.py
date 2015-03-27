@@ -216,7 +216,7 @@ class share_wizard(osv.TransientModel):
         share_group_name = '%s: %s (%d-%s)' %('Shared', self.name, self._uid, time.time())
         values = {'name': share_group_name, 'share': True}
         try:
-            implied_group_id = self.env['ir.model.data'].xmlid_to_res_id('share.group_shared')
+            implied_group = self.env.ref('share.group_shared')
         except ValueError:
             implied_group_id = None
         if implied_group_id:
@@ -671,9 +671,22 @@ class share_wizard(osv.TransientModel):
             self._setup_action_and_shortcut(new_ids, make_home=True)
         return group_id, new_ids, existing_ids
 
-    def go_step_2(self, cr, uid, ids, context=None):
-        wizard_data = self.browse(cr, uid, ids[0], context=context)
-        wizard_data._check_preconditions()
+    @api.multi
+    def go_step_1(self):
+        self.ensure_one()
+        if self.user_type == 'emails' and not self.has_email():
+            raise UserError(_('You must configure your email address in the user preferences before using the Share button.'))
+        res_id = self.env.ref('share.action_share_wizard_step1')
+        action = res_id.read()[0]
+        action['res_id'] = self.id
+        action.pop('context', '')
+        return action
+
+    @api.multi
+    def go_step_2(self):
+
+        self.ensure_one()
+        self._check_preconditions()
 
         # Create shared group and users
         group_id, new_ids, existing_ids = wizard_data._create_share_users_group()
@@ -766,8 +779,8 @@ class share_wizard(osv.TransientModel):
         #  B. Invite: skip summary screen, get back to the record
         
         # A.
-        if not wizard_data.invite:
-            dummy, step2_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step2_form')
+        if not self.invite:
+            step2_form_view = self.env.ref('share.share_step2_form')
             return {
                 'name': _('Shared access created!'),
                 'view_type': 'form',

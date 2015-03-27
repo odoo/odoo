@@ -45,9 +45,9 @@ synchronization with other companies.
     'data': [
         'security/share_security.xml',
         'security/ir.model.access.csv',
-        'res_users_view.xml',
-        'wizard/share_wizard_view.xml',
-        'views/share.xml',
+        'views/res_users_views.xml',
+        'wizard/share_wizard_views.xml',
+        'views/share_templates.xml',
     ],
     'installable': True,
     'auto_install': True,

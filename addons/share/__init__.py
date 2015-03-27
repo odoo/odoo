@@ -19,6 +19,5 @@
 #
 ##############################################################################
 
-import ir_model
-import res_users
+import models
 import wizard

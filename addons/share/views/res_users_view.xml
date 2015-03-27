@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD:addons/share/views/res_users_view.xml
 <openerp>
     <data>
-        <record model="ir.ui.view" id="res_users_search_sharing">
-            <field name="name">res.users.search.share</field>
+        <record id="res_users_search_sharing" model="ir.ui.view">
+            <field name="name">res.users.search.share.inherit</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_search"/>
             <field name="arch" type="xml">
@@ -22,8 +23,8 @@
             <field name="context">{'search_default_no_share': 1}</field>
         </record>
 
-        <record model="ir.ui.view" id="res_groups_search_sharing">
-            <field name="name">res.groups.search.share</field>
+        <record id="res_groups_search_sharing" model="ir.ui.view">
+            <field name="name">res.groups.search.share.inherit</field>
             <field name="model">res.groups</field>
             <field name="inherit_id" ref="base.view_groups_search"/>
             <field name="arch" type="xml">
@@ -41,7 +42,7 @@
             <field name="context">{'search_default_no_share': 1}</field>
         </record>
         <record id="view_groups_form_share" model="ir.ui.view">
-            <field name="name">res.groups.form</field>
+            <field name="name">res.groups.form.inherit</field>
             <field name="model">res.groups</field>
             <field name="inherit_id" ref="base.view_groups_form"/>
             <field name="arch" type="xml">
