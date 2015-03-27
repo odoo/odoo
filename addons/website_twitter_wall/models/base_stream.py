@@ -61,8 +61,9 @@ class StreamListener(object):
 
     def on_error(self, status_code):
         """Called when a non-200 status code is returned"""
-        _logger.error('Stream Error :%s, It\'s trying to reconnect within seconds.' % (status_code))
-        return True
+        # _logger.error('Stream Error :%s, It\'s trying to reconnect within seconds.' % (status_code))
+        raise Exception("Error")
+        return False
 
     def on_timeout(self):
         """Called when stream connection times out"""
@@ -89,7 +90,7 @@ class Stream(object):
         self.timeout = options.get("timeout", 300.0)
         self.retry_count = options.get("retry_count")
         self.retry_time_start = options.get("retry_time", 5.0)
-        self.retry_420_start = options.get("retry_420", 10.0)
+        self.retry_420_start = options.get("retry_420", 60.0)
         self.retry_time_cap = options.get("retry_time_cap", 320.0)
         self.snooze_time_step = options.get("snooze_time", 0.25)
         self.snooze_time_cap = options.get("snooze_time_cap", 16)
