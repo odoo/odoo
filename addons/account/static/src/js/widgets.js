@@ -198,7 +198,6 @@ var bankStatementReconciliation = Widget.extend({
         deferred_promises.push(self.model_bank_statement_line
             .query(['id'])
             .filter(lines_filter)
-            .order_by('statement_id, id')
             .all().then(function (data) {
                 self.st_lines = _(data).map(function(o){ return o.id; });
             })
