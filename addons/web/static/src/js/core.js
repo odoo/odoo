@@ -205,6 +205,7 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
         // TODO: session store in cookie should be optional
         this.name = instance._session_id;
         this.qweb_mutex = new $.Mutex();
+        this._groups_def = {};
     },
     /**
      * Setup a sessionm
@@ -263,6 +264,17 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
     session_logout: function() {
         $.bbq.removeState();
         return this.rpc("/web/session/destroy", {});
+    },
+    user_has_group: function(group) {
+        if (!this.uid) {
+            return $.when().resolve(false);
+        }
+        var def = this._groups_def[group];
+        if (!def) {
+            var Users = new instance.web.Model('res.users');
+            def = this._groups_def[group] = Users.call('has_group', [group]);
+        }
+        return def;
     },
     get_cookie: function (name) {
         if (!this.name) { return null; }

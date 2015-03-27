@@ -685,10 +685,13 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             self._display_view(view_options);
             self.trigger('switch_mode', view_type, no_store, view_options);
             if (self.session.debug) {
-                self.$('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
-                    view: self.active_view.controller,
-                    view_manager: self,
-                }));
+                self.session.user_has_group('base.group_system').then(function(is_admin) {
+                    self.$('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
+                        view: self.active_view.controller,
+                        view_manager: self,
+                        is_admin: is_admin,
+                    }));
+                });
             }
         });
     },
