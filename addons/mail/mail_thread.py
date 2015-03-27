@@ -1821,7 +1821,17 @@ class mail_thread(osv.AbstractModel):
                         ('model', '=', self._name),
                         ('res_id', '=', record_id)], limit=1, context=context)
                 if msg_ids:
-                    self.pool.get('mail.notification')._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
+                    notification_obj = self.pool.get('mail.notification')
+                    notification_obj._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
+                    message = message_obj.browse(cr, uid, msg_ids[0], context=context)
+                    if message.parent_id:
+                        partner_ids_to_parent_notify = set(partner_ids).difference(partner.id for partner in message.parent_id.notified_partner_ids)
+                        for partner_id in partner_ids_to_parent_notify:
+                            notification_obj.create(cr, uid, {
+                                'message_id': message.parent_id.id,
+                                'partner_id': partner_id,
+                                'is_read': True,
+                            }, context=context)
 
     def message_auto_subscribe(self, cr, uid, ids, updated_fields, context=None, values=None):
         """ Handle auto subscription. Two methods for auto subscription exist:
@@ -1902,6 +1912,7 @@ class mail_thread(osv.AbstractModel):
             self.message_subscribe(cr, uid, ids, [pid], subtypes, context=context)
 
         self._message_auto_subscribe_notify(cr, uid, ids, user_pids, context=context)
+
 
         return True
 

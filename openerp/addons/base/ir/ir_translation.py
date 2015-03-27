@@ -203,7 +203,7 @@ class ir_translation(osv.osv):
             #Also not removing lang from context trigger an error when lang is different
             context_wo_lang = context.copy()
             context_wo_lang.pop('lang', None)
-            model.write(cr, uid, record.res_id, {field: value}, context=context_wo_lang)
+            model.write(cr, uid, [record.res_id], {field: value}, context=context_wo_lang)
         return self.write(cr, uid, id, {'src': value}, context=context)
 
     _columns = {

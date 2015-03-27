@@ -157,7 +157,7 @@ class ir_import(orm.TransientModel):
         for field in fields:
             # FIXME: should match all translations & original
             # TODO: use string distance (levenshtein? hamming?)
-            if header == field['name'] \
+            if header.lower() == field['name'].lower() \
               or header.lower() == field['string'].lower():
                 return [field]
 
