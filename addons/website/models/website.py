@@ -880,8 +880,9 @@ class ir_attachment(osv.osv):
 class res_partner(osv.osv):
     _inherit = "res.partner"
 
-    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
-        partner = self.browse(cr, uid, ids[0], context=context)
+    @openerp.api.multi
+    def google_map_img(self, zoom=8, width=298, height=298):
+        partner = self.with_context(show_address=True)[0]
         params = {
             'center': '%s, %s %s, %s' % (partner.street or '', partner.city or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
             'size': "%sx%s" % (height, width),
@@ -890,22 +891,29 @@ class res_partner(osv.osv):
         }
         return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
-    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
-        partner = self.browse(cr, uid, ids[0], context=context)
+    @openerp.api.multi
+    def google_map_link(self, zoom=10):
+        partner = self.with_context(show_address=True)[0]
         params = {
             'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
-            'z': 10
+            'z': zoom
         }
         return urlplus('https://maps.google.com/maps' , params)
 
 class res_company(osv.osv):
     _inherit = "res.company"
-    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
-        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
-        return partner and partner.google_map_img(zoom, width, height, context=context) or None
-    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
-        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
-        return partner and partner.google_map_link(zoom, context=context) or None
+    @openerp.api.multi
+    def google_map_img(self, zoom=8, width=298, height=298):
+        partner = self[0].sudo().partner_id
+        if not partner:
+            return None
+        return partner.google_map_img(zoom, width, height)
+    @openerp.api.multi
+    def google_map_link(self, zoom=10):
+        partner = self[0].sudo().partner_id
+        if not partner:
+            return None
+        return partner.google_map_link(zoom)
 
 class base_language_install(osv.osv_memory):
     _inherit = "base.language.install"
