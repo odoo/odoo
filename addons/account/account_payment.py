@@ -187,7 +187,12 @@ class account_payment(models.Model):
         elif self.payment_type == 'outbound':
             self.partner_type = 'supplier'
         # Set payment method domain
-        return self._onchange_journal()
+        res = self._onchange_journal()
+        if not res.get('domain', {}):
+            res['domain'] = {}
+        res['domain']['journal_id'] = self.payment_type == 'inbound' and [('at_least_one_inbound', '=', True)] or [('at_least_one_outbound', '=', True)]
+        res['domain']['journal_id'].append(('type', 'in', ('bank', 'cash')))
+        return res
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
@@ -199,6 +204,7 @@ class account_payment(models.Model):
             # Set payment method domain (restrict to methods enabled for the journal and to selected payment type)
             payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
             return {'domain': {'payment_method': [('payment_type', '=', payment_type), ('id', 'in', payment_methods.ids)]}}
+        return {}
 
     @api.onchange('invoice_ids')
     def _onchange_invoice(self):
