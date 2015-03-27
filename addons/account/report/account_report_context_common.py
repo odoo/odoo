@@ -64,6 +64,8 @@ class AccountReportContextCommon(models.TransientModel):
             return 'account.financial.report.context'
         if name == 'generic_tax_report':
             return 'account.report.context.tax'
+        if name == 'followup_report':
+            return 'account.report.context.followup'
         if name == 'bank_reconciliation':
             return 'account.report.context.bank.reconciliation'
         if name == 'general_ledger':
@@ -75,6 +77,8 @@ class AccountReportContextCommon(models.TransientModel):
             return 'account.financial.report'
         if name == 'generic_tax_report':
             return 'account.generic.tax.report'
+        if name == 'followup_report':
+            return 'account.followup.report'
         if name == 'bank_reconciliation':
             return 'account.bank.reconciliation.report'
         if name == 'general_ledger':

@@ -20,5 +20,5 @@
 ##############################################################################
 
 import account_followup
-import wizard
-import report
+import account_followup_report
+import controllers

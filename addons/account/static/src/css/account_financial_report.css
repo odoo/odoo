@@ -5,7 +5,22 @@
 .ui-dialog-titlebar {
     display:none
 }
-input#summary, div.dropdown, i.fa, div.oe-account-saved-summary span, td.oe-account-unfoldable, td.oe-account-foldable, span.partner_id, span.move_line_id {
+div.oe-account-summary i.fa {
+    visibility: hidden;
+}
+div.oe-account-summary:hover i.fa {
+    visibility: visible;
+}
+div.oe-account-next-action i.fa {
+    visibility: hidden;
+}
+div.oe-account-next-action:hover i.fa {
+    visibility: visible;
+}
+div.oe-account-saved-summary:hover {
+    border-left: thin groove;
+}
+input#summary, div.dropdown, span.dropdown, i.fa, div.oe-account-saved-summary span, td.oe-account-unfoldable, td.oe-account-foldable, span.partner_id, span.move_line_id, span#public-link, input[type=checkbox], div.oe-account-next-action {
     cursor: pointer; cursor: hand;
 }
 td i.fa-pencil-square{
@@ -52,6 +67,9 @@ span.oe-account-domain-line {
     font-style: italic;
     margin-left: 70px;
 }
+span.unreconciled_aml {
+    font-style: : italic;
+}
 ul.oe-account-domain-dropdown {
     margin-left: 70px
 }
@@ -79,4 +97,28 @@ tr.defaultStyle {
     border-style: solid;
     border-left-style: hidden;
     border-right-style: hidden;
+}
+.progress {
+  position: relative;
+}
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+}
+.bootstrap-datetimepicker-widget {
+    z-index:2000 !important;
+}
+.oe-account-followup-not-clicked .followup-skip {
+    display: inline-block;
+}
+.oe-account-followup-not-clicked .followup-done {
+    display: none;
+}
+.oe-account-followup-clicked .followup-skip {
+    display: none;
+}
+.oe-account-followup-clicked .followup-done {
+    display: inline-block;
 }

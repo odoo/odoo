@@ -82,6 +82,9 @@
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}">
                         <div><strong><field name="total_invoiced" widget="monetary"/></strong><br/>Invoiced</div>
                     </button>
+                    <button type="object" class="oe_stat_button" name="button_go_to_followup" groups="account.group_account_user" icon="fa-list">
+                        <field string="Issued" name="issued_total" widget="statinfo"/>
+                    </button>
                 </xpath>
             </field>
         </record>

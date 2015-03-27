@@ -71,6 +71,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'test/account_pre_install.yml',
         'views/report_financial.xml',
         'views/report_configurator.xml',
+        'views/report_followup.xml',
         'views/account.xml',
         'views/report_invoice.xml',
         'report/account_invoice_report_view.xml',

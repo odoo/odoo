@@ -8,6 +8,9 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Overdue Payments" position="inside">
+                        <group>
+                            <field name="days_between_two_followups"/>
+                        </group>
                         <separator string="Overdue Payments Message" colspan="4"/>
                         <field name="overdue_msg" nolabel="1" colspan ="4"/>
                     </page>

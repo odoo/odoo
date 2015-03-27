@@ -30,18 +30,17 @@
                         </t>   
                     </select>
                 </div>
-		<div class="col-sm-3" t-if="report.get_report_type() == 'bank_reconciliation'">
-		  <label for="bank_account_id">Bank Accounts :</label>
-		  <select name="journal_id" class="form-control">
-		    <t t-foreach="context.journals" t-as="bank">
-		      <option t-attf-value="{{ bank.id }}" t-if="context.journal_id == bank" selected="selected"><t t-esc="bank.name"/></option>
-		      <option t-attf-value="{{ bank.id }}" t-if="context.journal_id != bank"><t t-esc="bank.name"/></option>
-
-		    </t>
-		  </select>
-		  <label class="start-date" for="date_from">Date :</label>
-                  <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control date_bank_reconciliation" name="date_from" t-att-value="context.date_from"></input>
-		</div>
+                <div class="col-sm-3" t-if="report.get_report_type() == 'bank_reconciliation'">
+                    <label for="bank_account_id">Bank Accounts :</label>
+                    <select name="journal_id" class="form-control">
+                        <t t-foreach="context.journals" t-as="bank">
+                            <option t-attf-value="{{ bank.id }}" t-if="context.journal_id == bank" selected="selected"><t t-esc="bank.name"/></option>
+                            <option t-attf-value="{{ bank.id }}" t-if="context.journal_id != bank"><t t-esc="bank.name"/></option>
+                        </t>
+                    </select>
+                    <label class="start-date" for="date_from">Date :</label>
+                    <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control date_bank_reconciliation" name="date_from" t-att-value="context.date_from"></input>
+                </div>
                 <div class="col-sm-3" t-if="report.get_report_type() != 'bank_reconciliation'">
                     <label for="date_filter">Date Filter :</label>
                     <select name="date_filter" t-if="report.get_report_type() == 'no_date_range'" class="form-control">
@@ -100,9 +99,19 @@
                 </div>
                 <div class="col-sm-3" t-if="report.get_report_type() != 'no_date_range' and report.get_report_type() != 'bank_reconciliation'">
                     <label class="custom-date" t-if="report.get_report_type() != 'no_date_range'" for="date_from">Start Date :</label>
-                    <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control custom-date" name="date_from" t-att-value="context.date_from"></input>
+                    <div t-if="report.get_report_type() != 'no_date_range'" class="form-group custom-date">
+                        <div class='input-group date oe-account-datetimepicker' t-att-data-default-value="context.date_from">
+                        <input type='text' class="form-control" name="date_from" />
+                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
                     <label class="custom-cmp" t-if="report.get_report_type() != 'no_date_range'" for="date_from_cmp">Comparison Start Date :</label>
-                    <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control custom-cmp" name="date_from_cmp" t-att-value="context.date_from_cmp"></input>
+                    <div t-if="report.get_report_type() != 'no_date_range'" class="form-group custom-cmp">
+                        <div class='input-group date oe-account-datetimepicker' t-att-data-default-value="context.date_from_cmp">
+                        <input type='text' class="form-control" name="date_from_cmp" />
+                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
                     <t t-set="style" value="''" />
                     <t t-if="context.date_filter_cmp == 'custom'"><t t-set="style" t-value="'display: none'" /></t>
                     <span t-att-style="style" t-if="report.get_report_type() != 'no_comparison'">
@@ -113,10 +122,20 @@
                 <div class="col-sm-3" t-if="report.get_report_type() != 'bank_reconciliation'">
                     <label class="custom-date" for="date_to" t-if="report.get_report_type() != 'no_date_range'">End Date :</label>
                     <label class="custom-date" for="date_to" t-if="report.get_report_type() == 'no_date_range'">Date :</label>
-                    <input type="date" class="form-control custom-date" name="date_to" t-att-value="context.date_to"></input>
+                    <div class="form-group custom-date">
+                        <div class='input-group date oe-account-datetimepicker' t-att-data-default-value="context.date_to">
+                        <input type='text' class="form-control" name="date_to" />
+                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
                     <label class="custom-cmp" for="date_to_cmp" t-if="report.get_report_type() != 'no_date_range'">Comparison End Date :</label>
                     <label class="custom-cmp" for="date_to_cmp" t-if="report.get_report_type() == 'no_date_range'">Comparison Date :</label>
-                    <input type="date" class="form-control custom-cmp" name="date_to_cmp" t-att-value="context.date_to_cmp"></input>
+                    <div class="form-group custom-cmp">
+                        <div class='input-group date oe-account-datetimepicker' t-att-data-default-value="context.date_to_cmp">
+                        <input type='text' class="form-control" name="date_to_cmp" />
+                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
                     <span t-if="report.get_report_type() == 'no_date_range'" t-att-style="style">
                         <label for="periods_number">Number of periods :</label>
                         <input type="number" name="periods_number" t-att-value="context.periods_number"/>

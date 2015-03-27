@@ -1,5 +1,9 @@
-from openerp import http
+from openerp import http, fields
 from openerp.http import request
+from hashlib import md5
+from openerp.tools.safe_eval import safe_eval
+import time
+from datetime import datetime
 
 
 class FinancialReportController(http.Controller):
@@ -15,7 +19,7 @@ class FinancialReportController(http.Controller):
         if name == 'general_ledger':
             return request.env['account.general.ledger'].sudo(uid)
 
-    @http.route('/account/<string:report_name>/<string:report_id>', type='http', auth='none')
+    @http.route('/account/<string:report_name>/<string:report_id>', type='http', auth='user')
     def report(self, report_name, report_id=None, **kw):
         uid = request.session.uid
         domain = [('create_uid', '=', uid)]
@@ -62,4 +66,111 @@ class FinancialReportController(http.Controller):
             'lines': lines,
             'mode': 'display',
         }
-        return request.render("account.report_financial", rcontext)
+        return request.render(report_obj.get_template(), rcontext)
+
+    @http.route(['/account/followup_report/all/', '/account/followup_report/all/page/<int:page>'], type='http', auth='user')
+    def followup_all(self, page=1, **kw):
+        uid = request.session.uid
+        context_obj = request.env['account.report.context.followup']
+        report_obj = request.env['account.followup.report']
+        context_all_obj = request.env['account.report.context.followup.all']
+        reports = []
+        context_all_id = context_all_obj.sudo(uid).search([('create_uid', '=', uid)], limit=1)
+        if 'letter_context_list' in kw and 'pdf' in kw:
+            letter_context_list = safe_eval('[' + kw['letter_context_list'] + ']')
+            letter_contexts = request.env['account.report.context.followup'].browse(letter_context_list)
+            return request.make_response(letter_contexts.with_context(public=True).get_pdf(log=True),
+                headers=[('Content-Type', 'application/pdf'),
+                         ('Content-Disposition', 'attachment; filename=followups.pdf;')])
+        if 'partner_skipped' in kw:
+            context_all_id.skip_partner(request.env['res.partner'].browse(int(kw['partner_skipped'])))
+        partners = request.env['res.partner'].get_partners_in_need_of_action() - context_all_id.skipped_partners_ids
+        if not context_all_id:
+            context_all_id = context_all_obj.sudo(uid).create({'valuemax': len(partners)})
+        if 'partner_filter' in kw:
+            context_all_id.write({'partner_filter': kw['partner_filter']})
+        if 'partner_done' in kw and 'partner_filter' not in kw:
+            try:
+                context_all_id.write({'skipped_partners_ids': [(4, int(kw['partner_done']))]})
+            except ValueError:
+                pass
+            if context_all_id.partner_filter == 'action':
+                context_all_id.write({'valuenow': context_all_id.valuenow + 1})
+                if kw['partner_done'] == 'all':
+                    partners.update_next_action()
+                    context_all_id.write({'valuenow': context_all_id.valuemax})
+                    partners = partners - partners
+        if context_all_id.valuemax != context_all_id.valuenow + len(partners):
+            context_all_id.write({'valuemax': context_all_id.valuenow + len(partners)})
+        if context_all_id.partner_filter == 'all':
+            partners = request.env['res.partner'].get_partners_in_need_of_action(overdue_only=True)
+        for partner in partners[((page - 1) * 3):(page * 3)]:
+            context_id = context_obj.sudo(uid).search([('partner_id', '=', partner.id)], limit=1)
+            if not context_id:
+                context_id = context_obj.with_context(lang=partner.lang).create({'partner_id': partner.id})
+            lines = report_obj.with_context(lang=partner.lang).get_lines(context_id)
+            reports.append({
+                'context': context_id.with_context(lang=partner.lang),
+                'lines': lines,
+            })
+        rcontext = {
+            'reports': reports,
+            'report': report_obj,
+            'mode': 'display',
+            'page': page,
+            'last_page': (len(partners) - 1) / 3 == page - 1,
+            'context_all': context_all_id,
+            'just_arrived': 'partner_done' not in kw and 'partner_skipped' not in kw,
+            'time': time,
+        }
+        return request.render('account.report_followup_all', rcontext)
+
+    @http.route('/account/followup_report/<int:partner>/', type='http', auth='user')
+    def followup(self, partner, **kw):
+        uid = request.session.uid
+        context_obj = request.env['account.report.context.followup']
+        report_obj = request.env['account.followup.report']
+        partner = request.env['res.partner'].browse(partner)
+        if 'partner_done' in kw:
+            partners = request.env['res.partner'].get_partners_in_need_of_action()
+            if not partners:
+                return self.followup_all(partner_done=kw['partner_done'])
+            partner = partners[0]
+        context_id = context_obj.sudo(uid).search([('partner_id', '=', partner.id)], limit=1)
+        if not context_id:
+            context_id = context_obj.with_context(lang=partner.lang).create({'partner_id': partner.id})
+        if 'pdf' in kw:
+            return request.make_response(context_id.with_context(lang=partner.lang, public=True).get_pdf(log=True),
+                headers=[('Content-Type', 'application/pdf'),
+                         ('Content-Disposition', 'attachment; filename=' + partner.name + '.pdf;')])
+        lines = report_obj.with_context(lang=partner.lang).get_lines(context_id)
+        rcontext = {
+            'context': context_id.with_context(lang=partner.lang),
+            'report': report_obj.with_context(lang=partner.lang),
+            'lines': lines,
+            'mode': 'display',
+            'time': time,
+        }
+        return request.render('account.report_followup', rcontext)
+
+
+    @http.route('/account/public_followup_report/<int:partner>/<string:password>', type='http', auth='none')
+    def followup_public(self, partner, password, **kw):
+        partner = request.env['res.partner'].sudo().browse(partner)
+        db_uuid = request.env['ir.config_parameter'].get_param('database.uuid')
+        check = md5(str(db_uuid) + partner.name).hexdigest()
+        if check != password:
+            return request.not_found()
+        context_obj = request.env['account.report.context.followup']
+        report_obj = request.env['account.followup.report']
+        context_id = context_obj.sudo().search([('partner_id', '=', int(partner))], limit=1)
+        if not context_id:
+            context_id = context_obj.sudo().with_context(lang=partner.lang).create({'partner_id': int(partner)})
+        lines = report_obj.sudo().with_context(lang=partner.lang).get_lines(context_id, public=True)
+        rcontext = {
+            'context': context_id.with_context(lang=partner.lang, public=True),
+            'report': report_obj.with_context(lang=partner.lang),
+            'lines': lines,
+            'mode': 'display',
+        }
+        return request.render('account.report_followup_public', rcontext)

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates>
+    <t t-name="emailSent">
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&amp;times;</span></button>
+            The followup report was successfully emailed !
+        </div>
+    </t>
+    <t t-name="emailNotSent">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&amp;times;</span></button>
+            Email not sent because of email address of partner not filled in.
+        </div>
+    </t>
     <t t-name="footNoteTextarea">
         <div class="mt32 mb32">
             <label t-att-for="'footnote' + footNoteSeqNum"><t t-esc="footNoteSeqNum"/></label>
@@ -14,32 +26,36 @@
     <t t-name="savedFootNote">
         <p class="footnote" t-att-id="'footnote'+num">
             <span class='text'><t t-raw="num+'. '+note"/></span>
-            <span class='footnoteIcons'><i class="fa fa-pencil-square"></i><i class="fa fa-trash-o"></i> </span>
+            <span class='footnoteIcons'><i class="fa fa-fw fa-pencil-square"></i><i class="fa fa-fw fa-trash-o"></i> </span>
         </p>
     </t>
+    <t t-name="nextActionDate">
+        <span data-toggle='tooltip' data-placement='bottom' t-att-title='note'><t t-esc='date'></t></span><i class="fa fa-fw fa-pencil-square"></i>
+    </t>
     <t t-name="foldable">
-        <span t-att-class="'oe-account-foldable ' + lineId + ' oe-account-caret-icon'"><i class="fa fa-caret-down"></i></span>
+        <span t-att-class="'oe-account-foldable ' + lineId + ' oe-account-caret-icon'"><i class="fa fa-fw fa-caret-down"></i></span>
     </t>
     <t t-name="unfoldable">
-        <span t-att-class="'oe-account-unfoldable ' + lineId + ' oe-account-caret-icon'"><i class="fa fa-caret-right"></i></span>
+        <span t-att-class="'oe-account-unfoldable ' + lineId + ' oe-account-caret-icon'"><i class="fa fa-fw fa-caret-right"></i></span>
     </t>
     <t t-name="pencilIcon">
-        <span class="pencilIcon"><i class="fa fa-pencil-square"></i></span>
+        <span class="pencilIcon"><i class="fa fa-fw fa-pencil-square"></i></span>
+    </t>
+    <t t-name="trashAndPencilIcon">
+        <span style="position: absolute; margin-left: 3px;"><i class="fa fa-fw fa-pencil-square"></i><i class="fa fa-fw fa-trash-o"></i> </span>
     </t>
     <t t-name="addSummary">
-        <div class="alert alert-info alert-dismissible addSummary" role="alert">
+        <div class="addSummary" role="alert">
             <span><input type='text' class="form-control" name='summary' placeholder='Click to add a summary' /></span>
         </div>
     </t>
     <t t-name="editSummary">
-        <label for="summary">Edit summary :</label>
-        <textarea name="summary" rows='4' class="form-control"></textarea>
+        <textarea name="summary" rows='4' class="form-control"><t t-esc="summary" /></textarea>
         <button class="btn btn-primary saveSummary">Save</button>
     </t>
     <t t-name="savedSummary">
-        <div class="alert alert-info alert-dismissible oe-account-saved-summary" role="alert">
-            <button type="button" class="close closeSummary"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
-            <button type="button" class="close"><i style="font-size: 16px;" class="fa fa-pencil"></i> </button>
+        <div class="oe-account-saved-summary" role="alert">
+            <i style="font-size: 16px; margin-left: -19px; position: absolute;" class="fa fa-fw fa-pencil"></i> 
             <span><t t-raw="summary" /></span>
         </div>
     </t>
@@ -52,12 +68,12 @@
     <t t-name="editContent"><t t-if="num > 0"><t t-esc="num" />. </t><textarea t-att-name="edit" rows='4' class="form-control"><t t-esc="text" /></textarea><button class="btn btn-primary saveContent">Save</button></t>
     <t t-name="report_financial_line">
         <t t-set="column" t-value="0" />
-        <tr t-att-class="l.type + ' ' + l.id">
+        <tr t-att-class="l.type" t-att-data-type="l.type" t-att-data-id="l.id" >
             <td>
-                <a t-if="l.type != 'account_id' &amp; l.type != 'tax_id'"><span t-att-class="l.type + ' ' + l.id + ' oe-account-domain-line'"><t t-esc="l.name"/></span></a>
+                <a t-if="l.type != 'account_id' &amp; l.type != 'tax_id'"><span t-att-data-id="l.id" t-att-class="l.type + ' oe-account-domain-line'"><t t-esc="l.name"/></span></a>
                 <div class="dropdown" t-if="l.type == 'account_id'">
                     <a data-toggle="dropdown">
-                        <span t-att-class="l.type + ' ' + l.id + ' oe-account-domain-line'"><t t-esc="l.name"></t></span><span class="caret"></span>
+                        <span t-att-data-id="l.id" t-att-class="l.type + ' oe-account-domain-line'"><t t-esc="l.name"></t></span><span class="caret"></span>
                     </a>
                     <t t-if="l.footnotes[column] != undefined">
                         <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />

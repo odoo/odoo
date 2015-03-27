@@ -128,6 +128,10 @@ class report_account_generic_tax_report(models.AbstractModel):
     def get_report_type(self):
         return 'date_range'
 
+    @api.model
+    def get_template(self):
+        return 'account.report_financial'
+
 
 class AccountReportContextTax(models.TransientModel):
     _name = "account.report.context.tax"
