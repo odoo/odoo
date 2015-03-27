@@ -127,6 +127,8 @@ class TwitterTweet(models.Model):
     comment = fields.Html(default='<br/>')
     agent_id = fields.Many2one('twitter.agent')
 
+    _sql_constraints = [('website_twitter_wall_tweet_unique', 'UNIQUE(tweet_id, agent_id)', 'Duplicate tweet not allowed !')]
+
     @api.model
     def process_tweet(self, wall_id, tweet):
         card_url = 'https://api.twitter.com/1/statuses/oembed.json?id=%s&omit_script=true' % (tweet.get('id'))
