@@ -8,8 +8,10 @@
             <field name="inherit_id" ref="account.view_account_config_settings"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='payment_acquirer']" position="inside">
-                    <button name='%(payment.action_payment_acquirer)d' type="action"
-                        string="Configure payment acquiring methods" class="oe_link"/>
+                    <div>
+                        <field name="module_payment_alipay" class="oe_inline"/>
+                        <label for="module_payment_alipay"/>
+                    </div>
                 </xpath>
             </field>
         </record>
