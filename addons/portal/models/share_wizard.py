@@ -124,34 +124,3 @@ class ShareWizardPortal(models.TransientModel):
                 self.write({'result_line_ids': [(0,0,new_line)]})
         return super_result
 
-    def copy_share_group_access_and_delete(self, cr, wizard_data, share_group_id, context=None):
-        # In the case of sharing with existing groups, the strategy is to copy
-        # access rights and rules from the share group, so that we can
-        if not wizard_data.group_ids: return
-        Groups = self.pool.get('res.groups')
-        Rules = self.pool.get('ir.rule')
-        Rights = self.pool.get('ir.model.access')
-        share_group = Groups.browse(cr, UID_ROOT, share_group_id)
-        share_rule_ids = [r.id for r in share_group.rule_groups]
-        for target_group in wizard_data.group_ids:
-            # Link the rules to the group. This is appropriate because as of
-            # v6.1, the algorithm for combining them will OR the rules, hence
-            # extending the visible data.
-            Rules.write(cr, UID_ROOT, share_rule_ids, {'groups': [(4,target_group.id)]})
-            _logger.debug("Linked sharing rules from temporary sharing group to group %s", target_group)
-
-            # Copy the access rights. This is appropriate too because
-            # groups have the UNION of all permissions granted by their
-            # access right lines.
-            for access_line in share_group.model_access:
-                Rights.copy(cr, UID_ROOT, access_line.id, default={'group_id': target_group.id})
-            _logger.debug("Copied access rights from temporary sharing group to group %s", target_group)
-
-        # finally, delete it after removing its users
-        Groups.write(cr, UID_ROOT, [share_group_id], {'users': [(6,0,[])]})
-        Groups.unlink(cr, UID_ROOT, [share_group_id])
-        _logger.debug("Deleted temporary sharing group %s", share_group_id)
-
-    def _finish_result_lines(self,wizard_data, share_group_id, context=None):
-        super(ShareWizardPortal,self)._finish_result_lines(cr, uid, wizard_data, share_group_id, context=context)
-        self.copy_share_group_access_and_delete(cr, wizard_data, share_group_id, context=context)
