@@ -26,13 +26,13 @@ class AcquirerAlipay(osv.Model):
         """ Alipay URLS """
         if environment == 'prod':
             return {
-                'alipay_form_url': 'https://www.alipay.com/cgi-bin/webscr',
-                'alipay_rest_url': 'https://api.alipay.com/v1/oauth2/token',
+                'alipay_form_url': 'https://mapi.alipay.com/gateway.do?',
+                'alipay_rest_url': 'https://mapi.alipay.com/gateway.do?',
             }
         else:
             return {
-                'alipay_form_url': 'https://www.sandbox.alipay.com/cgi-bin/webscr',
-                'alipay_rest_url': 'https://api.sandbox.alipay.com/v1/oauth2/token',
+                'alipay_form_url': 'https://mapi.alipay.com/gateway.do?',
+                'alipay_rest_url': 'https://mapi.alipay.com/gateway.do?',
             }
 
     def _get_providers(self, cr, uid, context=None):
@@ -111,23 +111,40 @@ class AcquirerAlipay(osv.Model):
 
         alipay_tx_values = dict(tx_values)
         alipay_tx_values.update({
-            'cmd': '_xclick',
-            'business': acquirer.alipay_email_account,
-            'item_name': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
-            'item_number': tx_values['reference'],
-            'amount': tx_values['amount'],
-            'currency_code': tx_values['currency'] and tx_values['currency'].name or '',
-            'address1': partner_values['address'],
-            'city': partner_values['city'],
-            'country': partner_values['country'] and partner_values['country'].name or '',
-            'state': partner_values['state'] and partner_values['state'].name or '',
-            'email': partner_values['email'],
-            'zip': partner_values['zip'],
-            'first_name': partner_values['first_name'],
-            'last_name': partner_values['last_name'],
-            'return': '%s' % urlparse.urljoin(base_url, AlipayController._return_url),
+            # 'cmd': '_xclick',
+            # 'business': acquirer.alipay_email_account,
+            # 'item_name': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
+            # 'item_number': tx_values['reference'],
+            # 'amount': tx_values['amount'],
+            # 'currency_code': tx_values['currency'] and tx_values['currency'].name or '',
+            # 'address1': partner_values['address'],
+            # 'city': partner_values['city'],
+            # 'country': partner_values['country'] and partner_values['country'].name or '',
+            # 'state': partner_values['state'] and partner_values['state'].name or '',
+            # 'email': partner_values['email'],
+            # 'zip': partner_values['zip'],
+            # 'first_name': partner_values['first_name'],
+            # 'last_name': partner_values['last_name'],
+            'service': 'create_direct_pay_by_user',
+            'payment_type': '1',
+            'partner': acquirer.alipay_seller_account,
+            'seller_email': acquirer.alipay_email_account,
+            '_input_charset': 'UTF-8',
+            'show_url': True,
+            'out_trade_no': tx_values['reference'],
+            'subject': tx_values['reference'],
+            'body': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
+            'total_fee': tx_values['amount'],
+            'payment_method': 'directPay',
+            'defaultbank': '',
+            'anti_phishing_key': '',
+            'buyer_email': partner_values['email'],
+            'extra_common_param': '',
+            'royalty_type': '',
+            'royalty_parameters': '',
+            'return_url': '%s' % urlparse.urljoin(base_url, AlipayController._return_url),
             'notify_url': '%s' % urlparse.urljoin(base_url, AlipayController._notify_url),
-            'cancel_return': '%s' % urlparse.urljoin(base_url, AlipayController._cancel_url),
+           
         })
         if acquirer.fees_active:
             alipay_tx_values['handling'] = '%.2f' % alipay_tx_values.pop('fees', 0.0)
