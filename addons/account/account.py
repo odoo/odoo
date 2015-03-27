@@ -620,9 +620,9 @@ class AccountTax(models.Model):
 
         if context.get('type'):
             if context.get('type') in ('out_invoice', 'out_refund'):
-                args += [('type_tax_use', 'in',['sale','all'])]
+                args += [('type_tax_use', '=', 'sale')]
             elif context.get('type') in ('in_invoice', 'in_refund'):
-                args += [('type_tax_use', 'in',['purchase','all'])]
+                args += [('type_tax_use', '=', 'purchase')]
 
         if context.get('journal_id'):
             journal = self.env['account.journal'].browse(context.get('journal_id'))
