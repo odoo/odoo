@@ -458,7 +458,7 @@ class AccountBankStatementLine(models.Model):
         if not self.partner_id:
             return self.env['account.move.line']
 
-        # Look for a set of move line whose amount is <= to the line's amount
+        # Select move lines until their total amount is greater than the statement line amount
         domain = [('reconciled', '=', False)]  # Make sure we can't mix reconciliation and 'rapprochement'
         domain += [('account_id.user_type.type', '=', amount > 0 and 'receivable' or 'payable')]  # Make sure we can't mix receivable and payable
         domain += amount_domain_maker('<', amount)  # Will also enforce > 0
@@ -468,9 +468,8 @@ class AccountBankStatementLine(models.Model):
         total = 0
         for line in mv_lines:
             total += line.currency_id and line.amount_residual_currency or line.amount_residual
-            if float_compare(total, abs(amount), precision_digits=st_line_currency.rounding) != 1:
-                ret = (ret | line)
-            else:
+            ret = (ret | line)
+            if float_compare(total, abs(amount), precision_digits=st_line_currency.rounding) != -1:
                 break
         return ret
 
