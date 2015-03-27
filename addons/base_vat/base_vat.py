@@ -70,7 +70,7 @@ _ref_vat = {
     'se': 'SE123456789701',
     'si': 'SI12345679',
     'sk': 'SK0012345675',
-    'tr': 'TR1234567890 (VERGI NO) veya TR12345678901 (TCKIMLIKNO)' # Levent Karakas @ Eska Yazilim A.S.
+    'tr': 'TR1234567890 (VERGINO) veya TR12345678901 (TCKIMLIKNO)' # Levent Karakas @ Eska Yazilim A.S.
 }
 
 class res_partner(osv.osv):
@@ -317,7 +317,7 @@ class res_partner(osv.osv):
         else:
             return False
 
-    # VAT validation in Turkey, contributed by Levent Karakas @ Eska Yazilim
+    # VAT validation in Turkey, contributed by # Levent Karakas @ Eska Yazilim A.S.
     def check_vat_tr(self, vat):
 
         if not (10 <= len(vat) <= 11):
