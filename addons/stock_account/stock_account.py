@@ -188,19 +188,15 @@ class stock_quant(osv.osv):
         '''
         if context is None:
             context = {}
-        account_period = self.pool['account.period']
+        account_move_obj = self.pool['account.move']
         super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
         for quant in self.browse(cr, uid, quant_ids, context=context):
             move = self._get_latest_move(cr, uid, quant, context=context)
             valuation_update = newprice - quant.cost
             # this is where we post accounting entries for adjustment, if needed
             if not quant.company_id.currency_id.is_zero(valuation_update):
-                # adjustment journal entry needed, cost has been updated
-                period_id = (context.get('force_period') or
-                                 account_period.find(cr, uid, move.date, context=context)[0])
-                period = account_period.browse(cr, uid, period_id, context=context)
                 # If neg quant period already closed (likely with manual valuation), skip update
-                if period.state != 'done':
+                if account_move_obj._check_lock_date(cr, uid, [move.id], context=context):
                     ctx = dict(context, force_valuation_amount=valuation_update)
                     self._account_entry_move(cr, uid, [quant], move, context=ctx)
 
