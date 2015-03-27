@@ -61,8 +61,8 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
             $('#report_error').modal('show');
         });
         var l10n = openerp.web._t.database.parameters;
-        $datetimepickers = this.$('.oe-account-datetimepicker');
-        options = {
+        var $datetimepickers = this.$('.oe-account-datetimepicker');
+        var options = {
             language : moment.locale(),
             format : openerp.web.normalize_format(l10n.date_format),
             icons: {
