@@ -76,7 +76,7 @@ class TestSale(TestMail):
             'amount': 75.0,
             'company_id': company_id,
             'journal_id': journal_id,
-            'partner_id': partner_id,
+            'partner_id': partner.id,
             'date': date,
             'voucher_type': 'sale',
         })
