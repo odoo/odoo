@@ -91,7 +91,8 @@ class ir_http(osv.AbstractModel):
                     # All other exceptions mean undetermined status (e.g. connection pool full),
                     # let them bubble up
                     request.session.logout(keep_db=True)
-            getattr(self, "_auth_method_%s" % auth_method)()
+            if request.uid is None:
+                getattr(self, "_auth_method_%s" % auth_method)()
         except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
