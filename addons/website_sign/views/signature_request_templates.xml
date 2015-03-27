@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" inherit_id="website.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel='stylesheet' href='/website_sign/static/src/css/backend.css'/>
+            <script type="text/javascript" src="/website_sign/static/src/js/backend.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel='stylesheet' href='/website_sign/static/src/css/frontend.css'/>
+            <link rel='stylesheet' href='/website_sign/static/src/css/iframe.css'/>
+
+            <script type="text/javascript" src="/website_sign/static/src/js/dashboard.js"></script>
+            <script type="text/javascript" src="/website_sign/static/src/js/website_sign.js"></script>
+        </xpath>
+    </template>
+
+    <template id="website_sign.layout" name="Digital Signatures Layout">&lt;!doctype html&gt;
+        <html t-att-lang="lang and lang.replace('_', '-')"
+              t-att-data-website-id="website.id if editable and website else None"
+              t-att-data-editable="'1' if editable else None"
+              t-att-data-translatable="'1' if translatable else None"
+              t-att-data-view-xmlid="xmlid if editable else None"
+              t-att-data-main-object="repr(main_object) if editable else None"
+              t-att-data-oe-company-name="res_company.name">
+            <head>
+                <meta charset="utf-8" />
+                <t t-if="main_object and 'website_meta_title' in main_object and not title">
+                    <t t-set="title" t-value="main_object.website_meta_title"/>
+                </t>
+                <t t-if="main_object and 'name' in main_object and not title and not additional_title">
+                    <t t-set="additional_title" t-value="main_object.name"/>
+                </t>
+                <t t-if="not title">
+                    <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-esc="(website or res_company).name"/></t>
+                </t>
+
+                <meta name="viewport" content="initial-scale=1"/>
+                <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
+                    and main_object.website_meta_description or website_meta_description"/>
+                <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
+                    and main_object.website_meta_keywords or website_meta_keywords"/>
+                <meta name="generator" content="Odoo"/>
+
+                <!-- OpenGraph tags for Facebook sharing -->
+                <meta property="og:title" t-att-content="additional_title" />
+                <meta property="og:site_name" t-att-content="res_company.name" />
+                <t t-if="main_object and 'plain_content' in main_object and main_object.plain_content">
+                    <t t-set="og_description" t-value="main_object.plain_content[0:500]"/>
+                    <meta property="og:description" t-att-content="og_description" />
+                    <meta property='og:image' t-att-content="request.httprequest.url_root+'logo.png'"/>
+                    <meta property='og:url' t-att-content="request.httprequest.url_root+request.httprequest.path[1:end]"/>
+                </t>
+
+                <title><t t-esc="title"/></title>
+
+                <t t-set="languages" t-value="website.get_languages() if website else None"/>
+                <t t-if="request and request.website_multilang and website">
+                    <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lang">
+                        <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
+                    </t>
+                </t>
+                <t t-call-assets="web.assets_common"/>
+                <t t-call-assets="website.assets_frontend"/>
+
+                <t t-raw="head or ''" name='layout_head'/>
+            </head>
+            <body>
+                <header>
+                    <div class="navbar navbar-default navbar-static-top">
+                        <div class="container">
+                            <div class="navbar-header">
+                                <a href="/" class="navbar-brand logo">
+                                    <img src="/logo.png" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                                </a>
+                            </div>
+                            <div t-if="signature_request" class="pull-right mt16" style="font-size:1.2em;">
+                                <t t-if="not current_request_item">Need to sign? Check your mail box to get your secure access</t>
+                                <t t-if="current_request_item and current_request_item.state == 'draft'">This document cannot be filled right now</t>
+                                <t t-if="current_request_item and current_request_item.state == 'sent'">Please Review And Act On This Document</t>
+                                <t t-if="current_request_item and current_request_item.state == 'completed'">You have completed the document</t>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </body>
+        </html>
+    </template>
+
+    <template id="website_sign.dashboard" name="Digital Signatures Homepage">
+        <t t-call="website_sign.layout">
+            <div class="container" id="sign_dashboard">
+                <div class="pull-right"><input type="checkbox" id="show_archives_toggle" t-att-checked="'checked' if not toggles['archive'] else ''"/> <label for="show_archives_toggle">Hide Archives</label></div>
+                <div class="pull-right" style="margin-right:20px;"><input type="checkbox" id="show_favorites_toggle" t-att-checked="'checked' if toggles['favorite'] else ''"/> <label for="show_favorites_toggle">Favorites Only</label></div>
+
+                <div class="signature_item_home_container">
+                    <h4 class="sign_home_title">Documents Templates<div class="sign_home_title_nav"><button type="button" class="btn btn-link fa fa-arrow-left"/> <span class="page_counter"/> of <span class="page_total_counter"/> <button type="button" class="btn btn-link fa fa-arrow-right"/></div></h4>
+
+                    <button type="button" class="btn signature_item_home" id="upload_template_button" data-favorited="1" data-archived="0"><div class="signature_item_home_icon fa fa-upload fa-2x"/>Upload New</button>
+
+                    <t t-foreach="templates" t-as="template">
+                        <a t-attf-href="/sign/template/{{template.id}}" class="btn signature_item_home" t-att-data-archived="str(int(template.archived))" t-att-data-favorited="str(int(env.user in template.favorited_ids))" t-att-title="template.attachment_id.name">
+                            <span class="helper"/>
+                            <span class="favorite_button fa fa-star" t-attf-data-ref="template/{{template.id}}"/>
+                            <button type="button" class="btn btn-link archive_button" t-attf-data-ref="template/{{template.id}}"/>
+                            <div class="signature_item_home_content">
+                                <div class="signature_item_home_icon fa fa-file fa-2x"/>
+                                <span><t t-esc="template.attachment_id.name"/></span>
+                                <span><t t-if="template.signature_request_ids"><em t-field="template.signature_request_ids.sorted(lambda r: r.create_date, reverse=True)[0].create_date"/></t><t t-if="not template.signature_request_ids"><em t-field="template.create_date"/></t></span>
+                            </div>
+                        </a>
+                    </t>
+                    <div class="clearfix"/>
+                </div>
+
+                <t t-foreach="[('sent', 'Signatures in Progress'), ('signed', 'Fully Signed'), ('canceled', 'Canceled')]" t-as="category">
+                    <div class="signature_item_home_container">
+                        <h4 class="sign_home_title"><t t-esc="category[1]"/><div class="sign_home_title_nav"><button type="button" class="btn btn-link fa fa-arrow-left"/> <span class="page_counter"/> of <span class="page_total_counter"/> <button type="button" class="btn btn-link fa fa-arrow-right"/></div></h4>
+
+                        <t t-foreach="signature_requests" t-as="signature_request">
+                            <a t-if="signature_request.state == category[0]" t-attf-href="/sign/document/{{signature_request.id}}/{{signature_request.access_token}}?pdfview" class="btn signature_item_home"  t-att-data-archived="str(int(signature_request.archived))" t-att-data-favorited="str(int(env.user in signature_request.favorited_ids))">
+                                <span class="helper"/>
+                                <span class="favorite_button fa fa-star" t-attf-data-ref="document/{{signature_request.id}}"/>
+                                <button t-if="category[0] != 'sent'" type="button" class="btn btn-link archive_button" t-attf-data-ref="document/{{signature_request.id}}"/>
+                                <div class="signature_item_home_content">
+                                    <div class="signature_item_home_icon fa fa-copy fa-2x"/>
+                                    <span t-att-title="signature_request.reference"><t t-esc="signature_request.reference"/></span>
+                                    <t t-if="category[0] != 'signed'">
+                                        <t t-set="concat_names" t-value="''"/>
+                                        <t t-foreach="signature_request.request_item_ids" t-as="request_item">
+                                            <t t-set="concat_names" t-value="concat_names + (', ' if concat_names else '') + (request_item.partner_id.name if request_item.partner_id else 'Public User')"/>
+                                        </t>
+                                        <span t-att-title="concat_names"><span t-if="len(signature_request.request_item_ids) == 1" class="small" style="color:red;"><t t-esc="concat_names"/></span><t t-if="len(signature_request.request_item_ids) &gt; 1"><t t-foreach="signature_request.request_item_ids" t-as="request_item"><span t-att-style="'color:' + ('green' if request_item.state == 'completed' else 'red')"><t t-esc="request_item.signer_trigram"/></span></t></t></span>
+                                    </t>
+                                    <span t-if="category[0] != 'canceled'"><em t-field="signature_request.message_ids[0].create_date"/></span>
+                                </div>
+                            </a>
+                        </t>
+                        <div class="clearfix"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="website_sign.doc_sign" name="Document Sign">
+        <t t-call="website_sign.layout">
+            <input type="hidden" id="is_website_sign_page"/>
+
+            <div t-if="current_request_item and current_request_item.state == 'sent' and hasItems" id="signature-validate-banner">
+                <button type="button" class="btn btn-primary" t-attf-data-action="/sign/signed/{{signature_request.id}}/{{token}}">Validate &amp; Send Completed Document</button>
+            </div>
+
+            <div t-att-class="'container-fluid' if isPDF else 'container'">
+                <div class="row" style="padding:5px;">
+                    <a t-if="current_request_item and current_request_item.state == 'sent' and not hasItems" id="sign-document-button" class="btn btn-primary" t-attf-data-action="/sign/signed/{{signature_request.id}}/{{token}}" data-toggle="modal" data-target="#signature_dialog">Sign Document</a> 
+                    
+                    <t t-if="env.user.id == signature_request.create_uid.id">
+                        <a href="/sign" class="btn btn-primary">Back to dashboard</a>
+                        <a t-if="signature_request.state != 'canceled'" id="cancel_request_button" t-attf-data-ref="/sign/cancel/{{signature_request.id}}" class="btn btn-link pull-right">Cancel the signature request</a>
+                    </t>
+                </div>
+
+                <div class="row" style="max-height:400px;overflow:auto;">
+                    <div class="col-md-4 mb8">
+                        <h4><t t-esc="signature_request.reference"/></h4>
+
+                        <div t-if="message" class="alert alert-success">
+                            <t t-if="message == 1">Your message has been sent !</t>
+                            <t t-if="message == 2">You just signed the document !</t>
+                            <t t-if="message == 3">Your signature request has been sent !</t>
+                        </div>
+
+                        <a t-if="signature_request.state == 'signed'" t-attf-href="/sign/download/{{signature_request.id}}/{{signature_request.access_token}}/completed" class="btn btn-primary">Download Document</a>
+
+                        <t t-set="nbComments" t-value="len(messages.filtered(lambda m: m.type == 'comment'))"/>
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#website_sign_chatter">View History<t t-if="nbComments > 0"> (<t t-esc="nbComments"/> comment<t t-if="nbComments > 1">s</t>)</t></button>
+                    </div>
+
+                    <div class="col-md-4 mb16">
+                        <h5 class="page-header mb8 mt8">Sender</h5>
+                        <div>
+                            <img class="media-object pull-right" t-att-src="website.image_url(signature_request.create_uid.partner_id, 'image_small')" style="width:50px;"/>
+                            <t t-if="signature_request.create_uid.partner_id.name"><t t-esc="signature_request.create_uid.partner_id.name"/><br/></t>
+                            <t t-if="signature_request.create_uid.partner_id.email"><a t-attf-href="mailto:{{signature_request.create_uid.partner_id.email}}"><t t-esc="signature_request.create_uid.partner_id.email"/></a><br/></t>
+                            <t t-if="signature_request.create_uid.partner_id.phone"><t t-esc="signature_request.create_uid.partner_id.phone"/><br/></t>
+                            <div class="clearfix"/>
+                        </div>
+
+                        <t t-if="env.user.id == signature_request.create_uid.id or len(signature_request.follower_ids) &gt; 0">
+                            <h5 class="page-header mb8 mt16">Followers (<t t-esc="len(signature_request.follower_ids)"/>)<button t-if="env.user.id == signature_request.create_uid.id" type="button" class="btn btn-link pull-right" id="add_followers_button" style="padding:0;">Send a copy to...</button></h5>
+                            <div>
+                                <t t-foreach="signature_request.follower_ids" t-as="follower"><span class="request_follower_name"><t t-esc="follower.name"/></span></t>
+                            </div>
+                        </t>
+                    </div>
+
+                    <div class="col-md-4 mb8">
+                        <t t-if="signature_request.state != 'signed'">
+                            <h5 class="page-header mb8 mt8">Waiting Signatures (<t t-raw="str(len(signature_request.request_item_ids)-signature_request.nb_closed)"/>)</h5>
+                            <t t-foreach="signature_request.request_item_ids" t-as="sign">
+                                <div t-if="sign.state != 'completed'"><b><t t-raw="sign.partner_id.name if sign.partner_id else 'Public user'"/></b><t t-esc="(' - ' + sign.role_id.name) if sign.role_id else ''"/> <a t-if="env.user.id == signature_request.create_uid.id and sign.state != 'draft'" t-att-data-id="sign.id" class="resend_access_button fa fa-envelope pull-right" title="Resend email access" style="cursor:pointer;"/><em t-if="sign.state != 'sent'"><br/>(the mail access has not been sent)</em></div>
+                            </t>
+                        </t>
+                        <t t-if="signature_request.nb_closed > 0">
+                            <h5 t-att-class="'page-header mb8 ' + ('mt8' if signature_request.state == 'signed' else 'mt16')">Signed (<t t-raw="str(signature_request.nb_closed) +'/'+ str(len(signature_request.request_item_ids))"/>)</h5>
+                            <t t-foreach="signature_request.request_item_ids" t-as="sign">
+                                <div t-if="sign.state == 'completed'"><img t-if="sign.signature" class="media-object pull-right" t-attf-src="/web/binary/image?model=signature.request.item&amp;field=signature&amp;id={{sign.id}}" style="width: 30%;"/><b><t t-raw="sign.partner_id.name"/></b><t t-esc="(' - ' + sign.role_id.name) if sign.role_id else ''"/><br/><em>Signed on <span t-field="sign.signing_date"></span></em><div class="clearfix"/></div>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+
+                <div t-if="not hasItems and not isPDF" class="row">
+                    <a class="col-md-12" t-attf-href="/sign/download/{{signature_request.id}}/{{signature_request.access_token}}/origin" target="_blank">
+                        <img t-if="signature_request.template_id.attachment_id.file_type_icon == 'webimage'" class="media-object" t-attf-src="/sign/download/{{signature_request.id}}/{{signature_request.access_token}}/origin" style="max-width: 100%; min-width: 100px;"/>
+                        <img t-if="signature_request.template_id.attachment_id.file_type_icon != 'webimage'" class="media-object" t-attf-src="/mail/static/src/img/mimetypes/{{signature_request.template_id.attachment_id.file_type_icon}}.png" style="max-width: 100%; min-width: 100px;"/>
+                    </a>
+                </div>
+            </div>
+
+            <t t-if="hasItems or isPDF">
+                <t t-call="website_sign.items_view"/>
+            </t>
+
+            <input id="input_signature_request_id" type="hidden" t-att-value="signature_request.id"/>
+            <input id="signer_name_input_info" type="hidden" t-att-value="current_request_item.partner_id.name if current_request_item and current_request_item.partner_id else ''"/>
+            <input t-if="current_request_item" id="ask_location_input" type="hidden" t-attf-value="/sign/save_location/{{signature_request.id}}/{{token}}"/>
+
+            <t t-if="len(signature_request.request_item_ids) == 1 and not signature_request.request_item_ids[0].partner_id">
+                <t t-call="website_sign.public_signer_dialog"/>
+            </t>
+            <t t-call="website_sign.add_followers_dialog"/>
+
+            <t t-call="website_sign.chatter"/>
+        </t>
+    </template>
+
+    <template id="website_sign.chatter" name="Digital Signatures Chatter">
+        <div class="modal fade" id="website_sign_chatter" role="dialog" aria-hidden="true">
+            <form id="comment" class="modal-dialog" method="post" t-attf-action="/sign/document/{{signature_request.id}}/{{token}}/note">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <h4>History</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div t-if="current_request_item" class="form-group">
+                            <textarea rows="3" name="comment" class="form-control" placeholder="Send us a note..."/>
+                            <hr/>
+                        </div>
+                        <ul class="media-list" id="comments-list">
+                            <t t-foreach="messages" t-as="message">
+                                <li class="media" t-if="message.type != 'email'">
+                                    <div class="media-body">
+                                        <img class="media-object pull-left" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
+                                        <div class="media-body">
+                                            <h5 class="media-heading">
+                                                <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
+                                            </h5>
+                                            <div t-field="message.body"/>
+                                        </div>
+                                    </div>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button t-if="current_request_item" type="submit" class="btn btn-primary">Send note</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <template id="website_sign.add_followers_dialog" name="Add Followers Dialog">
+        <div class="modal fade" id="add_followers_dialog" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <h4>Send a copy to third parties</h4>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            <label for="followers_select" class="col-md-3 control-label">Send a copy</label>
+                            <div class="col-md-9">
+                                <select id="followers_select" class="form-control" placeholder="Write email or search contact..." multiple="multiple"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" t-attf-data-ref="/sign/add_followers/{{signature_request.id}}">Send</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sign.public_signer_dialog" name="Public Signer Dialog">
+        <div class="modal fade" id="public_signer_dialog" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <h4 class="modal-title">Final Validation</h4>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            <label for="public_signer_name_input" class="col-md-3 control-label">Your name</label>
+                            <div class="col-md-9">
+                                <input type="text" id="public_signer_name_input" placeholder="Your name" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="public_signer_mail_input" class="col-md-3 control-label">Your email</label>
+                            <div class="col-md-9">
+                                <input type="text" id="public_signer_mail_input" placeholder="Your email" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" t-attf-data-ref="/sign/send_public/{{signature_request.id}}/{{signature_request.access_token}}">Validate &amp; Send</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sign.deleted_sign_request" name="Missing Signature Request">
+        <t t-call="website_sign.layout">
+            <div class="container">
+                <h3>Missing signature request</h3>
+                <p>
+                    The signature access you are trying to reach does not exist. Maybe the signature request has been deleted or modified. <br/>
+                    If there still exists a signature request for this document, check your access in your mail box!
+                </p>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,183 @@
+
+.website_sign_iframe {
+  width: 100%;
+  height: 10000px;
+  border: none;
+}
+
+.page {
+  position: relative;
+}
+
+#viewerContainer {
+  visibility: hidden;
+  opacity: 0.01;
+}
+
+.signature_item {
+  position: absolute;
+
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
+  border: 1px dashed #A4498C;
+  vertical-align: middle;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  box-shadow: 0px 0px 5px 2px #A4498C;
+  resize: none;
+
+  background-color: rgba(255, 255, 255, 0.9);
+
+  font-family: Helvetica;
+  line-height: 1.25;
+
+  z-index: 100;
+
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.signature_item_required {
+  background-color: rgba(255, 235, 235, 0.9);
+}
+
+.signature_item .helper, .signature_item_navigator .helper{
+  vertical-align: middle;
+  height: 100%;
+  display: inline-block;
+}
+
+.signature_item img {
+  width: 100%;
+  height: 100%;
+
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.signature_item .config_area {
+  display: none;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 75%;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 13pt;
+  text-align: left;
+}
+
+.signature_item .config_area .fa-arrows {
+  display: block;
+  float: left;
+  margin-right: 5px;
+}
+
+.signature_item .config_area .responsible_display {
+  display: block;
+  font-size: 0.7em;
+}
+
+.signature_item_pdfview {
+  border: 1px dashed silver;
+  box-shadow: 0px 0px 0px 0px white;
+  resize: none;
+  overflow: visible;
+  border: 1px dashed silver;
+  background: transparent;
+  color: black;
+  cursor: auto;
+  white-space: nowrap;
+}
+
+.ui-selected, .ui-selecting {
+  box-shadow: 0px 0px 10px 4px orange;
+}
+
+.ui-draggable .ui-draggable-handle, .field_type_button.ui-draggable {
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+.ui-draggable-dragging .ui-draggable-handle, #signature_item_to_add.ui-draggable-dragging {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.signature_item_navigator {
+  position: fixed;
+  top: 15%;
+  left: 1%;
+  background-color: transparent;
+  background-image: url(../img/navigator.png);
+  background-size: 100% 100%;
+
+  width: 10%;
+  height: 50px;
+  font-size: 1.5em;
+  text-transform: uppercase; 
+
+  z-index: 90;
+
+  text-align: left;
+  padding-left: 1%;
+  color: white;
+
+  cursor: pointer;
+}
+
+.signature_item_navline {
+  position: fixed;
+  top: 15%;
+  left: 1%;
+
+  pointer-events: none;
+  z-index: 80;
+
+  width: 99%;
+  height: 25px;
+  border-bottom: 1px dashed silver;
+  opacity: 0.5;
+}
+
+.field_type_toolbar {
+  width: 100%;
+  position: fixed;
+  z-index: 105;
+
+  background-color: #F8F8F8;
+  border-bottom: 1px solid #E7E7E7;
+  opacity: 0.0;
+
+  text-align: center;
+
+  transition: opacity ease 500ms;
+}
+
+#viewerContainer:hover .field_type_toolbar {
+  opacity: 1.0;
+}
+
+.field_type_button {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
+  border: none;
+  border-right: 1px solid #E7E7E7;
+
+  background-color: #A4498C;
+  color: white;
+
+  height: 30px;
+  padding: 0px 20px 0px 20px;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

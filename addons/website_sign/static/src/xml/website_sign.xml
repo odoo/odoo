@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sign.signature_dialog" name="Signature Dialog">
+        <div class="modal fade" id="signature_dialog" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <h4 class="modal-title">Adopt Your Signature</h4>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <div id="signer_info" class="form-group">
+                            <label class="col-md-3 control-label" for="name">Full Name</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="signer" id="signer_name" t-att-value="widget.signerName" type="text"/>
+                            </div>
+                        </div>
+                        <div id="signature_draw" class="panel panel-default mt16 mb0">
+                            <div class="panel-heading">
+                                <a id="sign_select_style" class="pull-right btn btn-link">Select Signature Style</a>
+                                <a id="sign_clean" class="pull-right btn btn-link">Clear Signature</a>
+                                <input type="file" name="files[]" id="sign_load" class="pull-right btn btn-link" style="visibility:hidden;"/>
+                                <a id="auto_sign_mode" class="sign_mode btn btn-primary">Auto</a>
+                                <a id="draw_sign_mode" class="sign_mode btn">Draw</a>
+                                <a id="load_sign_mode" class="sign_mode btn">Load</a>
+                            </div>
+                            <div id="sign" class="panel-body" style="padding: 0"/>
+                        </div>
+                        <div class="mt16 small">By clicking Adopt and Sign, I agree that the chosen signature/initials will be a valid electronic representation of my hand-written signature/initials for all purposes when it is used on documents, including legally binding contracts.</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Adopt and Sign</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    </div>
+
+                    <div id="font_dialog" class="panel panel-default">
+                        <div class="panel-heading">Styles</div>
+                        <div id="sign_font_selection" class="panel-body"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_sign.svg_text" name="SVG Signature Text">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" t-att-width="width" t-att-height="height">
+            <defs>
+                <style type="text/css">
+                    @font-face {
+                        font-family: "font";
+                        src: url(data:font/ttf;base64,<t t-esc="font"/>) format("woff");
+                        font-weight: normal;
+                        font-style: normal;
+                    }
+                </style>
+            </defs>
+            <text x="50%" t-att-y="height*4/5" t-att-font-size="height*4/5" t-att-textLength="width*4/5" t-att-lengthAdjust="'spacing' + ((type == 'signature')? 'AndGlyphs' : '')" style="font-family:'font'" fill="black" text-anchor="middle"><t t-esc="text"/></text>
+        </svg>
+    </t>
+
+    <t t-name="website_sign.signature_item" name="Signature Item">
+        <t t-if="readonly">
+            <div t-if="type == 'signature' || type == 'initial'" class="signature_item" style="text-align:center" t-att-data-signature="value"><span class="helper"/><img t-if="value" t-att-src="value"/><t t-if="!value"><t t-esc="placeholder"/></t><t t-call="website_sign.signature_item_configuration"/></div>
+
+            <div t-if="type == 'text' || type == 'textarea'" class="signature_item"><t t-raw="value"/><t t-call="website_sign.signature_item_configuration"/></div>
+        </t>
+
+        <t t-if="!readonly">
+            <button t-if="type == 'signature' || type == 'initial'" class="signature_item" style="text-align:center"><span class="helper"/><t t-esc="placeholder"/></button>
+            <input t-if="type == 'text'" type="text" class="signature_item" t-att-placeholder="placeholder"/>
+            <textarea t-if="type == 'textarea'" class="signature_item" t-att-placeholder="placeholder"/>
+        </t>
+    </t>
+
+    <t t-name="website_sign.signature_item_configuration" name="Signature Item Configuration Area">
+        <div class="config_area">
+            <span class="fa fa-arrows"/>
+            <span class="responsible_display"/>
+        </div>
+    </t>
+</templates>

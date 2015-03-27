@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="signature_item_view_list">
+        <field name="name">Signature Item Tree View</field>
+        <field name="model">signature.item</field>
+        <field name="arch" type="xml">
+            <tree default_order="page,posY,posX,id">
+                <field name="type_id"/>
+                <field name="required"/>
+                <field name="responsible_id"/>
+                <field name="page"/>
+                <field name="posX"/>
+                <field name="posY"/>
+                <field name="width"/>
+                <field name="height"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="signature_item_view_form">
+        <field name="name">Signature Item Form View</field>
+        <field name="model">signature.item</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="template_id"/>
+                    </group>
+
+                    <group>
+                        <group string="Information">
+                            <field name="type_id"/>
+                            <field name="required"/>
+                            <field name="responsible_id"/>
+                        </group>
+
+                        <group string="Display">
+                            <field name="page"/>
+                            <field name="posX"/>
+                            <field name="posY"/>
+                            <field name="width"/>
+                            <field name="height"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="signature_item_type_view_list">
+        <field name="name">Signature Item Type Tree View</field>
+        <field name="model">signature.item.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="auto_field"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="signature_item_type_view_form">
+        <field name="name">Signature Item Type Form View</field>
+        <field name="model">signature.item.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="auto_field"/>
+                </group>
+                <group col="3">
+                    <group col="3">
+                        <field name="default_width"/><span>(1.0 = full page width)</span>
+                        <field name="default_height"/><span>(1.0 = full page height)</span>
+                    </group>
+                    <group colspan="2">
+                        <field name="tip"/>
+                        <field name="placeholder"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="signature_item_type_action">
+        <field name="name">Signature Item Type</field>
+        <field name="res_model">signature.item.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.ui.view" id="signature_item_party_view_list">
+        <field name="name">Signature Item Party Tree View</field>
+        <field name="model">signature.item.party</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="signature_item_party_view_form">
+        <field name="name">Signature Item Party Form View</field>
+        <field name="model">signature.item.party</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="signature_item_party_action">
+        <field name="name">Signature Item Party</field>
+        <field name="res_model">signature.item.party</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem parent="website_sign.menu_digital_signatures" id="website_sign.menu_signature_item_type" name="Field Types" action="signature_item_type_action" groups="base.group_no_one"/>
+    <menuitem parent="website_sign.menu_digital_signatures" id="website_sign.menu_signature_item_party" name="Parties" action="signature_item_party_action" groups="base.group_no_one"/>
+</odoo>

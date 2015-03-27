@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_sign.items_view" name="Digital Signatures - Items View">
+        <iframe class="website_sign_iframe" t-att-readonly="'readonly' if readonly else ''"/>
+
+        <input id="input_signature_request_template_id" type="hidden" t-att-value="signature_request.template_id.id"/>
+        <input id="input_attachment_location" type="hidden" t-attf-value="/sign/download/{{signature_request.id}}/{{signature_request.access_token}}/origin"/>
+        <input id="input_current_role" type="hidden" t-att-value="role"/>
+
+        <t t-call="website_sign.items_input_info"/>
+        <t t-call="website_sign.item_types_input_info"/>
+    </template>
+    
+	<template id="website_sign.items_edit" name="Signature Request - Fields Edition">
+		<t t-call="website_sign.layout">
+            <input type="hidden" id="is_website_sign_page"/>
+            
+            <div t-att-class="'container-fluid' if isPDF else 'container'">
+                <div class="text-center row" style="padding:5px;">
+                    <div class="pull-left">
+                        <button type="button" id="send_template_button" class="btn btn-primary">Send</button>
+                        <a href="/sign" class="btn btn-link">Back to dashboard</a>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" id="share_template_button" class="btn btn-link pull-right">Share</button>
+                    </div>
+
+                    <span t-if="not has_signature_requests" class="fa fa-pencil" title="Edit template name"/>
+                    <input type="text" id="template_name_input" style="margin:6px;" t-att-value="signature_request_template.attachment_id.name" t-att-disabled="'disabled' if has_signature_requests else ''"/>
+                    <div id="template-saved-info" class="alert alert-success pull-right"><span class="fa fa-check"/> Saved</div>
+
+                    <div class="clearfix"/>
+                </div>
+
+                <div t-if="has_signature_requests" class="row">
+                    <p class="col-md-12 text-center">This template is used by some signature requests. If you want to edit it, <button type="button" id="duplicate_signature_template" class="btn btn-link" style="padding:0">click here</button> to start a new template from this one !</p>
+                </div>
+
+                <div t-if="not isPDF">
+                    <img t-if="signature_request_template.attachment_id.file_type_icon == 'webimage'" class="media-object" t-attf-src="/web/binary/image?model=ir.attachment&amp;field=datas&amp;id={{signature_request_template.attachment_id.id}}" style="max-width: 100%; min-width: 100px;"/>
+                    <img t-if="signature_request_template.attachment_id.file_type_icon != 'webimage'" class="media-object" t-attf-src="/mail/static/src/img/mimetypes/{{signature_request_template.attachment_id.file_type_icon}}.png" style="max-width: 100%; min-width: 100px;"/>
+                </div>
+            </div>
+
+            <iframe t-if="isPDF" class="website_sign_iframe" t-att-disabled="'disabled' if has_signature_requests else ''"/>
+
+            <input id="input_signature_request_template_id" type="hidden" t-att-value="signature_request_template.id"/>
+            <input id="input_attachment_location" type="hidden" t-attf-value="/web/binary/image?model=ir.attachment&amp;field=datas&amp;id={{signature_request_template.attachment_id.id}}"/>
+
+            <t t-call="website_sign.item_types_input_info"/>
+            <t t-call="website_sign.items_input_info"/>
+            <t t-call="website_sign.parties_input_info"/>
+
+            <t t-call="website_sign.signature_item_custom_dialog"/>
+            <t t-call="website_sign.initial_all_page_dialog"/>
+            <t t-call="website_sign.create_signature_request_dialog"/>
+            <t t-call="website_sign.share_template_dialog"/>
+
+            <t t-if="not has_signature_requests and isPDF">
+                <t t-foreach="signature_item_types" t-as="item_type">
+                    <button type="button" class="field_type_button" t-att-data-item-type-id="item_type.id" title="Drag &amp; Drop a field in the PDF"><t t-esc="item_type.name"/></button>
+                </t>
+            </t>
+        </t>
+	</template>
+
+    <template id="website_sign.signature_item_custom_dialog" name="Signature Field Customization Dialog">
+        <div class="modal fade" id="signature_item_custom_dialog" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <h4 class="modal-title">Customize Field <span class="small"/></h4>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            <label for="responsible_select_input" class="col-md-2 control-label">Responsible</label>
+                            <div id="responsible_select" class="col-md-10">
+                                <select id="responsible_select_input" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <div class="checkbox">
+                                    <label for="required_field">
+                                        <input type="checkbox" id="required_field"/> Mandatory field
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link pull-right" id="delete_field_button" data-dismiss="modal"><span class="fa fa-trash"/> Remove</button>
+
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button> 
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sign.initial_all_page_dialog" name="Initial All Pages Dialog">
+        <div class="modal fade" id="initial_all_page_dialog" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <h4 class="modal-title">Add Initials</h4>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            <label for="responsible_select_initials_input" class="col-md-2 control-label">Responsible</label>
+                            <div id="responsible_select_initials" class="col-md-10">
+                                <select id="responsible_select_initials_input" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Add once</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" title="The pages where there is already a signature field will be ignored">Add on all pages</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sign.create_signature_request_dialog" name="Signature Request Creation Dialog">
+        <div class="modal fade" id="create_signature_request_dialog" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <h4>Send Signature Request</h4>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <p id="warning_message_no_field">
+                            <em>If you leave your document without any fields, the signers will be requested for an unique signature alongside the document</em>
+                        </p>
+
+                        <div id="request_signers">
+                            <div class="form-group" style="margin-top:25px;">
+                                <label for="followers_select" class="col-md-3 control-label">Send a copy to</label>
+                                <div class="col-md-9">
+                                    <select id="followers_select" class="form-control" placeholder="Write email or search contact..." multiple="multiple"/>
+                                </div>
+                            </div>
+                            <div class="clearfix"/>
+                        </div>
+
+                        <hr/>
+
+                        <div class="form-group">
+                            <label for="signature_request_subject_input" class="col-md-3 control-label">Subject</label>
+                            <div class="col-md-9">
+                                <input type="text" id="signature_request_subject_input" class="form-control" placeholder="Signature Request"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sign_message_textarea" class="col-md-3 control-label">Message</label>
+                            <div class="col-md-9">
+                                <textarea id="sign_message_textarea" class="form-control" rows="4"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sign_reference_input" class="col-md-3 control-label">Filename</label>
+                            <div class="col-md-9">
+                                <input type="text" id="sign_reference_input" class="form-control" t-att-data-endref="default_reference"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Send</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sign.share_template_dialog" name="Public Signature Request Creation Dialog">
+        <div class="modal fade" id="share_template_dialog" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <h4>Multiple Signature Requests</h4>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <p>Share this link and Odoo will create a new document per person who clicks on the link. The link is private, only those that receive the link will be able to sign it.</p>
+
+                        <div class="form-group">
+                            <label for="share_link_input" class="col-md-3 control-label">Link to Share</label>
+                            <div class="col-md-9">
+                                <input id="share_link_input" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <p>To be able to share, there must be only one responsible for all fields !</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sign.items_input_info" name="Items input info">
+        <t t-if="signature_items">
+            <t t-foreach="signature_items" t-as="item">
+                <input type="hidden" class="item_input_info"
+                    t-att-data-item-id="item.id"
+                    t-att-data-type="item.type_id.id"
+                    t-att-data-required="item.required"
+                    t-att-data-responsible="item.responsible_id.id"
+                    t-att-data-page="item.page"
+                    t-att-data-posx="str(item.posX)"
+                    t-att-data-posy="str(item.posY)"
+                    t-att-data-width="item.width"
+                    t-att-data-height="item.height"
+                    t-att-data-item-value="str(item_values[item.id]) if item_values and item.id in item_values else ''"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="website_sign.item_types_input_info" name="Item types input info">
+        <t t-foreach="signature_item_types" t-as="item_type">
+            <input type="hidden" class="field_type_input_info" 
+                t-att-data-item-type-id="item_type['id']"
+                t-att-data-item-type-name="item_type['name']"
+                t-att-data-item-type-type="item_type['type']"
+                t-att-data-item-type-tip="item_type['tip']"
+                t-att-data-item-type-placeholder="item_type['placeholder']"
+                t-att-data-item-type-width="item_type['default_width']"
+                t-att-data-item-type-height="item_type['default_height']"
+                t-att-data-item-type-auto="item_type['auto_field']"/>
+        </t>
+    </template>
+
+    <template id="website_sign.parties_input_info" name="Parties input info">
+        <t t-foreach="signature_item_parties" t-as="party">
+            <input type="hidden" class="parties_input_info" 
+                t-att-data-id="party.id"
+                t-att-data-name="party.name"/>
+        </t>
+    </template>
+</odoo>

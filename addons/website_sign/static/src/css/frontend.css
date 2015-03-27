@@ -1,0 +1,283 @@
+
+.modal .modal-footer { /* TODO this rule is a backend rule... */
+  text-align: left;
+}
+
+/* Sign Home */
+#sign_dashboard {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.signature_item_home_container {
+  display: none;
+}
+
+.sign_home_title {
+  border-bottom: 1px solid silver;
+  font-weight: bold;
+  padding-bottom: 5px;
+  margin-top: 30px;
+}
+
+.sign_home_title_nav {
+  float: right;
+  font-weight: normal;
+  color: gray;
+  font-size: 0.85em;
+}
+
+.signature_item_home {
+  width: 15%;
+  height: 150px;
+  margin: 0;
+  padding: 0;
+  margin-right: 2%;
+
+  min-width: 100px;
+  margin-bottom: 10px;
+
+  display: block;
+  position: relative;
+  float: left;
+  
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: #F2F2F2;
+  border: 2px solid #F2F2F2;
+
+  text-align: center;
+  font-size: 1.2em;
+  color: gray;
+}
+
+.signature_item_home.last_signature_item {
+  margin-right: 0;
+}
+
+.signature_item_home_content {
+  width: 95%;
+  margin: auto;
+}
+
+.signature_item_home_content > span {
+  width: 100%;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.signature_item_home_content > span span + span::before {
+  content: ', ';
+  color: gray;
+}
+
+.signature_item_home em {
+  font-size: 0.65em;
+}
+
+.signature_item_home .favorite_button {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  color: silver;
+}
+
+.signature_item_home .favorite_button:hover {
+  color: orange;
+}
+
+.signature_item_home .favorite_button.favorite_button_enabled {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  color: orange;
+}
+
+.signature_item_home .favorite_button.favorite_button_enabled:hover {
+  color: red;
+}
+
+.signature_item_home .archive_button {
+  position: absolute;
+  margin: 0;
+  right: 3px;
+  bottom: 3px;
+  font-size: 0.7em;
+  padding: 0;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.signature_item_home:hover .archive_button {
+  opacity: 1;
+}
+
+.signature_item_home_icon {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.signature_item_home .helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.signature_item_home_content {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#upload_template_button {
+  background-color: #0CC497;
+  border-color: #0CC497;
+  color: white;
+}
+
+/* Edit mode */
+.fa-pencil {
+  cursor: pointer;
+  opacity: 0.1;
+  transition: opacity ease 250ms;
+}
+
+:hover > .fa-pencil {
+  opacity: 1.0; 
+}
+
+#template_name_input {
+  border: 1px dashed white;
+}
+
+#template_name_input:focus {
+  border: 1px solid silver;
+}
+
+#template_name_input[disabled] {
+  background-color: transparent;
+  border: none;
+}
+
+#template-saved-info {
+  padding: 5px;
+  margin: 0px;
+  text-align: center;
+  opacity: 0;
+}
+
+/* Sign page */
+.media, .media-body {
+  overflow: auto;
+  background-color: #f7f5fa;
+  padding: 5px;
+}
+
+.request_follower_name:not(:first-child)::before {
+  content: ', ';
+}
+
+#signature-validate-banner {
+  display: none;
+  opacity: 0;
+
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  padding: 10px;
+
+  background-color: #A4498C;
+  color: white;
+  font-size: 1.25em;
+  text-align: center;
+}
+
+.sign_loading_div {
+  opacity: 0.75;
+  z-index: 120;
+  background-color: white;
+  color: black;
+  font-size: 2em;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.sign_loading_div span {
+  display:inline-block;
+  vertical-align:middle;
+  background-color: #A4498C;
+  padding: 10px;
+  border-radius: 20px;
+  color: white;
+}
+
+.sign_loading_div span.helper {
+  height: 100%;
+  padding: 0;
+}
+
+#website_sign_chatter ul {
+  max-height: 300px;
+  overflow: auto;
+}
+
+/* Signature Dialog */
+div#font_dialog {
+  display: none;
+  height: 100%;
+  position: absolute;
+  right: 0%;
+  top: 0%;
+}
+
+div#font_dialog #sign_font_selection {
+  overflow: auto;
+  height: 90%;
+  padding: 0;
+}
+
+div#font_dialog a {
+  height: 100px;
+  padding: 0;
+}
+
+div#font_dialog a img {
+  height: 100%;
+}
+
+div#font_dialog .loading {
+  background-image: url(../img/loading.gif);
+  width: 31px;
+  height: 31px;
+  margin: auto;
+  margin-top: 35px;
+}
+
+.odoo_signed {
+  background: transparent;
+  background-image: url(../img/odoo_signed.png);
+  background-repeat: no-repeat;
+  background-position: 99% 1.5%;
+  background-size: 20% auto;
+
+  border-top: 1px solid #A4498C;
+  border-radius: 10% 0px 0px 0px;
+}
+
+.odoo_signed_powered {
+  color: gray;
+  font-style: italic;
+}
+
+.odoo_signed_powered::before {
+  content: "Powered by";
+  float: right;
+  margin-right: 15%;
+}
