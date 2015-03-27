@@ -71,8 +71,8 @@
                             <group>
                                 <field name="date" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
                                 <field name="partner_id" attrs="{'required': [('payment_type', '!=', 'transfer')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '=', 'confirmed')]}"/>
-                                <field name="journal_id" widget="selection" domain="[('type', '=', 'bank'), ('at_least_one_inbound', '=', True)]" attrs="{'readonly': [('state', '=', 'confirmed')], 'invisible': [('payment_type', 'in', ('outbound','transfer'))]}"/>
-                                <field name="journal_id" widget="selection" domain="[('type', '=', 'bank'), ('at_least_one_outbound', '=', True)]" attrs="{'readonly': [('state', '=', 'confirmed')], 'invisible': [('payment_type', '=', 'inbound')]}"/>
+                                <field name="journal_id" widget="selection" domain="[('type', 'in', ('bank', 'cash')), ('at_least_one_inbound', '=', True)]" attrs="{'readonly': [('state', '=', 'confirmed')], 'invisible': [('payment_type', 'in', ('outbound','transfer'))]}"/>
+                                <field name="journal_id" widget="selection" domain="[('type', 'in', ('bank', 'cash')), ('at_least_one_outbound', '=', True)]" attrs="{'readonly': [('state', '=', 'confirmed')], 'invisible': [('payment_type', '=', 'inbound')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '=', 'confirmed')]}"/>
                                 <label for="amount"/>
                                 <div>
@@ -105,6 +105,20 @@
             </field>
         </record>
 
+        <record id="action_account_dashboard_payments" model="ir.actions.act_window">
+            <field name="name">Payments</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                  Click to register a payment
+                </p><p>
+                  Payments are used to register liquidity movements (send, collect or transfer money).
+                  You can then process those payments by your own means or by using installed facilities.
+                </p>
+            </field>
+        </record>
         <record id="action_account_payments" model="ir.actions.act_window">
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>

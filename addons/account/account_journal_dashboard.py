@@ -227,7 +227,6 @@ class account_journal(models.Model):
             'bank': 'bank',
             'cash': 'cash',
             'general': 'general',
-            'opening': 'opening',
         }
         invoice_type = _journal_invoice_type_map[self.type]
 
@@ -244,6 +243,31 @@ class account_journal(models.Model):
         action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
         action['context'] = ctx
         return action
+
+    @api.multi
+    def open_spend_money(self):
+        return self.open_payments_action('outbound')
+
+    @api.multi
+    def open_collect_money(self):
+        return self.open_payments_action('inbound')
+
+    @api.multi
+    def open_transfer_money(self):
+        return self.open_payments_action('transfer')
+
+    @api.multi
+    def open_payments_action(self, payment_type):
+        ctx = self._context.copy()
+        ctx.update({
+            'default_payment_type': payment_type,
+            'default_journal_id': self.id
+        })
+        action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_dashboard_payments')
+        if action_rec:
+            action = action_rec.read([])[0]
+            action['context'] = ctx
+            return action
 
     @api.multi
     def import_statement(self):

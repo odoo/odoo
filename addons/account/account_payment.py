@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import time
-
 from openerp import models, fields, api, _
 from openerp.exceptions import UserError, ValidationError
 
@@ -26,7 +24,7 @@ class account_payment_method(models.Model):
     _description = "Payment Methods"
 
     name = fields.Char(required=True)
-    code = fields.Char(required=True) # For internal identification
+    code = fields.Char(required=True)  # For internal identification
     payment_type = fields.Selection([('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True)
 
 
@@ -42,7 +40,7 @@ class account_register_payments(models.TransientModel):
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')])
     payment_method = fields.Many2one('account.payment.method', string='Payment Method', required=True)
     date = fields.Date(string='Date', default=fields.Date.context_today, required=True)
-    journal_id = fields.Many2one('account.journal', string='Bank Journal', required=True, domain=[('type', '=', 'bank')])
+    journal_id = fields.Many2one('account.journal', string='Bank Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     @api.onchange('payment_type')
@@ -59,7 +57,6 @@ class account_register_payments(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        # TODO: return action False to close dialog if error
         rec = super(account_register_payments, self).default_get(fields)
         context = dict(self._context or {})
         active_model = context.get('active_model')
@@ -67,9 +64,9 @@ class account_register_payments(models.TransientModel):
 
         # Checks on context parameters
         if not active_model or not active_ids:
-            raise osv.except_osv(_("Programmation error : wizard action executed without active_model or active_ids in context."))
+            raise UserError(_("Programmation error: wizard action executed without active_model or active_ids in context."))
         if active_model != 'account.invoice':
-            raise osv.except_osv(_("Programmation error : the expected model for this action is 'account.invoice'. The provided one is '%d'." % active_model))
+            raise UserError(_("Programmation error: the expected model for this action is 'account.invoice'. The provided one is '%d'." % active_model))
 
         # Checks on received invoice records
         invoices = self.env[active_model].browse(active_ids)
@@ -156,11 +153,11 @@ class account_payment(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
     date = fields.Date(string='Date', default=fields.Date.context_today, required=True)
     reference = fields.Char('Ref', help="Transaction reference number.")
-    journal_id = fields.Many2one('account.journal', string='Bank Journal', required=True, domain=[('type', '=', 'bank')])
+    journal_id = fields.Many2one('account.journal', string='Bank Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     # Money flows from the journal_id's default_debit_account_id or default_credit_account_id to the destination_account_id
     destination_account_id = fields.Many2one('account.account', compute='_compute_destination_account_id', required=True)
     # For money transfer, money goes from journal_id to a transfer account, then from the transfer account to destination_journal_id
-    destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain=[('type', '=', 'bank')])
+    destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", readonly=True)
@@ -190,13 +187,10 @@ class account_payment(models.Model):
         elif self.payment_type == 'outbound':
             self.partner_type = 'supplier'
         # Set payment method domain
-        # TODO: set journal_id domain in order to hide journal with no inbound/outbound payment method
-        # This interface is a mess. Maybe all onchange should call a single method where it would be easier to sort things out
         return self._onchange_journal()
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
-        import pprint; pp = pprint.PrettyPrinter(indent=4); pp.pprint(self.journal_id)
         if self.journal_id:
             self.currency_id = self.journal_id.currency and self.journal_id.currency or self.company_id.currency_id
             # Set default payment method (we consider the first to be the default one)
@@ -314,9 +308,7 @@ class account_payment(models.Model):
         counterpart_aml_dict = self._get_shared_move_line_vals(debit, credit, amount_currency, move.id, invoice_id)
         counterpart_aml_dict.update(self._get_counterpart_move_line_vals(invoice_id))
         counterpart_aml = aml_obj.create(counterpart_aml_dict)
-
         move.post()
-
         return counterpart_aml
 
     def _create_transfer_entry(self, amount):
@@ -345,9 +337,7 @@ class account_payment(models.Model):
             'currency_id': self.destination_journal_id.currency.id,
             'journal_id': self.destination_journal_id.id})
         transfer_debit_aml = aml_obj.create(transfer_debit_aml_dict)
-
         dst_move.post()
-
         return transfer_debit_aml
 
     def _get_move_vals(self, journal=None):
@@ -366,7 +356,6 @@ class account_payment(models.Model):
             'company_id': self.company_id.id,
             'journal_id': journal.id,
         }
-
 
     def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):
         """ Returns values common to both move lines (except for debit, credit and amount_currency which are reversed)
@@ -407,9 +396,7 @@ class account_payment(models.Model):
             name = prefix + self.partner_id.name
         return {
             'name': name,
-            'account_id': self.payment_type in ('outbound','transfer') \
-                and self.journal_id.default_debit_account_id.id \
-                or self.journal_id.default_credit_account_id.id,
+            'account_id': self.payment_type in ('outbound','transfer') and self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id,
             'payment_id': self.id,
             'journal_id': self.journal_id.id,
         }
