@@ -34,7 +34,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def index(self, **kw):
         page = 'homepage'
         try:
-            main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
+            main_menu = request.env.ref('website.main_menu')
         except Exception:
             pass
         else:
