@@ -561,14 +561,20 @@
 </template>
 
 <template id="vote">
+    <t t-set="own_vote" t-value="post.user_vote"/>
+    <t t-set="forum" t-value="post.forum_id"/>
+    <t t-set="karma_up" t-value="forum.karma_upvote"/>
+    <t t-set="karma_down" t-value="forum.karma_downvote"/>
+    <t t-set="can_upvote" t-value="post.can_upvote"/>
+    <t t-set="can_downvote" t-value="post.can_downvote"/>
     <div class="vote text-center">
-        <a t-attf-class="vote_up fa fa-caret-up no-decoration #{post.user_vote == 1 and 'text-success' or ''} #{((post.user_vote == 1 and not post.can_downvote) or not post.can_upvote) and 'karma_required' or ''}"
-            t-attf-data-karma="#{post.user_vote == 1 and post.forum_id.karma_downvote or post.forum_id.karma_upvote}"
-            t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/upvote"/>
+        <a t-attf-class="vote_up fa fa-caret-up no-decoration #{own_vote == 1 and 'text-success' or ''} #{((own_vote == 1 and not can_downvote) or not can_upvote) and 'karma_required' or ''}"
+            t-attf-data-karma="#{own_vote == 1 and karma_down or karma_up}"
+            t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/upvote"/>
         <div class="vote_count text-muted" t-esc="post.vote_count"/>
-        <a t-attf-class="vote_down fa fa-caret-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''} #{((post.user_vote == -1 and not post.can_upvote) or not post.can_downvote) and 'karma_required' or ''}"
-            t-attf-data-karma="#{post.user_vote == -1 and post.forum_id.karma_upvote or post.forum_id.karma_downvote}"
-            t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/downvote"/>
+        <a t-attf-class="vote_down fa fa-caret-down no-decoration #{own_vote == -1 and 'text-warning' or ''} #{((own_vote == -1 and not can_upvote) or not can_downvote) and 'karma_required' or ''}"
+            t-attf-data-karma="#{own_vote == -1 and karma_up or karma_down}"
+            t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/downvote"/>
         <t t-raw="0"/>
     </div>
 </template>
