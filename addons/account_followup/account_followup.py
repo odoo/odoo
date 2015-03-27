@@ -93,7 +93,7 @@ class account_move_line(models.Model):
 class res_partner(models.Model):
     _inherit = "res.partner"
 
-    def get_partners_in_need_of_action(self):
+    def get_partners_in_need_of_action_and_update(self):
         company_id = self.env.user.company_id
         context = self.env.context
         cr = self.env.cr
@@ -200,6 +200,7 @@ class account_config_settings(models.TransientModel):
     _name = 'account.config.settings'
     _inherit = 'account.config.settings'
 
+    @api.multi
     def open_followup_level_form(self):
         res_ids = self.env['account_followup.followup'].search([])
 
@@ -207,6 +208,6 @@ class account_config_settings(models.TransientModel):
                  'type': 'ir.actions.act_window',
                  'name': 'Payment Follow-ups',
                  'res_model': 'account_followup.followup',
-                 'res_id': res_ids and res_ids[0] or False,
+                 'res_id': res_ids and res_ids.ids[0] or False,
                  'view_mode': 'form,tree',
          }

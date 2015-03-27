@@ -13,7 +13,7 @@
 </template>
 <template id='report_followup' inherit_id='account.report_followup'>
     <xpath expr="//div[@class='alert alert-warning']" position='attributes'>
-        <attribute name='t-if'>context and context.partner_id.id not in context.env['res.partner'].get_partners_in_need_of_action().keys()</attribute>
+        <attribute name='t-if'>context and context.partner_id.id not in context.env['res.partner'].get_partners_in_need_of_action_and_update().keys()</attribute>
     </xpath>
     <xpath expr="//script[@id='oe-account-inline-script']" position='replace'>
         <script type="text/javascript" src="/account_followup/static/src/js/account_report_widgets.js"></script>

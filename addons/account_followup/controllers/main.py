@@ -43,7 +43,7 @@ class FollowupReportController(addons.account.controllers.main.FinancialReportCo
                          ('Content-Disposition', 'attachment; filename=followups.pdf;')])
         if 'partner_skipped' in kw:
             context_all_id.skip_partner(request.env['res.partner'].browse(int(kw['partner_skipped'])))
-        partners_data = request.env['res.partner'].get_partners_in_need_of_action()
+        partners_data = request.env['res.partner'].get_partners_in_need_of_action_and_update()
         partners = request.env['res.partner'].browse(partners_data.keys()) - context_all_id.skipped_partners_ids
         action_contexts = []
         if not context_all_id:
@@ -95,7 +95,7 @@ class FollowupReportController(addons.account.controllers.main.FinancialReportCo
         uid = request.session.uid
         context_obj = request.env['account.report.context.followup']
         report_obj = request.env['account.followup.report']
-        partners_data = request.env['res.partner'].get_partners_in_need_of_action()
+        partners_data = request.env['res.partner'].get_partners_in_need_of_action_and_update()
         partner = request.env['res.partner'].browse(partner)
         partners = partners_data.keys()
         if 'partner_done' in kw:

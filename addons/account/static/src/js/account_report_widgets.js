@@ -140,7 +140,7 @@ openerp.account.ReportWidgets = openerp.Widget.extend({
                 break;
             case 'last_quarter':
                 var dt = new Date();
-                dt.setMonth((Math.floor((dt.getMonth())/3)) * 3); // Go to the first month of this quarter
+                dt.setMonth((moment(dt).quarter() - 1) * 3); // Go to the first month of this quarter
                 dt.setDate(0); // Then last day of last month (= last day of last quarter)
                 this.$("input[name='date_to']").parents('.oe-account-datetimepicker').data("DateTimePicker").setValue(moment(dt));
                 if (!no_date_range) {
