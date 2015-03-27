@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+        <record id="account_bank_statement_import_journal_creation_view" model="ir.ui.view">
+            <field name="name">Journal Creation</field>
+            <field name="model">account.bank.statement.import.journal.creation</field>
+            <field name="arch" type="xml">
+                <form string="Journal Creation">
+                    <p>The account of the statement you are importing is not yet recorded in Odoo. In order to proceed with the import, you need to create a bank account and journal using this form.</p>
+                    <p>Just click OK to create the account/journal and finish the import. If this was a mistake, hit cancel to abort the import.</p>
+                    <group>
+                        <field name="name"/>
+                        <field name="currency_id"/>
+                        <field name="account_number"/>
+                    </group>
+                    <footer>
+                        <button name="create_journal" string="OK" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>
