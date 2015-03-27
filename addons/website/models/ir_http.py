@@ -82,7 +82,7 @@ class ir_http(orm.AbstractModel):
             try:
                 if func:
                     self._authenticate(func.routing['auth'])
-                else:
+                elif request.uid is None:
                     self._auth_method_public()
             except Exception as e:
                 return self._handle_exception(e)
