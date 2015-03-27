@@ -71,6 +71,8 @@ class sale_order(osv.osv):
         for sale in self.browse(cr, uid, ids, context=context):
             result[sale.id] = 0.0
             for line in sale.order_line:
+                if line.state == 'cancel':
+                    continue
                 result[sale.id] += line.margin or 0.0
         return result
 
