@@ -1,0 +1,136 @@
+@bg-main:#F2F2F2;
+
+.dashboard {
+
+    padding: 0px 20px;
+    overflow: auto;
+    height: 100%;
+    .title{
+        font-size: 30px;
+        padding:20px;
+    }
+    .mt16{
+        margin-top: 16px;
+    }
+    .loader{
+        font-size: 13px;
+        margin-right: 10px;
+        position: absolute;
+        top: 6px;
+        right: 5px;
+        padding: 5px;
+        background: @bg-main;
+        border-radius: 10px;
+    }
+    small, .small{
+        font-size: 11px;
+    }
+    .col {
+        margin-bottom: 10px;
+        > div:first-child {
+            background: @bg-main;
+            text-align: center;
+            border-radius: 10px;
+            padding: 25px 18px 18px 18px;
+                .header{
+                    font-size: 22px;
+                }
+        }
+        .pills{
+            margin-top: 10px;
+            i {
+                vertical-align: middle;
+                font-size: 1.5em;
+            }
+            a{
+                background: @bg-main;
+                border-radius: 8px;
+                padding: 10px;
+            }
+            li{
+                text-align: center;
+            }
+            li:last-child{
+                float: right !important;
+            }
+        }
+        .btn.install_new_apps{
+            margin-top: 12px;
+        }
+        #invitations{
+            .invitation-form{
+                text-align: left;
+                textarea{
+                    width: 100%;
+                }
+            }
+            .send_invitations{
+                margin:12px 0px;
+                 i{
+                    color:#fff !important;
+                }
+            }
+            .optional_message_toggler{
+                font-size: 11px;
+                vertical-align: top;
+            }
+        }
+        .compact_subtitle{
+            line-height: 10px;
+            display: block;
+        }
+        .progress{
+            height: 10px;
+            background-color: darken(@bg-main, 15%);
+            -webkit-box-shadow:none;
+            box-shadow:none;
+            cursor: pointer;
+            .progress-bar{
+                -webkit-box-shadow:none;
+                box-shadow:none;
+            }
+        }
+        .planner_progress{
+            font-size: 18px;
+            padding-right: 0px;
+            padding-top: 3px;
+        }
+        .proress_title{
+            font-weight:bold;
+            cursor: pointer;
+        }
+        .progress_100{
+            -webkit-filter: grayscale(100%);
+            filter: grayscale(100%);
+            &.planner_progress{
+                font-size: 15px
+            }
+        }
+        .video_lock i{
+            padding-top: 13px;
+        }
+        .video_urls{
+            list-style-type: none;
+            li{
+                border-bottom: 1px solid #E0E0E0;
+                margin-top: 2px;
+            }
+            a.text-muted{
+                cursor: not-allowed !important;
+            }
+        }
+    }
+    hr{
+        margin-top: 10px;
+        margin-bottom: 15px;
+        border: 0;
+        border-top: 1px solid #CBCBCB;
+    }
+}
+
+@media (max-width: 1100px) {
+    .dashboard .col .pills li {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
