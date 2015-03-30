@@ -227,14 +227,22 @@ class im_livechat_channel_rule(osv.Model):
 
     def match_rule(self, cr, uid, channel_id, url, country_id=False, context=None):
         """ determine if a rule of the given channel match with the given url """
-        domain = [('channel_id', '=', channel_id)]
+        def _match(rule_ids):
+            for rule in self.browse(cr, uid, rule_ids, context=context):
+                if re.search(rule.regex_url, url):
+                    return rule
+            return False
+        # first, search the country specific rules (the first match is returned)
         if country_id: # don't include the country in the research if geoIP is not installed
-            domain.append(('country_ids', 'in', country_id))
-        rule_ids = self.search(cr, uid, domain, context=context)
-        for rule in self.browse(cr, uid, rule_ids, context=context):
-            if re.search(rule.regex_url, url):
+            domain = [('country_ids', 'in', [country_id]), ('channel_id', '=', channel_id)]
+            rule_ids = self.search(cr, uid, domain, context=context)
+            rule = _match(rule_ids)
+            if rule:
                 return rule
-        return False
+        # second, fallback on the rules without country
+        domain = [('country_ids', '=', False), ('channel_id', '=', channel_id)]
+        rule_ids = self.search(cr, uid, domain, context=context)
+        return _match(rule_ids)
 
 
 class im_chat_session(osv.Model):
