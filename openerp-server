@@ -260,6 +260,7 @@ Maybe you forgot to add those addons in your addons_path configuration."""
 
     if config['db_name']:
         for dbname in config['db_name'].split(','):
+            openerp.tools.config.parse_config(sys.argv[1:])
             preload_registry(dbname)
 
     if config["stop_after_init"]:
