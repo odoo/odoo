@@ -1142,7 +1142,7 @@ class account_invoice(models.Model):
         else:
             ref = self.number
         partner = self.partner_id._find_accounting_partner(self.partner_id)
-        name = name or self.invoice_line.name or self.number
+        name = name or self.invoice_line[0].name or self.number
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'name': name,
