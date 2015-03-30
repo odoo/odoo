@@ -676,10 +676,7 @@ class FieldConverter(osv.AbstractModel):
         lang_code = context.get('lang') or 'en_US'
         Lang = self.pool['res.lang']
 
-        lang_ids = Lang.search(cr, uid, [('code', '=', lang_code)], context=context) \
-               or  Lang.search(cr, uid, [('code', '=', 'en_US')], context=context)
-
-        return Lang.browse(cr, uid, lang_ids[0], context=context)
+        return Lang.browse(cr, uid, Lang._lang_get(cr, uid, lang_code), context=context)
 
 class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
