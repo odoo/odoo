@@ -31,11 +31,11 @@ class TestFiscalPosition(TransactionCase):
                                                                     country_id=country_id,
                                                                     vat_required=True,
                                                                     sequence=2))
-        res = self.fiscal_position_model.get_fiscal_position(cr, uid, company_id, partner_id)
+        res = self.fiscal_position_model.get_fiscal_position(cr, uid, partner_id)
         self.assertEquals(fp_b2b_id, res,
                           "Fiscal position detection should pick B2B position as 1rst match")
 
         self.fiscal_position_model.write(cr, uid, [fp_b2b_id], {'auto_apply': False})
-        res = self.fiscal_position_model.get_fiscal_position(cr, uid, company_id, partner_id)
+        res = self.fiscal_position_model.get_fiscal_position(cr, uid, partner_id)
         self.assertEquals(fp_b2c_id, res,
                           "Fiscal position detection should pick B2C position as 1rst match")

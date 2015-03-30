@@ -98,7 +98,7 @@ class AccountFiscalPosition(models.Model):
         return accounts
 
     @api.model
-    def get_fiscal_position(self, company_id, partner_id, delivery_id=None):
+    def get_fiscal_position(self, partner_id, delivery_id=None):
         if not partner_id:
             return False
         # This can be easily overriden to apply more complex fiscal rules
