@@ -131,11 +131,11 @@ class AccountConfigSettings(models.TransientModel):
     income_currency_exchange_account_id = fields.Many2one('account.account',
         related='company_id.income_currency_exchange_account_id',
         string="Gain Exchange Rate Account",
-        domain=[('internal_type', '=', 'other'), ('company_id', '=', company_id), ('deprecated', '=', False)])
+        domain=lambda self: [('internal_type', '=', 'other'), ('company_id', '=', self.company_id.id), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account',
         related='company_id.expense_currency_exchange_account_id',
         string="Loss Exchange Rate Account",
-        domain=[('internal_type', '=', 'other'), ('company_id', '=', company_id), ('deprecated', '=', False)])
+        domain=lambda self: [('internal_type', '=', 'other'), ('company_id', '=', self.company_id.id), ('deprecated', '=', False)])
 
     @api.multi
     @api.constrains('income_currency_exchange_account_id', 'expense_currency_exchange_account_id')
