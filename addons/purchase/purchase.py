@@ -47,10 +47,11 @@ class purchase_order(osv.osv):
             val = val1 = 0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
-               taxes = self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, line.product_id, order.partner_id)
-               val1 += cur_obj.round(cr, uid, cur, taxes['total']) #Decimal precision?
-               for c in taxes['taxes']:
-                   val += c.get('amount', 0.0)
+                if order.state == 'cancel' or line.state != 'cancel':
+                   taxes = self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, line.product_id, order.partner_id)
+                   val1 += cur_obj.round(cr, uid, cur, taxes['total']) #Decimal precision?
+                   for c in taxes['taxes']:
+                       val += c.get('amount', 0.0)
 
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
