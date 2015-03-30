@@ -19,9 +19,7 @@ creation of the Financial Accounting records).
     """,
     'data' : [],
     'depends': ['account_bank_statement_import'],
-    'demo': [
-        'demo/demo_data.xml',
-     ],
+    'demo': [],
     'auto_install': True,
     'installable': True,
 }

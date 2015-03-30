@@ -49,11 +49,11 @@ class TestAccountBankStatemetImport(TransactionCase):
              "is_company": False,
              "email": "test@tes.ttest",
              })
-        company_id = self.base_user_root.company_id.id
+        self.company_id = self.base_user_root.company_id.id
         self.other_user_id_a = self.res_users_model.create(
             {"partner_id": self.other_partner_id.id,
-             "company_id": company_id,
-             "company_ids": [(4, company_id)],
+             "company_id": self.company_id,
+             "company_ids": [(4, self.company_id)],
              "login": "my_login a",
              "name": "my user",
              "groups_id": [(4, self.ref('account.group_account_manager'))]
@@ -68,7 +68,7 @@ class TestAccountBankStatemetImport(TransactionCase):
 
         st_import = self.statement_import_model.sudo(self.other_user_id_a.id)
         bank = st_import._create_bank_account(
-            '001251882303', journal_id=self.journal_id)
+            '001251882303', company_id=self.company_id)
 
         self.assertEqual(bank.partner_id.id,
                          expected_id)

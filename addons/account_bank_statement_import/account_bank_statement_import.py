@@ -64,13 +64,19 @@ class account_bank_statement_import(models.TransientModel):
         # Try to find the bank account and currency in odoo
         currency_id, bank_account_id = self._find_additional_data(
             currency_code, account_number)
+        # Create the bank account if not already existing
+        if not bank_account_id and account_number:
+            journal_id = self.env.context.get('journal_id')
+            company_id = self.env.user.company_id.id
+            if journal_id:
+                journal = self.env['account.journal'].browse(journal_id)
+                company_id = journal.company_id.id
+            bank_account_id = self._create_bank_account(
+                account_number, company_id=company_id,
+                currency_id=currency_id).id
         # Find or create the bank journal
         journal_id = self._get_journal(
             currency_id, bank_account_id, account_number)
-        # Create the bank account if not already existing
-        if not bank_account_id and account_number:
-            self._create_bank_account(
-                account_number, journal_id=journal_id)
         # Prepare statement data to be used for bank statements creation
         stmts_vals = self._complete_stmts_vals(
             stmts_vals, journal_id, account_number)
@@ -178,16 +184,12 @@ class account_bank_statement_import(models.TransientModel):
                 raise UserError(_('The currency of the bank statement is not '
                                 'the same as the currency of the journal !'))
 
-        # If we couldn't find/create a journal, everything is lost
-        if not journal_id:
-            raise UserError(_('Cannot find in which journal import this '
-                            'statement. Please manually select a journal.'))
-
         return journal_id
 
     @api.model
     @api.returns('res.partner.bank')
-    def _create_bank_account(self, account_number, journal_id=False):
+    def _create_bank_account(self, account_number, company_id=False,
+                             currency_id=False):
         try:
             bank_type = self.env.ref('base.bank_normal')
             bank_code = bank_type.code
@@ -202,15 +204,19 @@ class account_bank_statement_import(models.TransientModel):
         # (from which statement transactions originate) don't.
         # Warning : if company_id is set, the method post_write of class
         # bank will create a journal
-        if journal_id:
-            company_id = self.env['account.journal'].browse(
-                journal_id).company_id.id
+        if company_id:
             vals = self.env['res.partner.bank'].onchange_company_id(company_id)
             vals_acc.update(vals.get('value', {}))
-            vals_acc['journal_id'] = journal_id
             vals_acc['company_id'] = company_id
 
-        return self.env['res.partner.bank'].create(vals_acc)
+        # When the journal is created at same time of the bank account, we need
+        # to specify the currency to use a first time for the account.account
+        res_bank = self.env['res.partner.bank'].with_context(
+            default_currency_id=currency_id).create(vals_acc)
+        # and a second time on the journal
+        if currency_id:
+            res_bank.journal_id.currency = currency_id
+        return res_bank
 
     @api.model
     def _complete_stmts_vals(self, stmts_vals, journal_id, account_number):
