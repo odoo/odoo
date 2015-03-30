@@ -785,6 +785,9 @@ class survey_question(osv.Model):
             comment_flag = answer_candidates.pop(("%s_%s" % (answer_tag, -1)), None)
             if question.comments_allowed:
                 comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
+            # Returning Error message if any answer has blank value.
+            if any([True if answer.strip() == '' else False for answer in answer_candidates.values()]):
+                errors.update({answer_tag: question.constr_error_msg})
             # There is no answer neither comments (if comments count as answer)
             if not answer_candidates and question.comment_count_as_answer and (not comment_flag or not comment_answer):
                 errors.update({answer_tag: question.constr_error_msg})
