@@ -81,7 +81,7 @@ class account_register_payments(models.TransientModel):
 
         total_amount = sum(inv.residual * MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] for inv in invoices)
         rec.update({
-            'amount': total_amount,
+            'amount': abs(total_amount),
             'currency_id': invoices[0].currency_id.id,
             # TOCHECK: what if the amount actually is 0 ?
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
