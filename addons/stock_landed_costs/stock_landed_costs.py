@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 import product
 
@@ -178,9 +179,12 @@ class stock_landed_cost(osv.osv):
             else:
                 costcor[valuation_line.cost_line_id] = valuation_line.additional_landed_cost
             tot += valuation_line.additional_landed_cost
-        res = (tot == landed_cost.amount_total)
+
+        prec = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
+        # float_compare returns 0 for equal amounts
+        res = not bool(float_compare(tot, landed_cost.amount_total, precision_digits=prec))
         for costl in costcor.keys():
-            if costcor[costl] != costl.price_unit:
+            if float_compare(costcor[costl], costl.price_unit, precision_digits=prec):
                 res = False
         return res
 

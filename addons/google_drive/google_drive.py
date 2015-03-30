@@ -20,6 +20,7 @@
 import logging
 
 from openerp import SUPERUSER_ID
+from openerp.addons.google_account import TIMEOUT
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -81,7 +82,7 @@ class config(osv.Model):
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept-Encoding": "gzip, deflate"}
         try:
             req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
-            content = urllib2.urlopen(req).read()
+            content = urllib2.urlopen(req, timeout=TIMEOUT).read()
         except urllib2.HTTPError:
             if user_is_admin:
                 model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base_setup', 'action_general_configuration')
@@ -101,7 +102,7 @@ class config(osv.Model):
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept-Encoding": "gzip, deflate"}
         try:
             req = urllib2.Request(request_url, None, headers)
-            parents = urllib2.urlopen(req).read()
+            parents = urllib2.urlopen(req, timeout=TIMEOUT).read()
         except urllib2.HTTPError:
             raise osv.except_osv(_('Warning!'), _("The Google Template cannot be found. Maybe it has been deleted."))
         parents_dict = json.loads(parents)
@@ -113,7 +114,7 @@ class config(osv.Model):
         data_json = json.dumps(data)
         # resp, content = Http().request(request_url, "POST", data_json, headers)
         req = urllib2.Request(request_url, data_json, headers)
-        content = urllib2.urlopen(req).read()
+        content = urllib2.urlopen(req, timeout=TIMEOUT).read()
         content = json.loads(content)
         res = {}
         if content.get('alternateLink'):
@@ -128,7 +129,7 @@ class config(osv.Model):
             data = {'role': 'writer', 'type': 'anyone', 'value': '', 'withLink': True}
             try:
                 req = urllib2.Request(request_url, json.dumps(data), headers)
-                urllib2.urlopen(req)
+                urllib2.urlopen(req, timeout=TIMEOUT)
             except urllib2.HTTPError:
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _("The permission 'reader' for 'anyone with the link' has not been written on the document"), context=context)
             user = self.pool['res.users'].browse(cr, uid, uid, context=context)
@@ -136,10 +137,10 @@ class config(osv.Model):
                 data = {'role': 'writer', 'type': 'user', 'value': user.email}
                 try:
                     req = urllib2.Request(request_url, json.dumps(data), headers)
-                    urllib2.urlopen(req)
+                    urllib2.urlopen(req, timeout=TIMEOUT)
                 except urllib2.HTTPError:
                     pass
-        return res 
+        return res
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):
         '''
