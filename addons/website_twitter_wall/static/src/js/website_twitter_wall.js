@@ -190,7 +190,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                         self.pool_cache[pop_el.id]['seen'] += 1;
                     }
                     var pop_el_desc = $(pop_el.html_description);
-                    pop_el_desc.attr("data-link-color", colors[color]);
+                    pop_el_desc.attr("data-link-color", colors[color] || color);
                     if (self.theme == "dark")
                         pop_el_desc.attr({"data-theme": "dark", "data-link-color": color});
                     $(Qweb.render("twitter_tweets", {'res': pop_el_desc.prop('outerHTML'), 'class' : current_class})).prependTo('.odoo-tw-walls');
@@ -237,17 +237,28 @@ website.if_dom_contains('.odoo-tw-walls', function() {
     });
 
     // Set background color of live view
-    var i = 1, content = "";
+    var content = "<center><b class='text-muted'>Your Custom Color</b></center>
+                    <div class='input-group odoo-tw-view-live-option-colorinput'>
+                        <input type='text' class='form-control' />
+                        <span class='input-group-addon'><i></i></span>
+                    </div>
+                    <script>$('.odoo-tw-view-live-option-colorinput').colorpicker({horizontal:true});</script><br/>
+                    <center><b class='text-muted'>Standard Colors</b></center>", i = 1;
     _.map(colors, function(primary, secondary) {
         content += "<span class='odoo-tw-view-live-option-color' data-color-code=" + secondary + " style='background-color:" + secondary + "' />";
-        if(i%3 == 0) content += "<br/>";
+        if(i%6 == 0) content += "<br/>";
         i++;
     });
-    $('.odoo-tw-view-live-color-picker').popover({
+    var picker = $('.odoo-tw-view-live-color-picker').popover({
         html: true,
         content: content
-    }).parent().on('click', '.odoo-tw-view-live-option-color', function() {
+    });
+    picker.parent().on('click', '.odoo-tw-view-live-option-color', function() {
         color = $(this).data('color-code');
+        $('body').css('background-color', color);
+    });
+    picker.parent().on('changeColor.colorpicker', '.odoo-tw-view-live-option-colorinput', function(e) {
+        color = e.color.toHex();
         $('body').css('background-color', color);
     });
 });
