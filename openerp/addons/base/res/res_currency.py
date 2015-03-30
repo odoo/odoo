@@ -296,6 +296,7 @@ class res_currency_rate(osv.osv):
         'name': fields.datetime('Date', required=True, select=True),
         'rate': fields.float('Rate', digits=(12, 6), help='The rate of the currency to the currency of rate 1'),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company')
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d 00:00:00'),

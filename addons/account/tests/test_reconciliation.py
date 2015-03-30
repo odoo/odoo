@@ -14,6 +14,7 @@ class TestReconciliation(TransactionCase):
         self.account_invoice_line_model = self.registry('account.invoice.line')
         self.acc_bank_stmt_model = self.registry('account.bank.statement')
         self.acc_bank_stmt_line_model = self.registry('account.bank.statement.line')
+        self.currency_rate_model = self.registry('res.currency.rate')
 
         self.partner_agrolait_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "base", "res_partner_2")[1]
         self.currency_swiss_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "base", "CHF")[1]
@@ -31,6 +32,12 @@ class TestReconciliation(TransactionCase):
         self.company_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "base", "main_company")[1]
         #set expense_currency_exchange_account_id and income_currency_exchange_account_id to a random account
         self.registry("res.company").write(self.cr, self.uid, [self.company_id], {'expense_currency_exchange_account_id': self.account_rsa_id, 'income_currency_exchange_account_id':self.account_rsa_id})
+        self.setup_currency_rate()
+
+    def setup_currency_rate(self):
+        cr, uid = self.cr, self.uid
+        self.currency_rate_model.create(cr, uid, {'currency_id': self.currency_swiss_id, 'rate': 1.3086, 'company_id': self.company_id, 'name': time.strftime('%Y-01-01')})
+        self.currency_rate_model.create(cr, uid, {'currency_id': self.currency_usd_id, 'rate': 1.2834, 'company_id': self.company_id, 'name': time.strftime('%Y-01-01')})
 
     def create_invoice(self, type='out_invoice', currency=None):
         cr, uid = self.cr, self.uid
