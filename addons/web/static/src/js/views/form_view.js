@@ -562,7 +562,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             return this.onchanges_mutex.def;
         } catch(e) {
             console.error(e);
-            crashmanager.show_message(e);
+            crash_manager.show_message(e);
             return $.Deferred().reject();
         }
     },
@@ -592,7 +592,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         return $.Deferred().resolve();
         } catch(e) {
             console.error(e);
-            crashmanager.show_message(e);
+            crash_manager.show_message(e);
             return $.Deferred().reject();
         }
     },
@@ -1634,4 +1634,3 @@ core.view_registry.add('form', FormView);
 return FormView;
 
 });
-
