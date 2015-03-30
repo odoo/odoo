@@ -230,7 +230,7 @@ class project_issue(osv.Model):
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this issue\n"
                                               " * Ready for next stage indicates the issue is ready to be pulled to the next stage",
-                                         required=False),
+                                         required=True),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Assigned', readonly=True, select=True),
