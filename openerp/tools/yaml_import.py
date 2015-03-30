@@ -487,6 +487,7 @@ class YamlInterpreter(object):
                             if key not in fields:
                                 # do not shadow values explicitly set in yaml.
                                 record_dict[key] = process_val(key, val)
+                                # locals_dict.update(record_dict)
                         else:
                             _logger.debug("The returning field '%s' from your on_change call '%s'"
                                             " does not exist either on the object '%s', either in"
@@ -502,6 +503,11 @@ class YamlInterpreter(object):
                 continue
             field_value = self._eval_field(model, field_name, expression, parent=record_dict, default=False, context=context)
             record_dict[field_name] = field_value
+
+        # filter returned values; indeed the last modification in the import process have added a default
+        # value for all fields in the view; however some fields present in the view are not stored and
+        # should not be sent to create. This bug appears with not stored function fields in the new API.
+        record_dict = dict((key, record_dict.get(key)) for key in record_dict if (key in model._columns or key in model._inherit_fields))
         return record_dict
 
     def process_ref(self, node, field=None):

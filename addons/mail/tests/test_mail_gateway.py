@@ -227,7 +227,7 @@ class TestMailgateway(TestMail):
                          'message_process: newly created group should have the incoming email as first message')
         self.assertIn('Please call me as soon as possible this afternoon!', msg.body,
                       'message_process: newly created group should have the incoming email as first message')
-        self.assertEqual(msg.type, 'email',
+        self.assertEqual(msg.message_type, 'email',
                          'message_process: newly created group should have an email as first message')
         self.assertEqual(msg.subtype_id, self.env.ref('mail.mt_comment'),
                          'message_process: newly created group should not have a log first message but an email')
@@ -458,16 +458,16 @@ class TestMailgateway(TestMail):
 
         self.format_and_process(MAIL_TEMPLATE, to='public@example.com', msg_id='<1>', email_from='Brice Denisse <from.test@example.com>')
         self.assertEqual(self.group_public.message_ids[0].author_id, from_1, 'message_process: email_from -> author_id wrong')
-        self.group_public.message_unsubscribe(partner_ids=[from_1.id])
+        self.group_public.message_unsubscribe([from_1.id])
 
         from_2 = self.env['res.users'].with_context({'no_reset_password': True}).create({'name': 'B', 'login': 'B', 'email': 'from.test@example.com'})
 
         self.format_and_process(MAIL_TEMPLATE, to='public@example.com', msg_id='<2>', email_from='Brice Denisse <from.test@example.com>')
         self.assertEqual(self.group_public.message_ids[0].author_id, from_2.partner_id, 'message_process: email_from -> author_id wrong')
-        self.group_public.message_unsubscribe(partner_ids=[from_2.id])
+        self.group_public.message_unsubscribe([from_2.partner_id.id])
 
         from_3 = self.env['res.partner'].create({'name': 'C', 'email': 'from.test@example.com'})
-        self.group_public.message_subscribe(partner_ids=[from_3.id])
+        self.group_public.message_subscribe([from_3.id])
 
         self.format_and_process(MAIL_TEMPLATE, to='public@example.com', msg_id='<3>', email_from='Brice Denisse <from.test@example.com>')
         self.assertEqual(self.group_public.message_ids[0].author_id, from_3, 'message_process: email_from -> author_id wrong')
@@ -516,12 +516,12 @@ class TestMailgateway(TestMail):
         msg1_pids = [self.user_employee_2.partner_id.id, self.partner_1.id]
 
         # Do: Raoul writes to Bert and Administrator, with a thread_model in context that should not be taken into account
-        msg1_id = self.env['mail.thread'].with_context({
+        msg1 = self.env['mail.thread'].with_context({
             'thread_model': 'mail.group'
         }).sudo(self.user_employee).message_post(partner_ids=msg1_pids, subtype='mail.mt_comment')
 
         # Test: message recipients
-        msg = self.env['mail.message'].browse(msg1_id)
+        msg = self.env['mail.message'].browse(msg1.id)
         self.assertEqual(msg.partner_ids, self.user_employee_2.partner_id | self.partner_1,
                          'message_post: private discussion: incorrect recipients')
         self.assertEqual(msg.notified_partner_ids, self.user_employee_2.partner_id | self.partner_1,
@@ -537,20 +537,20 @@ class TestMailgateway(TestMail):
             extra='In-Reply-To: %s' % msg.message_id, msg_id='<test30.JavaMail.0@agrolait.com>')
 
         # Test: last mail_message created
-        msg = self.env['mail.message'].search([], limit=1)
+        msg2 = self.env['mail.message'].search([], limit=1)
         # Test: message recipients
-        self.assertEqual(msg.author_id, self.partner_1,
+        self.assertEqual(msg2.author_id, self.partner_1,
                          'message_post: private discussion: wrong author through mailgatewya based on email')
-        self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.user_employee_2.partner_id,
+        self.assertEqual(msg2.partner_ids, self.user_employee.partner_id | self.user_employee_2.partner_id,
                          'message_post: private discussion: incorrect recipients when replying')
-        self.assertEqual(msg.notified_partner_ids, self.user_employee.partner_id | self.user_employee_2.partner_id,
+        self.assertEqual(msg2.notified_partner_ids, self.user_employee.partner_id | self.user_employee_2.partner_id,
                          'message_post: private discussion: incorrect notified recipients when replying')
 
         # Do: Bert replies through chatter (is a customer)
-        msg3_id = self.env['mail.thread'].message_post(author_id=self.partner_1.id, parent_id=msg1_id, subtype='mail.mt_comment')
+        msg3 = self.env['mail.thread'].message_post(author_id=self.partner_1.id, parent_id=msg1.id, subtype='mail.mt_comment')
 
         # Test: message recipients
-        msg = self.env['mail.message'].browse(msg3_id)
+        msg = self.env['mail.message'].browse(msg3.id)
         self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.user_employee_2.partner_id,
                          'message_post: private discussion: incorrect recipients when replying')
         self.assertEqual(msg.notified_partner_ids, self.user_employee.partner_id | self.user_employee_2.partner_id,

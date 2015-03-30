@@ -155,7 +155,7 @@ class TestMail(common.TransactionCase):
             'model': 'mail.group',
             'res_id': self.group_public.id,
             'subject': 'Public Discussion',
-            'type': 'email',
+            'message_type': 'email',
             'author_id': self.partner_1.id,
             'message_id': '<123456-openerp-%s-mail.group@%s>' % (self.group_public.id, socket.gethostname()),
         })

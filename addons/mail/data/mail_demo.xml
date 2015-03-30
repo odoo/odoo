@@ -93,7 +93,7 @@
             <p>We have a lot of inquiries about our now solution based on RedHat servers. However I do not have the updated specification ready at hand.</p>
             <p>Could you please send me the last version of the file asap?</p>
             <p>Thanks,</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
@@ -101,7 +101,7 @@
         </record>
         <record id="msg_discus6_1" model="mail.message">
             <field name="body"><![CDATA[<p>Sure, here it is. Have a nice day!</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="parent_id" ref="msg_discus6"/>
             <field name="author_id" ref="base.partner_demo"/>
@@ -111,7 +111,7 @@
         </record>
         <record id="msg_discus6_2" model="mail.message">
             <field name="body"><![CDATA[<p>I just found a more recent draft of the spec. Jon did some cleaning in the specifications. Could you merge the two documents to have an updated one?</p><p>When it's done, put it on the internal document management system.</p><p>Thanks,</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="parent_id" ref="msg_discus6"/>
             <field name="author_id" ref="base.partner_demo"/>
@@ -136,7 +136,7 @@
 </p>
 <p>Best regards,</p>
             ]]></field>
-            <field name="type">email</field>
+            <field name="message_type">email</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="email_from">virginie@agrolait.fr</field>
             <field name="author_id" eval="False"/>
@@ -160,7 +160,7 @@
             <p>The next version of our products catalog is scheduled for next month. Our product team send me their updated document holding the prices and costs, and I updated our catalog.</p>
             <p>You will find it in attachment, as well as a comparative benchmark of the different solutions currently existing on the market.<br />Have a nice reading!<br />
             Sincerely,</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
@@ -170,7 +170,7 @@
         <record id="msg_discuss4_1" model="mail.message">
             <field name="body"><![CDATA[<p>Thank you!<br/>Could you send me the updated pricelists as negotiated at the beginning of this year?</p>
             <p>Sincerely,</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="parent_id" ref="msg_discus4"/>
             <field name="author_id" ref="base.partner_demo"/>
@@ -181,7 +181,7 @@
         <!-- Thread: Demo (network admin) and Admin -->
         <record id="msg_discus3" model="mail.message">
             <field name="body"><![CDATA[<p>Hello,</p><p>I have a friend working at Epic Technologies. He told me they plan to upgrade their backup servers within the next 3 months.</p><p>I think that someone should contact them and check if there is an opportunity.</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
@@ -190,7 +190,7 @@
         <record id="msg_discus3_1" model="mail.message">
             <field name="body"><![CDATA[Contact Chris: +1 (650) 307-6736.]]></field>
             <field name="parent_id" ref="msg_discus3"/>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
@@ -208,7 +208,7 @@
             </ul>
             <p>Thanks,</p>
             ]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.res_partner_5"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
@@ -220,7 +220,7 @@
             <p>I am glad you are interested in our products. Indeed, we are have several backup solutions that should meet your requirements. In order to prepare a detailed offer, we will have to discuss several technical points about your needs and the context of your data management.</p>
             <p>I propose to have a meeting tomorrow at 2 PM. Does it seem suitable for you ?<br />Best regards,</p>]]></field>
             <field name="parent_id" ref="msg_discus2"/>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_5')])]"/>
@@ -230,7 +230,7 @@
             <field name="subject">RE: Information meeting</field>
             <field name="body"><![CDATA[<p>It is not possible for me to come tomorrow at 2 PM. Maybe at 4 PM?</p>]]></field>
             <field name="parent_id" ref="msg_discus2"/>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.res_partner_5"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=35)).strftime('%Y-%m-%d %H:%M')"/>
@@ -239,7 +239,7 @@
             <field name="subject">RE: Information meeting</field>
             <field name="body"><![CDATA[<p>4 PM is fine! See you tomorrow!<br />Best regards,</p>]]></field>
             <field name="parent_id" ref="msg_discus2"/>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_5')])]"/>
@@ -249,7 +249,7 @@
             <field name="subject">RE: Information meeting</field>
             <field name="body"><![CDATA[<p>Ok! See you tomorrow.</p>]]></field>
             <field name="parent_id" ref="msg_discus2"/>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.res_partner_5"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
@@ -260,7 +260,7 @@
         <record id="msg_discus1" model="mail.message">
             <field name="subject">Feedback about our On Site Assistance</field>
             <field name="body"><![CDATA[<p>Hi Virginie,</p><p>I wrote to you about our <i>On Site Assistance Service</i> that we delivered to Agrolait last week. Do you have any feedback or remark about our service? I noticed you requested new IP phones. Will it be used for new employees, or did you have any issue with the ones we provided?<br />Best regards,</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_2')])]"/>
@@ -270,7 +270,7 @@
             <field name="subject">RE: Feedback about our On Site Assistance</field>
             <field name="body"><![CDATA[<p>Hello Administrator,</p><p>Glad to hear from you! Everything is perfect, thanks for asking. Concerning the order of 2 IP phones, I ordered them for new employees. We are satisfied with the products of <i>YourCompany</i>, and we plan to fit out each new employee with one of your phone this year.<br />Regards,</p>]]></field>
             <field name="parent_id" ref="msg_discus1"/>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.res_partner_2"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
@@ -281,7 +281,7 @@
         <record id="msg_discus0" model="mail.message">
             <field name="subject">FWD: Meeting with Demo </field>
             <field name="body"><![CDATA[<p>Hello Administrator,</p><p>A small email to inform you that we will have a meeting with Mr Demo next Tuesday. Everything is under control!<br />Regards,</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.res_partner_1"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>

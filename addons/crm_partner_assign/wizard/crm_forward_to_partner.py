@@ -62,7 +62,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         default_composition_mode = context.get('default_composition_mode')
         res['assignation_lines'] = []
         if template_id:
-            res['body'] = email_template_obj.get_email_template(cr, uid, template_id).body_html
+            res['body'] = email_template_obj.get_email_template(cr, uid, template_id, 0).body_html
         if active_ids:
             lead_ids = lead_obj.browse(cr, uid, active_ids, context=context)
             if default_composition_mode == 'mass_mail':

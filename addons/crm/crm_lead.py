@@ -25,9 +25,9 @@ from operator import itemgetter
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp import tools
+from openerp import tools, api
 from openerp.addons.base.res.res_partner import format_address
-from openerp.osv import fields, osv, orm
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import email_re, email_split
 from openerp.exceptions import UserError, AccessError
@@ -983,6 +983,7 @@ class crm_lead(format_address, osv.osv):
             return 'crm.mt_lead_stage'
         return super(crm_lead, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
         leads = self.browse(cr, SUPERUSER_ID, ids, context=context)
@@ -1003,9 +1004,9 @@ class crm_lead(format_address, osv.osv):
         try:
             for lead in self.browse(cr, uid, ids, context=context):
                 if lead.partner_id:
-                    self._message_add_suggested_recipient(cr, uid, recipients, lead, partner=lead.partner_id, reason=_('Customer'))
+                    lead._message_add_suggested_recipient(recipients, partner=lead.partner_id, reason=_('Customer'))
                 elif lead.email_from:
-                    self._message_add_suggested_recipient(cr, uid, recipients, lead, email=lead.email_from, reason=_('Customer Email'))
+                    lead._message_add_suggested_recipient(recipients, email=lead.email_from, reason=_('Customer Email'))
         except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients

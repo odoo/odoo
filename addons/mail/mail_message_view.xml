@@ -32,7 +32,7 @@
                                 <field name="email_from"/>
                                 <field name="reply_to"/>
                                 <field name="date"/>
-                                <field name="type"/>
+                                <field name="message_type"/>
                             </group>
                             <group>
                                 <field name="model"/>
@@ -58,7 +58,7 @@
                 <search string="Messages Search">
                     <field name="body" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
                     <field name="subject"/>
-                    <field name="type"/>
+                    <field name="message_type"/>
                     <field name="author_id"/>
                     <field name="partner_ids"/>
                     <field name="model"/>
@@ -72,7 +72,7 @@
                             name="attachments"
                             domain="[('attachment_ids', '!=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Type" name="thread" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Type" name="thread" domain="[]" context="{'group_by':'message_type'}"/>
                     </group>
                 </search>
             </field>

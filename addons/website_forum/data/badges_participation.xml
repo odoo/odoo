@@ -56,7 +56,7 @@
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('mail.model_mail_message')"/>
             <field name="condition">higher</field>
-            <field name="domain" eval="[('type', '=', 'comment'), ('subtype_id', '=', ref('mail.mt_comment')), ('model', '=', 'forum.post')]"/>
+            <field name="domain" eval="[('message_type', '=', 'comment'), ('subtype_id', '=', ref('mail.mt_comment')), ('model', '=', 'forum.post')]"/>
             <field name="batch_mode">True</field>
             <field name="batch_distinctive_field" eval="ref('mail.field_mail_message_author_id')" />
             <field name="batch_user_expression">user.partner_id.id</field>
