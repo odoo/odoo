@@ -61,6 +61,7 @@
             }else{
                 this._super.apply(this, arguments);
                 openerp.set_cookie(im_livechat.COOKIE_NAME, "", -1);
+                openerp.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
             }
         },
     });
@@ -132,7 +133,8 @@
         build_button: function(channel, options, session, rule){
             var button = new im_livechat.ChatButton(null, channel, options, session);
             button.appendTo($("body"));
-            if (rule.action === 'auto_popup'){
+            var auto_popup_cookie = openerp.get_cookie('im_livechat_auto_popup') ? JSON.parse(openerp.get_cookie('im_livechat_auto_popup')) : true;
+            if (rule.action === 'auto_popup' && auto_popup_cookie){
                 setTimeout(function() {
                     button.click();
                 }, rule.auto_popup_timer*1000);
