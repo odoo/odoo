@@ -1,41 +1,19 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
 
 import base64
 import logging
 from email.utils import formataddr
 from urlparse import urljoin
 
-from openerp import api, tools
-from openerp import SUPERUSER_ID
+from openerp import _, api, fields, models
+from openerp import tools
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
-from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.translate import _
-import openerp.tools as tools
 
 _logger = logging.getLogger(__name__)
 
 
-class mail_mail(osv.Model):
+class MailMail(models.Model):
     """ Model holding RFC2822 email messages to send. This model also provides
         facilities to queue and send new email messages.  """
     _name = 'mail.mail'
@@ -44,63 +22,59 @@ class mail_mail(osv.Model):
     _order = 'id desc'
     _rec_name = 'subject'
 
-    _columns = {
-        'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade', auto_join=True),
-        'state': fields.selection([
-            ('outgoing', 'Outgoing'),
-            ('sent', 'Sent'),
-            ('received', 'Received'),
-            ('exception', 'Delivery Failed'),
-            ('cancel', 'Cancelled'),
-        ], 'Status', readonly=True, copy=False),
-        'auto_delete': fields.boolean('Auto Delete',
-            help="Permanently delete this email after sending it, to save space"),
-        'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
-        'email_to': fields.text('To', help='Message recipients (emails)'),
-        'recipient_ids': fields.many2many('res.partner', string='To (Partners)'),
-        'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
-        'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
-        'headers': fields.text('Headers', copy=False),
-        'failure_reason': fields.text('Failure Reason', help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.", readonly=1),
-        # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
-        # and during unlink() we will not cascade delete the parent and its attachments
-        'notification': fields.boolean('Is Notification',
-            help='Mail has been created to notify people of an existing mail.message'),
-    }
+    mail_message_id = fields.Many2one('mail.message', 'Message', required=True, ondelete='cascade', auto_join=True)
+    state = fields.Selection([
+        ('outgoing', 'Outgoing'),
+        ('sent', 'Sent'),
+        ('received', 'Received'),
+        ('exception', 'Delivery Failed'),
+        ('cancel', 'Cancelled'),
+    ], 'Status', readonly=True, copy=False, default='outgoing')
+    auto_delete = fields.Boolean('Auto Delete', help="Permanently delete this email after sending it, to save space")
+    references = fields.Text('References', help='Message references, such as identifiers of previous messages', readonly=1)
+    email_to = fields.Text('To', help='Message recipients (emails)')
+    recipient_ids = fields.Many2many('res.partner', string='To (Partners)')
+    email_cc = fields.Char('Cc', help='Carbon copy message recipients')
+    body_html = fields.Text('Rich-text Contents', help="Rich-text/HTML message")
+    headers = fields.Text('Headers', copy=False)
+    failure_reason = fields.Text('Failure Reason', help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.", readonly=1)
+    # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
+    # and during unlink() we will not cascade delete the parent and its attachments
+    notification = fields.Boolean('Is Notification', help='Mail has been created to notify people of an existing mail.message')
 
-    _defaults = {
-        'state': 'outgoing',
-    }
-
-    def default_get(self, cr, uid, fields, context=None):
-        # protection for `default_type` values leaking from menu action context (e.g. for invoices)
-        # To remove when automatic context propagation is removed in web client
-        if context and context.get('default_type') and context.get('default_type') not in self._all_columns['type'].column.selection:
-            context = dict(context, default_type=None)
-        return super(mail_mail, self).default_get(cr, uid, fields, context=context)
-
-    def create(self, cr, uid, values, context=None):
+    @api.model
+    def create(self, values):
         # notification field: if not set, set if mail comes from an existing mail.message
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
-        return super(mail_mail, self).create(cr, uid, values, context=context)
+        return super(MailMail, self).create(values)
 
-    def unlink(self, cr, uid, ids, context=None):
+    @api.multi
+    def unlink(self):
         # cascade-delete the parent message for all mails that are not created for a notification
-        ids_to_cascade = self.search(cr, uid, [('notification', '=', False), ('id', 'in', ids)])
-        parent_msg_ids = [m.mail_message_id.id for m in self.browse(cr, uid, ids_to_cascade, context=context)]
-        res = super(mail_mail, self).unlink(cr, uid, ids, context=context)
-        self.pool.get('mail.message').unlink(cr, uid, parent_msg_ids, context=context)
+        to_cascade = self.search([('notification', '=', False), ('id', 'in', self.ids)]).mapped('mail_message_id')
+        res = super(MailMail, self).unlink()
+        to_cascade.unlink()
         return res
 
-    def mark_outgoing(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'outgoing'}, context=context)
+    @api.model
+    def default_get(self, fields):
+        # protection for `default_type` values leaking from menu action context (e.g. for invoices)
+        # To remove when automatic context propagation is removed in web client
+        if self._context.get('default_type') not in self._all_columns['message_type'].column.selection:
+            self = self.with_context(dict(self._context, default_type=None))
+        return super(MailMail, self).default_get(fields)
 
-    def cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+    @api.multi
+    def mark_outgoing(self):
+        return self.write({'state': 'outgoing'})
 
-    @api.cr_uid
-    def process_email_queue(self, cr, uid, ids=None, context=None):
+    @api.multi
+    def cancel(self):
+        return self.write({'state': 'cancel'})
+
+    @api.model
+    def process_email_queue(self, ids=None):
         """Send immediately queued messages, committing after each
            message is sent - this is not transactional and should
            not be called during another transaction!
@@ -114,24 +88,27 @@ class mail_mail(osv.Model):
                                 messages to send (by default all 'outgoing'
                                 messages are sent).
         """
-        if context is None:
-            context = {}
-        if not ids:
+        if not self.ids:
             filters = [('state', '=', 'outgoing')]
-            if 'filters' in context:
-                filters.extend(context['filters'])
-            ids = self.search(cr, uid, filters, context=context)
+            if 'filters' in self._context:
+                filters.extend(self._context['filters'])
+            ids = self.search(filters).ids
         res = None
         try:
             # Force auto-commit - this is meant to be called by
             # the scheduler, and we can't allow rolling back the status
             # of previously sent emails!
-            res = self.send(cr, uid, ids, auto_commit=True, context=context)
+            res = self.browse(ids).send(auto_commit=True)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res
 
+    @api.cr_uid_context
     def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
+        return True
+
+    @api.multi
+    def _postprocess_sent_message_v9(self, mail_sent=True):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
@@ -140,87 +117,99 @@ class mail_mail(osv.Model):
         :param browse_record mail: the mail that was just sent
         :return: True
         """
-        if mail_sent and mail.auto_delete:
-            # done with SUPERUSER_ID to avoid giving large unlink access rights
-            self.unlink(cr, SUPERUSER_ID, [mail.id], context=context)
+        # Compat mode until v9
+        for mail in self:
+            self._postprocess_sent_message(mail, mail_sent=mail_sent)
+
+        if mail_sent:
+            self.sudo().filtered(lambda self: self.auto_delete).unlink()
         return True
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # mail_mail formatting, tools and send mechanism
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
-    def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
+    @api.multi
+    def _get_partner_access_link(self, partner=None):
         """Generate URLs for links in mails: partner has access (is user):
         link to action_mail_redirect action that will redirect to doc or Inbox """
-        if context is None:
-            context = {}
+        self.ensure_one()
         if partner and partner.user_ids:
-            base_url = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'web.base.url')
-            mail_model = mail.model or 'mail.thread'
-            if not hasattr(self.pool[mail_model], '_get_access_link'):
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            mail_model = self.model or 'mail.thread'
+            if not hasattr(self.env[mail_model], '_get_access_link'):
                 return None
-            url = urljoin(base_url, self.pool[mail_model]._get_access_link(cr, uid, mail, partner, context=context))
+            url = urljoin(base_url, self.env[mail_model]._get_access_link(self, partner))
             return "<span class='oe_mail_footer_access'><small>%(access_msg)s <a style='color:inherit' href='%(portal_link)s'>%(portal_msg)s</a></small></span>" % {
-                'access_msg': _('about') if mail.record_name else _('access'),
+                'access_msg': _('about') if self.record_name else _('access'),
                 'portal_link': url,
-                'portal_msg': '%s %s' % (context.get('model_name', ''), mail.record_name) if mail.record_name else _('your messages'),
+                'portal_msg': '%s %s' % (self._context.get('model_name', ''), self.record_name) if self.record_name else _('your messages'),
             }
         else:
             return None
 
-    def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
+    @api.multi
+    def send_get_mail_subject(self, force=False, partner=None):
         """If subject is void, set the subject as 'Re: <Resource>' or
         'Re: <mail.parent_id.subject>'
 
             :param boolean force: force the subject replacement
         """
-        if (force or not mail.subject) and mail.record_name:
-            return 'Re: %s' % (mail.record_name)
-        elif (force or not mail.subject) and mail.parent_id and mail.parent_id.subject:
-            return 'Re: %s' % (mail.parent_id.subject)
-        return mail.subject
+        self.ensure_one()
+        if (force or not self.subject) and self.record_name:
+            return 'Re: %s' % (self.record_name)
+        elif (force or not self.subject) and self.parent_id and self.parent_id.subject:
+            return 'Re: %s' % (self.parent_id.subject)
+        return self.subject
 
-    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+    @api.multi
+    def send_get_mail_body(self, partner=None):
         """Return a specific ir_email body. The main purpose of this method
         is to be inherited to add custom content depending on some module."""
-        body = mail.body_html or ''
+        self.ensure_one()
+        body = self.body_html or ''
 
         # generate access links for notifications or emails linked to a specific document with auto threading
         link = None
-        if mail.notification or (mail.model and mail.res_id and not mail.no_auto_thread):
-            link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
+        if self.notification or (self.model and self.res_id and not self.no_auto_thread):
+            link = self._get_partner_access_link(partner)
         if link:
             body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
         return body
 
-    def send_get_mail_to(self, cr, uid, mail, partner=None, context=None):
+    @api.multi
+    def send_get_mail_to(self, partner=None):
         """Forge the email_to with the following heuristic:
           - if 'partner', recipient specific (Partner Name <email>)
           - else fallback on mail.email_to splitting """
+        self.ensure_one()
         if partner:
             email_to = [formataddr((partner.name, partner.email))]
         else:
-            email_to = tools.email_split(mail.email_to)
+            email_to = tools.email_split(self.email_to)
         return email_to
 
-    def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
+    @api.multi
+    def send_get_email_dict(self, partner=None):
         """Return a dictionary for specific email values, depending on a
         partner, or generic to the whole recipients given by mail.email_to.
 
             :param browse_record mail: mail.mail browse_record
             :param browse_record partner: specific recipient partner
         """
-        body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+        self.ensure_one()
+        body = self.send_get_mail_body(partner=partner)
         body_alternative = tools.html2plaintext(body)
         res = {
             'body': body,
             'body_alternative': body_alternative,
-            'subject': self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context),
-            'email_to': self.send_get_mail_to(cr, uid, mail, partner=partner, context=context),
+            'subject': self.send_get_mail_subject(partner=partner),
+            'email_to': self.send_get_mail_to(partner=partner),
         }
         return res
 
-    def send(self, cr, uid, ids, auto_commit=False, raise_exception=False, context=None):
+    @api.multi
+    def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
             unless they should actually be re-sent).
@@ -235,38 +224,35 @@ class mail_mail(osv.Model):
                 email sending process has failed
             :return: True
         """
-        context = dict(context or {})
-        ir_mail_server = self.pool.get('ir.mail_server')
-        ir_attachment = self.pool['ir.attachment']
-        for mail in self.browse(cr, SUPERUSER_ID, ids, context=context):
+        IrMailServer = self.env['ir.mail_server']
+
+        for mail in self:
             try:
                 # TDE note: remove me when model_id field is present on mail.message - done here to avoid doing it multiple times in the sub method
                 if mail.model:
-                    model_id = self.pool['ir.model'].search(cr, SUPERUSER_ID, [('model', '=', mail.model)], context=context)[0]
-                    model = self.pool['ir.model'].browse(cr, SUPERUSER_ID, model_id, context=context)
+                    model = self.env['ir.model'].sudo().search([('model', '=', mail.model)])[0]
                 else:
                     model = None
                 if model:
-                    context['model_name'] = model.name
+                    mail = mail.with_context(model_name=model.name)
 
                 # load attachment binary data with a separate read(), as prefetching all
                 # `datas` (binary field) could bloat the browse cache, triggerring
                 # soft/hard mem limits with temporary data.
-                attachment_ids = [a.id for a in mail.attachment_ids]
                 attachments = [(a['datas_fname'], base64.b64decode(a['datas']))
-                                 for a in ir_attachment.read(cr, SUPERUSER_ID, attachment_ids,
-                                                             ['datas_fname', 'datas'])]
+                               for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas'])]
 
                 # specific behavior to customize the send email for notified partners
                 email_list = []
                 if mail.email_to:
-                    email_list.append(self.send_get_email_dict(cr, uid, mail, context=context))
+                    email_list.append(mail.send_get_email_dict())
                 for partner in mail.recipient_ids:
-                    email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
+                    email_list.append(mail.send_get_email_dict(partner=partner))
+
                 # headers
                 headers = {}
-                bounce_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.bounce.alias", context=context)
-                catchall_domain = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.domain", context=context)
+                bounce_alias = self.env['ir.config_parameter'].get_param("mail.bounce.alias")
+                catchall_domain = self.env['ir.config_parameter'].get_param("mail.catchall.domain")
                 if bounce_alias and catchall_domain:
                     if mail.model and mail.res_id:
                         headers['Return-Path'] = '%s-%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
@@ -282,7 +268,7 @@ class mail_mail(osv.Model):
                 # would trigger a rollback *after* actually sending the email.
                 # To avoid sending twice the same email, provoke the failure earlier
                 mail.write({
-                    'state': 'exception', 
+                    'state': 'exception',
                     'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.'),
                 })
                 mail_sent = False
@@ -290,7 +276,7 @@ class mail_mail(osv.Model):
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 for email in email_list:
-                    msg = ir_mail_server.build_email(
+                    msg = IrMailServer.build_email(
                         email_from=mail.email_from,
                         email_to=email.get('email_to'),
                         subject=email.get('subject'),
@@ -306,17 +292,15 @@ class mail_mail(osv.Model):
                         subtype_alternative='plain',
                         headers=headers)
                     try:
-                        res = ir_mail_server.send_email(cr, uid, msg,
-                                                    mail_server_id=mail.mail_server_id.id,
-                                                    context=context)
+                        res = IrMailServer.send_email(msg, mail_server_id=mail.mail_server_id.id)
                     except AssertionError as error:
-                        if error.message == ir_mail_server.NO_VALID_RECIPIENT:
+                        if error.message == IrMailServer.NO_VALID_RECIPIENT:
                             # No valid recipient found for this particular
                             # mail item -> ignore error to avoid blocking
                             # delivery to next recipients, if any. If this is
                             # the only recipient, the mail will show as failed.
                             _logger.info("Ignoring invalid recipients for mail.mail %s: %s",
-                                            mail.message_id, email.get('email_to'))
+                                         mail.message_id, email.get('email_to'))
                         else:
                             raise
                 if res:
@@ -327,19 +311,19 @@ class mail_mail(osv.Model):
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 if mail_sent:
                     _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
-                self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)
+                mail._postprocess_sent_message_v9(mail_sent=mail_sent)
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
-                _logger.exception('MemoryError while processing mail with ID %r and Msg-Id %r. '\
-                                      'Consider raising the --limit-memory-hard startup option',
-                                  mail.id, mail.message_id)
+                _logger.exception(
+                    'MemoryError while processing mail with ID %r and Msg-Id %r. Consider raising the --limit-memory-hard startup option',
+                    mail.id, mail.message_id)
                 raise
             except Exception as e:
                 failure_reason = tools.ustr(e)
                 _logger.exception('failed sending mail (id: %s) due to %s', mail.id, failure_reason)
                 mail.write({'state': 'exception', 'failure_reason': failure_reason})
-                self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=False)
+                mail._postprocess_sent_message_v9(mail_sent=False)
                 if raise_exception:
                     if isinstance(e, AssertionError):
                         # get the args of the original error, wrap into a value and throw a MailDeliveryException
@@ -349,5 +333,5 @@ class mail_mail(osv.Model):
                     raise
 
             if auto_commit is True:
-                cr.commit()
+                self._cr.commit()
         return True

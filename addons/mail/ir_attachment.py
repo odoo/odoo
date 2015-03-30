@@ -1,30 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014-TODAY OpenERP SA (http://www.openerp.com)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
-
-from openerp.osv import fields, osv
 
 import os.path
 
+from openerp import api, fields, models
 
-class IrAttachment(osv.Model):
+
+class IrAttachment(models.Model):
     """ Update partner to add a field about notification preferences """
     _name = "ir.attachment"
     _inherit = 'ir.attachment'
@@ -183,14 +164,11 @@ class IrAttachment(osv.Model):
         'zip': 'archive'
     }
 
-    def get_attachment_type(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        for attachment in self.browse(cr, uid, ids, context=context):
-            fileext = os.path.splitext(attachment.datas_fname or '')[1].lower()[1:]
-            result[attachment.id] = self._fileext_to_type.get(fileext, 'unknown')
-        return result
+    file_type_icon = fields.Char('File Type Icon', compute='get_attachment_type', store=True)
+    file_type = fields.Char(related='file_type_icon')     # FIXME remove in trunk
 
-    _columns = {
-        'file_type_icon': fields.function(get_attachment_type, type='char', string='File Type Icon'),
-        'file_type': fields.related('file_type_icon', type='char'),     # FIXME remove in trunk
-    }
+    @api.depends('datas_fname')
+    @api.one
+    def get_attachment_type(self):
+        fileext = os.path.splitext(self.datas_fname or '')[1].lower()[1:]
+        self.file_type_icon = self._fileext_to_type.get(fileext, 'unknown')

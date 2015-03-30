@@ -60,7 +60,8 @@ class TestTracking(TestMail):
         self.assertIn('Pigs', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
         # Test: change name as supername, public as private -> 2 subtypes
         self.group_pigs.sudo(self.user_employee).write({'name': 'supername', 'public': 'private'})
-        self.assertEqual(len(self.group_pigs.message_ids.ids), 2, 'tracked: two messages should have been produced')
+        self.group_pigs.invalidate_cache()
+        self.assertEqual(len(self.group_pigs.message_ids.ids), 2, 'tracked: one new message should have been produced')
         # Test: first produced message: mt_name_supername
         last_msg = self.group_pigs.message_ids[-2]
         self.assertEqual(last_msg.subtype_id.id, mt_private.id, 'tracked: message should be linked to mt_private subtype')
@@ -69,6 +70,7 @@ class TestTracking(TestMail):
 
         # Test: change public as public, group_public_id -> 1 subtype, name always tracked
         self.group_pigs.sudo(self.user_employee).write({'public': 'public', 'group_public_id': group_system_id})
+        self.group_pigs.invalidate_cache()
         self.assertEqual(len(self.group_pigs.message_ids), 3, 'tracked: one message should have been produced')
         # Test: first produced message: mt_group_public_set_id, with name always tracked, public tracked on change
         last_msg = self.group_pigs.message_ids[-3]
@@ -79,6 +81,7 @@ class TestTracking(TestMail):
 
         # Test: change group_public_id to False -> 1 subtype, name always tracked
         self.group_pigs.sudo(self.user_employee).write({'group_public_id': False})
+        self.group_pigs.invalidate_cache()
         self.assertEqual(len(self.group_pigs.message_ids), 4, 'tracked: one message should have been produced')
         # Test: first produced message: mt_group_public_set_id, with name always tracked, public tracked on change
         last_msg = self.group_pigs.message_ids[-4]
@@ -87,4 +90,5 @@ class TestTracking(TestMail):
         self.assertIn(u'Administration/Settings\u2192', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
         # Test: change not tracked field, no tracking message
         self.group_pigs.sudo(self.user_employee).write({'description': 'Dummy'})
+        self.group_pigs.invalidate_cache()
         self.assertEqual(len(self.group_pigs.message_ids), 4, 'tracked: No message should have been produced')

@@ -27,7 +27,7 @@
         <record model="mail.message" id="module_install_notification">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
-            <field name="type">notification</field>
+            <field name="message_type">notification</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Accounting and Finance application installed!</field>
             <field name="body"><![CDATA[<p>With Odoo's accounting, you get instant access to your financial data, and can setup analytic accounting, forecast taxes, control budgets, easily create and send invoices, record bank statements, etc.</p>

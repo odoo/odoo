@@ -166,7 +166,7 @@
         <field name="model">hr.applicant</field>
         <field name="res_id" ref="hr_case_advertisement"/>
         <field name="body">Please do refer to this application for sure.</field>
-        <field name="type">comment</field>
+        <field name="message_type">comment</field>
         <field name="author_id" ref="base.res_partner_2"/>
     </record>
     <record id="msg_case18_aplicant" model="mail.message">
@@ -177,7 +177,7 @@
             I will surely refer to this application as it is by your reference and <br />
             will try to conduct an interview within a very short time<br />
             Thanks,</p>]]></field>
-        <field name="type">comment</field>
+        <field name="message_type">comment</field>
         <field name="subtype_id" ref="mail.mt_comment"/>
         <field name="author_id" ref="base.partner_demo"/>
     </record>
@@ -191,7 +191,7 @@
         <field name="body"><![CDATA[<p>Hello,</p>
         <p>I have checked this application but It's not match with our requirement. so no need to process further and we should refuse this application.</p>
         <p>Kind regards,</p>]]></field>
-        <field name="type">comment</field>
+        <field name="message_type">comment</field>
         <field name="subtype_id" ref="mail.mt_comment"/>
         <field name="author_id" ref="base.partner_demo"/>
     </record>
@@ -201,7 +201,7 @@
         <field name="body"><![CDATA[<p>Hello,</p>
         <p>We should move further for this application as early as possible..</p>
         <p>Kind regards,</p>]]></field>
-        <field name="type">comment</field>
+        <field name="message_type">comment</field>
         <field name="subtype_id" ref="mail.mt_comment"/>
         <field name="author_id" ref="base.partner_demo"/>
     </record>

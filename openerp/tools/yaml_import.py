@@ -502,6 +502,11 @@ class YamlInterpreter(object):
                 continue
             field_value = self._eval_field(model, field_name, expression, parent=record_dict, default=False, context=context)
             record_dict[field_name] = field_value
+
+        # filter returned values; indeed the last modification in the import process have added a default
+        # value for all fields in the view; however some fields present in the view are not stored and
+        # should not be sent to create. This bug appears with not stored function fields in the new API.
+        record_dict = dict((key, record_dict.get(key)) for key in record_dict if (key in model._columns or key in model._inherit_fields))
         return record_dict
 
     def process_ref(self, node, field=None):

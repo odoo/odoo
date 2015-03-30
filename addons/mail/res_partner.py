@@ -1,29 +1,9 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
-from openerp.tools.translate import _
-from openerp.osv import fields, osv
+from openerp import _, fields, models
 
 
-class res_partner_mail(osv.Model):
+class Partner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
        to restrict usage of automatic email templates. """
     _name = "res.partner"
@@ -31,30 +11,23 @@ class res_partner_mail(osv.Model):
     _mail_flat_thread = False
     _mail_mass_mailing = _('Customers')
 
-    _columns = {
-        'notify_email': fields.selection([
-            ('none', 'Never'),
-            ('always', 'All Messages'),
-            ], 'Receive Inbox Notifications by Email', required=True,
-            oldname='notification_email_send',
-            help="Policy to receive emails for new messages pushed to your personal Inbox:\n"
-                    "- Never: no emails are sent\n"
-                    "- All Messages: for every notification you receive in your Inbox"),
-        'opt_out': fields.boolean('Opt-Out',
-            help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
-                    "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing."),
-    }
+    notify_email = fields.Selection([
+        ('none', 'Never'),
+        ('always', 'All Messages')],
+        'Receive Inbox Notifications by Email', required=True,
+        oldname='notification_email_send', default='always',
+        help="Policy to receive emails for new messages pushed to your personal Inbox:\n"
+             "- Never: no emails are sent\n"
+             "- All Messages: for every notification you receive in your Inbox")
+    opt_out = fields.Boolean(
+        'Opt-Out', help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
+                        "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing.")
 
-    _defaults = {
-        'notify_email': lambda *args: 'always',
-        'opt_out': False,
-    }
-
-    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
-        recipients = super(res_partner_mail, self).message_get_suggested_recipients(cr, uid, ids, context=context)
-        for partner in self.browse(cr, uid, ids, context=context):
-            self._message_add_suggested_recipient(cr, uid, recipients, partner, partner=partner, reason=_('Partner Profile'))
+    def message_get_suggested_recipients(self):
+        recipients = super(Partner, self).message_get_suggested_recipients()
+        for partner in self:
+            self._message_add_suggested_recipient(recipients, partner, partner=partner, reason=_('Partner Profile'))
         return recipients
 
-    def message_get_default_recipients(self, cr, uid, ids, context=None):
-        return dict((id, {'partner_ids': [id], 'email_to': False, 'email_cc': False}) for id in ids)
+    def message_get_default_recipients(self):
+        return dict((res_id, {'partner_ids': [res_id], 'email_to': False, 'email_cc': False}) for res_id in self.ids)

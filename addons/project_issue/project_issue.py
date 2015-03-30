@@ -1,4 +1,4 @@
- #-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -411,6 +411,7 @@ class project_issue(osv.Model):
             return 'project_issue.mt_issue_stage'
         return super(project_issue, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
         issues = self.browse(cr, SUPERUSER_ID, ids, context=context)
@@ -450,13 +451,13 @@ class project_issue(osv.Model):
         return res_id
 
     @api.cr_uid_ids_context
-    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
+    def message_post(self, cr, uid, thread_id, subtype=None, context=None, **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
             a new message is posted on the issue.
         """
         if context is None:
             context = {}
-        res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
+        res = super(project_issue, self).message_post(cr, uid, thread_id, subtype=subtype, context=context, **kwargs)
         if thread_id and subtype:
             self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': fields.datetime.now()}, context=context)
         return res

@@ -45,7 +45,7 @@ class crm_configuration(osv.TransientModel):
     }
 
     _defaults = {
-        'alias_domain': lambda self, cr, uid, context: self.pool['mail.alias']._get_alias_domain(cr, SUPERUSER_ID, [1], None, None)[1],
+        'alias_domain': lambda self, cr, uid, context: self.pool["ir.config_parameter"].get_param(cr, uid, "mail.catchall.domain", context),
     }
 
     def _find_default_lead_alias_id(self, cr, uid, context=None):

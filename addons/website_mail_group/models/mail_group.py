@@ -6,6 +6,7 @@ from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.addons.website.models.website import slug
 
+
 class MailGroup(osv.Model):
     _inherit = 'mail.group'
 
@@ -31,9 +32,11 @@ class MailGroup(osv.Model):
 class MailMail(osv.Model):
     _inherit = 'mail.mail'
 
-    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+    def send_get_mail_body(self, cr, uid, ids, partner=None, context=None):
         """ Short-circuit parent method for mail groups, replace the default
             footer with one appropriate for mailing-lists."""
+        # TDE: temporary addition (mail was parameter) due to semi-new-API
+        mail = self.browse(cr, uid, ids[0], context=context)
 
         if mail.model == 'mail.group' and mail.res_id:
             # no super() call on purpose, no private links that could be quoted!
@@ -55,6 +58,4 @@ class MailMail(osv.Model):
             body = tools.append_content_to_html(mail.body, footer, container_tag='div')
             return body
         else:
-            return super(MailMail, self).send_get_mail_body(cr, uid, mail,
-                                                            partner=partner,
-                                                            context=context)
+            return super(MailMail, self).send_get_mail_body(cr, uid, ids, partner=partner, context=context)

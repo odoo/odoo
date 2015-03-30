@@ -105,12 +105,12 @@ class TestForum(TestForumCommon):
 
     def test_comment_crash(self):
         with self.assertRaises(KarmaError):
-            self.post.sudo(self.user_portal).message_post(body='Should crash', type='comment')
+            self.post.sudo(self.user_portal).message_post(body='Should crash', message_type='comment')
 
     def test_comment(self):
-        self.post.sudo(self.user_employee).message_post(body='Test0', type='notification')
+        self.post.sudo(self.user_employee).message_post(body='Test0', message_type='notification')
         self.user_employee.karma = KARMA['com_all']
-        self.post.sudo(self.user_employee).message_post(body='Test1', type='comment')
+        self.post.sudo(self.user_employee).message_post(body='Test1', message_type='comment')
         self.assertEqual(len(self.post.message_ids), 4, 'website_forum: wrong behavior of message_post')
 
     def test_convert_answer_to_comment_crash(self):

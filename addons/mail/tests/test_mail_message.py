@@ -172,17 +172,17 @@ class TestMailMessage(TestMail):
 
     def test_mail_message_access_read_crash_portal(self):
         with self.assertRaises(except_orm):
-            self.message.sudo(self.user_portal).read(['body', 'type', 'subtype_id'])
+            self.message.sudo(self.user_portal).read(['body', 'message_type', 'subtype_id'])
 
     def test_mail_message_access_read_ok_portal(self):
         self.message.write({'subtype_id': self.ref('mail.mt_comment'), 'res_id': self.group_public.id})
-        self.message.sudo(self.user_portal).read(['body', 'type', 'subtype_id'])
+        self.message.sudo(self.user_portal).read(['body', 'message_type', 'subtype_id'])
 
     def test_mail_message_access_read_notification(self):
         self.env['mail.notification'].create({'message_id': self.message.id, 'partner_id': self.user_employee.partner_id.id})
         self.message.sudo(self.user_employee).read()
         # Test: Bert downloads attachment, ok because he can read message
-        self.env['mail.message'].sudo(self.user_employee).download_attachment(self.message.id, self.attachment.id)
+        self.message.sudo(self.user_employee).download_attachment(self.attachment.id)
 
     def test_mail_message_access_read_author(self):
         self.message.write({'author_id': self.user_employee.partner_id.id})
@@ -226,9 +226,8 @@ class TestMailMessage(TestMail):
         self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.group', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
 
     def test_message_set_star(self):
-        msg_id = self.group_pigs.message_post(body='My Body', subject='1')
-        msg = self.env['mail.message'].browse(msg_id)
-        msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg_id)
+        msg = self.group_pigs.message_post(body='My Body', subject='1')
+        msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
 
         # Admin set as starred
         msg.set_message_starred(True)
@@ -250,9 +249,8 @@ class TestMailMessage(TestMail):
         self.assertTrue(msg_emp.starred)
 
     def test_message_set_read(self):
-        msg_id = self.group_pigs.message_post(body='My Body', subject='1')
-        msg = self.env['mail.message'].browse(msg_id)
-        msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg_id)
+        msg = self.group_pigs.message_post(body='My Body', subject='1')
+        msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
 
         # Admin set as read
         msg.set_message_read(True)
@@ -264,7 +262,7 @@ class TestMailMessage(TestMail):
         # Employee set as read
         msg_emp.set_message_read(True)
         notification = self.env['mail.notification'].search([('partner_id', '=', self.user_employee.partner_id.id), ('message_id', '=', msg.id)])
-        self.assertEqual(len(notification), 1, 'mail_message set_message_read: more than one notification created')
+        self.assertEqual(len(notification), 1)
         self.assertTrue(notification.is_read)
         self.assertFalse(msg_emp.to_read)
 
@@ -274,9 +272,8 @@ class TestMailMessage(TestMail):
         self.assertFalse(msg_emp.to_read)
 
     def test_message_vote(self):
-        msg_id = self.group_pigs.message_post(body='My Body', subject='1')
-        msg = self.env['mail.message'].browse(msg_id)
-        msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg_id)
+        msg = self.group_pigs.message_post(body='My Body', subject='1')
+        msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
 
         # Do: Admin vote for msg
         msg.vote_toggle()
