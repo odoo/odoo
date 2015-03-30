@@ -210,13 +210,11 @@ class account_bank_statement_import(models.TransientModel):
             vals_acc['company_id'] = company_id
 
         # When the journal is created at same time of the bank account, we need
-        # to specify the currency to use a first time for the account.account
-        res_bank = self.env['res.partner.bank'].with_context(
-            default_currency_id=currency_id).create(vals_acc)
-        # and a second time on the journal
-        if currency_id:
-            res_bank.journal_id.currency = currency_id
-        return res_bank
+        # to specify the currency to use for the account.account and
+        # account.journal
+        return self.env['res.partner.bank'].with_context(
+            default_currency_id=currency_id,
+            default_currency=currency_id).create(vals_acc)
 
     @api.model
     def _complete_stmts_vals(self, stmts_vals, journal_id, account_number):
