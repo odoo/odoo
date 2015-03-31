@@ -127,13 +127,9 @@ class res_currency(osv.osv):
                     .name_search(cr, user, name_match.group(1), args, operator=operator, context=context, limit=limit)
         return results
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
-        return [(x['id'], tools.ustr(x['name'])) for x in reads]
+    @api.multi
+    def name_get(self):
+        return [(cur.id, cur.name) for cur in self]
 
     @api.v8
     def round(self, amount):
