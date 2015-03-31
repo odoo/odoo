@@ -37,23 +37,24 @@ class account_bank_statement_import(osv.TransientModel):
             context = {}
         #set the active_id in the context, so that any extension module could
         #reuse the fields chosen in the wizard if needed (see .QIF for example)
-        context.update({'active_id': ids[0]})
+        ctx = dict(context)
+        ctx['active_id'] = ids[0]
 
-        data_file = self.browse(cr, uid, ids[0], context=context).data_file
+        data_file = self.browse(cr, uid, ids[0], context=ctx).data_file
 
         # The appropriate implementation module returns the required data
-        currency_code, account_number, stmts_vals = self._parse_file(cr, uid, base64.b64decode(data_file), context=context)
+        currency_code, account_number, stmts_vals = self._parse_file(cr, uid, base64.b64decode(data_file), context=ctx)
         # Check raw data
-        self._check_parsed_data(cr, uid, stmts_vals, context=context)
+        self._check_parsed_data(cr, uid, stmts_vals, context=ctx)
         # Try to find the bank account and currency in odoo
-        currency_id, bank_account_id = self._find_additional_data(cr, uid, currency_code, account_number, context=context)
+        currency_id, bank_account_id = self._find_additional_data(cr, uid, currency_code, account_number, context=ctx)
         # Try to find the journal
-        journal_id = self._get_journal(cr, uid, currency_id, bank_account_id, account_number, context=context)
+        journal_id = self._get_journal(cr, uid, currency_id, bank_account_id, account_number, context=ctx)
         # If no journal found, ask the user about creating one
         if not journal_id:
-            return self._journal_creation_wizard(cr, uid, currency_id, account_number, bank_account_id, context=context)
+            return self._journal_creation_wizard(cr, uid, currency_id, account_number, bank_account_id, context=ctx)
         # Or directly finish the import
-        return self._finalize_import(cr, uid, bank_account_id, account_number, journal_id, stmts_vals, context=context)
+        return self._finalize_import(cr, uid, bank_account_id, account_number, journal_id, stmts_vals, context=ctx)
 
     def _journal_creation_wizard(self, cr, uid, currency_id, account_number, bank_account_id, context=None):
         """ Calls a wizard that allows the user to accept/refuse journal creation """
@@ -77,9 +78,6 @@ class account_bank_statement_import(osv.TransientModel):
         """ This part is separated from import_file so it can be called via the joutnal creation wizard
             No CUD can happen before this method is called, so not calling it is like aborting the import.
         """
-        # Create the bank account if not already existing
-        if not bank_account_id and account_number:
-            self._create_bank_account(cr, uid, account_number, journal_id=journal_id, partner_id=uid, context=context)
         # Prepare statement data to be used for bank statements creation
         stmts_vals = self._complete_stmts_vals(cr, uid, stmts_vals, journal_id, account_number, context=context)
         # Create the bank statements
