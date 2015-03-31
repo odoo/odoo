@@ -252,14 +252,20 @@ website.if_dom_contains('.odoo-tw-walls', function() {
     var picker = $('.odoo-tw-view-live-color-picker').popover({
         html: true,
         content: content
-    });
-    picker.parent().on('click', '.odoo-tw-view-live-option-color', function() {
+    }).parent();
+    picker.on('click', '.odoo-tw-view-live-option-color', function() {
         color = $(this).data('color-code');
         $('body').css('background-color', color);
     });
-    picker.parent().on('changeColor.colorpicker', '.odoo-tw-view-live-option-colorinput', function(e) {
+    picker.on('changeColor.colorpicker', '.odoo-tw-view-live-option-colorinput', function(e) {
         color = e.color.toHex();
         $('body').css('background-color', color);
+    });
+    $("body").on('mousemove', '.colorpicker', function() {
+        $(".odoo-tw-view-live-options").css("opacity", "1");
+    });
+    $("body").on('mouseout', '.colorpicker', function() {
+        $(".odoo-tw-view-live-options").css("opacity", "0");
     });
 });
 });
