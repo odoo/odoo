@@ -254,6 +254,7 @@ class Registry(Mapping):
     def leave_test_mode(self):
         """ Leave the test mode. """
         assert self.test_cr is not None
+        self.clear_caches()
         self.test_cr.force_close()
         self.test_cr = None
         RegistryManager.leave_test_mode()
