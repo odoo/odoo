@@ -56,11 +56,9 @@ def start_end_date_for_period(period, default_start_date=False, default_end_date
     else:  # period == 'once':
         start_date = default_start_date  # for manual goal, start each time
         end_date = default_end_date
-
-    if start_date and end_date:
-        return (datetime.strftime(start_date, DF), datetime.strftime(end_date, DF))
-    else:
         return (start_date, end_date)
+
+    return (datetime.strftime(start_date, DF), datetime.strftime(end_date, DF))
 
 
 class gamification_challenge(osv.Model):
@@ -275,7 +273,7 @@ class gamification_challenge(osv.Model):
         # close scheduled challenges
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'inprogress'),
-            ('end_date', '>=', fields.date.today())])
+            ('end_date', '<', fields.date.today())])
         if planned_challenge_ids:
             self.write(cr, uid, planned_challenge_ids, {'state': 'done'}, context=context)
 
@@ -417,10 +415,10 @@ class gamification_challenge(osv.Model):
                 date_clause = ""
                 query_params = [line.id]
                 if start_date:
-                    date_clause += "AND g.start_date = %s"
+                    date_clause += " AND g.start_date = %s"
                     query_params.append(start_date)
                 if end_date:
-                    date_clause += "AND g.end_date = %s"
+                    date_clause += " AND g.end_date = %s"
                     query_params.append(end_date)
             
                 query = """SELECT u.id AS user_id
