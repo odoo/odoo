@@ -10,6 +10,7 @@
     'depends': [
         'website',
         'payment',
+        'website_portal',
     ],
     'data': [
         'views/website_payment_templates.xml',
