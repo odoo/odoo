@@ -105,6 +105,10 @@ class Registry(Mapping):
         return self.models[model_name]
 
     @lazy_property
+    def cache(self):
+        return RegistryManager.cache
+
+    @lazy_property
     def pure_function_fields(self):
         """ Return the list of pure function fields (field objects) """
         fields = []
@@ -287,6 +291,7 @@ class RegistryManager(object):
 
     """
     _registries = None
+    _cache = None
     _lock = threading.RLock()
     _saved_lock = None
 
@@ -300,12 +305,25 @@ class RegistryManager(object):
                     # cannot specify the memory limit soft on windows...
                     size = 42
                 else:
-                    # On average, a clean registry take 25MB of memory + cache
-                    avgsz = 30 * 1024 * 1024
+                    # A registry takes 10MB of memory on average, so we reserve
+                    # 10Mb (registry) + 5Mb (working memory) per registry
+                    avgsz = 15 * 1024 * 1024
                     size = int(config['limit_memory_soft'] / avgsz)
 
             cls._registries = LRU(size)
         return cls._registries
+
+    @classproperty
+    def cache(cls):
+        """ Return the global LRU ormcache. Its keys are tuples with the
+        following structure: (db_name, model_name, method, args...).
+        """
+        with cls.lock():
+            if cls._cache is None:
+                # we allocate 8192 cache entries per registry
+                size = 8192 * cls.registries.count
+                cls._cache = LRU(size)
+            return cls._cache
 
     @classmethod
     def lock(cls):

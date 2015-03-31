@@ -97,6 +97,7 @@ def exp_duplicate_database(db_original_name, db_name):
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         cr.autocommit(True)     # avoid transaction block
+        _drop_conn(cr, db_original_name)
         cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
 
     from_fs = openerp.tools.config.filestore(db_original_name)
@@ -195,10 +196,10 @@ def dump_db(db_name, stream, backup_format='zip'):
             cmd.insert(-1, '--file=' + os.path.join(dump_dir, 'dump.sql'))
             openerp.tools.exec_pg_command(*cmd)
             if stream:
-                openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False)
+                openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
             else:
                 t=tempfile.TemporaryFile()
-                openerp.tools.osutil.zip_dir(dump_dir, t, include_dir=False)
+                openerp.tools.osutil.zip_dir(dump_dir, t, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
                 t.seek(0)
                 return t
     else:

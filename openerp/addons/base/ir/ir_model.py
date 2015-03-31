@@ -383,12 +383,12 @@ class ir_model_fields(osv.osv):
             if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
+            self.pool.clear_manual_fields()
+
             if vals['model'] in self.pool:
                 model = self.pool[vals['model']]
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
                     model._rec_name = 'x_name'
-
-                self.pool.clear_manual_fields()
 
                 # re-initialize model in registry
                 model.__init__(self.pool, cr)
@@ -731,7 +731,11 @@ class ir_model_access(osv.osv):
                         a.perm_''' + access_mode, (model_name,))
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
 
-    @tools.ormcache()
+    # The context parameter is useful when the method translates error messages.
+    # But as the method raises an exception in that case,  the key 'lang' might
+    # not be really necessary as a cache key, unless the `ormcache_context`
+    # decorator catches the exception (it does not at the moment.)
+    @tools.ormcache_context(accepted_keys=('lang',))
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
         if uid==1:
             # User root have all accesses
@@ -992,6 +996,10 @@ class ir_model_data(osv.osv):
             if record:
                 id = record.id
                 self.loads[(module,xml_id)] = (model,id)
+                for table, inherit_field in self.pool[model]._inherits.iteritems():
+                    parent_id = record[inherit_field].id
+                    parent_xid = '%s_%s' % (xml_id, table.replace('.', '_'))
+                    self.loads[(module, parent_xid)] = (table, parent_id)
         except Exception:
             pass
         return id

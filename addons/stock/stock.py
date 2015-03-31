@@ -305,7 +305,7 @@ class stock_quant(osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True),
         'in_date': fields.datetime('Incoming Date', readonly=True, select=True),
 
-        'history_ids': fields.many2many('stock.move', 'stock_quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant'),
+        'history_ids': fields.many2many('stock.move', 'stock_quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant', copy=False),
         'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong", required=True, readonly=True, select=True),
         'inventory_value': fields.function(_calc_inventory_value, string="Inventory Value", type='float', readonly=True),
 
@@ -1720,10 +1720,7 @@ class stock_move(osv.osv):
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
-        'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, type='float', digits=0, store={
-                'stock.move': (lambda self, cr, uid, ids, ctx: ids, ['product_id', 'product_uom_qty', 'product_uom'], 20),
-                'product.product': (_get_moves_from_prod, ['uom_id'], 20),
-            }, string='Quantity',
+        'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, type='float', digits=0, store=True, string='Quantity',
             help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
             required=True, states={'done': [('readonly', True)]},
@@ -1780,7 +1777,7 @@ class stock_move(osv.osv):
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id', 'scrap_location', type='boolean', relation='stock.location', string='Scrapped', readonly=True),
 
-        'quant_ids': fields.many2many('stock.quant', 'stock_quant_move_rel', 'move_id', 'quant_id', 'Moved Quants'),
+        'quant_ids': fields.many2many('stock.quant', 'stock_quant_move_rel', 'move_id', 'quant_id', 'Moved Quants', copy=False),
         'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'),
         'linked_move_operation_ids': fields.one2many('stock.move.operation.link', 'move_id', string='Linked Operations', readonly=True, help='Operations that impact this move for the computation of the remaining quantities'),
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', digits=0,
@@ -2803,7 +2800,7 @@ class stock_inventory_line(osv.osv):
 
     def _get_quants(self, cr, uid, line, context=None):
         quant_obj = self.pool["stock.quant"]
-        dom = [('company_id', '=', line.company_id.id), ('location_id', 'child_of', line.location_id.id), ('lot_id', '=', line.prod_lot_id.id),
+        dom = [('company_id', '=', line.company_id.id), ('location_id', '=', line.location_id.id), ('lot_id', '=', line.prod_lot_id.id),
                         ('product_id','=', line.product_id.id), ('owner_id', '=', line.partner_id.id), ('package_id', '=', line.package_id.id)]
         quants = quant_obj.search(cr, uid, dom, context=context)
         return quants
@@ -2823,7 +2820,7 @@ class stock_inventory_line(osv.osv):
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             if not company_id:
                 company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-            dom = [('company_id', '=', company_id), ('location_id', 'child_of', location_id), ('lot_id', '=', prod_lot_id),
+            dom = [('company_id', '=', company_id), ('location_id', '=', location_id), ('lot_id', '=', prod_lot_id),
                         ('product_id','=', product_id), ('owner_id', '=', partner_id), ('package_id', '=', package_id)]
             quants = quant_obj.search(cr, uid, dom, context=context)
             th_qty = sum([x.qty for x in quant_obj.browse(cr, uid, quants, context=context)])
@@ -2864,7 +2861,7 @@ class stock_inventory_line(osv.osv):
         move_id = stock_move_obj.create(cr, uid, vals, context=context)
         move = stock_move_obj.browse(cr, uid, move_id, context=context)
         if diff > 0:
-            domain = [('qty', '>', 0.0), ('package_id', '=', inventory_line.package_id.id), ('lot_id', '=', inventory_line.prod_lot_id.id)]
+            domain = [('qty', '>', 0.0), ('package_id', '=', inventory_line.package_id.id), ('lot_id', '=', inventory_line.prod_lot_id.id), ('location_id', '=', inventory_line.location_id.id)]
             preferred_domain_list = [[('reservation_id', '=', False)], [('reservation_id.inventory_id', '!=', inventory_line.inventory_id.id)]]
             quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, move.product_qty, domain=domain, prefered_domain_list=preferred_domain_list, restrict_partner_id=move.restrict_partner_id.id, context=context)
             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
