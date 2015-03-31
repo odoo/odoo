@@ -225,8 +225,9 @@
             }
             $textarea.summernote({
                     height: 150,
-                    toolbar: toolbar
-                });
+                    toolbar: toolbar,
+                    styleWithSpan: false
+            });
             $form.on('click', 'button, .a-submit', function () {
                 $textarea.html($form.find('.note-editable').code());
             });
