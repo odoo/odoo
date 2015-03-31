@@ -419,23 +419,20 @@
                             <field name="name"/>
                             <field name="category_id"/>
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
-                            <label for="factor"/>
-                            <div>
-                                <field name="factor"
-                                    digits="[42,5]"
-                                    attrs="{'invisible':[('uom_type','!=','smaller')],
-                                            'readonly':[('uom_type','=','bigger')]}"/>
-                                <field name="factor_inv"
-                                    digits="[42,5]"
-                                    attrs="{'invisible':[('uom_type','!=','bigger')],
-                                            'readonly':[('uom_type','!=','bigger')]}"/>
-                                <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey">
-                                    e.g: 1 * (reference unit) = ratio * (this unit)
-                                </p>
-                                <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey">
-                                    e.g: 1 * (this unit) = ratio * (reference unit)
-                                </p>
-                            </div>
+                            <field name="factor"
+                                digits="[42,5]"
+                                attrs="{'invisible':[('uom_type','!=','smaller')],
+                                        'readonly':[('uom_type','=','bigger')]}"/>
+                            <field name="factor_inv"
+                                digits="[42,5]"
+                                attrs="{'invisible':[('uom_type','!=','bigger')],
+                                        'readonly':[('uom_type','!=','bigger')]}"/>
+                            <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey" colspan="2">
+                                e.g: 1 * (reference unit) = ratio * (this unit)
+                            </p>
+                            <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey" colspan="2">
+                                e.g: 1 * (this unit) = ratio * (reference unit)
+                            </p>
                         </group>
                         <group>
                             <field name="active"/>
