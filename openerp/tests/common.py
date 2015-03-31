@@ -136,6 +136,7 @@ class TransactionCase(BaseCase):
 
     def tearDown(self):
         # rollback and close the cursor, and reset the environments
+        self.registry.clear_caches()
         self.env.reset()
         self.cr.rollback()
         self.cr.close()
@@ -157,6 +158,7 @@ class SingleTransactionCase(BaseCase):
     @classmethod
     def tearDownClass(cls):
         # rollback and close the cursor, and reset the environments
+        cls.registry.clear_caches()
         cls.env.reset()
         cls.cr.rollback()
         cls.cr.close()
