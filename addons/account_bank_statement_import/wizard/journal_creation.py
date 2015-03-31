@@ -12,15 +12,6 @@ class account_bank_statement_import_journal_creation(osv.TransientModel):
         'account_number': fields.char('Account Number', readonly=True),
     }
 
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(account_bank_statement_import_journal_creation, self).default_get(cr, uid, fields, context=context)
-        res.update({
-            'name': _('Bank') + ' ' + context['account_number'],
-            'currency_id': context['currency_id'],
-            'account_number': context['account_number'],
-        })
-        return res
-
     def create_journal(self, cr, uid, ids, context=None):
         bank_account_id = context['bank_account_id']
 
@@ -44,4 +35,4 @@ class account_bank_statement_import_journal_creation(osv.TransientModel):
 
         # Finish the statement import
         statement_import_transient = self.pool.get('account.bank.statement.import').browse(cr, uid, context['statement_import_transient_id'], context=context)
-        return statement_import_transient._finalize_import(bank_account_id, account_number, journal_id, context['stmts_vals'], context=context)
+        return statement_import_transient.import_file()

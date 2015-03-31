@@ -52,23 +52,14 @@ class account_bank_statement_import(osv.TransientModel):
         # If no journal found, ask the user about creating one
         if not journal_id:
             self._make_json_serialisable(cr, uid, stmts_vals, context=context)
-            return self._journal_creation_wizard(cr, uid, currency_id, account_number, bank_account_id, stmts_vals, context=context)
+            return self._journal_creation_wizard(cr, uid, currency_id, account_number, bank_account_id, context=context)
         # Or directly finish the import
         return self._finalize_import(cr, uid, bank_account_id, account_number, journal_id, stmts_vals, context=context)
 
-    def _make_json_serialisable(self, cr, uid, stmts_vals, context=None):
-        for stmt_vals in stmts_vals:
-            if stmt_vals.get('date'):
-                stmt_vals['date'] = str(stmt_vals['date'])
-            if stmt_vals.get('transactions'):
-                for transaction in stmt_vals['transactions']:
-                    if (transaction.get('date')):
-                        transaction['date'] = str(transaction['date'])
-
-    def _journal_creation_wizard(self, cr, uid, currency_id, account_number, bank_account_id, stmts_vals, context=None):
+    def _journal_creation_wizard(self, cr, uid, currency_id, account_number, bank_account_id, context=None):
         """ Calls a wizard that allows the user to accept/refuse journal creation """
         return {
-            'name': 'Journal Creation',
+            'name': _('Journal Creation'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.bank.statement.import.journal.creation',
             'view_type': 'form',
@@ -76,10 +67,10 @@ class account_bank_statement_import(osv.TransientModel):
             'target': 'new',
             'context': {
                 'statement_import_transient_id': context['active_id'],
-                'currency_id': currency_id,
-                'account_number': account_number,
+                'default_currency_id': currency_id,
+                'default_account_number': account_number,
                 'bank_account_id': bank_account_id,
-                'stmts_vals': stmts_vals,
+                'default_name': _('Bank') + ' ' + account_number,
             }
         }
 
