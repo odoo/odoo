@@ -367,7 +367,7 @@ class mrp_bom(osv.osv):
 
 class mrp_bom_line(osv.osv):
     _name = 'mrp.bom.line'
-    _order = "sequence"
+    _order = "sequence,id"
     _rec_name = "product_id"
 
     def _get_child_bom_lines(self, cr, uid, ids, field_name, arg, context=None):
@@ -418,6 +418,7 @@ class mrp_bom_line(osv.osv):
         'product_rounding': lambda *a: 0.0,
         'type': lambda *a: 'normal',
         'product_uom': _get_uom_id,
+        'sequence': 1,
     }
     _sql_constraints = [
         ('bom_qty_zero', 'CHECK (product_qty>0)', 'All product quantities must be greater than 0.\n' \
