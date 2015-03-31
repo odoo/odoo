@@ -86,22 +86,22 @@ var Create = Widget.extend({
                 };
             },
             fill_data: function (query, data) {
-                var that = this,
+                var self = this,
                     tags = {results: []};
                 _.each(data, function (obj) {
-                    if (that.matcher(query.term, obj.name)) {
+                    if (self.matcher(query.term, obj.name)) {
                         tags.results.push({id: obj.id, text: obj.name });
                     }
                 });
                 query.callback(tags);
             },
             query: function (query) {
-                var that = this;
+                var self = this;
                 // Fetch data only once and store it
                 if (!this.selection_data) {
                     this.fetch_rpc_fnc().then(function (data) {
-                        that.fill_data(query, data);
-                        that.selection_data = data;
+                        self.fill_data(query, data);
+                        self.selection_data = data;
                     });
                 } else {
                     this.fill_data(query, this.selection_data);
