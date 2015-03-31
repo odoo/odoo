@@ -51,7 +51,6 @@ class account_bank_statement_import(osv.TransientModel):
         journal_id = self._get_journal(cr, uid, currency_id, bank_account_id, account_number, context=context)
         # If no journal found, ask the user about creating one
         if not journal_id:
-            self._make_json_serialisable(cr, uid, stmts_vals, context=context)
             return self._journal_creation_wizard(cr, uid, currency_id, account_number, bank_account_id, context=context)
         # Or directly finish the import
         return self._finalize_import(cr, uid, bank_account_id, account_number, journal_id, stmts_vals, context=context)
