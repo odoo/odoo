@@ -238,11 +238,10 @@ website.if_dom_contains('.odoo-tw-walls', function() {
 
     // Set background color of live view
     var content = "<center><b class='text-muted'>Your Custom Color</b></center>
-                    <div class='input-group odoo-tw-view-live-option-colorinput'>
+                    <div class='input-group colorinput'>
                         <input type='text' class='form-control' />
                         <span class='input-group-addon'><i></i></span>
-                    </div>
-                    <script>$('.odoo-tw-view-live-option-colorinput').colorpicker({horizontal:true});</script><br/>
+                    </div><br/>
                     <center><b class='text-muted'>Standard Colors</b></center>", i = 1;
     _.map(colors, function(primary, secondary) {
         content += "<span class='odoo-tw-view-live-option-color' data-color-code=" + secondary + " style='background-color:" + secondary + "' />";
@@ -252,16 +251,20 @@ website.if_dom_contains('.odoo-tw-walls', function() {
     var picker = $('.odoo-tw-view-live-color-picker').popover({
         html: true,
         content: content
-    }).parent();
-    picker.on('click', '.odoo-tw-view-live-option-color', function() {
+    });
+    picker.on('shown.bs.popover', function() {
+        $(".colorinput > input.form-control").val(color);
+        $('.colorinput').colorpicker({horizontal: true});
+    });
+    picker.parent().on('click', '.odoo-tw-view-live-option-color', function() {
         color = $(this).data('color-code');
         $('body').css('background-color', color);
     });
-    picker.on('changeColor.colorpicker', '.odoo-tw-view-live-option-colorinput', function(e) {
+    picker.parent().on('changeColor.colorpicker', '.colorinput', function(e) {
         color = e.color.toHex();
         $('body').css('background-color', color);
     });
-    $("body").on('mousemove', '.colorpicker', function() {
+    $("body").on('mouseover', '.colorpicker', function() {
         $(".odoo-tw-view-live-options").css("opacity", "1");
     });
     $("body").on('mouseout', '.colorpicker', function() {
