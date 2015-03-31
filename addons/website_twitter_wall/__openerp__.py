@@ -15,7 +15,7 @@ Visualize Tweets
  * Display live tweets in different kind of view with mode
  * You display tweets just by posting or re-tweeting from twitter and twitter apps including mobile.
 """,
-    'author': 'Odoo SA',
+    'author': 'Odoo S.A.',
     'depends': ['website'],
     'website': 'https://www.odoo.com',
     'data': [
