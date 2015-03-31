@@ -44,7 +44,7 @@ class WebsiteTwitterWall(http.Controller):
     def twitter_wall_walls(self, **kwargs):
         """ Display all walls """
         return request.website.render('website_twitter_wall.twitter_walls', {
-            'walls': request.env['twitter.agent'].search([('website_published', '=', True)] if request.env.user == request.website.user_id else [])
+            'walls': request.env['twitter.agent'].search([('website_published', '=', True)] if request.env.uid == request.website.user_id.id else [])
         })
 
     @http.route(['/twitter_wall/view/<model("twitter.agent"):wall>',
