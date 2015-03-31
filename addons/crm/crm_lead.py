@@ -981,11 +981,11 @@ class crm_lead(format_address, osv.osv):
     # Mail Gateway
     # ----------------------------------------
 
-    def message_get_reply_to(self, cr, uid, ids, context=None):
+    def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
         leads = self.browse(cr, SUPERUSER_ID, ids, context=context)
         team_ids = set([lead.team_id.id for lead in leads if lead.team_id])
-        aliases = self.pool['crm.team'].message_get_reply_to(cr, uid, list(team_ids), context=context)
+        aliases = self.pool['crm.team'].message_get_reply_to(cr, uid, list(team_ids), default=default, context=context)
         return dict((lead.id, aliases.get(lead.team_id and lead.team_id.id or 0, False)) for lead in leads)
 
     def get_formview_id(self, cr, uid, id, context=None):
