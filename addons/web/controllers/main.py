@@ -30,6 +30,7 @@ except ImportError:
     xlwt = None
 
 import openerp
+import openerp.api
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.modules import get_module_resource
@@ -144,47 +145,30 @@ def ensure_db(redirect='/web/database/selector'):
 
     request.session.db = db
 
-def module_installed():
+def module_installed(env=None):
     # Candidates module the current heuristic is the /static dir
     loadable = http.addons_manifest.keys()
-    modules = {}
 
     # Retrieve database installed modules
     # TODO The following code should move to ir.module.module.list_installed_modules()
-    Modules = request.session.model('ir.module.module')
+    Modules = (env or request.env)['ir.module.module']
+
     domain = [('state','=','installed'), ('name','in', loadable)]
-    for module in Modules.search_read(domain, ['name', 'dependencies_id']):
-        modules[module['name']] = []
-        deps = module.get('dependencies_id')
-        if deps:
-            deps_read = request.session.model('ir.module.module.dependency').read(deps, ['name'])
-            dependencies = [i['name'] for i in deps_read]
-            modules[module['name']] = dependencies
+    modules = {
+        module.name: [dep.name for dep in module.dependencies_id]
+        for module in Modules.search(domain)
+    }
 
     sorted_modules = topological_sort(modules)
     return sorted_modules
 
 def module_installed_bypass_session(dbname):
-    loadable = http.addons_manifest.keys()
-    modules = {}
     try:
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
-            m = registry.get('ir.module.module')
-            # TODO The following code should move to ir.module.module.list_installed_modules()
-            domain = [('state','=','installed'), ('name','in', loadable)]
-            ids = m.search(cr, 1, [('state','=','installed'), ('name','in', loadable)])
-            for module in m.read(cr, 1, ids, ['name', 'dependencies_id']):
-                modules[module['name']] = []
-                deps = module.get('dependencies_id')
-                if deps:
-                    deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
-                    dependencies = [i['name'] for i in deps_read]
-                    modules[module['name']] = dependencies
-    except Exception,e:
-        pass
-    sorted_modules = topological_sort(modules)
-    return sorted_modules
+            return module_installed(env=openerp.api.Environment(cr, 1, {}))
+    except Exception:
+        return []
 
 def module_boot(db=None):
     server_wide_modules = openerp.conf.server_wide_modules or ['web']
