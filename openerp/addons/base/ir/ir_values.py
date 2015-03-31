@@ -22,7 +22,7 @@ import pickle
 
 from openerp import tools
 from openerp.osv import osv, fields
-from openerp.exceptions import AccessError
+from openerp.exceptions import AccessError, MissingError
 from openerp.tools.translate import _
 
 EXCLUDED_FIELDS = set((
@@ -416,31 +416,37 @@ class ir_values(osv.osv):
                              OR v.res_id = 0)
                    ORDER BY v.id"""
         cr.execute(query, ('action', action_slot, model, res_id or None))
+
+        # map values to their corresponding action record
+        actions = []
+        for id, name, value in cr.fetchall():
+            if not value:
+                continue                # skip if undefined
+            action_model, action_id = value.split(',')
+            if action_model not in self.pool:
+                continue                # unknown model? skip it!
+            action = self.pool[action_model].browse(cr, uid, int(action_id), context)
+            actions.append((id, name, action))
+
+        # process values and their action
+        user = self.pool['res.users'].browse(cr, uid, uid, context)
         results = {}
-        for action in cr.dictfetchall():
-            if not action['value']:
-                continue    # skip if undefined
-            action_model_name, action_id = action['value'].split(',')
-            if action_model_name not in self.pool:
-                continue    # unknow model? skip it
-            action_model = self.pool[action_model_name]
-            fields = [field for field in action_model._fields if field not in EXCLUDED_FIELDS]
+        for id, name, action in actions:
+            fields = [field for field in action._fields if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = action_model.read(cr, uid, int(action_id), fields, context)
-                if action_def:
-                    if action_model_name in ('ir.actions.report.xml', 'ir.actions.act_window'):
-                        groups = action_def.get('groups_id')
-                        if groups:
-                            cr.execute('SELECT 1 FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',
-                                       (tuple(groups), uid))
-                            if not cr.fetchone():
-                                if action['name'] == 'Menuitem':
-                                    raise AccessError(_('You do not have the permission to perform this operation!!!'))
-                                continue
-                # keep only the first action registered for each action name
-                results[action['name']] = (action['id'], action['name'], action_def)
-            except AccessError:
+                action_def = {
+                    field: action._fields[field].convert_to_read(action[field])
+                    for field in fields
+                }
+                if action._name in ('ir.actions.report.xml', 'ir.actions.act_window'):
+                    if action.groups_id and not action.groups_id & user.groups_id:
+                        if name == 'Menuitem':
+                            raise AccessError(_('You do not have the permission to perform this operation!!!'))
+                        continue
+                # keep only the last action registered for each action name
+                results[name] = (id, name, action_def)
+            except (AccessError, MissingError):
                 continue
         return sorted(results.values())
 
