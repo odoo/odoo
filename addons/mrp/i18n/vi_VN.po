@@ -20,7 +20,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.bom:0 view:mrp.bom.line:0
 msgid " Valid From Month"
-msgstr " Từ tháng hợp lệ"
+msgstr " Hợp lệ từ tháng"
 
 #. module: mrp
 #: field:product.template,bom_count:0
@@ -36,7 +36,7 @@ msgstr "# Lệnh sản xuất"
 #: code:addons/mrp/mrp.py:354
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (sao chép)"
+msgstr "%s (bản sao)"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:972
@@ -53,7 +53,7 @@ msgid ""
 "the quantity selected and it will finish the production order when total "
 "ordered quantities are produced."
 msgstr ""
-"Cơ chế 'Chỉ tiêu thụ' sẽ chỉ sản phẩm với số lượng đã chọn.\n"
+"Cơ chế 'Chỉ tiêu thụ' sẽ chỉ tiêu thụ sản phẩm với số lượng đã chọn.\n"
 "Cơ chế 'Tiêu thụ & Sản xuất' sẽ tiêu thụ cũng như sản xuất sản phẩm với số "
 "lượng đã chọn và nó sẽ kết thúc lệnh sản xuất khi tổng số lượng sản phẩm đã "
 "sản xuất xong."
@@ -75,9 +75,9 @@ msgstr ""
 "                Nhấp chuột để tạo một thành phần cho một công thức sản "
 "xuất.\n"
 "              </p><p>\n"
-"                Thành phần của công thức sản xuất là các thành phần và các "
+"                Thành phần của Định mức nguyên liệu là các thành phần và các "
 "sản phẩm\n"
-"                được sử dụng để tạo ra công thức sản xuất chính. Sử dụng "
+"                được sử dụng để tạo ra Định mức nguyên liệu chính. Sử dụng "
 "trình đơn này để\n"
 "                tìm kiếm trong BoM một thành phần cụ thể đã được sử dụng.\n"
 "              </p>\n"
@@ -128,9 +128,9 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Nhấp chuột để tạo một công thức sản xuất. \n"
+"                Nhấp chuột để tạo một Định mức nguyên liệu (BoM). \n"
 "              </p><p>\n"
-"                Công thức sản xuất cho phép bạn định nghĩa một danh sách "
+"                Định mức nguyên liệu cho phép bạn định nghĩa một danh sách "
 "nguyên liệu thô\n"
 "                cần thiết để làm ra một thành phẩm; thông qua một lệnh sản "
 "xuất hoặc một gói sản phẩm.\n"
@@ -171,7 +171,7 @@ msgstr ""
 "sản xuất\n"
 "                và đơn hàng. Các thuộc tính cho phép hệ thống tự động lựa "
 "chọn công thức\n"
-"                công thức sản xuất chính xác tùy theo các thuộc tính đã chọn "
+"                Định mức nguyên liệu chính xác tùy theo các thuộc tính đã chọn "
 "trong đơn hàng\n"
 "                bởi nhân viên bán hàng.\n"
 "              </p><p>\n"
@@ -205,13 +205,13 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Nhấp chuột để tạo một lệnh sản xuất. \n"
 "              </p><p>\n"
-"                Một lệnh sản xuất dựa trên một công thức sản xuất, mà sẽ "
+"                Một lệnh sản xuất dựa trên một Định mức nguyên liệu mà sẽ "
 "tiêu thụ\n"
-"                nguyên liệu thô và sản xuất ra hành phẩm.\n"
+"                nguyên liệu thô và sản xuất ra thành phẩm.\n"
 "              </p><p>\n"
-"                Lệnh sản xuất thường được đề xuất tự động dựa trên yêu cầu "
-"của khách hàng\n"
-"                hoặc quy tắc tự động như là quy tắc tồn kho tối thiểu.\n"
+"                Lệnh sản xuất có thể được đề xuất tự động dựa trên yêu cầu "
+"của khách hàng (thông qua một đơn hàng bán)\n"
+"                hoặc từ một quy tắc tự động (ví dụ: quy tắc tồn kho tối thiểu).\n"
 "              </p>\n"
 "            "
 
@@ -238,13 +238,13 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Nhấp chuột để thêm một thuộc tính mới.\n"
 "              </p><p>\n"
-"                Các thuộc tính trong hệ thống được sử dụng để chọn ra công "
-"thức\n"
-"                sản xuất phù hợp cho việc sản xuất một sản phẩm khi bạn có "
+"                Các thuộc tính trong hệ thống được sử dụng để chọn ra Định "
+"mức\n"
+"                nguyên liệu (BoM) phù hợp cho việc sản xuất một sản phẩm khi bạn có "
 "nhiều\n"
 "                cách khác nhau để xây dựng cùng một sản phẩm. Bạn có thể gán "
 "một vài\n"
-"                thuộc tính cho từng công thức sản xuất. Khi một nhân viên "
+"                thuộc tính cho từng Định mức nguyên liệu. Khi một nhân viên "
 "bán hàng\n"
 "                tạo một đơn hàng, họ có thể liên kết nó với một vài thuộc "
 "tính\n"
@@ -300,13 +300,13 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Nhấp chuột để tạo một lệnh sản xuất. \n"
 "              </p><p>\n"
-"                Một lệnh sản xuất dựa trên một công thức sản xuất, mà sẽ "
+"                Một lệnh sản xuất dựa trên một Định mức nguyên liệu mà sẽ "
 "tiêu thụ\n"
-"                nguyên liệu thô và sản xuất ra hành phẩm.\n"
+"                nguyên liệu thô và sản xuất ra thành phẩm.\n"
 "              </p><p>\n"
 "                Lệnh sản xuất thường được đề xuất tự động dựa trên yêu cầu "
-"của khách hàng\n"
-"                hoặc quy tắc tự động như là quy tắc tồn kho tối thiểu.\n"
+"của khách hàng (thông qua một đơn hàng bán)\n"
+"                hoặc từ một quy tắc tự động (ví dụ: quy tắc tồn kho tối thiểu).\n"
 "              </p>\n"
 "            "
 
@@ -351,7 +351,7 @@ msgstr "Cho phép lập kế hoạch chi tiết của hoạt động sản xuấ
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_properties:0
 msgid "Allow several bill of materials per products using properties"
-msgstr "Cho phép nhiều công thức sản xuất trên sản phẩm sử dụng thuộc tính"
+msgstr "Cho phép nhiều Định mức nguyên liệu trên sản phẩm sử dụng thuộc tính"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -411,7 +411,7 @@ msgid ""
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
 "Thời gian chậm trễ trung bình tính theo ngày để sản xuất sản phẩm này. Trong "
-"trường hợp đa cấp công thức sản xuất, thời gian sản xuất của các thành phần "
+"trường hợp đa cấp Định mức nguyên liệu, thời gian sản xuất của các thành phần "
 "sẽ được công thêm vào."
 
 #. module: mrp
@@ -454,19 +454,19 @@ msgstr ""
 #. module: mrp
 #: view:False:0 view:mrp.bom:0 view:mrp.bom.line:0
 msgid "Bill Of Material"
-msgstr "Công thức sản xuất"
+msgstr "Định mức nguyên liệu"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:0
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
-msgstr "Công thức sản xuất"
+msgstr "Định mức nguyên liệu"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Material Components"
-msgstr "Thành phần Công thức sản xuất"
+msgstr "Thành phần Định mức nguyên liệu"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -476,12 +476,12 @@ msgstr "Thành phần Công thức sản xuất"
 #: view:product.product:0 view:product.template:0
 #: field:product.template,bom_ids:0
 msgid "Bill of Materials"
-msgstr "Công thức sản xuất"
+msgstr "Định mức nguyên liệu"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr "Cấu trúc Công thức sản xuất"
+msgstr "Cấu trúc Định mức nguyên liệu"
 
 #. module: mrp
 #: help:mrp.production,bom_id:0
@@ -489,7 +489,7 @@ msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
 msgstr ""
-"Công thức sản xuất cho phép định nghĩa danh sách nguyên liệu thô cần thiết "
+"Định mức nguyên liệu cho phép định nghĩa danh sách nguyên liệu thô cần thiết "
 "để làm ra một sản phẩm cuối cùng."
 
 #. module: mrp
@@ -572,14 +572,14 @@ msgstr "Không thể xóa một lệnh sản xuất đang trong trạng thái '%
 #: code:addons/mrp/mrp.py:715
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr "Không tìm thấy một công thức sản xuất cho sản phẩm này."
+msgstr "Không tìm thấy một Định mức nguyên liệu cho sản phẩm này."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Cannot find bill of material for this product."
-msgstr "Không thể tìm thấy công thức sản xuất cho sản phẩm này."
+msgstr "Không thể tìm thấy Định mức nguyên liệu cho sản phẩm này."
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -880,7 +880,7 @@ msgstr "Thông tin chung"
 #. module: mrp
 #: help:mrp.bom,sequence:0
 msgid "Gives the sequence order when displaying a list of bills of material."
-msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách công thức sản xuất."
+msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách Định mức nguyên liệu."
 
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
@@ -891,7 +891,7 @@ msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách quy t
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách công thức sản xuất."
+msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách Định mức nguyên liệu."
 
 #. module: mrp
 #: help:mrp.bom.line,sequence:0
@@ -945,7 +945,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
 msgstr ""
-"Nếu bỏ chọn trường Hiệu lực, nó sẽ cho phép bạn ẩn công thức sản xuất mà "
+"Nếu bỏ chọn trường Hiệu lực, nó sẽ cho phép bạn ẩn Định mức nguyên liệu mà "
 "không cần xóa bỏ nó."
 
 #. module: mrp
@@ -1135,7 +1135,7 @@ msgstr "Đánh dấu là bắt đầu"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_property
 msgid "Master Bill of Materials"
-msgstr "Công thức sản xuất chính"
+msgstr "Định mức nguyên liệu chính"
 
 #. module: mrp
 #: view:mrp.config.settings:0
@@ -1268,7 +1268,7 @@ msgstr "Order"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr "Order Planning"
+msgstr "Lập kế hoạch sản xuất"
 
 #. module: mrp
 #: constraint:mrp.production:0
@@ -1278,7 +1278,7 @@ msgstr "Số lượng đặt hàng không thể nhở hơn hoặc bằng 0!"
 #. module: mrp
 #: field:mrp.bom.line,bom_id:0
 msgid "Parent BoM"
-msgstr "Công thức sản xuất cha"
+msgstr "Định mức nguyên liệu cha"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -1298,12 +1298,12 @@ msgstr "Đang chờ"
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per month"
-msgstr "Tren tháng"
+msgstr "Mỗi tháng"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per week"
-msgstr "Trên tuần"
+msgstr "Mỗi tuần"
 
 #. module: mrp
 #: selection:mrp.bom.line,type:0
@@ -1736,7 +1736,7 @@ msgid ""
 msgstr ""
 "Quy trình sản xuất cho phép bạn tạo và quản lý các hoạt động sản xuất mà có "
 "thể được theo dõi trong các năng lực sản xuất theo thứ tự để sản xuất một "
-"sản phẩm. Chúng được đính kèm vào công thức sản xuất."
+"sản phẩm. Chúng được đính kèm vào Định mức nguyên liệu."
 
 #. module: mrp
 #: view:False:0
@@ -1786,12 +1786,12 @@ msgstr "Tìm kiếm"
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Search Bill Of Material"
-msgstr "Tìm kiếm công thức sản xuất"
+msgstr "Tìm kiếm Định mức nguyên liệu"
 
 #. module: mrp
 #: view:mrp.bom.line:0
 msgid "Search Bill Of Material Components"
-msgstr "Tìm kiếm thành phần công thức sản xuất"
+msgstr "Tìm kiếm thành phần Định mức nguyên liệu"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1955,8 +1955,8 @@ msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
 msgstr ""
-"Việc lựa chọn công thức sản xuất chính xác để sử dụng phụ thuộc vào các "
-"thuộc tính được chỉ ra trên đơn hàng và công thức sản xuất."
+"Việc lựa chọn Định mức nguyên liệu chính xác để sử dụng phụ thuộc vào các "
+"thuộc tính được chỉ ra trên đơn hàng và Định mức nguyên liệu."
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
@@ -2114,12 +2114,12 @@ msgstr "Hợp lệ từ"
 #. module: mrp
 #: view:mrp.bom:0 view:mrp.bom.line:0
 msgid "Valid From Date by Month"
-msgstr "Ngày tháng hợp lệ từ (theo tháng)"
+msgstr "Hợp lệ từ Ngày (theo tháng)"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
 msgid "Valid Until"
-msgstr "Valid Until"
+msgstr "Hợp lệ đến"
 
 #. module: mrp
 #: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0
@@ -2349,7 +2349,7 @@ msgid ""
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
 msgstr ""
-"Bạn có thể cấu hình sản phẩm phụ trong một công thức sản xuất.\n"
+"Bạn có thể cấu hình sản phẩm phụ trong một Định mức nguyên liệu.\n"
 "Không có phân hệ này: A + B + C -> D.\n"
 "Với phân hệ này: A + B + C -> D + E.\n"
 "-Việc này sẽ cài đặt phân hệ mrp_byproduct."
@@ -2395,7 +2395,7 @@ msgstr "hoặc"
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "plus"
-msgstr "plus"
+msgstr "cộng"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mrpbomstructure
