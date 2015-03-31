@@ -43,7 +43,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         } else {
             display_str = $.timeago(datetime_obj);
         }
-        $(el).text(display_str.charAt(0).toUpperCase() + display_str.slice(1));
+        $(el).text(_.str.capitalize(display_str));
     });
 
     // Delete tweet
@@ -107,8 +107,8 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         '#EBEC6D': '#CFD01B',
         '#6C6D6D': '#0084B4',
         '#ACADAD': '#0084B4',
-        '#F0F0F0': '#0084B4'
-    }, current_class = 'col-sm-12', color = '#F0F0F0';
+        '#F1F1F1': '#0084B4'
+    }, current_class = 'col-sm-12', color = '#F1F1F1';
     Qweb.add_template('/website_twitter_wall/static/src/xml/website_twitter_wall_tweet.xml');
     var TweetWall = Widget.extend({
         template: 'twitter_tweets',
