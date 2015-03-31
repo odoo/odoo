@@ -31,8 +31,8 @@ class AcquirerAlipay(osv.Model):
             }
         else:
             return {
-                'alipay_form_url': 'https://mapi.alipay.com/gateway.do?',
-                'alipay_rest_url': 'https://mapi.alipay.com/gateway.do?',
+                'alipay_form_url': 'https://openapi.alipaydev.com/gateway.do',
+                'alipay_rest_url': 'https://openapi.alipaydev.com/gateway.do',
             }
 
     def _get_providers(self, cr, uid, context=None):
