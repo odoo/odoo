@@ -134,6 +134,8 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             total = 0.0
             for line in order.order_line:
+                if line.state == 'cancel':
+                    continue
                 total += (line.product_uom_qty * line.price_unit)
             res[order.id] = total
         return res
