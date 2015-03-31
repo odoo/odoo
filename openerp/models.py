@@ -1544,9 +1544,9 @@ class BaseModel(object):
                     x.pop(key, None)
                 return x
             ir_values_obj = self.pool.get('ir.values')
-            resprint = ir_values_obj.get(cr, uid, 'action', 'client_print_multi', [(self._name, False)], False, context)
-            resaction = ir_values_obj.get(cr, uid, 'action', 'client_action_multi', [(self._name, False)], False, context)
-            resrelate = ir_values_obj.get(cr, uid, 'action', 'client_action_relate', [(self._name, False)], False, context)
+            resprint = ir_values_obj.get_actions(cr, uid, 'client_print_multi', self._name, context=context)
+            resaction = ir_values_obj.get_actions(cr, uid, 'client_action_multi', self._name, context=context)
+            resrelate = ir_values_obj.get_actions(cr, uid, 'client_action_relate', self._name, context=context)
             resaction = [clean(action) for action in resaction if view_type == 'tree' or not action[2].get('multi')]
             resprint = [clean(print_) for print_ in resprint if view_type == 'tree' or not print_[2].get('multi')]
             #When multi="True" set it will display only in More of the list view
