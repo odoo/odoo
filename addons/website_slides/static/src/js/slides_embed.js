@@ -35,6 +35,9 @@ $(document).ready(function () {
                 this.$('canvas').show();
                 this.$('#page_count').text(this.pdf_viewer.pdf_page_total);
                 this.$('#PDFViewerLoader').hide();
+                if (this.pdf_viewer.pdf_page_total > 1) {
+                    this.$('.o_slide_navigation_buttons').removeClass('hide');
+                }
                 // init first page to display
                 var initpage = this.defaultpage;
                 var pageNum = (initpage > 0 && initpage <= this.pdf_viewer.pdf_page_total)? initpage : 1;
