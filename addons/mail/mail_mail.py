@@ -299,9 +299,11 @@ class mail_mail(osv.Model):
                         subtype_alternative='plain',
                         headers=headers)
                     try:
+                        author_uid = (mail.mapped('author_id.id') or [1])[0]
+                        send_email_context = context if 'uid' in context else dict(context, uid=author_uid)
                         res = ir_mail_server.send_email(cr, uid, msg,
                                                     mail_server_id=mail.mail_server_id.id,
-                                                    context=context)
+                                                    context=send_email_context)
                     except AssertionError as error:
                         if error.message == ir_mail_server.NO_VALID_RECIPIENT:
                             # No valid recipient found for this particular

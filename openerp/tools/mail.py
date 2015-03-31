@@ -654,7 +654,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
         res = mail_server_pool.send_email(cr, uid or 1, email_msg, mail_server_id=None,
                        smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password,
-                       smtp_encryption=('ssl' if ssl else None), smtp_debug=debug)
+                       smtp_encryption=('ssl' if ssl else None), smtp_debug=debug, context={'uid':uid or 1})
     except Exception:
         _logger.exception("tools.email_send failed to deliver email")
         return False

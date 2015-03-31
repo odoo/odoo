@@ -717,7 +717,7 @@ class res_partner(osv.Model, format_address):
         partners = self.browse(cr, uid, ids)
         for partner in partners:
             if partner.email:
-                tools.email_send(email_from, [partner.email], subject, body, on_error)
+                tools.email_send(email_from, [partner.email], subject, body, on_error, uid=uid)
         return True
 
     def email_send(self, cr, uid, ids, email_from, subject, body, on_error=''):
