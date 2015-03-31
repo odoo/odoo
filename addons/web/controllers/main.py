@@ -1288,10 +1288,17 @@ class Binary(openerpweb.Controller):
             return req.not_found()
         else:
             filename = '%s_%s' % (model.replace('.', '_'), id)
+            contenttype = 'application/octet-stream'
             if filename_field:
+                import mimetypes
                 filename = res.get(filename_field, '') or filename
-            return req.make_response(filecontent,
-                [('Content-Type', 'application/octet-stream'),
+                if filename:
+                    ctype, _ = mimetypes.guess_type(filename)
+                    if ctype:
+                        contenttype = ctype
+            return req.make_response(
+                filecontent,
+                [('Content-Type', contenttype),
                  ('Content-Disposition', content_disposition(filename, req))])
 
     @openerpweb.httprequest
