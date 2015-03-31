@@ -691,7 +691,7 @@ class task(base_stage, osv.osv):
             res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
                 res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
-            if task.state in ('done','cancelled'):
+            if task.stage_id and task.stage_id.fold:
                 res[task.id]['progress'] = 100.0
         return res
 
