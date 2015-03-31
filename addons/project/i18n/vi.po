@@ -82,12 +82,12 @@ msgstr ""
 #: model:ir.actions.act_window,help:project.open_task_type_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Bấm để tạo mới một giai đoạn trong kênh nhiệm vụ.\n"
+"                Bấm để tạo mới một trạng thái trong kênh nhiệm vụ.\n"
 "              </p><p>\n"
 "                Định nghĩa các bước mà sẽ được sử dụng trong dự án từ việc tạo\n"
 "                nhiệm vụ, cho đến lúc đóng một nhiệm vụ hoặc một "
 "vấn đề phát sinh.\n"
-"                Bạn sẽ sử dụng các giai đoạn này để theo dõi tiến trình\n"
+"                Bạn sẽ sử dụng các trạng thái này để theo dõi tiến trình\n"
 "                xử lý và giải quyết các nhiệm vụ hoặc phát sinh.\n"
 "              </p>\n"
 "            "
@@ -730,7 +730,7 @@ msgstr "Số giờ đã sử dụng"
 #. module: project
 #: field:project.task.delegate,planned_hours_me:0
 msgid "Hours to Validate"
-msgstr "Số giờ cần Các nhận"
+msgstr "Số giờ cần Xác nhận"
 
 #. module: project
 #: field:project.category,id:0 field:project.config.settings,id:0
@@ -1179,7 +1179,7 @@ msgstr "Thiết lập dự án"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Project Stages"
-msgstr "Giai đoạn"
+msgstr "Trạng thái Dự án"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -1261,7 +1261,7 @@ msgstr "Sẵn sàng"
 #: selection:project.task.history.cumulative,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr "Sẵn sàng cho giai đoạn kế tiếp"
+msgstr "Sẵn sàng cho trạng thái kế tiếp"
 
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
@@ -1344,32 +1344,32 @@ msgstr "Số giờ đã sử dụng"
 #: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,stage_id:0
 msgid "Stage"
-msgstr "Giai đoạn"
+msgstr "Trạng thái"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Giai đoạn được thay đổi"
+msgstr "Trạng thái được thay đổi"
 
 #. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
-msgstr "Tên Giai đoạn"
+msgstr "Tên Trạng thái"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Giai đoạn được thay đổi"
+msgstr "Trạng thái được thay đổi"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 msgid "Stages"
-msgstr "Giai đoạn"
+msgstr "Trạng thái"
 
 #. module: project
 #: view:project.task.type:project.task_type_search
 msgid "Stages common to all projects"
-msgstr "Giai đoạn dùng cho cho tất cả các dự án"
+msgstr "Trạng thái dùng cho cho tất cả các dự án"
 
 #. module: project
 #: field:project.task,date_start:0
@@ -1482,24 +1482,24 @@ msgstr ""
 #: model:mail.message.subtype,description:project.mt_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready for Next Stage"
-msgstr "Nhiệm vụ sẵn sàng cho giai đoạn tiếp"
+msgstr "Nhiệm vụ sẵn sàng cho trạng thái tiếp"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
 #: view:project.task.type:project.task_type_edit
 #: view:project.task.type:project.task_type_tree
 msgid "Task Stage"
-msgstr "Giai đoạn của Nhiệm vụ"
+msgstr "Trạng thái của Nhiệm vụ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr "Giai đoạn của Nhiệm vụ được thay đổi"
+msgstr "Trạng thái của Nhiệm vụ được thay đổi"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_task_types_view
 msgid "Task Stages"
-msgstr "Giai đoạn Nhiệm vụ"
+msgstr "Trạng thái Nhiệm vụ"
 
 #. module: project
 #: field:project.task,name:0 field:report.project.task.user,name:0
@@ -1567,7 +1567,7 @@ msgstr "Phân tích nhiệm vụ"
 #: field:project.project,type_ids:0
 #: view:project.task.type:project.task_type_search
 msgid "Tasks Stages"
-msgstr "Giai đoạn nhiệm vụ"
+msgstr "trạng thái nhiệm vụ"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -1835,7 +1835,7 @@ msgstr "Tiêu đề Nhiệm vụ"
 #. module: project
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "_Delegate"
-msgstr ""
+msgstr "_Ủy thác"
 
 #. module: project
 #: view:project.task:project.view_task_kanban
