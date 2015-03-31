@@ -228,12 +228,12 @@ class website(osv.osv):
             return False
 
     @openerp.tools.ormcache(skiparg=3)
-    def _get_languages(self, cr, uid, id, context=None):
+    def _get_languages(self, cr, uid, id):
         website = self.browse(cr, uid, id)
         return [(lg.code, lg.name) for lg in website.language_ids]
 
     def get_languages(self, cr, uid, ids, context=None):
-        return self._get_languages(cr, uid, ids[0], context=context)
+        return self._get_languages(cr, uid, ids[0])
 
     def get_alternate_languages(self, cr, uid, ids, req=None, context=None):
         langs = []
