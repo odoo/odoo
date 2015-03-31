@@ -56,7 +56,7 @@
                                 <td><t t-esc="line.move_id.name &lt;&gt; '/' and line.move_id.name or ('*'+str(line.move_id.id))"/></td>
                                 <td><t t-esc="formatLang(line.date,date=True)"/></td> 
                                 <td><span t-field="line.account_id.code"/></td>
-                                <td><t t-esc="line.partner_id and line.partner_id.name[:23]"/></td>
+                                <td><t t-esc="line.partner_id and line.partner_id.name[:23] or ''"/></td>
                                 <td><t t-esc="line.name[:35]"/></td>
                                 <td><t t-esc="formatLang(line.debit, currency_obj=res_company.currency_id)"/></td>
                                 <td><t t-esc="formatLang(line.credit, currency_obj=res_company.currency_id)"/></td>
