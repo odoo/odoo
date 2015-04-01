@@ -186,7 +186,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 if post_init:
                     getattr(py_module, post_init)(cr, registry)
 
-            registry._init_modules.add(package.name)
+            registry._init_modules.append(package.name)
             # validate all the views at a whole
             registry['ir.ui.view']._validate_module_views(cr, SUPERUSER_ID, module_name)
 
@@ -214,8 +214,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             for kind in ('init', 'demo', 'update'):
                 if hasattr(package, kind):
                     delattr(package, kind)
-
-        registry._init_modules.add(package.name)
+        else:
+            registry._init_modules.append(package.name)
         cr.commit()
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)

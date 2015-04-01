@@ -54,7 +54,7 @@ class Registry(Mapping):
         self._fields_by_model = None
 
         # modules fully loaded (maintained during init phase by `loading` module)
-        self._init_modules = set()
+        self._init_modules = []
 
         self.db_name = db_name
         self._db = openerp.sql_db.db_connect(db_name)

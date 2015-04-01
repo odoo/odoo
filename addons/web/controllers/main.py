@@ -145,28 +145,19 @@ def ensure_db(redirect='/web/database/selector'):
 
     request.session.db = db
 
-def module_installed(env=None):
+def module_installed(registry=None):
     # Candidates module the current heuristic is the /static dir
-    loadable = http.addons_manifest.keys()
+    loadable = http.addons_manifest
 
-    # Retrieve database installed modules
-    # TODO The following code should move to ir.module.module.list_installed_modules()
-    Modules = (env or request.env)['ir.module.module']
+    if not registry:
+        registry = request.registry
 
-    domain = [('state','=','installed'), ('name','in', loadable)]
-    modules = {
-        module.name: [dep.name for dep in module.dependencies_id]
-        for module in Modules.search(domain)
-    }
-
-    sorted_modules = topological_sort(modules)
-    return sorted_modules
+    return [mod for mod in registry._init_modules if mod in loadable]
 
 def module_installed_bypass_session(dbname):
     try:
         registry = openerp.modules.registry.RegistryManager.get(dbname)
-        with registry.cursor() as cr:
-            return module_installed(env=openerp.api.Environment(cr, 1, {}))
+        return module_installed(registry=registry)
     except Exception:
         return []
 
