@@ -142,7 +142,7 @@ class TestMessageRead(TestMail):
         # ----------------------------------------
 
         # Do: read 2 lasts message, flat
-        messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs.id)], mode='defaulf', limit=2)
+        messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs.id)], mode='default', limit=2)
         read_msg_list = messages['threads'][0][1]
         read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
         # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is not set, 1 expandable
