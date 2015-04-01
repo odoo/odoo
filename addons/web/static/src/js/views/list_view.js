@@ -611,7 +611,23 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         }
     },
     on_sidebar_export: function() {
-        new DataExport(this, this.dataset).open();
+        var selected_ids = this.get_selected_ids();
+        if (selected_ids.length == 0) {
+            return this.do_warn(_t("Warning"), _t("You must select at least one record."));
+        }
+        this.do_action({
+            type: 'ir.actions.client',
+            tag: 'export',
+            flags: {new_window: true},
+            params: {
+                model: this.dataset.model || "",
+                dataset: this.dataset || [],
+                domain: this.get_active_domain() || [],
+                selected_ids: selected_ids || [],
+                context: this.getParent().action.context || [],
+                view: this.ViewManager.action.name || self.name,
+            }
+        });
     },
     /**
      * Handler for the result of eval_domain_and_context, actually perform the

@@ -1791,7 +1791,7 @@
 </t>
 <div t-name="ExportTreeView" class="oe_export">
     <div class="oe_view_manager oe_view_manager_current ">
-        <div class="oe_view_manager_header oe_padding">
+        <div class=" oe_padding oe-control-panel">
             <strong><span class="oe_export_head">Export <span class="oe_model_name"><t t-esc="widget.model_name"></t></span></span></strong><br></br>
             <button type="button" class="oe_button oe_export_file oe_highlight">Export to File</button>
             <span class="oe_fade">or</span>
@@ -1808,7 +1808,7 @@
     </div>
     <div>
         <div class="col-md-3">
-            <div class="oe_input_margin radio" id="export_format"></div>
+            <div class="oe_input_margin" id="export_format"></div>
             <div class="oe_input_margin checkbox" title="Data will export in Import-Compatible mode. It can easily import with out any trouble.">
                 <label>
                     <input type="checkbox" id="import_compat" value="yes" checked="true">Import-Compatible Export</input>
@@ -1850,13 +1850,15 @@
 </div>
 <t t-name="Export.Formats" t-as="formats">
     <t t-foreach="formats">
-        <label class="radio-inline">
-            <input type="radio" name="formats" t-att-id="formats.tag" t-att-value="formats.tag"></input>
-            <t t-esc="formats.label"></t>
-            <t t-if="formats.error != 'None'">
-                <t t-esc="formats.error"></t>
-            </t>
-        </label>
+        <div class="radio-inline">
+            <label>
+                <input type="radio" name="formats" t-att-id="formats.tag" t-att-value="formats.tag"></input>
+                <t t-esc="formats.label"></t>
+                <t t-if="formats.error != 'None'">
+                    <t t-esc="formats.error"></t>
+                </t>
+            </label>
+        </div>
     </t>
 </t>
 <t t-name="Exists.ExportList" t-as="val">
@@ -1908,24 +1910,6 @@
         </table>
     </td>
 </tr>
-<t t-name="ExportNewList">
-    <tr>
-        <th><label>Save as:</label></th>
-        <td><input size="10" type="text" id="savelist_name"/></td>
-        <td><button class="oe_button oe_export_button_export" id="add_export_list">Ok</button></td>
-    </tr>
-</t>
-<t t-name="Exists.ExportList">
-    <label for="saved_export_list">Saved exports:</label>
-
-    <select id="saved_export_list">
-        <option></option>
-        <t t-foreach="existing_exports" t-as="export">
-            <option t-att-value="export.id"><t t-esc="export.name"/></option>
-        </t>
-    </select>
-    <button class="oe_button oe_export_button_export" id="delete_export_list" type="button">Delete</button>
-</t>
 
 <div t-name="Many2ManyKanban.quick_create" class="oe_kanban_quick_create">
     <input t-att-placeholder="_t('Type name to search')"/>

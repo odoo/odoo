@@ -44,7 +44,6 @@ var DataExport = Widget.extend({
         var self = this;
         this._super(parent);
         this.records = {};
-        this.dataset = dataset;
         this.action = action;
         this.domain = action.params.domain;
         this.model_name = action.params.view;
@@ -65,6 +64,7 @@ var DataExport = Widget.extend({
         if (!export_fields.length) {
             self.hide_buttons();
         }
+        this.show_exports_list()
         this.$el.find("#import_compat").on('change',function(){
             self.$el.find('#field-tree-structure').remove();
             var import_comp = "";
@@ -438,5 +438,5 @@ var DataExport = Widget.extend({
     },
 });
 
-return DataExport;
+core.action_registry.add('export', DataExport);
 });
