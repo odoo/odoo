@@ -74,15 +74,8 @@
         </tbody>
     </xpath>
     <xpath expr="//button[@type='submit']" position="replace">
-        <button type="submit" t-if="event.seats_available or event.seats_availability == 'unlimited'" class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Order Now</button>
-        <form t-if="not event.event_ticket_ids">
-            <div class="alert alert-info">
-                Event registration not yet started. 
-                <t t-if="uid">
-                    <i class="fa fa-plus-circle"><a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event"> <em>Configure Event Registration</em></a></i>
-                </t>
-            </div>
-        </form>
+        <button type="submit" t-if="event.state == 'confirm' and (event.seats_available or event.seats_availability == 'unlimited')"
+            class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Order Now</button>
     </xpath>
 </template>
 
