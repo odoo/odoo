@@ -1028,6 +1028,7 @@ class purchase_order_line(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         procurement_ids_to_except = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
         if procurement_ids_to_except:
+            procurement_obj.message_post(cr, uid, procurement_ids_to_except, body=_('Purchase order line deleted.'), context=context)
             self.pool['procurement.order'].write(cr, uid, procurement_ids_to_except, {'state': 'exception'}, context=context)
         return super(purchase_order_line, self).unlink(cr, uid, ids, context=context)
 
