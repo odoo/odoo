@@ -6,7 +6,6 @@ import json
 from openerp import http, SUPERUSER_ID
 from openerp.http import request
 from openerp.tools.translate import _
-import pudb
 
 class form_builder(http.Controller):
     #Load custom template as success page and build it with the inserted record
