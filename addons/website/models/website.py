@@ -939,10 +939,16 @@ class website_published_mixin(osv.AbstractModel):
         'website_published': fields.boolean('Visible in Website', copy=False),
         'website_url': fields.function(_website_url_proxy, type='char', string='Website URL',
                                        help='The full URL to access the document through the website.'),
+        'website_published_date': fields.datetime('Publish Date', copy=False),
     }
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
         return dict.fromkeys(ids, '#')
+
+    def write(self, cr, uid, ids, values, context=None):
+        if 'website_published' in values:
+            values['website_published_date'] = values['website_published'] and fields.datetime.now() or False
+        return super(website_published_mixin, self).write(cr, uid, ids, values, context=context)
 
     def open_website_url(self, cr, uid, ids, context=None):
         return {
