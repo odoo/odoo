@@ -940,13 +940,10 @@ function openerp_picking_widgets(instance){
         },
         print_picking: function(){
             var self = this;
-            return new instance.web.Model('stock.picking.type').call('read', [[self.picking_type_id], ['code'], new instance.web.CompoundContext()])
-                .then(function(pick_type){
-                    return new instance.web.Model('stock.picking').call('do_print_picking',[[self.picking.id]])
-                           .then(function(action){
-                                return self.do_action(action);
-                           });
-                });
+            return new instance.web.Model('stock.picking').call('do_print_picking_operations',[[self.picking.id]])
+                   .then(function(action){
+                        return self.do_action(action);
+                   });
         },
         picking_next: function(){
             for(var i = 0; i < this.pickings.length; i++){
