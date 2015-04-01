@@ -280,13 +280,13 @@ class ir_import(orm.TransientModel):
         if options.get('headers'):
             rows_to_import = itertools.islice(
                 rows_to_import, 1, None)
-        data = [
-            row for row in itertools.imap(mapper, rows_to_import)
-            # don't try inserting completely empty rows (e.g. from
-            # filtering out o2m fields)
-            if any(row)
-        ]
 
+        data = []
+        for row in rows_to_import:
+            # don't try inserting completely empty rows (e.g. from
+            # filtering out o2m fields
+            if any(f.strip() for f in row):
+                data.append(mapper(row))
         return data, import_fields
 
     def do(self, cr, uid, id, fields, options, dryrun=False, context=None):
