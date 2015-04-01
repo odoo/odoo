@@ -112,7 +112,7 @@ class TestMessageRead(TestMail):
         self.assertIsNotNone(new_msg_exp, 'message_read on Pigs message should have returned a new messages expandable')
         domain = new_msg_exp.get('domain', [])
         # Test: expandable, conditions in domain
-        sself.assertIn(('parent_id', '=', self.msg_id1), domain, 'new messages expandable domain should contain a child_of condition')
+        self.assertIn(('parent_id', '=', self.msg_id1), domain, 'new messages expandable domain should contain a child_of condition')
         self.assertIn(('id', '>', self.msg_id1), domain, 'new messages expandable domain should contain an id greater than condition')
         self.assertIn(('id', '<', self.msg_id9), domain, 'new messages expandable domain should contain an id less than condition')
         self.assertEqual(new_msg_exp.get('parent_id'), self.msg_id1, 'new messages expandable should have ancestor_id set to the thread header')
