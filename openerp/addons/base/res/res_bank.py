@@ -155,7 +155,7 @@ class res_partner_bank(osv.osv):
             _get_sanitized_account_number,
             string='Sanitized Account Number',
             type='char', size=64, readonly=True,
-            store=True, select=True
+            store=True,
         ),
         'bank': fields.many2one('res.bank', 'Bank'),
         'bank_bic': fields.char('Bank Identifier Code', size=16),
