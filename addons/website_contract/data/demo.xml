@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Time Units -->
+    <record id="uom_categ_time" model="product.uom.categ">
+            <field name="name">Time</field>
+    </record>
+    <record id="contract_uom_month" model="product.uom">
+        <field name="name">Month(s)</field>
+        <field ref="uom_categ_time" name="category_id"/>
+        <field name="factor" eval="1.0"/>
+    </record>
+    <record id="contract_uom_year" model="product.uom">
+        <field name="name">Year(s)</field>
+        <field ref="uom_categ_time" name="category_id"/>
+        <field name="factor_inv" eval="10.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+
+     <!-- Recurring products -->
+     <record id="odoo_saas" model="product.product">
+        <field name="name">Odoo SAAS</field>
+        <field name="recurring_invoice">True</field>
+        <field name="categ_id" ref="product.product_category_3"/>
+        <field name="type">service</field>
+        <field name="list_price">20.0</field>
+        <field name="uom_id" ref="contract_uom_month"/>
+        <field name="uom_po_id" ref="contract_uom_month"/>
+     </record>
+     <record id="odoo_custom_view" model="product.product">
+        <field name="name">Customized Views</field>
+        <field name="recurring_invoice">True</field>
+        <field name="categ_id" ref="product.product_category_3"/>
+        <field name="type">service</field>
+        <field name="list_price">10.0</field>
+        <field name="uom_id" ref="contract_uom_month"/>
+        <field name="uom_po_id" ref="contract_uom_month"/>
+     </record>
+     <record id="odoo_custom_module" model="product.product">
+        <field name="name">Customized Module</field>
+        <field name="recurring_invoice">True</field>
+        <field name="categ_id" ref="product.product_category_3"/>
+        <field name="type">service</field>
+        <field name="list_price">40.0</field>
+        <field name="uom_id" ref="contract_uom_month"/>
+        <field name="uom_po_id" ref="contract_uom_month"/>
+     </record>
+     <record id="odoo_custom_domain" model="product.product">
+        <field name="name">Custom Domain</field>
+        <field name="recurring_invoice">True</field>
+        <field name="categ_id" ref="product.product_category_3"/>
+        <field name="type">service</field>
+        <field name="list_price">0.0</field>
+        <field name="uom_id" ref="contract_uom_month"/>
+        <field name="uom_po_id" ref="contract_uom_month"/>
+     </record>
+   
+
+    <!-- Analytical Account -->
+    <record id="odoo_analytic" model="account.analytic.account">
+        <field name="type">normal</field>
+        <field name="name">Odoo SAAS</field>
+    </record>
+    <!-- Contract templates -->
+    <record id="odoo_monthly" model="account.analytic.account">
+        <field name="type">template</field>
+        <field name="name">Odoo Monthly</field>
+        <field name="parent_id" ref="odoo_analytic"/>
+        <field name="plan_description">
+            <![CDATA[
+            <ul>
+                <li>Access to your Odoo instance</li>
+                <li>Unlimited Support</li>
+                <li>Pay Monthly, stop when you want</li>
+            </ul>
+            ]]>
+        </field>
+        <field name="contract_type">subscription</field>
+        <field name="recurring_interval">1</field>
+        <field name="recurring_rule_type">monthly</field>
+        <field name="description">
+Payment
+All payments are due upon receipt. If a payment is not received or payment method is declined, the buyer forfeits the ownership of any items purchased. If no payment is received, no items will be shipped.
+
+Shipping Policies
+Shipping will be paid for by the buyer in the amount agreed upon by the seller at the time of purchase. If an item is lost during shipping, the total cost of item, including shipping, will be refunded to the buyer by the seller. Shipping costs may double if shipping internationally. If an item is damaged during shipping, seller will not be held responsible.
+
+Refund/Return Policy
+Items are entitled to be refunded or returned based on complaint. If an item is damaged during shipping, a replacement item will be sent free of charge. If an item is unsatisfactory, a written explanation is needed before the item may be considered for a refund. Buyer must take into account the description of the item before requesting a refund. If the item matches the description by the seller and the buyer is unsatisfied, seller is not responsible for refund. Exchanges are granted on a case-by-case basis.
+
+Cancellation
+An item may be cancelled up until payment has been processed. Once payment has been processed, the buyer is responsible for payment.
+
+Complaints
+Any complaints about items or sellers may be sent to our support team: support@wesellyourstuff.com or (888) 555-0198. There is no guarantee of a resolution. Each case will be looked at individually, and the seller will be in contact as well.
+        </field>
+    </record>
+
+    <record id="rec_inv_line_11" model="account.analytic.invoice.line">
+        <field name="name">Odoo SAAS
+Access to your Odoo Instance. Stored on our servers: high speed, high reliability and daily backups.</field>
+        <field name="analytic_account_id" ref="odoo_monthly"/>
+        <field name="product_id" ref="odoo_saas"/>
+        <field name="price_unit">20.0</field>
+        <field name="uom_id" ref="contract_uom_month"/>
+    </record>
+
+    <record id="opt_inv_line_11" model="account.analytic.invoice.line.option">
+        <field name="name">Customized Module
+Customize a module to better match your business process.</field>
+        <field name="analytic_account_id" ref="odoo_monthly"/>
+        <field name="product_id" ref="odoo_custom_module"/>
+        <field name="price_unit">40.0</field>
+        <field name="uom_id" ref="contract_uom_month"/>
+        <field name="portal_access">upgrade</field>
+    </record>
+
+    <record id="opt_inv_line_12" model="account.analytic.invoice.line.option">
+        <field name="name">Customized View
+Customize one or more views (in a single module) to better suit your needs.</field>
+        <field name="analytic_account_id" ref="odoo_monthly"/>
+        <field name="product_id" ref="odoo_custom_view"/>
+        <field name="price_unit">10.0</field>
+        <field name="uom_id" ref="contract_uom_month"/>
+        <field name="portal_access">upgrade</field>
+    </record>
+
+    <record id="opt_inv_line_13" model="account.analytic.invoice.line.option">
+        <field name="name">Custom Domain
+Access your Odoo Instance using your own domain.</field>
+        <field name="analytic_account_id" ref="odoo_monthly"/>
+        <field name="product_id" ref="odoo_custom_domain"/>
+        <field name="price_unit">0.0</field>
+        <field name="uom_id" ref="contract_uom_month"/>
+        <field name="portal_access">both</field>
+    </record>
+
+
+    <record id="odoo_yearly" model="account.analytic.account">
+        <field name="type">template</field>
+        <field name="name">Odoo Yearly</field>
+        <field name="parent_id" ref="odoo_analytic"/>
+        <field name="plan_description">
+            <![CDATA[
+            <ul>
+                <li>Access to your Odoo instance</li>
+                <li>Unlimited Support</li>
+                <li>Pay Yearly for the price of 10 months!</li>
+            </ul>
+            ]]>
+        </field>
+        <field name="contract_type">subscription</field>
+        <field name="recurring_interval">1</field>
+        <field name="recurring_rule_type">yearly</field>
+        <field name="description">
+Payment
+All payments are due upon receipt. If a payment is not received or payment method is declined, the buyer forfeits the ownership of any items purchased. If no payment is received, no items will be shipped.
+
+Shipping Policies
+Shipping will be paid for by the buyer in the amount agreed upon by the seller at the time of purchase. If an item is lost during shipping, the total cost of item, including shipping, will be refunded to the buyer by the seller. Shipping costs may double if shipping internationally. If an item is damaged during shipping, seller will not be held responsible.
+
+Refund/Return Policy
+Items are entitled to be refunded or returned based on complaint. If an item is damaged during shipping, a replacement item will be sent free of charge. If an item is unsatisfactory, a written explanation is needed before the item may be considered for a refund. Buyer must take into account the description of the item before requesting a refund. If the item matches the description by the seller and the buyer is unsatisfied, seller is not responsible for refund. Exchanges are granted on a case-by-case basis.
+
+Cancellation
+An item may be cancelled up until payment has been processed. Once payment has been processed, the buyer is responsible for payment.
+
+Complaints
+Any complaints about items or sellers may be sent to our support team: support@wesellyourstuff.com or (888) 555-0198. There is no guarantee of a resolution. Each case will be looked at individually, and the seller will be in contact as well.
+        </field>
+    </record>
+
+    <record id="rec_inv_line_1" model="account.analytic.invoice.line">
+        <field name="name">Odoo SAAS
+Access to your Odoo Instance. Stored on our servers: high speed, high reliability and daily backups.</field>
+        <field name="analytic_account_id" ref="odoo_yearly"/>
+        <field name="product_id" ref="odoo_saas"/>
+        <field name="price_unit">200.0</field>
+        <field name="uom_id" ref="contract_uom_year"/>
+    </record>
+
+    <record id="opt_inv_line_21" model="account.analytic.invoice.line.option">
+        <field name="name">Customized Module
+Customize a module to better match your business process.</field>
+        <field name="analytic_account_id" ref="odoo_yearly"/>
+        <field name="product_id" ref="odoo_custom_module"/>
+        <field name="price_unit">400.0</field>
+        <field name="uom_id" ref="contract_uom_year"/>
+        <field name="portal_access">upgrade</field>
+    </record>
+
+    <record id="opt_inv_line_22" model="account.analytic.invoice.line.option">
+        <field name="name">Customized View
+Customize one or more views (in a single module) to better suit your needs.</field>
+        <field name="analytic_account_id" ref="odoo_yearly"/>
+        <field name="product_id" ref="odoo_custom_view"/>
+        <field name="price_unit">100.0</field>
+        <field name="uom_id" ref="contract_uom_year"/>
+        <field name="portal_access">upgrade</field>
+    </record>
+
+    <record id="opt_inv_line_23" model="account.analytic.invoice.line.option">
+        <field name="name">Custom Domain
+Access your Odoo Instance using your own domain.</field>
+        <field name="analytic_account_id" ref="odoo_yearly"/>
+        <field name="product_id" ref="odoo_custom_domain"/>
+        <field name="price_unit">0.0</field>
+        <field name="uom_id" ref="contract_uom_year"/>
+        <field name="portal_access">both</field>
+    </record>
+
+    <!-- Demo Contract -->
+    <record id="contract_portal_21" model="account.analytic.account">
+        <field name="name">DPU/Odoo SAAS</field>
+        <field name="parent_id" ref="odoo_analytic"/>
+        <field name="partner_id" ref="portal.partner_demo_portal"/>
+        <field name="template_id" ref="odoo_monthly"/>
+        <field name="manager_id" ref="base.user_root"/>
+        <field name="message_follower_ids" eval="[(4, ref('portal.partner_demo_portal'))]"/>
+        <field name="type">contract</field>
+        <field name="date_start" eval="(DateTime.now() - timedelta(days=9))"/>
+        <field name="recurring_next_date" eval="(DateTime.now() + timedelta(days=21))"/>
+        <field name="description">
+Payment
+All payments are due upon receipt. If a payment is not received or payment method is declined, the buyer forfeits the ownership of any items purchased. If no payment is received, no items will be shipped.
+
+Shipping Policies
+Shipping will be paid for by the buyer in the amount agreed upon by the seller at the time of purchase. If an item is lost during shipping, the total cost of item, including shipping, will be refunded to the buyer by the seller. Shipping costs may double if shipping internationally. If an item is damaged during shipping, seller will not be held responsible.
+
+Refund/Return Policy
+Items are entitled to be refunded or returned based on complaint. If an item is damaged during shipping, a replacement item will be sent free of charge. If an item is unsatisfactory, a written explanation is needed before the item may be considered for a refund. Buyer must take into account the description of the item before requesting a refund. If the item matches the description by the seller and the buyer is unsatisfied, seller is not responsible for refund. Exchanges are granted on a case-by-case basis.
+
+Cancellation
+An item may be cancelled up until payment has been processed. Once payment has been processed, the buyer is responsible for payment.
+
+Complaints
+Any complaints about items or sellers may be sent to our support team: support@wesellyourstuff.com or (888) 555-0198. There is no guarantee of a resolution. Each case will be looked at individually, and the seller will be in contact as well.
+        </field>
+        <field name="contract_type">subscription</field>
+    </record>
+
+    <record id="rec_inv_line_31" model="account.analytic.invoice.line">
+        <field name="name">Odoo SAAS
+Access to your Odoo Instance. Stored on our servers: high speed, high reliability and daily backups.</field>
+        <field name="analytic_account_id" ref="contract_portal_21"/>
+        <field name="product_id" ref="odoo_saas"/>
+        <field name="price_unit">20.0</field>
+        <field name="uom_id" ref="contract_uom_month"/>
+    </record>
+
+    <record id="rec_inv_line_32" model="account.analytic.invoice.line">
+        <field name="name">Customized Module
+Customize a module to better match your business process.</field>
+        <field name="analytic_account_id" ref="contract_portal_21"/>
+        <field name="product_id" ref="odoo_custom_module"/>
+        <field name="price_unit">40.0</field>
+        <field name="uom_id" ref="contract_uom_month"/>
+    </record>
+</odoo>

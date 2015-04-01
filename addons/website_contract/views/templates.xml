@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Contract Manager">
+      <xpath expr="." position="inside">
+          <link rel='stylesheet' href='/website_contract/static/src/css/website_contract.less'/>
+          <script type="text/javascript" src="/website_contract/static/src/js/website_contract.js"></script>
+      </xpath>
+    </template>
+
+    <!-- Specific Contract Page -->
+
+    <template id="contract" name="Contract">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container mb64">
+                    <div class="row" t-if="user.partner_id == account.partner_id">
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb mt8 mb0">
+                                <li><a href="/account">My Account</a></li>
+                                <li>Contract <span t-esc="account.name"/></li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3 class="page-header">Contract <span t-field="account.name"/>
+                                <small class="pull-right">
+                                    <t t-if="account.state == 'open'">
+                                        <span class="label label-success"><i class="fa fa-fw fa-check"/> Running</span>
+                                    </t>
+                                    <t t-if="account.state == 'pending'">
+                                        <span class="label label-warning"><i class="fa fa-fw fa-refresh"/> To Renew</span>
+                                    </t>
+                                    <t t-if="account.state == 'close'">
+                                        <span class="label label-default"><i class="fa fa-fw fa-remove"/> Closed</span>
+                                    </t>
+                                </small>
+                                <a class="btn btn-info btn-sm css_editable_mode_hidden hidden-print" t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (account._name, account.id, action)" groups="base.group_website_publisher" t-ignore="true">View Contract</a>
+                            </h3>
+                            <div t-if="account.state=='pending'" class="alert alert-warning" role="alert">
+                                <p>Your contract is pending.
+                                    <span t-if="not active_plan.payment_mandatory and not account.manager_id">Contact us.</span>
+                                    <span t-if="not active_plan.payment_mandatory and account.manager_id"><a href="#wc-your-contact">Contact</a> your sales representative.</span>
+                                    <span t-if="active_plan.payment_mandatory">
+                                        <a href="#wc-auto-payment">Pay now</a>
+                                        <span t-if="account.manager_id"> or <a href="#wc-your-contact">contact</a> your sales representative</span>.</span>
+                                </p>
+                            </div>
+                            <div t-if="message" t-att-class="'alert ' + message_class" role="alert">
+                                <p t-esc="message"/>
+                            </div>
+                            <div t-field="account.partner_id" t-field-options='{
+                                "widget": "contact",
+                                "fields": [
+                                    "name",
+                                    "address",
+                                    "phone",
+                                    "email"]}'/>
+                            <div t-if="active_plan.payment_mandatory and allow_reopen and account.state!='open'">
+                                <a name="wc-auto-payment"/>
+                                <h3 class="page-header">Payment</h3>
+                                <p t-if="allow_reopen and account.state == 'close'">Your account is closed. If you wish to reopen it, you can pay your invoice for the current invoicing period.</p>
+                                <form method="post" class="mt16 clearfix" id="wc-payment-form" t-attf-action="/account/contract/payment/#{account.id}/#{account.uuid}">
+                                    <div class="form-group">
+                                        <select class="form-control" name="pay_meth">
+                                            <option value="-2">Current: <span t-esc="account.payment_method_id.name"/></option>
+                                            <option value="-1">New</option>
+                                            <optgroup label="All Payment Methods">
+                                                <t t-foreach="part_pms" t-as="pm">
+                                                    <option  t-att-value="pm.id" t-esc="pm.name"/>
+                                                </t>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <button class="mt8 btn btn-primary btn-sm pull-right">Pay Now</button>
+                                </form>
+                                <div id="new_payment_method" t-if="account.state == 'pending'" class="hidden">
+                                    <div t-if="error_message" class="alert alert-danger">
+                                      <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
+                                    </div>
+                                    <div t-if='len(acquirers)>1'>
+                                        <label class="control-label" for="pm_acquirer_id">Acquirer</label>
+                                        <select name="pm_acquirer_id" class="form-control">
+                                            <t t-foreach="acquirers" t-as="acquirer">
+                                                <option t-att-value="acquirer.id" t-esc="acquirer.name"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <t t-foreach="acquirers" t-as="acquirer">
+                                        <div t-raw="acquirer.form" t-att-data-acquirer-id="acquirer.id" t-attf-class="acquirer #{'hidden' if acquirer!=acquirers[0] else ''}"/>
+                                    </t>
+                                </div>
+                                
+                            </div>
+                            <div class="oe_structure"/>
+                            <table class="table mt32" id="wc-account-table">
+                                <thead>
+                                    <tr class="active"><th/><th/><th>Quantity</th><th>Unit Price</th><th>Subtotal</th></tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <td/><td/><td/>
+                                        <td>
+                                            <p class="mb0">Subtotal:</p>
+                                            <p class="mb0">Taxes:</p>
+                                            <p class="mb0"><strong>Total:</strong></p>
+                                        </td>
+                                        <td>
+                                            <p class="mb0" t-field="account.recurring_total" t-field-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/>
+                                            <p class="mb0" t-field="account.recurring_amount_tax" t-field-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/>
+                                            <strong><p class="mb0" t-field="account.recurring_amount_total" t-field-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></strong>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <t t-if="not account.template_id">
+                                        <tr t-foreach="account.recurring_invoice_line_ids" t-as="line">
+                                            <td class="line-description"><span t-field="line.name"/></td>
+                                            <td/>
+                                            <td><t t-esc="line.quantity"/> <t t-esc="line.uom_id.name"/></td>
+                                            <td t-if="not line.discount"><span t-esc="line.price_unit" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></td>
+                                            <td t-if="line.discount">
+                                                <s t-esc="line.price_unit" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/><br/>
+                                                <div><strong t-esc="line.price_unit*(100.0-line.discount)/100.0" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></div>
+                                            </td>                                            <td><span t-esc="line.price_subtotal" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></td>
+                                            <td/>
+                                        </tr>
+                                    </t>
+
+                                    <tr t-foreach="account.recurring_mandatory_lines" t-as="line">
+                                        <td class="line-description"><span t-field="line.name"/></td>
+                                        <td/>
+                                        <td><t t-esc="line.quantity"/> <t t-esc="line.uom_id.name"/></td>
+                                        <td t-if="not line.discount"><span t-esc="line.price_unit" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></td>
+                                        <td t-if="line.discount">
+                                            <s t-esc="line.price_unit" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/><br/>
+                                            <div><strong t-esc="line.price_unit*(100.0-line.discount)/100.0" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></div>
+                                        </td>
+                                        <td><span t-esc="line.price_subtotal" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></td>
+                                    </tr>
+                                    <tr t-foreach="account.recurring_option_lines" t-as="line">
+                                        <td class="line-description"><span t-field="line.name"/></td>
+                                        <td>
+                                            <a data-toggle="modal"
+                                               t-attf-data-target="#wc-modal-remove-#{line.get_template_option_line().id}"
+                                               href=""
+                                               t-if="(line.get_template_option_line().portal_access in ['both'] or is_salesman) and account.state!='close'">
+                                                Remove
+                                            </a>
+                                            <t t-call="website_contract.modal_remove"/>
+                                        </td>
+                                        <td><t t-esc="line.quantity"/> <t t-esc="line.uom_id.name"/></td>
+                                        <td t-if="not line.discount"><span t-esc="line.price_unit" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></td>
+                                        <td t-if="line.discount">
+                                            <s t-esc="line.price_unit" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/><br/>
+                                            <div><strong t-esc="line.price_unit*(100.0-line.discount)/100.0" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></div>
+                                        </td>                                        <td><span t-esc="line.price_subtotal" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></td>
+                                    </tr>
+                                    <tr t-foreach="account.recurring_custom_lines" t-as="line">
+                                        <td class="line-description"><span t-field="line.name"/></td>
+                                        <td/>
+                                        <td><t t-esc="line.quantity"/> <t t-esc="line.uom_id.name"/></td>
+                                        <td t-if="not line.discount"><span t-esc="line.price_unit" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></td>
+                                        <td t-if="line.discount">
+                                            <s t-esc="line.price_unit" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/><br/>
+                                            <div><strong t-esc="line.price_unit*(100.0-line.discount)/100.0" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></div>
+                                        </td>                                        <td><span t-esc="line.price_subtotal" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <t t-if="account.recurring_inactive_lines">
+                                <h3 class="page-header">Extra Options</h3>
+                                <div class="oe_structure"/>
+                                <table class="table table-default table-condensed table-hover" id="wc-option-table">
+                                    <thead>
+                                        <tr class='active'><th>Name</th><th/><th>Price</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="inactive_options" t-as="line">
+                                            <t t-if="line.portal_access != 'invisible'">
+                                                <td><span t-field="line.name"/></td>
+                                                <td>
+                                                    <a data-toggle="modal"
+                                                       t-attf-data-target="#wc-modal-add-#{line.id}"
+                                                       href=""
+                                                       t-if="line.portal_access in ['both', 'upgrade'] and account.state!='close'">
+                                                        Add
+                                                    </a>
+                                                    <t t-call="website_contract.modal_add"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="pricelist.price_get(line.product_id.id,1)[pricelist.id]" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/> / <span t-esc="line.uom_id.name"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-if="account.description">
+                                <div class="oe_structure"/>
+                                <h3 class="page-header">Terms and conditions</h3>
+                                <div t-field="account.description"/>
+                            </t>
+                        </div>
+                        <div class="col-md-3 col-md-offset-1">
+                            <div class="oe_structure"/>
+                            <div>
+                                <h3 class="page-header">Your Plan</h3>
+                                <div>Current plan: <span t-field="account.template_id.name"/></div>
+                                <div>Start date: <span t-field="account.date_start"/></div>
+                                <div t-if="account.date">Valid until: <span t-field="account.date"/></div>
+                                <div>Billing:
+                                    Every
+                                    <t t-esc="account.recurring_interval"/>
+                                    <t t-if="account.recurring_rule_type=='daily'">
+                                        day(s)
+                                    </t>
+                                    <t t-if="account.recurring_rule_type=='weekly'">
+                                        week(s)
+                                    </t>
+                                    <t t-if="account.recurring_rule_type=='monthly'">
+                                        month(s)
+                                    </t>
+                                    <t t-if="account.recurring_rule_type=='yearly'">
+                                        years(s)
+                                    </t>
+                                </div>
+                                <div>Next invoice: <span t-field="account.recurring_next_date"/></div>
+                                <a t-if="account.state!='close' and account.template_id and display_change_plan" class="mt8 btn btn-primary btn-sm" t-att-href="'/account/contract/'+str(account.id)+'/change'+'?uuid='+str(account.uuid)">Change plan</a>
+                            </div>
+                            <div t-if="account.manager_id">
+                                <a name="wc-your-contact"/>
+                                <h3 class="page-header">Sales Representative</h3>
+                                <div t-field="account.manager_id" t-field-options='{
+                                    "widget": "contact",
+                                    "fields": [
+                                        "name",
+                                        "phone",
+                                        "email"]}'/>
+                            </div>
+                            <div t-if="display_close" >
+                                <h3 class="page-header">Close your account</h3>
+                                <p>If you close your account, it will remain active until your next invoice date (<span id="wc-next-invoice" t-field="account.recurring_next_date"/>). After this date, you can reopen your account up to <span t-esc="account.recurring_interval"/>
+                                            <t t-if="account.recurring_rule_type=='daily'">
+                                                day(s)
+                                            </t>
+                                            <t t-if="account.recurring_rule_type=='weekly'">
+                                                week(s)
+                                            </t>
+                                            <t t-if="account.recurring_rule_type=='monthly'">
+                                                month(s)
+                                            </t>
+                                            <t t-if="account.recurring_rule_type=='yearly'">
+                                                years(s)
+                                            </t>
+                                by paying your invoice.</p>
+                                <a class="mt8 btn btn-default btn-sm" href="" id="wc-close-account" data-toggle="modal" data-target="#wc-modal-close">Close your account</a>
+                            </div>
+                            <div class="oe_structure"/>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                    
+                </div>
+            </div>
+
+            <div class="modal fade" id="wc-modal-close" t-if="display_close">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Close your contract</h4>
+                        </div>
+                        <form method="post" t-attf-action="/account/contract/#{account.id}/close/?uuid=#{account.uuid}">
+                            <div class="modal-body">
+                                <p>If you confirm, you contract will be closed right away. Your current invoicing period is valid until <span t-field="account.recurring_next_date"/>.</p>
+                                <p>We always listen to our customer. Could you specify the reason for cancelling your subscription?</p>
+                                <div class="form-group">
+                                    <select class="form-control" name="close_reason_id">
+                                        <t t-foreach="close_reasons" t-as="close_reason">
+                                            <option  t-att-value="close_reason.id" t-esc="close_reason.name"/>
+                                        </t>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" name="closing_text" style="width: 100%;" rows="4"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary contract-submit">Confirm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="modal_remove">
+        <div class="modal fade" t-attf-id="wc-modal-remove-#{line.get_template_option_line().id}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" t-attf-action="/account/contract/#{account.id}/remove_option/?uuid=#{account.uuid}">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Confirm Option Removal</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>The following option will be removed from your next invoice:</p>
+                            <p class="line-description" t-field="line.name"/>
+                            <input name="remove_option_id" type="hidden" t-att-value="line.get_template_option_line().id" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-primary contract-submit">Confirm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="modal_add">
+        <div class="modal fade" t-attf-id="wc-modal-add-#{line.id}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Confirm Option</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>The following option will be added to your next invoice:</p>
+                        <p class="line-description" t-field="line.name"/>
+                        <p t-if="(line.price_subtotal)&gt;0.0">You will be invoiced for the remaining of this invoicing period (from today to <span t-field="account.recurring_next_date" />).</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" t-attf-action="/account/contract/#{account.id}/pay_option" t-if="(line.price_subtotal)&gt;0.0">
+                            <input name="new_option_id" type="hidden" t-att-value="line.id" />
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-primary contract-submit">Confirm</button>
+                        </form>
+                        <form method="post" t-attf-action="/account/contract/#{account.id}/add_option/?uuid=#{account.uuid}" t-if="(line.price_subtotal)==0.0">
+                            <input name="new_option_id" type="hidden" t-att-value="line.id" />
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-primary contract-submit">Confirm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!--  Modification Pages -->
+    <template id="change_template" name="Change your plan">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb mt8">
+                                <li t-if="user.partner_id == account.partner_id"><a href="/account">My Account</a></li>
+                                <li><a t-att-href="'/account/contract/'+str(account.id)+'/'+str(account.uuid)">Contract <span t-esc="account.name"/></a></li>
+                                <li>Change Your Plan</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <h1>Change Your Plan</h1>
+                    <p>Your options will be carried to the new plan if they are available.</p>
+                    <div class="row">
+                        <t t-set="template" t-value="active_template"/>
+                        <t t-call="website_contract.template_panel"/>
+
+                        <t t-foreach="inactive_templates" t-as="template">
+                            <t t-if="template.user_selectable and not template.id==account.template_id.id">
+                                <t t-call="website_contract.template_panel"/>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="preview_template" name="Preview Template">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container mb32 mt32">
+                    <div class="row">
+                        <div groups="base.group_website_publisher" class="pull-right css_editable_mode_hidden hidden-print">
+                              <a class="btn btn-info" t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, action)">View Template</a>
+                        </div>
+                        <div class="col-md-4 col-md-offset-4">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h4 class="pull-left"><span t-field="template.name" /> <span class="label label-default">Current Plan</span></h4>
+                                    <div class="clearfix"/>
+                                </div>
+                                <div class="panel-body">
+                                    <div t-field="template.plan_description" />
+                                    <hr/>
+                                    <p>
+                                        Billing Period: <span t-esc="template.recurring_interval"/>
+                                                    <t t-if="template.recurring_rule_type=='daily'">
+                                                        day(s)
+                                                    </t>
+                                                    <t t-if="template.recurring_rule_type=='weekly'">
+                                                        week(s)
+                                                    </t>
+                                                    <t t-if="template.recurring_rule_type=='monthly'">
+                                                        month(s)
+                                                    </t>
+                                                    <t t-if="template.recurring_rule_type=='yearly'">
+                                                        year(s)
+                                                    </t>
+                                    </p>
+                                </div>
+                                <table class="table wc-template-panel-table">
+                                    <tbody>
+                                        <tr>
+                                            <td><h4>Basic Plan</h4></td>
+                                            <td/>
+                                        </tr>
+                                        <tr t-foreach="template.recurring_invoice_line_ids" t-as="invoice_line" class="line-description">
+                                            <td class="line-description"><span t-field="invoice_line.name"/></td>
+                                            <td><span t-esc="invoice_line.price_unit" t-esc-options='{"widget": "monetary", "display_currency": "template.pricelist_id.currency_id"}'/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h4>Options</h4></td>
+                                            <td/>
+                                        </tr>
+                                        <tr t-foreach="template.option_invoice_line_ids" t-as="invoice_line" class="line-description">
+                                            <t t-if="invoice_line.portal_access != 'invisible'">
+                                                <td class="line-description"><span t-esc="invoice_line.name"/></td>
+                                                <td><span t-esc="invoice_line.price_unit" t-esc-options='{"widget": "monetary", "display_currency": "template.pricelist_id.currency_id"}'/></td>
+                                            </t>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="panel-footer clearfix">
+                                    <button type="button" class="btn btn-standard pull-right" disabled="True">Current Plan</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="template_panel">
+        <div class="col-md-4">
+            <div t-att-class="'panel panel-primary' if (account.template_id.id == template.id) else 'panel panel-default'">
+                <div class="panel-heading">
+                    <h4 class="pull-left"><span t-esc="template.name" /> <span t-if="account.template_id.id == template.id" class="label label-default">Current Plan</span></h4>
+                    <button type="button"
+                            class="btn btn-primary pull-right"
+                            data-toggle="modal"
+                            t-if="template.user_selectable and account.template_id.id != template.id"
+                            t-att-data-target="'#contract_confirm_'+str(template.id)">
+                        <i class="fa fa-fw fa-arrow-circle-right"></i> Select
+                    </button>
+                    <div class="clearfix"/>
+                </div>
+                <div class="panel-body">
+                    <div t-raw="template.plan_description" />
+                    <hr/>
+                    <p>
+                        Billing Period: <span t-esc="template.recurring_interval"/>
+                                    <t t-if="template.recurring_rule_type=='daily'">
+                                        day(s)
+                                    </t>
+                                    <t t-if="template.recurring_rule_type=='weekly'">
+                                        week(s)
+                                    </t>
+                                    <t t-if="template.recurring_rule_type=='monthly'">
+                                        month(s)
+                                    </t>
+                                    <t t-if="template.recurring_rule_type=='yearly'">
+                                        year(s)
+                                    </t>
+                    </p>
+                </div>
+                    <table class="table wc-template-panel-table">
+                        <tbody>
+                            <tr>
+                                <td><h4>Basic Plan</h4></td>
+                                <td/>
+                            </tr>
+                            <tr t-foreach="template.recurring_invoice_line_ids" t-as="invoice_line" class="line-description">
+                                <td class="line-description"><span t-esc="invoice_line.name"/></td>
+                                <td><span t-esc="pricelist.with_context({'uom': invoice_line.uom_id.id}).price_get(invoice_line.product_id.id,1)[pricelist.id]" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></td>
+                            </tr>
+                            <tr>
+                                <td><h4>Options</h4></td>
+                                <td/>
+                            </tr>
+                            <tr t-foreach="template.option_invoice_line_ids" t-as="invoice_line" class="line-description">
+                                <t t-if="invoice_line.portal_access != 'invisible'">
+                                    <td class="line-description"><span t-esc="invoice_line.name"/></td>
+                                    <td><span t-esc="pricelist.with_context({'uom': invoice_line.uom_id.id}).price_get(invoice_line.product_id.id,1)[pricelist.id]" t-esc-options='{"widget": "monetary", "display_currency": "pricelist.currency_id"}'/></td>
+                                </t>
+                            </tr>
+                        </tbody>
+                    </table>
+                <div class="panel-footer clearfix">
+                    <button type="button" t-if="account.template_id.id == template.id" class="btn btn-standard pull-right" disabled="True">Current Plan</button>
+                    <form method="post" t-if="template.user_selectable and account.template_id.id != template.id">
+                        <input class="hidden" name="new_template_id" t-att-value="template.id"/>
+                        <input class="hidden" name="uuid" t-att-value="account.uuid"/>
+                        <button type="button" class="btn btn-primary pull-right" data-toggle="modal" t-att-data-target="'#contract_confirm_'+str(template.id)"><i class="fa fa-fw fa-arrow-circle-right"></i> Select</button>
+                        <div class="modal fade" t-att-id="'contract_confirm_'+str(template.id)">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Change Contract</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Please ensure that you have selected the correct plan:</p>
+                                        <ul>
+                                            <li>Plan: <span t-esc="template.name"/></li>
+                                            <li>
+                                                Billing Period: <span t-esc="template.recurring_interval"/>
+                                                <t t-if="template.recurring_rule_type=='daily'">
+                                                    day(s)
+                                                </t>
+                                                <t t-if="template.recurring_rule_type=='weekly'">
+                                                    week(s)
+                                                </t>
+                                                <t t-if="template.recurring_rule_type=='monthly'">
+                                                    month(s)
+                                                </t>
+                                                <t t-if="template.recurring_rule_type=='yearly'">
+                                                    year(s)
+                                                </t>
+                                            </li>
+                                        </ul>
+                                        <p>These modifications will be active immedialy, however your next invoice date will not be changed. Your next invoice will arrive on: <span t-field="account.recurring_next_date"/></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <a class="btn btn-primary contract-submit">Confirm</a>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Modify website_portal templates -->
+    <template id="account" name="Account" inherit_id="website_portal.account">
+        <xpath expr="//t[@t-call='website_portal.quotations']" position="before">
+            <t t-call="website_contract.contracts" />
+        </xpath>
+    </template>
+
+    <template id="contracts" name="Contracts">
+        <h3 class="page-header">Your Subscriptions</h3>
+
+        <t t-if="not accounts">
+            <p>You don't have any subscriptions yet.</p>
+        </t>
+        <t t-if="accounts">
+            <table class="table table-hover status_table">
+                <thead>
+                    <tr class="active">
+                        <th>Name</th>
+                        <th></th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+                <t t-foreach="accounts" t-as="account">
+                    <tr>
+                        <td><a t-att-href="'/account/contract/'+str(account.id)+'/'+str(account.uuid)"><t t-esc="account.name"/></a></td>
+                        <td>
+                            <t t-if="account.state == 'open'">
+                                <span class="label label-success"><i class="fa fa-fw fa-check"/> Running</span>
+                            </t>
+                            <t t-if="account.state == 'pending'">
+                                <span class="label label-warning"><i class="fa fa-fw fa-refresh"/> To Renew</span>
+                            </t>
+                            <t t-if="account.state == 'close'">
+                                <span class="label label-default"><i class="fa fa-fw fa-remove"/> Closed</span>
+                            </t>
+                        </td>
+                        <td><span t-esc="account.recurring_amount_total" t-esc-options='{"widget": "monetary", "display_currency": "account.pricelist_id.currency_id"}'/></td>
+                    </tr>
+                </t>
+            </table>
+        </t>
+    </template>
+
+    <!-- Modify website_sale templates -->
+    <template id="cart" name="Shopping Cart" inherit_id="website_sale.cart">
+        <xpath expr="//td[@name='price']" position="replace">
+            <!-- Normal price display (discount comes from using different pricelists-->
+            <td class="text-center" name="price" t-if="not line.discount">
+                <t t-if="(compute_currency(line.product_id.lst_price) - website_sale_order.pricelist_id.price_get(line.product_id.id,1)[website_sale_order.pricelist_id.id]) &gt; 1">
+                    <del class="text-danger" style="white-space: nowrap;"
+                        t-esc="line.product_id.lst_price" t-esc-options='{
+                        "widget": "monetary",
+                        "from_currency": "line.order_id.pricelist_id.currency_id",
+                        "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                        }'/>&amp;nbsp;
+                </t>
+                <span t-esc="website_sale_order.pricelist_id.price_get(line.product_id.id,1)[website_sale_order.pricelist_id.id]" style="white-space: nowrap;" t-esc-options='{
+                    "widget": "monetary",
+                    "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                    }'/>
+            </td>
+            <!-- Price display with discount directly in the sale_order_line -->
+            <td class="text-center" name="price" t-if="line.discount">
+                <del class="text-danger" style="white-space: nowrap;"
+                    t-esc="line.product_id.lst_price" t-esc-options='{
+                    "widget": "monetary",
+                    "from_currency": "line.order_id.pricelist_id.currency_id",
+                    "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                    }'/>&amp;nbsp;
+                <span t-esc="line.price_subtotal" style="white-space: nowrap;" t-esc-options='{
+                    "widget": "monetary",
+                    "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                    }'/>
+            </td>
+        </xpath>
+    </template>
+
+</odoo>

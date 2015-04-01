@@ -1,0 +1,52 @@
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+/* account pricing table */
+#wc-account-table td:nth-last-child(1),
+#wc-account-table th:nth-last-child(1),
+#wc-account-table td:nth-last-child(2),
+#wc-account-table th:nth-last-child(2),
+#wc-account-table td:nth-last-child(3),
+#wc-account-table th:nth-last-child(3), {
+    text-align:right;
+    min-width: 9em;
+    }
+    
+
+#wc-account-table a {
+    text-decoration: none;
+}
+
+/* option pricing table */
+
+#wc-option-table {
+    th:nth-last-child(1),
+    td:nth-last-child(1) {
+       text-align:right;
+    }
+
+    a {
+        text-decoration: none;
+    }
+    
+}
+
+.wc-template-panel-table td:last-child {
+    width: 30%;
+}
+
+
+/* line description */
+.line-description::first-line {
+    font-weight: bold;
+}
