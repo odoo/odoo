@@ -119,6 +119,14 @@ class stock_move(osv.osv):
             res['price_unit'] = purchase_line.price_unit
         return res
 
+    def _get_moves_taxes(self, cr, uid, moves, context=None):
+        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, context=context)
+        for move in moves:
+            if move.purchase_line_id:
+                is_extra_move[move.id] = False
+                extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.purchase_line_id.taxes_id])]
+        return (is_extra_move, extra_move_tax)
+
 
     def attribute_price(self, cr, uid, move, context=None):
         """

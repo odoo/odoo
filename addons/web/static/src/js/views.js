@@ -1658,7 +1658,7 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
         cr = human_readable ? '\n' : '';
 
     if (typeof(node) === 'string') {
-        return sindent + node;
+        return sindent + node.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw new Error(
             _.str.sprintf(_t("Node [%s] is not a JSONified XML node"),
