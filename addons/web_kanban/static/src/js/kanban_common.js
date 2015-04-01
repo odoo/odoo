@@ -806,11 +806,20 @@ var KanbanGroup = Widget.extend({
         var id = record, self = this;
         self.view.remove_no_result();
         self.trigger("add_record");
+        self.update_length(1);
         this.dataset.read_ids([id], this.view.fields_keys)
             .done(function (records) {
                 self.view.dataset.ids.push(id);
                 self.do_add_records(records, true);
             });
+    },
+    update_length: function(sign) {
+        if (this.group.attributes) {
+            this.group.attributes.length += 1*sign;
+        } else {
+            this.group.length += 1*sign;
+        }
+        this.$el.find(".oe_kanban_group_length").text(this.group.get('length'));
     },
     highlight: function(show){
         if(show){
