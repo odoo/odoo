@@ -68,12 +68,17 @@ class utm_mixin(osv.AbstractModel):
     }
 
     def tracking_fields(self):
-        return [('utm_campaign', 'campaign_id'), ('utm_source', 'source_id'), ('utm_medium', 'medium_id')]
+        return [
+            # ("URL_PARAMETER", "FIELD_NAME_MIXIN", "NAME_IN_COOKIES")
+            ('utm_campaign', 'campaign_id', 'odoo_utm_campaign'),
+            ('utm_source', 'source_id', 'odoo_utm_source'),
+            ('utm_medium', 'medium_id', 'odoo_utm_medium')
+        ]
 
     def tracking_get_values(self, cr, uid, vals, context=None):
-        for key, fname in self.tracking_fields():
+        for key, fname, cook in self.tracking_fields():
             field = self._fields[fname]
-            value = vals.get(fname) or (request and request.httprequest.cookies.get(key))  # params.get should be always in session by the dispatch from ir_http
+            value = vals.get(fname) or (request and request.httprequest.cookies.get(cook))  # params.get should be always in session by the dispatch from ir_http
             if field.type == 'many2one' and isinstance(value, basestring):
                 # if we receive a string for a many2one, we search/create the id
                 if value:

@@ -95,7 +95,7 @@ class website_links(models.Model):
         parsed = urlparse(self.url)
 
         utms = {}
-        for key, field in self.env['utm.mixin'].tracking_fields():
+        for key, field, cook in self.env['utm.mixin'].tracking_fields():
             attr = getattr(self, field).name
             if attr:
                 utms[key] = attr
@@ -173,7 +173,7 @@ class website_links(models.Model):
             create_vals['title'] = self._get_title_from_url(create_vals['url'])
 
         # Prevent the UTMs to be set by the values of UTM cookies
-        for (key, fname) in self.env['utm.mixin'].tracking_fields():
+        for (key, fname, cook) in self.env['utm.mixin'].tracking_fields():
             if fname not in create_vals:
                 create_vals[fname] = False
 
