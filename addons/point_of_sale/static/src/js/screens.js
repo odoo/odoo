@@ -1322,7 +1322,9 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
             this.refresh();
 
-            if (!this.pos.get_order()._printed && this.pos.config.iface_print_auto) {
+            if (!this.pos.get_order()._printed &&
+                !this.pos.config.iface_print_via_proxy &&
+                this.pos.config.iface_print_auto) {
                 this.print();
             }
 
@@ -1793,10 +1795,17 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                     order.finalize();
                 });
             } else {
-                this.pos.push_order(order) 
+                this.pos.push_order(order);
+                var cO = this.pos.get('selectedOrder');
+                var isChange = cO.get_total_paid() > cO.get_total_with_tax();
                 if (this.pos.config.iface_print_via_proxy) {
                     this.print_escpos_receipt();
-                    order.finalize();    //finish order and go back to scan screen
+                    if (isChange) {
+                        this.gui.show_screen(this.next_screen);
+                    }
+                    else {
+                        order.finalize(); //finish order and go back to scan screen
+                    }
                 } else {
                     this.gui.show_screen(this.next_screen);
                 }
