@@ -97,6 +97,7 @@ def exp_duplicate_database(db_original_name, db_name):
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         cr.autocommit(True)     # avoid transaction block
+        _drop_conn(cr, db_original_name)
         cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
 
     from_fs = openerp.tools.config.filestore(db_original_name)

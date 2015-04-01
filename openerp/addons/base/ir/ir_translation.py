@@ -204,7 +204,7 @@ class ir_translation(osv.osv):
             #Also not removing lang from context trigger an error when lang is different
             context_wo_lang = context.copy()
             context_wo_lang.pop('lang', None)
-            model.write(cr, uid, record.res_id, {field: value}, context=context_wo_lang)
+            model.write(cr, uid, [record.res_id], {field: value}, context=context_wo_lang)
         return self.write(cr, uid, id, {'src': value}, context=context)
 
     _columns = {
@@ -283,7 +283,7 @@ class ir_translation(osv.osv):
 
     def _set_ids(self, cr, uid, name, tt, lang, ids, value, src=None):
         self._get_ids.clear_cache(self)
-        self._get_source.clear_cache(self)
+        self.__get_source.clear_cache(self)
 
         cr.execute('delete from ir_translation '
                 'where lang=%s '
@@ -314,10 +314,6 @@ class ir_translation(osv.osv):
             source = tools.ustr(source)
             params = (lang or '', types, source, source)
             if res_id:
-                if isinstance(res_id, (int, long)):
-                    res_id = (res_id,)
-                else:
-                    res_id = tuple(res_id)
                 query += " AND res_id in %s"
                 params += (res_id,)
             if name:
@@ -335,6 +331,16 @@ class ir_translation(osv.osv):
         return (query, params)
 
     @tools.ormcache(skiparg=3)
+    def __get_source(self, cr, uid, name, types, lang, source, res_id):
+        # res_id is a tuple or None, otherwise ormcache cannot cache it!
+        query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)
+        cr.execute(query, params)
+        res = cr.fetchone()
+        trad = res and res[0] or u''
+        if source and not trad:
+            return tools.ustr(source)
+        return trad
+
     def _get_source(self, cr, uid, name, types, lang, source=None, res_id=None):
         """
         Returns the translation for the given combination of name, type, language
@@ -356,21 +362,18 @@ class ir_translation(osv.osv):
             return tools.ustr(source or '')
         if isinstance(types, basestring):
             types = (types,)
-        
-        query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)
-        
-        cr.execute(query, params)
-        res = cr.fetchone()
-        trad = res and res[0] or u''
-        if source and not trad:
-            return tools.ustr(source)
-        return trad
+        if res_id:
+            if isinstance(res_id, (int, long)):
+                res_id = (res_id,)
+            else:
+                res_id = tuple(res_id)
+        return self.__get_source(cr, uid, name, types, lang, source, res_id)
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
         ids = super(ir_translation, self).create(cr, uid, vals, context=context)
-        self._get_source.clear_cache(self)
+        self.__get_source.clear_cache(self)
         self._get_ids.clear_cache(self)
         self.pool['ir.ui.view'].clear_cache()
         return ids
@@ -385,7 +388,7 @@ class ir_translation(osv.osv):
         if vals.get('value'):
             vals.update({'state':'translated'})
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
-        self._get_source.clear_cache(self)
+        self.__get_source.clear_cache(self)
         self._get_ids.clear_cache(self)
         self.pool['ir.ui.view'].clear_cache()
         return result
@@ -396,7 +399,7 @@ class ir_translation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        self._get_source.clear_cache(self)
+        self.__get_source.clear_cache(self)
         self._get_ids.clear_cache(self)
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result

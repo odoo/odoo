@@ -130,22 +130,29 @@ class mail_thread(osv.AbstractModel):
             if alias_ids and len(alias_ids) == 1:
                 alias = alias_obj.browse(cr, uid, alias_ids[0], context=context)
 
-        if alias:
-            alias_email = alias.name_get()[0][1]
-            return _("""<p class='oe_view_nocontent_create'>
-                            Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>
-                        </p>
-                        %(static_help)s"""
-                    ) % {
-                        'document': document_name,
-                        'email': alias_email,
-                        'static_help': help or ''
-                    }
+        add_arrow = not help or help.find("oe_view_nocontent_create") == -1
 
-        if document_name != 'document' and help and help.find("oe_view_nocontent_create") == -1:
-            return _("<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s") % {
-                        'document': document_name,
-                        'static_help': help or '',
+        if alias:
+            email_link = "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': alias.name_get()[0][1]}
+            if add_arrow:
+                return _("""<p class='oe_view_nocontent_create'>
+                                Click here to add new %(document)s or send an email to: %(email)s.
+                            </p>
+                            %(static_help)s"""
+                        ) % {
+                            'document': document_name, 'email': email_link, 'static_help': help or ''
+                        }
+
+            return _("""%(static_help)s
+                        <p>
+                            You could also add a new %(document)s by sending an email to: %(email)s.
+                        </p>""") % {
+                            'document': document_name, 'email': email_link, 'static_help': help or ''
+                        }
+
+        if add_arrow:
+             return _("<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s") % {
+                         'document': document_name, 'static_help': help or ''
                     }
 
         return help
@@ -387,7 +394,7 @@ class mail_thread(osv.AbstractModel):
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
         for key, val in context.iteritems():
-            if key.startswith('default_'):
+            if key.startswith('default_') and key[8:] not in create_values:
                 create_values[key[8:]] = val
         self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
 
