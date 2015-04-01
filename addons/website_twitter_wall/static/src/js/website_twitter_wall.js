@@ -14,7 +14,9 @@ website.if_dom_contains('.odoo-tw-walls', function() {
 
     website.if_dom_contains('.odoo-tw-alert', function() {
         setInterval(function() {
-            ajax.jsonRpc("/twitter_wall/get_stream_state/" + $(".odoo-tw-walls").attr("wall_id"), 'call').then(function(res) {
+            ajax.jsonRpc("/twitter_wall/get_stream_state", 'call', {
+                'domain': [["id", '=', parseInt($(".odoo-tw-walls").attr("wall_id"))], ["state", '!=', 'archive']],
+            }).then(function(res) {
                 if(res == 'stop')
                     $(".odoo-tw-alert").show();
                 else

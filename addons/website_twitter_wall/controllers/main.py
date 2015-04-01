@@ -111,11 +111,10 @@ class WebsiteTwitterWall(http.Controller):
         """ Get tweets """
         return request.env['twitter.tweet'].search_read(domain, fields, limit=limit)
 
-    @http.route(['/twitter_wall/get_stream_state/<model("twitter.agent"):wall>'], type='json', auth='public', website=True)
-    def twitter_wall_get_stream_state(self, wall):
+    @http.route(['/twitter_wall/get_stream_state'], type='json', auth='public', website=True)
+    def twitter_wall_get_stream_state(self, domain):
         """ Get stream state """
-        if wall.state == 'archive':
-            return 'start'
-        if wall.stream_id.state == 'stop':
-            wall.stream_id.restart()
-        return wall.stream_id.state
+        Wall = request.env['twitter.agent'].search(domain, limit=1)
+        if Wall.stream_id.state == 'stop':
+            Wall.stream_id.restart()
+        return Wall.stream_id.state

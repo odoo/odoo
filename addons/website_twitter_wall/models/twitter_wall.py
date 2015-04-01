@@ -65,7 +65,6 @@ class TwitterStream(models.Model, StreamListener):
             with registry(self.env.cr.dbname).cursor() as new_cr:
                 self.env = api.Environment(new_cr, self.env.uid, self.env.context)
                 self.state = 'start'
-        print ">>>>>>>>>CONNECT>>>>>>"
         pass
 
     def on_data(self, tweet):
