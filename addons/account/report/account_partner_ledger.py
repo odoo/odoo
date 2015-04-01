@@ -24,7 +24,7 @@ from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.report import report_sxw
 from common_report_header import common_report_header
-
+from openerp import SUPERUSER_ID
 
 class third_party_ledger(report_sxw.rml_parse, common_report_header):
 
@@ -101,6 +101,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         if (data['model'] == 'res.partner') and ids:
             PARTNER_REQUEST =  "AND l.partner_id IN %s"
             params += [tuple(ids)]
+        reconcile = "" if self.reconcil else "AND l.reconcile_id IS NULL "
         self.cr.execute(
                 "SELECT DISTINCT l.partner_id " \
                 "FROM account_move_line AS l, account_account AS account, " \
@@ -109,12 +110,12 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                     "AND l.account_id = account.id " \
                     "AND am.id = l.move_id " \
                     "AND am.state IN %s"
-#                    "AND " + self.query +" " \
+                    "AND " + self.query +" " \
                     "AND l.account_id IN %s " \
                     " " + PARTNER_REQUEST + " " \
-                    "AND account.active ", params)
+                    "AND account.active " + reconcile + " ", params)
         self.partner_ids = [res['partner_id'] for res in self.cr.dictfetchall()]
-        objects = obj_partner.browse(self.cr, self.uid, self.partner_ids)
+        objects = obj_partner.browse(self.cr, SUPERUSER_ID, self.partner_ids)
         objects = sorted(objects, key=lambda x: (x.ref, x.name))
         return super(third_party_ledger, self).set_context(objects, data, self.partner_ids, report_type)
 

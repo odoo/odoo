@@ -393,7 +393,7 @@ class mail_thread(osv.AbstractModel):
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
         for key, val in context.iteritems():
-            if key.startswith('default_'):
+            if key.startswith('default_') and key[8:] not in create_values:
                 create_values[key[8:]] = val
         self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
 
