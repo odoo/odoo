@@ -242,6 +242,18 @@
                 </search>
             </field>
         </record>
+        <record id="view_account_analytic_line_pivot" model="ir.ui.view">
+            <field name="name">account.analytic.line.pivot</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Analytic Entries" >
+                    <field name="account_id" type="row"/>
+                    <field name="amount" type="measure"/>
+                    <field name="unit_amount" type="measure"/>
+                </pivot>
+            </field>
+         </record>
+
         <record id="action_account_analytic_line_form" model="ir.actions.act_window">
             <field name="name">Analytic Entries</field>
             <field name="type">ir.actions.act_window</field>
@@ -365,7 +377,7 @@
             <field name="name">Analytic Journal Items</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,pivot</field>
         </record>
 
      </data>

@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
             <form string="Create Invoice">
                 <group cols="2">
-                    <group string="Do you want to show details of work in invoice?" colspan="1" cols="2">
+                    <group string="Show details in invoice lines" colspan="1" cols="2">
                        <field name="date"/>
                        <field name="time"/>
                        <field name="name"/>
@@ -17,6 +17,9 @@
                     <group  string="Force to use a specific product" colspan="1" cols="2">
                         <p class="oe_grey" colspan="2">When reinvoicing costs, the amount on the invoice lines is given by the sale price of the corresponding product (if any, and if its sale price is not 0). You can use the following field to enforce the use of a single product for all the chosen lines in the future invoices.</p>
                         <field name="product"/>
+                    </group>
+                    <group string="Create one invoice by partner">
+                        <field name="group_by_partner"/>
                     </group>
                 </group>
                 <footer>
