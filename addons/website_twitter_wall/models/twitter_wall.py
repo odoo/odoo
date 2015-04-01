@@ -18,6 +18,7 @@ class TwitterStream(models.Model, StreamListener):
     twitter_api_secret = fields.Char()
     model = fields.Char('Type of Model')
     agent_ids = fields.One2many('twitter.agent', 'stream_id')
+    state = fields.Selection([('start', 'Start'), ('stop', 'Stop')], default='stop')
 
     def _register_hook(self, cr):
         """ Start streaming on server start """
@@ -59,6 +60,14 @@ class TwitterStream(models.Model, StreamListener):
         self.stop()
         self.start()
 
+    def on_connect(self):
+        with api.Environment.manage():
+            with registry(self.env.cr.dbname).cursor() as new_cr:
+                self.env = api.Environment(new_cr, self.env.uid, self.env.context)
+                self.state = 'start'
+        print ">>>>>>>>>CONNECT>>>>>>"
+        pass
+
     def on_data(self, tweet):
         """ Call when tweet is come and store in twitter.tweet Model """
         if 'delete' not in tweet:
@@ -70,6 +79,13 @@ class TwitterStream(models.Model, StreamListener):
                     if len(walls):
                         self.env['twitter.tweet'].process_tweet(walls[0].id, tweet)
         return True
+
+    def on_error(self, status_code):
+        with api.Environment.manage():
+            with registry(self.env.cr.dbname).cursor() as new_cr:
+                self.env = api.Environment(new_cr, self.env.uid, self.env.context)
+                self.state = 'stop'
+        return False
 
 
 class TwitterAgent(models.Model):

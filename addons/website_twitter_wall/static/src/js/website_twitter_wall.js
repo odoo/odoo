@@ -12,6 +12,17 @@ var Qweb = core.qweb;
 
 website.if_dom_contains('.odoo-tw-walls', function() {
 
+    website.if_dom_contains('.odoo-tw-alert', function() {
+        setInterval(function() {
+            ajax.jsonRpc("/twitter_wall/get_stream_state/" + $(".odoo-tw-walls").attr("wall_id"), 'call').then(function(res) {
+                if(res == 'stop')
+                    $(".odoo-tw-alert").show();
+                else
+                    $(".odoo-tw-alert").hide();
+            });
+        }, 10000);
+    });
+
     // Wall List
     //----------------------------------------------
 
