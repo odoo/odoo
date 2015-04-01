@@ -469,7 +469,15 @@ var KanbanRecord = Widget.extend({
     },
     do_action_object: function ($action) {
         var button_attrs = $action.data();
-        this.view.do_execute_action(button_attrs, this.view.dataset, this.id, this.do_reload);
+        var node_context = button_attrs.context || {};
+        var context = new data.CompoundContext(node_context);
+        context.set_eval_context({
+            active_id: this.id,
+            active_ids: [this.id],
+            active_model: this.view.dataset.model
+        });
+        var action_data = _.extend({}, button_attrs, {context: context});
+        this.view.do_execute_action(action_data, this.view.dataset, this.id, this.do_reload);
     },
     do_action_url: function($action) {
         return framework.redirect($action.attr("href"));
@@ -656,7 +664,7 @@ var KanbanGroup = Widget.extend({
         this.fetch_tooltip();
         return def;
     },
-    /* 
+    /*
      * Form the tooltip, based on optional group_by_tooltip on the grouping field.
      * This function goes through the arch of the view, finding the declaration
      * of the field used to group. If group_by_tooltip is defined, use the previously
@@ -664,7 +672,7 @@ var KanbanGroup = Widget.extend({
     fetch_tooltip: function() {
         var self = this;
         if (! this.group)
-            return;        
+            return;
         var options = null;
         var recurse = function(node) {
             if (node.tag === "field" && node.attrs.name == self.view.group_by) {
