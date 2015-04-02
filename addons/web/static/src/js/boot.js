@@ -103,7 +103,18 @@
             odoo.__DEBUG__.web_client = services['web.web_client'];
 
             if (jobs.length) {
-                console.warn('Warning: not all jobs could be started.', jobs);
+                for (var k=0; k<jobs.length; k++) {
+                    var deps = odoo.__DEBUG__.get_dependencies( jobs[k].name );
+                    for (var i=0; i<deps.length; i++) {
+                        if (jobs[k].name !== deps[i] && !(deps[i] in services)) {
+                            if (!jobs[k].missing) {
+                                jobs[k].missing = [];
+                            }
+                            jobs[k].missing.push(deps[i]);
+                        }
+                    }
+                }
+                console.warn('Warning: some modules could not be started for missing dependencies.', jobs);
             }
             // _.each(factories, function (value, key) {
             //     delete factories[key];
@@ -113,10 +124,10 @@
             var job, require;
             while (jobs.length && (job = _.find(jobs, is_ready))) {
                 require = make_require(job);
-
-                services[job.name] = job.factory.call(null, require);
-                if (require.__require_calls !== job.deps.length) {
-                    console.warn('Job ' + job.name + ' did not require all its dependencies');
+                try {
+                    services[job.name] = job.factory.call(null, require);
+                } catch (e) {
+                    console.error("Error: at least one error are found in module '"+job.name+"'", e);
                 }
                 jobs.splice(jobs.indexOf(job), 1);
             }
