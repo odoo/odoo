@@ -549,34 +549,34 @@
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="partner_id"/>
                             </group>
-                            <notebook colspan="4" groups="stock.group_adv_location">
-                                <page string="Warehouse Configuration" colspan="4">
-                                    <group colspan="4">
-                                        <field name="reception_steps" widget='radio'/>
-                                        <field name="delivery_steps" widget='radio'/>
-                                        <field name="default_resupply_wh_id" widget='selection' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/>
-                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/> 
-                                    </group>
-                                </page>
-                                <page string="Technical Information" groups='base.group_no_one'>
-                                    <group>
-                                        <group string="Locations">
-                                            <field name="wh_input_stock_loc_id" readonly="1"/>
-                                            <field name="wh_qc_stock_loc_id" readonly="1"/>
-                                            <field name="wh_pack_stock_loc_id" readonly="1"/>
-                                            <field name="wh_output_stock_loc_id" readonly="1"/>
-                                        </group>
-                                        <group string="Picking Types">
-                                            <field name="in_type_id" readonly="1"/>
-                                            <field name="int_type_id" readonly="1"/>
-                                            <field name="pick_type_id" readonly="1"/>
-                                            <field name="pack_type_id" readonly="1"/>
-                                            <field name="out_type_id" readonly="1"/>
-                                        </group>
-                                    </group>
-                                </page>
-                            </notebook>
                         </group>
+                        <notebook colspan="4" groups="stock.group_adv_location">
+                            <page string="Warehouse Configuration" colspan="4">
+                                <group colspan="4">
+                                    <field name="reception_steps" widget='radio'/>
+                                    <field name="delivery_steps" widget='radio'/>
+                                    <field name="default_resupply_wh_id" widget='selection' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/>
+                                    <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/> 
+                                </group>
+                            </page>
+                            <page string="Technical Information" groups='base.group_no_one'>
+                                <group>
+                                    <group string="Locations">
+                                        <field name="wh_input_stock_loc_id" readonly="1"/>
+                                        <field name="wh_qc_stock_loc_id" readonly="1"/>
+                                        <field name="wh_pack_stock_loc_id" readonly="1"/>
+                                        <field name="wh_output_stock_loc_id" readonly="1"/>
+                                    </group>
+                                    <group string="Picking Types">
+                                        <field name="in_type_id" readonly="1"/>
+                                        <field name="int_type_id" readonly="1"/>
+                                        <field name="pick_type_id" readonly="1"/>
+                                        <field name="pack_type_id" readonly="1"/>
+                                        <field name="out_type_id" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
