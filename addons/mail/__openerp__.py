@@ -56,7 +56,6 @@ Main Features
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_config_view.xml',
-        'res_partner_view.xml',
         'data/mail_data.xml',
         'data/mail_group_data.xml',
         'security/mail_security.xml',
