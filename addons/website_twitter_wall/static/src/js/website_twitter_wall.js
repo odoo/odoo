@@ -12,19 +12,6 @@ var Qweb = core.qweb;
 
 website.if_dom_contains('.odoo-tw-walls', function() {
 
-    website.if_dom_contains('.odoo-tw-alert', function() {
-        setInterval(function() {
-            ajax.jsonRpc("/twitter_wall/get_stream_state", 'call', {
-                'domain': [["id", '=', parseInt($(".odoo-tw-walls").attr("wall_id"))], ["state", '!=', 'archive']],
-            }).then(function(res) {
-                if(res == 'stop')
-                    $(".odoo-tw-alert").show();
-                else
-                    $(".odoo-tw-alert").hide();
-            });
-        }, 10000);
-    });
-
     // Wall List
     //----------------------------------------------
 
@@ -43,6 +30,25 @@ website.if_dom_contains('.odoo-tw-walls', function() {
 
     // Storify View
     //----------------------------------------------
+
+    // Check whether stream is connected or disconnected. if disconnected than display indicator.
+    website.if_dom_contains('.odoo-tw-alert', function() {
+        var $indicator = $('<div class="odoo-indicator"></div>').prependTo("body").hide();
+        setInterval(function() {
+            ajax.jsonRpc("/twitter_wall/get_stream_state", 'call', {
+                'domain': [["id", '=', parseInt($(".odoo-tw-walls").attr("wall_id"))], ["state", '!=', 'archive']],
+            }).then(function(res) {
+                if(res == 'stop') {
+                    $indicator.html('<strong>Stream Disconnected!</strong><br/>You are unable to fetch live tweet. It\'s take few seconds to reconnect automatically. <i class="fa fa-refresh fa-spin"></i>').slideDown(400);
+                } else {
+                    $indicator.html("Stream Connected!");
+                    setTimeout(function() {
+                        $indicator.slideUp(400);
+                    }, 5000);
+                }
+            });
+        }, 10000);
+    });
 
     // Display timeago in view
     $("timeago.odoo-tw-timeago").each(function (index, el) {
