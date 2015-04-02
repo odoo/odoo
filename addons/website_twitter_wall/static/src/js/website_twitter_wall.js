@@ -32,7 +32,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
     //----------------------------------------------
 
     // Check whether stream is connected or disconnected. if disconnected than display indicator.
-    website.if_dom_contains('.odoo-tw-alert', function() {
+    website.if_dom_contains('.odoo-tw-view-cover', function() {
         var $indicator = $('<div class="odoo-indicator"></div>').prependTo("body").hide();
         setInterval(function() {
             ajax.jsonRpc("/twitter_wall/get_stream_state", 'call', {
