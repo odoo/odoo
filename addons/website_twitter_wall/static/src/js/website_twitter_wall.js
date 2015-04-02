@@ -105,6 +105,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             window.scrollTo(0, 0);
             $("body").css({"position": "fixed", "background-color": "#F1F1F1"});
             $("body").addClass("odoo-tw-view-live-remove-border");
+            $("center.odoo-tw-tweet > span").hide();
             $(".odoo-tw-view-tweet-delete").remove();
         } else {
             setTimeout(function() {window.location.reload();}, 500);
