@@ -1823,10 +1823,6 @@ class mail_thread(osv.AbstractModel):
                     ('model', '=', self._name),
                     ('res_id', '=', record_id),
                     ('type', '=', 'email')], limit=1, context=context)
-                if not msg_ids:
-                    msg_ids = message_obj.search(cr, SUPERUSER_ID, [
-                        ('model', '=', self._name),
-                        ('res_id', '=', record_id)], limit=1, context=context)
                 if msg_ids:
                     notification_obj = self.pool.get('mail.notification')
                     notification_obj._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
