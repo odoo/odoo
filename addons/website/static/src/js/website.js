@@ -365,6 +365,9 @@ dom_ready.then(function () {
         init_kanban(this);
     });
 
+    $('.js_submit_loading').on('submit',function (){
+        $(this).find('#btn-loading').button('loading');
+    });
     setTimeout(function () {
         if (window.location.hash.indexOf("scrollTop=") > -1) {
             window.document.body.scrollTop = +location.hash.match(/scrollTop=([0-9]+)/)[1];

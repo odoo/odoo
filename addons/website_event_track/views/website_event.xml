@@ -319,7 +319,7 @@
                         </section>
                     </div>
                     <section id="forms" t-if="event.show_track_proposal">
-                        <form class="form-horizontal mt32" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
+                        <form class="form-horizontal mt32 js_submit_loading" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Name</label>
                                 <div class="col-md-7 col-sm-8">
@@ -369,7 +369,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-                                    <button type="submit" class="btn btn-primary">Submit Proposal</button>
+                                    <button type="submit" class="btn btn-primary" id="btn-loading" data-loading-text="Loading...">Submit Proposal</button>
                                 </div>
                             </div>
                         </form>

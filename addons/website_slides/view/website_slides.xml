@@ -542,7 +542,7 @@
                                     </h4>
                                 </div>
                                 <div t-att-class="comments and 'tab-pane fade active in' or 'tab-pane fade'" id="discuss">
-                                    <form id="comment" t-attf-action="/slides/slide/#{slide.id}/comment" method="POST">
+                                    <form id="comment" class="js_submit_loading" t-attf-action="/slides/slide/#{slide.id}/comment" method="POST">
                                         <div class="media">
                                             <span class="pull-left">
                                                 <img class="img img-circle media-object"
@@ -562,7 +562,7 @@
                                                     </p>
                                                 </div>
                                                 <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                                                <button type="submit" class="btn btn-primary mt8">Post</button>
+                                                <button type="submit" data-loading-text="Posting..." id="btn-loading" class="btn btn-primary mt8">Post</button>
                                             </div>
 
                                         </div>
