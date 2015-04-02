@@ -20,7 +20,11 @@ website.if_dom_contains('.website_forum', function () {
                 karma + _t(' karma is required to perform this action. You can earn karma by having your answers upvoted by the community.') + '</div>');
             var vote_alert = $(ev.currentTarget).parent().find("#vote_alert");
             if (vote_alert.length == 0) {
-                $(ev.currentTarget).parent().append($warning);
+                if ($(ev.currentTarget).is('button')) {
+                    $(ev.currentTarget).parent().append($warning);
+                } else {
+                    $(ev.currentTarget).after($warning);
+                }
             }
         }
     });
