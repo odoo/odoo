@@ -33,8 +33,7 @@
 
 <template id="website.submenu" name="Submenu">
     <li t-if="not submenu.child_id" t-att-class="
-        ((submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
-         request.httprequest.path == submenu.url) and 'active'
+        (submenu.url != '/' and request.httprequest.path == submenu.url) and 'active'
         ">
         <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
