@@ -336,13 +336,6 @@ class BaseModel(object):
     #                   field_column_obj, origina_parent_model), ... }
     _inherit_fields = {}
 
-    # Mapping field name/column_info object
-    # This is similar to _inherit_fields but:
-    # 1. includes self fields,
-    # 2. uses column_info instead of a triple.
-    # Warning: _all_columns is deprecated, use _fields instead
-    _all_columns = {}
-
     _table = None
     _log_create = False
     _sql_constraints = []
@@ -491,7 +484,6 @@ class BaseModel(object):
         """
         field = cls._fields.pop(name)
         cls._columns.pop(name, None)
-        cls._all_columns.pop(name, None)
         if hasattr(cls, name):
             delattr(cls, name)
         return field
@@ -570,11 +562,22 @@ class BaseModel(object):
 
         """
 
-        # IMPORTANT: the registry contains an instance for each model. The class
-        # of each model carries inferred metadata that is shared among the
-        # model's instances for this registry, but not among registries. Hence
-        # we cannot use that "registry class" for combining model classes by
-        # inheritance, since it confuses the metadata inference process.
+        # The model's class inherits from cls and the classes of the inherited
+        # models. All those classes are combined in a flat hierarchy:
+        #
+        #         Model                 the base class of all models
+        #        /  |  \
+        #      cls  c2  c1              the classes defined in modules
+        #        \  |  /
+        #       ModelClass              the final class of the model
+        #        /  |  \
+        #     model   recordset ...     the class' instances
+        #
+        # The registry contains the instance `model`. Its class, `ModelClass`,
+        # carries inferred metadata that is shared between all the model's
+        # instances for this registry only. When we '_inherit' from another
+        # model, we do not inherit its `ModelClass`, but this class' parents.
+        # This is a limitation of the inheritance mechanism.
 
         # Keep links to non-inherited constraints in cls; this is useful for
         # instance when exporting translations
@@ -591,65 +594,54 @@ class BaseModel(object):
         # determine the module that introduced the model
         original_module = pool[name]._original_module if name in parents else cls._module
 
-        # build the class hierarchy for the model
+        # determine all the classes the model should inherit from
+        bases = [cls]
+        hierarchy = cls
         for parent in parents:
             if parent not in pool:
                 raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
                     'You may need to add a dependency on the parent class\' module.' % (name, parent))
-            parent_model = pool[parent]
+            parent_class = type(pool[parent])
+            bases += parent_class.__bases__
+            hierarchy = type(name, (hierarchy, parent_class), {'_register': False})
 
-            # do no use the class of parent_model, since that class contains
-            # inferred metadata; use its ancestor instead
-            parent_class = type(parent_model).__base__
+        # order bases following the mro of class hierarchy
+        bases = [base for base in hierarchy.mro() if base in bases]
 
-            inherits = dict(parent_class._inherits)
-            inherits.update(cls._inherits)
+        # determine the attributes of the model's class
+        inherits = {}
+        depends = {}
+        constraints = {}
+        sql_constraints = []
 
-            depends = dict(parent_class._depends)
-            for m, fs in cls._depends.iteritems():
-                depends[m] = depends.get(m, []) + fs
+        for base in reversed(bases):
+            inherits.update(base._inherits)
 
-            old_constraints = parent_class._constraints
-            new_constraints = cls._constraints
-            # filter out from old_constraints the ones overridden by a
-            # constraint with the same function name in new_constraints
-            constraints = new_constraints + [oldc
-                for oldc in old_constraints
-                if not any(newc[2] == oldc[2] and same_name(newc[0], oldc[0])
-                           for newc in new_constraints)
-            ]
+            for mname, fnames in base._depends.iteritems():
+                depends[mname] = depends.get(mname, []) + fnames
 
-            sql_constraints = cls._sql_constraints + \
-                              parent_class._sql_constraints
+            for cons in base._constraints:
+                # cons may override a constraint with the same function name
+                constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
 
-            attrs = {
-                '_name': name,
-                '_register': False,
-                '_inherits': inherits,
-                '_depends': depends,
-                '_constraints': constraints,
-                '_sql_constraints': sql_constraints,
-            }
-            cls = type(name, (cls, parent_class), attrs)
+            sql_constraints += base._sql_constraints
 
-        # introduce the "registry class" of the model;
-        # duplicate some attributes so that the ORM can modify them
-        attrs = {
+        # build the actual class of the model
+        ModelClass = type(name, tuple(bases), {
             '_name': name,
             '_register': False,
             '_columns': None,           # recomputed in _setup_fields()
             '_defaults': None,          # recomputed in _setup_base()
             '_fields': frozendict(),    # idem
-            '_inherits': dict(cls._inherits),
-            '_depends': dict(cls._depends),
-            '_constraints': list(cls._constraints),
-            '_sql_constraints': list(cls._sql_constraints),
+            '_inherits': inherits,
+            '_depends': depends,
+            '_constraints': constraints.values(),
+            '_sql_constraints': sql_constraints,
             '_original_module': original_module,
-        }
-        cls = type(cls._name, (cls,), attrs)
+        })
 
         # instantiate the model, and initialize it
-        model = object.__new__(cls)
+        model = object.__new__(ModelClass)
         model.__init__(pool, cr)
         return model
 
@@ -660,8 +652,6 @@ class BaseModel(object):
 
         # process store of low-level function fields
         for fname, column in cls._columns.iteritems():
-            if hasattr(column, 'digits_change'):
-                column.digits_change(cr)
             # filter out existing store about this field
             pool._store_function[cls._name] = [
                 stored
@@ -826,9 +816,6 @@ class BaseModel(object):
             assert cls._log_access, \
                 "TransientModels must have log_access turned on, " \
                 "in order to implement their access rights policy"
-
-        # prepare ormcache, which must be shared by all instances of the model
-        cls._ormcache = {}
 
     @api.model
     @ormcache()
@@ -1827,7 +1814,7 @@ class BaseModel(object):
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
         try:
-            self._ormcache.clear()
+            self.pool.cache.clear_prefix((self.pool.db_name, self._name))
             self.pool._any_cache_cleared = True
         except AttributeError:
             pass
@@ -2901,7 +2888,7 @@ class BaseModel(object):
 
     @classmethod
     def _inherits_reload(cls):
-        """ Recompute the _inherit_fields and _all_columns mappings. """
+        """ Recompute the _inherit_fields mapping. """
         cls._inherit_fields = struct = {}
         for parent_model, parent_field in cls._inherits.iteritems():
             parent = cls.pool[parent_model]
@@ -2911,19 +2898,17 @@ class BaseModel(object):
             for name, source in parent._inherit_fields.iteritems():
                 struct[name] = (parent_model, parent_field, source[2], source[3])
 
-        # old-api stuff
-        cls._all_columns = cls._get_column_infos()
-
-    @classmethod
-    def _get_column_infos(cls):
-        """Returns a dict mapping all fields names (direct fields and
-           inherited field via _inherits) to a ``column_info`` struct
-           giving detailed columns """
+    @property
+    def _all_columns(self):
+        """ Returns a dict mapping all fields names (self fields and inherited
+        field via _inherits) to a ``column_info`` object giving detailed column
+        information. This property is deprecated, use ``_fields`` instead.
+        """
         result = {}
         # do not inverse for loops, since local fields may hide inherited ones!
-        for k, (parent, m2o, col, original_parent) in cls._inherit_fields.iteritems():
+        for k, (parent, m2o, col, original_parent) in self._inherit_fields.iteritems():
             result[k] = fields.column_info(k, col, parent, m2o, original_parent)
-        for k, col in cls._columns.iteritems():
+        for k, col in self._columns.iteritems():
             result[k] = fields.column_info(k, col)
         return result
 
@@ -3000,14 +2985,15 @@ class BaseModel(object):
             if column:
                 cls._columns[name] = column
 
-        # group fields by compute to determine field.computed_fields
-        fields_by_compute = defaultdict(list)
+        # determine field.computed_fields
+        computed_fields = defaultdict(list)
         for field in cls._fields.itervalues():
             if field.compute:
-                field.computed_fields = fields_by_compute[field.compute]
-                field.computed_fields.append(field)
-            else:
-                field.computed_fields = []
+                computed_fields[field.compute].append(field)
+
+        for fields in computed_fields.itervalues():
+            for field in fields:
+                field.computed_fields = fields
 
     @api.model
     def _setup_complete(self):
@@ -3025,9 +3011,10 @@ class BaseModel(object):
                 model = self.env[model_name]
                 for field_name in field_names:
                     field = model._fields[field_name]
-                    field._triggers.update(triggers)
+                    for trigger in triggers:
+                        field.add_trigger(trigger)
 
-        # determine old-api cls._inherit_fields and cls._all_columns
+        # determine old-api structures about inherited fields
         cls._inherits_reload()
 
         # register stuff about low-level function fields

@@ -433,7 +433,8 @@
             var self = this;
             var on_write_callback = self.fields_view.arch.attrs.on_write;
             if (!on_write_callback) { return $.when(); }
-            return this.dataset.call(on_write_callback, [source_record.get('id')])
+            var context = new instance.web.CompoundContext(self.dataset.get_context(), {'on_write_domain': self.dataset.domain}).eval();
+            return this.dataset.call(on_write_callback, [source_record.get('id'), context])
                 .then(function (ids) {
                     return $.when.apply(
                         null, _(ids).map(

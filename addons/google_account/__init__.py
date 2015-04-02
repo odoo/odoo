@@ -21,5 +21,4 @@
 import google_account
 import controllers
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+from .google_account import TIMEOUT     # noqa
