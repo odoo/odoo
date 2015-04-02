@@ -120,7 +120,7 @@ def xmlrpc_handle_exception_int(e):
 
 def xmlrpc_handle_exception_string(e):
     if isinstance(e, openerp.exceptions.UserError):
-        fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
+        fault = xmlrpclib.Fault('warning -- %s\n\n%s' % (e.name, e.value), '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
