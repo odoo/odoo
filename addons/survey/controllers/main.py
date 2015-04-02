@@ -39,14 +39,14 @@ class WebsiteSurvey(http.Controller):
 
     ## HELPER METHODS ##
 
-    def _check_bad_cases(self, cr, uid, request, survey_obj, survey, user_input_obj, context=None):
+    def _check_bad_cases(self, cr, uid, request, survey_obj, survey, user_input_obj, token=None, context=None):
         # In case of bad survey, redirect to surveys list
         if survey_obj.exists(cr, SUPERUSER_ID, survey.id, context=context) == []:
             return werkzeug.utils.redirect("/survey/")
 
         # In case of auth required, block public user
         if survey.auth_required and uid == request.website.user_id.id:
-            return request.website.render("survey.auth_required", {'survey': survey})
+            return request.website.render("survey.auth_required", {'survey': survey, 'token': token})
 
         # In case of non open surveys
         if survey.stage_id.closed:
@@ -92,7 +92,7 @@ class WebsiteSurvey(http.Controller):
         # END Test mode
 
         # Controls if the survey can be displayed
-        errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, context=context)
+        errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, token=token, context=context)
         if errpage:
             return errpage
 
@@ -118,7 +118,7 @@ class WebsiteSurvey(http.Controller):
 
         # Select the right page
         if user_input.state == 'new':  # Intro page
-            data = {'survey': survey, 'page': None, 'token': user_input.token}
+            data = {'survey': survey, 'page': None, 'token': user_input.token, 'user_input': user_input}
             return request.website.render('survey.survey_init', data)
         else:
             return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
@@ -155,7 +155,7 @@ class WebsiteSurvey(http.Controller):
         # Select the right page
         if user_input.state == 'new':  # First page
             page, page_nr, last = survey_obj.next_page(cr, uid, user_input, 0, go_back=False, context=context)
-            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
+            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token, 'user_input': user_input}
             if last:
                 data.update({'last': True})
             return request.website.render('survey.survey', data)
@@ -171,7 +171,7 @@ class WebsiteSurvey(http.Controller):
             if not page:
                 page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=True, context=context)
 
-            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
+            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token, 'user_input': user_input}
             if last:
                 data.update({'last': True})
             return request.website.render('survey.survey', data)
