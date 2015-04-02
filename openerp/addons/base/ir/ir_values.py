@@ -192,17 +192,17 @@ class ir_values(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         res = super(ir_values, self).create(cr, uid, vals, context=context)
-        self.get_defaults_dict.clear_cache(self)
+        self.clear_caches()
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(ir_values, self).write(cr, uid, ids, vals, context=context)
-        self.get_defaults_dict.clear_cache(self)
+        self.clear_caches()
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_values, self).unlink(cr, uid, ids, context=context)
-        self.get_defaults_dict.clear_cache(self)
+        self.clear_caches()
         return res
 
     def set_default(self, cr, uid, model, field_name, value, for_all_users=True, company_id=False, condition=False):
@@ -387,6 +387,7 @@ class ir_values(osv.osv):
             'value': action,
         })
 
+    @tools.ormcache_context(accepted_keys=('lang',))
     def get_actions(self, cr, uid, action_slot, model, res_id=False, context=None):
         """Retrieves the list of actions bound to the given model's action slot.
            See the class description for more details about the various action

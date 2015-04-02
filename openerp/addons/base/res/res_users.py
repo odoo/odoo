@@ -718,16 +718,22 @@ class groups_view(osv.osv):
     def create(self, cr, uid, values, context=None):
         res = super(groups_view, self).create(cr, uid, values, context)
         self.update_user_groups_view(cr, uid, context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
         return res
 
     def write(self, cr, uid, ids, values, context=None):
         res = super(groups_view, self).write(cr, uid, ids, values, context)
         self.update_user_groups_view(cr, uid, context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(groups_view, self).unlink(cr, uid, ids, context)
         self.update_user_groups_view(cr, uid, context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
         return res
 
     def update_user_groups_view(self, cr, uid, context=None):

@@ -61,6 +61,18 @@ class actions(osv.osv):
         'usage': lambda *a: False,
     }
 
+    def create(self, cr, uid, vals, context=None):
+        res = super(actions, self).create(cr, uid, vals, context=context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
+        return res
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(actions, self).write(cr, uid, ids, vals, context=context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
+        return res
+
     def unlink(self, cr, uid, ids, context=None):
         """unlink ir.action.todo which are related to actions which will be deleted.
            NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
@@ -71,7 +83,10 @@ class actions(osv.osv):
             ids = [ids]
         todo_ids = todo_obj.search(cr, uid, [('action_id', 'in', ids)], context=context)
         todo_obj.unlink(cr, uid, todo_ids, context=context)
-        return super(actions, self).unlink(cr, uid, ids, context=context)
+        res = super(actions, self).unlink(cr, uid, ids, context=context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
+        return res
 
     def _get_eval_context(self, cr, uid, action=None, context=None):
         """ evaluation context to pass to safe_eval """
