@@ -2422,8 +2422,12 @@ class BaseModel(object):
         """
         self._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
-        if context is None:
-            context = {}
+
+        # This prevents anything called by this method (in particular default
+        # values) from prefetching a field for which the corresponding column
+        # has not been added in database yet!
+        context = dict(context or {}, prefetch_fields=False)
+
         store_compute = False
         stored_fields = []              # new-style stored fields with compute
         todo_end = []
