@@ -102,11 +102,19 @@ class ir_http(osv.AbstractModel):
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
         attach = self.pool['ir.attachment'].search_read(
             request.cr, openerp.SUPERUSER_ID, domain,
-            ['__last_update', 'datas', 'datas_fname'],
+            ['__last_update', 'datas', 'datas_fname', 'name'],
             context=request.context)
         if attach:
             wdate = attach[0]['__last_update']
-            datas = attach[0]['datas']
+            datas = attach[0]['datas'] or ''
+            name = attach[0]['name']
+
+            if not datas:
+                if name.startswith(('http://', 'https://', '/')):
+                    return werkzeug.utils.redirect(name, 301)
+                else:
+                    return werkzeug.wrappers.Response(status=204)     # NO CONTENT
+
             response = werkzeug.wrappers.Response()
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
             try:
@@ -121,8 +129,8 @@ class ir_http(osv.AbstractModel):
             if response.status_code == 304:
                 return response
 
-            response.mimetype = (mimetypes.guess_type(attach[0]['datas_fname'])[0] or
-                                    'application/octet-stream')
+            response.mimetype = (mimetypes.guess_type(attach[0]['datas_fname'] or '')[0] or
+                                 'application/octet-stream')
             response.data = datas.decode('base64')
             return response
 
