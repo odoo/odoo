@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "WebsiteSaleCoupon",
+    'name': "website_sale_coupon",
 
     'summary': """Allows to use discount coupons in sales order and in ecommerce""",
 

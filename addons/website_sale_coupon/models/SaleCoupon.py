@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from dateutil.relativedelta import relativedelta
-import math
+
 import hashlib
+import math
 import random
 
-from openerp import models, fields, api
+from openerp import models, fields, api, _
+from openerp.exceptions import MissingError
 
 
 class SaleApplicability(models.Model):
@@ -130,42 +132,23 @@ class SaleOrderLine(models.Model):
     generated_from_line_id = fields.Many2one('sale.order.line')
 
     @api.multi
-    def write(self, vals):
-        print "in line write"
-        res = super(SaleOrderLine, self).write(vals)
-        if self.env.context.get('noreward'):
-            return res
-        if not (vals.get('coupon_program_id') or vals.get('generated_from_line_id')):
-            self.apply_immediately_reward()
-        return res
-
-    @api.multi
     def unlink(self):
-        reward_lines = self.order_id.order_line.filtered(lambda x: x.generated_from_line_id.id == self.id)
-        if reward_lines:
-            reward_lines.unlink()
-        return super(SaleOrderLine, self).unlink()
-
-    @api.model
-    def create(self, vals):
-        res = super(SaleOrderLine, self).create(vals)
-        if self._context.get('noreward'):
-            return res
-        if not (vals.get('coupon_program_id') or vals.get('generated_from_line_id')):
-            res.apply_immediately_reward()
+        res = True
+        try:
+            reward_lines = self.order_id.order_line.filtered(lambda x: x.generated_from_line_id.id in self.ids)
+            if reward_lines:
+                reward_lines.unlink()
+            res = super(SaleOrderLine, self).unlink()
+        except MissingError:
+            pass
         return res
 
     @api.multi
     def apply_immediately_reward(self):
-        remove_reward_lines = []
-        for order_line in self.order_id.order_line.filtered(lambda x: x.coupon_program_id != False):
-            programs = order_line._search_reward_programs([('program_type', '=', 'apply_immediately')])
-            print "====programs", programs
-            if not programs:
-                remove_reward_lines += self.order_id.order_line.filtered(lambda x: x.generated_from_line_id == order_line.id and x.coupon_program_id is not False)
+        programs = self._search_reward_programs([('program_type', '=', 'apply_immediately')])
+        if programs:
             self.process_rewards(programs)
-        if remove_reward_lines:
-            self.env['sale.order.line'].unlink(remove_reward_lines)
+        return programs
 
     def _search_reward_programs(self, domain=[]):
         return self.env['sale.couponprogram'].search(domain + [
@@ -178,49 +161,59 @@ class SaleOrderLine(models.Model):
     def process_rewards(self, programs):
         #@ensure_one
         for program in programs:
-            #reward_qty = self._compute_reward_quantity()
             getattr(self, '_process_reward_' + program.reward_type)(program)
 
-    def _create_discount_reward(self, program, discount_amount):
+    def _create_discount_reward(self, program, qty, discount_amount):
         reward_product_id = self.env.ref('website_sale_coupon.product_product_reward').id
         reward_lines = self.order_id.order_line.filtered(lambda x: x.generated_from_line_id == self and x.product_id.id == reward_product_id and x.coupon_program_id == program)
         if discount_amount <= 0 and reward_lines:
             reward_lines.unlink()
         elif discount_amount > 0 and reward_lines:
             for reward_line in reward_lines:
-                #discount_amount = (-1) * reward_line.price_unit
-                reward_line.with_context(noreward=True).write({'price_unit': -discount_amount})
+                reward_line.with_context(noreward=True).write({'price_unit': -discount_amount, 'product_uom_qty': qty})
         if discount_amount > 0 and not reward_lines:
+            if program.purchase_type == 'product':
+                desc = _("Reward on ") + program.product_id.name
+            if program.purchase_type == 'category':
+                desc = _("Reward on category of ") + self.product_id.name
             vals = {
                 'product_id': reward_product_id,
-                'product_uom_qty': 1,
+                'name': desc,
+                'product_uom_qty': qty,
                 'price_unit': -discount_amount,
                 'order_id': self.order_id.id,
                 'coupon_program_id': program.id,
                 'generated_from_line_id': self.id
             }
-            print "--------", vals
             self.with_context(noreward=True).create(vals)
 
     def _process_reward_product(self, program):
-        #and x.product_uom.id == program.reward_product_uom_id
+        #reward_product_id = self.env.ref('website_sale_coupon.product_product_reward').id
         product_lines = self.order_id.order_line.filtered(lambda x: x.product_id == program.reward_product_product_id)
         vals = self.product_id_change(self.order_id.pricelist_id.id, program.reward_product_product_id.id, program.reward_quantity,
                                       uom=program.reward_product_uom_id.id)['value']
-        reward_qty = self.product_uom_qty / program.product_quantity * program.reward_quantity
+        if product_lines:
+            line = product_lines[0]
+        if program.reward_product_product_id == program.product_id:
+            to_reward_qty = math.floor(self.product_uom_qty / (program.product_quantity + program.reward_quantity))
+            if not to_reward_qty and (line.product_uom_qty == program.product_quantity):
+                product_qty = line.product_uom_qty + program.reward_quantity
+                line.with_context(nocoupon=True).write({'product_uom_qty': product_qty})
+                to_reward_qty = 1
+        else:
+            to_reward_qty = math.floor(self.product_uom_qty / program.product_quantity * program.reward_quantity)
+        if not to_reward_qty:
+            vals['price_unit'] = 0
         if not product_lines:
             vals['product_id'] = program.reward_product_product_id.id
-            vals['product_uom_qty'] = reward_qty
+            vals['product_uom_qty'] = to_reward_qty
             vals['order_id'] = self.order_id.id
             line = self.with_context(noreward=True).create(vals)
         else:
-            line = product_lines[0]
-            if line.product_uom_qty < reward_qty and program.reward_product_product_id.id == line.product_id.id:
-                line.with_context(noreward=True).write({'product_uom_qty': reward_qty})
-            if program.product_id == program.reward_product_product_id and program.reward_product_product_id.id == line.product_id.id:
-                reward_updated_qty = line.product_uom_qty + (program.reward_quantity * reward_qty)
-                line.with_context(noreward=True).write({'product_uom_qty': reward_updated_qty})
-        self._create_discount_reward(program, reward_qty * vals['price_unit'])
+            if program.reward_product_product_id.id == line.product_id.id and \
+               program.reward_product_product_id != program.product_id and line.product_uom_qty <= to_reward_qty:
+                    line.with_context(noreward=True).write({'product_uom_qty': to_reward_qty})
+        self._create_discount_reward(program, to_reward_qty, vals['price_unit'])
 
     def _process_reward_discount(self, program):
         discount_amount = 0
@@ -235,7 +228,7 @@ class SaleOrderLine(models.Model):
             elif program.reward_discount_on == 'specific_product':
                 #reward_qty = self.product_uom_qty / (program.product_quantity * program.reward_quantity)
                 discount_amount = sum([x.price_unit * program.reward_discount_percentage / 100 for x in self.order_id.order_line if x.product_id == program.reward_discount_on_product_id])
-        self._create_discount_reward(program, discount_amount)
+        self._create_discount_reward(program, 1, discount_amount)
 
 
 class SaleOrder(models.Model):
@@ -247,6 +240,7 @@ class SaleOrder(models.Model):
     @api.model
     def create(self, vals):
         res = super(SaleOrder, self).create(vals)
+        res._merage_product_line()
         if vals.get('order_line'):
             res.apply_immediately_reward()
         return res
@@ -254,9 +248,25 @@ class SaleOrder(models.Model):
     @api.multi
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
+        self._merage_product_line()
         if vals.get('order_line'):
             self.apply_immediately_reward()
         return res
+
+    @api.multi
+    def _merage_product_line(self):
+        product_line = []
+        line_to_remove = []
+        for line in self.order_line:
+            if line.id != self.env.ref('website_sale_coupon.product_product_reward').id:
+                product_line = self.order_line.filtered(lambda x: x.product_id == line.product_id and x.id != line.id)
+                for p_line in product_line:
+                    if p_line and (line not in line_to_remove):
+                        line.with_context(nocoupon=True).write({'product_uom_qty': line.product_uom_qty + p_line.product_uom_qty})
+                        line_to_remove += p_line
+        if line_to_remove:
+            for line in line_to_remove:
+                line.unlink()
 
     def _search_reward_programs(self, domain=[]):
         return self.env['sale.couponprogram'].search(domain + [
@@ -269,16 +279,40 @@ class SaleOrder(models.Model):
         remove_reward_lines = []
         for order in self.filtered(lambda x: x.order_line is not False):
             programs = order._search_reward_programs([('program_type', '=', 'apply_immediately')])
-            print "-----programs", programs
             if not programs:
-                print "programs not found"
                 # x.generated_from_line_id == False and
                 remove_reward_lines += order.order_line.filtered(lambda x: x.coupon_program_id.purchase_type == 'amount')
-                if remove_reward_lines:
-                    #self.env['sale.order.line'].unlink(remove_reward_lines)
-                    for line in remove_reward_lines:
-                        line.with_context(nocoupon=True).unlink()
             self.process_rewards(programs)
+            for order_line in [x for x in order.order_line if not (x.coupon_program_id or x.generated_from_line_id)]:
+                programs = order_line.apply_immediately_reward()
+                if not programs:
+                    remove_reward_lines += self.order_line.filtered(lambda x: x.generated_from_line_id == order_line and x.coupon_program_id.id is not False)
+        for remove_line in remove_reward_lines:
+            remove_line.with_context(nocoupon=True).unlink()
+
+    @api.multi
+    def apply_coupon_reward(self, context={}):
+        print "<<<<<<<<<<<<<< i m here", context.get('coupon_code')
+        # remove_reward_lines = []
+        # coupon = self.env['copu'].search([('name','=',coupon_code)], limit=1)
+        # program = coupon.prodgram_id
+        # if progam_type == 'app':
+        #     return
+        # if program.purchae_type == 'amount' and
+        #     self.process_rewards(program)
+        # for line in self,
+        # for order in self.filtered(lambda x: x.order_line is not False):
+        #     programs = order._search_reward_programs([('program_type', '!=', 'apply_immediately')])
+        #     if not programs:
+        #         # x.generated_from_line_id == False and
+        #         remove_reward_lines += order.order_line.filtered(lambda x: x.coupon_program_id.purchase_type == 'amount')
+        #     self.process_rewards(programs)
+        #     for order_line in [x for x in order.order_line if not (x.coupon_program_id or x.generated_from_line_id)]:
+        #         programs = order_line.apply_immediately_reward()
+        #         if not programs:
+        #             remove_reward_lines += self.order_line.filtered(lambda x: x.generated_from_line_id == order_line and x.coupon_program_id.id is not False)
+        # for remove_line in remove_reward_lines:
+        #     remove_line.with_context(nocoupon=True).unlink()
 
     @api.multi
     def process_rewards(self, programs):
@@ -311,12 +345,12 @@ class SaleOrder(models.Model):
                     unit_prices = [x.price_unit for x in self.order_line if x.coupon_program_id is False]
                     discount_amount = (min(unit_prices) * (program.reward_discount_percentage) / 100)
             elif program.reward_discount_on == 'specific_product':
-                discount_amount = sum([x.price_subtotal * program.reward_discount_percentage / 100 for x in self.order_line if x.product_id == program.reward_product_product_id])
+                discount_amount = sum([x.price_unit * program.reward_discount_percentage / 100 for x in self.order_line if x.product_id == program.reward_product_product_id])
         self._create_discount_reward(program, discount_amount)
 
     def _create_discount_reward(self, program, discount_amount):
         reward_product_id = self.env.ref('website_sale_coupon.product_product_reward')
-        reward_lines = self.order_line.filtered(lambda x: x.generated_from_line_id == False and x.product_id.id == reward_product_id.id and x.coupon_program_id == program)
+        reward_lines = self.order_line.filtered(lambda x: x.generated_from_line_id.id is False and x.product_id.id == reward_product_id.id and x.coupon_program_id == program)
         if discount_amount <= 0 and reward_lines:
             reward_lines.unlink()
         elif discount_amount > 0 and reward_lines:
@@ -326,6 +360,7 @@ class SaleOrder(models.Model):
         elif discount_amount > 0 and not reward_lines:
             vals = {
                 'product_id': reward_product_id.id,
+                'name': "Reward on amount",
                 'product_uom_qty': 1,
                 'price_unit': -discount_amount,
                 'order_id': self.id,

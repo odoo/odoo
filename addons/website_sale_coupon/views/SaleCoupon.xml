@@ -130,9 +130,9 @@
              <field name="arch" type="xml">
                 <xpath expr="//field[@name='note']" position="before">
                     <group style="width: 50px">
-                        <!-- <h2><input type="text" name="txt_typed_coupon" class="form-control"/></h2> -->
-                        <field name="typed_code" class="oe_inline"/>
-                       <button name="apply_coupon" string="Apply" type="object" class="oe_edit_only oe_inline"/>
+                        <label string="Coupon" class="oe_inline oe_edit_only"/>
+                        <input type="text" name="txt_typed_coupon" class="form-control oe_inline oe_edit_only"/>
+                       <button name="apply_coupon_reward" string="Apply" type="object" class="oe_edit_only oe_inline" context="{'coupon_code': 'hello'}"/>
                     </group>
                 </xpath>
              </field>

@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-from datetime import date
-from dateutil.relativedelta import relativedelta
-
-from openerp import fields
 from openerp.tests import common
 
 
@@ -19,6 +15,8 @@ class TestSaleCouponCommon(common.TransactionCase):
         self.Partner = self.env['res.partner']
         self.Product = self.env['product.product']
         self.SaleOrder = self.env['sale.order']
+        self.Category = self.env['product.category']
+        self.reward_product = self.env.ref('website_sale_coupon.product_product_reward')
 
         # create partner for sale order.
         self.partner_id = self.Partner.create({
@@ -26,153 +24,117 @@ class TestSaleCouponCommon(common.TransactionCase):
             'email': 'steve_bucknor@odoo.com',
         })
 
-        # create product with coupon type
-        self.product_conference = self.Product.create({
-            'name': 'National Conference',
-            'type': 'service',
+        self.category_beverage = self.Category.create({
+            'name': 'Beverage',
         })
 
-        self.product_training = self.Product.create({
-            'name': 'Functional Training',
+        #products
+        self.product_mobile = self.Product.create({
+            'name': 'Mobile',
             'type': 'service',
-            'price_unit': 1000,
-        })
-        self.product_technical_training = self.Product.create({
-            'name': 'Technical Training',
-            'type': 'service',
-            'price_unit': 1500,
+            'price': 100,
         })
 
-        self.product_event = self.Product.create({
-            'name': 'Event',
+        self.product_cover = self.Product.create({
+            'name': 'Cover',
             'type': 'service',
-            'price_unit': 700,
+            'price': 50,
         })
-        # create coupon program
+
+        self.product_pendrive = self.Product.create({
+            'name': 'Pen drive',
+            'type': 'service',
+            'price': 60,
+        })
+
+        self.product_pendrive_cover = self.Product.create({
+            'name': 'Pen drive cover',
+            'type': 'service',
+            'price': 20,
+        })
+        self.product_harddisk = self.Product.create({
+            'name': 'hard disk',
+            'type': 'service',
+            'price': 50,
+        })
+
+        self.product_coca_cola = self.Product.create({
+            'name': 'Coca cola',
+            'type': 'service',
+            'price': 20,
+            'categ_id': self.category_beverage.id,
+        })
+
+        self.product_pepsi = self.Product.create({
+            'name': 'Pepsi',
+            'type': 'service',
+            'price': 10,
+            'categ_id': self.category_beverage.id,
+        })
+
         self.couponprogram_1 = self.CouponProgram.create({
-            'program_name': 'Buy 2 Get 1 Free',
+            'name': 'Buy 1 Mobile + get 1 cover free',
             'program_type': 'apply_immediately',
-            'program_sequence': 1,
-            'purchase_type': 'poroduct',
             'validity_type': 'day',
-            'validity_duration': 10,
-            'product_id': self.product_conference.id,
-            'product_quantity': 2,
+            'validity_duration': 15,
+            'purchase_type': 'product',
+            'product_id': self.product_mobile.id,
+            'product_quantity': 1,
             'reward_type': 'product',
-            'reward_product_product_id': self.product_conference.id,
+            'reward_product_product_id': self.product_cover.id,
             'reward_quantity': 1,
         })
 
         self.couponprogram_2 = self.CouponProgram.create({
-            'program_name': "10'%' Discount on Functional Training",
+            'name': "Buy 2 Hard disk + get 1 hard disk free",
             'program_type': 'apply_immediately',
-            'program_sequence': 1,
-            'purchase_type': 'poroduct',
-            'validity_type': 'week',
-            'validity_duration': 1,
-            'product_id': self.product_conference.id,
-            'product_quantity': 1,
-            'reward_type': 'discount',
-            'reward_discount_type': 'percentage',
-            'reward_discount': 10,
-            'reward_discount_on': 'specific_product',
-            'reward_discount_on_product_id': self.product_training.id,
-        })
-
-        self.couponprogram_3 = self.CouponProgram.create({
-            'program_name': "National Conference Free on Functional Training",
-            'program_type': 'apply_immediately',
-            'program_sequence': 2,
-            'purchase_type': 'poroduct',
-            'validity_type': 'month',
-            'validity_duration': 10,
-            'product_id': self.product_training.id,
-            'product_quantity': 1,
+            'purchase_type': 'product',
+            'validity_type': 'day',
+            'validity_duration': 15,
+            'product_id': self.product_harddisk.id,
+            'product_quantity': 2,
             'reward_type': 'product',
-            'reward_product_product_id': self.product_conference.id,
+            'reward_product_product_id': self.product_harddisk.id,
             'reward_quantity': 1,
         })
 
-        self.couponprogram_4 = self.CouponProgram.create({
-            'program_name': "100 off on Functional Training",
+        self.couponprogram_3 = self.CouponProgram.create({
+            'name': "Buy any product of beverage category in 2 qty and get 5$ off",
             'program_type': 'apply_immediately',
-            'program_sequence': 3,
+            'program_sequence': 1,
+            'purchase_type': 'category',
+            'product_category_id': self.category_beverage.id,
+            'validity_type': 'day',
+            'validity_duration': 15,
+            'product_quantity': 2,
+            'reward_type': 'discount',
+            'reward_discount_type': 'amount',
+            'reward_discount_amount': 2,
+        })
+
+        self.couponprogram_4 = self.CouponProgram.create({
+            'name': "Purchase for 1000 and above + 10'%' off on cart",
+            'program_type': 'apply_immediately',
+            'program_sequence': 1,
             'purchase_type': 'amount',
             'validity_type': 'day',
             'validity_duration': 15,
             'minimum_amount': 1000,
             'reward_type': 'discount',
-            'reward_discount_type': 'amount',
-            'reward_discount': 100,
-            'reward_tax': 'tax_included',
+            'reward_discount_type': 'percentage',
+            'reward_discount_percentage': 10,
+            'reward_discount_on': 'cart'
         })
 
         self.couponprogram_5 = self.CouponProgram.create({
-            'program_name': "10'%' off",
-            'program_type': 'public_unique_code',
-            'program_code': 'SC5657585',
+            'name': "Buy 1 pen drive and get 10'%' off on pen drive cover",
+            'program_type': 'apply_immediately',
             'program_sequence': 1,
-            'purchase_type': 'amount',
-            'date_from': date.today(),
-            'date_to': date.today() + relativedelta(days=10),
-            'minimum_amount': 0,
+            'purchase_type': 'product',
+            'product_id': self.product_pendrive.id,
             'reward_type': 'discount',
             'reward_discount_type': 'percentage',
-            'reward_discount_on': 'cart',
-            'reward_discount': 10,
-        })
-
-        self.couponprogram_6 = self.CouponProgram.create({
-            'program_name': "30'%' on cheapest product",
-            'program_type': 'public_unique_code',
-            'program_code': 'SC5656565',
-            'program_sequence': 1,
-            'purchase_type': 'amount',
-            'date_from': date.today(),
-            'date_to': date.today() + relativedelta(days=10),
-            'minimum_amount': 0,
-            'reward_type': 'discount',
-            'reward_discount_type': 'percentage',
-            'reward_discount_on': 'cheapest_product',
-            'reward_discount': 30,
-        })
-
-        self.couponprogram_7 = self.CouponProgram.create({
-            'program_name': "500 off",
-            'program_type': 'generated_coupon',
-            'program_sequence': 5,
-            'purchase_type': 'amount',
-            'validity_type': 'day',
-            'validity_duration': 10,
-            'minimum_amount': 0,
-            'reward_type': 'discount',
-            'reward_discount_type': 'amount',
-            'reward_discount': 500,
-            'reward_tax': 'tax_included',
-        })
-
-        self.couponprogram_8 = self.CouponProgram.create({
-            'program_name': "Gift Vouchar",
-            'program_type': 'apply_immediately',
-            'program_sequence': 5,
-            'purchase_type': 'amount',
-            'validity_type': 'day',
-            'validity_duration': 10,
-            'minimum_amount': 2000,
-            'reward_type': 'coupon',
-            'reward_gift_coupon_id': self.couponprogram_7.id,
-        })
-
-        self.couponprogram_9 = self.CouponProgram.create({
-            'program_name': "Free Shipping",
-            'program_type': 'apply_immediately',
-            'program_sequence': 6,
-            'purchase_type': 'amount',
-            'validity_type': 'day',
-            'validity_duration': 10,
-            'minimum_amount': 500,
-            'reward_type': 'product',
-            'reward_shipping_free': 'yes',
-            'reward_product_product_id': self.product_event.id,
-            'reward_quantity': 1,
+            'reward_discount_on': 'specific_product',
+            'reward_discount_on_product_id': self.product_pendrive_cover.id,
+            'reward_discount_percentage': 10,
         })
