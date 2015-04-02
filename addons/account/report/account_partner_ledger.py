@@ -31,6 +31,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
     def __init__(self, cr, uid, name, context=None):
         super(third_party_ledger, self).__init__(cr, uid, name, context=context)
         self.init_bal_sum = 0.0
+        self.amount_currency = {}
         self.localcontext.update({
             'time': time,
             'lines': self.lines,
@@ -50,6 +51,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             'display_initial_balance':self._display_initial_balance,
             'display_currency':self._display_currency,
             'get_target_move': self._get_target_move,
+            'amount_currency': self.amount_currency,
         })
 
     def _get_filter(self, data):
@@ -70,7 +72,10 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         if data['form']['filter'] == 'unreconciled':
             self.reconcil = False
         self.result_selection = data['form'].get('result_selection', 'customer')
-        self.amount_currency = data['form'].get('amount_currency', False)
+        if data['form'].get('amount_currency'):
+            self.amount_currency['currency'] = True
+        else:
+            self.amount_currency.pop('currency', False)
         self.target_move = data['form'].get('target_move', 'all')
         PARTNER_REQUEST = ''
         move_state = ['draft','posted']

@@ -136,7 +136,11 @@ class ir_import(orm.TransientModel):
             StringIO(record.file),
             quotechar=str(options['quoting']),
             delimiter=str(options['separator']))
-        csv_nonempty = itertools.ifilter(None, csv_iterator)
+
+        def nonempty(row):
+            return any(x for x in row if x.strip())
+
+        csv_nonempty = itertools.ifilter(nonempty, csv_iterator)
         # TODO: guess encoding with chardet? Or https://github.com/aadsm/jschardet
         encoding = options.get('encoding', 'utf-8')
         return itertools.imap(
@@ -280,13 +284,13 @@ class ir_import(orm.TransientModel):
         if options.get('headers'):
             rows_to_import = itertools.islice(
                 rows_to_import, 1, None)
-
-        data = []
-        for row in rows_to_import:
+        data = [
+            row for row in itertools.imap(mapper, rows_to_import)
             # don't try inserting completely empty rows (e.g. from
-            # filtering out o2m fields
-            if any(f.strip() for f in row):
-                data.append(mapper(row))
+            # filtering out o2m fields)
+            if any(row)
+        ]
+
         return data, import_fields
 
     def do(self, cr, uid, id, fields, options, dryrun=False, context=None):
