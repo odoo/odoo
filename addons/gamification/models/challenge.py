@@ -36,7 +36,10 @@ MAX_VISIBILITY_RANKING = 3
 def start_end_date_for_period(period, default_start_date=False, default_end_date=False):
     """Return the start and end date for a goal period based on today
 
-    :return: (start_date, end_date), datetime.date objects, False if the period is
+    :param str default_start_date: string date in DEFAULT_SERVER_DATE_FORMAT format
+    :param str default_end_date: string date in DEFAULT_SERVER_DATE_FORMAT format
+
+    :return: (start_date, end_date), dates in string format, False if the period is
     not defined or unknown"""
     today = date.today()
     if period == 'daily':
@@ -57,11 +60,9 @@ def start_end_date_for_period(period, default_start_date=False, default_end_date
         start_date = default_start_date  # for manual goal, start each time
         end_date = default_end_date
 
-    if start_date and end_date:
-        return (datetime.strftime(start_date, DF), datetime.strftime(end_date, DF))
-    else:
         return (start_date, end_date)
 
+    return (datetime.strftime(start_date, DF), datetime.strftime(end_date, DF))
 
 class gamification_challenge(osv.Model):
     """Gamification challenge
