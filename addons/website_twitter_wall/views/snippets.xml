@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add snippet for change cover -->
+    <template id="twitter_wall_cover" inherit_id="website.snippets" name="Twitter Wall Cover">
+        <xpath expr="//div[@id='snippet_options']" position="inside">
+            <div data-js='twitter_wall_cover'
+                data-selector=".odoo-tw-view-cover"
+                data-no-check="true">
+                <li data-change="true"><a href="#">Edit Cover</a></li>
+                <li data-clear="true"><a href="#">Clear Cover</a></li>
+            </div>
+        </xpath>
+    </template>
+</odoo>
