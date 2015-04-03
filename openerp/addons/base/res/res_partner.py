@@ -708,7 +708,7 @@ class res_partner(osv.Model, format_address):
         emails = tools.email_split(email)
         if emails:
             email = emails[0]
-        ids = self.search(cr, uid, [('email','ilike',email)], context=context)
+        ids = self.search(cr, uid, [('email','=ilike',email)], context=context)
         if not ids:
             return self.name_create(cr, uid, email, context=context)[0]
         return ids[0]
