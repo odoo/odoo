@@ -2311,12 +2311,13 @@ class account_model(osv.osv):
             })
             move_ids.append(move_id)
             for line in model.lines_id:
-                val = account_model_line_obj._prepare_move_line_values(cr, uid, line.id, context=context)
-                val.update({
+                val = {
                     'period_id': period_id,
                     'move_id': move_id,
                     'journal_id': model.journal_id.id,
-                })
+                }
+                val.update(account_model_line_obj._prepare_move_line_values(cr, uid, line.id, context=context))
+
                 account_move_line_obj.create(cr, uid, val, context=ctx)
 
         return move_ids
