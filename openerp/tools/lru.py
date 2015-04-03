@@ -123,7 +123,7 @@ class LRU(object):
     def clear_prefix(self, prefix):
         """ Remove from `self` all the items with the given `prefix`. """
         n = len(prefix)
-        for key in self.iterkeys():
+        for key in self.keys():
             if key[:n] == prefix:
                 del self[key]
 
