@@ -1131,7 +1131,11 @@ class AssetsBundle(object):
         if sep is None:
             sep = '\n            '
         response = []
-        if debug:
+        old_ie = False
+        if request:
+            ua = request.httprequest.user_agent
+            old_ie = css and ua.browser == "msie" and int((ua.version or '0').split('.')[0]) < 10
+        if debug or old_ie:
             if css and self.stylesheets:
                 self.compile_sass()
                 for style in self.stylesheets:
