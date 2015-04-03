@@ -816,7 +816,7 @@ class product_template(osv.osv):
         # re-apply product.template order + name_get
         return super(product_template, self).name_search(
             cr, user, '', args=[('id', 'in', template_ids)],
-            operator=operator, context=context, limit=limit)
+            operator='ilike', context=context, limit=limit)
 
 class product_product(osv.osv):
     _name = "product.product"
