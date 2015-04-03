@@ -24,7 +24,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         ).then(function(res) {
             if(res) {
                 $(self).hide();
-                $(self).siblings("label").show();
+                $(self).siblings("label.odoo-tw-wall-archive").show();
             }
         });
     });
@@ -40,9 +40,9 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                 'domain': [["id", '=', parseInt($(".odoo-tw-walls").attr("wall_id"))], ["state", '!=', 'archive']],
             }).then(function(res) {
                 if(res == 'stop') {
-                    $indicator.html(_t('<strong>Stream Disconnected!</strong><br/>You are unable to fetch live tweet. It\'s take few seconds to reconnect automatically. <i class="fa fa-refresh fa-spin"></i>')).slideDown(400);
+                    $indicator.html(_t('<strong>Oops! Something went wrong</strong><br/>You are unable to fetch live tweet. It\'s take few seconds to reconnect automatically. <i class="fa fa-refresh fa-spin"></i>')).slideDown(400);
                 } else {
-                    $indicator.html(_t("Stream Connected!"));
+                    $indicator.html(_t("<strong>Connected!</strong>"));
                     setTimeout(function() {
                         $indicator.slideUp(400);
                     }, 5000);
@@ -251,35 +251,43 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             case 'shuffle':
                 twitter_wall.toggle_shuffle();
                 break;
-            case 'theme':
-                twitter_wall.theme = twitter_wall.theme == "light" ? "dark" : "light";
-                break;
         }
     });
 
-    // Set background color of live view
-    var content = _.str.sprintf("<center><b class='text-muted'>%s</b></center>
+    // Customization options for live view
+    var content = _.str.sprintf("<center><b>%s</b></center>
                     <div class='input-group colorinput'>
                         <input type='text' class='form-control' />
                         <span class='input-group-addon'><i></i></span>
                     </div><br/>
-                    <center><b class='text-muted'>%s</b></center>", _t('Your Custom Color'), _t('Standard Colors')), i = 1;
+                    <center><b>%s</b></center>", _t('Your Custom Color'), _t('Standard Colors')), i = 1;
     _.map(colors, function(primary, secondary) {
         content += _.str.sprintf("<span class='odoo-tw-view-live-option-color' data-color-code='%s' style='background-color:%s' />", secondary, secondary);
         if(i%6 == 0) content += "<br/>";
         i++;
     });
-    var picker = $('.odoo-tw-view-live-color-picker').popover({
+    content += _.str.sprintf("<br/><center><b>%s</b></center><div class='btn-group'>
+                    <button class='btn btn-default theme active' data-operation='light' title='Sun'><i class='fa fa-sun-o' /></button>
+                    <button class='btn btn-default theme' data-operation='dark' title='Moon'><i class='fa fa-moon-o' /></button>
+                </div>", _t("Theme"));
+    var picker = $('.odoo-tw-view-live-picker').popover({
         html: true,
         content: content
     });
     picker.on('shown.bs.popover', function() {
         $(".colorinput > input.form-control").val(color);
         $('.colorinput').colorpicker({horizontal: true});
+        $('.theme').removeClass("active");
+        $('button[data-operation=' + twitter_wall.theme + ']').addClass("active");
     });
     picker.parent().on('click', '.odoo-tw-view-live-option-color', function() {
         color = $(this).data('color-code');
         $('body').css('background-color', color);
+    });
+    picker.parent().on('click', '.theme', function(e) {
+        var $el = $(e.currentTarget).toggleClass("active");
+        twitter_wall.theme = $el.data("operation");
+        $el.siblings().removeClass("active");
     });
     picker.parent().on('changeColor.colorpicker', '.colorinput', function(e) {
         color = e.color.toHex();

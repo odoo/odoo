@@ -49,6 +49,7 @@
                             </a>
                             <button t-if="wall.auth_user and wall.state!='archive'" groups="base.group_user" class="btn btn-default btn-sm odoo-tw-wall-archive" title="Archive wall" t-att-data-wall-id="wall.id"><i class="fa fa-archive" /></button>
                             <label t-att-style="wall.state=='archive' and 'display:block;' or 'display:none;'" class="label label-primary odoo-tw-wall-archive">Archived</label>
+                            <label t-att-style="wall.auth_user and 'display:none;' or 'display:block;'" class="label label-danger odoo-tw-wall-auth"><i class="fa fa-twitter" /> Not Authorized</label>
                             <div class="odoo-tw-wall-padding">
                                 <h4 class="mt4 mb8 odoo-tw-wall-ellipsis">
                                     <a t-att-title="wall.name" t-attf-href="/twitter_wall/view/#{wall.id}" t-field="wall.name" />
@@ -105,7 +106,7 @@
                         <center class="col-sm-12 odoo-tw-tweet" t-att-data-tweet-id="tweet.id">
                             <span t-field="tweet.comment" />
                             <div>
-                                <button class="btn odoo-tw-view-tweet-delete hidden-xs" groups="base.group_user" title="Delete this tweet"><i class="fa fa-trash-o text-primary" /></button>
+                                <button class="btn odoo-tw-view-tweet-delete hidden-xs" groups="base.group_user" title="Delete this tweet"><i class="fa fa-trash text-primary" /></button>
                                 <span t-raw="tweet.html_description" />
                             </div>
                         </center>
@@ -140,8 +141,7 @@
                                     <button class="btn btn-default odoo-tw-view-live-option-btn" data-operation="repeat" title="Repeat"><i class="fa fa-repeat" /></button>
                                     <button class="btn btn-default odoo-tw-view-live-option-btn" data-operation="shuffle" title="Shuffle"><i class="fa fa-random" /></button>
                                 </div>
-                                <button data-placement="top" class="btn btn-default odoo-tw-view-live-color-picker" title="Background Colors"><i class="fa fa-paint-brush" /></button>
-                                <button class="btn btn-default odoo-tw-view-live-option-btn" data-operation="theme" title="Theme"><i class="fa fa-adjust" /></button>
+                                <button data-placement="top" class="btn btn-default odoo-tw-view-live-picker" title="Customize"><i class="fa fa-paint-brush" /></button>
                                 <button class="btn btn-default odoo-tw-screen" title="Exit full screen"><i class="fa fa-compress" /></button>
                             </div>
                         </div>
@@ -156,7 +156,7 @@
 
     <!-- Share storify view on social networks -->
     <template id='twitter_wall_share' name="Wall Share">
-        <div class="form-group mt32">
+        <h4 class="form-group mt32">
             <a target="_Blank" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{wall.website_url}">
                 <i class="fa fa-facebook-square fa-2x white-color" />
             </a>
@@ -169,7 +169,7 @@
             <a target="_Blank" t-attf-href="https://plus.google.com/share?url=#{wall.website_url}">
                 <i class="fa fa-google-plus-square fa-2x white-color" />
             </a>
-        </div>
+        </h4>
     </template>
 
     <!-- Sharing option -->

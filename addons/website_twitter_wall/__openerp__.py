@@ -5,15 +5,15 @@
     'summary': 'Pretty Way to Display Tweets for Event',
     'version': '1.0',
     'description': """
-Visualize Tweets
-=====================
+Display your social media to large screen
+=========================================
 
- * Create wall for event
- * Verify with your twitter account
- * Make storify view of your event
- * Comment on tweet in storify view
- * Display live tweets in different kind of view with mode
- * You display tweets just by posting or re-tweeting from twitter and twitter apps including mobile.
+Turn your event into an interactive experience by letting everybody post messages and photos to your Twitter wall. Connect with the crowd and build a personal relationship with attendees.
+
+ * Create Live twitter walls for event
+ * No complex moderation needed, You can display tweets just by posting or re-tweeting from twitter even using twitter's mobile app.
+ * Customize your live view with help of various options.
+ * Auto Storify view after event is over.
 """,
     'author': 'Odoo S.A.',
     'depends': ['website'],
