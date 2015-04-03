@@ -138,7 +138,7 @@ class TwitterTweet(models.Model):
     _name = 'twitter.tweet'
 
     tweet_id = fields.Char()
-    html_description = fields.Html('Tweet')
+    tweet = fields.Html()
     comment = fields.Html(default='<br/>')
     agent_id = fields.Many2one('twitter.agent')
 
@@ -150,7 +150,7 @@ class TwitterTweet(models.Model):
         cardtweet = loads(urlopen(Request(card_url, None, {'Content-Type': 'application/json'})).read())
         return self.create({
             'tweet_id': tweet.get('id'),
-            'html_description': cardtweet.get('html', False),
+            'tweet': cardtweet.get('html', False),
             'agent_id': wall_id
         })
 

@@ -20,8 +20,8 @@ Turn your event into an interactive experience by letting everybody post message
     'website': 'https://www.odoo.com',
     'data': [
         'views/snippets.xml',
-        'views/website_twitter_wall.xml',
-        'views/website_twitter_wall_backend.xml',
+        'views/website_twitter_wall_templates.xml',
+        'views/website_twitter_wall_views.xml',
         'security/ir.model.access.csv',
         'data/website_twitter_wall_data.xml',
     ],

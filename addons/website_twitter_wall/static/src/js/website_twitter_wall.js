@@ -138,7 +138,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             this.pool_cache = {};
             this.repeat = false;
             this.shuffle = false;
-            this.current_class = 'col-sm-12'
+            this.current_class = 'col-sm-12';
             this.theme = "light";
             this.limit = 25;
             this.timeout = 7000;
@@ -171,7 +171,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             var self = this;
             return ajax.jsonRpc("/twitter_wall/get_tweet/", 'call', {
                 'domain': this.get_domain(),
-                'fields': ['tweet_id', 'html_description', 'agent_id'],
+                'fields': ['tweet_id', 'tweet', 'agent_id'],
                 'limit': this.limit
             }).then(function(res) {
                 if (res.length || self.repeat) {
@@ -211,7 +211,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                     } else {
                         self.pool_cache[pop_el.id]['seen'] += 1;
                     }
-                    var pop_el_desc = $(pop_el.html_description);
+                    var pop_el_desc = $(pop_el.tweet);
                     pop_el_desc.attr("data-link-color", colors[color] || color);
                     if (self.theme == "dark")
                         pop_el_desc.attr({"data-theme": "dark", "data-link-color": color});

@@ -102,12 +102,12 @@
             </div>
             <div class="container">
                 <div class="row odoo-tw-walls mt16" t-att-wall_id="wall.id">
-                    <t t-if="tweets" t-foreach="tweets" t-as="tweet">
-                        <center class="col-sm-12 odoo-tw-tweet" t-att-data-tweet-id="tweet.id">
-                            <span t-field="tweet.comment" />
+                    <t t-if="tweets" t-foreach="tweets" t-as="t">
+                        <center class="col-sm-12 odoo-tw-tweet" t-att-data-tweet-id="t.id">
+                            <span t-field="t.comment" />
                             <div>
                                 <button class="btn odoo-tw-view-tweet-delete hidden-xs" groups="base.group_user" title="Delete this tweet"><i class="fa fa-trash text-primary" /></button>
-                                <span t-raw="tweet.html_description" />
+                                <span t-raw="t.tweet" />
                             </div>
                         </center>
                     </t>
@@ -173,7 +173,7 @@
     </template>
 
     <!-- Sharing option -->
-    <template id="opt_twitter_wall_share" name="Share" customize_show="True" inherit_id="website_twitter_wall.twitter_wall_view">
+    <template id="opt_twitter_wall_share" inherit_id="website_twitter_wall.twitter_wall_view" name="Share" customize_show="True" >
         <xpath expr="//h3[@t-field='wall.description']" position="after">
             <t t-call="website_twitter_wall.twitter_wall_share">
                 <t t-set="wall" t-value="wall" />
