@@ -383,7 +383,7 @@
             <group name="employee_data" position="inside">
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
-                    <field name="survey_id" class="oe_inline" domain="[('res_model','=','hr_recruitment')]"/>
+                    <field name="survey_id" class="oe_inline"/>
                     <button string="Print Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_inline oe_link"/>
                 </div>
                 <label for="address_id"/>
