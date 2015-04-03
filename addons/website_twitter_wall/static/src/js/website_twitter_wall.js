@@ -8,6 +8,7 @@ var Widget = require('web.Widget');
 var Model = require('web.Model');
 var website = require('website.website');
 
+var _t = core._t;
 var Qweb = core.qweb;
 
 website.if_dom_contains('.odoo-tw-walls', function() {
@@ -39,15 +40,15 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                 'domain': [["id", '=', parseInt($(".odoo-tw-walls").attr("wall_id"))], ["state", '!=', 'archive']],
             }).then(function(res) {
                 if(res == 'stop') {
-                    $indicator.html('<strong>Stream Disconnected!</strong><br/>You are unable to fetch live tweet. It\'s take few seconds to reconnect automatically. <i class="fa fa-refresh fa-spin"></i>').slideDown(400);
+                    $indicator.html(_t('<strong>Stream Disconnected!</strong><br/>You are unable to fetch live tweet. It\'s take few seconds to reconnect automatically. <i class="fa fa-refresh fa-spin"></i>')).slideDown(400);
                 } else {
-                    $indicator.html("Stream Connected!");
+                    $indicator.html(_t("Stream Connected!"));
                     setTimeout(function() {
                         $indicator.slideUp(400);
                     }, 5000);
                 }
             });
-        }, 10000);
+        }, 12000);
     });
 
     // Display timeago in view
@@ -62,7 +63,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         } else {
             display_str = $.timeago(datetime_obj);
         }
-        $(el).text(_.str.capitalize(display_str));
+        $(el).text(_t(_.str.capitalize(display_str)));
     });
 
     // Delete tweet
@@ -108,7 +109,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             $("center.odoo-tw-tweet > span").hide();
             $(".odoo-tw-view-tweet-delete").remove();
         } else {
-            setTimeout(function() {window.location.reload();}, 500);
+            setTimeout(function() { window.location.reload(); }, 500);
         }
     });
 
@@ -257,14 +258,14 @@ website.if_dom_contains('.odoo-tw-walls', function() {
     });
 
     // Set background color of live view
-    var content = "<center><b class='text-muted'>Your Custom Color</b></center>
+    var content = _.str.sprintf("<center><b class='text-muted'>%s</b></center>
                     <div class='input-group colorinput'>
                         <input type='text' class='form-control' />
                         <span class='input-group-addon'><i></i></span>
                     </div><br/>
-                    <center><b class='text-muted'>Standard Colors</b></center>", i = 1;
+                    <center><b class='text-muted'>%s</b></center>", _t('Your Custom Color'), _t('Standard Colors')), i = 1;
     _.map(colors, function(primary, secondary) {
-        content += "<span class='odoo-tw-view-live-option-color' data-color-code=" + secondary + " style='background-color:" + secondary + "' />";
+        content += _.str.sprintf("<span class='odoo-tw-view-live-option-color' data-color-code='%s' style='background-color:%s' />", secondary, secondary);
         if(i%6 == 0) content += "<br/>";
         i++;
     });

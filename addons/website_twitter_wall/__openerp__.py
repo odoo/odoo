@@ -19,6 +19,7 @@ Visualize Tweets
     'depends': ['website'],
     'website': 'https://www.odoo.com',
     'data': [
+        'views/snippets.xml',
         'views/website_twitter_wall.xml',
         'views/website_twitter_wall_backend.xml',
         'security/ir.model.access.csv',
