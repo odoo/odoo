@@ -8,7 +8,6 @@
             <field name="action_id" ref="base.action_partner_form"/>
             <field name="model">res.partner</field>
             <field name="mode">form</field>
-            <field name="trigger_selector">.oe_form_buttons_view:visible:not(.modal-dialog .oe_form_buttons_view:visible), div.oe_right.oe_button_box > button</field>
             <field name="highlight_selector">div.oe_right.oe_button_box:visible > button.o_res_partner_tip_opp</field>
             <field name="placement">bottom</field>
         </record>
@@ -19,7 +18,6 @@
             <field name="model">crm.lead</field>
             <field name="type">opportunity</field>
             <field name="mode">form</field>
-            <field name="trigger_selector">.oe_form_buttons_view:visible,ol.breadcrumb a</field>
             <field name="highlight_selector">ol.breadcrumb:visible a:last</field>
             <field name="placement">bottom</field>
         </record>
@@ -29,7 +27,6 @@
             <field name="description"><![CDATA[You can change the stage of your opportunities by simply <b>drag and dropping</b> the opportunity into another column.]]></field>
             <field name="model">crm.lead</field>
             <field name="mode">kanban</field>
-            <field name="trigger_selector">.oe_kanban_record:visible</field>
             <field name="highlight_selector">.oe_kanban_record:visible</field>
             <field name="end_event">mousedown</field>
             <field name="placement">auto top</field>
