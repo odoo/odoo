@@ -47,6 +47,7 @@
                                         <field name="validity_duration" class="oe_inline" attrs="{'invisible': [('program_type', '=', 'public_unique_code')]}" />
                                         <field name="validity_type" class="oe_inline" attrs="{'invisible': [('program_type', '=', 'public_unique_code')]}"/>
                                         <field name="date_from" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}" class="oe_inline" placeholder="From"/>
+                                         <label string=" To " attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}" class="oe_inline"/>
                                         <field name="date_to" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}" class="oe_inline" placeholder="To"/>
                                     </div>
                                     <field name="partner_id" placeholder="Select customer"/>
@@ -95,13 +96,43 @@
                         <field name="nbr_coupons"/>
                     </group>
                     <footer>
-                        <button name="sale.couponprogram.generate_coupon" type="object" string="Generate" class="oe_highlight"/>
+                        <button name="generate_coupon" type="object" string="Generate" class="oe_highlight"/>
                         <button special="cancel" string="Cancel"/>
                     </footer>
                 </form>
-
             </field>
         </record>
+
+        <act_window id="launch_coupon_wizard"
+                    name="Generate Coupons"
+                    src_model="sale.couponprogram"
+                    res_model="sale.manual.coupon"
+                    view_mode="form"
+                    target="new"
+                    key2="client_action_multi"/>
+
+        <record model="ir.ui.view" id="wizard_form_view_to_get_coupon">
+            <field name="name">wizard.form.get.coupon</field>
+            <field name="model">sale.get.coupon</field>
+            <field name="arch" type="xml">
+                <form string="Apply coupon">
+                    <group>
+                        <field name="textbox_coupon_code"/>
+                    </group>
+                    <footer>
+                        <button name="process_coupon" string="Apply Coupon" type="object" class="oe_edit_only oe_inline"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+     <act_window id="launch_get_coupon_wizard"
+                    name="Apply Coupon"
+                    src_model="sale.order"
+                    res_model="sale.get.coupon"
+                    view_mode="form"
+                    target="new"
+                    key2="client_action_multi"/>
 
       <record model="ir.ui.view" id="coupon_program_tree_view">
             <field name="name">Sale Coupon Program tree view</field>
@@ -114,15 +145,6 @@
             </field>
         </record>
 
-        <act_window id="launch_coupon_wizard"
-                    name="Generate Coupons"
-                    src_model="sale.couponprogram"
-                    res_model="sale.manual.coupon"
-                    view_mode="form"
-                    target="new"
-                    key2="client_action_multi"/>
-
-
         <record model="ir.ui.view" id="sale_coupon_form">
              <field name="name">sale.coupon.form</field>
              <field name="model">sale.order</field>
@@ -130,9 +152,7 @@
              <field name="arch" type="xml">
                 <xpath expr="//field[@name='note']" position="before">
                     <group style="width: 50px">
-                        <label string="Coupon" class="oe_inline oe_edit_only"/>
-                        <input type="text" name="txt_typed_coupon" class="form-control oe_inline oe_edit_only"/>
-                       <button name="apply_coupon_reward" string="Apply" type="object" class="oe_edit_only oe_inline" context="{'coupon_code': 'hello'}"/>
+                       <button name="get_coupon" string="Apply coupon" type="object" class="oe_edit_only"/>
                     </group>
                 </xpath>
              </field>
