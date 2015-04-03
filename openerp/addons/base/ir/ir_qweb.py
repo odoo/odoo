@@ -8,6 +8,7 @@ import json
 import itertools
 import logging
 import math
+from operator import itemgetter
 import os
 import re
 import sys
@@ -950,40 +951,41 @@ class RelativeDatetimeConverter(osv.AbstractModel):
         return babel.dates.format_timedelta(
             value - reference, add_direction=True, locale=locale)
 
+contact_mapper = {
+    'name': lambda r: r.name_get()[0][1],
+    'address': lambda r: escape('\n'.join(
+        r.with_context(show_address=True).name_get()[0][1]
+    )),
+    'country_id': lambda r: r.country_id.display_name
+}
+contact_mapper.update(
+    (field, itemgetter(field))
+    for field in ['phone', 'mobile', 'fax', 'city', 'email', 'website']
+)
 class Contact(orm.AbstractModel):
     _name = 'ir.qweb.field.contact'
     _inherit = 'ir.qweb.field.many2one'
 
     def record_to_html(self, cr, uid, field_name, record, options=None, context=None):
-        if context is None:
-            context = {}
-
         if options is None:
             options = {}
         opf = options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
 
-        value_rec = record[field_name]
-        if not value_rec:
+        record = record[field_name]
+        if not record:
             return None
-        value_rec = value_rec.sudo().with_context(show_address=True)
-        value = value_rec.name_get()[0][1]
+        record = record.sudo()
 
         val = {
-            'name': value.split("\n")[0],
-            'address': escape("\n".join(value.split("\n")[1:])).strip(),
-            'phone': value_rec.phone,
-            'mobile': value_rec.mobile,
-            'fax': value_rec.fax,
-            'city': value_rec.city,
-            'country_id': value_rec.country_id.display_name,
-            'website': value_rec.website,
-            'email': value_rec.email,
             'fields': opf,
-            'object': value_rec,
+            'object': record,
             'options': options
         }
+        for field in opf:
+            val[field] = contact_mapper[field](record)
 
-        html = self.pool["ir.ui.view"].render(cr, uid, "base.contact", val, engine='ir.qweb', context=context).decode('utf8')
+        html = self.pool["ir.ui.view"].render(
+            cr, uid, "base.contact", val, engine='ir.qweb', context=context).decode('utf8')
 
         return HTMLSafe(html)
 

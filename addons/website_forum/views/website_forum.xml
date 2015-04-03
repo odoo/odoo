@@ -582,7 +582,10 @@
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
-        <div t-attf-class="question #{can_bump and 'oe_js_bump' or ''}" t-att-data-type="question.post_type" t-att-data-last-update="question.write_date" t-att-data-id="question.id">
+        <div t-attf-class="question #{can_bump and 'oe_js_bump' or ''}"
+             t-att-data-type="question.post_type"
+             t-att-data-last-update="question.write_date"
+             t-att-data-id="question.id">
             <div class="pull-left">
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>

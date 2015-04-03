@@ -203,20 +203,19 @@ class WebsiteForum(http.Controller):
             raise werkzeug.exceptions.NotFound()
 
         # increment view counter
-        question.sudo().set_viewed()
+        question.set_viewed()
         if question.parent_id:
             redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(question.parent_id))
             return werkzeug.utils.redirect(redirect_url, 301)
         filters = 'question'
-        values = self._prepare_forum_values(forum=forum, searches=post)
-        values.update({
-            'main_object': question,
-            'question': question,
-            'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - datetime.strptime(question.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9),
-            'header': {'question_data': True},
-            'filters': filters,
-            'reversed': reversed,
-        })
+        values = self._prepare_forum_values(forum=forum, searches=post,
+            main_object=question,
+            question=question,
+            can_bump=(question.forum_id.allow_bump and not question.child_ids and (datetime.today() - datetime.strptime(question.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9),
+            header={'question_data': True},
+            filters=filters,
+            reversed=reversed,
+        )
         return request.website.render("website_forum.post_description_full", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", methods=['POST'], website=True)
@@ -237,12 +236,11 @@ class WebsiteForum(http.Controller):
         reasons = request.env['forum.post.reason'].search([])
 
         values = self._prepare_forum_values(**post)
-        values.update({
-            'question': question,
-            'question': question,
-            'forum': forum,
-            'reasons': reasons,
-        })
+        values.update(
+            question=question,
+            forum=forum,
+            reasons=reasons,
+        )
         return request.website.render("website_forum.close_post", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/edit_answer', type='http', auth="user", website=True)
