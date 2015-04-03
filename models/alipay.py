@@ -92,7 +92,7 @@ class AcquirerAlipay(osv.Model):
             }
         else:
             return {
-                'alipay_url': 'https://openapi.alipaydev.com/gateway.do'
+                'alipay_url': 'https://openapi.alipaydev.com/gateway.do?'
             }
 
     def _get_providers(self, cr, uid, context=None):
@@ -168,11 +168,13 @@ class AcquirerAlipay(osv.Model):
             alipay_tx_values['handling'] = '%.2f' % alipay_tx_values.pop('fees', 0.0)
         if alipay_tx_values.get('return_url'):
             alipay_tx_values['custom'] = json.dumps({'return_url': '%s' % alipay_tx_values.pop('return_url')})
+
+        context['alipay_tx_values'] = alipay_tx_values
         return partner_values, alipay_tx_values
 
     def alipay_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        params = {}
+        params = context['alipay_tx_values']
         params,prestr = params_filter(params)
         params['sign'] = build_mysign(prestr, acquirer.alipay_partner_key, 'MD5')
         params['sign_type'] = 'MD5'
