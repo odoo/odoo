@@ -26,13 +26,11 @@ class AcquirerAlipay(osv.Model):
         """ Alipay URLS """
         if environment == 'prod':
             return {
-                'alipay_form_url': 'https://mapi.alipay.com/gateway.do?',
-                'alipay_rest_url': 'https://mapi.alipay.com/gateway.do?',
+                'alipay_url': 'https://mapi.alipay.com/gateway.do?'
             }
         else:
             return {
-                'alipay_form_url': 'https://openapi.alipaydev.com/gateway.do',
-                'alipay_rest_url': 'https://openapi.alipaydev.com/gateway.do',
+                'alipay_url': 'https://openapi.alipaydev.com/gateway.do'
             }
 
     def _get_providers(self, cr, uid, context=None):
@@ -41,27 +39,19 @@ class AcquirerAlipay(osv.Model):
         return providers
 
     _columns = {
-        'alipay_partner_account': fields.char('Alipay Partner Account', required_if_provider='alipay'),
-        'alipay_seller_email': fields.char(
-            'Alipay Seller Email',
-            help='The Seller Email is used to ensure communications coming from Alipay are valid and secured.'),
-        'alipay_use_ipn': fields.boolean('Use IPN', help='Alipay Instant Payment Notification'),
-        # Server 2 server
-        'alipay_api_enabled': fields.boolean('Use Rest API'),
-        'alipay_api_username': fields.char('Rest API Username'),
-        'alipay_api_password': fields.char('Rest API Password'),
-        'alipay_api_access_token': fields.char('Access Token'),
-        'alipay_api_access_token_validity': fields.datetime('Access Token Validity'),
+        'alipay_partner_account': fields.char('Alipay Partner ID', required_if_provider='alipay'),
+        'alipay_partner_key': fields.char('Alipay Partner Key', required_if_provider='alipay'),
+        'alipay_seller_email': fields.char('Alipay Seller Email', required_if_provider='alipay'),
+
     }
 
     _defaults = {
-        'alipay_use_ipn': True,
         'fees_active': False,
-        'fees_dom_fixed': 0.35,
-        'fees_dom_var': 3.4,
-        'fees_int_fixed': 0.35,
-        'fees_int_var': 3.9,
-        'alipay_api_enabled': False,
+        'fees_dom_fixed': 0.0,
+        'fees_dom_var': 0.0,
+        'fees_int_fixed': 0.0,
+        'fees_int_var': 0.0,
+
     }
 
     def _migrate_alipay_account(self, cr, uid, context=None):
@@ -111,14 +101,16 @@ class AcquirerAlipay(osv.Model):
 
         alipay_tx_values = dict(tx_values)
         alipay_tx_values.update({
+            'out_trade_no': tx_values['reference'],
+            'subject': tx_values['reference'],
+            'logistics_type':'DIRECT',
+            'logistics_fee':'0',
+            'logistics_payment':'SELLER_PAY'
             'service': 'create_direct_pay_by_user',
             'payment_type': '1',
             'partner': acquirer.alipay_seller_email,
             'seller_email': acquirer.alipay_partner_account,
             '_input_charset': 'utf-8',
-            'show_url': '',
-            'out_trade_no': tx_values['reference'],
-            'subject': tx_values['reference'],
             'body': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
             'total_fee': tx_values['amount'],
             'payment_method': 'directPay',
@@ -130,6 +122,7 @@ class AcquirerAlipay(osv.Model):
             'royalty_parameters': '',
             'return_url': '%s' % urlparse.urljoin(base_url, AlipayController._return_url),
             'notify_url': '%s' % urlparse.urljoin(base_url, AlipayController._notify_url),
+            'show_url': '',
         })
         if acquirer.fees_active:
             alipay_tx_values['handling'] = '%.2f' % alipay_tx_values.pop('fees', 0.0)
@@ -139,31 +132,8 @@ class AcquirerAlipay(osv.Model):
 
     def alipay_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        return self._get_alipay_urls(cr, uid, acquirer.environment, context=context)['alipay_form_url']
+        return self._get_alipay_urls(cr, uid, acquirer.environment, context=context)['alipay_url']
 
-    def _alipay_s2s_get_access_token(self, cr, uid, ids, context=None):
-        res = dict.fromkeys(ids, False)
-        parameters = werkzeug.url_encode({'grant_type': 'client_credentials'})
-
-        for acquirer in self.browse(cr, uid, ids, context=context):
-            tx_url = self._get_alipay_urls(cr, uid, acquirer.environment)['alipay_rest_url']
-            request = urllib2.Request(tx_url, parameters)
-
-            request.add_header('Accept', 'application/json')
-            request.add_header('Accept-Language', 'en_US')
-
-            # add authorization header
-            base64string = base64.encodestring('%s:%s' % (
-                acquirer.alipay_api_username,
-                acquirer.alipay_api_password)
-            ).replace('\n', '')
-            request.add_header("Authorization", "Basic %s" % base64string)
-
-            request = urllib2.urlopen(request)
-            result = request.read()
-            res[acquirer.id] = json.loads(result).get('access_token')
-            request.close()
-        return res
 
 
 class TxAlipay(osv.Model):
@@ -251,161 +221,3 @@ class TxAlipay(osv.Model):
             data.update(state='error', state_message=error)
             return tx.write(data)
 
-    # --------------------------------------------------
-    # SERVER2SERVER RELATED METHODS
-    # --------------------------------------------------
-
-    def _alipay_try_url(self, request, tries=3, context=None):
-        """ Try to contact Alipay. Due to some issues, internal service errors
-        seem to be quite frequent. Several tries are done before considering
-        the communication as failed.
-
-         .. versionadded:: pre-v8 saas-3
-         .. warning::
-
-            Experimental code. You should not use it before OpenERP v8 official
-            release.
-        """
-        done, res = False, None
-        while (not done and tries):
-            try:
-                res = urllib2.urlopen(request)
-                done = True
-            except urllib2.HTTPError as e:
-                res = e.read()
-                e.close()
-                if tries and res and json.loads(res)['name'] == 'INTERNAL_SERVICE_ERROR':
-                    _logger.warning('Failed contacting Alipay, retrying (%s remaining)' % tries)
-            tries = tries - 1
-        if not res:
-            pass
-            # raise openerp.exceptions.
-        result = res.read()
-        res.close()
-        return result
-
-    def _alipay_s2s_send(self, cr, uid, values, cc_values, context=None):
-        """
-         .. versionadded:: pre-v8 saas-3
-         .. warning::
-
-            Experimental code. You should not use it before OpenERP v8 official
-            release.
-        """
-        tx_id = self.create(cr, uid, values, context=context)
-        tx = self.browse(cr, uid, tx_id, context=context)
-
-        headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer %s' % tx.acquirer_id._alipay_s2s_get_access_token()[tx.acquirer_id.id],
-        }
-        data = {
-            'intent': 'sale',
-            'transactions': [{
-                'amount': {
-                    'total': '%.2f' % tx.amount,
-                    'currency': tx.currency_id.name,
-                },
-                'description': tx.reference,
-            }]
-        }
-        if cc_values:
-            data['payer'] = {
-                'payment_method': 'credit_card',
-                'funding_instruments': [{
-                    'credit_card': {
-                        'number': cc_values['number'],
-                        'type': cc_values['brand'],
-                        'expire_month': cc_values['expiry_mm'],
-                        'expire_year': cc_values['expiry_yy'],
-                        'cvv2': cc_values['cvc'],
-                        'first_name': tx.partner_name,
-                        'last_name': tx.partner_name,
-                        'billing_address': {
-                            'line1': tx.partner_address,
-                            'city': tx.partner_city,
-                            'country_code': tx.partner_country_id.code,
-                            'postal_code': tx.partner_zip,
-                        }
-                    }
-                }]
-            }
-        else:
-            # TODO: complete redirect URLs
-            data['redirect_urls'] = {
-                # 'return_url': 'http://example.com/your_redirect_url/',
-                # 'cancel_url': 'http://example.com/your_cancel_url/',
-            },
-            data['payer'] = {
-                'payment_method': 'alipay',
-            }
-        data = json.dumps(data)
-
-        request = urllib2.Request('https://api.sandbox.alipay.com/v1/payments/payment', data, headers)
-        result = self._alipay_try_url(request, tries=3, context=context)
-        return (tx_id, result)
-
-    def _alipay_s2s_get_invalid_parameters(self, cr, uid, tx, data, context=None):
-        """
-         .. versionadded:: pre-v8 saas-3
-         .. warning::
-
-            Experimental code. You should not use it before OpenERP v8 official
-            release.
-        """
-        invalid_parameters = []
-        return invalid_parameters
-
-    def _alipay_s2s_validate(self, cr, uid, tx, data, context=None):
-        """
-         .. versionadded:: pre-v8 saas-3
-         .. warning::
-
-            Experimental code. You should not use it before OpenERP v8 official
-            release.
-        """
-        values = json.loads(data)
-        status = values.get('state')
-        if status in ['approved']:
-            _logger.info('Validated Alipay s2s payment for tx %s: set as done' % (tx.reference))
-            tx.write({
-                'state': 'done',
-                'date_validate': values.get('udpate_time', fields.datetime.now()),
-                'alipay_txn_id': values['id'],
-            })
-            return True
-        elif status in ['pending', 'expired']:
-            _logger.info('Received notification for Alipay s2s payment %s: set as pending' % (tx.reference))
-            tx.write({
-                'state': 'pending',
-                # 'state_message': data.get('pending_reason', ''),
-                'alipay_txn_id': values['id'],
-            })
-            return True
-        else:
-            error = 'Received unrecognized status for Alipay s2s payment %s: %s, set as error' % (tx.reference, status)
-            _logger.info(error)
-            tx.write({
-                'state': 'error',
-                # 'state_message': error,
-                'alipay_txn_id': values['id'],
-            })
-            return False
-
-    def _alipay_s2s_get_tx_status(self, cr, uid, tx, context=None):
-        """
-         .. versionadded:: pre-v8 saas-3
-         .. warning::
-
-            Experimental code. You should not use it before OpenERP v8 official
-            release.
-        """
-        # TDETODO: check tx.alipay_txn_id is set
-        headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer %s' % tx.acquirer_id._alipay_s2s_get_access_token()[tx.acquirer_id.id],
-        }
-        url = 'https://api.sandbox.alipay.com/v1/payments/payment/%s' % (tx.alipay_txn_id)
-        request = urllib2.Request(url, headers=headers)
-        data = self._alipay_try_url(request, tries=3, context=context)
-        return self.s2s_feedback(cr, uid, tx.id, data, context=context)
