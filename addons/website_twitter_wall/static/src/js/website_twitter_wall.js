@@ -129,7 +129,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         '#6C6D6D': '#0084B4',
         '#ACADAD': '#0084B4',
         '#F1F1F1': '#0084B4'
-    }, current_class = 'col-sm-12', color = '#F1F1F1';
+    }, color = '#F1F1F1';
     Qweb.add_template('/website_twitter_wall/static/src/xml/website_twitter_wall_tweet.xml');
     var TweetWall = Widget.extend({
         template: 'twitter_tweets',
@@ -138,6 +138,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             this.pool_cache = {};
             this.repeat = false;
             this.shuffle = false;
+            this.current_class = 'col-sm-12'
             this.theme = "light";
             this.limit = 25;
             this.timeout = 7000;
@@ -214,7 +215,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                     pop_el_desc.attr("data-link-color", colors[color] || color);
                     if (self.theme == "dark")
                         pop_el_desc.attr({"data-theme": "dark", "data-link-color": color});
-                    $(Qweb.render("twitter_tweets", {'res': pop_el_desc.prop('outerHTML'), 'class' : current_class})).prependTo('.odoo-tw-walls');
+                    $(Qweb.render("twitter_tweets", {'res': pop_el_desc.prop('outerHTML'), 'class' : self.current_class})).prependTo('.odoo-tw-walls');
                 } else {
                     clearInterval(self.tweet_interval);
                     self.get_data();
@@ -229,19 +230,19 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         switch($(this).data('operation')) {
             case 'list':
                 $('.odoo-tw-tweet').removeClass().addClass('col-sm-12 odoo-tw-tweet');
-                current_class = 'col-sm-12';
+                twitter_wall.current_class = 'col-sm-12';
                 $(this).siblings().removeClass("active");
                 twitter_wall.timeout = 7000;
                 break;
             case 'grid':
                 $('.odoo-tw-tweet').removeClass().addClass('col-sm-4 odoo-tw-tweet odoo-tw-view-live-option-single');
-                current_class = 'col-sm-4 odoo-tw-view-live-option-single';
+                twitter_wall.current_class = 'col-sm-4 odoo-tw-view-live-option-single';
                 $(this).siblings().removeClass("active");
                 twitter_wall.timeout = 5000;
                 break;
             case 'single':
                 $('.odoo-tw-tweet').removeClass().addClass('col-sm-12 odoo-tw-tweet odoo-tw-view-live-option-single');
-                current_class = 'col-sm-12 odoo-tw-view-live-option-single';
+                twitter_wall.current_class = 'col-sm-12 odoo-tw-view-live-option-single';
                 $(this).siblings().removeClass("active");
                 twitter_wall.timeout = 15000;
                 break;
