@@ -1250,7 +1250,7 @@
                 </div>
                 <br />
             </t>
-            <table>
+            <table class='receipt-orderlines'>
                 <colgroup>
                     <col width='50%' />
                     <col width='25%' />
@@ -1274,7 +1274,7 @@
                 </tr>
             </table>
             <br />
-            <table>
+            <table class='receipt-total'>
                 <tr>
                     <td>Subtotal:</td>
                     <td class="pos-right-align">
@@ -1303,7 +1303,7 @@
                 </tr>
             </table>
             <br />
-            <table>
+            <table class='receipt-paymentlines'>
                 <tr t-foreach="paymentlines" t-as="line">
                     <td>
                         <t t-esc="line.name"/>
@@ -1314,7 +1314,7 @@
                 </tr>
             </table>
             <br />
-            <table>
+            <table class='receipt-change'>
                 <tr><td>Change:</td><td class="pos-right-align">
                     <t t-esc="widget.format_currency(order.get_change())"/>
                     </td></tr>
