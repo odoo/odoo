@@ -2,7 +2,7 @@
 
 import logging
 
-from openerp import api, fields, models, _
+from openerp import fields, models, _
 
 _logger = logging.getLogger(__name__)
 
@@ -14,17 +14,15 @@ class ShareWizardPortal(models.TransientModel):
        menus in the selected portal upon sharing with a portal group."""
     _inherit = "share.wizard"
 
-    @api.model
+    user_ids = fields.Many2many('res.users', 'share_wizard_res_user_rel', 'share_id', 'user_id', string='Existing users', domain=[('share', '=', True)])
+    group_ids = fields.Many2many('res.groups', 'share_wizard_res_group_rel', 'share_id', 'group_id', string='Existing groups', domain=[('share', '=', False)])
+
     def _user_type_selection(self):
         selection = super(ShareWizardPortal, self)._user_type_selection()
         selection.extend([('existing',_('Users you already shared with')),
                           ('groups',_('Existing Groups (e.g Portal Groups)'))])
         return selection
 
-    user_ids = fields.Many2many('res.users', 'share_wizard_res_user_rel', 'share_id', 'user_id', string='Existing users', domain=[('share', '=', True)])
-    group_ids = fields.Many2many('res.groups', 'share_wizard_res_group_rel', 'share_id', 'group_id', string='Existing groups', domain=[('share', '=', False)])
-
-    @api.model
     def _check_preconditions(self):
         if self.user_type == 'existing':
             self._assert(self.user_ids,
@@ -39,52 +37,51 @@ class ShareWizardPortal(models.TransientModel):
             return
         Menus = self.env['ir.ui.menu']
         parent_menu = Menus.browse(parent_menu_id) # No context
-        menu_id = None
+        menu = None
         max_seq = 10
         for child_menu in parent_menu.child_id:
             max_seq = max(max_seq, child_menu.sequence)
             if child_menu.name == menu_name:
-                menu_id = child_menu.id
+                menu = child_menu
                 break
-        if not menu_id:
+        if not menu:
             # not found, create it
-            menu_id = Menus.sudo().create({'name': menu_name,
+            menu = Menus.sudo().create({'name': menu_name,
                                      'parent_id': parent_menu.id,
                                      'sequence': max_seq + 10, # at the bottom
                                     })
-        return menu_id
+        return menu
 
     def _sharing_root_menu_id(self, portal):
         """Create or retrieve root ID of sharing menu in portal menu
 
            :param portal: browse_record of portal, constructed with a context WITHOUT language
         """
-        parent_menu_id = self._create_or_get_submenu_named(portal, SHARED_DOCS_MENU)
-        if parent_menu_id:
-            child_menu_id = self._create_or_get_submenu_named(parent_menu_id, SHARED_DOCS_CHILD_MENU)
-            return child_menu_id
+        parent_menu = self._create_or_get_submenu_named(portal, SHARED_DOCS_MENU)
+        if parent_menu:
+            child_menu = self._create_or_get_submenu_named(parent_menu.id, SHARED_DOCS_CHILD_MENU)
+            return child_menu
 
     def _create_shared_data_menu(self, portal):
         """Create sharing menus in portal menu according to share wizard options.
 
            :param portal: browse_record of portal, constructed with a context WITHOUT language
         """
-        root_menu_id = self._sharing_root_menu_id(portal)
-        if not root_menu_id:
+        root_menu = self._sharing_root_menu_id(portal)
+        if not root_menu:
             # no specific parent menu, cannot create the sharing menu at all.
             return
         # Create the shared action and menu
         action_def = self._shared_action_def()
-        action_id = self.env['ir.actions.act_window'].sudo().create(action_def)
+        action = self.env['ir.actions.act_window'].sudo().create(action_def)
         menu_data = {'name': action_def['name'],
                      'sequence': 10,
-                     'action': 'ir.actions.act_window,'+str(action_id.id),
-                     'parent_id': root_menu_id,
+                     'action': 'ir.actions.act_window,'+str(action.id),
+                     'parent_id': root_menu.id,
                      'icon': 'STOCK_JUSTIFY_FILL'}
-        menu_id =  self.env['ir.ui.menu'].sudo().create(menu_data)
-        return menu_id
+        menu =  self.env['ir.ui.menu'].sudo().create(menu_data)
+        return menu
 
-    @api.one
     def _create_share_users_group(self):
         # Override of super() to handle the possibly selected "existing users"
         # and "existing groups".
@@ -123,4 +120,3 @@ class ShareWizardPortal(models.TransientModel):
 
                 self.write({'result_line_ids': [(0,0,new_line)]})
         return super_result
-

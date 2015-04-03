@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD:addons/share/views/res_users_view.xml
-<openerp>
-    <data>
+<odoo>
         <record id="res_users_search_sharing" model="ir.ui.view">
             <field name="name">res.users.search.share.inherit</field>
             <field name="model">res.users</field>
@@ -18,7 +16,7 @@
         </record>
 
         <!-- Hide share users/groups by default -->
-        <record model="ir.actions.act_window" id="base.action_res_users">
+        <record id="base.action_res_users" model="ir.actions.act_window">
             <field name="name">Users</field>
             <field name="context">{'search_default_no_share': 1}</field>
         </record>
@@ -37,7 +35,7 @@
         </record>
 
         <!-- Hide share users/groups by default -->
-        <record model="ir.actions.act_window" id="base.action_res_groups">
+        <record id="base.action_res_groups" model="ir.actions.act_window">
             <field name="name">Groups</field>
             <field name="context">{'search_default_no_share': 1}</field>
         </record>
@@ -54,5 +52,4 @@
                 </field>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>

@@ -1,30 +1,13 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2012 OpenERP S.A. (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
-from openerp.osv import osv
 
-class ir_model_access(osv.Model):
+from openerp import api, models
+
+class IrModelAccess(models.Model):
     _inherit = 'ir.model.access'
 
     # overload group_names_with_access() to avoid returning sharing groups
     # by filtering out groups with share=true.
+    @api.v7
     def group_names_with_access(self, cr, model_name, access_mode):
         """Returns the names of visible groups which have been granted ``access_mode`` on
            the model ``model_name``.
@@ -44,4 +27,7 @@ class ir_model_access(osv.Model):
                         (g.share IS NULL or g.share IS false) AND
                         a.perm_''' + access_mode, (model_name,))
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
-    
+
+    @api.v8
+    def group_names_with_access(self, model_name, access_mode):
+        return self.group_names_with_access(self._cr, model_name, access_mode)

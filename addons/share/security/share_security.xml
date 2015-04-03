@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data noupdate="0">
-        <record model="ir.module.category" id="module_category_share">
+<odoo>
+        <record id="module_category_share" model="ir.module.category">
             <field name="name">Sharing</field>
             <field name="parent_id" ref="base.module_category_tools"/>
             <field name="sequence">26</field>
@@ -14,5 +13,4 @@ This group is a template group for shared users, giving basic access needs, the 
             <field name="category_id" ref="base.module_category_hidden"/>
             <field name="share">1</field>
         </record>
-    </data>
-</openerp>
+</odoo>
