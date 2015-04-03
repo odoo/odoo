@@ -110,6 +110,7 @@ var TimelineView = View.extend ({
         this.model = dataset.model;
         this.domain = dataset.domain || [];
         this.context = dataset.context || {};
+        this.parent_view = parent.parent ? parent.parent : this;
 
         var opt = _.clone(this.context.options);
         this.options = options || {};
@@ -322,6 +323,7 @@ var MailThread = Attachment.extend ({
         this.domain = dataset.domain || [];
         this.context = _.clone(dataset.context) || {};
         this.options = _.clone(options);
+        this.parent_view = parent.parent_view;
 
         this.is_ready = $.Deferred();
         this.root = parent instanceof TimelineView ? parent : false;
@@ -855,7 +857,7 @@ var MailThread = Attachment.extend ({
 
         this.followers_loaded = $.Deferred();
 
-        if ((! this.nb_followers || !this.follower_ids) && (this.model && this.res_id)) {
+        if ((! this.nb_followers || !this.follower_ids) && (this.model && this.res_id) && this.options.view_inbox) {
             this.nb_followers = 0;
             this.follower_ids = [];
 
