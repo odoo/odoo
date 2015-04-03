@@ -103,9 +103,9 @@ class AcquirerAlipay(osv.Model):
         alipay_tx_values.update({
             'out_trade_no': tx_values['reference'],
             'subject': tx_values['reference'],
-            'logistics_type':'DIRECT',
-            'logistics_fee':'0',
-            'logistics_payment':'SELLER_PAY'
+            'logistics_type': 'DIRECT',
+            'logistics_fee': '0',
+            'logistics_payment': 'SELLER_PAY',
             'service': 'create_direct_pay_by_user',
             'payment_type': '1',
             'partner': acquirer.alipay_seller_email,
