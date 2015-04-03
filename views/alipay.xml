@@ -3,7 +3,7 @@
     <data noupdate="1">
 
         <template id="alipay_acquirer_button">
-            <form t-if="acquirer.alipay_partner_account" t-att-action="tx_url" method="post" target="_self">
+           <!--  <form t-if="acquirer.alipay_partner_account" t-att-action="tx_url" method="post" target="_self">
                 <input type="hidden" name="service" t-att-value="tx_values['service']"/>
                 <input type="hidden" name="payment_type" t-att-value="tx_values['payment_type']"/>
                 <input type="hidden" name="partner" t-att-value="tx_values['partner']"/>
@@ -25,7 +25,7 @@
                        t-att-value="tx_values.get('return_url')"/>
                 <input t-if="tx_values.get('notify_url')" type="hidden" name="notify_url"
                        t-att-value="tx_values.get('notify_url')"/>
-                <!-- submit -->
+                
                 <button type="submit" width="100px"
                         t-att-class="submit_class">
                     <img t-if="not submit_txt" src="/payment_alipay/static/src/img/alipay_icon.png"/>
@@ -34,7 +34,7 @@
                         <span class="fa fa-long-arrow-right"/>
                     </span>
                 </button>
-            </form>
+            </form> -->
         </template>
 
     </data>
