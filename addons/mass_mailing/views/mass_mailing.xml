@@ -28,6 +28,13 @@
                     <field name="mail_mail_id_int"/>
                     <field name="message_id"/>
                     <field name="mass_mailing_id"/>
+                    <filter string="Received" name="filter_received" domain="[('sent', '!=', False), ('bounced', '=', False)]"/>
+                    <filter string="Opened" name="filter_opened" domain="[('opened', '!=', False)]"/>
+                    <filter string="Replied" name="filter_replied" domain="[('replied', '!=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Open Date" name="group_open_date" context="{'group_by': 'opened:day'}"/>
+                        <filter string="Reply Date" name="group_reply_date" context="{'group_by': 'replied:day'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -289,23 +296,28 @@
                     <sheet>
                         <div class="oe_button_box pull-right" attrs="{'invisible': [('state', 'in', ('draft','test'))]}">
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
-                                type="action" class="oe_stat_button">
+                                    context="{'search_default_filter_received': True}"
+                                    type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
-                                type="action" class="oe_stat_button">
+                                    context="{'search_default_filter_opened': True}"
+                                    type="action" class="oe_stat_button">
                                 <field name="opened_ratio" string="Opened" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
-                                type="action" class="oe_stat_button">
+                                    context="{'search_default_filter_replied': True}"
+                                    type="action" class="oe_stat_button">
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
-                                type="action" class="oe_stat_button oe_inline">
+                                    context="{'search_default_filter_opened': True, 'search_default_group_open_date': True}"
+                                    type="action" class="oe_stat_button oe_inline">
                                 <field name="opened_daily" string="Opened Daily" widget="barchart"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
-                                type="action" class="oe_stat_button oe_inline">
+                                    context="{'search_default_filter_replied': True, 'search_default_group_reply_date': True}"
+                                    type="action" class="oe_stat_button oe_inline">
                                 <field name="replied_daily" string="Replied Daily" widget="barchart"/>
                             </button>
                         </div>
