@@ -3,8 +3,8 @@
     <data noupdate="1">
 
         <template id="alipay_acquirer_button">
-           <!--  <form t-if="acquirer.alipay_partner_account" t-att-action="tx_url" method="post" target="_self">
-                <input type="hidden" name="service" t-att-value="tx_values['service']"/>
+                <form t-if="acquirer.alipay_partner_account" t-att-action="tx_url" method="post" target="_self">
+                <!-- <input type="hidden" name="service" t-att-value="tx_values['service']"/>
                 <input type="hidden" name="payment_type" t-att-value="tx_values['payment_type']"/>
                 <input type="hidden" name="partner" t-att-value="tx_values['partner']"/>
                 <input type="hidden" name="seller_email" t-att-value="tx_values['seller_email']"/>
@@ -24,7 +24,7 @@
                 <input t-if="tx_values.get('return_url')" type='hidden' name='return_url'
                        t-att-value="tx_values.get('return_url')"/>
                 <input t-if="tx_values.get('notify_url')" type="hidden" name="notify_url"
-                       t-att-value="tx_values.get('notify_url')"/>
+                       t-att-value="tx_values.get('notify_url')"/>-->
                 
                 <button type="submit" width="100px"
                         t-att-class="submit_class">
@@ -34,7 +34,7 @@
                         <span class="fa fa-long-arrow-right"/>
                     </span>
                 </button>
-            </form> -->
+            </form> 
         </template>
 
     </data>
