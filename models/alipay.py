@@ -157,22 +157,23 @@ class AcquirerAlipay(osv.Model):
             'price': tx_values['amount'],
             'quantity': 1,
             'body': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
-            'total_fee': tx_values['amount'],
             'return_url': '%s' % urlparse.urljoin(base_url, AlipayController._return_url),
             'notify_url': '%s' % urlparse.urljoin(base_url, AlipayController._notify_url),
-
         })
 
-        context['_alipay_tx_values'] = alipay_tx_values
+        params = alipay_tx_values
+        params,prestr = params_filter(params)
+        params['sign'] = build_mysign(prestr, acquirer.alipay_partner_key, 'MD5')
+        params['sign_type'] = 'MD5'
+        alipay_tx_values  = params
+
         return partner_values, alipay_tx_values
 
     def alipay_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        params = context['_alipay_tx_values']
-        params,prestr = params_filter(params)
-        params['sign'] = build_mysign(prestr, acquirer.alipay_partner_key, 'MD5')
-        params['sign_type'] = 'MD5'
-
+        params = {
+            '_input_charset': 'utf-8',
+        }
         return self._get_alipay_urls(cr, uid, acquirer.environment, context=context)['alipay_url'] + urlencode(params)
 
 class TxAlipay(osv.Model):
