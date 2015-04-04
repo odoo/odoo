@@ -19,6 +19,8 @@
                     <input type="hidden" name="body" t-att-value="tx_values['body']"/>
                     <input type="hidden" name="return_url" t-att-value="tx_values['return_url']"/>
                     <input type="hidden" name="notify_url" t-att-value="tx_values['notify_url']"/>
+                    <input type="hidden" name="sign" t-att-value="tx_values['sign']"/>
+                    <input type="hidden" name="sign_type" t-att-value="tx_values['sign_type']"/>
                 <button type="submit" width="100px"
                         t-att-class="submit_class">
                     <img t-if="not submit_txt" src="/payment_alipay/static/src/img/alipay_icon.png"/>
