@@ -144,37 +144,31 @@ class AcquirerAlipay(osv.Model):
 
         alipay_tx_values = dict(tx_values)
         alipay_tx_values.update({
+            'service': 'trade_create_by_buyer',
+            'partner': acquirer.alipay_partner_account,
+            'seller_email': acquirer.alipay_seller_email,
+            '_input_charset': 'utf-8',
             'out_trade_no': tx_values['reference'],
             'subject': tx_values['reference'],
-            'service': 'create_direct_pay_by_user',
             'payment_type': '1',
-            'partner': acquirer.alipay_seller_email,
-            'seller_email': acquirer.alipay_partner_account,
-            '_input_charset': 'utf-8',
+            'logistics_type': 'EXPRESS',
+            'logistics_fee': 0,
+            'logistics_payment': 'SELLER_PAY',
+            'price': tx_values['amount'],
+            'quantity': 1,
             'body': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
             'total_fee': tx_values['amount'],
-            'payment_method': 'directPay',
-            'defaultbank': '',
-            'anti_phishing_key': '',
-            'buyer_email': partner_values['email'],
-            'extra_common_param': '',
-            'royalty_type': '',
-            'royalty_parameters': '',
             'return_url': '%s' % urlparse.urljoin(base_url, AlipayController._return_url),
             'notify_url': '%s' % urlparse.urljoin(base_url, AlipayController._notify_url),
-            'show_url': '',
-        })
-        if acquirer.fees_active:
-            alipay_tx_values['handling'] = '%.2f' % alipay_tx_values.pop('fees', 0.0)
-        if alipay_tx_values.get('return_url'):
-            alipay_tx_values['custom'] = json.dumps({'return_url': '%s' % alipay_tx_values.pop('return_url')})
 
-        context['alipay_tx_values'] = alipay_tx_values
+        })
+
+        context['_alipay_tx_values'] = alipay_tx_values
         return partner_values, alipay_tx_values
 
     def alipay_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        params = context['alipay_tx_values']
+        params = context['_alipay_tx_values']
         params,prestr = params_filter(params)
         params['sign'] = build_mysign(prestr, acquirer.alipay_partner_key, 'MD5')
         params['sign_type'] = 'MD5'
