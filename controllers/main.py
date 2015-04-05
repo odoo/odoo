@@ -34,6 +34,7 @@ class AlipayController(http.Controller):
         alipay_urls = request.registry['payment.acquirer']._get_alipay_urls(cr, uid, tx and tx.acquirer_id and tx.acquirer_id.environment or 'prod', context=context)
         validate_url = alipay_urls['alipay_url']
         new_post = {
+            'service':'notify_verify',
             'partner': seller_id ,
             'notify_id': notify_id,
         }

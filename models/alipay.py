@@ -210,7 +210,8 @@ class TxAlipay(osv.Model):
     def _alipay_form_validate(self, cr, uid, tx, data, context=None):
         status = data.get('trade_status')
         data = {
-            'acquirer_reference': data.get('trade_no'),
+            'acquirer_reference': data.get('out_trade_no'),
+            'alipay_txn_id': data.get('trade_no'),
             'alipay_txn_type': data.get('payment_type'),
             'partner_reference': data.get('buyer_id')
         }
