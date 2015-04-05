@@ -24,8 +24,8 @@ class AlipayController(http.Controller):
         res = False
         cr, uid, context = request.cr, request.uid, request.context
         reference = post.get('out_trade_no')
-        notify_id = post.get('notify_id)
-        seller_id = post.get('seller_id)
+        notify_id = post.get('notify_id')
+        seller_id = post.get('seller_id')
         tx = None
         if reference:
             tx_ids = request.registry['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
