@@ -51,8 +51,10 @@ class AlipayController(http.Controller):
     def alipay_notify(self, **post):
         """ Alipay Notify. """
         _logger.info('Beginning Alipay notify form_feedback with post data %s', pprint.pformat(post))  # debug
-        self.alipay_validate_data(**post)
-        return 'success'
+        if self.alipay_validate_data(**post):
+            return 'success'
+        else:
+            return ''
 
     @http.route('/payment/alipay/return', type='http', auth="none", methods=['GET'])
     def alipay_return(self, **get):
