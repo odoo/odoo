@@ -261,13 +261,12 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                         <input type='text' class='form-control' />
                         <span class='input-group-addon'><i></i></span>
                     </div><br/>
-                    <center><b>%s</b></center>", _t('Your Custom Color'), _t('Standard Colors')), i = 1;
+                    <center><b>%s</b></center>
+                    <div class='row'><div class='col-md-12'>", _t('Your Custom Color'), _t('Standard Colors'));
     _.map(colors, function(primary, secondary) {
         content += _.str.sprintf("<span class='odoo-tw-view-live-option-color' data-color-code='%s' style='background-color:%s' />", secondary, secondary);
-        if(i%6 == 0) content += "<br/>";
-        i++;
     });
-    content += _.str.sprintf("<br/><center><b>%s</b></center><div class='btn-group'>
+    content += _.str.sprintf("</div></div><center><b>%s</b></center><div class='btn-group'>
                     <button class='btn btn-default theme active' data-operation='light' title='Sun'><i class='fa fa-sun-o' /></button>
                     <button class='btn btn-default theme' data-operation='dark' title='Moon'><i class='fa fa-moon-o' /></button>
                 </div>", _t("Theme"));
