@@ -527,7 +527,9 @@ def content_disposition(filename, req):
     if browser == 'msie' and version < 9:
         return "attachment; filename=%s" % escaped
     elif browser == 'safari':
-        return "attachment; filename=%s" % filename
+        # XXX: Force unicode so to avoid a UnicodeDecodeError error when
+        # Werkzeug tries to encode using latin-1.
+        return u"attachment; filename=%s" % filename.decode('utf-8')
     else:
         return "attachment; filename*=UTF-8''%s" % escaped
 
