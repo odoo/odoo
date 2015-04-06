@@ -644,6 +644,7 @@
 
     <record id="mrp_production_1" model="mrp.production">
         <field name="product_id" ref="product.product_product_3"/>
+        <field name="categ_id" ref="product.product_category_5"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="product_qty">3</field>
         <field name="location_src_id" ref="stock.stock_location_stock"/>
@@ -654,6 +655,7 @@
 
     <record id="mrp_production_2" model="mrp.production">
         <field name="product_id" ref="product.product_product_27"/>
+        <field name="categ_id" ref="product.product_category_5"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="location_src_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
