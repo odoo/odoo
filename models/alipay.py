@@ -102,6 +102,20 @@ class AcquirerAlipay(osv.Model):
             'notify_url': '%s' % urlparse.urljoin(base_url, AlipayController._notify_url),
         })
 
+        to_sign = {}
+        to_sign.update({
+            'partner': acquirer.alipay_partner_account,
+            'seller_email': acquirer.alipay_seller_email,
+            'seller_id': acquirer.alipay_partner_account,
+            '_input_charset': 'utf-8',
+            'out_trade_no': tx_values['reference'],
+            'subject': tx_values['reference'],
+            'body': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
+            'payment_type': '1',
+            'return_url': '%s' % urlparse.urljoin(base_url, AlipayController._return_url),
+            'notify_url': '%s' % urlparse.urljoin(base_url, AlipayController._notify_url),
+        })
+
         payload_direct = {
             'service': 'create_direct_pay_by_user',
             'total_fee': tx_values['amount'],
@@ -126,19 +140,20 @@ class AcquirerAlipay(osv.Model):
         }
 
         if acquirer.alipay_interface_type == 'create_direct_pay_by_user':
+            to_sign.update(payload_direct)
             alipay_tx_values.update(payload_direct)
 
         if acquirer.alipay_interface_type == 'create_partner_trade_by_buyer':
-            alipay_tx_values.update(payload_escow)
+            to_sign.update(payload_escow)
+            alipay_tx_values.update(payload_direct)
 
         if acquirer.alipay_interface_type == 'trade_create_by_buyer':
-            alipay_tx_values.update(payload_dualfun)
+            to_sign.update(payload_dualfun)
+            alipay_tx_values.update(payload_direct)
 
-        params = alipay_tx_values
-        params,prestr = util.params_filter(params)
-        params['sign'] = util.build_mysign(prestr, acquirer.alipay_partner_key, 'MD5')
-        params['sign_type'] = 'MD5'
-        alipay_tx_values  = params
+        _,prestr = util.params_filter(to_sign)
+        alipay_tx_values['sign'] = util.build_mysign(prestr, acquirer.alipay_partner_key, 'MD5')
+        alipay_tx_values['sign_type'] = 'MD5'
 
         return partner_values, alipay_tx_values
 
