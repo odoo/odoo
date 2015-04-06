@@ -32,8 +32,8 @@
     """,
     'data': [
         'security/ir.model.access.csv',
-        'views/website_certification_views.xml',
-        'views/website_certification_templates.xml',
+        'views/certification_views.xml',
+        'views/certification_templates.xml',
     ],
     'installable': True,
 }

@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import certification
+import models
 import controllers
