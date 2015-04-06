@@ -42,39 +42,13 @@ editor.EditorBar.include({
             wizardA.on('hidden.bs.modal', function () {$(this).remove();});
 
         });
-        this.$el.on('click', '#save_and_publish', function() {
-            var version_id = parseInt($('html').data('version_id'));
-            if(version_id)
-            {
-                self.save();
-            }
-            else
-            {
-                var wizard = $(qweb.render("website_version.publish",{message:_t("Are you sure you want to publish your modifications.")}));
-                wizard.appendTo($('body')).modal({"keyboard" :true});
-                wizard.on('click','.o_confirm', function(){
-                    self.save();
-                });
-                wizard.on('hidden.bs.modal', function () {$(this).remove();});
-            }
-
-        });
-
-        $('.option_choice').click(function() {
-            self.$el.find(".o_second_choice").remove();
-            var name = $('#version-menu-button').data('version_name');
-            if(name){
-                self.$el.find(".o_first_choice").before(qweb.render("all_options", {version:'Save on '+name}));
-            }
-            else{
-                self.$el.find(".o_first_choice").before(qweb.render("all_options", {version:'Save and Publish'}));
-            }
-
-        });
+        var ver_name = $('#version-menu-button').data('version_name');
+        if(ver_name){
+            this.$el.find('button[data-action="save"]').text(_.str.sprintf(_t("Save on %s"), ver_name));
+        }
 
         return this._super();
     }
 });
-
 
 });
