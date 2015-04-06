@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+
+{
+    'name': 'allPay Payment Acquirer',
+    'category': 'Hidden',
+    'summary': 'Payment Acquirer: allPay Implementation',
+    'version': '1.0',
+    'description': """allPay Payment Acquirer""",
+    'author': 'Odoo CN, Jeffery',
+    'depends': ['payment'],
+    'data': [
+        'views/allpay.xml',
+        'views/payment_acquirer.xml',
+        'views/res_config_view.xml',
+        'data/allpay.xml',
+    ],
+    'installable': True,
+}
