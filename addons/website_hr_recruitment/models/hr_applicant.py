@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
+from odoo import models
 
-class hr_applicant(osv.Model):
+class HrApplicant(models.Model):
     _inherit = 'hr.applicant'
 
     def website_form_input_filter(self, request, values):

@@ -1,14 +1,17 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from urlparse import urljoin
 from werkzeug import url_encode
 
-from openerp import models, fields, api
-from openerp.addons.website.models.website import slug
+from odoo import api, fields, models
 
 class HrRecruitmentSource(models.Model):
     _inherit = 'hr.recruitment.source'
 
+    url = fields.Char(compute='_compute_url', string='Url Parameters')
+
     @api.depends('source_id', 'source_id.name', 'job_id')
-    @api.one
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for source in self:
@@ -19,5 +22,3 @@ class HrRecruitmentSource(models.Model):
                     'utm_source': source.source_id.name
                 })
             ))
-
-    url = fields.Char(compute='_compute_url', string='Url Parameters')
