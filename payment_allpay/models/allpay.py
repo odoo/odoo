@@ -27,15 +27,15 @@ _logger = logging.getLogger(__name__)
 class AcquirerallPay(osv.Model):
     _inherit = 'payment.acquirer'
 
-     @classmethod
-
-
+    @classmethod
     def checkout_feedback(cls, post):
         """
         :param post: post is a dictionary which allPay server sent to us.
         :return: a dictionary containing data the allpay server return to us.
         """
         _logger.info('inside the feedback')
+        HASH_KEY = acquirer.allpay_hash_key
+        HASH_IV = acquirer.allpay_hash_iv
         returns = {}
         ar_parameter = {}
         check_mac_value = ''
@@ -64,7 +64,7 @@ class AcquirerallPay(osv.Model):
                 sz_confirm_mac_value = "".join((str(sz_confirm_mac_value), "&", str(val[0]), "=", str(val[1])))
 
             sz_confirm_mac_value = "".join((sz_confirm_mac_value, "&HashIV=", HASH_IV))
-            sz_confirm_mac_value = do_str_replace((urllib.quote_plus(sz_confirm_mac_value)).lower(), False)
+            sz_confirm_mac_value = util.do_str_replace((urllib.quote_plus(sz_confirm_mac_value)).lower(), False)
             sz_confirm_mac_value = hashlib.md5(sz_confirm_mac_value).hexdigest().upper()
 
             _logger.info('sz-checkMacValue: %s & checkMacValue: %s' % (sz_confirm_mac_value, check_mac_value))
