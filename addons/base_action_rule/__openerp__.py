@@ -37,8 +37,8 @@ trigger an automatic reminder email.
     'website': 'https://www.odoo.com',
     'depends': ['base', 'resource', 'mail'],
     'data': [
-        'base_action_rule_data.xml',
-        'base_action_rule_view.xml',
+        'data/base_action_rule_data.xml',
+        'views/base_action_rule_views.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [],

@@ -19,5 +19,4 @@
 #
 ##############################################################################
 
-import base_action_rule
-import test_models
+import models
