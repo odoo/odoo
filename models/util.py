@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 try:
     import hashlib
     md5_constructor = hashlib.md5
