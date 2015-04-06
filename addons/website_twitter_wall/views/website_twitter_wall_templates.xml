@@ -24,12 +24,12 @@
     <!-- Assets for twitter wall -->
     <template id="assets_frontend" inherit_id="website.assets_frontend" name="Twitter Wall Assets">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/website_twitter_wall/static/lib/bootstrap-colorpicker/src/js/colorpicker-color.js" />
-            <script type="text/javascript" src="/website_twitter_wall/static/lib/bootstrap-colorpicker/src/js/colorpicker.js" />
-            <link type="text/less" href="/website_twitter_wall/static/lib/bootstrap-colorpicker/src/less/colorpicker.less" rel="stylesheet" t-ignore="true" />
             <script type="text/javascript" src="/website_twitter_wall/static/src/js/website_twitter_wall.js" />
             <script type="text/javascript" src="/website_twitter_wall/static/src/js/website_twitter_wall_editor.js" />
+            <script type="text/javascript" src="/website_twitter_wall/static/lib/bootstrap-colorpicker/src/js/colorpicker-color.js" />
+            <script type="text/javascript" src="/website_twitter_wall/static/lib/bootstrap-colorpicker/src/js/colorpicker.js" />
             <link type="text/less" href="/website_twitter_wall/static/src/less/website_twitter_wall.less" rel="stylesheet" t-ignore="true" />
+            <link type="text/less" href="/website_twitter_wall/static/lib/bootstrap-colorpicker/src/less/colorpicker.less" rel="stylesheet" t-ignore="true" />
         </xpath>
     </template>
 
@@ -102,12 +102,12 @@
             </div>
             <div class="container">
                 <div class="row odoo-tw-walls mt16" t-att-wall_id="wall.id">
-                    <t t-if="tweets" t-foreach="tweets" t-as="t">
-                        <center class="col-sm-12 odoo-tw-tweet" t-att-data-tweet-id="t.id">
-                            <span t-field="t.comment" />
+                    <t t-if="tweets" t-foreach="tweets" t-as="tw">
+                        <center class="col-sm-12 odoo-tw-tweet" t-att-data-tweet-id="tw.id">
+                            <span t-field="tw.comment" />
                             <div>
                                 <button class="btn odoo-tw-view-tweet-delete hidden-xs" groups="base.group_user" title="Delete this tweet"><i class="fa fa-trash text-primary" /></button>
-                                <span t-raw="t.tweet" />
+                                <span t-raw="tw.tweet" />
                             </div>
                         </center>
                     </t>

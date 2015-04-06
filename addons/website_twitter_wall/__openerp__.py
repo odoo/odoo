@@ -19,11 +19,11 @@ Turn your event into an interactive experience by letting everybody post message
     'depends': ['website'],
     'website': 'https://www.odoo.com',
     'data': [
+        'data/website_twitter_wall_data.xml',
+        'security/ir.model.access.csv',
         'views/snippets.xml',
         'views/website_twitter_wall_templates.xml',
         'views/website_twitter_wall_views.xml',
-        'security/ir.model.access.csv',
-        'data/website_twitter_wall_data.xml',
     ],
     'installable': True,
 }
