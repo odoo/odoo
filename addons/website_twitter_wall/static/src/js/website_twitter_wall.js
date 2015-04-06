@@ -103,6 +103,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         $("#oe_main_menu_navbar, header, .odoo-tw-hide-onlive, footer").slideToggle("normal");
         if (!window.screenTop && !window.screenY) {
             twitter_wall = new TweetWall(parseInt($(".odoo-tw-walls").attr("wall_id")));
+            new Customize(this, $("button[title='Customize']"));
             window.scrollTo(0, 0);
             $("body").css({"position": "fixed", "background-color": "#F1F1F1"});
             $("body").addClass("odoo-tw-view-live-remove-border");
@@ -255,43 +256,38 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         }
     });
 
-    // Customization options for live view
-    var content = _.str.sprintf("<center><b>%s</b></center>
-                    <div class='input-group colorinput'>
-                        <input type='text' class='form-control' />
-                        <span class='input-group-addon'><i></i></span>
-                    </div><br/>
-                    <center><b>%s</b></center>
-                    <div class='row'><div class='col-md-12'>", _t('Your Custom Color'), _t('Standard Colors'));
-    _.map(colors, function(primary, secondary) {
-        content += _.str.sprintf("<span class='odoo-tw-view-live-option-color' data-color-code='%s' style='background-color:%s' />", secondary, secondary);
-    });
-    content += _.str.sprintf("</div></div><center><b>%s</b></center><div class='btn-group'>
-                    <button class='btn btn-default theme active' data-operation='light' title='Sun'><i class='fa fa-sun-o' /></button>
-                    <button class='btn btn-default theme' data-operation='dark' title='Moon'><i class='fa fa-moon-o' /></button>
-                </div>", _t("Theme"));
-    var picker = $("button[title='Customize']").popover({
-        html: true,
-        content: content
-    });
-    picker.on('shown.bs.popover', function() {
-        $(".colorinput > input.form-control").val(color);
-        $('.colorinput').colorpicker({horizontal: true});
-        $('.theme').removeClass("active");
-        $('button[data-operation=' + twitter_wall.theme + ']').addClass("active");
-    });
-    picker.parent().on('click', '.odoo-tw-view-live-option-color', function() {
-        color = $(this).data('color-code');
-        $('body').css('background-color', color);
-    });
-    picker.parent().on('click', '.theme', function(e) {
-        var $el = $(e.currentTarget).toggleClass("active");
-        twitter_wall.theme = $el.data("operation");
-        $el.siblings().removeClass("active");
-    });
-    picker.parent().on('changeColor.colorpicker', '.colorinput', function(e) {
-        color = e.color.toHex();
-        $('body').css('background-color', color);
+    // Handle customization popover
+    Qweb.add_template('/website_twitter_wall/static/src/xml/website_twitter_wall_customize.xml');
+    var Customize = Widget.extend({
+        template: 'customize',
+        init: function(parent, btn) {
+            this._super(parent);
+            var picker = btn.popover({
+                html: true,
+                content: function() {
+                    return $(Qweb.render("customize", {"colors": colors}));
+                }
+            });
+            picker.on('shown.bs.popover', function() {
+                $(".colorinput > input.form-control").val(color);
+                $('.colorinput').colorpicker({horizontal: true});
+                $('.theme').removeClass("active");
+                $('button[data-operation=' + twitter_wall.theme + ']').addClass("active");
+            });
+            picker.parent().on('click', '.odoo-tw-view-live-option-color', function() {
+                color = $(this).data('color-code');
+                $('body').css('background-color', color);
+            });
+            picker.parent().on('click', '.theme', function(e) {
+                var $el = $(e.currentTarget).toggleClass("active");
+                twitter_wall.theme = $el.data("operation");
+                $el.siblings().removeClass("active");
+            });
+            picker.parent().on('changeColor.colorpicker', '.colorinput', function(e) {
+                color = e.color.toHex();
+                $('body').css('background-color', color);
+            });
+        },
     });
     $("body").on('mouseover', '.colorpicker', function() {
         $(".odoo-tw-view-live-options").css("opacity", "1");
