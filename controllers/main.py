@@ -8,6 +8,7 @@ import logging
 import pprint
 import urllib2
 import werkzeug
+import util
 
 from openerp import http, SUPERUSER_ID
 from openerp.http import request
@@ -23,6 +24,11 @@ class AlipayController(http.Controller):
     def alipay_validate_data(self, **post):
         res = False
         cr, uid, context = request.cr, request.uid, request.context
+        _, prestr = util.params_filter(post)
+        mysign = util.build_mysign(prestr, settings.ALIPAY_KEY, settings.ALIPAY_SIGN_TYPE)
+        if mysign != post.get('sign'):
+            return 'false'
+
         reference = post.get('out_trade_no')
         notify_id = post.get('notify_id')
         seller_id = post.get('seller_id')
@@ -60,7 +66,7 @@ class AlipayController(http.Controller):
     @http.route('/payment/alipay/return', type='http', auth="none", methods=['GET'])
     def alipay_return(self, **get):
         """ Alipay Return """
-        _logger.info('Beginning Alipay return form_feedback with post data %s', pprint.pformat(post))  # debug
+        _logger.info('Beginning Alipay return form_feedback with post data %s', pprint.pformat(get))  # debug
         res = request.registry['payment.transaction'].form_feedback(cr, SUPERUSER_ID, get, 'alipay', context=context)
         return ''
 

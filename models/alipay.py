@@ -9,23 +9,9 @@ import logging
 import urlparse
 import werkzeug.urls
 import urllib2
+
+import util
 from urllib import urlencode, urlopen
-
-try:
-    import hashlib
-    md5_constructor = hashlib.md5
-    md5_hmac = md5_constructor
-    sha_constructor = hashlib.sha1
-    sha_hmac = sha_constructor
-except ImportError:
-    import md5
-    md5_constructor = md5.new
-    md5_hmac = md5
-    import sha
-    sha_constructor = sha.new
-    sha_hmac = sha
-
-md5 = md5_constructor
 
 from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_alipay.controllers.main import AlipayController
@@ -34,52 +20,6 @@ from openerp.tools.float_utils import float_compare
 from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
-
-
-def smart_str(s, encoding='utf-8', strings_only=False, errors='strict'):
-    """
-    Returns a bytestring version of 's', encoded as specified in 'encoding'.
-
-    If strings_only is True, don't convert (some) non-string-like objects.
-    """
-    if strings_only and isinstance(s, (types.NoneType, int)):
-        return s
-    if not isinstance(s, basestring):
-        try:
-            return str(s)
-        except UnicodeEncodeError:
-            if isinstance(s, Exception):
-                # An Exception subclass containing non-ASCII data that doesn't
-                # know how to print itself properly. We shouldn't raise a
-                # further exception.
-                return ' '.join([smart_str(arg, encoding, strings_only,
-                        errors) for arg in s])
-            return unicode(s).encode(encoding, errors)
-    elif isinstance(s, unicode):
-        return s.encode(encoding, errors)
-    elif s and encoding != 'utf-8':
-        return s.decode('utf-8', errors).encode(encoding, errors)
-    else:
-        return s
-
-def params_filter(params):
-    ks = params.keys()
-    ks.sort()
-    newparams = {}
-    prestr = ''
-    for k in ks:
-        v = params[k]
-        k = smart_str(k, 'utf-8')
-        if k not in ('sign','sign_type') and v != '':
-            newparams[k] = smart_str(v, 'utf-8')
-            prestr += '%s=%s&' % (k, newparams[k])
-    prestr = prestr[:-1]
-    return newparams, prestr
-
-def build_mysign(prestr, key, sign_type = 'MD5'):
-    if sign_type == 'MD5':
-        return md5(prestr + key).hexdigest()
-    return ''
 
 class AcquirerAlipay(osv.Model):
     _inherit = 'payment.acquirer'
@@ -100,10 +40,17 @@ class AcquirerAlipay(osv.Model):
         providers.append(['alipay', 'Alipay'])
         return providers
 
+    ALIPAY_INTERFACE_TYPE = [
+        ('trade_create_by_buyer', 'Standard Dual Interface'),
+        ('create_direct_pay_by_user', 'Instant Payment Transaction'),
+        ('create_partner_trade_by_buyer', 'Securied Transaction'),
+    ]
+
     _columns = {
         'alipay_partner_account': fields.char('Alipay Partner ID', required_if_provider='alipay'),
         'alipay_partner_key': fields.char('Alipay Partner Key', required_if_provider='alipay'),
         'alipay_seller_email': fields.char('Alipay Seller Email', required_if_provider='alipay'),
+        'alipay_interface_type': fields.selection(ALIPAY_INTERFACE_TYPE, 'Interface Type', readonly=True, select=True, copy=False),
 
     }
 
@@ -113,7 +60,6 @@ class AcquirerAlipay(osv.Model):
         'fees_dom_var': 0.0,
         'fees_int_fixed': 0.0,
         'fees_int_var': 0.0,
-
     }
 
     def alipay_compute_fees(self, cr, uid, id, amount, currency_id, country_id, context=None):
@@ -144,26 +90,53 @@ class AcquirerAlipay(osv.Model):
 
         alipay_tx_values = dict(tx_values)
         alipay_tx_values.update({
-            'service': 'trade_create_by_buyer',
             'partner': acquirer.alipay_partner_account,
             'seller_email': acquirer.alipay_seller_email,
+            'seller_id': acquirer.alipay_partner_account,
             '_input_charset': 'utf-8',
             'out_trade_no': tx_values['reference'],
             'subject': tx_values['reference'],
+            'body': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
             'payment_type': '1',
+            'return_url': '%s' % urlparse.urljoin(base_url, AlipayController._return_url),
+            'notify_url': '%s' % urlparse.urljoin(base_url, AlipayController._notify_url),
+        })
+
+        payload_direct = {
+            'service': 'create_direct_pay_by_user',
+            'total_fee': tx_values['amount'],
+        }
+
+        payload_escow = {
+            'service': 'create_partner_trade_by_buyer',
             'logistics_type': 'EXPRESS',
             'logistics_fee': 0,
             'logistics_payment': 'SELLER_PAY',
             'price': tx_values['amount'],
             'quantity': 1,
-            'body': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
-            'return_url': '%s' % urlparse.urljoin(base_url, AlipayController._return_url),
-            'notify_url': '%s' % urlparse.urljoin(base_url, AlipayController._notify_url),
-        })
+        }
+
+        payload_dualfun = {
+            'service': 'trade_create_by_buyer',
+            'logistics_type': 'EXPRESS',
+            'logistics_fee': 0,
+            'logistics_payment': 'SELLER_PAY',
+            'price': tx_values['amount'],
+            'quantity': 1,
+        }
+
+        if acquirer.alipay_interface_type == 'create_direct_pay_by_user':
+            alipay_tx_values.update(payload_direct)
+
+        if acquirer.alipay_interface_type == 'create_partner_trade_by_buyer':
+            alipay_tx_values.update(payload_escow)
+
+        if acquirer.alipay_interface_type == 'trade_create_by_buyer':
+            alipay_tx_values.update(payload_dualfun)
 
         params = alipay_tx_values
-        params,prestr = params_filter(params)
-        params['sign'] = build_mysign(prestr, acquirer.alipay_partner_key, 'MD5')
+        params,prestr = util.params_filter(params)
+        params['sign'] = util.build_mysign(prestr, acquirer.alipay_partner_key, 'MD5')
         params['sign_type'] = 'MD5'
         alipay_tx_values  = params
 
@@ -215,17 +188,29 @@ class TxAlipay(osv.Model):
             'alipay_txn_type': data.get('payment_type'),
             'partner_reference': data.get('buyer_id')
         }
-        if status in ['WAIT_SELLER_SEND_GOODS']:
-            _logger.info('Validated Alipay payment for tx %s: set as done' % (tx.reference))
-            data.update(state='done', date_validate=data.get('gmt_payment', fields.datetime.now()))
-            return tx.write(data)
-        elif status in ['WAIT_BUYER_PAY']:
-            _logger.info('Received notification for Alipay payment %s: set as pending' % (tx.reference))
-            data.update(state='pending', state_message=data.get('pending_reason', ''))
-            return tx.write(data)
-        else:
-            error = 'Received unrecognized status for Alipay payment %s: %s, set as error' % (tx.reference, status)
-            _logger.info(error)
-            data.update(state='error', state_message=error)
-            return tx.write(data)
+        if acquirer.alipay_interface_type == 'create_direct_pay_by_user':
+            if status in ['TRADE_FINISHED', 'TRADE_SUCCESS']:
+                _logger.info('Validated Alipay payment for tx %s: set as done' % (tx.reference))
+                data.update(state='done', date_validate=data.get('notify_time', fields.datetime.now()))
+                return tx.write(data)
+            else:
+                error = 'Received unrecognized status for Alipay payment %s: %s, set as error' % (tx.reference, status)
+                _logger.info(error)
+                data.update(state='error', state_message=error)
+                return tx.write(data)
+
+        if acquirer.alipay_interface_type in ['create_partner_trade_by_buyer','trade_create_by_buyer' ] :
+            if status in ['WAIT_SELLER_SEND_GOODS']:
+                _logger.info('Validated Alipay payment for tx %s: set as done' % (tx.reference))
+                data.update(state='done', date_validate=data.get('gmt_payment', fields.datetime.now()))
+                return tx.write(data)
+            elif status in ['WAIT_BUYER_PAY']:
+                _logger.info('Received notification for Alipay payment %s: set as pending' % (tx.reference))
+                data.update(state='pending', state_message=data.get('pending_reason', ''))
+                return tx.write(data)
+            else:
+                error = 'Received unrecognized status for Alipay payment %s: %s, set as error' % (tx.reference, status)
+                _logger.info(error)
+                data.update(state='error', state_message=error)
+                return tx.write(data)
 
