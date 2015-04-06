@@ -8,10 +8,10 @@ import logging
 import pprint
 import urllib2
 import werkzeug
-import util
 
 from openerp import http, SUPERUSER_ID
 from openerp.http import request
+from openerp.addons.payment_alipay.models import util
 
 _logger = logging.getLogger(__name__)
 
