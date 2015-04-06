@@ -50,7 +50,7 @@ class AcquirerAlipay(osv.Model):
         'alipay_partner_account': fields.char('Alipay Partner ID', required_if_provider='alipay'),
         'alipay_partner_key': fields.char('Alipay Partner Key', required_if_provider='alipay'),
         'alipay_seller_email': fields.char('Alipay Seller Email', required_if_provider='alipay'),
-        'alipay_interface_type': fields.selection(ALIPAY_INTERFACE_TYPE, 'Interface Type', readonly=True, select=True, copy=False),
+        'alipay_interface_type': fields.selection(ALIPAY_INTERFACE_TYPE, 'Interface Type'),
 
     }
 
