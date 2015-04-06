@@ -12,9 +12,9 @@ The module adds the possibility to display data from Odoo in Google Spreadsheets
     'website': 'https://www.odoo.com',
     'depends': ['board', 'google_drive'],
     'data': [
-        'views/google_spreadsheet_view.xml',
-        'views/google_spreadsheet.xml',
-        'data/google_spreadsheet_data.xml',
+        'views/ir_attachment_views.xml',
+        'views/google_spreadsheet_templates.xml',
+        'data/google_drive_config_data.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,

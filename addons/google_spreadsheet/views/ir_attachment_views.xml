@@ -3,8 +3,8 @@
 
         <!-- add google drive config field in user form -->
 
-        <record model="ir.ui.view" id="view_ir_attachment_google_spreadsheet_tree">
-            <field name="name">ir.attachment.google.spreadsheet.tree</field>
+        <record id="view_ir_attachment_google_spreadsheet_tree" model="ir.ui.view">
+            <field name="name">ir.attachment.tree</field>
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
                 <tree string="Google Spreadsheets">
@@ -14,8 +14,8 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_ir_attachment_google_spreadsheet_form">
-            <field name="name">ir.attachment.google.spreadsheet.form</field>
+        <record id="view_ir_attachment_google_spreadsheet_form" model="ir.ui.view">
+            <field name="name">ir.attachment.form</field>
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
                 <form string="Google Spreadsheets">

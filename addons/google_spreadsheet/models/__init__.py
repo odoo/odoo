@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-import google_spreadsheet
+import google_drive_config
