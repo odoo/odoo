@@ -48,11 +48,11 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                     }, 5000);
                 }
             });
-        }, 12000);
+        }, 15000);
     });
 
     // Display timeago in view
-    $("timeago.odoo-tw-timeago").each(function (index, el) {
+    $("timeago[data-timeago]").each(function (index, el) {
         var datetime = $(el).attr('datetime'),
             datetime_obj = time.str_to_datetime(datetime),
             // if wall 7 days, 24 hours, 60 min, 60 second, 1000 millis old(one week)
@@ -77,7 +77,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
     });
 
     // Do fullscreen or Exit fullscreen on button click
-    $(".odoo-tw-screen").on('click', function() {
+    $("button[data-screen]").on('click', function() {
         if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
             if (document.documentElement.requestFullScreen) {
                 document.documentElement.requestFullScreen();
@@ -271,7 +271,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                     <button class='btn btn-default theme active' data-operation='light' title='Sun'><i class='fa fa-sun-o' /></button>
                     <button class='btn btn-default theme' data-operation='dark' title='Moon'><i class='fa fa-moon-o' /></button>
                 </div>", _t("Theme"));
-    var picker = $('.odoo-tw-view-live-picker').popover({
+    var picker = $("button[title='Customize']").popover({
         html: true,
         content: content
     });

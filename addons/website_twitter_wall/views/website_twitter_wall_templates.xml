@@ -42,7 +42,7 @@
                         <h1>Hey! No twitter wall found</h1>
                         <h3>Goto Content menu -> New Twitter Wall</h3>
                     </span>
-                    <div class="col-sm-6 col-md-4 mt16 mb16" t-foreach="walls" t-as="wall">
+                    <div class="col-sm-6 col-md-4 mt16" t-foreach="walls" t-as="wall">
                         <div class="well well-sm odoo-tw-wall">
                             <a t-attf-href="/twitter_wall/view/#{wall.id}">
                                 <img t-att-title="wall.name" t-attf-src="/website/image/twitter.agent/#{wall.id}/image/400x400" class="img-responsive img-thumbnail odoo-tw-wall-image" />
@@ -77,11 +77,11 @@
                     <div class="odoo-tw-view-cover-info-nav">
                         <div class="container">
                             <ul class="nav navbar-nav">
-                                <li class="navbar-text"><i class="fa fa-clock-o"/> <timeago class="odoo-tw-timeago" t-att-datetime="wall.create_date" /></li>
+                                <li class="navbar-text"><i class="fa fa-clock-o"/> <timeago data-timeago="true" t-att-datetime="wall.create_date" /></li>
                                 <li class="navbar-text mb0" title="Total Views" ><i class="fa fa-eye"/> <t t-esc="str(wall.total_views) + ' Views'" /></li>
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
-                                <button t-if="wall.state!='archive'" class="btn btn-default mt8 odoo-tw-screen button-inverted" title="Live tweet"><i class="fa fa-arrows-alt" /></button>
+                                <button t-if="wall.state!='archive'" class="btn btn-default mt8 button-inverted" data-screen="true" title="Live tweet"><i class="fa fa-arrows-alt" /></button>
                             </ul>
                         </div>
                     </div>
@@ -141,8 +141,8 @@
                                     <button class="btn btn-default odoo-tw-view-live-option-btn" data-operation="repeat" title="Repeat"><i class="fa fa-repeat" /></button>
                                     <button class="btn btn-default odoo-tw-view-live-option-btn" data-operation="shuffle" title="Shuffle"><i class="fa fa-random" /></button>
                                 </div>
-                                <button data-placement="top" class="btn btn-default odoo-tw-view-live-picker" title="Customize"><i class="fa fa-paint-brush" /></button>
-                                <button class="btn btn-default odoo-tw-screen" title="Exit full screen"><i class="fa fa-compress" /></button>
+                                <button data-placement="top" class="btn btn-default" title="Customize"><i class="fa fa-paint-brush" /></button>
+                                <button class="btn btn-default" data-screen="true" title="Exit full screen"><i class="fa fa-compress" /></button>
                             </div>
                         </div>
                         <b class="col-sm-4 col-md-4 col-xs-12">
