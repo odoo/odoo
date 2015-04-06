@@ -145,7 +145,7 @@
          </record>
         <!-- HR Kanban View  -->
 
-    <record model="ir.ui.view" id="hr_kanban_view_employees">
+    <record id="hr_kanban_view_employees" model="ir.ui.view">
         <field name="name">hr.employee.kanban</field>
         <field name="model">hr.employee</field>
         <field name="priority">10</field>
@@ -414,7 +414,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_hr_job">
+        <record id="action_hr_job" model="ir.actions.act_window">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
             <field name="view_type">form</field>
@@ -439,7 +439,7 @@
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
 
-        <record model="ir.actions.act_window" id="act_employee_from_department">
+        <record id="act_employee_from_department" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import _, SUPERUSER_ID, api, fields, models, tools
+from openerp import api, fields, models, tools, SUPERUSER_ID, _
 from openerp.exceptions import ValidationError
 from openerp.modules.module import get_resource_path
 
@@ -19,6 +19,14 @@ class HrEmployeeCategory(models.Model):
             result.append((category.id, name))
         return result
 
+    name = fields.Char(string="Employee Tag", required=True)
+    complete_name = fields.Char(compute='_compute_complete_name', string='Name')
+    parent_id = fields.Many2one('hr.employee.category', string='Parent Employee Tag', index=True)
+    child_ids = fields.One2many('hr.employee.category', 'parent_id', string='Child Categories')
+    employee_ids = fields.Many2many('hr.employee',
+        'employee_category_rel', 'category_id', 'emp_id',
+        string='Employees')
+
     @api.one
     def _compute_complete_name(self):
         self.complete_name = self.name_get()[0][1]
@@ -29,26 +37,11 @@ class HrEmployeeCategory(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('Error! You cannot create recursive category.'))
 
-    name = fields.Char(string="Employee Tag", required=True)
-    complete_name = fields.Char(compute='_compute_complete_name', string='Name')
-    parent_id = fields.Many2one('hr.employee.category', string='Parent Employee Tag', index=True)
-    child_ids = fields.One2many('hr.employee.category', 'parent_id', string='Child Categories')
-    employee_ids = fields.Many2many('hr.employee',
-        'employee_category_rel', 'category_id', 'emp_id',
-        string='Employees')
-
 
 class HrJob(models.Model):
     _name = "hr.job"
     _description = "Job Position"
     _inherit = ['mail.thread']
-
-    @api.one
-    @api.depends('no_of_recruitment', 'employee_ids')
-    def _compute_employees(self):
-        nb_employees = len(self.employee_ids)
-        self.no_of_employee = nb_employees
-        self.expected_employees = nb_employees + self.no_of_recruitment
 
     name = fields.Char(string='Job Name', required=True, index=True, translate=True)
     expected_employees = fields.Integer(compute='_compute_employees',
@@ -81,6 +74,21 @@ class HrJob(models.Model):
         'The name of the job position must be unique per department in company!'),
     ]
 
+    @api.one
+    @api.depends('no_of_recruitment', 'employee_ids')
+    def _compute_employees(self):
+        nb_employees = len(self.employee_ids)
+        self.no_of_employee = nb_employees
+        self.expected_employees = nb_employees + self.no_of_recruitment
+
+    @api.one
+    def copy(self, default=None):
+        if default is None:
+            default = {}
+        if 'name' not in default:
+            default['name'] = _("%s (copy)") % (self.name)
+        return super(HrJob, self).copy(default=default)
+
     @api.multi
     def set_recruit(self):
         for job in self:
@@ -95,14 +103,6 @@ class HrJob(models.Model):
             'no_of_recruitment': 0,
             'no_of_hired_employee': 0
         })
-
-    @api.one
-    def copy(self, default=None):
-        if default is None:
-            default = {}
-        if 'name' not in default:
-            default['name'] = _("%s (copy)") % (self.name)
-        return super(HrJob, self).copy(default=default)
 
     # ----------------------------------------
     # Compatibility methods
@@ -120,25 +120,9 @@ class HrEmployee(models.Model):
  
     _mail_post_access = 'read'
 
-    @api.one
-    @api.depends('image')
-    def _compute_image(self):
-        self.image_medium = tools.image_resize_image_medium(self.image)
-        self.image_small = tools.image_resize_image_small(self.image)
-
-    @api.one
-    def _inverse_image_medium(self):
-        self.image = tools.image_resize_image_big(self.image_medium)
-
-    @api.one
-    def _inverse_image_small(self):
-        self.image = tools.image_resize_image_big(self.image_small)
-
-    @api.one
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if not self._check_recursion():
-            raise ValidationError(_('Error! You cannot create recursive hierarchy of Employee(s).'))
+    def _get_default_image(self):
+        image_path = get_resource_path('hr', 'static/src/img/', 'default_image.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     #we need a related field in order to be able to sort the employee by name
     name_related = fields.Char(string='Name', related='resource_id.name', readonly=True, store=True)
@@ -200,17 +184,25 @@ class HrEmployee(models.Model):
         string='Latest Connection', readonly=1)
     active = fields.Boolean(default=True)
 
-    def _get_default_image(self):
-        image_path = get_resource_path('hr', 'static/src/img/', 'default_image.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+    @api.one
+    @api.depends('image')
+    def _compute_image(self):
+        self.image_medium = tools.image_resize_image_medium(self.image)
+        self.image_small = tools.image_resize_image_small(self.image)
 
-    @api.multi
-    def unlink(self):
-        Resource = self.env['resource.resource']
-        for employee in self:
-            Resource += employee.resource_id
-        Resource.unlink()
-        return super(HrEmployee, self).unlink()
+    @api.one
+    def _inverse_image_medium(self):
+        self.image = tools.image_resize_image_big(self.image_medium)
+
+    @api.one
+    def _inverse_image_small(self):
+        self.image = tools.image_resize_image_big(self.image_small)
+
+    @api.one
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('Error! You cannot create recursive hierarchy of Employee(s).'))
 
     @api.onchange('address_id')
     def address_id_change(self):
@@ -229,6 +221,14 @@ class HrEmployee(models.Model):
     @api.onchange('user_id')
     def onchange_user(self):
         self.work_email = self.user_id.email
+
+    @api.multi
+    def unlink(self):
+        Resource = self.env['resource.resource']
+        for employee in self:
+            Resource += employee.resource_id
+        Resource.unlink()
+        return super(HrEmployee, self).unlink()
 
     @api.multi
     def action_follow(self):
@@ -270,15 +270,15 @@ class HrDepartment(models.Model):
     _description = "HR Department"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    @api.one
-    def _compute_complete_name(self):
-        self.complete_name = self.name_get()[0][1]
-
-    @api.one
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if not self._check_recursion():
-            raise ValidationError(_('Error! You cannot create recursive departments.'))
+    @api.multi
+    def name_get(self):
+        result = []
+        for department in self:
+            name = department.name
+            if department.parent_id:
+                name = department.parent_id.name + ' / ' + name
+            result.append((department.id, name))
+        return result
 
     name = fields.Char(string='Department Name', required=True)
     complete_name = fields.Char(compute='_compute_complete_name', string='Name')
@@ -292,15 +292,15 @@ class HrDepartment(models.Model):
     note = fields.Text()
     color = fields.Integer(string='Color Index')
 
-    @api.multi
-    def name_get(self):
-        result = []
-        for department in self:
-            name = department.name
-            if department.parent_id:
-                name = department.parent_id.name + ' / ' + name
-            result.append((department.id, name))
-        return result
+    @api.one
+    def _compute_complete_name(self):
+        self.complete_name = self.name_get()[0][1]
+
+    @api.one
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('Error! You cannot create recursive departments.'))
 
     @api.model
     def create(self, vals):
@@ -323,7 +323,7 @@ class HrDepartment(models.Model):
             manager_id = vals['manager_id']
             employee = Employee.browse(manager_id)
             if employee.user_id:
-                self.message_subscribe_users(cr, uid, ids, user_ids=[employee.user_id.id], context=context)
+                self.message_subscribe_users(user_ids=[employee.user_id.id])
             for department in self:
                 employees |= Employee.search(
                     [
