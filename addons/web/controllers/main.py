@@ -1293,7 +1293,7 @@ class Binary(openerpweb.Controller):
                 import mimetypes
                 filename = res.get(filename_field, '') or filename
                 if filename:
-                    ctype, _ = mimetypes.guess_type(filename)
+                    ctype, _charset = mimetypes.guess_type(filename)
                     if ctype:
                         contenttype = ctype
             return req.make_response(
@@ -1323,15 +1323,23 @@ class Binary(openerpweb.Controller):
             res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
         if not filecontent:
-            raise ValueError(_("No content found for field '%s' on '%s:%s'") %
-                (field, model, id))
+            raise ValueError(
+                _("No content found for field '%s' on '%s:%s'") %
+                (field, model, id)
+            )
         else:
+            contenttype = 'application/octet-stream'
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
+                import mimetypes
                 filename = res.get(filename_field, '') or filename
-            return req.make_response(filecontent,
-                headers=[('Content-Type', 'application/octet-stream'),
-                        ('Content-Disposition', content_disposition(filename, req))],
+                ctype, _charset = mimetypes.guess_type(filename)
+                if ctype:
+                    contenttype = ctype
+            return req.make_response(
+                filecontent,
+                headers=[('Content-Type', contenttype),
+                         ('Content-Disposition', content_disposition(filename, req))],
                 cookies={'fileToken': token})
 
     @openerpweb.httprequest
