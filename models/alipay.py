@@ -141,12 +141,15 @@ class AcquirerAlipay(osv.Model):
 
         if acquirer.alipay_interface_type == 'create_direct_pay_by_user':
             to_sign.update(payload_direct)
+            alipay_tx_values.update(payload_direct)
 
         if acquirer.alipay_interface_type == 'create_partner_trade_by_buyer':
             to_sign.update(payload_escow)
+            alipay_tx_values.update(payload_direct)
 
         if acquirer.alipay_interface_type == 'trade_create_by_buyer':
             to_sign.update(payload_dualfun)
+            alipay_tx_values.update(payload_direct)
 
         _,prestr = util.params_filter(to_sign)
         alipay_tx_values['sign'] = util.build_mysign(prestr, acquirer.alipay_partner_key, 'MD5')
