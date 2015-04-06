@@ -15,7 +15,7 @@ Lead to Issues
 Link module to map leads to issues
         """,
     'data': [
-        'crm_lead2projectissue_wizard_views.xml'
+        'views/crm_lead2projectissue_wizard_views.xml'
     ],
     'depends': ['crm', 'project_issue'],
     'installable': True,
