@@ -103,7 +103,6 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         $("#oe_main_menu_navbar, header, .odoo-tw-hide-onlive, footer").slideToggle("normal");
         if (!window.screenTop && !window.screenY) {
             twitter_wall = new TweetWall(parseInt($(".odoo-tw-walls").attr("wall_id")));
-            new Customize(this, $("button[title='Customize']"));
             window.scrollTo(0, 0);
             $("body").css({"position": "fixed", "background-color": "#F1F1F1"});
             $("body").addClass("odoo-tw-view-live-remove-border");
@@ -257,43 +256,56 @@ website.if_dom_contains('.odoo-tw-walls', function() {
     });
 
     // Handle customization popover
+    $("button[title='Customize']").mouseenter(function() {
+        $('.colorinput').colorpicker("destroy");
+        new Customize($(this));
+    });
+
     Qweb.add_template('/website_twitter_wall/static/src/xml/website_twitter_wall_customize.xml');
     var Customize = Widget.extend({
         template: 'customize',
-        init: function(parent, btn) {
-            this._super(parent);
-            var picker = btn.popover({
-                html: true,
-                content: function() {
-                    return $(Qweb.render("customize", {"colors": colors}));
-                }
-            });
-            picker.on('shown.bs.popover', function() {
-                $(".colorinput > input.form-control").val(color);
-                $('.colorinput').colorpicker({horizontal: true});
-                $('.theme').removeClass("active");
-                $('button[data-operation=' + twitter_wall.theme + ']').addClass("active");
-            });
-            picker.parent().on('click', '.odoo-tw-view-live-option-color', function() {
-                color = $(this).data('color-code');
+        init: function(parent) {
+            this._super.apply(this, arguments);
+            this.element = parent;
+            this.renderElement();
+            this.bind_events();
+        },
+        bind_events: function () {
+            $('.odoo-tw-view-live-option-color').click(function(e) {
+                color = $(e.currentTarget).data('color-code');
                 $('body').css('background-color', color);
             });
-            picker.parent().on('click', '.theme', function(e) {
+            $('.theme').click(function(e) {
                 var $el = $(e.currentTarget).addClass("active");
                 twitter_wall.theme = $el.data("operation");
                 $el.siblings().removeClass("active");
             });
-            picker.parent().on('changeColor.colorpicker', '.colorinput', function(e) {
+            $('.colorinput').on('changeColor.colorpicker', function(e) {
                 color = e.color.toHex();
+                $(".colorinput > input.form-control").val(color);
                 $('body').css('background-color', color);
             });
+            $("body").on('mouseover', '.colorpicker', function() {
+                $(".odoo-tw-view-live-options").css("opacity", "1");
+            });
+            $("body").on('mouseout', '.colorpicker', function() {
+                $(".odoo-tw-view-live-options").css("opacity", "0");
+            });
         },
-    });
-    $("body").on('mouseover', '.colorpicker', function() {
-        $(".odoo-tw-view-live-options").css("opacity", "1");
-    });
-    $("body").on('mouseout', '.colorpicker', function() {
-        $(".odoo-tw-view-live-options").css("opacity", "0");
+        renderElement: function () {
+            this.$el.append(Qweb.render('customize', {"colors": colors}));
+            this.element.popover({
+                'html': true,
+                'content': this.$el.html()
+            }).on('shown.bs.popover', function() {
+                $(".colorinput > input.form-control").val(color);
+                $('.colorinput').colorpicker({horizontal: true});
+                $('.theme').removeClass("active");
+                $('button[data-operation=' + twitter_wall.theme + ']').addClass("active");
+            }).popover("show").on("click", function() {
+                $(this).popover("destroy");
+            });
+        },
     });
 });
 });
