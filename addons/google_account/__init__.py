@@ -21,4 +21,4 @@
 import models
 import controllers
 
-from models.google_account import TIMEOUT     # noqa
+from models.google_service import TIMEOUT     # noqa

@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-import google_account
+import google_service
 
