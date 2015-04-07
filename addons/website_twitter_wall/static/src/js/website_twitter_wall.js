@@ -271,11 +271,11 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             this.bind_events();
         },
         bind_events: function () {
-            $('.odoo-tw-view-live-option-color').click(function(e) {
+            $('.odoo-tw-view-live-option-color').on('click', function(e) {
                 color = $(e.currentTarget).data('color-code');
                 $('body').css('background-color', color);
             });
-            $('.theme').click(function(e) {
+            $('.theme').on('click', function(e) {
                 var $el = $(e.currentTarget).addClass("active");
                 twitter_wall.theme = $el.data("operation");
                 $el.siblings().removeClass("active");
