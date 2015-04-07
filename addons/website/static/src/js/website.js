@@ -113,7 +113,7 @@
         }, options || {});
 
         var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
-        type = type.length ? type[0] : 'text';
+        type = type.length ? type[0] : 'input';
         options.field_type = type;
         options.field_name = options.field_name || options[type];
 
