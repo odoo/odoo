@@ -1238,8 +1238,8 @@ class AssetsBundle(object):
             if len(pages) == 1:
                 pages = []
             for idx, page in enumerate(pages):
-                self.set_cache("css.%d" % (idx+1), ''.join(page))
-            content = '\n'.join(css_url % i for i in range(1,len(pages)+1))
+                self.set_cache("css.%d" % (idx+1), u''.join(page))
+            content = u'\n'.join(css_url % i for i in range(1,len(pages)+1))
             self.set_cache("css.0", content)
         if not content:
             return self.css()
