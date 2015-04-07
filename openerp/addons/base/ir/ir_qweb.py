@@ -33,6 +33,8 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+MAX_CSS_RULES = 4095
+
 #--------------------------------------------------------------------
 # QWeb template engine
 #--------------------------------------------------------------------
@@ -1142,7 +1144,12 @@ class AssetsBundle(object):
         else:
             url_for = self.context.get('url_for', lambda url: url)
             if css and self.stylesheets:
-                href = '/web/css/%s/%s' % (self.xmlid, self.version)
+                suffix = ''
+                if request:
+                    ua = request.httprequest.user_agent
+                    if ua.browser == "msie" and int((ua.version or '0').split('.')[0]) < 10:
+                        suffix = '.0'
+                href = '/web/css%s/%s/%s' % (suffix, self.xmlid, self.version)
                 response.append('<link href="%s" rel="stylesheet"/>' % url_for(href))
             if js:
                 src = '/web/js/%s/%s' % (self.xmlid, self.version)
@@ -1178,7 +1185,10 @@ class AssetsBundle(object):
             self.set_cache('js', content)
         return content
 
-    def css(self):
+    def css(self, page_number=None):
+        if page_number is not None:
+            return self.css_page(page_number)
+
         content = self.get_cache('css')
         if content is None:
             self.compile_sass()
@@ -1198,10 +1208,41 @@ class AssetsBundle(object):
 
             matches.append(content)
             content = u'\n'.join(matches)
-            if self.css_errors:
-                return content
-            self.set_cache('css', content)
+            if not self.css_errors:
+                self.set_cache('css', content)
+            content = content.encode('utf-8')
 
+        return content
+
+    def css_page(self, page_number):
+        content = self.get_cache('css.%d' % (page_number,))
+        if page_number:
+            return content
+        if content is None:
+            css = self.css().decode('utf-8')
+            re_rules = '([^{]+\{(?:[^{}]|\{[^{}]*\})*\})'
+            re_selectors = '()(?:\s*@media\s*[^{]*\{)?(?:\s*(?:[^,{]*(?:,|\{(?:[^}]*\}))))'
+            css_url = '@import url(\'/web/css.%%d/%s/%s\');' % (self.xmlid, self.version)
+            pages = [[]]
+            page = pages[0]
+            page_selectors = 0
+            for rule in re.findall(re_rules, css):
+                selectors = len(re.findall(re_selectors, rule))
+                if page_selectors + selectors < MAX_CSS_RULES:
+                    page_selectors += selectors
+                    page.append(rule)
+                else:
+                    pages.append([rule])
+                    page = pages[-1]
+                    page_selectors = selectors
+            if len(pages) == 1:
+                pages = []
+            for idx, page in enumerate(pages):
+                self.set_cache("css.%d" % (idx+1), ''.join(page))
+            content = '\n'.join(css_url % i for i in range(1,len(pages)+1))
+            self.set_cache("css.0", content)
+        if not content:
+            return self.css()
         return content
 
     def get_cache(self, type):

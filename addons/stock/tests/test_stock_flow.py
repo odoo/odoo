@@ -1095,3 +1095,55 @@ class TestStockFlow(TestStockCommon):
         total_qty = [quant.qty for quant in quants]
         self.assertEqual(sum(total_qty), 4000, 'Expecting 4000 kg , got %.4f on location stock!' % (sum(total_qty)))
         self.assertEqual(productKG.qty_available, 4000, 'Expecting 4000 kg , got %.4f of quantity available!' % (productKG.qty_available))
+
+
+        #--------------------------------------------------------
+        # TEST PARTIAL INVENTORY WITH PACKS and LOTS
+        #---------------------------------------------------------
+
+        packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id})
+        lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id})
+        inventory = self.InvObj.create({'name': 'Test Partial and Pack',
+                                        'filter': 'partial',
+                                        'location_id': self.stock_location})
+        inventory.prepare_inventory()
+        pack_obj = self.env['stock.quant.package']
+        lot_obj = self.env['stock.production.lot']
+        pack1 = pack_obj.create({'name': 'PACK00TEST1'})
+        pack2 = pack_obj.create({'name': 'PACK00TEST2'})
+        lot1 = lot_obj.create({'name': 'Lot001', 'product_id': lotproduct.id})
+        move = self.MoveObj.search([('product_id', '=', productKG.id), ('inventory_id', '=', inventory.id)], limit=1)
+        self.assertEqual(len(move), 0, "Partial filter should not create a lines upon prepare")
+
+        line_vals = []
+        line_vals += [{'location_id': self.stock_location, 'product_id': packproduct.id, 'product_qty': 10, 'product_uom_id': packproduct.uom_id.id}]
+        line_vals += [{'location_id': self.stock_location, 'product_id': packproduct.id, 'product_qty': 20, 'product_uom_id': packproduct.uom_id.id, 'package_id': pack1.id}]
+        line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 30, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': lot1.id}]
+        line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 25, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': False}]
+        inventory.write({'line_ids': [(0, 0, x) for x in line_vals]})
+        inventory.action_done()
+        self.assertEqual(packproduct.qty_available, 30, "Wrong qty available for packproduct")
+        self.assertEqual(lotproduct.qty_available, 55, "Wrong qty available for lotproduct")
+        quants = self.StockQuantObj.search([('product_id', '=', packproduct.id), ('location_id', '=', self.stock_location), ('package_id', '=', pack1.id)])
+        total_qty = sum([quant.qty for quant in quants])
+        self.assertEqual(total_qty, 20, 'Expecting 20 units on package 1 of packproduct, but we got %.4f on location stock!' % (total_qty))
+
+        #Create an inventory that will put the lots without lot to 0 and check that taking without pack will not take it from the pack
+        inventory2 = self.InvObj.create({'name': 'Test Partial Lot and Pack2',
+                                        'filter': 'partial',
+                                        'location_id': self.stock_location})
+        inventory2.prepare_inventory()
+        line_vals = []
+        line_vals += [{'location_id': self.stock_location, 'product_id': packproduct.id, 'product_qty': 20, 'product_uom_id': packproduct.uom_id.id}]
+        line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 0, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': False}]
+        line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 10, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': lot1.id}]
+        inventory2.write({'line_ids': [(0, 0, x) for x in line_vals]})
+        inventory2.action_done()
+        self.assertEqual(packproduct.qty_available, 40, "Wrong qty available for packproduct")
+        self.assertEqual(lotproduct.qty_available, 10, "Wrong qty available for lotproduct")
+        quants = self.StockQuantObj.search([('product_id', '=', lotproduct.id), ('location_id', '=', self.stock_location), ('lot_id', '=', lot1.id)])
+        total_qty = sum([quant.qty for quant in quants])
+        self.assertEqual(total_qty, 10, 'Expecting 0 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))
+        quants = self.StockQuantObj.search([('product_id', '=', lotproduct.id), ('location_id', '=', self.stock_location), ('lot_id', '=', False)])
+        total_qty = sum([quant.qty for quant in quants])
+        self.assertEqual(total_qty, 0, 'Expecting 0 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))

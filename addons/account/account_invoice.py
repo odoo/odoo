@@ -1142,7 +1142,7 @@ class account_invoice(models.Model):
         else:
             ref = self.number
         partner = self.partner_id._find_accounting_partner(self.partner_id)
-        name = name or self.invoice_line.name or self.number
+        name = name or self.invoice_line[0].name or self.number
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'name': name,
@@ -1520,12 +1520,11 @@ class account_invoice_tax(models.Model):
 
     @api.multi
     def amount_change(self, amount, currency_id=False, company_id=False, date_invoice=False):
-        factor = self.factor_tax if self else 1
         company = self.env['res.company'].browse(company_id)
         if currency_id and company.currency_id:
             currency = self.env['res.currency'].browse(currency_id)
             currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
-            amount = currency.compute(amount * factor, company.currency_id, round=False)
+            amount = currency.compute(amount, company.currency_id, round=False)
         return {'value': {'tax_amount': amount}}
 
     @api.v8

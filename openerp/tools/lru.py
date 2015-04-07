@@ -119,4 +119,12 @@ class LRU(object):
         self.first = None
         self.last = None
 
+    @synchronized()
+    def clear_prefix(self, prefix):
+        """ Remove from `self` all the items with the given `prefix`. """
+        n = len(prefix)
+        for key in self.keys():
+            if key[:n] == prefix:
+                del self[key]
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
