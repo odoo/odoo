@@ -263,9 +263,8 @@ class mrp_bom(osv.osv):
             for bom in boms:
                 if bom.product_id.id in all_prod:
                     return False
-                lines = bom.bom_lines
-                if lines:
-                    res = res and check_bom([bom_id for bom_id in lines if bom_id not in boms], all_prod + [bom.product_id.id])
+                if bom.bom_lines:
+                    res = res and check_bom([b for b in bom.bom_lines if b not in boms], all_prod + [bom.product_id.id])
             return res
         return check_bom(boms, [])
 

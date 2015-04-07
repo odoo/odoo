@@ -572,7 +572,8 @@ class mail_message(osv.Model):
 
     def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
         doc_ids = doc_dict.keys()
-        allowed_doc_ids = self.pool.get(doc_model).search(cr, uid, [('id', 'in', doc_ids)], context=context)
+        ctx = dict(context or {}, active_test=False)
+        allowed_doc_ids = self.pool.get(doc_model).search(cr, uid, [('id', 'in', doc_ids)], context=ctx)
         return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
 
     def _find_allowed_doc_ids(self, cr, uid, model_ids, context=None):
