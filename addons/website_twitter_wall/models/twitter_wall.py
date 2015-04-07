@@ -61,6 +61,7 @@ class TwitterStream(models.Model, StreamListener):
         self.start()
 
     def on_connect(self):
+        super(TwitterStream, self).on_connect()
         with api.Environment.manage():
             with registry(self.env.cr.dbname).cursor() as new_cr:
                 self.env = api.Environment(new_cr, self.env.uid, self.env.context)
@@ -80,6 +81,7 @@ class TwitterStream(models.Model, StreamListener):
         return True
 
     def on_error(self, status_code):
+        super(TwitterStream, self).on_error()
         with api.Environment.manage():
             with registry(self.env.cr.dbname).cursor() as new_cr:
                 self.env = api.Environment(new_cr, self.env.uid, self.env.context)

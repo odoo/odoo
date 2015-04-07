@@ -61,7 +61,7 @@ class StreamListener(object):
 
     def on_error(self, status_code):
         """Called when a non-200 status code is returned"""
-        raise Exception('Stream Error :%s' % (status_code))
+        _logger.error('Stream Error :%s' % (status_code))
         return False
 
     def on_timeout(self):
