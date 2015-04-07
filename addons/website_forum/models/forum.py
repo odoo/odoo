@@ -387,6 +387,14 @@ class Post(osv.Model):
             self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [uid], post.forum_id.karma_gen_question_new, context=context)
         return post_id
 
+    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
+        for post in self.browse(cr, uid, mids, context=context):
+            # Make sure only author or moderator can edit/delete messages
+            if operation in ('write', 'unlink') and not post.can_edit:
+                raise KarmaError('Not enough karma to edit a post.')
+        return super(Post, self).check_mail_message_access(
+            cr, uid, mids, operation, model_obj=model_obj, context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         posts = self.browse(cr, uid, ids, context=context)
         if 'state' in vals:

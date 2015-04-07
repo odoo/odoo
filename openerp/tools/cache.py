@@ -59,7 +59,7 @@ class ormcache(object):
         return lookup
 
     def lru(self, model):
-        return model.pool.cache, (model.pool.db_name, model._name, self.method)
+        return model.pool.cache, (model._name, self.method)
 
     def lookup(self, method, *args, **kwargs):
         d, key0 = self.lru(args[0])
@@ -181,16 +181,19 @@ def log_ormcache_stats(sig=None, frame=None):
     import threading
 
     me = threading.currentThread()
+    me_dbname = me.dbname
     entries = defaultdict(int)
-    for key in RegistryManager.cache.iterkeys():
-        entries[key[:3]] += 1
+    for reg in RegistryManager.registries.itervalues():
+        for key in reg.cache.iterkeys():
+            entries[key[:3]] += 1
     for key, count in sorted(entries.items()):
         dbname, model_name, method = key
         me.dbname = dbname
         stat = STAT[key]
         _logger.info("%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
-            count, stat.hit, stat.miss, stat.err, stat.ratio, model_name, method.__name__)
+                     count, stat.hit, stat.miss, stat.err, stat.ratio, model_name, method.__name__)
 
+    me.dbname = me_dbname
 
 # For backward compatibility
 cache = ormcache
