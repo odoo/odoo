@@ -1394,12 +1394,21 @@ var ReceiptScreenWidget = ScreenWidget.extend({
     click_next: function() {
         this.pos.get_order().finalize();
     },
+    click_back: function() {
+        // Placeholder method for ReceiptScreen extensions that
+        // can go back ...
+    },
     renderElement: function() {
         var self = this;
         this._super();
         this.$('.next').click(function(){
             if (!self._locked) {
                 self.click_next();
+            }
+        });
+        this.$('.back').click(function(){
+            if (!self._locked) {
+                self.click_back();
             }
         });
         this.$('.button.print').click(function(){
@@ -1825,6 +1834,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 gui.define_screen({name:'payment', widget: PaymentScreenWidget});
 
 return {
+    ReceiptScreenWidget: ReceiptScreenWidget,
     ActionButtonWidget: ActionButtonWidget,
     define_action_button: define_action_button,
     ScreenWidget: ScreenWidget,
