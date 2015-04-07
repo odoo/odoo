@@ -375,10 +375,10 @@ class ir_mail_server(osv.osv):
 
         '''
         get_param = self.pool['ir.config_parameter'].get_param
-        postmaster = get_param(cr, uid, 'mail.catchall.alias',
+        postmaster = get_param(cr, SUPERUSER_ID, 'mail.catchall.alias',
                                default='postmaster-odoo',
                                context=context,)
-        domain = get_param(cr, uid, 'mail.catchall.domain', context=context)
+        domain = get_param(cr, SUPERUSER_ID, 'mail.catchall.domain', context=context)
         if postmaster and domain:
             return '%s@%s' % (postmaster, domain)
 

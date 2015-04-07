@@ -237,6 +237,7 @@ class rml_parse(object):
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
         for obj in self.objects:
+            obj.refresh()
             obj._context['lang'] = lang
 
     def _get_lang_dict(self):
