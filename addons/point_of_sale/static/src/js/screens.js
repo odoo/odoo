@@ -1321,34 +1321,18 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this._super();
         var self = this;
 
-        this.refresh();
+        this.render_change();
+        this.render_receipt();
 
-        if (!this.pos.get_order()._printed &&
-            !this.pos.config.iface_print_via_proxy &&
-            this.pos.config.iface_print_auto) {
+        if (this.should_auto_print()) {
             this.print();
+        } else {
+            this.lock_screen(false);
         }
 
-        // The problem is that in chrome the print() is asynchronous and doesn't
-        // execute until all rpc are finished. So it conflicts with the rpc used
-        // to send the orders to the backend, and the user is able to go to the next 
-        // screen before the printing dialog is opened. The problem is that what's 
-        // printed is whatever is in the page when the dialog is opened and not when it's called,
-        // and so you end up printing the product list instead of the receipt... 
-        //
-        // Fixing this would need a re-architecturing
-        // of the code to postpone sending of orders after printing.
-        //
-        // But since the print dialog also blocks the other asynchronous calls, the
-        // button enabling in the setTimeout() is blocked until the printing dialog is 
-        // closed. But the timeout has to be big enough or else it doesn't work
-        // 2 seconds is the same as the default timeout for sending orders and so the dialog
-        // should have appeared before the timeout... so yeah that's not ultra reliable. 
-
-        this.lock_screen(true);
-        setTimeout(function(){
-            self.lock_screen(false);
-        }, 2000);
+    },
+    should_auto_print: function(){
+        return this.pos.config.iface_print_auto && !this.pos.get_order()._printed;
     },
     lock_screen: function(locked) {
         this._locked = locked;
@@ -1358,26 +1342,76 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             this.$('.next').addClass('highlight');
         }
     },
-    print: function() {
-        this.pos.get_order()._printed = true;
+    print_web: function() {
         window.print();
+        this.pos.get_order()._printed = true;
     },
-    finish_order: function() {
-        if (!this._locked) {
-            this.pos.get_order().finalize();
+    print_xml: function() {
+        var env = {
+            widget:  this,
+            pos:     this.pos,
+            order:   this.pos.get_order(),
+            receipt: this.pos.get_order().export_for_printing(),
+        };
+        var receipt = QWeb.render('XmlReceipt',env);
+
+        this.pos.proxy.print_receipt(receipt);
+        this.pos.get_order()._printed = true;
+    },
+    print: function() {
+        var self = this;
+
+        if (!this.pos.config.iface_print_via_proxy) { // browser (html) printing
+
+            // The problem is that in chrome the print() is asynchronous and doesn't
+            // execute until all rpc are finished. So it conflicts with the rpc used
+            // to send the orders to the backend, and the user is able to go to the next 
+            // screen before the printing dialog is opened. The problem is that what's 
+            // printed is whatever is in the page when the dialog is opened and not when it's called,
+            // and so you end up printing the product list instead of the receipt... 
+            //
+            // Fixing this would need a re-architecturing
+            // of the code to postpone sending of orders after printing.
+            //
+            // But since the print dialog also blocks the other asynchronous calls, the
+            // button enabling in the setTimeout() is blocked until the printing dialog is 
+            // closed. But the timeout has to be big enough or else it doesn't work
+            // 1 seconds is the same as the default timeout for sending orders and so the dialog
+            // should have appeared before the timeout... so yeah that's not ultra reliable. 
+
+            this.lock_screen(true);
+
+            setTimeout(function(){
+                self.lock_screen(false);
+            }, 1000);
+
+            this.print_web();
+        } else {    // proxy (xml) printing
+            this.print_xml();
+            this.lock_screen(false);
         }
+    },
+    click_next: function() {
+        this.pos.get_order().finalize();
     },
     renderElement: function() {
         var self = this;
         this._super();
         this.$('.next').click(function(){
-            self.finish_order();
+            if (!self._locked) {
+                self.click_next();
+            }
         });
         this.$('.button.print').click(function(){
-            self.print();
+            if (!self._locked) {
+                self.print();
+            }
         });
     },
-    refresh: function() {
+    render_change: function() {
+        this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
+    },
+    render_receipt: function() {
         var order = this.pos.get_order();
         this.$('.pos-receipt-container').html(QWeb.render('PosTicket',{
                 widget:this,
@@ -1400,7 +1434,6 @@ gui.define_screen({name:'receipt', widget: ReceiptScreenWidget});
 var PaymentScreenWidget = ScreenWidget.extend({
     template:      'PaymentScreenWidget',
     back_screen:   'product',
-    next_screen:   'receipt',
     init: function(parent, options) {
         var self = this;
         this._super(parent, options);
@@ -1685,17 +1718,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
             self.$('.next').removeClass('highlight');
         }
     },
-    print_escpos_receipt: function(){
-        var env = {
-            widget:  this,
-            pos:     this.pos,
-            order:   this.pos.get_order(),
-            receipt: this.pos.get_order().export_for_printing(),
-        };
-
-        this.pos.proxy.print_receipt(QWeb.render('XmlReceipt',env));
-    },
-
     // Check if the order is paid, then sends it to the backend,
     // and complete the sale process
     validate_order: function(force_validation) {
@@ -1796,20 +1818,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             });
         } else {
             this.pos.push_order(order);
-            debugger;
-            var cO = this.pos.get('selectedOrder');
-            var isChange = cO.get_total_paid() > cO.get_total_with_tax();
-            if (this.pos.config.iface_print_via_proxy) {
-                this.print_escpos_receipt();
-                if (isChange) {
-                    this.gui.show_screen(this.next_screen);
-                }
-                else {
-                    order.finalize(); //finish order and go back to scan screen
-                }
-            } else {
-                this.gui.show_screen(this.next_screen);
-            }
+            this.gui.show_screen('receipt');
         }
     },
 });
