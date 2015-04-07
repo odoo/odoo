@@ -11,7 +11,7 @@ for customization purpose.
     'depends': ['web'],
     'installable': True,
     'auto_install': False,
-    'data': ['views/base_import_module.xml'],
+    'data': ['views/base_import_module_view.xml'],
     'qweb': [],
     'test': [],
 }
