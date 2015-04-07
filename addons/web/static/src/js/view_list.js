@@ -93,6 +93,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.no_leaf = false;
         this.grouped = false;
+
+        if (!this.options.$pager || !this.options.$pager.length) {
+            this.options.$pager = false;
+        }
     },
     view_loading: function(r) {
         return this.load_list(r);
@@ -290,10 +294,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // Pager
         if (!this.$pager) {
             this.$pager = $(QWeb.render("ListView.pager", {'widget':self})).hide();
-            if (this.options.$buttons) {
+            if (this.options.$pager) {
                 this.$pager.appendTo(this.options.$pager);
             } else {
-                this.$el.find('.oe_list_pager').replaceWith(this.$pager);
+                this.$pager.appendTo(this.$('.oe_list_pager'));
             }
 
             this.$pager
