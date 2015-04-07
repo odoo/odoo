@@ -48,3 +48,13 @@
   !python {model: sale.order, id: sale_order_cl_2}: |
     invoice = self.invoice_ids
     assert len(invoice.invoice_line) == 1, "Only 1 line should be invoiced because the other one is canceled, got %d" % len(invoice.invoice_line)
+-
+  I set the sale to done
+-
+  !python {model: sale.order, id: sale_order_cl_2}: |
+    self.action_done()
+-
+  And check if the canceled line is still canceled
+-
+  !assert {model: sale.order.line, id: sale_order_cl_2_line_1, string: The canceled line should still be canceled}:
+    - state == 'cancel'
