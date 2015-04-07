@@ -279,7 +279,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                 $('body').css('background-color', color);
             });
             picker.parent().on('click', '.theme', function(e) {
-                var $el = $(e.currentTarget).toggleClass("active");
+                var $el = $(e.currentTarget).addClass("active");
                 twitter_wall.theme = $el.data("operation");
                 $el.siblings().removeClass("active");
             });
