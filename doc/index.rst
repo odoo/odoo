@@ -14,6 +14,7 @@ Odoo Technical Documentation
     setup
     reference
     api_integration
+    functional mementoes <http://odoo.com/documentation/functional>
 
 .. ifconfig:: todo_include_todos
 
