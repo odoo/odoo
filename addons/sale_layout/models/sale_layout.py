@@ -42,7 +42,7 @@ class SaleLayoutCategory(osv.Model):
     _name = 'sale_layout.category'
     _order = 'sequence, id'
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', required=True),
         'subtotal': fields.boolean('Add subtotal'),
         'separator': fields.boolean('Add separator'),
