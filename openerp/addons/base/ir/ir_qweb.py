@@ -1219,7 +1219,7 @@ class AssetsBundle(object):
         if page_number:
             return content
         if content is None:
-            css = self.css()
+            css = self.css().decode('utf-8')
             re_rules = '([^{]+\{(?:[^{}]|\{[^{}]*\})*\})'
             re_selectors = '()(?:\s*@media\s*[^{]*\{)?(?:\s*(?:[^,{]*(?:,|\{(?:[^}]*\}))))'
             css_url = '@import url(\'/web/css.%%d/%s/%s\');' % (self.xmlid, self.version)
