@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 from json import loads
 from thread import start_new_thread
 from urllib2 import Request, urlopen
@@ -7,6 +8,8 @@ from openerp.addons.website.models.website import slug
 from openerp.exceptions import UserError
 from base_stream import Stream, StreamListener
 from oauth import Oauth
+
+_logger = logging.getLogger(__name__)
 
 
 class TwitterStream(models.Model, StreamListener):
@@ -148,13 +151,16 @@ class TwitterTweet(models.Model):
 
     @api.model
     def process_tweet(self, wall_id, tweet):
-        card_url = 'https://api.twitter.com/1/statuses/oembed.json?id=%s&omit_script=true' % (tweet.get('id'))
-        cardtweet = loads(urlopen(Request(card_url, None, {'Content-Type': 'application/json'})).read())
-        return self.create({
-            'tweet_id': tweet.get('id'),
-            'tweet': cardtweet.get('html', False),
-            'agent_id': wall_id
-        })
+        try:
+            card_url = 'https://api.twitter.com/1/statuses/oembed.json?id=%s&omit_script=true' % (tweet.get('id'))
+            cardtweet = loads(urlopen(Request(card_url, None, {'Content-Type': 'application/json'})).read())
+            return self.create({
+                'tweet_id': tweet.get('id'),
+                'tweet': cardtweet.get('html', False),
+                'agent_id': wall_id
+            })
+        except Exception as e:
+            _logger.error(e)
 
 
 class TwitterHashtag(models.Model):
