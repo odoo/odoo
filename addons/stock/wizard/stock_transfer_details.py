@@ -60,7 +60,7 @@ class stock_transfer_details(models.TransientModel):
                 'sourceloc_id': op.location_id.id,
                 'destinationloc_id': op.location_dest_id.id,
                 'result_package_id': op.result_package_id.id,
-                'date': op.date, 
+                'date': op.date,
                 'owner_id': op.owner_id.id,
             }
             if op.product_id:
@@ -74,6 +74,8 @@ class stock_transfer_details(models.TransientModel):
     @api.one
     def do_detailed_transfer(self):
         processed_ids = []
+        packop_model = self.env['stock.pack.operation']
+        picking_id = self.picking_id.id
         # Create new and update existing pack operations
         for lstits in [self.item_ids, self.packop_ids]:
             for prod in lstits:
@@ -90,14 +92,15 @@ class stock_transfer_details(models.TransientModel):
                     'owner_id': prod.owner_id.id,
                 }
                 if prod.packop_id:
-                    prod.packop_id.write(pack_datas)
+                    prod.packop_id.with_context(no_recompute=True).write(pack_datas)
                     processed_ids.append(prod.packop_id.id)
                 else:
-                    pack_datas['picking_id'] = self.picking_id.id
-                    packop_id = self.env['stock.pack.operation'].create(pack_datas)
+                    pack_datas['picking_id'] = picking_id
+                    packop_id = packop_model.with_context(no_recompute=True).create(pack_datas)
                     processed_ids.append(packop_id.id)
         # Delete the others
-        packops = self.env['stock.pack.operation'].search(['&', ('picking_id', '=', self.picking_id.id), '!', ('id', 'in', processed_ids)])
+        self.picking_id.do_recompute_remaining_quantities()
+        packops = self.env['stock.pack.operation'].search(['&', ('picking_id', '=', picking_id), '!', ('id', 'in', processed_ids)])
         for packop in packops:
             packop.unlink()
 
