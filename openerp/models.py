@@ -4880,9 +4880,9 @@ class BaseModel(object):
             while current_id is not None:
                 cr.execute(query, (current_id,))
                 result = cr.fetchone()
-                current_id = result[0] if result else None
-                if current_id == id:
+                if result and result[0] == current_id or result[0] == id:
                     return False
+                current_id = result[0]
         return True
 
     def _check_m2m_recursion(self, cr, uid, ids, field_name):
