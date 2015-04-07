@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     "name" : "Product extension to track sales and purchases",
-    "version" : "1.0",
-    "author" : "OpenERP S.A.",
+    "author" : "Odoo S.A.",
     "depends" : ["product", "purchase", "sale", "mrp", "stock_account"],
     "category" : "Generic Modules/Inventory Control",
     "description": """
@@ -13,11 +14,9 @@ Product extension. This module adds:
     "init_xml" : [],
     "demo_xml" : [],
     "data" : [
+        'security/ir.model.access.csv',
         'wizard/wizard_price_views.xml',
-        'views/product_views.xml',
         'views/mrp_views.xml',
-        'security/ir.model.access.csv'
+        'views/product_views.xml',
     ],
-    "active": False,
-    "installable": True
 }
