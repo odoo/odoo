@@ -40,7 +40,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                 'domain': [["id", '=', parseInt($(".odoo-tw-walls").attr("wall_id"))], ["state", '!=', 'archive']],
             }).then(function(res) {
                 if(res == 'stop') {
-                    $indicator.html(_t('<strong>Oops! Something went wrong</strong><br/>You are unable to fetch live tweet. It\'s take few seconds to reconnect automatically. <i class="fa fa-refresh fa-spin"></i>')).slideDown(400);
+                    $indicator.html(_t('<i class="fa fa-warning" /> <strong>Oops! Something went wrong</strong><br/>You are unable to fetch live tweet. It\'s take few seconds to reconnect automatically. <i class="fa fa-refresh fa-spin" />')).slideDown(400);
                 } else {
                     $indicator.html(_t("<strong>Connected!</strong>"));
                     setTimeout(function() {
