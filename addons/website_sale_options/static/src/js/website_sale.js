@@ -27,6 +27,7 @@ $(document).ready(function () {
                         var $a = $(this);
                         $form.ajaxSubmit({
                             url:  '/shop/cart/update_option',
+                            data: {lang: openerp.website.get_context().lang},
                             success: function (quantity) {
                                 if (!$a.hasClass('js_goto_shop')) {
                                     window.location.href = window.location.href.replace(/shop([\/?].*)?$/, "shop/cart");

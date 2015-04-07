@@ -989,7 +989,7 @@ class pos_order(osv.osv):
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name
-                inv_line['invoice_line_tax_id'] = [(6, 0, [x.id for x in line.product_id.taxes_id] )]
+                inv_line['invoice_line_tax_id'] = [(6, 0, inv_line['invoice_line_tax_id'])]
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
             self.signal_workflow(cr, uid, [order.id], 'invoice')
@@ -1108,11 +1108,16 @@ class pos_order(osv.osv):
                     if not grouped_data[key]:
                         grouped_data[key].append(values)
                     else:
-                        current_value = grouped_data[key][0]
-                        current_value['quantity'] = current_value.get('quantity', 0.0) +  values.get('quantity', 0.0)
-                        current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
-                        current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
-                        current_value['tax_amount'] = current_value.get('tax_amount', 0.0) + values.get('tax_amount', 0.0)
+                        for line in grouped_data[key]:
+                            if line.get('tax_code_id') == values.get('tax_code_id'):
+                                current_value = line
+                                current_value['quantity'] = current_value.get('quantity', 0.0) +  values.get('quantity', 0.0)
+                                current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
+                                current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
+                                current_value['tax_amount'] = current_value.get('tax_amount', 0.0) + values.get('tax_amount', 0.0)
+                                break
+                        else:
+                            grouped_data[key].append(values)
                 else:
                     grouped_data[key].append(values)
 

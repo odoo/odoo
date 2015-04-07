@@ -147,21 +147,6 @@ class sale_order(osv.osv):
                     move_obj.write(cr, uid, [x.id for x in picking.move_lines], {'invoice_state': 'invoiced'}, context=context)
         return res
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        sale_order_line_obj = self.pool.get('sale.order.line')
-        proc_obj = self.pool.get('procurement.order')
-        stock_obj = self.pool.get('stock.picking')
-        for sale in self.browse(cr, uid, ids, context=context):
-            for pick in sale.picking_ids:
-                if pick.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(
-                        _('Cannot cancel sales order!'),
-                        _('You must first cancel all delivery order(s) attached to this sales order.'))
-            stock_obj.signal_workflow(cr, uid, [p.id for p in sale.picking_ids], 'button_cancel')
-        return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
-
     def action_wait(self, cr, uid, ids, context=None):
         res = super(sale_order, self).action_wait(cr, uid, ids, context=context)
         for o in self.browse(cr, uid, ids):
@@ -412,6 +397,14 @@ class stock_move(osv.osv):
             uos_coeff = move.product_uom_qty and move.product_uos_qty / move.product_uom_qty or 1.0
             res['price_unit'] = res['price_unit'] / uos_coeff
         return res
+
+    def _get_moves_taxes(self, cr, uid, moves, context=None):
+        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, context=context)
+        for move in moves:
+            if move.procurement_id and move.procurement_id.sale_line_id:
+                is_extra_move[move.id] = False
+                extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.procurement_id.sale_line_id.tax_id])]
+        return (is_extra_move, extra_move_tax)
 
 
 class stock_location_route(osv.osv):

@@ -842,7 +842,7 @@ class purchase_order(osv.osv):
             picking_vals = {
                 'picking_type_id': order.picking_type_id.id,
                 'partner_id': order.partner_id.id,
-                'date': max([l.date_planned for l in order.order_line]),
+                'date': order.date_order,
                 'origin': order.name
             }
             picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
@@ -1026,9 +1026,9 @@ class purchase_order_line(osv.osv):
             if line.state not in ['draft', 'cancel']:
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
         procurement_obj = self.pool.get('procurement.order')
-        procurement_ids_to_cancel = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
-        if procurement_ids_to_cancel:
-            self.pool['procurement.order'].cancel(cr, uid, procurement_ids_to_cancel)
+        procurement_ids_to_except = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
+        if procurement_ids_to_except:
+            self.pool['procurement.order'].write(cr, uid, procurement_ids_to_except, {'state': 'exception'}, context=context)
         return super(purchase_order_line, self).unlink(cr, uid, ids, context=context)
 
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,

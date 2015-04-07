@@ -322,7 +322,9 @@
     function treat_node(node){
         if(node.nodeType === 3) {
             if(node.nodeValue.match(/\S/)){
-                node.nodeValue = openerp._t($.trim(node.nodeValue));
+                var text_value = $.trim(node.nodeValue);
+                var spaces = node.nodeValue.split(text_value);
+                node.nodeValue = spaces[0] + openerp._t(text_value) + spaces[1];
             }
         }
         else if(node.nodeType === 1 && node.hasChildNodes()) {

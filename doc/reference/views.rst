@@ -851,7 +851,9 @@ Possible children of the view element are:
     an object with all the requested fields as its attributes. Each field has
     two attributes ``value`` and ``raw_value``, the former is formatted
     according to current user parameters, the latter is the direct value from
-    a :meth:`~openerp.models.Model.read`
+    a :meth:`~openerp.models.Model.read` (except for date and datetime fields
+    that are `formatted according to user's locale
+    <https://github.com/odoo/odoo/blob/8.0/addons/web_kanban/static/src/js/kanban.js#L900>`_)
   ``read_only_mode``
     self-explanatory
 
