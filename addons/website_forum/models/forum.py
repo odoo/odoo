@@ -294,6 +294,7 @@ class Post(models.Model):
     @api.multi
     def _get_post_karma_rights(self):
         user = self.env.user
+        is_admin = user.id == SUPERUSER_ID
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
         for post, post_sudo in itertools.izip(self, self.sudo()):
@@ -306,17 +307,17 @@ class Post(models.Model):
             post.karma_comment = post.forum_id.karma_comment_own if is_creator else post.forum_id.karma_comment_all
             post.karma_comment_convert = post.forum_id.karma_comment_convert_own if is_creator else post.forum_id.karma_comment_convert_all
 
-            post.can_ask = user.karma >= post.forum_id.karma_ask
-            post.can_answer = user.karma >= post.forum_id.karma_answer
-            post.can_accept = user.karma >= post.karma_accept
-            post.can_edit = user.karma >= post.karma_edit
-            post.can_close = user.karma >= post.karma_close
-            post.can_unlink = user.karma >= post.karma_unlink
-            post.can_upvote = user.karma >= post.forum_id.karma_upvote
-            post.can_downvote = user.karma >= post.forum_id.karma_downvote
-            post.can_comment = user.karma >= post.karma_comment
-            post.can_comment_convert = user.karma >= post.karma_comment_convert
-            post.can_view = user.karma >= post.karma_close or post_sudo.create_uid.karma > 0
+            post.can_ask = is_admin or user.karma >= post.forum_id.karma_ask
+            post.can_answer = is_admin or user.karma >= post.forum_id.karma_answer
+            post.can_accept = is_admin or user.karma >= post.karma_accept
+            post.can_edit = is_admin or user.karma >= post.karma_edit
+            post.can_close = is_admin or user.karma >= post.karma_close
+            post.can_unlink = is_admin or user.karma >= post.karma_unlink
+            post.can_upvote = is_admin or user.karma >= post.forum_id.karma_upvote
+            post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote
+            post.can_comment = is_admin or user.karma >= post.karma_comment
+            post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
+            post.can_view = is_admin or user.karma >= post.karma_close or post_sudo.create_uid.karma > 0
 
     @api.one
     @api.constrains('post_type', 'forum_id')
