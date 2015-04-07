@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- explicit list view definition -->
+        <!--
+        <record model="ir.ui.view" id="shipping.list">
+          <field name="name">shipping list</field>
+          <field name="model">shipping.shipping</field>
+          <field name="arch" type="xml">
+            <tree>
+              <field name="name"/>
+              <field name="value"/>
+              <field name="value2"/>
+            </tree>
+          </field>
+        </record>
+        -->
+
+        <record model="ir.ui.view" id="provider_list">
+            <field name="name">provider.list</field>
+            <field name="model">shipping.provider</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="environment"/>
+                    <field name="website_published"/>
+                </tree>
+            </field>
+        </record>
+
+        
+        <record model="ir.ui.view" id="provider_form">
+            <field name="name">provider.form</field>
+            <field name="model">shipping.provider</field>
+            <field name="arch" type="xml">
+                <form string="Shipping Provider">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="environment"/>
+                            <field name="website_published"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group name="provider_display">
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="shipping.action_window">
+            <field name="name">Shipping Provider</field>
+            <field name="res_model">shipping.provider</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_shipping_transaction" model="ir.actions.act_window">
+            <field name="name">Shipping Transactions</field>
+            <field name="res_model">shipping.transaction</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+
+        <!-- server action to the one above -->
+        <!--
+        <record model="ir.actions.server" id="shipping.action_server">
+          <field name="name">shipping server</field>
+          <field name="model_id" ref="model_shipping_shipping"/>
+          <field name="code">
+            action = {
+              "type": "ir.actions.act_window",
+              "view_mode": "tree,form",
+              "res_model": self._name,
+            }
+          </field>
+        </record>
+        -->
+
+        <!-- Top menu item -->
+
+        <!-- menu categories -->
+
+        <menuitem name="Shipping" id="root_shipping_menu" parent="base.menu_administration"/>
+
+        <!-- actions -->
+
+        <menuitem name="Shipping Provider" id="shipping.menu_1_list" parent="root_shipping_menu"
+            action="shipping.action_window"/>
+
+        <menuitem name="Shipping Transactions" id="shipping.menu_2_list" parent="root_shipping_menu"
+            action="action_shipping_transaction"/>
+        <!--<menuitem name="Server to list" id="shipping" parent="shipping.menu_2"
+                  action="shipping.action_server"/>
+        -->
+
+
+
+    </data>
+</openerp>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="shipping_fedex.list">
+      <field name="name">shipping_fedex list</field>
+      <field name="model">shipping_fedex.shipping_fedex</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="shipping_fedex.action_window">
+      <field name="name">shipping_fedex window</field>
+      <field name="res_model">shipping_fedex.shipping_fedex</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="shipping_fedex.action_server">
+      <field name="name">shipping_fedex server</field>
+      <field name="model_id" ref="model_shipping_fedex_shipping_fedex"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+  
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="shipping_fedex" id="shipping_fedex.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="shipping_fedex.menu_1" parent="shipping_fedex.menu_root"/>
+    <menuitem name="Menu 2" id="shipping_fedex.menu_2" parent="shipping_fedex.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="shipping_fedex.menu_1_list" parent="shipping_fedex.menu_1"
+              action="shipping_fedex.action_window"/>
+    <menuitem name="Server to list" id="shipping_fedex" parent="shipping_fedex.menu_2"
+              action="shipping_fedex.action_server"/>
+    -->
+
+        <record id="provider_form_fedex" model="ir.ui.view">
+            <field name="name">provider.form.fedex</field>
+            <field name="model">shipping.provider</field>
+            <field name="inherit_id" ref="shipping.provider_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="provider_display"]' position='after'>
+                    <group>
+                        <field name="developer_key"/>
+                        <field name="developer_password"/>
+                        <field name="account_number"/>
+                        <field name="meter_number"/>
+                        <field name="default_droppof_type"/>
+                        <field name="default_packaging_type"/>
+                        <field name="default_service_type"/>
+                        <field name="default_document_content"/>
+                        <field name="default_image_type"/>
+
+                    </group>
+                </xpath>
+               
+            </field>
+        </record>
+    </data>
+</openerp>
