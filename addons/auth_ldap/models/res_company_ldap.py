@@ -4,15 +4,34 @@ import ldap
 import logging
 from ldap.filter import filter_format
 
-import openerp.exceptions
-from openerp import api, fields, models, SUPERUSER_ID, tools
-from openerp.modules.registry import RegistryManager
+from openerp import fields, models, tools
+
 _logger = logging.getLogger(__name__)
 
 class CompanyLDAP(models.Model):
     _name = 'res.company.ldap'
     _order = 'sequence'
     _rec_name = 'ldap_server'
+
+    sequence = fields.Integer(default=10)
+    company = fields.Many2one('res.company', required=True, ondelete='cascade')
+    ldap_server = fields.Char(string='LDAP Server address', required=True, default='127.0.0.1')
+    ldap_server_port = fields.Integer(string='LDAP Server port', required=True, default=389)
+    ldap_binddn = fields.Char('LDAP binddn',
+        help=("The user account on the LDAP server that is used to query "
+              "the directory. Leave empty to connect anonymously."))
+    ldap_password = fields.Char(string='LDAP password',
+        help=("The password of the user account on the LDAP server that is "
+              "used to query the directory."))
+    ldap_filter = fields.Char(string='LDAP filter', required=True)
+    ldap_base = fields.Char(string='LDAP base', required=True)
+    user = fields.Many2one('res.users', string='Template User', help="User to copy when creating new users")
+    create_user = fields.Boolean(default=True,
+        help="Automatically create local user accounts for new users authenticating via LDAP")
+    ldap_tls = fields.Boolean(string='Use TLS',
+        help="Request secure TLS/SSL encryption when connecting to the LDAP server. "
+             "This option requires a server with STARTTLS enabled, "
+             "otherwise all authentication attempts will fail.")
 
     def connect(self):
         """ 
@@ -145,65 +164,3 @@ class CompanyLDAP(models.Model):
                 user_id = self.env['res.users'].create(values).id
         return user_id
 
-    sequence = fields.Integer(default=10)
-    company = fields.Many2one('res.company', required=True, ondelete='cascade')
-    ldap_server = fields.Char(string='LDAP Server address', required=True, default='127.0.0.1')
-    ldap_server_port = fields.Integer(string='LDAP Server port', required=True, default=389)
-    ldap_binddn = fields.Char('LDAP binddn',
-        help=("The user account on the LDAP server that is used to query "
-              "the directory. Leave empty to connect anonymously."))
-    ldap_password = fields.Char(string='LDAP password',
-        help=("The password of the user account on the LDAP server that is "
-              "used to query the directory."))
-    ldap_filter = fields.Char(string='LDAP filter', required=True)
-    ldap_base = fields.Char(string='LDAP base', required=True)
-    user = fields.Many2one('res.users', string='Template User', help="User to copy when creating new users")
-    create_user = fields.Boolean(default=True,
-        help="Automatically create local user accounts for new users authenticating via LDAP")
-    ldap_tls = fields.Boolean(string='Use TLS',
-        help="Request secure TLS/SSL encryption when connecting to the LDAP server. "
-             "This option requires a server with STARTTLS enabled, "
-             "otherwise all authentication attempts will fail.")
-
-
-class ResCompany(models.Model):
-    _inherit = "res.company"
-
-    ldaps = fields.One2many('res.company.ldap', 'company', string='LDAP Parameters', copy=True, groups="base.group_system")
-
-
-class Users(models.Model):
-    _inherit = "res.users"
-
-    def _login(self, db, login, password):
-        user_id = super(Users, self)._login(db, login, password)
-        if user_id:
-            return user_id
-        registry = RegistryManager.get(db)
-        with registry.cursor() as cr:
-            cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
-            res = cr.fetchone()
-            if res:
-                return False
-            env = openerp.api.Environment(cr, SUPERUSER_ID, {})
-            Ldap = env['res.company.ldap']
-            for ldap_conf in Ldap.search([('ldap_server', '!=', False)], order='sequence'):
-                entry = ldap_conf.authenticate(login, password)
-                if entry:
-                    user_id = ldap_conf.get_or_create_user(login, entry)
-                    if user_id:
-                        break
-            return user_id
-
-    @api.model
-    def check_credentials(self, password):
-        try:
-            super(Users, self).check_credentials(password)
-        except openerp.exceptions.AccessDenied:
-
-            if self.env.user.active:
-                Ldap = self.env['res.company.ldap'].sudo()
-                for ldap_conf in Ldap.search([('ldap_server', '!=', False)], order='sequence'):
-                    if ldap_conf.authenticate(self.env.user.login, password):
-                        return
-            raise

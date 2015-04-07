@@ -9,8 +9,8 @@
     'website' : 'https://www.odoo.com',
     'category' : 'Authentication',
     'data' : [
-        'views/users_ldap_view.xml',
-        'views/user_ldap_installer.xml',
+        'views/res_company_views.xml',
+        'views/res_company_ldap_views.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,
