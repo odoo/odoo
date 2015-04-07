@@ -1563,52 +1563,37 @@ class XMLExport(ExportFormat, http.Controller):
     def extract_types(self, field_names, model):
         """Extract models data for given fields
 
-        Update object types and comodels corresponding to a list of fields.
-
-        Args:
-            field_names: A list of fields.
+        Update object types corresponding to a list of fields.
         """
-
-        models_types = defaultdict(dict)
-        models_comodels = defaultdict(dict)
-
+        types = defaultdict(dict)
+        comodels = defaultdict(dict)
         for tokens in (field_name.split('/') for field_name in field_names):
             cur_model = model
             for tok in tokens:
                 if tok in ("id", ".id"):
                     continue
-                if tok not in models_types[cur_model]:
+                if tok not in types[cur_model]:
                     attrs = request.env[cur_model].fields_get([tok], attributes=['type', 'relation'])[tok]
                     if attrs['type'] in ("one2many", "many2many", "many2one"):
-                        models_types[cur_model][tok] = attrs['type']
-                        models_comodels[cur_model][tok] = attrs['relation']
+                        types[cur_model][tok] = attrs['type']
+                        comodels[cur_model][tok] = attrs['relation']
                     else:
-                        models_types[cur_model][tok] = attrs['type']
-                if tok in models_comodels[cur_model]:
-                    cur_model = models_comodels[cur_model][tok]
+                        types[cur_model][tok] = attrs['type']
+                if tok in comodels[cur_model]:
+                    cur_model = comodels[cur_model][tok]
+        return types
 
-        self.models_types = models_types
-        self.models_comodels = models_comodels
-
-    def export_record(self, record, model):
+    def export_record(self, record, export_data):
         """Add a record to the root element
 
         Add a record as an xml element to the xml root element. Can call
         itself to add related records. If a record as already been
         exported, the function only return the xml_id.
-
-        Args:
-            record: A recordset containing one record.
-            model: The model of the record to add.
-
-        Returns:
-            The xml_id of the added or existing record.
         """
-
-
-        if record.id in self.seen_ids[model]:
-            return self.seen_ids[model][record.id]
-
+        root, seen_ids, models_types = export_data
+        model = record._name
+        if record.id in seen_ids[model]:
+            return seen_ids[model][record.id]
         xml_id = record._BaseModel__export_xml_id()
         start_no_xml_id = '__export__.'
         if xml_id.startswith(start_no_xml_id):
@@ -1617,50 +1602,41 @@ class XMLExport(ExportFormat, http.Controller):
                 xml_id = xml_id[len(start_no_xml_id):]+'_'+re.sub('[^a-zA-Z0-9-]', '_', name[0][1])
             else:
                 xml_id = xml_id[len(start_no_xml_id):]
-        self.seen_ids[model][record.id] = xml_id
-
+        seen_ids[model][record.id] = xml_id
         record_element = etree.Element('record', model=model, id=xml_id)
-
-        types = self.models_types[model]
-        comodels = self.models_comodels[model]
-
-        for field_name in types.keys():
-            field = etree.SubElement(record_element, 'field', name=field_name)
-
-            if types[field_name] in ("one2many", "many2many", "many2one") and len(getattr(record, field_name)):
+        types = models_types[model]
+        for field_name in types:
+            field = etree.Element('field', name=field_name)
+            field_value = record[field_name]
+            if types[field_name] in ("one2many", "many2many", "many2one"):
+                if not field_value:
+                    continue
                 if types[field_name] == 'many2one':
-                    field.set('ref', self.export_record(getattr(record, field_name), comodels[field_name]))
+                    field.set('ref', self.export_record(field_value, export_data))
                 else:
-                    field.set('eval', '['+', '.join(
-                        '(4,ref(\''+self.export_record(sub_record, comodels[field_name])+'\'))'
-                        for sub_record in getattr(record, field_name)
-                    )+']')
+                    field.set('eval', '[%s]' % ', '.join(
+                        "(4,ref('%s'))" % self.export_record(sub_record, export_data)
+                        for sub_record in field_value
+                    ))
             else:
-                field.text = unicode(getattr(record, field_name))
-
-        self.root.append(record_element)
-
+                field.text = unicode(field_value)
+            record_element.append(field)
+        root.append(record_element)
         return xml_id
 
     def base(self, data, token):
         params = simplejson.loads(data)
         model, fields, ids, domain = operator.itemgetter('model', 'fields', 'ids', 'domain')(params)
-
         if ids:
             records = request.env[model].browse(ids)
         else:
             records = request.env[model].search(domain)
-
-        self.extract_types(map(operator.itemgetter('name'), fields), model)
-
-        self.seen_ids = defaultdict(dict)
-        self.root = etree.Element('odoo')
-
+        models_types = self.extract_types(map(operator.itemgetter('name'), fields), model)
+        root = etree.Element('odoo')
+        export_data = (root, defaultdict(dict), models_types)
         for record in records:
-            self.export_record(record, model)
-
-        data_output = etree.tostring(self.root, encoding='utf-8', xml_declaration=True, pretty_print=True)
-
+            self.export_record(record, export_data)
+        data_output = etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
         return request.make_response(data_output, headers=[
             ('Content-Disposition', content_disposition(self.filename(model))),
             ('Content-Type', self.content_type)], cookies={'fileToken': token})
