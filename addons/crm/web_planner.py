@@ -14,7 +14,8 @@ class PlannerCrm(models.Model):
 
     @api.model
     def _prepare_planner_crm_data(self):
-        sales_team = self.env.ref('sales_team.team_sales_department')
+        # sudo is needed to avoid error message when current user's company != sale_department company
+        sales_team = self.sudo().env.ref('sales_team.team_sales_department')
         values = {
             'alias_domain': sales_team.alias_domain,
             'alias_name': sales_team.alias_name,
