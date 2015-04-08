@@ -175,10 +175,8 @@ class AcquirerallPay(osv.Model):
         sorted_to_sign.insert(0,('HashKey',acquirer.allpay_hash_key))
         sorted_to_sign.append(('HashIV',acquirer.allpay_hash_iv))
 
-        sorted_to_sign = util.do_str_replace(urllib.quote(werkzeug.url_encode(sorted_to_sign), '+%').lower())
-
-        check_mac_value = hashlib.md5(sorted_to_sign).hexdigest().upper()
-        allpay_tx_values['CheckMacValue'] = check_mac_value
+        string_to_sign = util.do_str_replace(urllib.quote(werkzeug.url_encode(sorted_to_sign), '+%').lower())
+        allpay_tx_values['CheckMacValue'] = hashlib.md5(string_to_sign).hexdigest().upper()
 
         return partner_values, allpay_tx_values
 
