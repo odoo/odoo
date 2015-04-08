@@ -64,20 +64,51 @@
             <field name="arch" type="xml">
                 <xpath expr='//group[@name="provider_display"]' position='after'>
                     <group>
-                        <field name="developer_key"/>
-                        <field name="developer_password"/>
-                        <field name="account_number"/>
-                        <field name="meter_number"/>
-                        <field name="default_droppof_type"/>
-                        <field name="default_packaging_type"/>
-                        <field name="default_service_type"/>
-                        <field name="default_document_content"/>
-                        <field name="default_image_type"/>
-
+                        <group>
+                            <field name="developer_key"/>
+                            <field name="developer_password"/>
+                            <field name="account_number"/>
+                            <field name="meter_number"/>
+                        </group>
+                        <group>
+                            <field name="default_droppoff_type"/>
+                            <field name="default_packaging_type"/>
+                            <field name="default_service_type"/>
+                            <field name="default_document_content"/>
+                            <field name="default_image_type"/>
+                            <field name="default_label_order"/>
+                            <field name="default_label_printing_orientation"/>
+                            <field name="default_weight_unit"/>
+                        </group>
                     </group>
                 </xpath>
                
             </field>
         </record>
+
+        <record id='transaction_form_fedex' model='ir.ui.view'>
+            <field name="name">provider.transaction.form.fedex</field>
+            <field name="model">shipping.transaction</field>
+            <field name="inherit_id" ref="shipping.transaction_form"/>
+             <field name="arch" type="xml">
+                 <xpath expr='//notebook' position='inside'>
+                    <page string="Fedex TX Details">
+                        <group>
+                            <group>
+                                <field name="droppoff_type"/>
+                                <field name="packaging_type"/>
+                                <field name="service_type"/>
+                                <field name="document_content"/>
+                                <field name="image_type"/>
+                                <field name="label_order"/>
+                                <field name="label_printing_orientation"/>
+                                <field name="weight_unit"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>

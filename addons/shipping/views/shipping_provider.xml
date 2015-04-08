@@ -17,7 +17,7 @@
         -->
 
         <record model="ir.ui.view" id="provider_list">
-            <field name="name">provider.list</field>
+            <field name="name">shipping.provider.list</field>
             <field name="model">shipping.provider</field>
             <field name="arch" type="xml">
                 <tree>
@@ -27,10 +27,9 @@
                 </tree>
             </field>
         </record>
-
-        
+    
         <record model="ir.ui.view" id="provider_form">
-            <field name="name">provider.form</field>
+            <field name="name">shipping.provider.form</field>
             <field name="model">shipping.provider</field>
             <field name="arch" type="xml">
                 <form string="Shipping Provider">
@@ -48,7 +47,58 @@
             </field>
         </record>
 
+        <!-- Transactions -->
+        <record model="ir.ui.view" id="transaction_form">
+            <field name="name">shipping.transaction.form</field>
+            <field name="model">shipping.transaction</field>
+            <field name="arch" type="xml">
+                <form string="Shipping Transaction">
+                    <sheet>
+                        <group>
+                            <field name="provider_id"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="shipper_id"/>
+                                <field name="shipper_name"/>
+                                <field name="shipper_address"/>
+                                <field name="shipper_email"/>
+                                <field name="shipper_lang"/>
+                                <field name="shipper_zip"/>
+                                <field name="shipper_city"/>
+                                <field name="shipper_phone"/>
+                                <field name="shipper_country_id"/>
+                            </group>
+                            <group>
+                                <field name="recipient_id"/>
+                                <field name="recipient_name"/>
+                                <field name="recipient_address"/>
+                                <field name="recipient_email"/>
+                                <field name="recipient_lang"/>
+                                <field name="recipient_zip"/>
+                                <field name="recipient_city"/>
+                                <field name="recipient_phone"/>
+                                <field name="recipient_country_id"/>
+                            </group>
+                        </group>   
+                        <notebook></notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>        
 
+
+        <record model="ir.ui.view" id="transaction_list">
+            <field name="name">shipping.transaction.list</field>
+            <field name="model">shipping.transaction</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="reference"/>
+                    <field name="provider_id"/>
+                    <field name="tracking_number"/>
+                </tree>
+            </field>
+        </record>
 
 
         <!-- actions opening views on models -->
