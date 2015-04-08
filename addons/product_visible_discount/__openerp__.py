@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Prices Visible Discounts',
     'version': '1.0',
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'category': 'Sales Management',
     'website': 'https://www.odoo.com',
     'description': """
@@ -20,6 +21,6 @@ To this end, a new check box named 'Visible Discount' is added to the pricelist 
     """,
     'depends': ["sale","purchase"],
     'demo': [],
-    'data': ['views/product_visible_discount_view.xml'],
+    'data': ['views/inherited_product_pricelist_views.xml'],
     'installable': True,
 }
