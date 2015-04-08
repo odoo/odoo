@@ -26,7 +26,9 @@ class TestVirtualAvailable(TestStockCommon):
         })
 
         self.picking_out = self.env['stock.picking'].create({
-            'picking_type_id': self.ref('stock.picking_type_out')})
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
         self.env['stock.move'].create({
             'name': 'a move',
             'product_id': self.productA.id,
@@ -34,10 +36,13 @@ class TestVirtualAvailable(TestStockCommon):
             'product_uom': self.productA.uom_id.id,
             'picking_id': self.picking_out.id,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location
+            })
 
         self.picking_out_2 = self.env['stock.picking'].create({
-            'picking_type_id': self.ref('stock.picking_type_out')})
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
         self.env['stock.move'].create({
             'restrict_partner_id': self.ref('base.res_partner_4'),
             'name': 'another move',
@@ -46,7 +51,8 @@ class TestVirtualAvailable(TestStockCommon):
             'product_uom': self.productA.uom_id.id,
             'picking_id': self.picking_out_2.id,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location
+            })
 
 
     def test_without_owner(self):

@@ -57,7 +57,7 @@ Dashboard / Reports for Warehouse Management will include:
         'wizard/stock_return_picking_view.xml',
         'wizard/make_procurement_view.xml',
         'wizard/orderpoint_procurement_view.xml',
-        'wizard/stock_transfer_details.xml',
+        'wizard/stock_pack_details.xml',
         'stock_incoterms.xml',
         'stock_report.xml',
         'stock_view.xml',
@@ -72,16 +72,16 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_stockpicking.xml',
         'views/report_stockpicking_operations.xml',
         'views/report_stockinventory.xml',
-        'views/stock.xml',
         'report/report_stock_forecast.xml',
         'stock_dashboard.xml',
+        'wizard/stock_immediate_transfer.xml',
+        'wizard/stock_backorder_confirmation.xml'
     ],
     'test': [
         'test/inventory.yml',
         'test/move.yml',
         'test/procrule.yml',
         'test/stock_users.yml',
-        'stock_demo.yml',
         'test/shipment.yml',
         'test/packing.yml',
         'test/packingneg.yml',
@@ -90,5 +90,4 @@ Dashboard / Reports for Warehouse Management will include:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'qweb': ['static/src/xml/picking.xml'],
 }

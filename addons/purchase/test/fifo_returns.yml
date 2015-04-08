@@ -72,7 +72,11 @@
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fiforet2")).picking_ids
     return_id = self.create(cr, uid, {}, context={'active_model':'stock.picking', 'active_id': pick_ids[0].id})
     return_picking_id, dummy = self._create_returns(cr, uid, [return_id], context={'active_id': pick_ids[0].id})
-    self.pool.get('stock.picking').do_transfer(cr, uid, [return_picking_id])
+    # Important to pass through confirmation and assignation
+    pick_obj = self.pool.get('stock.picking')
+    pick_obj.action_confirm(cr, uid, [return_picking_id])
+    pick_obj.action_assign(cr, uid, [return_picking_id])
+    pick_obj.do_transfer(cr, uid, [return_picking_id])
 - 
   Check the standard price of the product changed to 80.0 as we returned the quants of purchase order 2
 - 

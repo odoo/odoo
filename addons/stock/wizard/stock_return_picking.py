@@ -107,6 +107,8 @@ class stock_return_picking(osv.osv_memory):
             'picking_type_id': pick_type_id,
             'state': 'draft',
             'origin': pick.name,
+            'location_id': pick.location_dest_id.id,
+            'location_dest_id': pick.location_id.id,
         }, context=context)
 
         for data_get in data_obj.browse(cr, uid, data['product_return_moves'], context=context):
@@ -139,8 +141,6 @@ class stock_return_picking(osv.osv_memory):
         if not returned_lines:
             raise UserError(_("Please specify at least one non-zero quantity."))
 
-        pick_obj.action_confirm(cr, uid, [new_picking], context=context)
-        pick_obj.action_assign(cr, uid, [new_picking], context)
         return new_picking, pick_type_id
 
     def create_returns(self, cr, uid, ids, context=None):

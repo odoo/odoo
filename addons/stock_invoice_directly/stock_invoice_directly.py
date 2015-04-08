@@ -9,15 +9,16 @@ from openerp.tools.translate import _
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
-    @api.cr_uid_ids_context
-    def do_transfer(self, cr, uid, picking_ids, context=None):
+    def do_new_transfer(self, cr, uid, ids, context=None):
         """Launch Create invoice wizard if invoice state is To be Invoiced,
           after processing the picking.
         """
         if context is None:
             context = {}
-        res = super(stock_picking, self).do_transfer(cr, uid, picking_ids, context=context)
-        pick_ids = [p.id for p in self.browse(cr, uid, picking_ids, context) if p.invoice_state == '2binvoiced']
+        res = super(stock_picking, self).do_new_transfer(cr, uid, ids, context=context)
+        if res: #If it is already returning a wizard
+            return res
+        pick_ids = [p.id for p in self.browse(cr, uid, ids, context) if p.invoice_state == '2binvoiced']
         if pick_ids:
             context = dict(context, active_model='stock.picking', active_ids=pick_ids)
             return {

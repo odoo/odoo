@@ -796,6 +796,15 @@ class pos_order(osv.osv):
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_type = order.picking_type_id
             picking_id = False
+            location_id = order.location_id.id
+            if order.partner_id:
+                destination_id = order.partner_id.property_stock_customer.id
+            elif picking_type:
+                if not picking_type.default_location_dest_id:
+                    raise UserError(_('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
+                destination_id = picking_type.default_location_dest_id.id
+            else:
+                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
             if picking_type:
                 picking_id = picking_obj.create(cr, uid, {
                     'origin': order.name,
@@ -806,17 +815,10 @@ class pos_order(osv.osv):
                     'move_type': 'direct',
                     'note': order.note or "",
                     'invoice_state': 'none',
+                    'location_id': location_id,
+                    'location_dest_id': destination_id,
                 }, context=context)
                 self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
-            location_id = order.location_id.id
-            if order.partner_id:
-                destination_id = order.partner_id.property_stock_customer.id
-            elif picking_type:
-                if not picking_type.default_location_dest_id:
-                    raise UserError(_('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
-                destination_id = picking_type.default_location_dest_id.id
-            else:
-                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
 
             move_list = []
             for line in order.lines:
