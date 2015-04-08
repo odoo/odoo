@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="invitation_view" name="Invitation View">
+    <link rel="stylesheet" href="/calendar/static/src/css/calendar.css"/>
+    <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+    <body class="openerp">
+        <div class="row o_invitiation_mt">
+            <div class='invitation_block well col-md-6 col-md-offset-3'>
+                <div class="pull-right"><b><t t-esc="current_attendee['cn']"/> (<t t-esc="current_attendee['email']"/>)</b></div>
+                <div class="pull-left">
+                    <img class="cal_inline cal_image" src='/web/binary/company_logo' />
+                </div>
+                <div>               
+                    <div class="invitation_block cal_meeting">
+                        <h2 class="cal_inline"><strong>Calendar Invitation</strong></h2>                                
+                        <t t-if="current_attendee['state'] != 'needsAction'">
+                            <a t-attf-class="attendee_#{current_attendee['state']}">
+                                <b t-if="current_attendee['state'] == 'accepted'">Yes I'm going.</b>
+                                <b t-if="current_attendee['state'] == 'declined'">No I'm not going.</b>
+                            </a>                        
+                        </t>
+                        <div class="cal_meeting"><t t-esc="meeting['event']"/></div>
+                        <div class="cal_info">
+                            <div class="row">
+                                <div class="col-md-3 cal_lable">When</div>
+                                <div class="col-md-9"> <t t-esc="meeting['when']"/></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 cal_lable">Where</div>
+                                <div class="col-md-9"> <t t-esc="meeting['where'] or '-'"/></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 cal_lable">Who</div>
+                                <div class="col-md-9">
+                                    <t t-foreach="attendee" t-as="att">
+                                        <div><span t-attf-class="oe_invitation #{att['status']}"/><t t-esc="att['name']"/></div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</template>
+</odoo>
