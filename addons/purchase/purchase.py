@@ -1435,6 +1435,23 @@ class procurement_order(osv.osv):
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, po_line.order_id.partner_id.id, {'uom': procurement.product_uom.id})[pricelist_id]
 
         return qty, price
+  
+    def get_available_draft_po_ids(self, cr, uid, procurement, partner,
+                                   context=None):
+        """ 
+            Return a list of existing draft po ids we can use to avoid 
+            creating a new one.
+        """
+        po_obj = self.pool['purchase.order']
+        available_draft_po_ids = po_obj.search(cr, uid,
+            [('partner_id', '=', partner.id),
+             ('state', '=', 'draft'),
+             ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
+             ('location_id', '=', procurement.location_id.id),
+             ('company_id', '=', procurement.company_id.id),
+             ('dest_address_id', '=', procurement.partner_dest_id.id)],
+            context=context)
+        return available_draft_po_ids
 
     def update_origin_po(self, cr, uid, po, proc, context=None):
         pass
@@ -1463,9 +1480,9 @@ class procurement_order(osv.osv):
                 purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context) 
                 line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
-                available_draft_po_ids = po_obj.search(cr, uid, [
-                    ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
-                    ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id), ('dest_address_id', '=', procurement.partner_dest_id.id)], context=context)
+                available_draft_po_ids = self.get_available_draft_po_ids(
+                                                cr, uid, procurement, partner,
+                                                context=context)
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
