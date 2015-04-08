@@ -145,6 +145,7 @@
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Javascript initializing the LiveSupport">
+            <t t-translate="off">
             $(function() {
                 odoo.define('im_livechat.livesupport', function (require) {
                     var im_livechat = require('im_livechat.im_livechat');
@@ -164,6 +165,7 @@
                 });
                 odoo.init();
             });
+            </t>
         </template>
 
     </data>

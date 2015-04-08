@@ -502,7 +502,7 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
     if (sc.tagName) {
         sc = sc.childNodes[so] || dom.firstChild(ec);
         so = 0;
-        if (!dom.hasContentBefore(sc)) {
+        if (!dom.hasContentBefore(sc) && towrite) {
             sc.parentNode.insertBefore(document.createTextNode('\u00A0'), sc);
         }
     }
@@ -557,18 +557,19 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
         sc = before ? dom.lastChild(before) : dom.firstChild(after);
         so = sc.textContent.length;
 
-        if (before) {
+        if (towrite && !node.firstChild && node.parentNode && !dom.isNotBreakable(node)) {
+            sc = $("<br/>")[0];
+            so = 0;
+            node.appendChild(br);
+        } else if (!ancestor.children.length && !ancestor.textContent.match(/\S|\u00A0/)) {
+            sc = $("<br/>")[0];
+            so = 0;
+            $(ancestor).prepend(sc);
+        } else if (before) {
             var text = sc.textContent.replace(/[ \t\n\r]+$/, '\u00A0');
             so -= sc.textContent.length - text.length;
             sc.textContent = text;
         }
-        if (towrite && !node.firstChild && node.parentNode && !dom.isNotBreakable(node)) {
-            var br = $("<br/>")[0];
-            node.appendChild(br);
-            sc = br;
-            so = 0;
-        }
-        dom.autoMerge(sc, false);
 
     } else {
 
@@ -704,7 +705,7 @@ dom.isFont = function (node) {
         (nodeName === "SPAN" && (
             node.className.match(/(^|\s)fa(\s|$)/i) ||
             node.className.match(/(^|\s)(text|bg)-/i) ||
-            (node.attributes.style && node.attributes.style.value.match(/(^|\s)(color|background-color):/i)))) );
+            (node.attributes.style && node.attributes.style.value.match(/(^|\s)(color|background-color|font-size):/i)))) );
 };
 dom.isVisibleText = function (textNode) {
   return !!textNode.textContent.match(/\S|\u00A0/);
@@ -1024,7 +1025,7 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
 
     var node = dom.node(r.sc);
     var last = node;
-    while (node && dom.isSplitable(node) && !dom.isList(node)) {
+    while (node && dom.isSplitable(node) && !dom.isList(node) && !dom.isEditable(node)) {
         last = node;
         node = node.parentNode;
     }
@@ -1158,8 +1159,6 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
         }
         r = r.deleteContents();
         r.select();
-        event.preventDefault();
-        return false;
     }
 
     var target = r.ec;
@@ -1284,8 +1283,6 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
         }
         r = r.deleteContents();
         r.select();
-        event.preventDefault();
-        return false;
     }
 
     var target = r.sc;
@@ -1729,12 +1726,19 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
 $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, value) {
     var $editable = layoutInfo.editable();
     $editable.data('NoteHistory').recordUndo($editable);
+
     var node = range.create().sc.parentNode;
     document.execCommand('removeFormat');
-    document.execCommand('removeFormat');
+    document.execCommand('removeFormat'); // 2 times because some browser don't clean all in one time
     var r = range.create();
     r = dom.merge(node, r.sc, r.so, r.ec, r.eo, null, true);
-    range.create(r.sc, r.so, r.ec, r.eo).select();
+    r = range.create(r.sc, r.so, r.ec, r.eo);
+    r.select();
+
+    $.summernote.pluginEvents.justify(event, editor, layoutInfo, "");
+
+    r.clean().select();
+
     event.preventDefault();
     return false;
 };
@@ -1766,6 +1770,9 @@ eventHandler.toolbar.button.updateRecentColor = function (elBtn, sEvent, sValue)
 
 options.fontSizes = [_t('Default'), 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 62];
 $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color, bgcolor, size) {
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable);
+
     var rng = range.create();
     var startPoint = rng.getStartPoint();
     var endPoint = rng.getEndPoint();
@@ -1955,7 +1962,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
       if (i>0 && (font = dom.ancestor(nodes[i-1], dom.isFont))) {
         className2 = font.getAttribute('class');
         style2 = font.getAttribute('style');
-        if (node !== font && className == className2 && style == style2) {
+        if (node !== font && className == className2 && style == style2 && (node.parentNode === font.parentNode || node.parentNode === font)) {
           remove(node, font);
           nodes.splice(i,1);
           i--;
@@ -1968,6 +1975,8 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
 };
 $.summernote.pluginEvents.fontSize = function (event, editor, layoutInfo, value) {
   var $editable = layoutInfo.editable();
+  $editable.data('NoteHistory').recordUndo($editable);
+
   event.preventDefault();
   $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, null, null, value);
   editor.afterCommand($editable);
@@ -2001,6 +2010,60 @@ $.summernote.pluginEvents.backColor = function (event, editor, layoutInfo, backC
   }
   $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, null, backColor, null);
   editor.afterCommand($editable);
+    };
+
+    $.summernote.pluginEvents.justify = function (event, editor, layoutInfo, align) {
+        var rng = range.create();
+        var startPoint = rng.getStartPoint();
+        var endPoint = rng.getEndPoint();
+
+        // get list of nodes to change
+        var nodes = [];
+        nodes.push(dom.ancestor(startPoint.node, dom.isPara) || dom.ancestor(startPoint.node, dom.isCell));
+        nodes.push(dom.ancestor(endPoint.node, dom.isPara) || dom.ancestor(endPoint.node, dom.isCell));
+        dom.walkPoint(startPoint, endPoint, function (point) {
+          var node = point.node;
+          if (dom.isPara(node) || dom.isCell(node)) {
+              nodes.push(point.node);
+          }
+        });
+        nodes = list.unique(nodes);
+
+        $(nodes).not(":has(div,p,li,h1,h2,h3,h4,h5,h6,h7,td,th)").each(function () {
+            var $node = $(this).css('text-align', '');
+            var css = window.getComputedStyle(this);
+            var textAlign = css.textAlign;
+            if (textAlign === "start") {
+                textAlign = css.direction === "ltr" ? "left" : "right";
+            }
+            if(textAlign !== align) {
+                $node.css('text-align', align);
+            }
+        }).find("*").css('text-align', "");
+    };
+    $.summernote.pluginEvents.justifyLeft = function (event, editor, layoutInfo) {
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable);
+        $.summernote.pluginEvents.justify(event, editor, layoutInfo, 'left');
+        editor.afterCommand($editable);
+    };
+    $.summernote.pluginEvents.justifyCenter = function (event, editor, layoutInfo) {
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable);
+        $.summernote.pluginEvents.justify(event, editor, layoutInfo, 'center');
+        editor.afterCommand($editable);
+    };
+    $.summernote.pluginEvents.justifyRight = function (event, editor, layoutInfo) {
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable);
+        $.summernote.pluginEvents.justify(event, editor, layoutInfo, 'right');
+        editor.afterCommand($editable);
+    };
+    $.summernote.pluginEvents.justifyFull = function (event, editor, layoutInfo) {
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable);
+        $.summernote.pluginEvents.justify(event, editor, layoutInfo, 'justify');
+        editor.afterCommand($editable);
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

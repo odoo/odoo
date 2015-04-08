@@ -249,7 +249,7 @@
             <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
                 <tree string="Routing Work Centers">
-                    <field name="sequence"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="workcenter_id"/>
                     <field name="cycle_nbr"/>
@@ -417,10 +417,10 @@
                                     <field name="product_efficiency"/>
                                 </group>
                             </group>
-                            <lable string="Properties"/>
+                            <separator string="Properties" groups="product.group_mrp_properties"/>
                             <group>
                                 <group>
-                                    <field name="property_ids" widget="many2many_tags"/>
+                                    <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                                 </group>
                                 <group/>
                             </group>

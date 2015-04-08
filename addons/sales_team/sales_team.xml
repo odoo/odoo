@@ -104,8 +104,6 @@
                                 <field name="active"/>
                             </group>
                             <group name="right">
-                                <field name="parent_id"/>
-                                <field name="change_responsible"/>
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -128,6 +126,17 @@
                                         </templates>
                                     </kanban>
                                 </field>
+                            </page>
+                            <page string="More Info" groups="base.group_sale_manager">
+                                <group name="sales_team_more_info">
+                                    <group string="Escalation">
+                                        <field name="parent_id"/>
+                                        <field name="change_responsible"/>                                
+                                    </group>
+                                    <group>
+                                        <field name="active"/>
+                                    </group>
+                                </group>                                
                             </page>
                             <page string="Notes">
                                 <field name="note"/>

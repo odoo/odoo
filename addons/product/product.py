@@ -530,6 +530,7 @@ class product_template(osv.osv):
             ('end','End of Lifecycle'),
             ('obsolete','Obsolete')], 'Status'),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
+        'uom_rel_id': fields.related('uom_id', type="many2one", relation="product.uom", readonly=True, string='Default UoM'),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Specify a unit of measure here if invoicing is made in another unit of measure than inventory. Keep empty to use the default unit of measure.'),

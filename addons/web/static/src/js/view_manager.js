@@ -234,7 +234,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             });
 
             // Add onclick event listener
-            this.control_elements.$switch_buttons.siblings('button').click(function() {
+            this.control_elements.$switch_buttons.siblings('button').click(function(event) {
                 var view_type = $(event.target).data('view-type');
                 self.switch_mode(view_type);
             });

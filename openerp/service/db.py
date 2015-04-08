@@ -174,12 +174,6 @@ def dump_db(db_name, stream, backup_format='zip'):
     _logger.info('DUMP DB: %s format %s', db_name, backup_format)
 
     cmd = ['pg_dump', '--no-owner']
-    if openerp.tools.config['db_user']:
-        cmd.append('--username=' + openerp.tools.config['db_user'])
-    if openerp.tools.config['db_host']:
-        cmd.append('--host=' + openerp.tools.config['db_host'])
-    if openerp.tools.config['db_port']:
-        cmd.append('--port=' + str(openerp.tools.config['db_port']))
     cmd.append(db_name)
 
     if backup_format == 'zip':
@@ -248,12 +242,6 @@ def restore_db(db, dump_file, copy=False):
             pg_args = ['--no-owner', dump_file]
 
         args = []
-        if openerp.tools.config['db_user']:
-            args.append('--username=' + openerp.tools.config['db_user'])
-        if openerp.tools.config['db_host']:
-            args.append('--host=' + openerp.tools.config['db_host'])
-        if openerp.tools.config['db_port']:
-            args.append('--port=' + str(openerp.tools.config['db_port']))
         args.append('--dbname=' + db)
         pg_args = args + pg_args
 

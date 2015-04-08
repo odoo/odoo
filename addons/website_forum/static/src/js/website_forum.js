@@ -143,8 +143,7 @@ website.if_dom_contains('.website_forum', function () {
         return true;
     });
 
-
-    $('.link_url').on('change', function (ev) {
+    $('.link_url, .o_forum_post_link').on('change', function (ev) {  // keep .link_url for compat
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var display_error = function(){
@@ -153,7 +152,7 @@ website.if_dom_contains('.website_forum', function () {
                 'Please enter valid URL. Example: http://www.odoo.com'+
                 '</div>');
             $link.parent().append($warning);
-            $("button#btn_post_your_article")[0].disabled = true;
+            $link.parents('form').find('button')[0].disabled = true;
 
         };
         var url = $link.val();
@@ -163,10 +162,10 @@ website.if_dom_contains('.website_forum', function () {
         var regex = new RegExp("(http(s)?://.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)");
         if(regex.test(url)){
             ajax.jsonRpc("/forum/get_url_title", 'call', {'url': url}).then(function (data) {
-                if(data){
+                if (data) {
                     $("input[name='post_name']")[0].value = data;
-                    $('button#btn_post_your_article').prop('disabled', false);
-                }else{
+                    $link.parents('form').find('button')[0].disabled = false;
+                } else {
                     display_error();
                 }
 

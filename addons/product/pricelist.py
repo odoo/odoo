@@ -306,8 +306,8 @@ class product_pricelist(osv.osv):
                         if (not partner) or (seller_id.name.id != partner):
                             continue
                         seller = seller_id
-                    if not seller and product.seller_ids:
-                        seller = product.seller_ids[0]
+                    if not seller:
+                        continue
                     if seller:
                         qty_in_seller_uom = qty
                         seller_uom = seller.product_uom.id
@@ -381,7 +381,7 @@ class product_pricelist_version(osv.osv):
         'active': fields.boolean('Active',
             help="When a version is duplicated it is set to non active, so that the " \
             "dates do not overlaps with original version. You should change the dates " \
-            "and reactivate the pricelist", copy=False),
+            "and reactivate the pricelist"),
         'items_id': fields.one2many('product.pricelist.item',
             'price_version_id', 'Price List Items', required=True, copy=True),
         'date_start': fields.date('Start Date', help="First valid date for the version."),
@@ -420,6 +420,13 @@ class product_pricelist_version(osv.osv):
             ['date_start', 'date_end'])
     ]
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        # set active False to prevent overlapping active pricelist
+        # versions
+        if not default:
+            default = {}
+        default['active'] = False
+        return super(product_pricelist_version, self).copy(cr, uid, id, default, context=context)
 
 class product_pricelist_item(osv.osv):
     def _price_field_get(self, cr, uid, context=None):

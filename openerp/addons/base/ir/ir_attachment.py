@@ -118,7 +118,7 @@ class ir_attachment(osv.osv):
         return self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'ir_attachment.location', 'file')
 
     @tools.ormcache(skiparg=3)
-    def _filestore(self, cr, uid, context=None):
+    def _filestore(self, cr, uid):
         return tools.config.filestore(cr.dbname)
 
     def force_storage(self, cr, uid, context=None):

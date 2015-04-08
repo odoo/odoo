@@ -36,11 +36,12 @@
                             <right><t t-esc="change.name" /></right>
                         </line>
                         <t t-if="change.note">
-                            <line font='b' bold='off' indent='1' line-ratio='1'>
-                                <left>
-                                    <span>---</span> <span><t t-esc="change.note" /></span>
-                                </left>
+                            <line>
+                                <left>NOTE</left>
+                                <right>...</right>
                             </line>
+                            <div><span font='b' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="change.note" /></span></div>
+                            <line></line>
                         </t>
                     </t>
                     <br />
@@ -57,11 +58,12 @@
                         <right><t t-esc="change.name" /></right>
                     </line>
                     <t t-if="change.note">
-                        <line font='b' bold='off' indent='1' line-ratio='1'>
-                            <left>
-                                <span>---</span> <span><t t-esc="change.note" /></span>
-                            </left>
+                        <line>
+                            <left>NOTE</left>
+                            <right>...</right>
                         </line>
+                        <div><span font='b' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="change.note" /></span></div>
+                        <line></line>
                     </t>
                 </t>
                 <br />

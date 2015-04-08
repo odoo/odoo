@@ -75,10 +75,10 @@ def report_configuration():
     config = openerp.tools.config
     _logger.info("OpenERP version %s", __version__)
     _logger.info('addons paths: %s', openerp.modules.module.ad_paths)
-    if config['db_host']:
-        _logger.info('database: %s@%s:%s', config['db_user'], config['db_host'], config['db_port'] or '5432')
-    else:
-        _logger.info('database: %s@unix-socket', config['db_user'])
+    host = config['db_host'] or os.environ.get('PGHOST', 'default')
+    port = config['db_port'] or os.environ.get('PGPORT', 'default')
+    user = config['db_user'] or os.environ.get('PGUSER', 'default')
+    _logger.info('database: %s@%s:%s', user, host, port)
 
 def rm_pid_file():
     config = openerp.tools.config

@@ -1,8 +1,12 @@
 odoo.define('website.translator', function (require) {
 'use strict';
 
+var core = require('web.core');
 var editor = require('website.editor');
 var website = require('website.website');
+var ajax = require('ajax');
+
+var QWeb = core.qweb;
 
 if (!website.translatable) {
     // Temporary hack until the editor bar is moved to the web client
@@ -24,7 +28,7 @@ editor.EditorBar.include({
             if(website.no_editor) {
                 $edit_button.removeProp('disabled');
             } else {
-                $edit_button.parent().after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
+                $edit_button.parent().after(QWeb.render('website.TranslatorAdditionalButtons'));
                 $('a[data-action=edit_master]').on('click', self, function(ev) {
                     self.edit_master(ev);
                 });
@@ -69,7 +73,7 @@ editor.EditorBar.include({
     translate: function () {
         var self = this;
         this.translations = null;
-        return openerp.jsonRpc('/website/get_view_translations', 'call', {
+        return ajax.jsonRpc('/website/get_view_translations', 'call', {
             'xml_id': $(document.documentElement).data('view-xmlid'),
             'lang': website.get_context().lang,
         }).then(function (translations) {
@@ -163,7 +167,7 @@ editor.EditorBar.include({
                 translation_id: data.oeTranslationId || null
             });
         });
-        openerp.jsonRpc('/website/set_translations', 'call', {
+        ajax.jsonRpc('/website/set_translations', 'call', {
             'data': trans,
             'lang': website.get_context()['lang'],
         }).then(function () {
@@ -216,7 +220,7 @@ website.RTE.include({
     }
 });
 
-website.TranslatorDialog = openerp.Widget.extend({
+website.TranslatorDialog = core.Widget.extend({
     events: _.extend({}, website.EditorBar.prototype.events, {
         'hidden.bs.modal': 'destroy',
         'click button[data-action=activate]': function (ev) {

@@ -26,7 +26,7 @@
             <field name="model">hr.timesheet.invoice.create.final</field>
             <field name="arch" type="xml">
             <form string="Invoice contract">
-                    <p>Do you want to show details of each activity to your customer?</p>
+                    <p>Show details in invoice lines</p>
                     <group>
                         <group>
                             <field name="date"/>
@@ -35,9 +35,12 @@
                             <field name="name"/>
                             <field name="price"/>
                         </group>
-                    </group>
-                    <group string="Force to use a special product" groups="base.group_no_one">
-                        <field name="product"/>
+                        <group string="Force to use a special product" groups="base.group_no_one">
+                            <field name="product"/>
+                        </group>
+                        <group string="Create one invoice by partner">
+                            <field name="group_by_partner"/>
+                        </group>
                     </group>
                 <footer>
                     <button name="do_create" string="Create Invoice" type="object" class="oe_highlight"/>

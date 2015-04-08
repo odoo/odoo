@@ -540,25 +540,119 @@ var AddAnItemList = ListView.List.extend({
     }
 });
 
+/**
+ * A Abstract field for one2many and many2many field
+ * init: add dataset
+ * set_value: compute comands list into ids
+ */
+var AbstractManyField = common.AbstractField.extend({
+    init: function(field_manager, node) {
+        var self = this;
+        this._super(field_manager, node);
+        this.dataset = new One2ManyDataSet(this, this.field.relation);
+        this.dataset.o2m = this;
+        this.dataset.parent_view = this.view;
+        this.dataset.child_name = this.name;
+        this.dataset.on('dataset_changed', this, function() {
+            self.dataset_changed();
+        });
+    },
+    dataset_changed: function() {
+        this.trigger('changed_value');
+    },
+    /**
+     * Set value use command to convert tuple of commands in id list
+     */
+    set_value: function(value_) {
+        this.dataset.reset_ids([]);
+        var ids = this.get_ids_from_command(value_);
+        this._super(ids);
+        this.dataset.reset_ids(ids);
+        if (this.dataset.index === null && this.dataset.ids.length > 0) {
+            this.dataset.index = 0;
+        }
+        this.dataset_changed();
+    },
 
-var FieldOne2Many = common.AbstractField.extend({
+    // return id for this commands instead of the object ('ALL' to activate all conversion)
+    get_ids_from_command_list: ['LINK_TO', 'REPLACE_WITH'],
+    get_ids_from_command: function (value_) {
+        var self = this;
+        var ids;
+        var command_list = [];
+        if (this.get_ids_from_command_list && this.get_ids_from_command_list !== 'ALL') {
+            for (var i=0; i<this.get_ids_from_command_list.length; i++) {
+                command_list[i] = commands[this.get_ids_from_command_list[i]];
+            }
+        }
+
+        value_ = value_ || [];
+        if(value_.length >= 1 && value_[0] instanceof Array) {
+            ids = [];
+            _.each(value_, function(command) {
+                var obj = {values: command[2]};
+                if (command_list.length && command.indexOf(command_list) === -1) {
+                    ids.push(obj);
+                }
+                switch (command[0]) {
+                    case commands.CREATE:
+                        obj.id = _.uniqueId(self.dataset.virtual_id_prefix);
+                        obj.defaults = {};
+                        self.dataset.to_create.push(obj);
+                        self.dataset.cache.push(_.extend(_.clone(obj), {values: _.clone(command[2])}));
+                        ids.push(obj.id);
+                        return;
+                    case commands.UPDATE:
+                        obj.id = command[1];
+                        self.dataset.to_write.push(obj);
+                        self.dataset.cache.push(_.extend(_.clone(obj), {values: _.clone(command[2])}));
+                        ids.push(obj.id);
+                        return;
+                    case commands.DELETE:
+                        self.dataset.to_delete.push({id: command[1]});
+                        return;
+                    case commands.LINK_TO:
+                        ids.push(command[1]);
+                        return;
+                    case commands.DELETE_ALL:
+                        self.dataset.delete_all = true;
+                        return;
+                    case commands.REPLACE_WITH:
+                        ids = command[2];
+                        return;
+                }
+            });
+            return ids;
+        } else if (value_.length >= 1 && typeof(value_[0]) === "object") {
+            ids = [];
+            this.dataset.delete_all = true;
+            _.each(value_, function(command) {
+                var obj = {values: command};
+                obj.id = _.uniqueId(self.dataset.virtual_id_prefix);
+                obj.defaults = {};
+                self.dataset.to_create.push(obj);
+                self.dataset.cache.push(_.clone(obj));
+                ids.push(obj.id);
+            });
+            return ids;
+        } else {
+            return value_;
+        }
+    }
+});
+
+
+var FieldOne2Many = AbstractManyField.extend({
     multi_selection: false,
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
+        
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.form_last_update = $.Deferred();
         this.init_form_last_update = this.form_last_update;
         this.is_started = false;
-        this.dataset = new One2ManyDataSet(this, this.field.relation);
-        this.dataset.o2m = this;
-        this.dataset.parent_view = this.view;
-        this.dataset.child_name = this.name;
-        var self = this;
-        this.dataset.on('dataset_changed', this, function() {
-            self.trigger_on_change();
-        });
         this.set_value([]);
     },
     start: function() {
@@ -582,9 +676,6 @@ var FieldOne2Many = common.AbstractField.extend({
         this.view.on("on_button_cancel", self, destroy);
         this.is_started = true;
         this.reload_current_view();
-    },
-    trigger_on_change: function() {
-        this.trigger('changed_value');
     },
     load_views: function() {
         var self = this;
@@ -719,66 +810,11 @@ var FieldOne2Many = common.AbstractField.extend({
          */
         return (this.viewmanager && this.viewmanager.active_view);
     },
+    get_ids_from_command_list: 'ALL',
     set_value: function(value_) {
-        value_ = value_ || [];
-        var self = this;
-        var view = this.get_active_view();
-        this.dataset.reset_ids([]);
-        var ids;
-        if(value_.length >= 1 && value_[0] instanceof Array) {
-            ids = [];
-            _.each(value_, function(command) {
-                var obj = {values: command[2]};
-                switch (command[0]) {
-                    case commands.CREATE:
-                        obj.id = _.uniqueId(self.dataset.virtual_id_prefix);
-                        obj.defaults = {};
-                        self.dataset.to_create.push(obj);
-                        self.dataset.cache.push(_.extend(_.clone(obj), {values: _.clone(command[2])}));
-                        ids.push(obj.id);
-                        return;
-                    case commands.UPDATE:
-                        obj.id = command[1];
-                        self.dataset.to_write.push(obj);
-                        self.dataset.cache.push(_.extend(_.clone(obj), {values: _.clone(command[2])}));
-                        ids.push(obj.id);
-                        return;
-                    case commands.DELETE:
-                        self.dataset.to_delete.push({id: command[1]});
-                        return;
-                    case commands.LINK_TO:
-                        ids.push(command[1]);
-                        return;
-                    case commands.DELETE_ALL:
-                        self.dataset.delete_all = true;
-                        return;
-                }
-            });
-            this._super(ids);
-            this.dataset.set_ids(ids);
-        } else if (value_.length >= 1 && typeof(value_[0]) === "object") {
-            ids = [];
-            this.dataset.delete_all = true;
-            _.each(value_, function(command) {
-                var obj = {values: command};
-                obj.id = _.uniqueId(self.dataset.virtual_id_prefix);
-                obj.defaults = {};
-                self.dataset.to_create.push(obj);
-                self.dataset.cache.push(_.clone(obj));
-                ids.push(obj.id);
-            });
-            this._super(ids);
-            this.dataset.set_ids(ids);
-        } else {
-            this._super(value_);
-            this.dataset.reset_ids(value_);
-        }
-        if (this.dataset.index === null && this.dataset.ids.length > 0) {
-            this.dataset.index = 0;
-        }
-        this.trigger_on_change();
+        this._super(value_);
         if (this.is_started && !this.no_rerender) {
-            return self.reload_current_view();
+            return this.reload_current_view();
         } else {
             return $.when();
         }
@@ -868,7 +904,7 @@ var One2ManyListView = ListView.extend({
         return ret;
     },
     changed_records: function () {
-        this.o2m.trigger_on_change();
+        this.o2m.dataset_changed();
     },
     is_valid: function () {
         var self = this;
@@ -1136,7 +1172,7 @@ var One2ManyViewManager = ViewManager.extend({
     },
 });
 
-var FieldMany2ManyTags = common.AbstractField.extend(common.CompletionFieldMixin, common.ReinitializeFieldMixin, {
+var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, common.ReinitializeFieldMixin, {
     template: "FieldMany2ManyTags",
     tag_template: "FieldMany2ManyTag",
     init: function() {
@@ -1238,24 +1274,6 @@ var FieldMany2ManyTags = common.AbstractField.extend(common.CompletionFieldMixin
                 }
             });
     },
-    // WARNING: duplicated in 4 other M2M widgets
-    set_value: function(value_) {
-        value_ = value_ || [];
-        if (value_.length >= 1 && value_[0] instanceof Array) {
-            // value_ is a list of m2m commands. We only process
-            // LINK_TO and REPLACE_WITH in this context
-            var val = [];
-            _.each(value_, function (command) {
-                if (command[0] === commands.LINK_TO) {
-                    val.push(command[1]);                   // (4, id[, _])
-                } else if (command[0] === commands.REPLACE_WITH) {
-                    val = command[2];                       // (6, _, ids)
-                }
-            });
-            value_ = val;
-        }
-        this._super(value_);
-    },
     is_false: function() {
         return _(this.get("value")).isEmpty();
     },
@@ -1330,18 +1348,12 @@ var FieldMany2ManyTags = common.AbstractField.extend(common.CompletionFieldMixin
         If you see this options, do not use it, it's basically a dirty hack to make one
         precise o2m to behave the way we want.
 */
-var FieldMany2Many = common.AbstractField.extend(common.ReinitializeFieldMixin, {
+var FieldMany2Many = AbstractManyField.extend(common.ReinitializeFieldMixin, {
     multi_selection: false,
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
         this.is_loaded = $.Deferred();
-        this.dataset = new Many2ManyDataSet(this, this.field.relation);
-        this.dataset.m2m = this;
-        var self = this;
-        this.dataset.on('unlink', self, function(ids) {
-            self.dataset_changed();
-        });
         this.set_value([]);
         this.list_dm = new utils.DropMisordered();
         this.render_value_dm = new utils.DropMisordered();
@@ -1381,24 +1393,6 @@ var FieldMany2Many = common.AbstractField.extend(common.ReinitializeFieldMixin, 
     destroy_content: function() {
         this.list_view.destroy();
         this.list_view = undefined;
-    },
-    // WARNING: duplicated in 4 other M2M widgets
-    set_value: function(value_) {
-        value_ = value_ || [];
-        if (value_.length >= 1 && value_[0] instanceof Array) {
-            // value_ is a list of m2m commands. We only process
-            // LINK_TO and REPLACE_WITH in this context
-            var val = [];
-            _.each(value_, function (command) {
-                if (command[0] === commands.LINK_TO) {
-                    val.push(command[1]);                   // (4, id[, _])
-                } else if (command[0] === commands.REPLACE_WITH) {
-                    val = command[2];                       // (6, _, ids)
-                }
-            });
-            value_ = val;
-        }
-        this._super(value_);
     },
     get_value: function() {
         return [commands.replace_with(this.get('value'))];
@@ -1494,20 +1488,13 @@ var Many2ManyList = AddAnItemList.extend({
     }
 });
 
-var FieldMany2ManyKanban = common.AbstractField.extend(common.CompletionFieldMixin, {
+var FieldMany2ManyKanban = AbstractManyField.extend(common.CompletionFieldMixin, {
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
         common.CompletionFieldMixin.init.call(this);
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
-
-        var self = this;
-        this.dataset = new Many2ManyDataSet(this, this.field.relation);
-        this.dataset.m2m = this;
-        this.dataset.on('unlink', self, function(ids) {
-            self.dataset_changed();
-        });
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1523,24 +1510,6 @@ var FieldMany2ManyKanban = common.AbstractField.extend(common.CompletionFieldMix
                 });
             });
         });
-    },
-    // WARNING: duplicated in 4 other M2M widgets
-    set_value: function(value_) {
-        value_ = value_ || [];
-        if (value_.length >= 1 && value_[0] instanceof Array) {
-            // value_ is a list of m2m commands. We only process
-            // LINK_TO and REPLACE_WITH in this context
-            var val = [];
-            _.each(value_, function (command) {
-                if (command[0] === commands.LINK_TO) {
-                    val.push(command[1]);                   // (4, id[, _])
-                } else if (command[0] === commands.REPLACE_WITH) {
-                    val = command[2];                       // (6, _, ids)
-                }
-            });
-            value_ = val;
-        }
-        this._super(value_);
     },
     get_value: function() {
         return [commands.replace_with(this.get('value'))];
@@ -1633,7 +1602,7 @@ var FieldMany2ManyKanban = common.AbstractField.extend(common.CompletionFieldMix
  * Options on attribute ; "blockui" {Boolean} block the UI or not
  * during the file is uploading
  */
-var FieldMany2ManyBinaryMultiFiles = common.AbstractField.extend(common.ReinitializeFieldMixin, {
+var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.ReinitializeFieldMixin, {
     template: "FieldBinaryFileUploader",
     init: function(field_manager, node) {
         this._super(field_manager, node);
@@ -1651,24 +1620,6 @@ var FieldMany2ManyBinaryMultiFiles = common.AbstractField.extend(common.Reinitia
     },
     initialize_content: function() {
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
-    },
-    // WARNING: duplicated in 4 other M2M widgets
-    set_value: function(value_) {
-        value_ = value_ || [];
-        if (value_.length >= 1 && value_[0] instanceof Array) {
-            // value_ is a list of m2m commands. We only process
-            // LINK_TO and REPLACE_WITH in this context
-            var val = [];
-            _.each(value_, function (command) {
-                if (command[0] === commands.LINK_TO) {
-                    val.push(command[1]);                   // (4, id[, _])
-                } else if (command[0] === commands.REPLACE_WITH) {
-                    val = command[2];                       // (6, _, ids)
-                }
-            });
-            value_ = val;
-        }
-        this._super(value_);
     },
     get_value: function() {
         return [commands.replace_with(this.get("value"))];
@@ -1798,7 +1749,7 @@ var FieldMany2ManyBinaryMultiFiles = common.AbstractField.extend(common.Reinitia
     record existing in the model targeted by the relation, according to the given domain if one is specified. Checked records
     will be added to the relation.
 */
-var FieldMany2ManyCheckBoxes = common.AbstractField.extend(common.ReinitializeFieldMixin, {
+var FieldMany2ManyCheckBoxes = AbstractManyField.extend(common.ReinitializeFieldMixin, {
     className: "oe_form_many2many_checkboxes",
     init: function() {
         this._super.apply(this, arguments);
@@ -1843,27 +1794,13 @@ var FieldMany2ManyCheckBoxes = common.AbstractField.extend(common.ReinitializeFi
         if (! _.isEqual(new_value, this.get("value")))
             this.internal_set_value(new_value);
     },
-    // WARNING: (mostly) duplicated in 4 other M2M widgets
     set_value: function(value_) {
-        value_ = value_ || [];
-        if (value_.length >= 1 && value_[0] instanceof Array) {
-            // value_ is a list of m2m commands. We only process
-            // LINK_TO and REPLACE_WITH in this context
-            var val = [];
-            _.each(value_, function (command) {
-                if (command[0] === commands.LINK_TO) {
-                    val.push(command[1]);                   // (4, id[, _])
-                } else if (command[0] === commands.REPLACE_WITH) {
-                    val = command[2];                       // (6, _, ids)
-                }
-            });
-            value_ = val;
-        }
+        var value_ = this.get_ids_from_command(value_);
         var formatted = {};
         _.each(value_, function(el) {
             formatted[JSON.stringify(el)] = true;
         });
-        this._super(formatted);
+        this.set({'value': formatted});
     },
     get_value: function() {
         var value = _.filter(_.keys(this.get("value")), function(el) {
@@ -1945,6 +1882,7 @@ core.form_widget_registry
 
 return {
     FieldMany2ManyTags: FieldMany2ManyTags,
+    AbstractManyField: AbstractManyField,
 };
 
 });

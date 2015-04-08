@@ -562,7 +562,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             return this.onchanges_mutex.def;
         } catch(e) {
             console.error(e);
-            crashmanager.show_message(e);
+            crash_manager.show_message(e);
             return $.Deferred().reject();
         }
     },
@@ -592,7 +592,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         return $.Deferred().resolve();
         } catch(e) {
             console.error(e);
-            crashmanager.show_message(e);
+            crash_manager.show_message(e);
             return $.Deferred().reject();
         }
     },
@@ -844,6 +844,16 @@ var FormView = View.extend(common.FieldManagerMixin, {
                         readonly_values[f.name] = f.get_value(true);
                     }
                 }
+            }
+            // Heuristic to assign a proper sequence number for new records that
+            // are added in a dataset containing other lines with existing sequence numbers
+            if (!self.datarecord.id && self.fields.sequence &&
+                !_.has(values, 'sequence') && !_.isEmpty(self.dataset.cache)) {
+                // Find current max or min sequence (editable top/bottom)
+                var current = _[prepend_on_create ? "min" : "max"](
+                    _.map(self.dataset.cache, function(o){return o.values.sequence})
+                );
+                values['sequence'] = prepend_on_create ? current - 1 : current + 1;
             }
             if (form_invalid) {
                 self.set({'display_invalid_fields': true});
@@ -1624,4 +1634,3 @@ core.view_registry.add('form', FormView);
 return FormView;
 
 });
-

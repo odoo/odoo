@@ -25,16 +25,18 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="standard_price" position="replace">
+                <xpath expr="//group[@name='standard_price']" position="replace">
                     <field name="cost_method" groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}"/>
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
-                        <field name="standard_price" attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
+                        <field name="standard_price" attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" class="oe_inline" nolabel="1"/>
+                        <label string="/" class="oe_inline" groups="product.group_uom"/>
+                        <field name="uom_rel_id" class="oe_inline" groups="product.group_uom"/>
                         <button name="%(action_view_change_standard_price)d" string="- update"
                             type="action" attrs="{'invisible':['|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
                             class="oe_link" groups="stock_account.group_inventory_valuation"/>
                     </div>
-                </field>
+                </xpath>
                 <xpath expr="//group[@name='properties']" position="before">
                     <group groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}">
                         <separator string="Inventory Valuation" colspan="4"/>

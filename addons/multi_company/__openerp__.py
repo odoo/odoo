@@ -37,7 +37,10 @@ This module is the base module for other multi-company modules.
         'sale_stock',
         'project',
     ],
-    'data': ['res_company_view.xml'],
+    'data': [
+        'res_company_view.xml',
+        'multi_company_data.xml',
+    ],
     'demo': ['multi_company_demo.xml'],
     'installable': True,
     'auto_install': False,

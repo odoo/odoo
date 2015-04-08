@@ -154,6 +154,17 @@ var PivotView = View.extend({
         if ((!self.active_measures.length) || fvg.arch.attrs.display_quantity){
             self.active_measures.push('__count__');
         }
+        // add active measures to the measure list.  This is very rarely necessary, but it
+        // can be useful if one is working with a functional field non stored, but in a
+        // model with an overrided read_group method.  In this case, the pivot view could
+        // work, and the measure should be allowed.  However, be careful if you define a
+        // measure in your pivot view: non stored functional fields will probably not work
+        // (their aggregate will always be 0).
+        _.each(this.active_measures, function (m) {
+            if (!(m in self.measures)) {
+                self.measures[m] = self.fields[m];
+            }
+        });
     },
     prepare_fields: function (fields) {
         var self = this,

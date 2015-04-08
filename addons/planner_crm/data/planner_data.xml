@@ -133,11 +133,6 @@
                             <span class="fa fa-fw"/>Incoming Emails
                         </a>
                     </li>
-                    <li>
-                        <a href="#planner_page9">
-                            <span class="fa fa-fw"/>LinkedIn
-                        </a>
-                    </li>
                     <h4><i class="fa fa-magic"></i> Deployment</h4>
                     <li>
                         <a href="#planner_page10">
@@ -388,14 +383,12 @@
                                 <strong>Recommended actions:</strong>
                                 <li>
                                     <a t-att-href="prepare_backend_url(
-                                        'crm.crm_stage_act')"
-                                        target="_blank">
+                                        'crm.crm_lead_opportunities', 'kanban')">
                                         Configure the stages of your sales pipeline</a>
                                 </li>
                                 <li>
                                     <a t-att-href="prepare_backend_url(
-                                        'crm.crm_lead_opportunities', 'kanban')"
-                                        target="_blank">
+                                        'crm.crm_lead_opportunities', 'kanban')">
                                         Create the three firsts opportunities</a>
                                 </li>
                             </div>
@@ -404,7 +397,7 @@
                             <div class="well well-lg footer-well">
                                 <strong>Need help to structure your sale process ?</strong><br/>
                                 <a href="https://www.odoo.com/page/live-chat" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
-                                <a href="mailto:info@odoo.com?subject=Sales%20Planner"><span class="fa fa-envelope-o"/> Email Our CRM Expert</a>
+                                <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank"><span class="fa fa-envelope-o"/> Email Our CRM Expert</a>
                             </div>
                         </div>
                     </div>
@@ -488,7 +481,7 @@
                                 <div class="well well-lg footer-well">
                                     <strong>Contact us now:</strong><br/>
                                     <a href="https://www.odoo.com/page/live-chat" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
-                                    <a href="mailto:info@odoo.com?subject=Sales%20Planner"><span class="fa fa-envelope-o"/> Email Our CRM Expert</a>
+                                    <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank"><span class="fa fa-envelope-o"/> Email Our CRM Expert</a>
                                 </div>
                             </div>
                         </div>
@@ -517,7 +510,7 @@
                                     <span>
                                         <li>Read the <a href="https://www.odoo.com/blog/business-hacks-1/post/how-to-build-your-quotes-for-success-173" target="_blank">blog post on the Quote Builder</a></li>
                                         <li>Activate quotation templates in <a t-att-href="prepare_backend_url(
-                                            'base_setup.action_sale_config')" target="_blank">Sales Settings</a></li>
+                                            'base_setup.action_sale_config')">Sales Settings</a></li>
                                         <li>Create your templates of offers</li>
                                     </span>
                                     <p>
@@ -531,13 +524,13 @@
                                     <h4><b>Fixed price</b> <span class="small">(ex: monthly subscription)</span></h4>
                                     <span>
                                         <li>Activate contracts: <a t-att-href="prepare_backend_url(
-                                            'base_setup.action_sale_config')" target="_blank">in the Sales Settings</a></li>
+                                            'base_setup.action_sale_config')">in the Sales Settings</a></li>
                                         <li>Create contracts template</li>
                                     </span>
                                     <br/>
                                     <h4><b>Time &amp; material</b> <span class="small">(ex: consulting mission)</span></h4>
                                     <span>
-                                        <li><a t-att-href="prepare_backend_url('account_analytic_analysis.action_account_analytic_overdue_all')" target="_blank">Create your contracts</a> and configure your prices</li>
+                                        <li><a t-att-href="prepare_backend_url('account_analytic_analysis.action_account_analytic_overdue_all')">Create your contracts</a> and configure your prices</li>
                                     </span>
                                 </div>
                             </div>
@@ -572,8 +565,7 @@
                                     <div class="panel-body">
                                         <span>Each product, one by one<br/>
                                             <a t-att-href="prepare_backend_url(
-                                                'product.product_template_action', 'form')"
-                                                target="_blank">Create a product</a>
+                                                'product.product_template_action', 'form')">Create a product</a>
                                         </span>
                                     </div>
                                 </div>
@@ -590,8 +582,7 @@
                                     <div class="panel-body">
                                         <p>
                                             <a t-att-href="prepare_backend_url(
-                                                'product.product_template_action')"
-                                                target="_blank">Create 3 products</a> manually
+                                                'product.product_template_action')">Create 3 products</a> manually
                                         </p>
                                         <p>Export these 3 products by selecting them and chosing 'Export' from the 'More' menu</p>
                                         <p>Add your existing products to this CSV file</p>
@@ -631,7 +622,7 @@
                                     <strong>Contact us now:</strong><br/>
                                     <a href="https://www.odoo.com/page/live-chat" target="_blank" style="margin-right:10px">
                                         <span class="fa fa-comment-o"/> Live Chat on</a><br/>
-                                    <a href="mailto:info@odoo.com?subject=Sales%20Planner">
+                                    <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank">
                                         <span class="fa fa-envelope-o"/> Email Our CRM Expert</a>
                                 </div>
                             </div>
@@ -668,8 +659,7 @@
                                         This email address has been preconfigured as the default
                                         for your sales department.<br/>
                                         <a t-att-href="prepare_backend_url(
-                                            'base_setup.action_sale_config')"
-                                            target="_blank">(you can change it here)</a>
+                                            'base_setup.action_sale_config')">(you can change it here)</a>
                                     </p>
                                     <span class="arrow-down"></span>
                                 </div>
@@ -688,7 +678,7 @@
                                     <h4><b>Do you want to setup your own domain name ?</b></h4>
                                     <t t-if="alias_name and alias_domain">(<t t-esc="alias_name"/>@<t t-esc="alias_domain"/>)</t><br/>
                                     <a href="https://www.odoo.com/page/live-chat" target="_blank"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
-                                    <a href="mailto:info@odoo.com?subject=Sales%20Planner"><span class="fa fa-phone"/> Email Our CRM Expert</a>
+                                    <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank"><span class="fa fa-phone"/> Email Our CRM Expert</a>
                                 </div>
                             </div>
                         </div>
@@ -713,8 +703,7 @@
                                     </p>
                                     <p>
                                         <a t-att-href="prepare_backend_url(
-                                            'crm.action_report_crm_lead', 'graph')"
-                                            target="_blank">Leads analysis</a>
+                                            'crm.action_report_crm_lead', 'graph')">Leads analysis</a>
                                     </p>
                                     </div>
                                 </div>
@@ -730,13 +719,11 @@
                                             A sales manager will mostly use these two reports:
                                             <li>
                                                 <a t-att-href="prepare_backend_url(
-                                                    'crm.action_report_crm_opportunity', 'graph')"
-                                                    target="_blank">Opportunities Analysis</a>
+                                                    'crm.action_report_crm_opportunity', 'graph')">Opportunities Analysis</a>
                                             </li>
                                             <li>
                                                 <a t-att-href="prepare_backend_url(
-                                                    'account.action_account_invoice_report_all', 'graph')"
-                                                    target="_blank">Invoice Analysis</a>
+                                                    'account.action_account_invoice_report_all', 'graph')">Invoice Analysis</a>
                                             </li>
                                         </p>
                                         <p>
@@ -759,8 +746,7 @@
                                         <p><strong>Exercise: </strong>Try to switch the kanban to graph view</p>
                                         <p>
                                             <a t-att-href="prepare_backend_url(
-                                                'crm.crm_lead_opportunities', 'kanban')"
-                                                target="_blank">Opportunities pipeline</a>
+                                                'crm.crm_lead_opportunities', 'kanban')">Opportunities pipeline</a>
                                         </p>
                                     </div>
                                 </div>
@@ -787,7 +773,7 @@
                                 <div class="well well-lg footer-well">
                                     <span><strong>Contact us now:</strong></span><br/>
                                     <a href="#" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
-                                    <a href="mailto:info@odoo.com?subject=Sales%20Planner"><span class="fa fa-envelope-o"/> Email Our CRM Expert</a>
+                                    <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank"><span class="fa fa-envelope-o"/> Email Our CRM Expert</a>
                                 </div>
                             </div>
                         </div>
@@ -801,14 +787,14 @@
                         <div class="col-md-4 col-md-offset-2 col-xs-12 text-center">
                             <div class="panel">
                                 <div class="panel-heading">
-                                    <a t-att-href="prepare_backend_url('base.action_res_users')" target="_blank"><i class="fa-2x" data-icon="&#xe001;"></i><br/>Create your users here</a>
+                                    <a t-att-href="prepare_backend_url('base.action_res_users')"><i class="fa-2x" data-icon="&#xe001;"></i><br/>Create your users here</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4 col-xs-12 text-center">
                             <div class="panel">
                                 <div class="panel-heading">
-                                    <a t-att-href="prepare_backend_url('mail.action_mail_inbox_feeds')" target="_blank"><i class="fa-2x" data-icon="&#xe090;"></i><br/> Follow the day-to-day activites to be sure that everyone is using it</a>
+                                    <a t-att-href="prepare_backend_url('mail.action_mail_inbox_feeds')"><i class="fa-2x" data-icon="&#xe090;"></i><br/> Follow the day-to-day activites to be sure that everyone is using it</a>
                                 </div>
                             </div>
                         </div>
@@ -960,17 +946,15 @@
                                 <span class="fa fa-envelope fa-4x"></span>
                                 <h3><strong>Mass mailing</strong></h3>
                                 <p>Design efficient email campaigns. Send, convert and track your success</p>
-                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'mass_mailing')" class="btn odoo_purple btn_install"
-                                    target="_blank"
-                                    ><span class="fa fa-arrow-circle-o-down"/> Install Mailing</a>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'mass_mailing')" class="btn odoo_purple btn_install">
+                                    <span class="fa fa-arrow-circle-o-down"/> Install Mailing</a>
                             </div>
                             <div class="text-center col-md-4 col-xs-6">
                                 <span class="fa fa-comments-o fa-4x"></span>
                                 <h3><strong>Live Chat</strong></h3>
                                 <p>Engage directly with your website visitors to attract leads and boost online sales.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'im_livechat')"
-                                    class="btn odoo_purple btn_install"
-                                    target="_blank">
+                                    class="btn odoo_purple btn_install">
                                     <span class="fa fa-arrow-circle-o-down"/> Install Live Chat</a>
                             </div>
 
@@ -981,7 +965,7 @@
                                 <h3><strong>Survey</strong></h3>
                                 <p>Gain high quality insight from surveys, a great way to engage with prospects</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'survey')"
-                                    class="btn odoo_purple btn_install" target="_blank">
+                                    class="btn odoo_purple btn_install">
                                     <span class="fa fa-arrow-circle-o-down"/> Install Surveys</a>
                             </div>
 
@@ -992,7 +976,7 @@
                                 <h3><strong>Website Builder</strong></h3>
                                 <p>Get an awesome website for your business. Fully customizable and SEO friendly.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website')"
-                                    class="btn odoo_purple btn_install" target="_blank">
+                                    class="btn odoo_purple btn_install">
                                     <span class="fa fa-arrow-circle-o-down"/> Install Website Builder</a>
                             </div>
 
@@ -1003,7 +987,7 @@
                                 <h3><strong>Events</strong></h3>
                                 <p>Create sleek and attractive event pages. Sell online and organize on site.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'event')"
-                                    class="btn odoo_purple btn_install" target="_blank">
+                                    class="btn odoo_purple btn_install">
                                     <span class="fa fa-arrow-circle-o-down"/> Install Events</a>
                             </div>
                             <div class="text-center col-md-4 col-xs-6">
@@ -1011,8 +995,7 @@
                                 <h3><strong>e-Commerce</strong></h3>
                                 <p>Boost your online sales with sleek product pages.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_sale')"
-                                    class="btn odoo_purple btn_install"
-                                    target="_blank">
+                                    class="btn odoo_purple btn_install">
                                     <span class="fa fa-arrow-circle-o-down"/> Install e-Commerce</a>
                             </div>
                         </div>
@@ -1024,7 +1007,7 @@
                     <div class="text-center">
                       <h1>Congratulations, you're done !</h1>
                       <h3 class="mb1">We hope this process helped you improve your sales strategy.</h3>
-                      <h4 class="mb2">Don't hesitate to <a href="mailto:info@odoo.com?subject=Sales%20Planner">send us an email</a> to describe<br/> your experience or to suggest improvements !</h4>
+                      <h4 class="mb2">Don't hesitate to <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank">send us an email</a> to describe<br/> your experience or to suggest improvements !</h4>
 
                       <p>Happy Selling!<br/>- The Odoo Team</p>
                       <img src="/planner/static/src/img/odoo_logo.png"/>

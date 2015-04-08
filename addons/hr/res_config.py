@@ -54,6 +54,9 @@ class hr_config_settings(osv.osv_memory):
             "Manage employees by department",
             implied_group='hr.group_multi_departments', group="base.group_hr_user",
             help="""Allows you to manage employees by department."""),
+        'group_hr_attendance': fields.boolean('Track attendances for all employees',
+            implied_group='base.group_hr_attendance',
+            help="Allocates attendance group to all users."),
     }
 
     def onchange_hr_timesheet(self, cr, uid, ids, timesheet, context=None):
@@ -65,5 +68,10 @@ class hr_config_settings(osv.osv_memory):
     def onchange_hr_attendance(self, cr, uid, ids, attendance, context=None):
         """ module_hr_timesheet implies module_hr_attendance """
         if not attendance:
-            return {'value': {'module_hr_timesheet': False}}
+            return {'value': {'module_hr_timesheet': False,'group_hr_attendance': False}}
+        return {}
+        
+    def onchange_group_hr_attendance(self, cr, uid, ids, hr_attendance, context=None):
+        if hr_attendance:
+            return {'value': {'module_hr_attendance': True}}
         return {}

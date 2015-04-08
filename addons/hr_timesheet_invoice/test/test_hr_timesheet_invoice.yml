@@ -114,3 +114,66 @@
     assert aline.invoice_id == invoice_id, "Invoice doesn't match the one at analytic line"
     assert float_compare(invoice_id.amount_untaxed, 187.5, precision_digits=2) == 0, "Invoice amount mismatch: %s" % invoice_id.amount_untaxed
     assert float_compare(invoice_id.amount_tax, 50, precision_digits=2) == 0, "Invoice tax mismatch: %s" %  invoice_id.amount_tax
+
+-
+  In order to test group invoicing by customer.
+-
+  I create an analytic account 'Sales Integration' for customer Asustek.
+-
+  !record {model: account.analytic.account, id: analytic_asustek01}:
+    name: Sales Integration
+    partner_id: base.res_partner_1
+-
+  I create an analytic account 'Asustek Website' for customer Asustek.
+-
+  !record {model: account.analytic.account, id: analytic_asustek02}:
+    name: Asustek Website
+    partner_id: base.res_partner_1
+-
+ I create an account analytic line.
+-
+  !record {model: account.analytic.line, id: account_analytic_line_0 }:
+    account_id: analytic_asustek01
+    amount: -1.0
+    general_account_id: account.a_expense
+    journal_id: hr_timesheet.analytic_journal
+    name: sales module extension
+    product_id: product.product_product_consultant
+    product_uom_id: product.product_uom_hour
+    to_invoice: hr_timesheet_invoice.timesheet_invoice_factor2
+    unit_amount: 5.00
+-
+  I create an account analytic line.
+-
+  !record {model: account.analytic.line, id: account_analytic_line_3 }:
+    account_id: analytic_asustek02
+    amount: -1.0
+    general_account_id: account.a_expense
+    journal_id: hr_timesheet.analytic_journal
+    name: template design
+    product_id: product.product_product_consultant
+    product_uom_id: product.product_uom_hour
+    to_invoice: hr_timesheet_invoice.timesheet_invoice_factor2
+    unit_amount: 5.00
+-
+  Now I create invoice on analytic Line using "Invoice analytic Line" wizard and set group by partner true.
+-
+  !record {model: hr.timesheet.invoice.create, id: hr_timesheet_invoice_create_1}:
+    date: 1
+    name: 1
+    product: product.product_product_consultant
+    time: 1
+    group_by_partner: 1
+-
+  I click on "Create Invoice" button of "Invoice analytic Line" wizard to create invoice and check that only one invoice is created for customer Asustek.
+-
+  !python {model: hr.timesheet.invoice.create}: |
+    action_result = self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_1")], {
+        "active_ids": [ref("hr_timesheet_invoice.account_analytic_line_0"),ref("hr_timesheet_invoice.account_analytic_line_3")]
+    })
+    invoice_pool = self.pool.get('account.invoice')
+    invoice_domain = action_result['domain']
+    invoice_ids = invoice_pool.search(cr, uid, invoice_domain)
+    invoice_id = invoice_pool.browse(cr, uid, invoice_ids)[0]
+    assert len(invoice_ids) == 1,"only one invoice should be created for customer Asustek."
+    assert invoice_id.amount_untaxed == 375.0, "Invoice amount mismatch: %s" % invoice_id.amount_untaxed

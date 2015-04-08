@@ -2,13 +2,13 @@
 
 import datetime
 import json
-import urllib
 import werkzeug
 
 from openerp import tools
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models.website import slug, unslug
+from openerp.addons.web.controllers.main import login_redirect
 from openerp.exceptions import UserError
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
@@ -271,22 +271,15 @@ class WebsiteBlog(http.Controller):
             context=context)
         return message_id
 
-    @http.route(['/blog/post_comment'], type='http', auth="public", methods=['GET', 'POST'], website=True)
+    @http.route(['/blog/post_comment/<int:blog_post_id>'], type='http', auth="public", website=True)
     def blog_post_comment(self, blog_post_id=0, **kw):
+        if not request.session.uid:
+            return login_redirect()
         cr, uid, context = request.cr, request.uid, request.context
-        redirect_url = request.httprequest.referrer + "#comments"
         if kw.get('comment'):
-            if not request.session.uid: # if not logged, redirect to the login form, keeping the url to post the comment
-                kw['comment'] = kw.get('comment').encode('utf8') # avoid crash from urlencode if accent
-                url = '/blog/post_comment/?blog_post_id=%s&%s' % (blog_post_id, urllib.urlencode(kw))
-                redirect_url = '/web/login?redirect=%s' % urllib.quote(url)
-            else:
-                blog_post_id = int(blog_post_id)
-                blog_post = request.registry['blog.post']
-                post = blog_post.browse(cr, uid, blog_post_id, context=context)
-                self._blog_post_message(blog_post_id, kw.get('comment'), **kw)
-                redirect_url = "/blog/%s/post/%s#comments" % (slug(post.blog_id), slug(post))
-        return werkzeug.utils.redirect(redirect_url)
+            self._blog_post_message(blog_post_id, kw.get('comment'), **kw)
+        blog_post = request.registry['blog.post'].browse(cr, uid, blog_post_id, context=context)
+        return werkzeug.utils.redirect("/blog/%s/post/%s#comments" % (slug(blog_post.blog_id), slug(blog_post)))
 
 
     def _get_discussion_detail(self, ids, publish=False, **post):

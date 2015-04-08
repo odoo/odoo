@@ -309,7 +309,7 @@ class website(osv.osv):
             return False
 
     @openerp.tools.ormcache(skiparg=3)
-    def _get_languages(self, cr, uid, id, context=None):
+    def _get_languages(self, cr, uid, id):
         website = self.browse(cr, uid, id)
         return [(lg.code, lg.name) for lg in website.language_ids]
 
@@ -324,7 +324,7 @@ class website(osv.osv):
         return uri
 
     def get_languages(self, cr, uid, ids, context=None):
-        return self._get_languages(cr, uid, ids[0], context=context)
+        return self._get_languages(cr, uid, ids[0])
 
     def get_alternate_languages(self, cr, uid, ids, req=None, context=None):
         langs = []
@@ -350,17 +350,17 @@ class website(osv.osv):
                 lang['hreflang'] = lang['short']
         return langs
 
-    @openerp.tools.ormcache(skiparg=4)
-    def _get_current_website_id(self, cr, uid, domain_name, context=None):
-        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
+    @openerp.tools.ormcache(skiparg=3)
+    def _get_current_website_id(self, cr, uid, domain_name):
+        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1)
         if ids:
             return ids[0]
         else:
-            return self.search(cr, uid, [], limit=1, context=context)[0]
+            return self.search(cr, uid, [], limit=1)[0]
 
     def get_current_website(self, cr, uid, context=None):
         domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
-        website_id = self._get_current_website_id(cr, uid, domain_name, context=context)
+        website_id = self._get_current_website_id(cr, uid, domain_name)
         request.context['website_id'] = website_id
         return self.browse(cr, uid, website_id, context=context)
 
