@@ -174,14 +174,28 @@ class WebsiteForum(http.Controller):
         )
         return simplejson.dumps(data)
 
-    @http.route(['/forum/<model("forum.forum"):forum>/tag'], type='http', auth="public", website=True)
+    @http.route([
+        '/forum/<model("forum.forum"):forum>/tag',
+        '/forum/<model("forum.forum"):forum>/tag/page/<int:page>'
+    ], type='http', auth="public", website=True)
     def tags(self, forum, page=1, **post):
-        tags = request.env['forum.tag'].search([('forum_id', '=', forum.id), ('posts_count', '>', 0)], limit=None, order='posts_count DESC')
-        values = self._prepare_forum_values(forum=forum, searches={'tags': True}, **post)
-        values.update({
-            'tags': tags,
-            'main_object': forum,
-        })
+        TAGS_PER_PAGE = 80
+        Tags = request.env['forum.tag']
+        tags_domain = [('forum_id', '=', forum.id), ('posts_count', '>', 0)]
+        pager = request.website.pager(
+            url='/forum/%s/tag' % slug(forum),
+            total=Tags.search_count(tags_domain),
+            page=page,
+            step=TAGS_PER_PAGE,
+        )
+        tags = Tags.search(tags_domain, offset=pager['offset'], limit=TAGS_PER_PAGE, order='posts_count DESC')
+        values = self._prepare_forum_values(
+            forum=forum,
+            searches={'tags': True},
+            tags=tags,
+            main_object=forum,
+            pager=pager,
+        )
         return request.website.render("website_forum.tag", values)
 
     # Questions
