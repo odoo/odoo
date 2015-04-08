@@ -14,6 +14,7 @@ import urllib2
 import hashlib
 import util
 import urllib
+import datetime
 
 from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_allpay.controllers.main import allPayController
@@ -143,7 +144,7 @@ class AcquirerallPay(osv.Model):
     def allpay_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
-        date_create = fields.datetime.now().strftime('%Y/%m/%d %H:%M:%S')  #time format yyyy/MM/dd HH:mm:ss
+        date_create = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')  #time format yyyy/MM/dd HH:mm:ss
         amount = int(round(tx_values['amount']))
         if amount <= 0:
             amount = 1
