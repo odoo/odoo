@@ -2,7 +2,7 @@
 
 {
     'name': 'allPay Payment Acquirer',
-    'category': 'Hidden',
+    'category': 'Website',
     'summary': 'Payment Acquirer: allPay Implementation',
     'version': '1.0',
     'description': """allPay Payment Acquirer""",

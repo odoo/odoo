@@ -2,7 +2,7 @@
 
 {
     'name': 'Alipay Payment Acquirer',
-    'category': 'Hidden',
+    'category': 'Website',
     'summary': 'Payment Acquirer: Alipay Implementation',
     'version': '1.0',
     'description': """Alipay Payment Acquirer""",
