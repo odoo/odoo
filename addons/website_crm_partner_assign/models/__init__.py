@@ -1,1 +1,3 @@
-import res_partner
+# -*- coding: utf-8 -*-
+
+import res_partner_grade

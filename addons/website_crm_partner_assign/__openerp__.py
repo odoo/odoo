@@ -10,8 +10,8 @@ Publish and Assign Partner
         """,
     'depends': ['crm_partner_assign','website_partner', 'website_google_map'],
     'data': [
-        'views/partner_grade.xml',
-        'views/website_crm_partner_assign.xml',
+        'views/res_partner_grade_views.xml',
+        'views/website_crm_partner_assign_templates.xml',
     ],
     'demo': [
         'data/res_partner_grade_demo.xml',
