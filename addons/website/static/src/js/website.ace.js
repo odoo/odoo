@@ -72,7 +72,7 @@ var ViewOption = Widget.extend({
 var ViewEditor = Widget.extend({
     resizing: false,
     refX: 0,
-    minWidth: 40,
+    minWidth: 100,
     template: 'website.ace_view_editor',
     events: {
         'change #ace-view-list-html': 'displaySelectedView',
@@ -133,6 +133,7 @@ var ViewEditor = Widget.extend({
         }
         document.body.addEventListener('mouseup', stopResizing, true);
         self.$('.ace_gutter').mouseup(stopResizing).mousedown(startResizing).click(stopResizing);
+        self.$('.ace_content').mouseup(stopResizing).click(stopResizing);
         $(document).mousemove(updateWidth);
         $('button[data-action=edit]').click(function () {
            self.close();
@@ -178,6 +179,12 @@ var ViewEditor = Widget.extend({
                 self.open.call(self);
                 self.$(self.active_list).val(viewId).trigger('change');
                 self.updateHash.call(self);
+                //Hide options from editor if server returns empty list
+                _.each(res, function(list, type){
+                    if(list.length == 0){
+                        self.$el.find('.type_switcher[data-edit-type="'+type+'"]').hide();
+                    }
+                });
             });
     },
     loadViews: function (views) {
