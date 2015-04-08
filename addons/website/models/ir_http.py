@@ -64,7 +64,10 @@ class ir_http(orm.AbstractModel):
             # in all cases, website processes them
             request.website_enabled = True
 
-        request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
+        request.website_multilang = (
+            request.website_enabled and
+            func and func.routing.get('multilang', func.routing['type'] == 'http')
+        )
 
         if 'geoip' not in request.session:
             record = {}

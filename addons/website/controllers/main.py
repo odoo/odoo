@@ -237,15 +237,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.registry["ir.ui.view"].customize_template_get(
             request.cr, request.uid, xml_id, full=full, context=request.context)
 
-
-    @http.route('/website/get_view_translations', type='json', auth='public', website=True, multilang=False)
+    @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
         return request.registry["ir.ui.view"].get_view_translations(
             request.cr, request.uid, xml_id, lang=lang, context=request.context)
 
-
-    @http.route('/website/set_translations', type='json', auth='public', website=True, multilang=False)
+    @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
         irt = request.registry.get('ir.translation')
         for view_id, trans in data.items():
@@ -283,7 +281,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     irt.create(request.cr, request.uid, new_trans)
         return True
 
-    @http.route('/website/translations', type='json', auth="public", website=True, multilang=False)
+    @http.route('/website/translations', type='json', auth="public", website=True)
     def get_website_translations(self, lang):
         module_obj = request.registry['ir.module.module']
         module_ids = module_obj.search(request.cr, request.uid, [('name', 'ilike', 'website'), ('state', '=', 'installed')], context=request.context)
@@ -336,7 +334,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             window.parent['%s'](%s, %s);
         </script>""" % (func, json.dumps(website_url), json.dumps(message))
 
-    @http.route(['/website/publish'], type='json', auth="public", website=True, multilang=False)
+    @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
         _id = int(id)
         _object = request.registry[object]
