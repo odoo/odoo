@@ -71,15 +71,15 @@
             <field name="model_id" ref="model_crm_claim"/>
             <field name="auto_delete" eval="True"/>
             <field name="email_from">${object.user_id.email}</field>
-            <field name="email_to">${(object.partner_id and object.partner_id.email)|safe}</field>
-            <field name="subject">Acknowledge for ${object.name} request.</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">Acknowledge request for [${object.id}]${object.name}.</field>
             <field name="body_html"><![CDATA[<p>Dear Customer,</p></br>
 Hereby, we acknowledge the reception of your request. The reference of your ticket is <b>${object.id}</b>.</br>
 We will qualify and assign it and you'll receive an email as soon as the responsible will start working on it.</br>
 To provide additional information, you can simply reply to this email.
 <p>Kind regards,</p>]]></field>
         </record>
-        
+
 
     </data>
 </odoo>

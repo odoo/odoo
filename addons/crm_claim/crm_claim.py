@@ -231,10 +231,10 @@ class crm_claim(osv.osv):
         return True
 
     def create(self, cr, uid, vals, context=None):
-        context = dict(context or {})
+        if not context:
+            context = {}
         if vals.get('team_id') and not context.get('default_team_id'):
             context['default_team_id'] = vals.get('team_id')
-
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         new_claim_id = super(crm_claim, self).create(cr, uid, vals, context=create_context)
