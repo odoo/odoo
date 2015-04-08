@@ -12,8 +12,8 @@
                             <h1><field name="name" class="oe_title" placeholder="Promotion Rule Name..." height="20px"/></h1>
                         </div>
                         <div class="oe_right">
-                            <button class="oe_stat_button" type="action" string="Generated Coupon" icon="fa-xing" attrs="{'invisible': [('program_type', '!=', 'generated_coupon')]}"/>
-                            <button class="oe_inline oe_stat_button" type="action" string="Sale Order" icon="fa fa-strikethrough fa-fw"/>
+                            <button class="oe_stat_button" type="action" string="Generated Coupon" icon="fa-xing" attrs="{'invisible': [('program_type', '!=', 'generated_coupon')]}" name="%(action_coupon_view)d"/>
+                            <button class="oe_inline oe_stat_button" type="action" string="Sale Order" icon="fa fa-strikethrough fa-fw" name="%(action_sale_order_view)d"/>
                         </div>
                         <group>
                             <group>
@@ -39,8 +39,8 @@
                                     <field name="product_category_id" attrs="{'invisible': [('purchase_type', '!=', 'category')]}" placeholder="Select product category"/>
                                     <label string="Quantity" for="product_quantity" attrs="{'invisible': [('purchase_type', '=', 'amount')]}"/>
                                     <div attrs="{'invisible': [('purchase_type', '=', 'amount')]}">
-                                        <field name="product_quantity" attrs="{'invisible': [('purchase_type', '=', 'amount')]}" class="oe_inline"/>
-                                        <field name="product_uom_id" attrs="{'invisible': [('purchase_type', '=', 'amount')]}" class="oe_inline" placeholder="Select unit of measure"/>
+                                        <field name="product_quantity" class="oe_inline"/>
+                                        <field name="product_uom_id" class="oe_inline" placeholder="Select unit of measure"/>
                                     </div>
                                     <label for="validity_duration" string="Validity duration"/>
                                     <div>
@@ -61,19 +61,23 @@
                                         <field name="reward_product_product_id" attrs="{'invisible': [('reward_type', '!=', 'product')]}" placeholder="Select reward product"/>
                                         <label string="Quantity" for="reward_quantity" attrs="{'invisible': [('reward_type', '!=', 'product')]}"/>
                                         <div attrs="{'invisible': [('reward_type', '!=', 'product')]}">
-                                            <field name="reward_quantity" attrs="{'invisible': [('reward_type', '!=', 'product')]}" class="oe_inline"/>
-                                            <field name="reward_product_uom_id" attrs="{'invisible': [('reward_type', '!=', 'product')]}" placeholder="Select unit of measure" class="oe_inline"/>
+                                            <field name="reward_quantity" class="oe_inline"/>
+                                            <field name="reward_product_uom_id" placeholder="Select unit of measure" class="oe_inline"/>
                                         </div>
                                         <field name="reward_discount_type" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
-
                                         <field name="reward_discount_on" attrs="{'invisible': 
                                             ['|', ('reward_discount_type', '!=', 'percentage'),('reward_type', '!=', 'discount')]}" widget="radio"/>
                                         <field name="reward_discount_on_product_id" attrs="{'invisible': ['|', ('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}" placeholder="Select product"/>
-                                        <field name="reward_discount_percentage" attrs="{'invisible': ['|', ('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount') ]}"/>
+                                        <label string="Percentage" for="reward_discount_percentage" attrs="{'invisible': ['|', ('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount')]}"/>
+                                        <div attrs="{'invisible': ['|', ('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount')]}">
+                                            <field name="reward_discount_percentage" attrs="{'invisible': ['|', ('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount')]}" class="oe_inline"/>
+                                            <field name="reward_discount_on_product_uom_id" attrs="{'invisible': ['|', ('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}" class="oe_inline"/>
+                                        </div>
                                          <label string="Amount" for="reward_discount_amount" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" />
                                         <div attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}">
-                                            <field name="reward_discount_amount" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" class="oe_inline"/>
-                                            <field name="reward_tax" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" class="oe_inline"/>
+                                            <field name="reward_discount_amount" class="oe_inline"/>
+                                            <field name="reward_currency_id" class="oe_inline"/>
+                                            <field name="reward_tax" class="oe_inline"/>
                                         </div>
                                         <field name="reward_partial_use" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" widget="radio"/>
                                         <field name="reward_gift_coupon_id" attrs="{'invisible': [('reward_type', '!=', 'coupon')]}" placeholder="Select program"/>
@@ -84,6 +88,20 @@
                         </notebook>
                      </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="coupon_tree_view">
+            <field name="name">coupon tree</field>
+            <field name="model">sale.coupon</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="coupon_code"/>
+                    <field name="reward_name"/>
+                    <field name="nbr_used"/>
+                    <field name="state"/>
+                    <field name="order_line_id"/>
+                </tree>
             </field>
         </record>
 
@@ -187,5 +205,18 @@
         </record>
         <menuitem id="base.menu_sales_config" parent="base.menu_base_config" sequence="1" name="Sales"/>
         <menuitem action="action_sale_coupon_configuration" id="base.menu_coupon_type_config" parent="base.menu_sales_config"/>
+
+        <record id="action_sale_order_view" model="ir.actions.act_window">
+            <field name="name">Sale order form</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="action_coupon_view" model="ir.actions.act_window">
+            <field name="name">Sale Coupon</field>
+            <field name="res_model">sale.coupon</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+        </record>
   </data>
 </openerp>

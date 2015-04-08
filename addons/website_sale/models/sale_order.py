@@ -74,7 +74,7 @@ class sale_order(osv.Model):
     def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         sol = self.pool.get('sale.order.line')
-
+        print "<<<<<<<<<<<<>>>>>>>>>> cart update"
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
             if line_id != False:
