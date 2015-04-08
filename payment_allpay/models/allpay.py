@@ -144,7 +144,7 @@ class AcquirerallPay(osv.Model):
         base_url = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
         date_create = fields.datetime.now()
-        amount = round(tx_values['amount'])
+        amount = int(round(tx_values['amount']))
         if amount <= 0:
             amount = 1
 
@@ -175,8 +175,8 @@ class AcquirerallPay(osv.Model):
         })
 
         sorted_to_sign = sorted(to_sign.iteritems())
-        sorted_to_sign.insert(0,('HashKey',acquirer.allpay_hash_key))
-        sorted_to_sign.append(('HashIV',acquirer.allpay_hash_iv))
+        sorted_to_sign.insert(0, ('HashKey', acquirer.allpay_hash_key))
+        sorted_to_sign.append(('HashIV', acquirer.allpay_hash_iv))
 
         string_to_sign = util.do_str_replace(urllib.quote(werkzeug.url_encode(sorted_to_sign), '+%').lower())
         allpay_tx_values['CheckMacValue'] = hashlib.md5(string_to_sign).hexdigest().upper()
