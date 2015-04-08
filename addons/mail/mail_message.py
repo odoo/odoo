@@ -119,7 +119,7 @@ class mail_message(osv.Model):
                         ('email', 'Email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
-                        ], 'Type', size=12, 
+                        ], 'Type', size=12,
             help="Message type: email for email message, notification for system "\
                  "message, comment for other messages such as user replies"),
         'email_from': fields.char('From',
@@ -759,7 +759,7 @@ class mail_message(osv.Model):
 
         # Calculate remaining ids: if not void, raise an error
         other_ids = other_ids.difference(set(document_related_ids))
-        if not other_ids:
+        if not document_related_ids or not other_ids:
             return
         raise orm.except_orm(_('Access Denied'),
                              _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
