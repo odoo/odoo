@@ -143,7 +143,10 @@ class AcquirerallPay(osv.Model):
     def allpay_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
-        date_create =  fields.datetime.now()
+        date_create = fields.datetime.now()
+        amount = round(tx_values['amount'])
+        if amount <= 0:
+            amount = 1
 
         allpay_tx_values = dict(tx_values)
         allpay_tx_values.update({
@@ -151,7 +154,7 @@ class AcquirerallPay(osv.Model):
             'MerchantTradeNo': tx_values['reference'],
             'MerchantTradeDate': tx_values.get('date_create', date_create),
             'PaymentType': 'aio',
-            'TotalAmount': tx_values['amount'],
+            'TotalAmount': amount,
             'TradeDesc': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
             'ItemName': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
             'ChoosePayment': 'ALL',
@@ -164,7 +167,7 @@ class AcquirerallPay(osv.Model):
             'MerchantTradeNo': tx_values['reference'],
             'MerchantTradeDate': tx_values.get('date_create', date_create),
             'PaymentType': 'aio',
-            'TotalAmount': tx_values['amount'],
+            'TotalAmount': amount,
             'TradeDesc': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
             'ItemName': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
             'ChoosePayment': 'ALL',
