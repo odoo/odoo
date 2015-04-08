@@ -143,12 +143,13 @@ class AcquirerallPay(osv.Model):
     def allpay_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
+        date_create =  fields.datetime.now()
 
         allpay_tx_values = dict(tx_values)
         allpay_tx_values.update({
             'MerchantID': acquirer.allpay_merchant_id,
             'MerchantTradeNo': tx_values['reference'],
-            'MerchantTradeDate': tx_values['date_create'],
+            'MerchantTradeDate': tx_values.get('date_create', date_create),
             'PaymentType': 'aio',
             'TotalAmount': tx_values['amount'],
             'TradeDesc': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
@@ -161,7 +162,7 @@ class AcquirerallPay(osv.Model):
         to_sign.update({
             'MerchantID': acquirer.allpay_merchant_id,
             'MerchantTradeNo': tx_values['reference'],
-            'MerchantTradeDate': tx_values['date_create'],
+            'MerchantTradeDate': tx_values.get('date_create', date_create),
             'PaymentType': 'aio',
             'TotalAmount': tx_values['amount'],
             'TradeDesc': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
@@ -174,8 +175,7 @@ class AcquirerallPay(osv.Model):
         sorted_to_sign.insert(0,('HashKey',acquirer.allpay_hash_key))
         sorted_to_sign.append(('HashIV',acquirer.allpay_hash_iv))
 
-        sorted_to_sign = util.do_str_replace(urllib.quote(urllib.urlencode(sorted_to_sign), '+%').lower())
-        _logger.info(urllib.quote(urllib.urlencode(sorted_dict), '+').lower())
+        sorted_to_sign = util.do_str_replace(urllib.quote(werkzeug.url_encode(sorted_to_sign), '+%').lower())
 
         check_mac_value = hashlib.md5(sorted_to_sign).hexdigest().upper()
         allpay_tx_values['CheckMacValue'] = check_mac_value
@@ -200,7 +200,7 @@ class TxallPay(osv.Model):
     # --------------------------------------------------
 
     def _allpay_form_get_tx_from_data(self, cr, uid, data, context=None):
-        reference, txn_id = data.get('out_trade_no'), data.get('trade_no')
+        reference, txn_id = data.get('TradeNo'), data.get('MerchantTradeNo')
         if not reference or not txn_id:
             error_msg = 'allPay: received data with missing reference (%s) or txn_id (%s)' % (reference, txn_id)
             _logger.error(error_msg)
@@ -226,11 +226,11 @@ class TxallPay(osv.Model):
             'allpay_txn_type': data.get('PaymentType'),
         }
 
-        if status =1:
+        if status == '1':
             _logger.info('Validated allPay payment for tx %s: set as done' % (tx.reference))
             data.update(state='done', date_validate=data.get('PaymentDate', fields.datetime.now()))
             return tx.write(data)
-        elif status = 800:
+        elif status == '800':
             _logger.info('Received notification for allPay payment %s: set as pending' % (tx.reference))
             data.update(state='pending', state_message=data.get('RtnMsg', ''))
             return tx.write(data)
