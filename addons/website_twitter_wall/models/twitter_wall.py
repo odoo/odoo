@@ -80,7 +80,7 @@ class TwitterStream(models.Model, StreamListener):
                     self.env = api.Environment(new_cr, self.env.uid, self.env.context)
                     walls = self.agent_ids.filtered(lambda o: o.auth_user == tweet['user']['id_str'] and o.state != 'archive').sorted(lambda r: r.create_date, reverse=True)
                     if len(walls):
-                        self.env['twitter.tweet'].process_tweet(walls[0].id, tweet)
+                        self.env['twitter.tweet'].process_tweet(walls[0].id, tweet['retweeted_status']['id'])
         return True
 
     def on_error(self, status_code):
@@ -150,12 +150,12 @@ class TwitterTweet(models.Model):
     _sql_constraints = [('website_twitter_wall_tweet_unique', 'UNIQUE(tweet_id, agent_id)', 'Duplicate tweet not allowed !')]
 
     @api.model
-    def process_tweet(self, wall_id, tweet):
+    def process_tweet(self, wall_id, tweet_id):
         try:
-            card_url = 'https://api.twitter.com/1/statuses/oembed.json?id=%s&omit_script=true' % (tweet.get('id'))
+            card_url = 'https://api.twitter.com/1/statuses/oembed.json?id=%s&omit_script=true' % (tweet_id)
             cardtweet = loads(urlopen(Request(card_url, None, {'Content-Type': 'application/json'})).read())
             return self.create({
-                'tweet_id': tweet.get('id'),
+                'tweet_id': tweet_id,
                 'tweet': cardtweet.get('html', False),
                 'agent_id': wall_id
             })
