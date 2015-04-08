@@ -3,7 +3,7 @@
     <data noupdate="1">
 
         <template id="allpay_acquirer_button">
-            <form t-if="acquirer.allpay_partner_account" t-att-action="tx_url" method="post" target="_self">
+            <form t-if="acquirer.allpay_merchant_id" t-att-action="tx_url" method="post" target="_self">
                 <input type="hidden" name="MerchantID" t-att-value="tx_values['MerchantID']"/>
                 <input type="hidden" name="MerchantTradeNo" t-att-value="tx_values['MerchantTradeNo']"/>
                 <input type="hidden" name="MerchantTradeDate" t-att-value="tx_values['MerchantTradeDate']"/>
