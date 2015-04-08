@@ -66,7 +66,7 @@ class website_event(website_event):
         # free tickets -> order with amount = 0: auto-confirm, no checkout
         if not order.amount_total:
             order.action_button_confirm()  # tde notsure: email sending ?
-            attendees = self.pool['event.registration'].browse(cr, uid, list(attendee_ids), context=context)
+            attendees = request.registry['event.registration'].browse(cr, uid, list(attendee_ids), context=context)
             # clean context and session, then redirect to the confirmation page
             request.website.sale_reset(context=context)
             return request.website.render("website_event.registration_complete", {
