@@ -136,7 +136,11 @@ class ir_import(orm.TransientModel):
             StringIO(record.file),
             quotechar=str(options['quoting']),
             delimiter=str(options['separator']))
-        csv_nonempty = itertools.ifilter(None, csv_iterator)
+
+        def nonempty(row):
+            return any(x for x in row if x.strip())
+
+        csv_nonempty = itertools.ifilter(nonempty, csv_iterator)
         # TODO: guess encoding with chardet? Or https://github.com/aadsm/jschardet
         encoding = options.get('encoding', 'utf-8')
         return itertools.imap(
@@ -157,7 +161,7 @@ class ir_import(orm.TransientModel):
         for field in fields:
             # FIXME: should match all translations & original
             # TODO: use string distance (levenshtein? hamming?)
-            if header == field['name'] \
+            if header.lower() == field['name'].lower() \
               or header.lower() == field['string'].lower():
                 return [field]
 

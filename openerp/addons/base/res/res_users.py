@@ -338,7 +338,7 @@ class res_users(osv.osv):
             for id in ids:
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
-        self.context_get.clear_cache(self)
+        self._context_get.clear_cache(self)
         self.has_group.clear_cache(self)
         return res
 
@@ -374,8 +374,8 @@ class res_users(osv.osv):
         return super(res_users, self).copy(cr, uid, id, default, context)
 
     @tools.ormcache(skiparg=2)
-    def context_get(self, cr, uid, context=None):
-        user = self.browse(cr, SUPERUSER_ID, uid, context)
+    def _context_get(self, cr, uid):
+        user = self.browse(cr, SUPERUSER_ID, uid)
         result = {}
         for k in self._fields:
             if k.startswith('context_'):
@@ -390,6 +390,9 @@ class res_users(osv.osv):
                     res = res.id
                 result[context_key] = res or False
         return result
+
+    def context_get(self, cr, uid, context=None):
+        return self._context_get(cr, uid)
 
     def action_get(self, cr, uid, context=None):
         dataobj = self.pool['ir.model.data']
@@ -893,6 +896,8 @@ class users_view(osv.osv):
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, attributes=None):
         res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access, attributes)
         # add reified groups fields
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            return res
         for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, uid, context):
             if kind == 'selection':
                 # selection group field
