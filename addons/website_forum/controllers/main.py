@@ -574,14 +574,31 @@ class WebsiteForum(http.Controller):
         })
         return request.website.render("website_forum.badge", values)
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/badge/<model("gamification.badge"):badge>'''], type='http', auth="public", website=True)
-    def badge_users(self, forum, badge, **kwargs):
-        users = [badge_user.user_id for badge_user in badge.sudo().owner_ids]
-        values = self._prepare_forum_values(forum=forum, searches={'badges': True})
-        values.update({
-            'badge': badge,
-            'users': users,
-        })
+    @http.route([
+        '/forum/<model("forum.forum"):forum>/badge/<model("gamification.badge"):badge>',
+        '/forum/<model("forum.forum"):forum>/badge/<model("gamification.badge"):badge>/page/<int:page>'
+    ], type='http', auth="public", website=True)
+    def badge_users(self, forum, badge, page=1, **kwargs):
+        BadgeUsers = request.env['gamification.badge.user'].sudo()
+        count = BadgeUsers.search_count([('badge_id', '=', badge.id)])
+        BADGE_USERS_PER_PAGE = 20
+        pager = request.website.pager(
+            url='/forum/%s/badge/%s' % (slug(forum), slug(badge)),
+            total=count,
+            page=page,
+            step=BADGE_USERS_PER_PAGE,
+        )
+        users = BadgeUsers.search(
+            [('badge_id', '=', badge.id)],
+            offset=pager['offset'], limit=BADGE_USERS_PER_PAGE
+        ).mapped('user_id')
+        values = self._prepare_forum_values(
+            forum=forum,
+            searches={'badges': True},
+            badge=badge,
+            users=users,
+            pager=pager
+        )
         return request.website.render("website_forum.badge_user", values)
 
     # Messaging
