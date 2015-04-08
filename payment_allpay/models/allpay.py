@@ -171,7 +171,7 @@ class AcquirerallPay(osv.Model):
             'ReturnURL': '%s' % urlparse.urljoin(base_url, allPayController._return_url),
         })
 
-        sorted_to_sign = sorted(to_sign.interitems())
+        sorted_to_sign = sorted(to_sign.iteritems())
         sorted_to_sign.insert(0,('HashKey',acquirer.allpay_hash_key))
         sorted_to_sign.append(('HashIV',acquirer.allpay_hash_iv))
 
