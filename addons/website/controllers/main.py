@@ -52,8 +52,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         return super(Website, self).web_login(*args, **kw)
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
-    def change_lang(self, lang, r, **kwargs):
-        redirect = werkzeug.utils.redirect(r or '/%s'  % lang, 303)
+    def change_lang(self, lang, r='/', **kwargs):
+        if lang == 'default':
+            lang = request.website.default_lang_code
+            r = '/%s%s' % (lang, r or '/')
+        redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
         redirect.set_cookie('website_lang', lang)
         return redirect
 
