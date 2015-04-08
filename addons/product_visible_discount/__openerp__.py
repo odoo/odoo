@@ -20,7 +20,6 @@ To this end, a new check box named 'Visible Discount' is added to the pricelist 
     """,
     'depends': ["sale","purchase"],
     'demo': [],
-    'data': ['product_visible_discount_view.xml'],
-    'auto_install': False,
+    'data': ['views/product_visible_discount_view.xml'],
     'installable': True,
 }
