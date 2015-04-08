@@ -80,7 +80,7 @@ class TwitterStream(models.Model, StreamListener):
                     self.env = api.Environment(new_cr, self.env.uid, self.env.context)
                     walls = self.agent_ids.filtered(lambda o: o.auth_user == tweet['user']['id_str'] and o.state != 'archive').sorted(lambda r: r.create_date, reverse=True)
                     if len(walls):
-                        self.env['twitter.tweet'].process_tweet(walls[0].id, tweet['retweeted_status']['id'])
+                        self.env['twitter.tweet'].process_tweet(walls[0].id, tweet['retweeted_status']['id'] if tweet.get('retweeted_status') else tweet.get('id'))
         return True
 
     def on_error(self, status_code):
