@@ -26,7 +26,7 @@ class allPayController(http.Controller):
         _logger.info('Beginning allPay return form_feedback with post data %s', pprint.pformat(post))  # debug
         returns = request.registry['payment.acquirer'].checkout_feedback(post)
         if returns:
-            if returns['RtnCode'] == '1' or returns['RtnCode'] == 800:
+            if returns['RtnCode'] == 1 or returns['RtnCode'] == 800:
                 res = request.registry['payment.transaction'].form_feedback(cr, SUPERUSER_ID, post, 'allpay',
                                                                             context=context)
                 if res:

@@ -228,11 +228,11 @@ class TxallPay(osv.Model):
             'allpay_txn_type': data.get('PaymentType'),
         }
 
-        if status == '1':
+        if status == 1:
             _logger.info('Validated allPay payment for tx %s: set as done' % (tx.reference))
             data.update(state='done', date_validate=data.get('PaymentDate', fields.datetime.now()))
             return tx.write(data)
-        elif status == '800':
+        elif status == 800:
             _logger.info('Received notification for allPay payment %s: set as pending' % (tx.reference))
             data.update(state='pending', state_message=data.get('RtnMsg', ''))
             return tx.write(data)
