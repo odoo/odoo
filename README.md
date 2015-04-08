@@ -1,2 +1,2 @@
-# odoo payment addons for great china
+# odoo payment addons for the great china
 
