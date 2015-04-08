@@ -16,7 +16,7 @@ class ResCompany(osv.Model):
         ], limit=1, context=context)
         if allpay_ids:
             allpay = Acquirer.browse(cr, uid, allpay_ids[0], context=context)
-            return dict.fromkeys(ids, allpay.allpay_partner_account)
+            return dict.fromkeys(ids, allpay.allpay_merchant_id)
         return dict.fromkeys(ids, False)
 
     def _set_allpay_account(self, cr, uid, id, name, value, arg, context=None):
@@ -25,11 +25,11 @@ class ResCompany(osv.Model):
         allpay_account = self.browse(cr, uid, id, context=context).allpay_account
         allpay_ids = Acquirer.search(cr, uid, [
             ('website_published', '=', True),
-            ('allpay_partner_account', '=', allpay_account),
+            ('allpay_merchant_id', '=', allpay_account),
             ('company_id', '=', company_id),
         ], context=context)
         if allpay_ids:
-            Acquirer.write(cr, uid, allpay_ids, {'allpay_partner_account': value}, context=context)
+            Acquirer.write(cr, uid, allpay_ids, {'allpay_merchant_id': value}, context=context)
         return True
 
     _columns = {
