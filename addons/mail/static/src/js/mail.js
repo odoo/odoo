@@ -1970,6 +1970,13 @@ var ComposeMessageTopButton = Widget.extend({
     },
     on_compose_message: function (ev) {
         ev.preventDefault();
+        var ctx = {}
+        if ($('a.oe_compose_post') && $('a.oe_compose_post').is(":visible") == true && (this.getParent()).getParent().action_manager.inner_widget.active_view.type == 'form'){
+            ctx = {
+                'default_res_id': (this.getParent()).getParent().action_manager.inner_widget.active_view.controller.datarecord.id,
+                'default_model': (this.getParent()).getParent().action_manager.inner_widget.active_view.controller.model,
+                }
+        }
         var action = {
             type: 'ir.actions.act_window',
             res_model: 'mail.compose.message',
@@ -1977,7 +1984,7 @@ var ComposeMessageTopButton = Widget.extend({
             view_type: 'form',
             views: [[false, 'form']],
             target: 'new',
-            context: {},
+            context: ctx,
         };
         web_client.action_manager.do_action(action);
     },
