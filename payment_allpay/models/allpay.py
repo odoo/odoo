@@ -24,6 +24,10 @@ from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 
 class AcquirerallPay(osv.Model):
     _inherit = 'payment.acquirer'

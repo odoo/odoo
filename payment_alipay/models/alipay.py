@@ -19,6 +19,10 @@ from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_compare
 from openerp import SUPERUSER_ID
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 _logger = logging.getLogger(__name__)
 
 class AcquirerAlipay(osv.Model):

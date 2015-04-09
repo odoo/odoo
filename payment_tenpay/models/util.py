@@ -14,6 +14,10 @@ except ImportError:
     sha_constructor = sha.new
     sha_hmac = sha
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 md5 = md5_constructor
 
 def smart_str(s, encoding='utf-8', strings_only=False, errors='strict'):

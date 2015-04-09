@@ -20,6 +20,9 @@ from openerp.tools.float_utils import float_compare
 from openerp import SUPERUSER_ID
 from openerp.http import request
 from openerp import models, fields, api, exceptions, _
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
 _logger = logging.getLogger(__name__)
