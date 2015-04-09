@@ -141,7 +141,7 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
                 if user[0] not in new_user:
                     new_user.append(user[0])
                 user = user_ref.browse(cr, uid, user[0])
-                survey_ref.write(cr, uid, survey_ids, {'user_id':[[6, 0, [user.id]]]})
+                survey_ref.write(cr, uid, survey_ids, {'users':[[6, 0, [user.id]]]})
                 mail = record['mail']%{'login':partner.email, 'passwd':user.password, \
                                             'name' : partner.name}
                 if record['send_mail_existing']:
