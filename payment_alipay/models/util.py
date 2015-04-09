@@ -13,8 +13,9 @@ except ImportError:
     import sha
     sha_constructor = sha.new
     sha_hmac = sha
-    
+
 import sys
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 

@@ -23,9 +23,9 @@ class TenpayController(http.Controller):
 
     def tenpay_validate_data(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        ALIPAY_KEY = request.registry['payment.transaction']._get_partner_key()
+        _KEY = request.registry['payment.transaction']._get_partner_key()
         _, prestr = util.params_filter(post)
-        mysign = util.build_mysign(prestr, ALIPAY_KEY, 'MD5')
+        mysign = util.build_mysign(prestr, _KEY, 'MD5')
         if mysign != post.get('sign'):
             return 'false'
 
