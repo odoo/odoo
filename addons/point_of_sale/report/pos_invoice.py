@@ -44,10 +44,10 @@ class PosInvoiceReport(osv.AbstractModel):
             not_invoiced_posorders = posorder_obj.browse(cr, uid, not_invoiced_orders_ids, context=context)
             not_invoiced_orders_names = list(map(lambda a: a.name, not_invoiced_posorders))
             raise osv.except_osv(_('Error!'), _('No link to an invoice for %s.' % ', '.join(not_invoiced_orders_names)))
-
-        docargs = {
-            'doc_ids': ids_to_print,
-            'doc_model': report.model,
-            'docs': selected_orders,
-        }
-        return report_obj.render(cr, uid, ids, 'account.report_invoice', docargs, context=context)
+        if ids_to_print:
+            docargs = {
+                'doc_ids': ids_to_print,
+                'doc_model': report.model,
+                'docs': selected_orders,
+            }
+            return report_obj.render(cr, uid, ids, 'account.report_invoice', docargs, context=context)
