@@ -402,7 +402,7 @@ class survey_question_wiz(osv.osv_memory):
                     result['context'] = context
                 else:
                     survey_obj.write(cr, SUPERUSER_ID, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
-                    sur_response_obj.write(cr, uid, int(sur_name_read.response), {'state' : 'done'})
+                    sur_response_obj.write(cr, uid, long(sur_name_read.response), {'state' : 'done'})
 
                     # mark the survey request as done; call 'survey_req_done' on its actual model
                     survey_req_obj = self.pool.get(context.get('active_model'))
