@@ -99,9 +99,9 @@ website.if_dom_contains('.odoo-tw-walls', function() {
 
     // Event fire on window fullscreen and exit fullscreen
     var twitter_wall;
-    $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', function() {
+    $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange', function() {
         $("#oe_main_menu_navbar, header, .odoo-tw-hide-onlive, footer").slideToggle("normal");
-        if (!window.screenTop && !window.screenY) {
+        if (document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen) {
             twitter_wall = new TweetWall(parseInt($(".odoo-tw-walls").attr("wall_id")));
             new Customize(this, $("button[title='Customize']"));
             window.scrollTo(0, 0);
