@@ -1,6 +1,7 @@
 # -*- coding: utf-'8' "-*-"
 
 import base64
+
 try:
     import simplejson as json
 except ImportError:
@@ -20,6 +21,7 @@ from openerp.tools.float_utils import float_compare
 from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
+
 
 class AcquirerAlipay(osv.Model):
     _inherit = 'payment.acquirer'
@@ -50,7 +52,8 @@ class AcquirerAlipay(osv.Model):
         'alipay_partner_account': fields.char('Alipay Partner ID', required_if_provider='alipay'),
         'alipay_partner_key': fields.char('Alipay Partner Key', required_if_provider='alipay'),
         'alipay_seller_email': fields.char('Alipay Seller Email', required_if_provider='alipay'),
-        'alipay_interface_type': fields.selection(ALIPAY_INTERFACE_TYPE, 'Interface Type'),
+        'alipay_interface_type': fields.selection(ALIPAY_INTERFACE_TYPE, 'Interface Type',
+                                                  required_if_provider='alipay'),
 
     }
 
@@ -151,7 +154,7 @@ class AcquirerAlipay(osv.Model):
             to_sign.update(payload_dualfun)
             alipay_tx_values.update(payload_direct)
 
-        _,prestr = util.params_filter(to_sign)
+        _, prestr = util.params_filter(to_sign)
         alipay_tx_values['sign'] = util.build_mysign(prestr, acquirer.alipay_partner_key, 'MD5')
         alipay_tx_values['sign_type'] = 'MD5'
 
@@ -163,6 +166,7 @@ class AcquirerAlipay(osv.Model):
             '_input_charset': 'utf-8',
         }
         return self._get_alipay_urls(cr, uid, acquirer.environment, context=context)['alipay_url'] + urlencode(params)
+
 
 class TxAlipay(osv.Model):
     _inherit = 'payment.transaction'
@@ -214,7 +218,7 @@ class TxAlipay(osv.Model):
                 data.update(state='error', state_message=error)
                 return tx.write(data)
 
-        if acquirer.alipay_interface_type in ['create_partner_trade_by_buyer','trade_create_by_buyer' ] :
+        if acquirer.alipay_interface_type in ['create_partner_trade_by_buyer', 'trade_create_by_buyer']:
             if status in ['WAIT_SELLER_SEND_GOODS']:
                 _logger.info('Validated Alipay payment for tx %s: set as done' % (tx.reference))
                 data.update(state='done', date_validate=data.get('gmt_payment', fields.datetime.now()))
