@@ -1083,6 +1083,33 @@ class Float(Field):
         return float_round(value, precision_digits=digits[1]) if digits else value
 
 
+class Monetary(Field):
+    """ 
+    :param currency_field: recquired the name of the currency_field on the model
+
+    The attribute `currency_field` is mandatory except in the case of related
+    fields.
+    """
+    type = 'monetary'
+    _slots = {
+        'currency_field': None,
+    }
+
+    def __init__(self, string=None, currency_field=None, **kwargs):
+        super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
+
+    _column_currency_field = property(attrgetter('currency_field'))
+    _related_currency_field = property(attrgetter('currency_field'))
+    _description_currency_field = property(attrgetter('currency_field'))
+
+    def convert_to_cache(self, value, record, validate=True):
+        currency = record[self.currency_field]
+        if currency:
+            return currency.round(float(value or 0.0))
+        else:
+            return float(value or 0.0)
+
+
 class _String(Field):
     """ Abstract class for string fields. """
     _slots = {
