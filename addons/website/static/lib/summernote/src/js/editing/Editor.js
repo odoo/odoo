@@ -352,7 +352,7 @@ define([
         linkUrl = options.onCreateLink(linkUrl);
       }
 
-      rng = rng.deleteContents();
+      rng = rng.deleteContents(true);
       var anchor = dom.ancestor(rng.sc, dom.isAnchor);
 
       // Create a new link when there is no anchor on range.
