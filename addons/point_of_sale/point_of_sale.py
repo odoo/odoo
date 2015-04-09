@@ -979,6 +979,7 @@ class pos_order(osv.osv):
                     'invoice_id': inv_id,
                     'product_id': line.product_id.id,
                     'quantity': line.qty,
+                    'account_analytic_id': self._prepare_analytic_account(cr, uid, line, context=context),
                 }
                 inv_name = product_obj.name_get(cr, uid, [line.product_id.id], context=context)[0][1]
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
