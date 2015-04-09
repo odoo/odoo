@@ -346,11 +346,13 @@ class SaleOrder(models.Model):
             remove_line.with_context(nocoupon=True).unlink()
 
     def _check_for_free_shipping(self, coupon_code):
+        print "<<<<<<in free shipping"
         free_shipping_product_line = self.order_line.filtered(lambda x: x.product_id.is_delivery_chargeble is True)
         if not free_shipping_product_line:
             return True
         product_line = free_shipping_product_line[0]
         delivery_charge_line = self.order_line.filtered(lambda x: x.product_id == self.env.ref('delivery.product_product_delivery'))
+        print "<<<<<<", delivery_charge_line
         if not delivery_charge_line:
             return True
         reward_line = self.order_line.filtered(lambda x: x.generated_from_line_id == product_line)
