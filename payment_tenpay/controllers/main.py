@@ -21,21 +21,18 @@ class TenpayController(http.Controller):
     _return_url = '/payment/tenpay/return/'
 
 
-
     def tenpay_validate_data(self, **post):
-        res = False
         cr, uid, context = request.cr, request.uid, request.context
         ALIPAY_KEY = request.registry['payment.transaction']._get_partner_key()
         _, prestr = util.params_filter(post)
-        mysign = util.build_mysign(prestr, ALIPAY_KEY)
+        mysign = util.build_mysign(prestr, ALIPAY_KEY, 'MD5')
         if mysign != post.get('sign'):
             return 'false'
 
         _logger.info('Tenpay: validated data')
-        res = request.registry['payment.transaction'].form_feedback(cr, SUPERUSER_ID, post, 'tenpay',
-                                                                    context=context)
+        return request.registry['payment.transaction'].form_feedback(cr, SUPERUSER_ID, post, 'tenpay',
+                                                                     context=context)
 
-        return res
 
     @http.route('/payment/tenpay/notify', type='http', auth='none', methods=['POST'])
     def tenpay_notify(self, **post):
@@ -51,5 +48,7 @@ class TenpayController(http.Controller):
         """ Tenpay Return """
         _logger.info('Beginning Tenpay return form_feedback with post data %s', pprint.pformat(get))  # debug
         res = request.registry['payment.transaction'].form_feedback(cr, SUPERUSER_ID, get, 'tenpay', context=context)
+        if res:
+            return 'success'
         return ''
 
