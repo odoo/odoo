@@ -46,6 +46,11 @@ class AcquirerAlipay(osv.Model):
         providers.append(['alipay', 'Alipay'])
         return providers
 
+    @api.one
+    def _get_alipay_partner_key(self):
+        return self.alipay_partner_key
+
+
     ALIPAY_INTERFACE_TYPE = [
         ('trade_create_by_buyer', 'Standard Dual Interface'),
         ('create_direct_pay_by_user', 'Instant Payment Transaction'),

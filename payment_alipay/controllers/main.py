@@ -24,8 +24,9 @@ class AlipayController(http.Controller):
     def alipay_validate_data(self, **post):
         res = False
         cr, uid, context = request.cr, request.uid, request.context
+        _KEY = request.registry['payment.acquirer']._get_alipay_partner_key()
         _, prestr = util.params_filter(post)
-        mysign = util.build_mysign(prestr, settings.ALIPAY_KEY, settings.ALIPAY_SIGN_TYPE)
+        mysign = util.build_mysign(prestr, _KEY, 'MD5')
         if mysign != post.get('sign'):
             return 'false'
 

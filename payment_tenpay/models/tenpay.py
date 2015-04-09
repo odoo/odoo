@@ -61,7 +61,7 @@ class AcquirerTenpay(osv.Model):
     }
 
     @api.one
-    def _get_partner_key(self):
+    def _get_tenpay_partner_key(self):
         return self.tenpay_partner_key
 
     _defaults = {
