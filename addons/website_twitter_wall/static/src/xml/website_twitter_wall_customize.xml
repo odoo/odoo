@@ -12,10 +12,12 @@
                 <t t-foreach="colors" t-as="color"><span class='odoo-tw-view-live-option-color' t-att-data-color-code='color' t-attf-style='background-color:#{color}'></span></t>
             </div>
         </div>
-        <center><b>Theme</b></center>
-        <div class='btn-group'>
-            <button class='btn btn-default theme active' data-operation='light' title='Sun'><i class='fa fa-sun-o' /></button>
-            <button class='btn btn-default theme' data-operation='dark' title='Moon'><i class='fa fa-moon-o' /></button>
-        </div>
+        <center><b>Card Theme</b></center>
+        <center>
+            <div class='btn-group'>
+                <button class='btn btn-default theme active' data-operation='light' title='Light'><i class='fa fa-sun-o' /></button>
+                <button class='btn btn-default theme' data-operation='dark' title='Dark'><i class='fa fa-moon-o' /></button>
+            </div>
+        </center>
     </t>
 </template>
