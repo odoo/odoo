@@ -1230,7 +1230,7 @@ define(['summernote/summernote'], function () {
                 rng = $editable.data('range') || rng;
             }
             if (!rng && $target.length) {
-                rng = range.create($target[0],0);
+                rng = range.create($target.closest("*")[0],0);
             }
             if (rng) {
                 try {
