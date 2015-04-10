@@ -11,9 +11,14 @@
                             <label class="oe_edit_only" for="name" string="Program Name"/>
                             <h1><field name="name" class="oe_title" placeholder="Promotion Rule Name..." height="20px"/></h1>
                         </div>
-                        <div class="oe_right">
-                            <button class="oe_stat_button" type="action" string="Generated Coupon" icon="fa-xing" attrs="{'invisible': [('program_type', '!=', 'generated_coupon')]}" name="%(action_coupon_view)d"/>
-                            <button class="oe_inline oe_stat_button" type="action" string="Sale Order" icon="fa fa-strikethrough fa-fw" name="%(action_sale_order_view)d"/>
+                        <div class="oe_right oe_button_box" style="width: 300px;">
+                            <button class="oe_stat_button" type="object" icon="fa-xing" attrs="{'invisible': [('program_type', '!=', 'generated_coupon')]}" name="action_view_coupons">
+                                <field name="count_coupons" string="Coupons" widget="statinfo"/>
+                            </button>
+
+                            <button class="oe_stat_button" type="object" icon="fa-strikethrough" name="action_view_order">
+                                <field name="count_sale_order" string="Sales" widget="statinfo"/>
+                            </button>
                         </div>
                         <group>
                             <group>
@@ -40,7 +45,7 @@
                                     <label string="Quantity" for="product_quantity" attrs="{'invisible': [('purchase_type', '=', 'amount')]}"/>
                                     <div attrs="{'invisible': [('purchase_type', '=', 'amount')]}">
                                         <field name="product_quantity" class="oe_inline"/>
-                                        <field name="product_uom_id" class="oe_inline" placeholder="Select unit of measure"/>
+                                        <field name="product_uom_id" class="oe_inline"/>
                                     </div>
                                     <label for="validity_duration" string="Validity duration"/>
                                     <div>
@@ -50,8 +55,8 @@
                                          <label string=" To " attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}" class="oe_inline"/>
                                         <field name="date_to" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}" class="oe_inline" placeholder="To"/>
                                     </div>
-                                    <field name="partner_id" placeholder="Select customer"/>
-                                    <field name="company_id" placeholder="Select company"/>
+                                    <field name="partner_id" placeholder="Select customer"></field>
+                                    <field name="company_id" placeholder="Select company"></field>
                                 </group>
                             </page>
                             <page string="Rewards" name="rewards">
@@ -92,10 +97,10 @@
         </record>
 
         <record model="ir.ui.view" id="coupon_tree_view">
-            <field name="name">coupon tree</field>
+            <field name="name">coupon.tree.view</field>
             <field name="model">sale.coupon</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree string="Coupons" create="false">
                     <field name="coupon_code"/>
                     <field name="reward_name"/>
                     <field name="nbr_used"/>
@@ -104,6 +109,30 @@
                 </tree>
             </field>
         </record>
+
+
+        <record model="ir.ui.view" id="coupon_form_view">
+            <field name="name">coupon.form.view</field>
+            <field name="model">sale.coupon</field>
+            <field name="arch" type="xml">
+                <form string="Coupons" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <field name="coupon_code"/>
+                            <field name="reward_name"/>
+                            <field name="nbr_used"/>
+                            <field name="state"/>
+                        </group>
+                            <notebook>
+                                <page string="Sale order line">
+                                    <field name="order_line_id"/>
+                                </page>
+                            </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
 
         <record model="ir.ui.view" id="wizard_form_view">
             <field name="name">wizard.form.coupon</field>
@@ -217,6 +246,18 @@
             <field name="res_model">sale.coupon</field>
             <field name="view_type">tree</field>
             <field name="view_mode">tree</field>
+        </record>
+        <record id="action_order_line_product_tree" model="ir.actions.act_window">
+            <field name="context">{}</field><!-- force empty -->
+            <field name="name">Sales Order Lines</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_id" ref="sale.view_order_line_tree"/>
+        </record>
+        <record id="action_coupon_tree" model="ir.actions.act_window">
+            <field name="context">{}</field><!-- force empty -->
+            <field name="name">Sales coupons</field>
+            <field name="res_model">sale.coupon</field>
+            <field name="view_id" ref="coupon_tree_view"/>
         </record>
   </data>
 </openerp>
