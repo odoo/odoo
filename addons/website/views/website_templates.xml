@@ -96,8 +96,11 @@
                     <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
                 </t>
             </t>
-            <t t-call-assets="web.assets_common"/>
-            <t t-call-assets="website.assets_frontend"/>
+
+            <t t-call-assets="web.assets_common" t-js="false"/>
+            <t t-call-assets="website.assets_frontend" t-js="false"/>
+            <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-call-assets="website.assets_frontend" t-css="false"/>
 
             <t t-raw="head or ''" name='layout_head'/>
         </head>
@@ -181,7 +184,7 @@
 </template>
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
-    <xpath expr='//t[@t-call-assets="website.assets_frontend"]' position="after">
+    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css="false"]' position="after">
         <t t-call-assets="website.assets_editor"/>
     </xpath>
 </template>
