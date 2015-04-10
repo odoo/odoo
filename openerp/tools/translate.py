@@ -329,7 +329,7 @@ class TinyPoFile(object):
                 elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
                     fuzzy = True
                 line = self.lines.pop(0).strip()
-            if 0 == len(self.lines):
+            if not self.lines:
                 raise StopIteration()
             while not line:
                 # allow empty lines between comments and msgid
