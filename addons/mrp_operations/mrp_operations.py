@@ -219,7 +219,7 @@ class mrp_production(osv.osv):
             workcenter_line.signal_workflow('button_done')
         return super(mrp_production,self).action_production_end(cr, uid, ids, context=context)
 
-    def action_in_production(self, cr, uid, ids):
+    def action_in_production(self, cr, uid, ids, context=None):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
@@ -227,7 +227,7 @@ class mrp_production(osv.osv):
         for prod in self.browse(cr, uid, ids):
             if prod.workcenter_lines:
                 workcenter_pool.signal_workflow(cr, uid, [prod.workcenter_lines[0].id], 'button_start_working')
-        return super(mrp_production,self).action_in_production(cr, uid, ids)
+        return super(mrp_production,self).action_in_production(cr, uid, ids, context=context)
     
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels work order if production order is canceled.

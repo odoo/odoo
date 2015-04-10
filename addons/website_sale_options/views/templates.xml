@@ -106,15 +106,13 @@
                   </div>
                 </td>
                 <td>
-                  <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
-                  <span class="text-danger" style="text-decoration: line-through; white-space: nowrap;"
+                  <span class="text-danger oe_optional" t-att-style="'' if (compute_currency(product.lst_price) - product.price) &gt; 0.1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
                       "from_currency": "website.currency_id",
                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                    }'/><br/>
-                  </t>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-field="product.price"
                     t-field-options='{
