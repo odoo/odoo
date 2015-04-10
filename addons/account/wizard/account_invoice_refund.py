@@ -116,6 +116,8 @@ class account_invoice_refund(osv.osv_memory):
                     raise osv.except_osv(_('Error!'), _('Cannot %s draft/proforma/cancel invoice.') % (mode))
                 if inv.reconciled and mode in ('cancel', 'modify'):
                     raise osv.except_osv(_('Error!'), _('Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.') % (mode))
+                if inv.state == 'open' and mode in ('cancel', 'modify') and len(inv.payment_ids) != 0:
+                    raise osv.except_osv(_('Error!'), _('Cannot %s invoice which is partially paid.') % (mode))
                 if form.period.id:
                     period = form.period.id
                 else:
