@@ -141,7 +141,7 @@ def image_save_for_web(image, fp=None, format=None):
         image.save(img, **opt)
         return img.getvalue()
 
-def image_resize_image_big(base64_source, size=(1204, 1024), encoding='base64', filetype=None, avoid_if_small=True):
+def image_resize_image_big(base64_source, size=(1024, 1024), encoding='base64', filetype=None, avoid_if_small=True):
     """ Wrapper on image_resize_image, to resize images larger than the standard
         'big' image size: 1024x1024px.
         :param size, encoding, filetype, avoid_if_small: refer to image_resize_image
