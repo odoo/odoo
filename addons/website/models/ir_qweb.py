@@ -99,7 +99,7 @@ class QWeb(orm.AbstractModel):
     def render_text(self, text, element, qwebcontext):
         compress = request and not request.debug and request.website and request.website.compress_html
         if compress and element.tag not in self.PRESERVE_WHITESPACE:
-            text = self.re_remove_spaces.sub(' ', text.lstrip())
+            text = self.re_remove_spaces.sub(' ', text)
         return super(QWeb, self).render_text(text, element, qwebcontext)
 
     def render_tail(self, tail, element, qwebcontext):
