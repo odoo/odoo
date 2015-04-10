@@ -197,7 +197,7 @@
     Template used to display attachments in a mail.message
     -->
 <t t-name="ThreadMessageAttachments">
-    <t t-foreach='thread.format_attachments(widget.attachment_ids)' t-as='attachment'>
+    <t t-foreach='thread.format_attachments(widget)' t-as='attachment'>
         <t t-if="attachment.file_type_icon !== 'webimage'">
             <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
                 <a t-att-href='attachment.url' target="_blank">

@@ -270,18 +270,16 @@ var TimelineView = View.extend ({
 });
 
 var Common = Widget.extend ({
-    format_attachments: function (attachments) {
-        console.log("format attachments");
-        for (var l in attachments) {
-            var attach = attachments[l];
+    format_attachments: function (message) {
+        for (var l in message.attachment_ids) {
+            var attach = message.attachment_ids[l];
             if (!attach.formating) {
-                attach.url = mail_utils.get_attachment_url(session, this.id, attach.id);
-                console.log("url", attach.url);
+                attach.url = mail_utils.get_attachment_url(session, message.id, attach.id);
                 attach.name = mail_utils.breakword(attach.name || attach.filename);
                 attach.formating = true;
             }
         }
-        return attachments;
+        return message.attachment_ids;
     },
 
     display_attachments: function (message) {
@@ -660,8 +658,6 @@ var MailThread = Common.extend ({
         event.preventDefault();
         event.stopPropagation();
 
-        console.log("on record clicked 1");
-
         var self = this;
         var state = {
             'model': this.context.default_model,
@@ -671,8 +667,6 @@ var MailThread = Common.extend ({
 
         web_client.action_manager.do_push_state(state);
 
-        console.log("on record clicked 2");
-
         this.context.params = {
             model: this.context.default_model,
             res_id: this.context.default_res_id,
@@ -680,7 +674,6 @@ var MailThread = Common.extend ({
 
         this.ds_thread.call("message_redirect_action", {context: this.context})
             .then(function(action){
-                console.log("on record clicked 3");
                 self.do_action(action); 
             });
     },
@@ -1269,7 +1262,6 @@ var ThreadComposeMessage = Common.extend ({
             recipient_done = this.check_recipient_partners();
 
         $.when(recipient_done).done(function (partner_ids) {
-            console.log("fullmail partners", partner_ids);
             var context = {
                 'default_parent_id': self.id,
                 'default_body': mail_utils.get_text2html(
@@ -1286,7 +1278,6 @@ var ThreadComposeMessage = Common.extend ({
                 context.default_model = self.context.default_model;
                 context.default_res_id = self.context.default_res_id;
             }
-            console.log("fullmail context", context);
 
             var action = {
                 type: 'ir.actions.act_window',
