@@ -50,15 +50,18 @@ var ControlPanel = Widget.extend({
         this.bus.on("update_breadcrumbs", this, this.update_breadcrumbs);
     },
     start: function() {
-        // Retrieve ControlPanel jQuery nodes
         this.$title_col = this.$('.oe-cp-title');
         this.$breadcrumbs = this.$('.oe-view-title');
-        this.$searchview = this.$('.oe-cp-search-view');
-        this.$searchview_buttons = this.$('.oe-search-options');
-        this.$buttons = this.$('.oe-cp-buttons');
-        this.$sidebar = this.$('.oe-cp-sidebar');
-        this.$pager = this.$('.oe-cp-pager');
-        this.$switch_buttons = this.$('.oe-cp-switch-buttons');
+
+        // Exposed jQuery nodesets
+        this.nodes = {
+            $buttons: this.$('.oe-cp-buttons'),
+            $pager: this.$('.oe-cp-pager'),
+            $searchview: this.$('.oe-cp-search-view'),
+            $searchview_buttons: this.$('.oe-search-options'),
+            $sidebar: this.$('.oe-cp-sidebar'),
+            $switch_buttons: this.$('.oe-cp-switch-buttons'),
+        };
 
         // By default, hide the ControlPanel and remove its contents from the DOM
         this.$el.hide();
@@ -89,23 +92,20 @@ var ControlPanel = Widget.extend({
      * Detaches the content of the ControlPanel
      */
     _detach_content: function() {
-        this.$buttons.contents().detach();
-        this.$switch_buttons.contents().detach();
-        this.$pager.contents().detach();
-        this.$sidebar.contents().detach();
-        this.$searchview.contents().detach();
-        this.$searchview_buttons.contents().detach();
+        _.each(this.nodes, function($nodeset) {
+            $nodeset.contents().detach();
+        });
     },
     /**
      * Attaches content to the ControlPanel
      * @param {Object} [content] dictionnary of jQuery elements to attach, whose keys
-     * are jQuery nodes identifiers
+     * are jQuery nodes identifiers in this.nodes
      */
     _attach_content: function(content) {
         var self = this;
         _.each(content, function($nodeset, $element) {
-            if ($nodeset && self[$element]) {
-                $nodeset.appendTo(self[$element]);
+            if ($nodeset && self.nodes[$element]) {
+                $nodeset.appendTo(self.nodes[$element]);
             }
         });
     },
@@ -136,7 +136,7 @@ var ControlPanel = Widget.extend({
      * @param {Object} [active_view_selector] the selector of the div to activate
      */
     update_switch_buttons: function(active_view_selector) {
-        _.each(this.$switch_buttons.find('button'), function(button) {
+        _.each(this.nodes.$switch_buttons.find('button'), function(button) {
             $(button).removeClass('active');
         });
         this.$(active_view_selector).addClass('active');
@@ -177,7 +177,7 @@ var ControlPanel = Widget.extend({
     update_search_view: function(searchview, is_hidden) {
         // Set the $buttons div (in the DOM) of the searchview as the $buttons
         // have been appended to a jQuery node not in the DOM at SearchView initialization
-        searchview.$buttons = this.$searchview_buttons;
+        searchview.$buttons = this.nodes.$searchview_buttons;
         searchview.toggle_visibility(!is_hidden);
         this.$title_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
     },
