@@ -5,6 +5,7 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var website = require('website.website');
+var Model = require('web.Model');
 
 var _t = core._t;
 var ZeroClipboard = window.ZeroClipboard;
@@ -15,7 +16,7 @@ website.if_dom_contains('div.o_website_links_create_tracked_url', function() {
 
     var SelectBox = Widget.extend({
         init: function(obj) {
-            this.obj = website.session.model(obj);
+            this.obj = new Model(obj);
         },
         start: function(element, placeholder) {
             var self = this;

@@ -3,15 +3,11 @@ odoo.define('website_links.charts', function (require) {
 
 var Widget = require('web.Widget');
 var website = require('website.website');
-
-var moment = window.moment;
-var nv = window.nv;
-var d3 = window.d3;
+var Model = require('web.Model');
 
 var exports = {};
 
 website.if_dom_contains('div.o_website_links_chart', function() {
-
     
     var BarChart = Widget.extend({
         init: function($element, begin_date, end_date, dates) {
@@ -135,7 +131,7 @@ website.if_dom_contains('div.o_website_links_chart', function() {
         // Get the code of the link
         var link_id = $('#link_id').val();
 
-        var clicks = website.session.model('website.links.click');
+        var clicks = new Model('website.links.click');
         var links_domain = ['link_id', '=', parseInt(link_id)];
 
         var total_clicks = function() {
