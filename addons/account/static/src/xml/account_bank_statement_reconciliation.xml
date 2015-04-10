@@ -35,7 +35,7 @@
             <div class="notification_area"></div>
             <div class="reconciliation_lines_container"></div>
             <div class="show_more_container"><button class="show_more">Show more... (<span class="num_items_remaining"></span> remaining)</button></div>
-            <p class='protip'>Tip : Hit ctrl-enter to validate the whole sheet.</p>
+            <p class='protip'>Tip : Hit ctrl-enter to reconcile all balanced items.</p>
         </div></div>
     </t>
 
@@ -80,10 +80,10 @@
                     <table class="accounting_view">
                         <caption>
                             <button class="button_ok btn btn-default btn-sm"></button>
-                            <span class="tip_reconciliation_not_balanced">You must balance the reconciliation</span>
+                            <span class="tip_reconciliation_not_balanced">Select a partner or choose a counterpart</span>
                             <span t-if="! line.has_no_partner" class="partner_name">
                                 <t t-esc="line.partner_name"/>
-                                <span class="change_partner glyphicon glyphicon-pencil"></span>
+                                <span class="change_partner glyphicon glyphicon-remove"></span>
                             </span>
                             <div class="change_partner_container oe_form"></div>
                         </caption>
@@ -168,7 +168,7 @@
         </tr>
     </t>
 
-    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="Click to register a partial payment and keep the invoice open. Otherwise it does a full reconciliation."></i></t>
+    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="Click to register a partial payment and keep the payment balance open."></i></t>
 
     <t t-name="icon_undo_partial_reconciliation"><i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i></t>
 
