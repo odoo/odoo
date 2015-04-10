@@ -1,23 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 {
     'name': 'Website Mail',
@@ -25,14 +6,14 @@
     'summary': 'Website Module for Mail',
     'version': '0.1',
     'description': """Glue module holding mail improvements for website.""",
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'depends': ['website', 'mail'],
     'data': [
-        'views/snippets.xml',
-        'views/website_mail.xml',
-        'views/website_email_designer.xml',
-        'views/snippet_options.xml',
-        'views/theme_list.xml',
+        'views/website_mail_snippets.xml',
+        'views/website_mail_templates.xml',
+        'views/website_mail_designer_views.xml',
+        'views/website_mail_snippet_options.xml',
+        'views/website_mail_theme_list.xml',
         'views/theme/neopolitan_snippets.xml',
         'views/theme/skyline_snippets.xml',
         'views/theme/narrative_snippets.xml',
@@ -41,7 +22,7 @@
         'views/theme/airmail_snippets.xml',
         'views/theme/zenflat_snippets.xml',
         'views/theme/cleave_snippets.xml',
-        'data/mail_groups.xml',
+        'data/mail_group_data.xml',
     ],
     'qweb': [
         'static/src/xml/website_mail.xml'

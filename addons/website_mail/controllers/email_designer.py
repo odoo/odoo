@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import io
-from PIL import Image, ImageFont, ImageDraw
-import werkzeug.wrappers
-
-from openerp import addons
-from openerp.addons.web import http
-from openerp.addons.web.http import request
 import time
+import io
+import werkzeug.wrappers
+from PIL import Image, ImageFont, ImageDraw
+
+from openerp import addons, http
+from openerp.http import request
 
 
 class WebsiteEmailDesigner(http.Controller):
@@ -22,7 +21,8 @@ class WebsiteEmailDesigner(http.Controller):
         '/website_mail/font_to_img/<icon>/<color>/<int:size>',
         '/website_mail/font_to_img/<icon>/<color>/<int:size>/<int:alpha>',
         ], auth="public", website=True)
-    def export_icon_to_png(self, icon, color='#000', size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf'):
+    def export_icon_to_png(self, icon, color='#000', size=100, alpha=255,
+                           font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf'):
         """ This method converts FontAwesom pictograms to Images and is Used only
             for mass mailing becuase custom fonts are not supported in mail.
             :param icon : character from FontAwesom cheatsheet
@@ -79,9 +79,9 @@ class WebsiteEmailDesigner(http.Controller):
 
 class Website(addons.website.controllers.main.Website):
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Backend email template field
-    #------------------------------------------------------
+    # ------------------------------------------------------
     @http.route('/website_mail/field/email', type='http', auth="public", website=True)
     def FieldTextHtmlEmail(self, model=None, res_id=None, field=None, callback=None, **kwargs):
         kwargs['template'] = "website_mail.FieldTextHtmlEmail"
@@ -89,7 +89,6 @@ class Website(addons.website.controllers.main.Website):
 
     @http.route('/website_mail/field/email_template', type='http', auth="public", website=True)
     def FieldTextHtmlEmailTemplate(self, model=None, res_id=None, field=None, callback=None, **kwargs):
-        cr, uid, context = request.cr, request.uid, request.context
         kwargs['theme'] = True
         kwargs['snippets'] = 'snippets' not in kwargs and '/website_mail/snippets' or kwargs['snippets']
         kwargs['dont_load_assets'] = not kwargs.get('enable_editor')

@@ -1,89 +1,65 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
-from openerp import SUPERUSER_ID
-from openerp.tools import html2plaintext
-from openerp.tools.translate import _
-from openerp.osv import osv, fields, expression
+import openerp
+from openerp import api, fields, models, SUPERUSER_ID, _
 from openerp.exceptions import AccessError
+from openerp.osv import expression
+from openerp.tools import html2plaintext
 
-class MailMessage(osv.Model):
+
+class MailMessage(models.Model):
     _inherit = 'mail.message'
 
-    def _get_description_short(self, cr, uid, ids, name, arg, context=None):
-        res = dict.fromkeys(ids, False)
-        for message in self.browse(cr, uid, ids, context=context):
-            if message.subject:
-                res[message.id] = message.subject
-            else:
-                plaintext_ct = '' if not message.body else html2plaintext(message.body)
-                res[message.id] = plaintext_ct[:30] + '%s' % (' [...]' if len(plaintext_ct) >= 30 else '')
-        return res
+    @api.one
+    def _compute_description(self):
+        if self.subject:
+            self.description = self.subject
+        else:
+            plaintext_ct = '' if not self.body else html2plaintext(self.body)
+            self.description = plaintext_ct[:30] + '%s' % (' [...]' if len(plaintext_ct) >= 30 else '')
 
-    _columns = {
-        'description': fields.function(
-            _get_description_short, type='char',
-            help='Message description: either the subject, or the beginning of the body'
-        ),
-        'website_published': fields.boolean(
-            'Published', help="Visible on the website as a comment", copy=False,
-        ),
-    }
+    description = fields.Char(compute='_compute_description',
+                              help='Message description: either the subject, or the beginning of the body')
+    website_published = fields.Boolean('Published', help="Visible on the website as a comment", copy=False)
 
-    def default_get(self, cr, uid, fields_list, context=None):
-        defaults = super(MailMessage, self).default_get(cr, uid, fields_list, context=context)
-
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(MailMessage, self).default_get(fields_list)
         # Note: explicitly implemented in default_get() instead of _defaults,
         # to avoid setting to True for all existing messages during upgrades.
         # TODO: this default should probably be dynamic according to the model
         # on which the messages are attached, thus moved to create().
+        
         if 'website_published' in fields_list:
             defaults.setdefault('website_published', True)
 
         return defaults
 
-    def _search(self, cr, uid, args, offset=0, limit=None, order=None,
-                context=None, count=False, access_rights_uid=None):
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None,
+                count=False, access_rights_uid=None):
         """ Override that adds specific access rights of mail.message, to restrict
         messages to published messages for public users. """
-        if uid != SUPERUSER_ID:
-            group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-            group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
-            if group_user_id in [group.id for group in group_ids]:
+        if self.env.uid != SUPERUSER_ID:
+            group_ids = self.env.user.groups_id
+            group_user_id = self.env["ir.model.data"].get_object_reference('base', 'group_public')[1]
+            if group_user_id in group_ids.ids:
                 args = expression.AND([[('website_published', '=', True)], list(args)])
 
-        return super(MailMessage, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
-                                                context=context, count=count, access_rights_uid=access_rights_uid)
+        return super(MailMessage, self)._search(args, offset=offset, limit=limit, order=order,
+                                                count=count, access_rights_uid=access_rights_uid)
 
-    def check_access_rule(self, cr, uid, ids, operation, context=None):
+    @api.multi
+    def check_access_rule(self, operation):
         """ Add Access rules of mail.message for non-employee user:
             - read:
                 - raise if the type is comment and subtype NULL (internal note)
         """
-        if uid != SUPERUSER_ID:
-            group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-            group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
-            if group_user_id in [group.id for group in group_ids]:
-                cr.execute('SELECT id FROM "%s" WHERE website_published IS FALSE AND id = ANY (%%s)' % (self._table), (ids,))
-                if cr.fetchall():
+        if self.env.uid != SUPERUSER_ID:
+            group_ids = self.env.user.groups_id
+            group_user_id = self.env["ir.model.data"].get_object_reference('base', 'group_public')[1]
+            if group_user_id in group_ids.ids:
+                self.env.cr.execute('SELECT id FROM "%s" WHERE website_published IS FALSE AND id = ANY (%%s)' % (self._table), (self.ids,))
+                if self.env.cr.fetchall():
                     raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation))
-        return super(MailMessage, self).check_access_rule(cr, uid, ids=ids, operation=operation, context=context)
-
+        return super(MailMessage, self).check_access_rule(operation=operation)
