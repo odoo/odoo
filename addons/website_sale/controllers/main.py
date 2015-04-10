@@ -986,10 +986,4 @@ class website(Website):
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
     def customize_template_get(self, key, full=False, bundles=False, **kw):
         result = Website.customize_template_get(self, key, full=full, bundles=bundles, **kw)
-        res = []
-        for data in result:
-            if data['key'] == 'website_sale.products_categories' and data['header'] == True:
-                pass
-            else:
-                res.append(data)
-        return res
+        return [data for data in result if not (data['key'] == 'website_sale.products_categories' and data['header'] == True)]
