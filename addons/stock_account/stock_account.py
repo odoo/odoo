@@ -22,8 +22,6 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID, api
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-import time
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -251,7 +249,7 @@ class stock_quant(osv.osv):
             move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
                                       'period_id': period_id,
-                                      'date': time.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                                      'date': fields.date.context_today(self, cr, uid, context=context),
                                       'ref': move.picking_id.name}, context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
