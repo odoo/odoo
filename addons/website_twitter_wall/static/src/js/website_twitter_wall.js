@@ -277,7 +277,6 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             picker.parent().on('click', '.odoo-tw-view-live-option-color', function() {
                 color = $(this).data('color-code');
                 $('body').css('background-color', color);
-                $(".odoo-tw-tweet").remove();
             });
             picker.parent().on('click', '.theme', function(e) {
                 var $el = $(e.currentTarget).toggleClass("active");
@@ -289,7 +288,6 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                 color = e.color.toHex();
                 $(".colorinput > input.form-control").val(color);
                 $('body').css('background-color', color);
-                $(".odoo-tw-tweet").remove();
             });
         },
     });
