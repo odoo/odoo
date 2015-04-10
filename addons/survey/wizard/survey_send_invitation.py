@@ -73,18 +73,13 @@ class survey_send_invitation(osv.osv_memory):
             raise osv.except_osv(_('Warning!'), _('The following surveys are not in open state: %s') % msg)
         data['mail'] = _('''
 Hello %%(name)s, \n\n
-Would you please spent some of your time to fill-in our survey: \n%s\n
+Would you please spend some of your time to fill-in our survey: \n%(survey)s\n
 You can access this survey with the following parameters:
- URL: %s
+ URL: <a href="%(url)s">%(url)s</a>
  Your login ID: %%(login)s\n
  Your password: %%(passwd)s\n
 \n\n
-Thanks,''') % (
-            name, 
-            self.pool.get('ir.config_parameter').get_param(
-                cr, uid, 'web.base.url', default='http://localhost:8069',
-                context=context)
-                + '#id=%d&view_type=form&model=survey' % survey_id)
+Thanks,''') % {'survey': name, 'url': self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)}
         return data
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False):
