@@ -725,6 +725,7 @@ class stock_picking(osv.osv):
             default.setdefault('backorder_id', False)
         if 'invoice_state' not in default and picking_obj.invoice_state == 'invoiced':
             default['invoice_state'] = '2binvoiced'
+        default.setdefault('date_done', False)
         res = super(stock_picking, self).copy(cr, uid, id, default, context)
         return res
 

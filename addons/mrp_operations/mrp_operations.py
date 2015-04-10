@@ -220,7 +220,7 @@ class mrp_production(osv.osv):
                 result[prod.id] = max(line.date_planned_end, result[prod.id])
         return result
 
-    def action_production_end(self, cr, uid, ids):
+    def action_production_end(self, cr, uid, ids, context=None):
         """ Finishes work order if production order is done.
         @return: Super method
         """
@@ -230,9 +230,9 @@ class mrp_production(osv.osv):
             if workcenter_line.state == 'draft':
                 workcenter_pool.signal_button_start_working(cr, uid, [workcenter_line.id])
             workcenter_pool.signal_button_done(cr, uid, [workcenter_line.id])
-        return super(mrp_production,self).action_production_end(cr, uid, ids)
+        return super(mrp_production,self).action_production_end(cr, uid, ids, context=context)
 
-    def action_in_production(self, cr, uid, ids):
+    def action_in_production(self, cr, uid, ids, context=None):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
@@ -240,7 +240,7 @@ class mrp_production(osv.osv):
         for prod in self.browse(cr, uid, ids):
             if prod.workcenter_lines:
                 workcenter_pool.signal_button_start_working(cr, uid, [prod.workcenter_lines[0].id])
-        return super(mrp_production,self).action_in_production(cr, uid, ids)
+        return super(mrp_production,self).action_in_production(cr, uid, ids, context=context)
     
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels work order if production order is canceled.
