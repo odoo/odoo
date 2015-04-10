@@ -180,8 +180,8 @@
                                 <table class="table">
                                     <thead><tr><td> Asked: <strong><span t-field="question.create_date" t-field-options='{"format":"short"}'/></strong></td></tr></thead>
                                     <tr><td> Seen: <strong><t t-raw="question.views"/></strong>
-                                        <span t-if="question.views&gt;1">times</span>
-                                        <span t-if="question.views&lt;=1">time</span>
+                                        <span t-if="question.views&gt;1"> times</span>
+                                        <span t-if="question.views&lt;=1"> time</span>
                                     </td></tr>
                                     <tr><td> Last updated: <strong><span t-field="question.write_date" t-field-options='{"format":"short"}'/></strong></td></tr>
                                 </table>
@@ -208,14 +208,14 @@
                 <t t-if="question.post_type == 'link'">
                     <a t-att-href="question.content_link" target="_blank">
                         <span class="fa fa-link" t-if="forum.default_post_type != 'link'"/>
-                        <t t-esc="question.name"/>
+                        <t t-esc="' ' + question.name"/>
                     </a>
                 </t>
                 <t t-if="question.post_type in ('question', 'discussion')">
                     <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
                         <span class="fa fa-info-circle" t-if="question.post_type=='question' and forum.default_post_type != 'question'"/>
                         <span class="fa fa-comment" t-if="question.post_type=='discussion' and forum.default_post_type != 'discussion'"/>
-                        <t t-esc="question.name"/>
+                        <t t-esc="' ' + question.name"/>
                     </a>
                 </t>
                 <span t-if="not question.active"><b> [Deleted]</b></span>
@@ -228,12 +228,12 @@
                 </a>
             </t>
             <small class="text-muted">
-                By <span t-field="question.create_uid" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
-                • <span t-field="question.write_date" t-field-options='{"format":"short"}'/>
-                • <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
+                <span>By </span><span t-field="question.create_uid" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
+                <span> • </span><span t-field="question.write_date" t-field-options='{"format":"short"}'/>
+                <span> • </span><a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
                     <t t-esc="question.child_count"/>
-                    <t t-if="question.child_count&gt;1">comments</t>
-                    <t t-if="question.child_count&lt;=1">comment</t>
+                    <t t-if="question.child_count&gt;1"> comments</t>
+                    <t t-if="question.child_count&lt;=1"> comment</t>
                 </a>
             </small>
         </div>
@@ -250,8 +250,8 @@
             <a style="font-size: 15px;" t-attf-href="/forum/#{ slug(forum) }/question/#{ answer.parent_id.id }/#answer-#{ answer.id }" t-esc="answer.parent_id.name"/>
             <t t-if="len(answer.website_message_ids)&gt;0">
                 (<t t-esc="len(answer.website_message_ids)"/>
-                <t t-if="len(answer.website_message_ids)&gt;1">Comments</t>
-                <t t-if="len(answer.website_message_ids)&lt;=1">Comment</t>)
+                <t t-if="len(answer.website_message_ids)&gt;1"> Comments</t>
+                <t t-if="len(answer.website_message_ids)&lt;=1"> Comment</t>)
             </t>
         </div>
     </div>
@@ -286,16 +286,16 @@
     <t t-call="website_forum.header">
         <h2 class="page-header mt0">
             <t t-esc="question_count"/>
-                <span t-if="post_type not in ('link','question','discussion')">Posts</span>
-                <span t-if="post_type == 'question'">Questions</span>
-                <span t-if="post_type == 'link'">Links</span>
-                <span t-if="post_type == 'discussion'">Threads</span>
+                <span t-if="post_type not in ('link','question','discussion')"> Posts </span>
+                <span t-if="post_type == 'question'"> Questions</span>
+                <span t-if="post_type == 'link'"> Links</span>
+                <span t-if="post_type == 'discussion'"> Threads</span>
             <t t-esc="search"/>
             <small class="dropdown" t-if="filters in ('all', 'unanswered','followed', 'tag')">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <t t-if="filters == 'unanswered'">Unanswered</t>
-                  <t t-if="filters == 'followed'">Followed</t>
-                  <t t-if="tag"><span t-field="tag.name"/></t>
+                  <t t-if="filters == 'unanswered'"> Unanswered</t>
+                  <t t-if="filters == 'followed'"> Followed</t>
+                  <t t-if="tag"> <span t-field="tag.name"/></t>
                   <t t-if="sorting == 'relevancy desc'"> by relevance</t>
                   <t t-if="sorting == 'write_date desc'"> by activity date</t>
                   <t t-if="sorting == 'create_date desc'"> by newest</t>
@@ -609,13 +609,13 @@
                     </div>
                 </div>
                 <div class="text-muted mb16">
-                    By
+                    <span>By </span>
                     <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
                         t-field="question.create_uid"
                         t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
-                    on <span t-field="question.create_date" t-field-options='{"format":"short"}'/>
-                    • <span t-field="question.views"/> views
+                    <span> on </span><span t-field="question.create_date" t-field-options='{"format":"short"}'/>
+                    <span> • </span><span t-field="question.views"/> views
                 </div>
 
                 <div class="alert alert-info text-center" t-if="question.state == 'close'">
@@ -623,12 +623,12 @@
                         <b>The <i t-field="question.post_type"/> has been closed<t t-if="question.closed_reason_id"> for reason: <i t-esc="question.closed_reason_id.name"/></t></b>
                     </p>
                     <t t-if="question.closed_uid">
-                        <b>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.closed_uid.id }"
+                        <b> by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.closed_uid.id }"
                             t-field="question.closed_uid"
                             t-field-options='{"widget": "contact", "fields": ["name"]}'
                             style="display: inline-block;"/></b>
                     </t>
-                    <b>on <span t-field="question.closed_date"/></b>
+                    <b> on <span t-field="question.closed_date"/></b>
                     <div class="mt16 mb24 text-center">
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"/>
@@ -897,11 +897,11 @@
                         <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold"/>
                         <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver"/>
                         <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze"/>
-                        <span t-field="badge.name"/>
+                        <span> </span><span t-field="badge.name"/>
                     </a>
                 </td><td>
                     <b t-esc="badge.stat_count_distinct"/>
-                    <i class="text-muted">awarded users</i>
+                    <i class="text-muted"> awarded users</i>
                 </td><td>
                     <span t-field="badge.description"/>
                 </td>
@@ -920,14 +920,14 @@
                 <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold"/>
                 <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver"/>
                 <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze"/>
-                <span t-field="badge.name"/>
+                <span> </span><span t-field="badge.name"/>
             </div>
             <span t-field="badge.description" style="margin-left:20px"/>
         </div>
         <h4 class="mt32">
             <t class="pull-left" t-esc="badge.stat_count_distinct"/>
-            <span t-if="badge.stat_count_distinct&gt;1">users</span>
-            <span t-if="badge.stat_count_distinct&lt;=1">user</span>
+            <span t-if="badge.stat_count_distinct&gt;1"> users</span>
+            <span t-if="badge.stat_count_distinct&lt;=1"> user</span>
             received this badge:
         </h4>
         <div class="row">
@@ -949,18 +949,20 @@
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                     <t t-if="user.country_id">
-                        <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class": "country_flag"}'/>
+                        <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class": "country_flag"}' class='ml4'/>
                     </t>
-                    <b><t t-esc="user.karma"/></b>
+                    <b class='ml8'><t t-esc="user.karma"/></b>
                     <t t-raw="separator"/>
                     <div>
                         <b> badges:</b>
-                        <span class="fa fa-circle badge-gold"/>
-                        <t t-esc="user.gold_badge"/>
-                        <span class="fa fa-circle badge-silver"/>
-                        <t t-esc="user.silver_badge"/>
-                        <span class="fa fa-circle badge-bronze"/>
-                        <t t-esc="user.bronze_badge"/>
+                        <span>
+                            <span class="fa fa-circle badge-gold"/>
+                            <span t-esc="user.gold_badge" class="ml4"/>
+                            <span class="fa fa-circle badge-silver ml8" />
+                            <span t-esc="user.silver_badge" class="ml4" />
+                            <span class="fa fa-circle badge-bronze ml8" />
+                            <span t-esc="user.bronze_badge" class="ml4" />
+                        </span>
                     </div>
                     <t t-raw="0"/>
                 </div>
