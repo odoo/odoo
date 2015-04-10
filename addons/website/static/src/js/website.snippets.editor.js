@@ -1333,6 +1333,103 @@ options.carousel = options.slider.extend({
     },
 });
 
+editor.countdown = editor.Dialog.extend({
+    template: 'website.countdown_configuration',
+    events : _.extend({}, editor.Dialog.prototype.events, {
+        'click button[data-action=set_countdown]': 'set_countdown',
+    }),
+    init: function (parent) {
+        $('.countdown').parent().addClass('o_dirty');
+        this.$target = parent.$target;
+        return this._super();
+    },
+    start: function () {
+        var self = this;
+        $("div.input-group span.fa-calendar").on('click', function(e) {
+            $(e.currentTarget).closest("div.date").datetimepicker({
+                useSeconds: true,
+                icons : {
+                    time: 'fa fa-clock-o',
+                    date: 'fa fa-calendar',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down'
+                },
+            });
+        });
+        return this._super();
+    },
+    set_countdown: function (e) {
+        var self = this;
+        var release_date = $("#web_countdown_date").val();
+        var add_warning = function (msg){
+            self.$el.find(".alert").remove();
+            self.$el.find(".modal-body").append('<div class="alert alert-danger mt8">'+ msg +'</div>');
+        };
+        var matches = release_date.match(/^(\d{4})\-(\d{2}|\d{1})\-(\d{2}|\d{1}) (\d{2}|\d{1}):(\d{2}|\d{1}):(\d{2}|\d{1})$/);
+        if(matches === null)
+        {
+            add_warning('Invalid Input. Please enter proper DATE, HOURS, MINUTES, SECONDS');
+        }
+        else {
+            self.$target.attr("data-release_date", new Date(release_date).getTime());
+            self.trigger('set_countdown');
+        }
+    },
+});
+
+options.countdown = Option.extend({
+    start : function () {
+        var self = this;
+        this._super();
+        this.$el.find(".set_countdown").on('click', function () {self.on_set_countdown(); return false;});
+    },
+    on_set_countdown: function () {
+        var self = this;
+        var release_date = parseInt(this.$target[0].getAttribute("data-release_date"));
+        var set_dialog = new editor.countdown(self);
+        set_dialog.appendTo($(document.body));
+        if (release_date) {
+            var date = new Date(release_date);
+            $('input#web_countdown_date').val(moment(date).format('YYYY-MM-DD HH:mm:ss'));
+        }
+        set_dialog.on('set_countdown', this, function () {
+            animation.countdown(self.$target[0], false);
+            set_dialog.$el.modal('hide');
+        });
+    },
+    add_timer_element: function (type, value) {
+        var $clock_str = {"o_counter_day": "Days", "o_counter_hour": "Hours", "o_counter_min": "Minutes", "o_counter_sec": "Seconds"};
+        if (value && value.length && type == "click"){
+            if (this.$target.find("div."+value).length){
+                alert('Countdown Timer displaying "' + $clock_str[value] + '" is already there.')
+            }
+            else{
+                var $clock = "<div class='col-md-2 col-sm-3 col-xs-6 text-center mb16'><div class='"+value+" o_countdown-text img-circle col-xs-12 text-center'><p> <font class='o_count_val' contenteditable='false'>00</font></p><p><font>"+$clock_str[value]+"</font></p></div><div>"
+                this.$target.find("div.col-last").first().before($clock);
+            }
+        }
+    },
+});
+
+editor.EditorBar.include({
+    edit: function () {
+        var self = this;
+        this._super();
+        $('body').on('click',
+            '.o_show_counter',
+            function(){
+                $(this).closest('.container').find(".o_countdown_start").removeClass('hidden');
+                $(this).closest('.container').find(".o_countdown_over").addClass('hidden');
+        });
+        $('body').on('click',
+            '.o_show_release',
+            function(){
+                $(this).closest('.container').find(".o_countdown_start").addClass('hidden');
+                $(this).closest('.container').find(".o_countdown_over").removeClass('hidden');
+        });
+    },
+});
+
 options.marginAndResize = Option.extend({
     start: function () {
         var self = this;
@@ -1450,7 +1547,7 @@ options.marginAndResize = Option.extend({
             $body.mousemove(body_mousemove);
             $body.mouseup(body_mouseup);
         });
-        this.$overlay.find(".oe_handle.size .auto_size").on('click', function (){
+        this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event){
             self.$target.css("height", "");
             self.$target.css("overflow", "");
             self.BuildingBlock.cover_target(self.$overlay, self.$target);
@@ -1493,7 +1590,7 @@ options.marginAndResize = Option.extend({
 
         this.$overlay.attr("class", overlay_class);
     },
-
+    
     /* on_resize
     *  called when the box is resizing and the class change, before the cover_target
     *  @compass: resize direction : 'n', 's', 'e', 'w'
