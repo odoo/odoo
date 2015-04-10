@@ -85,11 +85,11 @@
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
           <b>
               <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
-                <del class="text-danger" style="white-space: nowrap;" t-field="product.lst_price" t-field-options='{
+                <del class="text-danger mr8" style="white-space: nowrap;" t-field="product.lst_price" t-field-options='{
                   "widget": "monetary",
                   "from_currency": "product.company_id.currency_id",
                   "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                }'/>&amp;nbsp;
+                }'/>
               </t>
               <span t-field="product.price" style="white-space: nowrap;"  t-field-options='{
                    "widget": "monetary",
@@ -645,12 +645,12 @@
                               </td>
                               <td class="text-center" name="price">
                                 <t t-if="(compute_currency(line.product_id.lst_price) - line.price_unit) &gt; 1">
-                                  <del class="text-danger" style="white-space: nowrap;"
+                                  <del class="text-danger mr8" style="white-space: nowrap;"
                                     t-field="line.product_id.lst_price" t-field-options='{
                                         "widget": "monetary",
                                         "from_currency": "line.company_id.currency_id",
                                         "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                                    }'/>&amp;nbsp;
+                                    }'/>
                                 </t>
                                 <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
                                      "widget": "monetary",
@@ -735,12 +735,12 @@
                   </td>
                   <td>
                       <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
-                        <del class="text-danger" style="white-space: nowrap;"
+                        <del class="text-danger mr8" style="white-space: nowrap;"
                           t-field="product.lst_price" t-field-options='{
                               "widget": "monetary",
                               "from_currency": "product.company_id.currency_id",
                               "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                          }'/>&amp;nbsp;
+                          }'/>
                       </t>
                       <span t-field="product.price" style="white-space: nowrap;" t-field-options='{
                            "widget": "monetary",

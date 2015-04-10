@@ -50,14 +50,14 @@
             <div class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html"><t t-raw="content"/></div>
         </div>
         <div id="templates" class="o_not_editable hidden" t-if="theme and enable_editor">
-            <h1 class="page-header mt16 email_head panel-primary">
+            <h1 class="page-header oe_mt16 email_head panel-primary">
                 Select a theme 
                 <button type="button" class="btn btn-sm btn-default info_popover fa fa-info-circle" data-toggle="popover" data-trigger="focus" title="Help" data-content="Here you can design your own template from scratch by selecting your favorite theme."></button>
             </h1>  
             <t t-call="website_mail.mass_mail_theme_list"/>
 
             <div class="hidden">
-                <h1 class="page-header mt16">
+                <h1 class="page-header oe_mt16">
                     Choose a Template
                 </h1>
                 <div id="email_template_list">
