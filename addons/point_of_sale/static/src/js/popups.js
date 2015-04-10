@@ -140,20 +140,13 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
 
             this.list    = options.list    || [];
             this.renderElement();
-
-            this.$('.selection-item').click(function(){
-                if (options.confirm) {
-                    var item = self.list[parseInt($(this).data('item-index'))];
-                    item = item ? item.item : item;
-                    options.confirm.call(self,item);
-                }
-            });
         },
         click_item : function(event) {
             this.gui.close_popup();
             if (this.options.confirm) {
                 var item = this.list[parseInt($(event.target).data('item-index'))];
                 item = item ? item.item : item;
+                this.options.confirm.call(self,item);
             }
         }
     });
@@ -194,7 +187,7 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             var self = this;
             this._super(options);
 
-            this.inputbuffer = '' + options.value   || '';
+            this.inputbuffer = '' + (options.value   || '');
             this.renderElement();
             this.firstinput = true;
         },

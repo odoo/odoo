@@ -226,7 +226,7 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
             var self = this;
             var ret = new $.Deferred();
             if (password) {
-                this.gui.show_popup('password',{
+                this.show_popup('password',{
                     'title': _t('Password ?'),
                     confirm: function(pw) {
                         if (pw !== password) {
