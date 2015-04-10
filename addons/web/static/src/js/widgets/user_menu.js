@@ -7,6 +7,7 @@ var framework = require('web.framework');
 var Model = require('web.Model');
 var session = require('web.session');
 var Widget = require('web.Widget');
+var Notification = require('web.Notification');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -26,8 +27,26 @@ var SystrayMenu = Widget.extend({
                 f($(this));
             }
         });
+
         this.$el.parent().show();
-        return this._super.apply(this, arguments);
+        this._super.apply(this, arguments);
+        self.notification = new Notification(this);
+        self.notification.appendTo(self.$('.dropdown-toggle'));
+        return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
+            var user_offset = result[0]['tz_offset'];
+            var offset = -(new Date().getTimezoneOffset());
+            // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
+            var browser_offset = (offset < 0) ? "-" : "+";
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+            if (browser_offset !== user_offset) {
+                $('.timezone_icon').append('<a href="#" class="tz_mismatch"><i class="fa fa-exclamation-triangle" style="color:red;"></i></a>');
+                $('.tz_mismatch').click(function(){
+                    self.timezone_warning(browser_offset, user_offset);
+                });
+            }
+        });
+
     },
     do_update: function () {
         var self = this;
@@ -104,6 +123,25 @@ var SystrayMenu = Widget.extend({
                 dialogClass: 'oe_act_window',
                 title: _t("About"),
             }, $help).open();
+        });
+    },
+    do_warn: function() {
+        var n = this.notification;
+        return n.warn.apply(n, arguments);
+    },
+    timezone_warning: function(browser_offset, user_offset) {
+        var self = this;
+        var notification = self.do_warn(_t("Timezone Mismatch"), QWeb.render('WebClient.timezone_notification', {
+            user_timezone: session.user_context.tz || 'UTC',
+            user_offset: user_offset,
+            browser_offset: browser_offset,
+        }), true);
+        self.$el.find('.oe_webclient_timezone_notification').on('click', function() {
+            notification.close();
+        }).find('a').on('click', function() {
+            notification.close();
+            self.on_menu_settings();
+            return false;
         });
     },
 });
