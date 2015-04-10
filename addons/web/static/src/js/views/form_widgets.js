@@ -888,6 +888,42 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
     }
 });
 
+var TimeZone = FieldSelection.extend({
+    template: "WebClient.timezone_systray_preferences",
+    events: {
+        'change select': 'store_dom_value',
+    },
+    initialize_content: function() {
+        var self = this;
+        return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
+            var user_offset = result[0]['tz_offset'];
+            var offset = -(new Date().getTimezoneOffset());
+            var browser_offset = (offset < 0) ? "-" : "+";
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+            if (browser_offset === user_offset) {
+                self.$el.removeClass('fa-exclamation-triangle');
+            }
+        });
+    },
+    store_dom_value: function() {
+        var self = this;
+        var val = $('#oe-field-input-6').val();
+        var user_offset = moment().tz(val.replace(/"/g,"")).format('Z');
+        var offset = -(new Date().getTimezoneOffset());
+        var browser_offset = (offset < 0) ? "-" : "+";
+        browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60))+':';
+        browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+        if (browser_offset !== user_offset) {
+            self.$el.addClass('fa-exclamation-triangle');
+        }
+        else {
+            self.$el.removeClass('fa-exclamation-triangle');
+        }
+        return this._super();
+    },
+});
+
 var FieldRadio = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     template: 'FieldRadio',
     events: {
@@ -1546,6 +1582,7 @@ var FieldToggleBoolean = common.AbstractField.extend({
 });
 
 
+
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
  *
@@ -1579,7 +1616,8 @@ core.form_widget_registry
     .add('monetary', FieldMonetary)
     .add('priority', Priority)
     .add('kanban_state_selection', KanbanSelection)
-    .add('statinfo', StatInfo);
+    .add('statinfo', StatInfo)
+    .add('tz_warning', TimeZone);
 
 
 /**
