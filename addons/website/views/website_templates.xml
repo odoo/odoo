@@ -185,7 +185,7 @@
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
     <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css="false"]' position="after">
-        <t t-call-assets="website.assets_editor"/>
+        <t t-call-assets="website.assets_editor" async="True"/>
     </xpath>
 </template>
 

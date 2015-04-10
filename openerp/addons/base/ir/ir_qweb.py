@@ -479,7 +479,8 @@ class QWeb(orm.AbstractModel):
         bundle = AssetsBundle(xmlid, cr=cr, uid=uid, context=context, registry=self.pool)
         css = self.get_attr_bool(template_attributes.get('css'), default=True)
         js = self.get_attr_bool(template_attributes.get('js'), default=True)
-        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')))
+        async = self.get_attr_bool(template_attributes.get('async'), default=False)
+        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')), async=async)
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -1152,7 +1153,7 @@ class AssetsBundle(object):
     def can_aggregate(self, url):
         return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
 
-    def to_html(self, sep=None, css=True, js=True, debug=False):
+    def to_html(self, sep=None, css=True, js=True, debug=False, async=False):
         if sep is None:
             sep = '\n            '
         response = []
@@ -1174,7 +1175,7 @@ class AssetsBundle(object):
                 response.append('<link href="%s" rel="stylesheet"/>' % url_for(href))
             if js:
                 src = '/web/js/%s/%s' % (self.xmlid, self.version)
-                response.append('<script type="text/javascript" src="%s"></script>' % url_for(src))
+                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(src)))
         response.extend(self.remains)
         return sep + sep.join(response)
 
