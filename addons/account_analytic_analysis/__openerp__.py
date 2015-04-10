@@ -41,6 +41,7 @@ Adds menu to show relevant information to each manager.You can also view the rep
         'res_config_view.xml',
         'views/account_analytic_analysis.xml',
         'product_template_view.xml',
+        'res_partner_view.xml',
     ],
     'demo': ['analytic_account_demo.xml'],
     'test': ['test/account_analytic_analysis.yml'],

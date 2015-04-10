@@ -249,15 +249,10 @@ class res_partner(osv.osv):
         return result
 
     def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
-        MoveLine = self.pool('account.move.line')
-        AnalyticAccount = self.pool('account.analytic.account')
-        return {
-            partner_id: {
-                'journal_item_count': MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
-                'contracts_count': AnalyticAccount.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
-            }
-            for partner_id in ids
-        }
+        result = dict.fromkeys(ids, 0)
+        for group in self.pool['account.move.line'].read_group(cr, uid, [('partner_id', 'in', ids)], ['partner_id'], ['partner_id'], context=context):
+            result[group['partner_id'][0]] = group['partner_id_count']        
+        return result
 
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''
@@ -290,8 +285,7 @@ class res_partner(osv.osv):
         'debit_limit': fields.float('Payable Limit'),
         'total_invoiced': fields.function(_invoice_total, string="Total Invoiced", type='float', groups='account.group_account_invoice'),
 
-        'contracts_count': fields.function(_journal_item_count, string="Contracts", type='integer', multi="invoice_journal"),
-        'journal_item_count': fields.function(_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
+        'journal_item_count': fields.function(_journal_item_count, string="Journal Items", type="integer"),
         'property_account_payable': fields.property(
             type='many2one',
             relation='account.account',
