@@ -134,8 +134,6 @@ var TimelineView = View.extend ({
 
         this.add_qweb_template(); 
 
-        console.log("this.options", this.options);
-
         this.has_been_loaded.resolve();
     },
 
@@ -988,6 +986,7 @@ var ThreadComposeMessage = Common.extend ({
 
         this.parent_thread = parent;
         this.view = parent.view;
+        this.session = session;
 
         core.bus.on('clear_uncommitted_changes', this, function (e) {
             if (this.show_composer && !e.isDefaultPrevented()) {
