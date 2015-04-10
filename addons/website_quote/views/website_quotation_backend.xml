@@ -6,14 +6,6 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//header/button[@name='action_button_confirm']" position="before">
-                    <button name="open_quotation" string="Preview Quotation" type="object" class="oe_highlight"
-                        attrs="{'invisible': ['|','&amp;',('template_id','=',False),('state','=','draft'),('quote_viewed','=',True)]}"/>
-                </xpath>
-                <xpath expr="//header/button[@name='action_button_confirm']" position="before">
-                    <button name="open_quotation" string="Preview Quotation" type="object" 
-                        attrs="{'invisible': ['|','&amp;',('template_id','=',False),('state','!=','draft'),('quote_viewed','=',False)]}"/>
-                </xpath>
                 <xpath expr="//header/button[@name='action_quotation_send'][1]" position="replace">
                     <button name="action_quotation_send" string="Send by Email" type="object"
                         groups="base.group_user"
@@ -24,6 +16,13 @@
                 </xpath>
                 <xpath expr="//header/button[@name='print_quotation'][1]" position="replace">
                     <button name="print_quotation" string="Print" type="object" states="draft" groups="base.group_user"/>
+                </xpath>
+                <xpath expr="//sheet/div[@name='buttons']" position="inside">
+                    <button name="open_quotation" type="object" icon="fa fa-book"
+                        class="oe_inline oe_stat_button oe_right"
+                        attrs="{'invisible': [('template_id', '=', False)]}">
+                        <div>View Online<br />Quotation</div>
+                    </button>
                 </xpath>
                 <xpath expr="//page[@string='Order Lines']" position="after">
                     <page string="Suggested Products">
