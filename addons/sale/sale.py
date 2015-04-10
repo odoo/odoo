@@ -785,7 +785,7 @@ class sale_order(osv.osv):
                         order_line.append([4, line_id])
             else:
                 order_line.append(line)
-        return {'value': {'order_line': order_line}}
+        return {'value': {'order_line': order_line, 'amount_untaxed': False, 'amount_tax': False, 'amount_total': False}}
 
     def test_procurements_done(self, cr, uid, ids, context=None):
         for sale in self.browse(cr, uid, ids, context=context):
