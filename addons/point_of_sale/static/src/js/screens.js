@@ -1127,7 +1127,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
             fields.id           = partner.id || false;
             fields.country_id   = fields.country_id || false;
-            fields.barcode        = fields.barcode ? this.pos.barcode_reader.sanitize_ean(fields.barcode) : false; 
+            fields.barcode      = fields.barcode || '';
 
             new instance.web.Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
                 self.saved_client_details(partner_id);
