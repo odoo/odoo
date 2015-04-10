@@ -4,6 +4,7 @@ import random
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.addons.web.http import request
+import openerp.addons.decimal_precision as dp
 
 
 class sale_order(osv.Model):
@@ -217,3 +218,23 @@ class website(orm.Model):
             'sale_transaction_id': False,
             'sale_order_code_pricelist_id': False,
         })
+
+class sale_order_line(orm.Model):
+    _inherit = "sale.order.line"
+    
+    def _amount_line_with_tax(self, cr, uid, ids, field_name, arg, context=None):
+        tax_obj = self.pool('account.tax')
+        cur_obj = self.pool('res.currency')
+        res = {}
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
+            cur = line.order_id.pricelist_id.currency_id
+            res[line.id] = cur_obj.round(cr, uid, cur, taxes['total_included'])
+        return res
+    
+    _columns={
+             'price_with_tax': fields.function(_amount_line_with_tax, digits_compute= dp.get_precision('Account')),
+    }
