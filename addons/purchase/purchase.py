@@ -1177,6 +1177,46 @@ class purchase_order_line(osv.osv):
         return True
 
 
+class procurement_compute_all(osv.osv_memory):
+    _inherit = 'procurement.order.compute.all'
+
+    _columns = {
+        'available_draft_po_ids': fields.many2many('purchase.order', 'procurement_order_compute_all_purchase_rel',
+                                                   'scheduler_id', 'purchase_order_id', domain=[('state', '=', 'draft')],
+                                                   string='Purchase Order drafts to use if something to be purchased',
+                                                   help='Leave empty to always create new Purchase Orders when needed'),
+    }
+
+    _defaults = {
+        'available_draft_po_ids': lambda s, c, u, ct: s.pool.get('purchase.order').search(c, u, [('state', '=', 'draft')], context=ct),
+    }
+
+    def procure_calculation(self, cr, uid, ids, context=None):
+        po_ids = self.read(cr, uid, ids[0], ['available_draft_po_ids'], context=context)['available_draft_po_ids']
+        ctx = dict(context, forced_po_drafts=[('id', 'in', po_ids)])
+        return super(procurement_compute_all, self).procure_calculation(cr, uid, ids, context=ctx)
+
+
+class procurement_compute(osv.osv_memory):
+    _inherit = 'procurement.orderpoint.compute'
+
+    _columns = {
+        'available_draft_po_ids': fields.many2many('purchase.order', 'procurement_orderpoint_compute_purchase_rel',
+                                                   'scheduler_id', 'purchase_order_id', domain=[('state', '=', 'draft')],
+                                                   string='Purchase Order drafts to use if something to be purchased',
+                                                   help='Leave empty to always create new Purchase Orders when needed'),
+    }
+
+    _defaults = {
+        'available_draft_po_ids': lambda s, c, u, ct: s.pool.get('purchase.order').search(c, u, [('state', '=', 'draft')], context=ct),
+    }
+
+    def procure_calculation(self, cr, uid, ids, context=None):
+        po_ids = self.read(cr, uid, ids[0], ['available_draft_po_ids'], context=context)['available_draft_po_ids']
+        ctx = dict(context, forced_po_drafts=[('id', 'in', po_ids)])
+        return super(procurement_compute, self).procure_calculation(cr, uid, ids, context=ctx)
+
+
 class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
 
@@ -1357,7 +1397,8 @@ class procurement_order(osv.osv):
                 purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context) 
                 line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
-                available_draft_po_ids = po_obj.search(cr, uid, [
+                forced_po_drafts = context.get('forced_po_drafts', [])
+                available_draft_po_ids = po_obj.search(cr, uid, forced_po_drafts + [
                     ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
                     ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id), ('dest_address_id', '=', procurement.partner_dest_id.id)], context=context)
                 if available_draft_po_ids:
@@ -1396,6 +1437,7 @@ class procurement_order(osv.osv):
                     po_id = self.create_procurement_purchase_order(cr, SUPERUSER_ID, procurement, po_vals, line_vals, context=context)
                     po_line_id = po_obj.browse(cr, uid, po_id, context=context).order_line[0].id
                     pass_ids.append(procurement.id)
+                    context.get('forced_po_drafts', [(False, False, [])])[0][2].append(po_id)
                 res[procurement.id] = po_line_id
                 self.write(cr, uid, [procurement.id], {'purchase_line_id': po_line_id}, context=context)
         if pass_ids:
