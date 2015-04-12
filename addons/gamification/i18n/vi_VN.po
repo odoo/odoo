@@ -29,9 +29,9 @@ msgid "\n"
 "        % endif\n"
 "        "
 msgstr "\n"
-"        <p>Chúc mừng, bạn vừa nhận được huy hiệu <strong>${object.badge_id.name}</strong> !\n"
+"        <p>Chúc mừng, bạn vừa nhận được huy chương <strong>${object.badge_id.name}</strong> !\n"
 "            % if object.sender_id\n"
-"                Huy hiệu này được trao bởi <strong>${object.sender_id.name}</strong>.\n"
+"                Huy chương này được trao bởi <strong>${object.sender_id.name}</strong>.\n"
 "            % endif\n"
 "        </p>\n"
 "\n"
@@ -209,13 +209,13 @@ msgstr "<="
 #: code:addons/gamification/models/challenge.py:756
 #, python-format
 msgid "<br/>Nobody has succeeded to reach every goal, no badge is rewared for this challenge."
-msgstr "<br/>Không có ai đạt được hết các tiêu chí, không có huy hiệu nào được trao cho thử thách này."
+msgstr "<br/>Không có ai đạt được hết các tiêu chí, không có huy chương nào được trao cho thử thách này."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:754
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
-msgstr "<br/>Phần thưởng (huy hiệu %s) dành cho những người thành công đã đươc gửi đến %s."
+msgstr "<br/>Phần thưởng (huy chương %s) dành cho những người thành công đã đươc gửi đến %s."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:763
@@ -235,12 +235,12 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                    Nhấp chuột để tạo mới một Huy hiệu. \n"
+"                    Nhấp chuột để tạo mới một Huy chương. \n"
 "                </p>\n"
 "                <p>\n"
-"                    Một huy hiệu là một danh hiệu tượng trưng được trao cho một cá nhân khi vượt qua thử thách.\n"
-"                    Huy hiệu có thể được trao tự động hoặc thủ công khi một cá nhân đáp ứng được một số các điều kiện để vượt qua thử thách.\n"
-"                    Một sô huy hiệu có thể dễ dàng đạt được, một số khác có thể khó hơn, tùy thuộc vào các điều kiện của thử thách.\n"
+"                    Một huy chương là một danh hiệu tượng trưng được trao cho một cá nhân khi vượt qua thử thách.\n"
+"                    Huy chương có thể được trao tự động hoặc thủ công khi một cá nhân đáp ứng được một số các điều kiện để vượt qua thử thách.\n"
+"                    Một sô huy chương có thể dễ dàng đạt được, một số khác có thể khó hơn, tùy thuộc vào các điều kiện của thử thách.\n"
 "                </p>\n"
 "            "
 
@@ -397,39 +397,39 @@ msgstr "Tự động: tổng giá trị một trường"
 #: field:gamification.badge.user,badge_id:0
 #: field:gamification.badge.user.wizard,badge_id:0
 msgid "Badge"
-msgstr "Huy hiệu"
+msgstr "Huy chương"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Badge Description"
-msgstr "Mô tả Huy hiệu"
+msgstr "Mô tả Huy chương"
 
 #. module: gamification
 #: model:mail.message.subtype,description:gamification.mt_badge_granted
 #: model:mail.message.subtype,name:gamification.mt_badge_granted
 msgid "Badge Granted"
-msgstr "Huy hiệu được trao"
+msgstr "Huy chương được trao"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_list_view
 msgid "Badge List"
-msgstr "Danh mục huy hiệu"
+msgstr "Danh mục huy chương"
 
 #. module: gamification
 #: field:gamification.badge.user,badge_name:0
 msgid "Badge Name"
-msgstr "Tên huy hiệu"
+msgstr "Tên huy chương"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_badge_menu
 msgid "Badges"
-msgstr "Huy hiệu"
+msgstr "Huy chương"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed."
-msgstr "Các huy hiệu được trao khi một thử thách được kết thúc. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed."
+msgstr "Các huy chương được trao khi một thử thách được kết thúc. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed."
 
 #. module: gamification
 #: field:gamification.goal.definition,batch_mode:0
@@ -818,7 +818,7 @@ msgstr "Công cụ Gamification"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification badge"
-msgstr "Huy hiệu Gamification"
+msgstr "Huy chương Gamification"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
@@ -843,7 +843,7 @@ msgstr "Phiên bản tiêu chí Gamification"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
 msgid "Gamification user badge"
-msgstr "Huy hiệu người dùng Gamification"
+msgstr "Huy chương người dùng Gamification"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_kanban
@@ -922,18 +922,18 @@ msgstr "Trao"
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 msgid "Grant Badge"
-msgstr "Trao Huy hiệu"
+msgstr "Trao Huy chương"
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr "Trao Huy hiệu cho"
+msgstr "Trao Huy chương cho"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr "Trao Huy hiệu này"
+msgstr "Trao Huy chương này"
 
 #. module: gamification
 #: view:gamification.badge.user:gamification.badge_user_kanban_view
@@ -1009,7 +1009,7 @@ msgstr "Nếu đánh dấu, các thông điệp mới yêu cầu sự có mặt 
 #. module: gamification
 #: help:gamification.badge.user,challenge_id:0
 msgid "If this badge was rewarded through a challenge"
-msgstr "Nếu huy hiệu này được trao tặng thông qua một thử thách"
+msgstr "Nếu huy chương này được trao tặng thông qua một thử thách"
 
 #. module: gamification
 #: field:gamification.badge,image:0
@@ -1258,7 +1258,7 @@ msgstr "No one, assigned through challenges"
 #: code:addons/gamification/models/challenge.py:766
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr "Không ai đáp ứng được các điều kiện để nhận các huy hiệu đặc biệt."
+msgstr "Không ai đáp ứng được các điều kiện để nhận các huy chương đặc biệt."
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1288,12 +1288,12 @@ msgstr "Khi thay đổi"
 #. module: gamification
 #: help:gamification.badge,rule_auth_badge_ids:0
 msgid "Only the people having these badges can give this badge"
-msgstr "Chỉ những người có các huy hiệu này mới có quyền cho/tặng huy hiệu này"
+msgstr "Chỉ những người có các huy chương này mới có quyền cho/tặng huy chương này"
 
 #. module: gamification
 #: help:gamification.badge,rule_auth_user_ids:0
 msgid "Only these people can give this badge"
-msgstr "Chỉ những người này mới có quyền cho/tặng huy hiệu này"
+msgstr "Chỉ những người này mới có quyền cho/tặng huy chương này"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -1418,7 +1418,7 @@ msgstr "Mẫu báo cáo"
 #. module: gamification
 #: field:gamification.badge,rule_auth_badge_ids:0
 msgid "Required Badges"
-msgstr "Huy hiệu bắt buộc"
+msgstr "Huy chương bắt buộc"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
@@ -1500,7 +1500,7 @@ msgstr "Tìm các tiêu chí"
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Security rules to define who is allowed to manually grant badges. Not enforced for administrator."
-msgstr "Các quy tắc an ninh để định nghĩa ai thì được phép trao huy hiệu một cách thủ công. Thiết lập này không ảnh hưởng tới tài khoản quản trị tối cao."
+msgstr "Các quy tắc an ninh để định nghĩa ai thì được phép trao huy chương một cách thủ công. Thiết lập này không ảnh hưởng tới tài khoản quản trị tối cao."
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
@@ -1689,12 +1689,12 @@ msgstr "Càng cao càng tốt"
 #. module: gamification
 #: help:gamification.badge,owner_ids:0
 msgid "The list of instances of this badge granted to users"
-msgstr "Danh mục các phiên bản của huy hiệu này mà được trao cho người dùng"
+msgstr "Danh mục các phiên bản của huy chương này mà được trao cho người dùng"
 
 #. module: gamification
 #: help:gamification.badge,unique_owner_ids:0
 msgid "The list of unique users having received this badge."
-msgstr "Danh mục người dùng riêng biệt nhận được huy hiệu này."
+msgstr "Danh mục người dùng riêng biệt nhận được huy chương này."
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
@@ -1704,7 +1704,7 @@ msgstr "Càng thấp càng tốt"
 #. module: gamification
 #: help:gamification.badge,rule_max_number:0
 msgid "The maximum number of time this badge can be sent per month per person."
-msgstr "Số lần tối đã huy hiệu này có thể được gửi mỗi tháng cho cùng một người."
+msgstr "Số lần tối đã huy chương này có thể được gửi mỗi tháng cho cùng một người."
 
 #. module: gamification
 #: help:gamification.goal.definition,model_id:0
@@ -1719,32 +1719,32 @@ msgstr "Số ngày mà người dùng được gán đến một chỉ tiêu th�
 #. module: gamification
 #: help:gamification.badge,stat_my_this_month:0
 msgid "The number of time the current user has received this badge this month."
-msgstr "Số lần người dùng hiện hành đã nhận được huy hiệu này trong tháng."
+msgstr "Số lần người dùng hiện hành đã nhận được huy chương này trong tháng."
 
 #. module: gamification
 #: help:gamification.badge,stat_my:0
 msgid "The number of time the current user has received this badge."
-msgstr "Số lần người dùng hiện hành đã nhận được huy hiệu này."
+msgstr "Số lần người dùng hiện hành đã nhận được huy chương này."
 
 #. module: gamification
 #: help:gamification.badge,stat_my_monthly_sending:0
 msgid "The number of time the current user has sent this badge this month."
-msgstr "Số lần người dùng gửi huy hiệu này trong tháng."
+msgstr "Số lần người dùng gửi huy chương này trong tháng."
 
 #. module: gamification
 #: help:gamification.badge,stat_count_distinct:0
 msgid "The number of time this badge has been received by unique users."
-msgstr "Số lần nhận huy hiệu này được nhận bởi những người dùng riêng biệt."
+msgstr "Số lần nhận huy chương này được nhận bởi những người dùng riêng biệt."
 
 #. module: gamification
 #: help:gamification.badge,stat_this_month:0
 msgid "The number of time this badge has been received this month."
-msgstr "Số lần nhận huy hiệu này được nhận trong tháng."
+msgstr "Số lần nhận huy chương này được nhận trong tháng."
 
 #. module: gamification
 #: help:gamification.badge,stat_count:0
 msgid "The number of time this badge has been received."
-msgstr "Số lần nhận huy hiệu này được nhận."
+msgstr "Số lần nhận huy chương này được nhận."
 
 #. module: gamification
 #: help:gamification.goal.definition,monetary:0
@@ -1769,7 +1769,7 @@ msgstr "The user who has send the badge"
 #. module: gamification
 #: help:gamification.badge,goal_definition_ids:0
 msgid "The users that have succeeded theses goals will receive automatically the badge."
-msgstr "Những người dùng mà đạt hết các chỉ tiêu này sẽ tự động nhận được huy hiệu."
+msgstr "Những người dùng mà đạt hết các chỉ tiêu này sẽ tự động nhận được huy chương."
 
 #. module: gamification
 #: help:gamification.goal.definition,batch_user_expression:0
@@ -1790,12 +1790,12 @@ msgstr "Những chỉ tiêu này sẽ không được tính toán lại."
 #: code:addons/gamification/models/badge.py:238
 #, python-format
 msgid "This badge can not be sent by users."
-msgstr "Huy hiệu này không thể được gửi bởi người dùng."
+msgstr "Huy chương này không thể được gửi bởi người dùng."
 
 #. module: gamification
 #: help:gamification.badge,image:0
 msgid "This field holds the image used for the badge, limited to 256x256"
-msgstr "Trường này chứa hình ảnh sử dụng cho huy hiệu, được giới hạn kích thước 256x256 pixels"
+msgstr "Trường này chứa hình ảnh sử dụng cho huy chương, được giới hạn kích thước 256x256 pixels"
 
 #. module: gamification
 #: field:gamification.goal,target_goal:0
@@ -1877,7 +1877,7 @@ msgstr "Hàng tuần"
 #. module: gamification
 #: help:gamification.badge,rule_auth:0
 msgid "Who can grant this badge"
-msgstr "Người có thể trao huy hiệu này"
+msgstr "Người có thể trao huy chương này"
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
@@ -1887,7 +1887,7 @@ msgstr "Bạn muốn trao tặng cho ai?"
 #. module: gamification
 #: help:gamification.challenge,reward_realtime:0
 msgid "With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge."
-msgstr "Với tùy chọn này được kích hoạt, một người dùng chỉ có thể nhận huy hiệu một lần. Ba huy hiệu đầu tiên vẫn được trao chỉ khi vào cuối thử thách (at the end of the challenge)."
+msgstr "Với tùy chọn này được kích hoạt, một người dùng chỉ có thể nhận huy chương một lần. Ba huy chương đầu tiên vẫn được trao chỉ khi vào cuối thử thách (at the end of the challenge)."
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1905,7 +1905,7 @@ msgstr "Bạn không nằm trong danh sách được phép"
 #: code:addons/gamification/wizard/grant_badge.py:43
 #, python-format
 msgid "You can not grant a badge to yourself"
-msgstr "Bạn không thể tự trao tặng huy hiệu cho chính mình (tự sướng ^_^)"
+msgstr "Bạn không thể tự trao tặng huy chương cho chính mình (tự sướng ^_^)"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
@@ -1916,7 +1916,7 @@ msgstr "Bạn có thể vẫn trao"
 #: code:addons/gamification/models/badge.py:242
 #, python-format
 msgid "You do not have the required badges."
-msgstr "Bạn không có các huy hiệu bắt buộc."
+msgstr "Bạn không có các huy chương bắt buộc."
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:244
@@ -1927,7 +1927,7 @@ msgstr "You have already sent this badge too many time this month."
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "badges this month"
-msgstr "Huy hiệu trong tháng"
+msgstr "Huy chương trong tháng"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
