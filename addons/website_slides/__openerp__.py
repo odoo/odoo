@@ -17,7 +17,7 @@ Share and Publish Videos, Presentations and Documents'
 """,
     'author': 'Odoo SA',
     'website': 'https://www.odoo.com',
-    'depends': ['website', 'website_mail'],
+    'depends': ['website', 'website_mail','marketing'],
     'data': [
         'view/res_config.xml',
         'view/website_slides.xml',
