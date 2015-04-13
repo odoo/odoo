@@ -13,7 +13,7 @@
     </div>
 </t>
 <t t-name="KanbanView.buttons">
-    <t t-if="widget.options.action_buttons !== false and widget.is_action_enabled('create')">
+    <t t-if="(widget.options.action_buttons !== false and widget.is_action_enabled('create')) or (!widget.view_id and !widget.options.read_only_mode and (widget.is_action_enabled('write') || widget.is_action_enabled('create')))">
         <div class="oe_kanban_buttons">
             <button type="button" class="oe_kanban_button_new btn btn-primary btn-sm">
                 <t t-esc="widget.options.create_text || _t('Create')"/>
