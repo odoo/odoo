@@ -1967,6 +1967,10 @@ odoo.define('web_kanban.Many2ManyKanbanView', function (require) {
     });
 
     var Many2ManyKanbanView = KanbanView.extend({
+        load_kanban: function(data) {
+            this._super(data);
+            this.render_buttons();
+        },
         get_quick_create_class: function () {
             return Many2ManyQuickCreate;
         },
