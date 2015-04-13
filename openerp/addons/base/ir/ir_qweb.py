@@ -739,8 +739,9 @@ class DateTimeConverter(osv.AbstractModel):
         if isinstance(value, basestring):
             value = datetime.datetime.strptime(
                 value, openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        value = fields.datetime.context_timestamp(
-            cr, uid, timestamp=value, context=context)
+        value = openerp.fields.Datetime.context_timestamp(
+            self.browse(cr, uid, (), context=context),
+            timestamp=value)
 
         if options and 'format' in options:
             pattern = options['format']
