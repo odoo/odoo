@@ -77,7 +77,7 @@
     <t t-extend="CalendarView.sidebar.responsible">
         <t t-jquery="span[t-attf-class*='color_filter']" t-operation="after">
             <t t-if="(filters_value.value != -1) &amp;&amp; (filters_value.is_remove != false)">
-                <i class="oe_remove_follower fa fa-close hidden" title="Remove this favorite from the list" t-att-data-id="filters_value.value"/>
+                <i class="oe_remove_follower fa fa-times hidden" title="Remove this favorite from the list" t-att-data-id="filters_value.value"/>
            </t>
         </t>
     </t>

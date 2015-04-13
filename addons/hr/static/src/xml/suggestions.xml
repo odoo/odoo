@@ -11,7 +11,7 @@
     <!-- Suggested employees -->
     <div t-name="hr.suggestions.employees" class="oe_sidebar_suggestion oe_suggestion_employee">
         <div class="oe_suggest_title">
-            <i class="oe_suggestion_remove oe_suggestion_employee fa fa-remove"/>
+            <i class="oe_suggestion_remove oe_suggestion_employee fa fa-times"/>
             <h2>Suggested Employees</h2>
         </div>
         <div class="oe_suggest_items">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="oe_suggested_item_content">
                         <a class="oe_suggestion_item_name" t-attf-href="#model=hr.employee&amp;id=#{result.id}"><t t-esc="result.name"/></a>
-                        <i class="oe_suggestion_remove_item oe_suggestion_employee fa fa-remove" t-att-id="result.id"/>
+                        <i class="oe_suggestion_remove_item oe_suggestion_employee fa fa-times" t-att-id="result.id"/>
                         <br/>
                         <button class="oe_suggestion_follow" t-att-id="result.id">Follow</button>
                     </div>
