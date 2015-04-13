@@ -589,6 +589,9 @@ class purchase_order(osv.osv):
             'price_unit': order_line.price_unit or 0.0,
             'quantity': order_line.product_qty,
             'product_id': order_line.product_id.id or False,
+            'th_weight': order_line.th_weight,
+            'th_volume': order_line.th_volume,
+            'real_weight': order_line.real_weight,
             'uos_id': order_line.product_uom.id or False,
             'invoice_line_tax_id': [(6, 0, [x.id for x in order_line.taxes_id])],
             'account_analytic_id': order_line.account_analytic_id.id or False,
@@ -1088,7 +1091,7 @@ class purchase_order_line(osv.osv):
         if context is None:
             context = {}
 
-        res = {'value': {'th_weight': 0, 'real_weight': 0, 'th_volume': 0, 'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
+        res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False, 'th_weight': 0, 'real_weight': 0, 'th_volume': 0}}
         if not product_id:
             return res
 

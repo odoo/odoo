@@ -425,7 +425,6 @@ class sale_order(osv.osv):
         inv_ids1 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
         # determine newly created invoices
         new_inv_ids = list(inv_ids1 - inv_ids0)
-
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False,
 
@@ -933,6 +932,9 @@ class sale_order_line(osv.osv):
                 'discount': line.discount,
                 'uos_id': uos_id,
                 'product_id': line.product_id.id or False,
+                'th_weight': line.th_weight,
+                'th_volume': line.th_volume,
+                'real_weight': line.real_weight,
                 'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
                 'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
             }

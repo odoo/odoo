@@ -575,25 +575,25 @@ var AbstractManyField = common.AbstractField.extend({
     },
 
     // return id for this commands instead of the object ('ALL' to activate all conversion)
-    get_ids_from_command_list: ['LINK_TO', 'REPLACE_WITH'],
+    //get_ids_from_command_list: ['LINK_TO', 'REPLACE_WITH'],
     get_ids_from_command: function (value_) {
         var self = this;
         var ids;
         var command_list = [];
-        if (this.get_ids_from_command_list && this.get_ids_from_command_list !== 'ALL') {
+        /*if (this.get_ids_from_command_list && this.get_ids_from_command_list !== 'ALL') {
             for (var i=0; i<this.get_ids_from_command_list.length; i++) {
                 command_list[i] = commands[this.get_ids_from_command_list[i]];
             }
-        }
+        }*/
 
         value_ = value_ || [];
         if(value_.length >= 1 && value_[0] instanceof Array) {
             ids = [];
             _.each(value_, function(command) {
                 var obj = {values: command[2]};
-                if (command_list.length && command.indexOf(command_list) === -1) {
+                /*if (command_list.length && command.indexOf(command_list) === -1) {
                     ids.push(obj);
-                }
+                }*/
                 switch (command[0]) {
                     case commands.CREATE:
                         obj.id = _.uniqueId(self.dataset.virtual_id_prefix);
