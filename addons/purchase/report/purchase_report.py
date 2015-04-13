@@ -64,6 +64,9 @@ class purchase_report(osv.osv):
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'commercial_partner_id': fields.many2one('res.partner', 'Commercial Entity', readonly=True),
+        'gross_weight': fields.float('Gross Weight', readonly=True),
+        'real_weight': fields.float('Net Weight', readonly=True),
+        'gross_volume': fields.float('Gross Volume', readonly=True),
     }
     _order = 'date desc, price_total desc'
     def init(self, cr):
@@ -92,6 +95,9 @@ class purchase_report(osv.osv):
                     sum(l.product_qty/u.factor*u2.factor) as quantity,
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
+                    sum(l.th_weight) as gross_weight,
+                    sum(l.real_weight) as real_weight,
+                    sum(l.th_volume) as gross_volume,
                     count(*) as nbr,
                     sum(l.price_unit*l.product_qty)::decimal(16,2) as price_total,
                     avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,

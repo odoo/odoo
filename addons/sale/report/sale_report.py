@@ -59,6 +59,9 @@ class sale_report(osv.osv):
         'team_id': fields.many2one('crm.team', 'Sales Team', readonly=True, oldname='section_id'),
         'country_id': fields.many2one('res.country', 'Partner Country', readonly=True),
         'commercial_partner_id': fields.many2one('res.partner', 'Commercial Entity', readonly=True),
+        'gross_weight': fields.float('Gross Weight', readonly=True),
+        'real_weight': fields.float('Net Weight', readonly=True),
+        'gross_volume': fields.float('Gross Volume', readonly=True),
     }
     _order = 'date desc'
 
@@ -69,6 +72,9 @@ class sale_report(osv.osv):
                     t.uom_id as product_uom,
                     sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
                     sum(l.product_uom_qty * l.price_unit * (100.0-l.discount) / 100.0) as price_total,
+                    sum(l.th_weight) as gross_weight,
+                    sum(l.real_weight) as real_weight,
+                    sum(l.th_volume) as gross_volume,
                     count(*) as nbr,
                     s.date_order as date,
                     s.date_confirm as date_confirm,

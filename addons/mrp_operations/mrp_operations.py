@@ -69,6 +69,7 @@ class mrp_production_workcenter_line(osv.osv):
             'product': production.product_id.id,
             'qty': production.product_qty,
             'uom': production.product_uom.id,
+
         }
         return {'value': result}
 
@@ -95,6 +96,9 @@ class mrp_production_workcenter_line(osv.osv):
             readonly=True),
        'qty':fields.related('production_id','product_qty',type='float',string='Qty',readonly=True, store=True),
        'uom':fields.related('production_id','product_uom',type='many2one',relation='product.uom',string='Unit of Measure',readonly=True),
+       'th_weight': fields.float(string='Gross Weight', readonly=True, states={'draft': [('readonly', False)]}),
+       'real_weight': fields.float(string='Net Weight', readonly=True, states={'draft': [('readonly', False)]}),
+       'th_volume': fields.float(string='Gross Volume', readonly=True, states={'draft': [('readonly', False)]}),
     }
 
     _defaults = {
@@ -255,6 +259,14 @@ class mrp_production(osv.osv):
             old = None
             for wci in range(len(po.workcenter_lines)):
                 wc  = po.workcenter_lines[wci]
+                product_uom = self.pool.get('product.uom')
+                default_uom = wc.product.uom_id and wc.product.uom_id.id
+                total_qty = product_uom._compute_qty(cr, uid, wc.uom.id, wc.qty, default_uom)
+                self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id], {
+                        'th_weight': total_qty * wc.product.weight,
+                        'real_weight': total_qty * wc.product.weight_net,
+                        'th_volume': total_qty * wc.product.volume
+                    }, context=context, update=False)
                 if (old is None) or (wc.sequence>old):
                     dt = dt_end
                 if context.get('__last_update'):

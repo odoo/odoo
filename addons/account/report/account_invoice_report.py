@@ -103,6 +103,9 @@ class account_invoice_report(osv.osv):
         'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'country_id': fields.many2one('res.country', 'Country of the Partner Company'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'gross_weight': fields.float('Gross Weight', readonly=True),
+        'real_weight': fields.float('Net Weight', readonly=True),
+        'gross_volume': fields.float('Gross Volume', readonly=True),
     }
     _order = 'date desc'
 
@@ -128,6 +131,7 @@ class account_invoice_report(osv.osv):
         select_str = """
             SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id, sub.account_analytic_id,
                 sub.payment_term, sub.period_id, sub.uom_name, sub.currency_id, sub.journal_id,
+                sub.gross_weight, sub.real_weight, sub.gross_volume,
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
                 sub.product_qty, sub.price_total / cr.rate as price_total, sub.price_average /cr.rate as price_average,
@@ -142,6 +146,9 @@ class account_invoice_report(osv.osv):
                     ail.product_id, ai.partner_id, ai.payment_term, ai.period_id, ail.account_analytic_id,
                     u2.name AS uom_name,
                     ai.currency_id, ai.journal_id, ai.fiscal_position, ai.user_id, ai.company_id,
+                    sum(ail.th_weight) as gross_weight,
+                    sum(ail.real_weight) as real_weight,
+                    sum(ail.th_volume) as gross_volume,
                     count(ail.*) AS nbr,
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,

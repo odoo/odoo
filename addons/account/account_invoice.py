@@ -1286,6 +1286,9 @@ class account_invoice_line(models.Model):
         related='invoice_id.company_id', store=True, readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner',
         related='invoice_id.partner_id', store=True, readonly=True)
+    th_weight = fields.Float(string='Gross Weight')
+    real_weight = fields.Float(string='Net Weight')
+    th_volume = fields.Float(string='Gross Volume')
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -1316,7 +1319,6 @@ class account_invoice_line(models.Model):
                 return {'value': {}, 'domain': {'product_uom': []}}
             else:
                 return {'value': {'price_unit': 0.0}, 'domain': {'product_uom': []}}
-
         values = {}
 
         part = self.env['res.partner'].browse(partner_id)
@@ -1367,7 +1369,13 @@ class account_invoice_line(models.Model):
             if values['uos_id'] and values['uos_id'] != product.uom_id.id:
                 values['price_unit'] = self.env['product.uom']._compute_price(
                     product.uom_id.id, values['price_unit'], values['uos_id'])
-
+        if uom_id:
+            ProductUom = self.env['product.uom']
+            default_uom = product.uom_id and product.uom_id.id
+            total_qty = ProductUom._compute_qty(uom_id, qty, default_uom)
+            values['th_weight'] = total_qty * product.weight
+            values['real_weight'] = total_qty * product.weight_net
+            values['th_volume'] = total_qty * product.volume
         return {'value': values, 'domain': domain}
 
     @api.multi

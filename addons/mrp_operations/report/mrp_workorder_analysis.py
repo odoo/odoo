@@ -43,6 +43,9 @@ class mrp_workorder(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible'),
         'routing_id': fields.many2one('mrp.routing', string='Routing', readonly=True),
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', readonly=True),
+        'gross_weight': fields.float('Gross Weight', readonly=True),
+        'real_weight': fields.float('Net Weight', readonly=True),
+        'gross_volume': fields.float('Gross Volume', readonly=True),
     }
 
     def init(self, cr):
@@ -61,6 +64,9 @@ class mrp_workorder(osv.osv):
                     wl.production_id as production_id,
                     wl.workcenter_id as workcenter_id,
                     sum(wl.cycle) as total_cycles,
+                    sum(wl.th_weight) as gross_weight,
+                    sum(wl.real_weight) as real_weight,
+                    sum(wl.th_volume) as gross_volume,
                     count(*) as nbr,
                     sum(mp.product_qty) as product_qty,
                     wl.state as state,

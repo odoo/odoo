@@ -177,6 +177,8 @@
                                         <group>
                                             <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <field name="th_weight"/>
+                                            <field name="real_weight"/>
+                                            <field name="th_volume"/>
                                             <!-- we should put a config wizard for these two fields -->
                                             <field name="address_allotment_id"/>
                                         </group>
@@ -192,6 +194,8 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="state" invisible="1"/>
                                     <field name="th_weight" invisible="1"/>
+                                    <field name="real_weight" invisible="1"/>
+                                    <field name="th_volume" invisible="1"/>
                                     <field name="product_id"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
                                         groups="base.group_user"
