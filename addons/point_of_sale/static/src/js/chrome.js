@@ -10,7 +10,6 @@ var core = require('web.core');
 
 var _t = core._t;
 var QWeb = core.qweb;
-var PosModel = models.PosModel;
 
 /* -------- The Order Selector -------- */
 
@@ -416,7 +415,7 @@ var Chrome = PosBaseWidget.extend({
         this.started  = new $.Deferred(); // resolves when DOM is online
         this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
 
-        this.pos = new PosModel(this.session,{chrome:this});
+        this.pos = new models.PosModel(this.session,{chrome:this});
         this.gui = new gui.Gui({pos: this.pos, chrome: this});
         this.chrome = this; // So that chrome's childs have chrome set automatically
         this.pos.gui = this.gui;
