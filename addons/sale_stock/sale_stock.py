@@ -116,7 +116,7 @@ class sale_order(osv.osv):
         of given sales order ids. It can either be a in a list or in a form
         view, if there is only one delivery order to show.
         '''
-
+        
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
 
@@ -128,7 +128,7 @@ class sale_order(osv.osv):
         pick_ids = []
         for so in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in so.picking_ids]
-
+            
         #choose the view_mode accordingly
         if len(pick_ids) > 1:
             result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
@@ -189,7 +189,7 @@ class sale_order(osv.osv):
 
 class product_product(osv.osv):
     _inherit = 'product.product'
-
+    
     def need_procurement(self, cr, uid, ids, context=None):
         #when sale/product is installed alone, there is no need to create procurements, but with sale_stock
         #we must create a procurement for each product that is not a service.
@@ -358,9 +358,9 @@ class stock_move(osv.osv):
             self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
                 'invoice_lines': [(4, invoice_line_id)]
             }, context=context)
-            cr.execute('SELECT order_id FROM sale_order_invoice_rel WHERE order_id=%s AND invoice_id=%s' % (sale_line.order_id.id, invoice_line_vals['invoice_id']))
-            if not cr.fetchall():
-                cr.execute('INSERT INTO sale_order_invoice_rel (order_id, invoice_id) VALUES (%s, %s)' %(sale_line.order_id.id, invoice_line_vals['invoice_id']))
+            self.pool.get('sale.order').write(cr, uid, [sale_line.order_id.id], {
+                'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
+            })
             sale_line_obj = self.pool.get('sale.order.line')
             invoice_line_obj = self.pool.get('account.invoice.line')
             sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', '=', move.procurement_id.sale_line_id.order_id.id), ('invoiced', '=', False), '|', ('product_id', '=', False), ('product_id.type', '=', 'service')], context=context)
@@ -427,7 +427,7 @@ class stock_picking(osv.osv):
             saleorder = saleorders[0]
             return saleorder.partner_invoice_id.id
         return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)
-
+    
     def _get_sale_id(self, cr, uid, ids, name, args, context=None):
         sale_obj = self.pool.get("sale.order")
         res = {}
@@ -438,7 +438,7 @@ class stock_picking(osv.osv):
                 if sale_ids:
                     res[picking.id] = sale_ids[0]
         return res
-
+    
     _columns = {
         'sale_id': fields.function(_get_sale_id, type="many2one", relation="sale.order", string="Sale Order"),
     }
