@@ -1301,7 +1301,7 @@ class account_invoice_line(models.Model):
     @api.multi
     def product_id_change(self, product, uom_id, qty=0, name='', type='out_invoice',
             partner_id=False, fposition_id=False, price_unit=False, currency_id=False,
-            company_id=None):
+            company_id=None, date_invoice=None):
         context = self._context
         company_id = company_id if company_id is not None else context.get('company_id', False)
         self = self.with_context(company_id=company_id, force_company=company_id)
@@ -1359,7 +1359,7 @@ class account_invoice_line(models.Model):
             if company.currency_id != currency:
                 if type in ('in_invoice', 'in_refund'):
                     values['price_unit'] = product.standard_price
-                values['price_unit'] = values['price_unit'] * currency.rate
+                values['price_unit'] = values['price_unit'] * currency.with_context(dict(context or {}, date=date_invoice)).rate
 
             if values['uos_id'] and values['uos_id'] != product.uom_id.id:
                 values['price_unit'] = self.env['product.uom']._compute_price(
@@ -1369,14 +1369,14 @@ class account_invoice_line(models.Model):
 
     @api.multi
     def uos_id_change(self, product, uom, qty=0, name='', type='out_invoice', partner_id=False,
-            fposition_id=False, price_unit=False, currency_id=False, company_id=None):
+            fposition_id=False, price_unit=False, currency_id=False, company_id=None, date_invoice=None):
         context = self._context
         company_id = company_id if company_id != None else context.get('company_id', False)
         self = self.with_context(company_id=company_id)
 
         result = self.product_id_change(
             product, uom, qty, name, type, partner_id, fposition_id, price_unit,
-            currency_id, company_id=company_id,
+            currency_id, company_id=company_id, date_invoice=date_invoice
         )
         warning = {}
         if not uom:
@@ -1451,7 +1451,7 @@ class account_invoice_line(models.Model):
     # Set the tax field according to the account and the fiscal position
     #
     @api.multi
-    def onchange_account_id(self, product_id, partner_id, inv_type, fposition_id, account_id):
+    def onchange_account_id(self, product_id, partner_id, inv_type, fposition_id, account_id, date_invoice=None):
         if not account_id:
             return {}
         unique_tax_ids = []
@@ -1461,7 +1461,7 @@ class account_invoice_line(models.Model):
             unique_tax_ids = fpos.map_tax(account.tax_ids).ids
         else:
             product_change_result = self.product_id_change(product_id, False, type=inv_type,
-                partner_id=partner_id, fposition_id=fposition_id, company_id=account.company_id.id)
+                partner_id=partner_id, fposition_id=fposition_id, company_id=account.company_id.id, date_invoice=date_invoice)
             if 'invoice_line_tax_id' in product_change_result.get('value', {}):
                 unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
         return {'value': {'invoice_line_tax_id': unique_tax_ids}}
