@@ -3205,7 +3205,7 @@ class BaseModel(object):
             records = records[:PREFETCH_MAX] | self
 
         # determine which fields can be prefetched
-        if not self.env.in_draft and \
+        if not self.env.in_onchange and \
                 self._context.get('prefetch_fields', True) and \
                 self._columns[field.name]._prefetch:
             # prefetch all classic and many2one fields that the user can access
