@@ -23,7 +23,7 @@
                         <group>
                             <group>
                                 <field name="program_type"/>
-                                <field name="program_code" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}"  />
+                                <field name="program_code" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}"/>
                             </group>
                             <group>
                                     <field name="active"/>
@@ -56,7 +56,7 @@
                                         <field name="date_to" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}" class="oe_inline" placeholder="To"/>
                                     </div>
                                     <field name="partner_id" placeholder="Select customer"></field>
-                                    <field name="company_id" placeholder="Select company"></field>
+                                    <field name="company_id" placeholder="Select company" groups="base.group_multi_company"></field>
                                 </group>
                             </page>
                             <page string="Rewards" name="rewards">
@@ -93,6 +93,17 @@
                         </notebook>
                      </sheet>
                 </form>
+            </field>
+        </record>
+
+      <record model="ir.ui.view" id="coupon_program_tree_view">
+            <field name="name">Sale Coupon Program tree view</field>
+            <field name="model">sale.couponprogram</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="active"/>
+                </tree>
             </field>
         </record>
 
@@ -156,9 +167,10 @@
                     res_model="sale.manual.coupon"
                     view_mode="form"
                     target="new"
-                    key2="client_action_multi"/>
+                    key2="client_action_multi"
+                    groups="base.group_multi_company"/>
 
-        <record model="ir.ui.view" id="wizard_form_view_to_get_coupon">
+        <record model="ir.ui.view" id="wizard_view_to_get_coupon">
             <field name="name">wizard.form.get.coupon</field>
             <field name="model">sale.get.coupon</field>
             <field name="arch" type="xml">
@@ -173,6 +185,7 @@
                 </form>
             </field>
         </record>
+
      <act_window id="launch_get_coupon_wizard"
                     name="Apply Coupon"
                     src_model="sale.order"
@@ -181,26 +194,13 @@
                     target="new"
                     key2="client_action_multi"/>
 
-      <record model="ir.ui.view" id="coupon_program_tree_view">
-            <field name="name">Sale Coupon Program tree view</field>
-            <field name="model">sale.couponprogram</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name"/>
-                    <field name="active"/>
-                </tree>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="sale_coupon_form">
              <field name="name">sale.coupon.form</field>
              <field name="model">sale.order</field>
              <field name="inherit_id" ref="sale.view_order_form" />
              <field name="arch" type="xml">
-                <xpath expr="//field[@name='note']" position="before">
-                    <group style="width: 50px">
-                       <button name="get_coupon" string="Apply coupon" type="object" class="oe_edit_only"/>
-                    </group>
+                <xpath expr="//header/button[@name='cancel']" position="before">
+                    <button name="apply_coupon_wizard" string="Apply coupon" type="object" groups="base.group_user"/>
                 </xpath>
              </field>
         </record>

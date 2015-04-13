@@ -121,34 +121,31 @@ class SaleCouponProgram(models.Model):
     coupon_ids = fields.One2many('sale.coupon', 'program_id', string="Coupon Id")
     applicability_id = fields.Many2one('sale.applicability', string="Applicability Id", ondelete='cascade', required=True)
     reward_id = fields.Many2one('sale.reward', string="Reward", ondelete='cascade', required=True)
-    count_sale_order = fields.Integer(default=1)
-    count_coupons = fields.Integer(default=1)
+    count_sale_order = fields.Integer(compute='_compute_so_count', default=0)
+    count_coupons = fields.Integer(compute='_compute_coupon_count', default=0)
 
-    # def _compute_so_count(self):
-    #     count = 1
-    #     sales_order_line = self.env['sale.order_line'].search([('coupon_program_id', '=', self.id)])
-    #     if sales_order_line:
-    #         for order in sales_order_line:
-    #             count += 1
-    #     self.count_sale_order = count
-    #     return count
+    _sql_constraints = [
+        ('unique_program_code', 'unique(program_code)', 'The program code must be unique!'),
+    ]
 
-    # def _compute_coupon_count(self):
-    #     count = 1
-    #     coupons = self.env['sale.coupon'].search([('program_id', '=', self.id)])
-    #     if coupons:
-    #         for coupon in coupons:
-    #             count += 1
-    #     self.count_coupons = count
-    #     return count
+    def _compute_so_count(self):
+        count = 0
+        sales_order_line = self.env['sale.order.line'].search([('coupon_program_id', '=', self.id)])
+        if sales_order_line:
+            for order in sales_order_line:
+                count += 1
+        self.count_sale_order = count
+
+    def _compute_coupon_count(self):
+        count = 0
+        coupons = self.env['sale.coupon'].search([('program_id', '=', self.id)])
+        if coupons:
+            for coupon in coupons:
+                count += 1
+        self.count_coupons = count
 
     @api.onchange('product_id')
     def get_uom_of_applicable_product(self):
-        result = self.env['ir.model.data'].xmlid_to_res_id('base.group_multi_company')
-        if self._uid == self.env['res.groups'].browse(result).users.id:
-            print "<<<<<<<<<>>>>>> have multi company"
-        else:
-            print "<<<<<<<<<>>>>>> not have multi company"
         self.product_uom_id = self.product_id.product_tmpl_id.uom_id
 
     @api.onchange('reward_product_product_id')
@@ -159,12 +156,6 @@ class SaleCouponProgram(models.Model):
     def get_uom_of_reward_on_specific_product(self):
         self.reward_discount_on_product_uom_id = self.reward_discount_on_product_id.product_tmpl_id.uom_id
 
-    # @api.onchange('program_type')
-    # def generate_public_unique_code(self):
-    #     if self.program_type == 'public_unique_code':
-    #         coupon = self.env['sale.coupon'].create({'program_id': self.id})
-    #         self.program_code = coupon.coupon_code
-
     def is_program_valid(self, coupon_code):
         if self.program_type == 'generated_coupon' or self.program_type == 'apply_immediately':
             if fields.date.today() <= self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date()):
@@ -173,7 +164,6 @@ class SaleCouponProgram(models.Model):
                 coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
                 if coupon_obj:
                     coupon_obj.state = 'expired'
-                print "<<<<<<<<< coupon has expired>>>>>>>>>>"
                 return False
         if self.program_type == 'public_unique_code':
             if fields.date.today() <= datetime.strptime(self.date_to, "%Y-%m-%d").date():
@@ -182,7 +172,6 @@ class SaleCouponProgram(models.Model):
                 coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
                 if coupon_obj:
                     coupon_obj.state = 'expired'
-                print "<<<<<<<<< coupon has expired>>>>>>>>>>"
                 return False
 
     @api.multi
@@ -209,6 +198,16 @@ class SaleOrderLine(models.Model):
     def unlink(self):
         res = True
         try:
+            for line in self:
+                if line.coupon_id:
+                    coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', line.coupon_id)])
+                    if coupon_obj:
+                        coupon_obj.state = 'new'
+                        coupon_obj.reward_name = ""
+                        if coupon_obj.nbr_used > 1:
+                            coupon_obj.nbr_used -= 1
+                        else:
+                            coupon_obj.nbr_used = 0
             reward_lines = self.order_id.order_line.filtered(lambda x: x.generated_from_line_id.id in self.ids)
             if reward_lines:
                 reward_lines.unlink()
@@ -268,12 +267,11 @@ class SaleOrderLine(models.Model):
                 coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
                 if coupon_obj:
                     coupon_obj.state = 'used'
-                    coupon_obj.sale_order_id = self.order_id.id
+                    #coupon_obj.order_line_id = self.id
                     coupon_obj.nbr_used = coupon_obj.nbr_used + 1
                     coupon_obj.reward_name = desc
 
     def _process_reward_product(self, program, coupon_code):
-        #reward_product_id = self.env.ref('website_sale_coupon.product_product_reward').id
         product_lines = self.order_id.order_line.filtered(lambda x: x.product_id == program.reward_product_product_id)
         vals = self.product_id_change(self.order_id.pricelist_id.id, program.reward_product_product_id.id, program.reward_quantity,
                                       uom=program.reward_product_uom_id.id)['value']
@@ -451,17 +449,23 @@ class SaleOrder(models.Model):
                                                      (self.amount_untaxed >= program.minimum_amount and program.reward_tax == 'tax_excluded')):
                 reward_product_id = self.env.ref('website_sale_coupon.product_product_reward')
                 reward_line = self.order_line.filtered(lambda x: x.generated_from_line_id.id is False and x.product_id == reward_product_id)
-                if not reward_line:
+                if reward_line:
+                    return {'error': _('Code %s is already applied') % (coupon_code)}
+                else:
                     self.process_rewards(program, coupon_code)
             if program.purchase_type == 'product':
                 for line in self.order_line.filtered(lambda x: x.product_id == program.product_id and x.product_uom_qty >= program.product_quantity):
                     reward_line = self.order_line.filtered(lambda x: x.generated_from_line_id == line)
-                    if not reward_line:
+                    if reward_line:
+                        return {'error': _('Code %s is already applied') % (coupon_code)}
+                    else:
                         line.process_rewards(program, coupon_code)
             if program.purchase_type == 'category':
                 for line in self.order_line.filtered(lambda x: x.product_id.categ_id == program.product_category_id and x.product_uom_qty >= program.product_quantity):
                     reward_line = self.order_line.filtered(lambda x: x.generated_from_line_id == line)
-                    if not reward_line:
+                    if reward_line:
+                        return {'error': _('Code %s is already applied') % (coupon_code)}
+                    else:
                         line.process_rewards(program, coupon_code)
             self._check_for_free_shipping(coupon_code)
 
@@ -472,7 +476,7 @@ class SaleOrder(models.Model):
             getattr(self, '_process_reward_' + program.reward_type)(program, coupon_code)
 
     def _process_reward_product(self, program, coupon_code):
-        product_lines = self.order_line.filtered(lambda x: x.product_id == program.reward_product_product_id and x.product_uom == program.reward_product_uom_id)
+        product_lines = self.order_line.filtered(lambda x: x.product_id == program.reward_product_product_id)
         vals = self.order_line.product_id_change(self.pricelist_id.id, program.reward_product_product_id.id, program.reward_quantity,
                                                  uom=program.reward_product_uom_id.id)['value']
         if not product_lines:
@@ -528,9 +532,15 @@ class SaleOrder(models.Model):
                 coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
                 if coupon_obj:
                     coupon_obj.state = 'used'
-                    coupon_obj.sale_order_id = self.id
+                    #coupon_obj.order_line_id = False
                     coupon_obj.nbr_used = coupon_obj.nbr_used + 1
                     coupon_obj.reward_name = desc
+
+    @api.multi
+    def apply_coupon_wizard(self, context=None):
+        res = self.env['ir.actions.act_window'].for_xml_id('website_sale_coupon', 'launch_get_coupon_wizard', context=context)
+        res['domain'] = [('program_id', '=', self.id)]
+        return res
 
 
 class ProductTemplate(models.Model):
