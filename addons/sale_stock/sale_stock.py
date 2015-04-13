@@ -358,9 +358,9 @@ class stock_move(osv.osv):
             self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
                 'invoice_lines': [(4, invoice_line_id)]
             }, context=context)
-            self.pool.get('sale.order').write(cr, uid, [sale_line.order_id.id], {
-                'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
-            })
+            cr.execute('SELECT order_id FROM sale_order_invoice_rel WHERE order_id=%s AND invoice_id=%s' % (sale_line.order_id.id, invoice_line_vals['invoice_id']))
+            if not cr.fetchall():
+                cr.execute('INSERT INTO sale_order_invoice_rel (order_id, invoice_id) VALUES (%s, %s)' %(sale_line.order_id.id, invoice_line_vals['invoice_id']))
             sale_line_obj = self.pool.get('sale.order.line')
             invoice_line_obj = self.pool.get('account.invoice.line')
             sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', '=', move.procurement_id.sale_line_id.order_id.id), ('invoiced', '=', False), '|', ('product_id', '=', False), ('product_id.type', '=', 'service')], context=context)
