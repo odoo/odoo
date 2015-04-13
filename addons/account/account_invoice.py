@@ -722,6 +722,7 @@ class account_invoice(osv.osv):
             'internal_number': False,
             'period_id': False,
             'sent': False,
+            'name': False,
         })
         if 'date_invoice' not in default:
             default.update({
