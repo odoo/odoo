@@ -39,7 +39,7 @@ var SystrayMenu = Widget.extend({
             browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
             browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
             if (browser_offset !== user_offset) {
-                $('.oe_timezone_icon').append('<a href="#" class="oe_tz_warning"><i class="fa fa-exclamation-triangle" style="color:red;"></i></a>');
+                $('.oe_timezone_icon').append('<a href="#" title="Timezone mismatch" class="oe_tz_warning"><i class="fa fa-exclamation-triangle" style="color:red;"></i></a>');
                 $('.oe_timezone_icon').css('display', 'inline-block');
                 $('.oe_timezone_icon a').css('display', 'inline');
                 $('.oe_timezone_icon a').first().css('padding-right', '48px');
