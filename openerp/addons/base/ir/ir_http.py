@@ -102,10 +102,18 @@ class ir_http(osv.AbstractModel):
 
     def _serve_attachment(self):
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
-        attach = self.pool['ir.attachment'].search_read(request.cr, openerp.SUPERUSER_ID, domain, ['__last_update', 'datas', 'mimetype', 'checksum'], context=request.context)
+        attach = self.pool['ir.attachment'].search_read(request.cr, openerp.SUPERUSER_ID, domain, ['__last_update', 'datas', 'name', 'mimetype', 'checksum'], context=request.context)
         if attach:
             wdate = attach[0]['__last_update']
-            datas = attach[0]['datas'] or '' # support empty ir_attachment
+            datas = attach[0]['datas'] or ''
+            name = attach[0]['name']
+
+            if not datas:
+                if name.startswith(('http://', 'https://', '/')):
+                    return werkzeug.utils.redirect(name, 301)
+                else:
+                    return werkzeug.wrappers.Response(status=204)     # NO CONTENT
+
             response = werkzeug.wrappers.Response()
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
             try:

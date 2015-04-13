@@ -1317,13 +1317,13 @@ openerp.account = function (instance) {
             if (balance_type === "equal") {
                 displayValidState(true);
             } else if (balance_type === "greater") {
-                createOpenBalance("Create Write-off");
+                createOpenBalance(_t("Create Write-off"));
             } else if (balance_type === "lower") {
                 if (self.st_line.has_no_partner) {
-                    createOpenBalance("Choose counterpart");
+                    createOpenBalance(_t("Choose counterpart"));
                 } else {
                     displayValidState(false, "Keep open");
-                    createOpenBalance("Open balance");
+                    createOpenBalance(_t("Open balance"));
                 }
             }
 

@@ -37,7 +37,7 @@ class sale_order_line(osv.osv):
         to_cur = self.pool.get('product.pricelist').browse(cr, uid, [pricelist])[0].currency_id.id
         if product:
             product = self.pool['product.product'].browse(cr, uid, product, context=context)
-            purchase_price = product.standard_price
+            purchase_price = product.price_get(ptype='standard_price', context=dict(context, currency_id=to_cur))[product.id]
             to_uom = res.get('product_uom', uom)
             if to_uom != product.uom_id.id:
                 purchase_price = self.pool['product.uom']._compute_price(cr, uid, product.uom_id.id, purchase_price, to_uom)

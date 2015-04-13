@@ -590,6 +590,7 @@ class mail_thread(osv.AbstractModel):
         ir_attachment_obj.unlink(cr, uid, attach_ids, context=context)
         return True
 
+    @api.cr_uid_ids_context
     def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
         """ mail.message check permission rules for related document. This method is
             meant to be inherited in order to implement addons-specific behavior.

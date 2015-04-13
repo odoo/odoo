@@ -366,6 +366,14 @@ class Post(models.Model):
         return post
 
     @api.multi
+    def check_mail_message_access(self, operation, model_obj=None):
+        for post in self:
+            # Make sure only author or moderator can edit/delete messages
+            if operation in ('write', 'unlink') and not post.can_edit:
+                raise KarmaError('Not enough karma to edit a post.')
+        return super(Post, self).check_mail_message_access(operation, model_obj=model_obj)
+
+    @api.multi
     @api.depends('name', 'post_type')
     def name_get(self):
         result = []

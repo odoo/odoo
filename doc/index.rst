@@ -14,6 +14,7 @@ Odoo Technical Documentation
     setup
     reference
     api_integration
+    business
 
 .. ifconfig:: todo_include_todos
 

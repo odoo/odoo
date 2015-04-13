@@ -194,7 +194,7 @@ def setup(app):
     app.add_config_value('versions', '', 'env')
 
     app.connect('html-page-context', analytics)
-    app.add_config_value('google_analytics_key', False, 'env')
+    app.add_config_value('google_analytics_key', '', 'env')
 
 def canonicalize(app, pagename, templatename, context, doctree):
     """ Adds a 'canonical' URL for the current document in the rendering

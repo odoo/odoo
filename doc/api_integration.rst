@@ -795,7 +795,7 @@ set through the mapping argument, the default value will be used.
 Update records
 --------------
 
-Reccords can be updated using :meth:`~openerp.models.Model.write`, it takes
+Records can be updated using :meth:`~openerp.models.Model.write`, it takes
 a list of records to update and a mapping of updated fields to values similar
 to :meth:`~openerp.models.Model.create`.
 
