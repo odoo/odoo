@@ -7,7 +7,6 @@ var framework = require('web.framework');
 var Model = require('web.Model');
 var session = require('web.session');
 var Widget = require('web.Widget');
-var Notification = require('web.Notification');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -30,8 +29,7 @@ var SystrayMenu = Widget.extend({
 
         this.$el.parent().show();
         this._super.apply(this, arguments);
-        self.notification = new Notification(this);
-        self.notification.appendTo(self.$('.dropdown-toggle'));
+
         return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
             var user_offset = result[0]['tz_offset'];
             var offset = -(new Date().getTimezoneOffset());
@@ -39,13 +37,10 @@ var SystrayMenu = Widget.extend({
             browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
             browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
             if (browser_offset !== user_offset) {
-                $('.oe_timezone_icon').append('<a href="#" title="Timezone mismatch" class="oe_tz_warning"><i class="fa fa-exclamation-triangle" style="color:red;"></i></a>');
+                $('.oe_timezone_icon').append('<i class="fa fa-exclamation-triangle" style="color:red;" title="Your Odoo preference timezone does not match your browser timezone: \n Your Odoo timezone is '+user_offset+' \n Your Browser timezone is '+browser_offset+'"></i>');
                 $('.oe_timezone_icon').css('display', 'inline-block');
                 $('.oe_timezone_icon a').css('display', 'inline');
                 $('.oe_timezone_icon a').first().css('padding-right', '48px');
-                $('.oe_tz_warning').on('click', function() {
-                    self.timezone_warning(browser_offset, user_offset);
-                });
             }
         });
 
@@ -125,25 +120,6 @@ var SystrayMenu = Widget.extend({
                 dialogClass: 'oe_act_window',
                 title: _t("About"),
             }, $help).open();
-        });
-    },
-    do_warn: function() {
-        var n = this.notification;
-        return n.warn.apply(n, arguments);
-    },
-    timezone_warning: function(browser_offset, user_offset) {
-        var self = this;
-        var notification = self.do_warn(_t("Timezone Mismatch"), QWeb.render('WebClient.timezone_notification', {
-            user_timezone: session.user_context.tz || 'UTC',
-            user_offset: user_offset,
-            browser_offset: browser_offset,
-        }), true);
-        self.$el.find('.oe_webclient_timezone_notification').on('click', function() {
-            notification.close();
-        }).find('a').on('click', function() {
-            notification.close();
-            self.on_menu_settings();
-            return false;
         });
     },
 });

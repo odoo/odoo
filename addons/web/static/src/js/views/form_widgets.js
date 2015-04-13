@@ -889,7 +889,6 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
 });
 
 var TimeZone = FieldSelection.extend({
-    template: "WebClient.timezone_systray_preferences",
     initialize_content: function() {
         var self = this;
         return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
@@ -898,8 +897,9 @@ var TimeZone = FieldSelection.extend({
             var browser_offset = (offset < 0) ? "-" : "+";
             browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
             browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-            if (browser_offset === user_offset) {
-                self.$el.removeClass('fa-exclamation-triangle');
+            if (browser_offset !== user_offset) {
+                self.$el.append('<i class="fa fa-exclamation-triangle" style="color:red;margin:5px" title="Your Odoo preference timezone does not match your browser timezone: \n Your Odoo timezone is '+user_offset+'\n Your Browser timezone is '+browser_offset+'"   ></i>');
+                self.$el.css('display', 'inline-flex');
             }
         });
     },
