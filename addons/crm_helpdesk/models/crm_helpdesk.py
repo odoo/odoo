@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import _, api, fields, models
+from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 from openerp.tools import html2plaintext
 

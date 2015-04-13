@@ -21,7 +21,6 @@ and categorize your interventions with a channel and a priority level.
         'views/crm_helpdesk_menu.xml',
         'security/ir.model.access.csv',
         'report/crm_helpdesk_report_view.xml',
-        'data/crm_helpdesk_data.xml',
     ],
     'demo': ['data/crm_helpdesk_demo.xml'],
     'installable': True,
