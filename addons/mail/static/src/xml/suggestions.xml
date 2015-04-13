@@ -11,7 +11,7 @@
     <!-- Suggested groups -->
     <div t-name="TimelineSuggestionGroups" class="oe_sidebar_suggestion oe_suggestion_group">
         <div class="oe_suggest_title">
-            <i class="oe_suggestion_remove oe_suggestion_group fa fa-remove"/>
+            <i class="oe_suggestion_remove oe_suggestion_group fa fa-times"/>
             <span>Suggested Groups</span>
         </div>
         <div class="oe_suggest_items">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="oe_suggested_item_content">
                         <a class="oe_suggestion_item_name" t-attf-href="#model=mail.group&amp;id=#{result.id}"><t t-esc="result.name"/></a>
-                        <i class="oe_suggestion_remove_item oe_suggestion_group fa fa-remove" t-att-id="result.id"/>
+                        <i class="oe_suggestion_remove_item oe_suggestion_group fa fa-times" t-att-id="result.id"/>
                         <br/>
                         <div class="btn-group btn-group-sm"> 
                             <button type="button" class="btn btn-default oe_suggestion_join" t-att-id="result.id">Join Group</button>

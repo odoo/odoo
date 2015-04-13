@@ -62,7 +62,7 @@
                             <a t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, post=post)}" t-field="post.name"></a>
                             <span t-if="not post.website_published" class="text-warning">
                                 &amp;nbsp;
-                                <span class="fa fa-warning" title="Not published"/>
+                                <span class="fa fa-exclamation-triangle" title="Not published"/>
                             </span>
                         </h4>
                         <div class="text-muted">

@@ -162,7 +162,7 @@
                                             <div class="oe_goal_state">
                                                 <t t-if="record.state.raw_value=='reached'"><i class="oe_green fa fa-check" title="Goal Reached"/></t>
                                                 <t t-if="record.state.raw_value=='inprogress'"><i class="fa fa-clock-o" title="Goal in Progress"/></t>
-                                                <t t-if="record.state.raw_value=='failed'"><i class="oe_red fa fa-remove" title="Goal Failed"/></t>
+                                                <t t-if="record.state.raw_value=='failed'"><i class="oe_red fa fa-times" title="Goal Failed"/></t>
                                             </div>
                                         </t>
                                         <t t-if="record.definition_display.raw_value == 'progress'">
