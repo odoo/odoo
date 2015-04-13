@@ -890,9 +890,6 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
 
 var TimeZone = FieldSelection.extend({
     template: "WebClient.timezone_systray_preferences",
-    events: {
-        'change select': 'store_dom_value',
-    },
     initialize_content: function() {
         var self = this;
         return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
@@ -905,22 +902,6 @@ var TimeZone = FieldSelection.extend({
                 self.$el.removeClass('fa-exclamation-triangle');
             }
         });
-    },
-    store_dom_value: function() {
-        var self = this;
-        var val = $('#oe-field-input-6').val();
-        var user_offset = moment().tz(val.replace(/"/g,"")).format('Z');
-        var offset = -(new Date().getTimezoneOffset());
-        var browser_offset = (offset < 0) ? "-" : "+";
-        browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60))+':';
-        browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-        if (browser_offset !== user_offset) {
-            self.$el.addClass('fa-exclamation-triangle');
-        }
-        else {
-            self.$el.removeClass('fa-exclamation-triangle');
-        }
-        return this._super();
     },
 });
 

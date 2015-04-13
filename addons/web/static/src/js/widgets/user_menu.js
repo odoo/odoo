@@ -35,13 +35,15 @@ var SystrayMenu = Widget.extend({
         return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
             var user_offset = result[0]['tz_offset'];
             var offset = -(new Date().getTimezoneOffset());
-            // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
             var browser_offset = (offset < 0) ? "-" : "+";
             browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
             browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
             if (browser_offset !== user_offset) {
-                $('.timezone_icon').append('<a href="#" class="tz_mismatch"><i class="fa fa-exclamation-triangle" style="color:red;"></i></a>');
-                $('.tz_mismatch').click(function(){
+                $('.oe_timezone_icon').append('<a href="#" class="oe_tz_warning"><i class="fa fa-exclamation-triangle" style="color:red;"></i></a>');
+                $('.oe_timezone_icon').css('display', 'inline-block');
+                $('.oe_timezone_icon a').css('display', 'inline');
+                $('.oe_timezone_icon a').first().css('padding-right', '48px');
+                $('.oe_tz_warning').on('click', function() {
                     self.timezone_warning(browser_offset, user_offset);
                 });
             }
