@@ -19,11 +19,8 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
 from openerp.tools import html2plaintext
-from openerp.tools.translate import _
 from openerp.osv import osv, fields, expression
-from openerp.exceptions import AccessError
 
 class MailMessage(osv.Model):
     _inherit = 'mail.message'
@@ -60,30 +57,12 @@ class MailMessage(osv.Model):
 
         return defaults
 
-    def _search(self, cr, uid, args, offset=0, limit=None, order=None,
-                context=None, count=False, access_rights_uid=None):
-        """ Override that adds specific access rights of mail.message, to restrict
-        messages to published messages for public users. """
-        if uid != SUPERUSER_ID:
-            group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-            group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
-            if group_user_id in [group.id for group in group_ids]:
-                args = expression.AND([[('website_published', '=', True)], list(args)])
+class IrRule(osv.Model):
+    _inherit = 'ir.rule'
 
-        return super(MailMessage, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
-                                                context=context, count=count, access_rights_uid=access_rights_uid)
-
-    def check_access_rule(self, cr, uid, ids, operation, context=None):
-        """ Add Access rules of mail.message for non-employee user:
-            - read:
-                - raise if the type is comment and subtype NULL (internal note)
-        """
-        if uid != SUPERUSER_ID:
-            group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-            group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
-            if group_user_id in [group.id for group in group_ids]:
-                cr.execute('SELECT id FROM "%s" WHERE website_published IS FALSE AND id = ANY (%%s)' % (self._table), (ids,))
-                if cr.fetchall():
-                    raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation))
-        return super(MailMessage, self).check_access_rule(cr, uid, ids=ids, operation=operation, context=context)
+    def _compute_domain(self, cr, uid, model_name, mode="read"):
+        domain = super(IrRule, self)._compute_domain(cr, uid, model_name, mode=mode)
+        if model_name == 'mail.message' and self.pool['res.users'].has_group(cr, uid, 'base.group_public'):
+            domain = expression.AND([domain, [('website_published', '=', True)]])
+        return domain
 

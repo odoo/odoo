@@ -144,7 +144,7 @@ class ir_rule(osv.osv):
         return []
 
     def clear_cache(self, cr, uid):
-        self._compute_domain.clear_cache(self)
+        ir_rule._compute_domain.clear_cache(self)
 
     def domain_get(self, cr, uid, model_name, mode='read', context=None):
         dom = self._compute_domain(cr, uid, model_name, mode)

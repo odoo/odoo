@@ -701,7 +701,7 @@ class mail_message(osv.Model):
             return model_record_ids
 
         if uid == SUPERUSER_ID:
-            return
+            return super(mail_message, self).check_access_rule(cr, uid, ids, operation, context=None)
         if isinstance(ids, (int, long)):
             ids = [ids]
         not_obj = self.pool.get('mail.notification')
@@ -770,7 +770,7 @@ class mail_message(osv.Model):
         # Calculate remaining ids: if not void, raise an error
         other_ids = other_ids.difference(set(document_related_ids))
         if not other_ids:
-            return
+            return super(mail_message, self).check_access_rule(cr, uid, ids, operation, context=None)
         raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
                              (self._description, operation))
 
