@@ -715,13 +715,6 @@ class YamlInterpreter(object):
 
         if node.action:
             action_type = node.type or 'act_window'
-            icons = {
-                "act_window": 'STOCK_NEW',
-                "report.xml": 'STOCK_PASTE',
-                "wizard": 'STOCK_EXECUTE',
-                "url": 'STOCK_JUMP_TO',
-            }
-            values['icon'] = icons.get(action_type, 'STOCK_NEW')
             if action_type == 'act_window':
                 action_id = self.get_id(node.action)
                 self.cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%s', (action_id,))
@@ -736,16 +729,6 @@ class YamlInterpreter(object):
                 self.cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%s ORDER BY sequence LIMIT 1', (action_id,))
                 if self.cr.rowcount:
                     action_mode = self.cr.fetchone()
-                if action_type == 'tree':
-                    values['icon'] = 'STOCK_INDENT'
-                elif action_mode and action_mode.startswith('tree'):
-                    values['icon'] = 'STOCK_JUSTIFY_FILL'
-                elif action_mode and action_mode.startswith('graph'):
-                    values['icon'] = 'terp-graph'
-                elif action_mode and action_mode.startswith('calendar'):
-                    values['icon'] = 'terp-calendar'
-                if target == 'new':
-                    values['icon'] = 'STOCK_EXECUTE'
                 if not values.get('name', False):
                     values['name'] = action_name
             elif action_type == 'wizard':
@@ -758,8 +741,6 @@ class YamlInterpreter(object):
                 raise YamlImportException("Unsupported type '%s' in menuitem tag." % action_type)
         if node.sequence:
             values['sequence'] = node.sequence
-        if node.icon:
-            values['icon'] = node.icon
 
         self._set_group_values(node, values)
 

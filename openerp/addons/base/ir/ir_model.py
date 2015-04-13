@@ -1250,7 +1250,6 @@ class wizard_model_menu(osv.osv_memory):
             self.pool.get('ir.ui.menu').create(cr, uid, {
                 'name': menu.name,
                 'parent_id': menu.menu_id.id,
-                'action': 'ir.actions.act_window,%d' % (action_id,),
-                'icon': 'STOCK_INDENT'
+                'action': 'ir.actions.act_window,%d' % (action_id,)
             }, context)
         return {'type':'ir.actions.act_window_close'}

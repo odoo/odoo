@@ -213,17 +213,6 @@ class ir_ui_menu(osv.osv):
             # value is False, remove existing binding
             ir_values_obj.unlink(cursor, user, values_ids, context=ctx)
 
-    def _get_icon_pict(self, cr, uid, ids, name, args, context):
-        res = {}
-        for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = ('stock', (m.icon,'ICON_SIZE_MENU'))
-        return res
-
-    def onchange_icon(self, cr, uid, ids, icon):
-        if not icon:
-            return {}
-        return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon,'ICON_SIZE_MENU'))}}
-
     def read_image(self, path):
         if not path:
             return False
@@ -399,7 +388,6 @@ class ir_ui_menu(osv.osv):
         'complete_name': fields.function(_get_full_name,
             string='Full Path', type='char', size=128),
         'icon': fields.char('Icon', size=64),
-        'icon_pict': fields.function(_get_icon_pict, type='char', size=32),
         'web_icon': fields.char('Web Icon File'),
         'web_icon_hover': fields.char('Web Icon File (hover)'),
         'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', readonly=True, store=True, multi='icon'),
@@ -428,7 +416,6 @@ class ir_ui_menu(osv.osv):
         (osv.osv._check_recursion, _rec_message, ['parent_id'])
     ]
     _defaults = {
-        'icon_pict': ('stock', ('STOCK_OPEN', 'ICON_SIZE_MENU')),
         'sequence': 10,
     }
     _order = "sequence,id"
