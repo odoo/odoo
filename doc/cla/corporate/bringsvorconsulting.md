@@ -13,3 +13,4 @@ Torvald Baade Bringsvor bringsvor@bringsvor.com https://github.com/bringsvor
 List of contributors:
 
 Torvald Baade Bringsvor bringsvor@bringsvor.com https://github.com/bringsvor
+Torvald Baade Bringsvor torvald@bringsvor.com https://github.com/bringsvor
