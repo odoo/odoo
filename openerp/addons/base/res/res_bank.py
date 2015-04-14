@@ -31,7 +31,7 @@ class Bank(osv.osv):
         'name': fields.char('Name', required=True),
         'street': fields.char('Street'),
         'street2': fields.char('Street2'),
-        'zip': fields.char('Zip', change_default=True, size=24),
+        'zip': fields.char('Zip', change_default=True),
         'city': fields.char('City'),
         'state': fields.many2one("res.country.state", 'Fed. State',
             domain="[('country_id', '=', country)]"),
@@ -40,7 +40,7 @@ class Bank(osv.osv):
         'phone': fields.char('Phone'),
         'fax': fields.char('Fax'),
         'active': fields.boolean('Active'),
-        'bic': fields.char('Bank Identifier Code', size=64,
+        'bic': fields.char('Bank Identifier Code',
             help="Sometimes called BIC or Swift."),
     }
     _defaults = {
@@ -115,13 +115,13 @@ class res_partner_bank(osv.osv):
 
     _columns = {
         'name': fields.char('Bank Account'), # to be removed in v6.2 ?
-        'acc_number': fields.char('Account Number', size=64, required=True),
+        'acc_number': fields.char('Account Number', required=True),
         'bank': fields.many2one('res.bank', 'Bank'),
-        'bank_bic': fields.char('Bank Identifier Code', size=16),
+        'bank_bic': fields.char('Bank Identifier Code'),
         'bank_name': fields.char('Bank Name'),
         'owner_name': fields.char('Account Owner Name'),
         'street': fields.char('Street'),
-        'zip': fields.char('Zip', change_default=True, size=24),
+        'zip': fields.char('Zip', change_default=True),
         'city': fields.char('City'),
         'country_id': fields.many2one('res.country', 'Country',
             change_default=True),
