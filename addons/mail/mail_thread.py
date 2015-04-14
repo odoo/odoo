@@ -236,16 +236,17 @@ class mail_thread(osv.AbstractModel):
     def _search_message_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
         return [('message_ids.to_read', '=', True)]
 
-    def _get_followers(self, cr, uid, ids, name, arg, context=None):
-        fol_obj = self.pool.get('mail.followers')
-        fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)])
-        res = dict((id, dict(message_follower_ids=[], message_is_follower=False)) for id in ids)
-        user_pid = self.pool.get('res.users').read(cr, uid, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
-        for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids):
-            res[fol.res_id]['message_follower_ids'].append(fol.partner_id.id)
-            if fol.partner_id.id == user_pid:
-                res[fol.res_id]['message_is_follower'] = True
-        return res
+    @api.multi
+    def _get_followers(self, names, arg):
+        partner = self.env.user.partner_id
+
+        result = {thread.id: {'message_follower_ids': [], 'message_is_follower': False} for thread in self}
+        for follower in self.env['mail.followers'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', self.ids)]):
+            result[follower.res_id]['message_follower_ids'].append(follower.partner_id.id)
+            if follower.partner_id == partner:
+                result[follower.res_id]['message_is_follower'] = True
+
+        return result
 
     def _set_followers(self, cr, uid, id, name, value, arg, context=None):
         if not value:
