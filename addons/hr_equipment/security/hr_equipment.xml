@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- TODO RIM review security rights -->
+    <record id="base.group_admin_user" model="res.groups">
+        <field name="name">Equipment Manager</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">The user will be able to manage equipments.</field>
+    </record>
+    <record id="base.group_hr_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('base.group_admin_user'))]"/>
+    </record>
+
+    <record id="maintenance_employee" model="ir.rule">
+        <field name="name">Employee can see its own maintenance requests</field>
+        <field name="model_id" ref="model_hr_equipment_request"/>
+        <field name="domain_force">['|',('user_id.id','=',user.id),('employee_id.user_id.id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+    <record id="equipment_employee" model="ir.rule">
+        <field name="name">Employee can see its own equipments</field>
+        <field name="model_id" ref="model_hr_equipment"/>
+        <field name="domain_force">[('employee_id.user_id.id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record id="maintenance_admin_user" model="ir.rule">
+        <field name="name">Administrator of maintenance requests</field>
+        <field name="model_id" ref="model_hr_equipment_request"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_admin_user'))]"/>
+    </record>
+    <record id="equipment_admin_user" model="ir.rule">
+        <field name="name">Equipments administrator</field>
+        <field name="model_id" ref="model_hr_equipment"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_admin_user'))]"/>
+    </record>
+
+</odoo>
