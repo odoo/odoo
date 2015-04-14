@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import time
-
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -94,7 +92,7 @@ class account_move_line_reconcile(osv.osv_memory):
         if context is None:
             context = {}
 
-        date = time.strftime('%Y-%m-%d')
+        date = fields.date.context_today(self, cr, uid, context=context)
         ctx = dict(context or {}, account_period_prefer_normal=True)
         ids = period_obj.find(cr, uid, dt=date, context=ctx)
         if ids:
@@ -119,7 +117,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
     }
     _defaults = {
-        'date_p': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_p': fields.date.context_today,
         'comment': 'Write-off',
     }
 
