@@ -21,6 +21,7 @@
 
 import logging
 import time
+from datetime import datetime
 
 from openerp import tools
 from openerp.osv import fields, osv
@@ -512,13 +513,13 @@ class pos_session(osv.osv):
         }
 
     def _confirm_orders(self, cr, uid, ids, context=None):
-        account_move_obj = self.pool.get('account.move')
         pos_order_obj = self.pool.get('pos.order')
         for session in self.browse(cr, uid, ids, context=context):
-            local_context = dict(context or {}, force_company=session.config_id.journal_id.company_id.id)
+            company_id = session.config_id.journal_id.company_id.id
+            local_context = dict(context or {}, force_company=company_id)
             order_ids = [order.id for order in session.order_ids if order.state == 'paid']
 
-            move_id = account_move_obj.create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=local_context)
+            move_id = pos_order_obj._create_account_move(cr, uid, session.start_at, session.name, session.config_id.journal_id.id, company_id, context=context)
 
             pos_order_obj._create_account_move_line(cr, uid, order_ids, session, move_id, context=local_context)
 
@@ -1021,6 +1022,14 @@ class pos_order(osv.osv):
         '''This method is designed to be inherited in a custom module'''
         return False
 
+    def _create_account_move(self, cr, uid, dt, ref, journal_id, company_id, context=None):
+        local_context = dict(context or {}, company_id=company_id)
+        start_at_datetime = datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        date_tz_user = fields.datetime.context_timestamp(cr, uid, start_at_datetime, context=context)
+        date_tz_user = date_tz_user.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        period_id = self.pool['account.period'].find(cr, uid, dt=date_tz_user, context=local_context)
+        return self.pool['account.move'].create(cr, uid, {'ref': ref, 'journal_id': journal_id, 'period_id': period_id[0]}, context=context)
+
     def _create_account_move_line(self, cr, uid, ids, session=None, move_id=None, context=None):
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
@@ -1066,16 +1075,14 @@ class pos_order(osv.osv):
 
             if move_id is None:
                 # Create an entry for the sale
-                move_id = account_move_obj.create(cr, uid, {
-                    'ref' : order.name,
-                    'journal_id': order.sale_journal.id,
-                }, context=context)
+                move_id = self._create_account_move(cr, uid, order.session_id.start_at, order.name, order.sale_journal.id, order.company_id.id, context=context)
+
+            move = account_move_obj.browse(cr, uid, move_id, context=context)
 
             def insert_data(data_type, values):
                 # if have_to_group_by:
 
                 sale_journal_id = order.sale_journal.id
-                period = account_period_obj.find(cr, uid, context=dict(context or {}, company_id=current_company.id))[0]
 
                 # 'quantity': line.qty,
                 # 'product_id': line.product_id.id,
@@ -1084,7 +1091,7 @@ class pos_order(osv.osv):
                     'ref': order.name,
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
                     'journal_id' : sale_journal_id,
-                    'period_id' : period,
+                    'period_id': move.period_id.id,
                     'move_id' : move_id,
                     'company_id': current_company.id,
                 })
