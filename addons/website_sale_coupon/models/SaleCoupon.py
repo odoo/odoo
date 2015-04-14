@@ -123,10 +123,34 @@ class SaleCouponProgram(models.Model):
     reward_id = fields.Many2one('sale.reward', string="Reward", ondelete='cascade', required=True)
     count_sale_order = fields.Integer(compute='_compute_so_count', default=0)
     count_coupons = fields.Integer(compute='_compute_coupon_count', default=0)
+    state = fields.Selection([('draft', 'Draft'), ('opened', 'Opened'), ('closed', 'Closed')], help="Shows the program states", default="draft")
 
     _sql_constraints = [
         ('unique_program_code', 'unique(program_code)', 'The program code must be unique!'),
     ]
+
+    @api.multi
+    def open_generate_coupon_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Number of coupons',
+            'res_model': 'sale.manual.coupon',
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'target': 'new',
+        }
+
+    @api.one
+    def action_opened(self):
+        self.state = 'opened'
+
+    @api.one
+    def action_closed(self):
+        self.state = 'closed'
+
+    @api.one
+    def action_draft(self):
+        self.state = 'opened'
 
     def _compute_so_count(self):
         count = 0
@@ -209,6 +233,10 @@ class SaleOrderLine(models.Model):
                         else:
                             coupon_obj.nbr_used = 0
             reward_lines = self.order_id.order_line.filtered(lambda x: x.generated_from_line_id.id in self.ids)
+            for line_obj in self:
+                line = self.order_id.order_line.filtered(lambda x: x.generated_from_line_id.id is False and (x.coupon_program_id.reward_product_product_id == line_obj.product_id or x.coupon_program_id.reward_discount_on_product_id == line_obj.product_id))
+                if line:
+                    reward_lines += line
             if reward_lines:
                 reward_lines.unlink()
             res = super(SaleOrderLine, self).unlink()
@@ -218,7 +246,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def apply_immediately_reward(self):
-        programs = self._search_reward_programs([('program_type', '=', 'apply_immediately')])
+        programs = self._search_reward_programs([('program_type', '=', 'apply_immediately'), ('state', '=', 'opened')])
         if programs:
             self.process_rewards(programs, False)
         return programs
@@ -367,17 +395,30 @@ class SaleOrder(models.Model):
                     return True
 
     def _search_reward_programs(self, domain=[]):
+        # print "<<<<<<>>>>>>> in search", domain
         return self.env['sale.couponprogram'].search(domain + [
             '&', ('purchase_type', '=', 'amount'), '|',
             '&', ('reward_tax', '=', 'tax_excluded'), ('minimum_amount', '<=', self.amount_total),
-            '&', ('reward_tax', '=', 'tax_included'), ('minimum_amount', '<=', self.amount_untaxed)], limit=1, order="minimum_amount desc")
+            '&', ('reward_tax', '=', 'tax_included'), ('minimum_amount', '<=', self.amount_untaxed)], limit=1)
 
     def _check_current_reward_applicability(self, domain=[]):
         remove_reward_lines = []
         for order in self.filtered(lambda x: x.order_line is not False):
-            programs = order._search_reward_programs(domain)
-            if not programs:
-                remove_reward_lines += order.order_line.filtered(lambda x: x.coupon_program_id.purchase_type == 'amount' and x.coupon_program_id.program_type == domain[0][2])
+            reward_line = order.order_line.filtered(lambda x: x.coupon_program_id.purchase_type == 'amount' and x.coupon_program_id.program_type == domain[0][2])
+            if reward_line:
+                if reward_line.coupon_program_id.applicability_tax == 'tax_excluded'and \
+                   order.amount_total + ((-1) * reward_line.price_unit) < reward_line.coupon_program_id.minimum_amount:
+                        remove_reward_lines += reward_line
+                if reward_line.coupon_program_id.applicability_tax == 'tax_included' and \
+                   order.amount_untaxed + ((-1) * reward_line.price_unit) < reward_line.coupon_program_id.minimum_amount:
+                        remove_reward_lines += reward_line
+                # if reward_line and reward_line.coupon_program_id.reward_type == 'product':
+                #     if order.order_line.filtered(lambda x: x.product_id == reward_line.coupon_program_id.reward_product_product_id or reward_line.coupon_program_id.reward_discount_on_product_id):
+                #         remove_reward_lines += reward_line
+            # programs = order._search_reward_programs(domain)
+            # print "<<<<<<<<<>>>", programs, domain
+            # if not programs:
+            #     remove_reward_lines += order.order_line.filtered(lambda x: x.coupon_program_id.purchase_type == 'amount' and x.coupon_program_id.program_type == domain[0][2])
             for order_line in [x for x in order.order_line if not (x.coupon_program_id or x.generated_from_line_id)]:
                 programs = order_line._search_reward_programs(domain)
                 if programs:
@@ -422,7 +463,8 @@ class SaleOrder(models.Model):
     @api.multi
     def apply_immediately_reward(self):
         for order in self.filtered(lambda x: x.order_line is not False):
-            programs = order._search_reward_programs([('program_type', '=', 'apply_immediately')])
+            programs = order._search_reward_programs([('program_type', '=', 'apply_immediately'), ('state', '=', 'opened')])
+            print "<<<<<<<<<>>>>>>>>>in so", programs
             if programs:
                 self.process_rewards(programs, False)
             for order_line in [x for x in order.order_line if not (x.coupon_program_id or x.generated_from_line_id)]:
@@ -449,6 +491,7 @@ class SaleOrder(models.Model):
                                                      (self.amount_untaxed >= program.minimum_amount and program.reward_tax == 'tax_excluded')):
                 reward_product_id = self.env.ref('website_sale_coupon.product_product_reward')
                 reward_line = self.order_line.filtered(lambda x: x.generated_from_line_id.id is False and x.product_id == reward_product_id)
+                print "<<<<<<<>>>>>", reward_line
                 if reward_line:
                     return {'error': _('Code %s is already applied') % (coupon_code)}
                 else:
@@ -468,6 +511,7 @@ class SaleOrder(models.Model):
                     else:
                         line.process_rewards(program, coupon_code)
             self._check_for_free_shipping(coupon_code)
+        return {'update_price': True}
 
     @api.multi
     def process_rewards(self, programs, coupon_code):
@@ -537,10 +581,15 @@ class SaleOrder(models.Model):
                     coupon_obj.reward_name = desc
 
     @api.multi
-    def apply_coupon_wizard(self, context=None):
-        res = self.env['ir.actions.act_window'].for_xml_id('website_sale_coupon', 'launch_get_coupon_wizard', context=context)
-        res['domain'] = [('program_id', '=', self.id)]
-        return res
+    def open_apply_coupon_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': "Enter coupon code",
+            'res_model': 'sale.get.coupon',
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'target': 'new',
+        }
 
 
 class ProductTemplate(models.Model):
@@ -571,5 +620,5 @@ class GetCouponCode(models.TransientModel):
     def process_coupon(self):
         sale_order_id = self.env['sale.order'].browse(self._context.get('active_ids'))
         coupon_applied_satus = sale_order_id.apply_coupon_reward(self.textbox_coupon_code)
-        if coupon_applied_satus is not None:
+        if coupon_applied_satus.get('error'):
             raise UserError(_(coupon_applied_satus.get('error')))

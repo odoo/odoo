@@ -6,6 +6,18 @@
             <field name="model">sale.couponprogram</field>
             <field name="arch" type="xml">
                 <form string="Coupon Program">
+                    <header>
+                        <button name="action_opened" type="object"
+                                string="Open program"
+                                states="draft" class="oe_highlight"/>
+                        <button name="action_closed" type="object"
+                                string="Close program"
+                                states="draft,opened"/>
+                        <button type="object" name="open_generate_coupon_wizard"
+                                string="Generate coupon"
+                                attrs="{'invisible': [('program_type', '!=', 'generated_coupon')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,opened,closed" statusbar_colors='"waiting_date":"blue"}'/>
+                    </header>
                      <sheet>
                         <div class="oe_left" style="width: 350px;">
                             <label class="oe_edit_only" for="name" string="Program Name"/>
@@ -22,7 +34,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="program_type"/>
+                                <field name="program_type" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="program_code" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')]}"/>
                             </group>
                             <group>
@@ -150,7 +162,7 @@
             <field name="model">sale.manual.coupon</field>
             <field name="arch" type="xml">
                 <form string="Generate Coupons">
-                    <group>
+                    <group style="width: 250px">
                         <field name="nbr_coupons"/>
                     </group>
                     <footer>
@@ -161,38 +173,21 @@
             </field>
         </record>
 
-        <act_window id="launch_coupon_wizard"
-                    name="Generate Coupons"
-                    src_model="sale.couponprogram"
-                    res_model="sale.manual.coupon"
-                    view_mode="form"
-                    target="new"
-                    key2="client_action_multi"
-                    groups="base.group_multi_company"/>
-
         <record model="ir.ui.view" id="wizard_view_to_get_coupon">
             <field name="name">wizard.form.get.coupon</field>
             <field name="model">sale.get.coupon</field>
             <field name="arch" type="xml">
                 <form string="Apply coupon">
-                    <group>
+                    <group style="width: 400px">
                         <field name="textbox_coupon_code"/>
                     </group>
                     <footer>
-                        <button name="process_coupon" string="Apply Coupon" type="object" class="oe_edit_only oe_inline"/>
+                        <button name="process_coupon" string="Apply Coupon" type="object" class="oe_highlight"/>
                         <button special="cancel" string="Cancel"/>
                     </footer>
                 </form>
             </field>
         </record>
-
-     <act_window id="launch_get_coupon_wizard"
-                    name="Apply Coupon"
-                    src_model="sale.order"
-                    res_model="sale.get.coupon"
-                    view_mode="form"
-                    target="new"
-                    key2="client_action_multi"/>
 
         <record model="ir.ui.view" id="sale_coupon_form">
              <field name="name">sale.coupon.form</field>
@@ -200,7 +195,7 @@
              <field name="inherit_id" ref="sale.view_order_form" />
              <field name="arch" type="xml">
                 <xpath expr="//header/button[@name='cancel']" position="before">
-                    <button name="apply_coupon_wizard" string="Apply coupon" type="object" groups="base.group_user"/>
+                    <button name="open_apply_coupon_wizard" string="Apply coupon" type="object" groups="base.group_user"/>
                 </xpath>
              </field>
         </record>
