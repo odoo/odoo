@@ -85,8 +85,8 @@
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
             <t t-if="request and request.website_multilang and website">
-                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lang">
-                    <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
+                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lg">
+                    <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
                 </t>
             </t>
 
