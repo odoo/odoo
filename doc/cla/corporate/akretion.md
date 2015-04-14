@@ -1,4 +1,4 @@
-Brazil, France, 2015-03-22
+Brazil, France, 2015-04-14
 
 Akretion France agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
@@ -11,16 +11,14 @@ Signed,
 Sébastien BEAU sebastien.beau@akretion.com https://github.com/akretion
 
 
-#TODO add Raph here
+Akretion LTDA agrees to the terms of the Odoo Corporate Contributor License
+Agreement v1.0.
 
-#Akretion Brazil agrees to the terms of the Odoo Corporate Contributor License
-#Agreement v1.0.
+I declare that I am authorized and able to make this agreement and sign this 
+declaration.
 
-#I declare that I am authorized and able to make this agreement and sign this 
-#declaration.
-#
-#Signed,
-#
+Signed,
+Raphaël Valyi raphael.valyi@akretion.com https://github.com/akretion
 
 
 List of contributors:
@@ -34,10 +32,12 @@ Chafique delli chafique.delli@akretion.com https://github.com/chafique-delli
 Cilene Oliveira cilene.oliveira@akretion.com https://github.com/cileneoliveira
 David Beal david.beal@akretion.com https://github.com/bealdav
 Florian da Costa florian.dacosta@akretion.com https://github.com/florian-dacosta
-Sebastien Beau sebastien.beau@akretion.com https://github.com/sebastienbeau
+Magno Barcelo da Costa magno.costa@akretion.com.br https://github.com/mbcosta
 Raphaël Valyi raphael.valyi@akretion.com https://github.com/rvalyi
 Renato Lima renato.lima@akretion.com https://github.com/renatonlima
+Sebastien Beau sebastien.beau@akretion.com https://github.com/sebastienbeau
 Sylvain Calador sylvain.calador@akretion.com https://github.com/sylvainc
 Sylvain Legal sylvain.legal@akretion.com https://github.com/legalsylvain
-Magno Barcelo da Costa magno.costa@akretion.com.br https://github.com/mbcosta
+Thiago Moreira de Souza Arrais thiago.moreira@akretion.com.br https://github.com/thiagomds
 Valentin Chemiere valentin.chemiere@akretion.com https://github.com/viggor
+Vianney da Costa vianney.dacosta@akretion.com.br https://launchpad.net/~vianneydc
