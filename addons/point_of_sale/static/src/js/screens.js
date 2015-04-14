@@ -946,8 +946,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.refresh();
 
-            if (!this.pos.get('selectedOrder')._printed &&
-                !this.pos.config.iface_print_via_proxy) {
+            if (!this.pos.get('selectedOrder')._printed) {
                 this.print();
             }
 
@@ -1328,21 +1327,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
 
             }else{
-                this.pos.push_order(currentOrder);
-                var cO = this.pos.get('selectedOrder');
-                var isChange = cO.getPaidTotal() > cO.getTotalTaxIncluded();
-
+                this.pos.push_order(currentOrder) 
                 if(this.pos.config.iface_print_via_proxy){
                     var receipt = currentOrder.export_for_printing();
                     this.pos.proxy.print_receipt(QWeb.render('XmlReceipt',{
                         receipt: receipt, widget: self,
                     }));
-                    if(isChange) {
-                        this.pos_widget.screen_selector.set_current_screen(this.next_screen);
-                    }
-                    else {
-                        this.pos.get('selectedOrder').destroy(); //finish order and go back to scan screen
-                    }
+                    this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
                 }else{
                     this.pos_widget.screen_selector.set_current_screen(this.next_screen);
                 }

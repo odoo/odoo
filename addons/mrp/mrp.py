@@ -204,6 +204,7 @@ class mrp_bom(osv.osv):
     }
     _order = "sequence"
 
+
     def _bom_find(self, cr, uid, product_tmpl_id=None, product_id=None, properties=None, context=None):
         """ Finds BoM for particular product and product uom.
         @param product_tmpl_id: Selected product.

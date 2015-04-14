@@ -22,7 +22,7 @@ class website_sale_options(website_sale):
         r.qcontext['optional_product_ids'] = optional_product_ids
         return r
 
-    @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
     def cart_options_update_json(self, product_id, add_qty=1, set_qty=0, goto_shop=None, lang=None, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         if lang:
