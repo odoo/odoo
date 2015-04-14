@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from lxml import etree
 import openerp.addons.decimal_precision as dp
 import openerp.exceptions
@@ -1296,7 +1295,7 @@ class account_invoice(osv.osv):
         if 'date_p' in context and context['date_p']:
             date=context['date_p']
         else:
-            date=time.strftime('%Y-%m-%d')
+            date=fields.date.context_today(self, cr, uid, context=context)
 
         # Take the amount in currency and the currency of the payment
         if 'amount_currency' in context and context['amount_currency'] and 'currency_id' in context and context['currency_id']:
