@@ -60,6 +60,9 @@ class ir_http(orm.AbstractModel):
         request.website = None
         func = None
         try:
+            if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
+                new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string
+                return werkzeug.utils.redirect(new_url, 301)
             func, arguments = self._find_handler()
             request.website_enabled = func.routing.get('website', False)
         except werkzeug.exceptions.NotFound:
