@@ -184,9 +184,11 @@
         </field>
     </record>
 
-    <menuitem name="Lead Automation" id="menu_marketing_campaign" parent="base.marketing_menu" groups="marketing.group_marketing_user,marketing.group_marketing_manager" 
+    <menuitem name="Lead Automation" id="menu_marketing_campaign_root" groups="marketing.group_marketing_user,marketing.group_marketing_manager" 
     sequence="3"/>
-    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="30"/>
+    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign_root" action="action_marketing_campaign_form" sequence="1"/>
+    <menuitem name="Reports" id="report_marketing_campaign" parent="menu_marketing_campaign_root" 
+        sequence="99"/>
 
     <!-- Marketing Segments -->
     <record model="ir.ui.view" id="view_marketing_campaign_segment_form">
@@ -275,7 +277,7 @@
         <field name="context">{'group_by': []}</field>
     </record>
 
-    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign" action="action_marketing_campaign_segment_form" sequence="20"/>
+    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign_root" action="action_marketing_campaign_segment_form" sequence="2"/>
 
     <!--
         Marketing Activities
@@ -460,7 +462,7 @@
         <field name="context">{'group_by': []}</field>
     </record>
 
-    <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="10"/>
+    <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign_root" action="action_marketing_campaign_workitem" sequence="3"/>
 
     </data>
 </openerp>

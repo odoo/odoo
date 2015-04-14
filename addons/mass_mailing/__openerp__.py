@@ -47,7 +47,6 @@ professional emails and reuse templates in a few clicks.
         'views/mass_mailing_report.xml',
         'views/mass_mailing.xml',
         'views/res_config.xml',
-        'views/res_partner.xml',
         'views/email_template.xml',
         'views/website_mass_mailing.xml',
         'views/snippets.xml',

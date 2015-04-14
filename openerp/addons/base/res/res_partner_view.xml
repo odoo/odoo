@@ -6,11 +6,12 @@
         <menuitem name="Sales"
             id="menu_base_partner"
             groups="base.group_sale_salesman"
-            sequence="20"/>
+            sequence="6"/>
 
-            <menuitem id="base.menu_sales" parent="base.menu_base_partner" name="Sales" sequence="1" />
-            <menuitem id="menu_base_config" parent="menu_base_partner" name="Configuration" sequence="30" groups="group_system"/>
-            <menuitem id="menu_config_address_book" parent="menu_base_config" name="Contacts" sequence="4" groups="group_system"/>
+            <!-- This menu will disappear, I commented it for tests purpose -->
+            <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config"
+            sequence="1"/>
+            <menuitem id="menu_config_address_book" parent="base.menu_sale_config" name="Contacts" sequence="4" groups="group_system"/>
 
         <!-- Partner Titles -->
         <record id="view_partner_title_tree" model="ir.ui.view">
@@ -448,7 +449,8 @@
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
-        <menuitem id="menu_partner_form" parent="base.menu_sales" action="action_partner_form" sequence="2"/>
+        <menuitem name="CRM" id="base.menu_crm" parent="base.menu_base_partner" sequence="2"/>
+        <menuitem id="menu_partner_form" parent="base.menu_crm" action="action_partner_form" sequence="4"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers</field>

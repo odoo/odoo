@@ -45,7 +45,6 @@ up a management by affair.
         'security/ir.model.access.csv',
         'security/hr_timesheet_security.xml',
         'hr_timesheet_view.xml',
-        'wizard/hr_timesheet_sign_in_out_view.xml',
         'report/hr_timesheet_report_view.xml',
         'hr_timesheet_installer.xml',
         'hr_timesheet_data.xml'
@@ -53,7 +52,6 @@ up a management by affair.
     'demo': ['hr_timesheet_demo.xml'],
     'test': [
         'test/hr_timesheet_users.yml',
-        'test/test_hr_timesheet.yml',
         'test/hr_timesheet_demo.yml',
     ],
     'installable': True,

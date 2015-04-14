@@ -4,9 +4,14 @@
 
         <!-- Top menu item -->
         <menuitem name="Sales"
-            id="base.menu_base_partner"/>
+            id="base.menu_base_partner" sequence="6"/>
 
-        <menuitem id="base.menu_aftersale" name="After-Sale Services" sequence="2" parent="base.menu_base_partner" />
+        <menuitem id="base.menu_aftersale" name="After-Sale"
+            groups="base.group_sale_salesman"
+            parent="base.menu_base_partner" sequence="5" />
+        <menuitem id="base.menu_services" name="Services" sequence="2" 
+            parent="base.menu_aftersale" 
+            groups="base.group_sale_salesman"/>
 
         <!-- Help Desk (menu) -->
 
@@ -53,8 +58,7 @@
         </record>
 
         <menuitem name="Helpdesk and Support" id="menu_help_support_main"
-            groups="base.group_sale_salesman"
-            parent="base.menu_aftersale" action="crm_case_helpdesk_act111" sequence="2"/>
+            parent="base.menu_services" action="crm_case_helpdesk_act111" sequence="2"/>
 
     </data>
 </openerp>

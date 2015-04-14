@@ -2,9 +2,12 @@
 <openerp>
     <data>
 
-        <menuitem id="base.menu_aftersale" name="After-Sale Services"
+        <menuitem id="base.menu_aftersale" name="After-Sale"
             groups="base.group_sale_salesman"
-            parent="base.menu_base_partner" sequence="3" />
+            parent="base.menu_base_partner" sequence="5" />
+        <menuitem id="base.menu_services" name="Services"
+            groups="base.group_sale_salesman"
+            parent="base.menu_aftersale" sequence="2" />
 
         <!-- Claims Menu -->
         <record model="ir.actions.act_window" id="crm_claim_category_claim0">
@@ -45,7 +48,7 @@
 
 
         <menuitem name="Claims" id="menu_crm_case_claims"
-            parent="base.menu_aftersale" action="crm_claim_category_claim0" sequence="1"/>
+            parent="base.menu_services" action="crm_claim_category_claim0" sequence="1"/>
 
         <!-- Claim Stages -->
         <menuitem id="menu_claim_stage_view" name="Stages" action="crm_claim_stage_act" parent="menu_config_claim" sequence="20"/>

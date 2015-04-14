@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    	<menuitem name="UTMs" id="marketing_utm"
-            parent="base.marketing_menu" groups="marketing.group_marketing_user" sequence="99"/>
+        <menuitem id="menu_link_tracker_root" name="Link Tracker" groups="base.group_no_one" sequence="30"/>
+    	<menuitem name="UTMs" id="marketing_utm" groups="marketing.group_marketing_user" parent="menu_link_tracker_root" sequence="99"/>
 
     	<!-- utm.campaign -->
     	<record model="ir.ui.view" id="utm_campaign_tree">

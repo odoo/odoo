@@ -214,8 +214,9 @@
             </field>
         </record>
 
-        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
-             sequence="11" groups="base.group_hr_user"/>
+        <menuitem id="menu_timesheet_approvals" name="Approvals" parent="hr_attendance.timesheet_menu_root" sequence="6" groups="base.group_hr_user"/>
+        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="menu_timesheet_approvals"
+             sequence="11" />
 
         <!--
             Company inheritancy

@@ -10,11 +10,12 @@
         </template>
 
         <!-- Marketing / Mass Mailing -->
-        <menuitem name="Mass Mailing" id="mass_mailing_campaign"
-            parent="base.marketing_menu" sequence="1" groups="marketing.group_marketing_user"/>
+        <menuitem name="Mass Mailing" id="mass_mailing_menu_root" sequence="14"/>
+        <menuitem name="Mailings" id="mass_mailing_menu"
+            parent="mass_mailing_menu_root" sequence="1" groups="marketing.group_marketing_user"/>
         <!-- Marketing / Configuration -->
-        <menuitem name="Configuration" id="marketing_configuration"
-            parent="base.marketing_menu" sequence="99"/>
+        <menuitem name="Configuration" id="mass_mailing_configuration"
+            parent="mass_mailing_menu_root" sequence="99"/>
 
         <!--  MAIL MAIL STATISTICS !-->
         <record model="ir.ui.view" id="view_mail_mail_statistics_search">
@@ -206,7 +207,7 @@
         </record>
 
         <menuitem name="Contacts" id="menu_email_mass_mailing_contacts"
-            parent="mass_mailing_campaign" sequence="4" groups="base.group_no_one"
+            parent="mass_mailing_menu" sequence="4" groups="base.group_no_one"
             action="action_view_mass_mailing_contacts"/>
 
         <!--  MASS MAILING LIST -->
@@ -284,7 +285,7 @@
         </record>
 
         <menuitem name="Mailing Lists" id="menu_email_mass_mailing_lists"
-            parent="mass_mailing_campaign" sequence="3"
+            parent="mass_mailing_menu" sequence="3"
             action="action_view_mass_mailing_lists"/>
 
         <!--  MASS MAILING !-->
@@ -613,7 +614,7 @@
         </record>
 
         <menuitem name="Mass Mailings" id="menu_email_mass_mailings"
-            parent="mass_mailing_campaign" sequence="2"
+            parent="mass_mailing_menu" sequence="2"
             action="action_view_mass_mailings"/>
 
         <!--  MASS MAILING CAMPAIGN STAGE !-->
@@ -645,11 +646,11 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Mass Mailing" id= "menu_view_mass_mailing_config"
-            parent="base.menu_marketing_config_root" sequence="4" groups="marketing.group_marketing_user"/>
-           
+        <menuitem id="menu_mass_mailing_configuration" name="Mass Mailing" parent="base.menu_config"
+            sequence="14" groups="marketing.group_marketing_user"/>
+
         <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
-            parent="menu_view_mass_mailing_config" sequence="1"
+            parent="menu_mass_mailing_configuration" sequence="1"
             groups="mass_mailing.group_mass_mailing_campaign"
             action="action_view_mass_mailing_stages"/>
 
@@ -856,7 +857,7 @@
         </record>
 
         <menuitem name="Campaigns" id="menu_email_campaigns"
-            parent="mass_mailing_campaign" sequence="1"
+            parent="mass_mailing_menu_root" sequence="5"
             action="action_view_mass_mailing_campaigns"
             groups="mass_mailing.group_mass_mailing_campaign"/>
 

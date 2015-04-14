@@ -287,11 +287,11 @@
 
 
         <!-- Menu items -->
-        <menuitem name="Live Chat" parent="mail.mail_feeds_main" id="im_livechat" groups="group_im_livechat"/>
+        <menuitem id="menu_livechat_root" groups="group_im_livechat" name="Live Chat" sequence="34"/>
 
-        <menuitem name="Channels" parent="im_livechat" id="support_channels" action="action_support_channels" groups="group_im_livechat" sequence="5"/>
+        <menuitem name="Channels" parent="menu_livechat_root" id="support_channels" action="action_support_channels" groups="group_im_livechat" sequence="5"/>
 
-        <menuitem name="History" parent="im_livechat" id="session_history" action="action_session_history" groups="group_im_livechat" sequence="10"/>
+        <menuitem name="History" parent="menu_livechat_root" id="session_history" action="action_session_history" groups="group_im_livechat" sequence="10"/>
 
     </data>
 </openerp>
