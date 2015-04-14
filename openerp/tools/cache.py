@@ -59,26 +59,27 @@ class ormcache(object):
         return lookup
 
     def lru(self, model):
-        return model.pool.cache, (model._name, self.method)
+        counter = STAT[(model.pool.db_name, model._name, self.method)]
+        return model.pool.cache, (model._name, self.method), counter
 
     def lookup(self, method, *args, **kwargs):
-        d, key0 = self.lru(args[0])
+        d, key0, counter = self.lru(args[0])
         key = key0 + args[self.skiparg:]
         try:
             r = d[key]
-            STAT[key0].hit += 1
+            counter.hit += 1
             return r
         except KeyError:
-            STAT[key0].miss += 1
+            counter.miss += 1
             value = d[key] = self.method(*args, **kwargs)
             return value
         except TypeError:
-            STAT[key0].err += 1
+            counter.err += 1
             return self.method(*args, **kwargs)
 
     def clear(self, model, *args):
         """ Remove *args entry from the cache or all keys if *args is undefined """
-        d, key0 = self.lru(model)
+        d, key0, _ = self.lru(model)
         if args:
             _logger.warn("ormcache.clear arguments are deprecated and ignored "
                          "(while clearing caches on (%s).%s)",
@@ -99,7 +100,7 @@ class ormcache_context(ormcache):
         return super(ormcache_context, self).__call__(method)
 
     def lookup(self, method, *args, **kwargs):
-        d, key0 = self.lru(args[0])
+        d, key0, counter = self.lru(args[0])
 
         # Note. The decorator() wrapper (used in __call__ above) will resolve
         # arguments, and pass them positionally to lookup(). This is why context
@@ -114,14 +115,14 @@ class ormcache_context(ormcache):
         key = key0 + args[self.skiparg:self.context_pos] + tuple(ckey)
         try:
             r = d[key]
-            STAT[key0].hit += 1
+            counter.hit += 1
             return r
         except KeyError:
-            STAT[key0].miss += 1
+            counter.miss += 1
             value = d[key] = self.method(*args, **kwargs)
             return value
         except TypeError:
-            STAT[key0].err += 1
+            counter.err += 1
             return self.method(*args, **kwargs)
 
 
@@ -132,7 +133,7 @@ class ormcache_multi(ormcache):
         self.multi = multi
 
     def lookup(self, method, *args, **kwargs):
-        d, key0 = self.lru(args[0])
+        d, key0, counter = self.lru(args[0])
         base_key = key0 + args[self.skiparg:self.multi] + args[self.multi+1:]
         ids = args[self.multi]
         result = {}
@@ -143,9 +144,9 @@ class ormcache_multi(ormcache):
             key = base_key + (i,)
             try:
                 result[i] = d[key]
-                STAT[key0].hit += 1
+                counter.hit += 1
             except Exception:
-                STAT[key0].miss += 1
+                counter.miss += 1
                 missed.append(i)
 
         if missed:
@@ -183,9 +184,9 @@ def log_ormcache_stats(sig=None, frame=None):
     me = threading.currentThread()
     me_dbname = me.dbname
     entries = defaultdict(int)
-    for reg in RegistryManager.registries.itervalues():
+    for dbname, reg in RegistryManager.registries.iteritems():
         for key in reg.cache.iterkeys():
-            entries[key[:3]] += 1
+            entries[(dbname,) + key[:2]] += 1
     for key, count in sorted(entries.items()):
         dbname, model_name, method = key
         me.dbname = dbname

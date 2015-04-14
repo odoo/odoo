@@ -947,6 +947,16 @@ class mail_thread(osv.AbstractModel):
         in_reply_to = decode_header(message, 'In-Reply-To')
         thread_references = references or in_reply_to
 
+        # 0. First check if this is a bounce message or not.
+        #    See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
+        #    As all MTA does not respect this RFC (googlemail is one of them),
+        #    we also need to verify if the message come from "mailer-daemon"
+        localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
+        if message.get_content_type() == 'multipart/report' or localpart == 'mailer-daemon':
+            _logger.info("Not routing bounce email from %s to %s with Message-Id %s",
+                         email_from, email_to, message_id)
+            return []
+
         # 1. message is a reply to an existing message (exact match of message_id)
         ref_match = thread_references and tools.reference_re.search(thread_references)
         msg_references = mail_header_msgid_re.findall(thread_references)
