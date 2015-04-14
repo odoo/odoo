@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api, fields, models
+from openerp import fields, models
 from openerp import tools
 
 
 class CrmHelpdeskReport(models.Model):
-    """ Helpdesk report after Sales Services """
 
     _name = "crm.helpdesk.report"
     _description = "Helpdesk report after Sales Services"

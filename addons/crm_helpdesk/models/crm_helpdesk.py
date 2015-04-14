@@ -1,28 +1,28 @@
 # -*- coding: utf-8 -*-
 
+import openerp
 from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 from openerp.tools import html2plaintext
 
 
 class CrmHelpdesk(models.Model):
-    """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
     _description = "Helpdesk"
-    _order = "id desc"
     _inherit = ['mail.thread']
+    _order = "id desc"
 
     id = fields.Integer(string='ID', readonly=True)
     name = fields.Char(required=True)
-    active = fields.Boolean(required=False, default=True)
+    active = fields.Boolean(default=True)
     date_action_last = fields.Datetime(string='Last Action', readonly=True)
     date_action_next = fields.Datetime(string='Next Action', readonly=True)
     description = fields.Text()
     create_date = fields.Datetime(string='Creation Date', readonly=True)
     write_date = fields.Datetime(string='Update Date', readonly=True)
     date_deadline = fields.Date(string='Deadline')
-    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid)
+    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
     team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id',\
                     index=True, help='Responsible sales team. Define Responsible user and Email account for mail gateway.')
     company_id = fields.Many2one('res.company', string='Company', 
@@ -34,8 +34,8 @@ class CrmHelpdesk(models.Model):
     email_from = fields.Char(string='Email', size=128,
                     help="Destination email for email gateway")
     date = fields.Datetime()
-    ref = fields.Reference(string='Reference', selection='referencable_models')
-    ref2 = fields.Reference(string='Reference 2', selection='referencable_models')
+    ref = fields.Reference(string='Reference', selection=lambda self: openerp.addons.base.res.res_request.referencable_models(self, self.env.cr, self.env.uid, self.env.context))
+    ref2 = fields.Reference(string='Reference 2', selection=lambda self: openerp.addons.base.res.res_request.referencable_models(self, self.env.cr, self.env.uid, self.env.context))
     channel_id = fields.Many2one('utm.medium', string='Channel',
                     help="Communication channel.")
     planned_revenue = fields.Float()
@@ -57,14 +57,9 @@ class CrmHelpdesk(models.Model):
                     \nWhen the case is over, the status is set to \'Done\'.\
                     \nIf the case needs to be reviewed then the status is set to \'Pending\'.')
 
-
-    @api.model
-    def referencable_models(self):
-        return [(r['object'], r['name']) for r in self.env['res.request.link'].search([])]
-
     @api.onchange('partner_id')
     def on_change_partner_id(self):
-            self.email_from = self.partner_id.email
+        self.email_from = self.partner_id.email
 
     @api.multi
     def write(self, values):
@@ -76,19 +71,20 @@ class CrmHelpdesk(models.Model):
                 values['date_closed'] = fields.datetime.now()
         return super(CrmHelpdesk, self).write(values)
 
-    @api.one
+    @api.multi
     def case_escalate(self):
         """ Escalates case to parent level """
-        data = {}
-        if self.team_id and self.team_id.parent_id:
-            parent_id = self.team_id.parent_id
-            data['team_id'] = parent_id.id
-            if parent_id.change_responsible and parent_id.user_id:
-                data['user_id'] = parent_id.user_id.id
-            self.write(data)
-        else:
-            raise UserError(_('You can not escalate, \
-                you are already at the top level regarding your sales-team category.'))
+        data = {'active': True}
+        for case in self:
+            if case.team_id and case.team_id.parent_id:
+                parent_id = case.team_id.parent_id
+                data['team_id'] = parent_id.id
+                if parent_id.change_responsible and parent_id.user_id:
+                    data['user_id'] = parent_id.user_id.id
+            else:
+                raise UserError(_('You can not escalate, you are already at the top level regarding your sales-team category.'))
+            case.write(data)
+        return True
 
     # -------------------------------------------------------
     # Mail gateway

@@ -18,7 +18,6 @@ and categorize your interventions with a channel and a priority level.
     'depends': ['crm'],
     'data': [
         'views/crm_helpdesk_view.xml',
-        'views/crm_helpdesk_menu.xml',
         'security/ir.model.access.csv',
         'report/crm_helpdesk_report_view.xml',
     ],
