@@ -186,27 +186,23 @@
                 <form string="Grid Lines">
                     <group>
                         <field name="name"/>
-                        <field name="sequence"/>
                     </group>
                     <group>
-                        <group>
-                            <label for="type" string="Condition"/>
-                            <div>
-                                <field name="type" class="oe_inline"/>
-                                <field name="operator" class="oe_inline"/>
-                                <field name="max_value" class="oe_inline"/>
-                            </div>
-                            <label for="price_type"/>
-                            <div>
-                                <field name="price_type" class="oe_inline"/>
-                                <label string=" in Function of " class="oe_inline" attrs="{'invisible':[('price_type','=','fixed')]}"/>
-                                <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}" class="oe_inline"/>
-                            </div>
-                        </group>
-                        <group>
-                            <field name="list_price"/>
-                            <field name="standard_price"/>
-                        </group>
+                        <label for="type" string="Condition"/>
+                        <div>
+                            <field name="type" class="oe_inline"/>
+                            <field name="operator" class="oe_inline"/>
+                            <field name="max_value" class="oe_inline"/>
+                        </div>
+                        <label for="list_base_price" string="Sale Price"/>
+                        <div>
+                            <field name="list_base_price" class="oe_inline"/>
+                            +
+                            <field name="list_price" class="oe_inline"/>
+                            *
+                            <field name="variable_factor" class="oe_inline"/>
+                        </div>
+                        <field name="standard_price"/>
                     </group>
                 </form>
             </field>

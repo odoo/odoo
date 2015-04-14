@@ -40,7 +40,7 @@
             <field name="name">Weight &lt;= 5kg</field>
             <field name="grid_id" ref="delivery_grid"/>
             <field eval="5" name="max_value"/>
-            <field eval="20" name="list_price"/>
+            <field eval="20" name="list_base_price"/>
             <field eval="10" name="standard_price"/>
         </record>
         <!--  delivery charge of product if weight more than 5kg-->
@@ -49,7 +49,7 @@
             <field name="grid_id" ref="delivery_grid"/>
             <field name="operator">&gt;=</field>
             <field eval="5" name="max_value"/>
-            <field eval="50" name="list_price"/>
+            <field eval="50" name="list_base_price"/>
             <field eval="30" name="standard_price"/>
         </record>
 
@@ -60,7 +60,7 @@
             <field eval="300" name="max_value"/>
             <field name="operator">&gt;=</field>
             <field name="type">price</field>
-            <field eval="0" name="list_price"/>
+            <field eval="0" name="list_base_price"/>
             <field eval="0" name="standard_price"/>
         </record>
 
