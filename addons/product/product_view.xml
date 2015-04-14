@@ -335,14 +335,15 @@
                 </p>
             </field>
         </record>
-
+        
+        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="3"/>
         <menuitem action="product_template_action"
             id="menu_product_template_action"
-            parent="base.menu_product" sequence="1" />
+            parent="base.menu_sales" sequence="4" />
 
         <!-- product product -->
 
-        <menuitem id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="2" groups="base.group_no_one"/>
+        <menuitem id="prod_config_main" name="Products" parent="base.menu_sale_config" sequence="2" groups="base.group_no_one"/>
 
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
@@ -496,7 +497,7 @@
             </field>
         </record>
 
-        <menuitem id="product.menu_products" action="product.product_normal_action_sell" parent="base.menu_product" groups="base.group_no_one" sequence="10"/>
+        <menuitem id="product.menu_products" action="product.product_normal_action_sell" parent="base.menu_sales" groups="base.group_no_one" sequence="99"/>
 
         <record id="product_category_search_view" model="ir.ui.view">
             <field name="name">product.category.search</field>
@@ -563,11 +564,6 @@
               </p>
             </field>
         </record>
-        <menuitem
-            action="product_category_action"
-            id="product.menu_products_category"
-            parent="base.menu_product"
-            sequence="30" groups="base.group_no_one"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
             <field name="name">Product Categories</field>
             <field name="type">ir.actions.act_window</field>

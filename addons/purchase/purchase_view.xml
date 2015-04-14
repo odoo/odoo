@@ -7,14 +7,10 @@
             id="base.menu_purchase_root"
             groups="group_purchase_manager,group_purchase_user"
             icon="fa-shopping-cart"
-            sequence="60"/>
+            sequence="11"/>
 
         <menuitem id="menu_procurement_management" name="Purchase"
             parent="base.menu_purchase_root" sequence="1" />
-
-        <menuitem id="menu_purchase_config_purchase" name="Configuration"
-            groups="group_purchase_manager"
-            parent="base.menu_purchase_root" sequence="100"/>
 
         <record id="purchase_pricelist_version_action" model="ir.actions.act_window">
             <field name="name">Pricelist Versions</field>
@@ -34,9 +30,10 @@
               </p>
             </field>
         </record>
+        <menuitem id="menu_purchase_config" name="Purchases" parent="base.menu_config" sequence="4" groups="group_purchase_manager"/>
         <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
-            parent="menu_purchase_config_purchase" sequence="50" groups="product.group_purchase_pricelist"/>
+            parent="menu_purchase_config" sequence="50" groups="product.group_purchase_pricelist"/>
         <menuitem
             action="product.product_pricelist_action_for_purchase" id="menu_product_pricelist_action2_purchase"
             parent="menu_purchase_config_pricelist" sequence="1" groups="product.group_purchase_pricelist" />
@@ -54,7 +51,7 @@
             parent="menu_purchase_config_pricelist" sequence="60" />
         <menuitem
             id="menu_product_in_config_purchase" name="Products"
-            parent="menu_purchase_config_purchase" sequence="30" groups="base.group_no_one"/>
+            parent="menu_purchase_config" sequence="30" groups="base.group_no_one"/>
 
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_purchase"
@@ -77,18 +74,21 @@
         parent="menu_procurement_management"
         action="base.action_partner_supplier_form" sequence="15"/>
 
+    <!-- Purchase Control Menu -->
+    <menuitem id="menu_purchase_control" name="Control" parent="base.menu_purchase_root" sequence="4"/>
+
       <!--Inventory control-->
-      <menuitem id="menu_procurement_management_inventory" name="Incoming Products"
-            parent="base.menu_purchase_root" sequence="4"/>
-      <menuitem action="stock.action_receipt_picking_move" id="menu_action_picking_tree_in_move"
+    <menuitem id="menu_procurement_management_inventory" name="Products"
+            parent="menu_purchase_control" sequence="4"/>
+    <menuitem action="stock.action_receipt_picking_move" id="menu_action_picking_tree_in_move"
             parent="menu_procurement_management_inventory" sequence="11"/>
 
     <!--Invoice control-->
-    <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
-        parent="base.menu_purchase_root" sequence="6"/>
+    <menuitem id="menu_procurement_management_invoice" name="Bills"
+        parent="menu_purchase_control" sequence="6"/>
 
     <record id="action_invoice_pending" model="ir.actions.act_window">
-        <field name="name">On Draft Invoices</field>
+        <field name="name">Draft Bills</field>
         <field name="res_model">account.invoice</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,pivot,graph</field>
@@ -143,14 +143,8 @@
           sequence="13"/>
 
       <!-- Product menu-->
-      <menuitem id="menu_procurement_management_product" name="Products"
-          parent="base.menu_purchase_root" sequence="8"/>
-
-      <menuitem name="Products by Category" id="menu_product_by_category_purchase_form" action="product.product_category_action"
-           parent="menu_procurement_management_product" sequence="2" groups="base.group_no_one"/>
-
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product_normal_action_puchased"
-          parent="menu_procurement_management_product" sequence="1"/>
+          parent="menu_procurement_management" sequence="20"/>
 
         <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>
@@ -548,7 +542,7 @@
         </record>
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">On Purchase Order Lines</field>
+            <field name="name">Purchase Order Lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('order_id.invoice_method','=','manual'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>

@@ -3,8 +3,8 @@
     <data>
 
         <!-- Main menu items -->
-        <menuitem name="Events" id="event_main_menu" parent="base.marketing_menu" sequence="2" groups="marketing.group_marketing_user"/>
-        <menuitem name="Events" id="event_configuration" parent="base.menu_marketing_config_root" sequence="1" groups="marketing.group_marketing_user"/>
+        <menuitem name="Events" id="event_main_menu" sequence="15" groups="marketing.group_marketing_user"/>
+        <menuitem parent="event_main_menu" id="menu_reporting_events" sequence="99" groups="event.group_event_manager" name="Reports"/>
 
         <!-- EVENT.TYPE VIEWS -->
         <record model="ir.ui.view" id="view_event_type_form">
@@ -38,7 +38,9 @@
             <field name="view_type">form</field>
         </record>
         
-        <menuitem name="Events Types" id="menu_event_type" action="action_event_type" parent="event.event_configuration" groups="base.group_no_one"/>
+        <menuitem id="menu_event_configuration" name="Event" parent="base.menu_config"
+            sequence="14"/>
+        <menuitem name="Events Types" id="menu_event_type" action="action_event_type" parent="menu_event_configuration" groups="base.group_no_one"/>
 
         <!-- EVENT.REGISTRATION ACTIONS -->
         <record id="act_event_registration_from_event" model="ir.actions.act_window">
@@ -396,7 +398,7 @@
 
         <menuitem name="Attendees"
             id="menu_action_registration" parent="event.event_main_menu"
-            action="action_registration" groups="event.group_event_manager,event.group_event_user"/>
+            action="action_registration" groups="base.group_no_one"/>
 
         <!-- EVENT.MAIL VIEWS -->
         <record model="ir.ui.view" id="view_event_mail_form">
@@ -450,7 +452,7 @@
             <field name="view_type">form</field>
         </record>
         
-        <menuitem name="Events Mail Schedulers" id="menu_event_type" action="action_event_mail" parent="event.event_configuration" groups="base.group_no_one"/>
+        <menuitem name="Events Mail Schedulers" id="menu_event_type" action="action_event_mail" parent="menu_event_configuration" groups="base.group_no_one"/>
 
     </data>
 </openerp>

@@ -71,9 +71,10 @@
             <field name="context">{'search_default_user_to_review_id': [active_id], 'default_user_to_review_id': active_id}</field>
         </record>
 
-        <menuitem name="Appraisal" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="25"/>
+        <menuitem name="Appraisal" id="menu_hr_evaluation_root" sequence="25"/>
         <menuitem name="Periodic Appraisal" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="4" groups="base.group_hr_manager"/>
-        <menuitem parent="hr.menu_hr_configuration_employees" id="menu_open_view_hr_evaluation_plan_tree"
+        <menuitem name="Appraisal" id="menu_hr_evaluation_configuration" sequence="22" parent="base.menu_config"/>
+        <menuitem parent="menu_hr_evaluation_configuration" id="menu_open_view_hr_evaluation_plan_tree"
             action="open_view_hr_evaluation_plan_tree" sequence="5" groups="base.group_hr_manager"/>
 
         <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_form">
@@ -263,7 +264,7 @@
             </field>
         </record>
 
-        <menuitem name="Appraisals" parent="menu_eval_hr" id="menu_open_view_hr_evaluation_tree"
+        <menuitem name="Appraisals" parent="menu_hr_evaluation_root" id="menu_open_view_hr_evaluation_tree"
             action="open_view_hr_evaluation_tree" groups="base.group_hr_user"/>
 
         <record model="ir.ui.view" id="view_hr_evaluation_interview_form">
@@ -352,7 +353,7 @@
         </record>
 
         <record id="view_evaluation_calendar" model="ir.ui.view">
-            <field name="name">Interview Requests</field>
+            <field name="name">Interviews</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="arch" type="xml">
                 <calendar string="Interview Request" color="user_to_review_id" date_start="deadline">
@@ -362,7 +363,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_hr_evaluation_interview_tree">
-            <field name="name">Interview Requests</field>
+            <field name="name">Interviews</field>
             <field name="res_model">hr.evaluation.interview</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
@@ -400,7 +401,7 @@
             <field name="act_window_id" ref="action_hr_evaluation_interview_tree"/>
         </record>
 
-        <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests"
+        <menuitem name="Interviews" parent="menu_hr_evaluation_root" id="menu_open_hr_evaluation_interview_requests"
             action="action_hr_evaluation_interview_tree"/>
 
       <!-- Email Compose message Action-->

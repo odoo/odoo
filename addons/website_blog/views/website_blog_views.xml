@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem name="Knowledge" id="knowledge.menu_document"/>
-        <menuitem name="Blog Posts" id="menu_wiki" parent="knowledge.menu_document" sequence="20" />
+        <menuitem name="Blog" id="menu_website_blog_root" sequence="20" parent="website.menu_website_configuration"/>
 
         <!-- Blog views -->
         <record model="ir.ui.view" id="view_blog_blog_list">
@@ -114,7 +113,7 @@
                 </p>
             </field>
         </record>
-        <menuitem id="menu_page" parent="menu_wiki" name="Blog Posts" action="action_blog_post" sequence="10"/>
+        <menuitem id="menu_page" parent="menu_website_blog_root" name="Blog Posts" action="action_blog_post" sequence="10"/>
 
         <record model="ir.actions.act_window" id="action_blog_blog">
             <field name="name">Blogs</field>
@@ -122,7 +121,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="menu_blog" parent="menu_wiki" name="Blogs" action="action_blog_blog" sequence="20"/>
+        <menuitem id="menu_blog" parent="menu_website_blog_root" name="Blogs" action="action_blog_blog" sequence="20"/>
 
         <record model="ir.ui.view" id="blog_tag_tree">
             <field name="name">blog_tag_tree</field>
@@ -159,6 +158,6 @@
             <field name="view_id" ref="blog_tag_tree"/>
         </record>
 
-        <menuitem id="menu_blog_tag" parent="menu_wiki" name="Blog Tags" action="action_tags" sequence="40" />
+        <menuitem id="menu_blog_tag" parent="menu_website_blog_root" name="Blog Tags" action="action_tags" sequence="40" />
     </data>
 </openerp>

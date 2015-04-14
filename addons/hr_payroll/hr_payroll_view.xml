@@ -3,9 +3,9 @@
     <data>
         <!-- Root Menus -->
 
-        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_hr_manager" sequence="45"/>
-        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="30"/>
-        <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
+        <menuitem id="menu_hr_payroll_configuration" name="Payroll" parent="base.menu_config"
+            sequence="23" groups="base.group_hr_manager"/>
+        <menuitem id="menu_hr_payroll_root" name="Payroll" sequence="23"/>
 
         <!-- Contract View -->
         <record id="hr_contract_form_inherit" model="ir.ui.view">
@@ -99,7 +99,7 @@
         <menuitem
             id="menu_hr_payroll_structure_view"
             action="action_view_hr_payroll_structure_list_form"
-            parent="payroll_configure"
+            parent="menu_hr_payroll_configuration"
             sequence="2"
         />
         <record id="action_view_hr_payroll_structure_tree" model="ir.actions.act_window">
@@ -112,7 +112,7 @@
         <menuitem
             id="menu_hr_payroll_structure_tree"
             action="action_view_hr_payroll_structure_tree"
-            parent="payroll_configure"
+            parent="menu_hr_payroll_configuration"
             sequence="2"
             icon="STOCK_INDENT"
         />
@@ -374,7 +374,7 @@
             <field name="search_view_id" ref="view_hr_payslip_filter"/>
         </record>
 
-        <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll" groups="base.group_hr_user"/>        
+        <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_payroll_root" groups="base.group_hr_user"/>        
 
         <record id="act_hr_employee_payslip_list" model="ir.actions.act_window">
             <field name="res_model">hr.payslip</field>
@@ -464,7 +464,7 @@
         <menuitem
             id="menu_hr_salary_rule_category"
             action="action_hr_salary_rule_category"
-            parent="payroll_configure"
+            parent="menu_hr_payroll_configuration"
             sequence="11"
             groups="base.group_no_one"
         />
@@ -478,7 +478,7 @@
         <menuitem
             id="menu_hr_salary_rule_category_tree_view"
             action="action_hr_salary_rule_category_tree_view"
-            parent="payroll_configure"
+            parent="menu_hr_payroll_configuration"
             sequence="12"
             icon="STOCK_INDENT"
             groups="base.group_no_one"
@@ -541,7 +541,7 @@
         <menuitem
             id="menu_action_hr_contribution_register_form"
             action="action_contribution_register_form"
-            parent="payroll_configure"
+            parent="menu_hr_payroll_configuration"
             sequence="14"
         />
 
@@ -657,7 +657,7 @@
             <field name="search_view_id" ref="view_hr_rule_filter"/>
         </record>
 
-        <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
+        <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="menu_hr_payroll_configuration" sequence="12"/>
 
 
         <act_window name="All Children Rules"
@@ -734,7 +734,7 @@
             <field name="view_id" ref="hr_payslip_run_tree"/>
             <field name="search_view_id" ref="hr_payslip_run_filter"/>
         </record>
-        <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_root_payroll"/>
+        <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_payroll_root"/>
 
         <!--  Shortcuts -->
 

@@ -3,8 +3,8 @@
 from openerp.osv import fields, osv
 
 class event_config_settings(osv.TransientModel):
-    _name='marketing.config.settings'
-    _inherit='marketing.config.settings'
+    _name='event.config.settings'
+    _inherit='res.config.settings'
     _columns = {
         'module_event_sale': fields.boolean(
             'Sell events tickets',

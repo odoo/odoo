@@ -134,10 +134,12 @@
             <field name="context">{'default_invoice_on_timesheets':1}</field>
         </record>
 
-        <menuitem parent="hr.menu_hr_configuration_timesheets_attendances" id="menu_timesheet_accounts" action="act_hr_timesheet_accounts_form" sequence="2" groups="base.group_hr_manager"/>
+        <menuitem name="Timesheets" id="menu_hr_timesheet_config" sequence="10"
+            parent="base.menu_config"/>
+        <menuitem parent="menu_hr_timesheet_config" id="menu_timesheet_accounts" action="act_hr_timesheet_accounts_form" sequence="2" groups="base.group_hr_manager"/>
         
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
-            <field name="name">Timesheet Activities</field>
+            <field name="name">Activities</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.analytic.timesheet</field>
             <field name="view_type">form</field>
@@ -156,7 +158,8 @@
             </field>
         </record>
 
-        <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
+        <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"
+            groups="base.group_no_one"/>
 
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>
@@ -171,9 +174,6 @@
                 </xpath>
             </field>
         </record>
-
-        <menuitem id="menu_hr_timesheet_reports" parent="hr.menu_hr_reporting" sequence="5" name="Timesheet"/>
-
 
     </data>
 </openerp>

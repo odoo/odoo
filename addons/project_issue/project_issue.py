@@ -34,17 +34,6 @@ from openerp.tools.translate import _
 from openerp.exceptions import UserError, AccessError
 
 
-class project_issue_version(osv.Model):
-    _name = "project.issue.version"
-    _order = "name desc"
-    _columns = {
-        'name': fields.char('Version Number', required=True),
-        'active': fields.boolean('Active', required=False),
-    }
-    _defaults = {
-        'active': 1,
-    }
-
 class project_issue(osv.Model):
     _name = "project.issue"
     _description = "Project Issue"
@@ -241,7 +230,6 @@ class project_issue(osv.Model):
         'channel': fields.char('Channel', help="Communication channel."),
         'categ_ids': fields.many2many('project.category', string='Tags'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
-        'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
                         track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]", copy=False),
