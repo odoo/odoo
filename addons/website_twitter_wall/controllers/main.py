@@ -30,10 +30,10 @@ class WebsiteTwitterWall(http.Controller):
     @http.route('/twitter_wall/create', type='json', auth='user', methods=['POST'], website=True)
     def twitter_wall_create(self, **kargs):
         """ Create new wall """
-        values = dict((value, kargs[value]) for value in ['name', 'description', 'image', 'website_published', 'tweetus_ids'] if kargs.get(value))
-        if kargs['is_url']:
-            values['image'] = self._read_image(values['image'])
         try:
+            values = dict((value, kargs[value]) for value in ['name', 'description', 'image', 'website_published', 'tweetus_ids'] if kargs.get(value))
+            if kargs['is_url']:
+                values['image'] = self._read_image(values['image'])
             request.env['twitter.agent'].create(values)
         except Exception as e:
             _logger.error(e)
