@@ -82,9 +82,6 @@
                                             <field name="reward_product_uom_id" placeholder="Select unit of measure" class="oe_inline"/>
                                         </div>
                                         <field name="reward_discount_type" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
-                                        <field name="reward_discount_on" attrs="{'invisible': 
-                                            ['|', ('reward_discount_type', '!=', 'percentage'),('reward_type', '!=', 'discount')]}" widget="radio"/>
-                                        <field name="reward_discount_on_product_id" attrs="{'invisible': ['|', ('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}" placeholder="Select product"/>
                                         <label string="Percentage" for="reward_discount_percentage" attrs="{'invisible': ['|', ('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount')]}"/>
                                         <div attrs="{'invisible': ['|', ('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount')]}">
                                             <field name="reward_discount_percentage" attrs="{'invisible': ['|', ('reward_discount_type', '!=', 'percentage'), ('reward_type', '!=', 'discount')]}" class="oe_inline"/>
@@ -96,6 +93,9 @@
                                             <field name="reward_currency_id" class="oe_inline"/>
                                             <field name="reward_tax" class="oe_inline"/>
                                         </div>
+                                        <field name="reward_discount_on" attrs="{'invisible': 
+                                            ['|', ('reward_discount_type', '!=', 'percentage'),('reward_type', '!=', 'discount')]}" widget="radio"/>
+                                        <field name="reward_discount_on_product_id" attrs="{'invisible': ['|', ('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}" placeholder="Select product"/>
                                         <field name="reward_partial_use" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" widget="radio"/>
                                         <field name="reward_gift_coupon_id" attrs="{'invisible': [('reward_type', '!=', 'coupon')]}" placeholder="Select program"/>
                                         <field name="reward_shipping_free" widget="radio" class="oe_inline"/>
