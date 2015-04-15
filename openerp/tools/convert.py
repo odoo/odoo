@@ -479,6 +479,11 @@ form: module.record_id""" % (xml_id,)
         # TODO add remove ir.model.data
 
     def _tag_ir_set(self, cr, rec, data_node=None, mode=None):
+        """
+            .. deprecated:: 9.0
+
+            Use the <record> notation with ``ir.values`` as model instead.
+        """
         if self.mode != 'init':
             return
         res = {}
@@ -851,7 +856,7 @@ form: module.record_id""" % (xml_id,)
             'template': self._tag_template,
             'workflow': self._tag_workflow,
             'report': self._tag_report,
-            'ir_set': self._tag_ir_set,
+            'ir_set': self._tag_ir_set, # deprecated:: 9.0
             'act_window': self._tag_act_window,
             'assert': self._tag_assert,
         }

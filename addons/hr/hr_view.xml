@@ -8,7 +8,7 @@
             groups="base.group_hr_manager,base.group_hr_user,base.group_user"
             icon="fa-user"
             sequence="90"/>
-        <menuitem id="menu_hr_reporting" parent="base.menu_reporting" name="Human Resources" sequence="60" 
+        <menuitem id="menu_hr_reporting" parent="base.menu_reporting" name="Human Resources" sequence="60"
         groups="base.group_hr_manager"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_user" sequence="50"/>
@@ -260,7 +260,7 @@
             </field>
         </record>
 
-        <record id="action2" model="ir.actions.act_window">
+        <record id="hr_employee_action_subordinate_hierachy" model="ir.actions.act_window">
             <field name="name">Subordinate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
@@ -269,15 +269,14 @@
             <field name="view_id" ref="view_partner_tree2"/>
         </record>
 
-        <ir_set>
-            <field eval="'action'" name="key"/>
-            <field eval="'client_action_multi'" name="key2"/>
-            <field eval="['hr.employee']" name="models"/>
+        <record id="hr_employee_action_subordinate_hierachy_mutli" model="ir.values">
             <field name="name">Subordinate Hierarchy</field>
-            <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
-            <field eval="True" name="isobject"/>
-            <field eval="True" name="replace"/>
-        </ir_set>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('hr_employee_action_subordinate_hierachy'))"/>
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="model">hr.employee</field>
+        </record>
 
         <!-- Employee Category -->
        <record id="view_employee_category_form" model="ir.ui.view">
