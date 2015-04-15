@@ -3489,6 +3489,8 @@ class BaseModel(object):
         """
         if uid == SUPERUSER_ID:
             return
+        if not ids:
+            return
 
         if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
