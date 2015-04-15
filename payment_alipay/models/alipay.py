@@ -18,9 +18,10 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_alipay.controllers.main import AlipayController
 from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_compare
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 
 import sys
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 
