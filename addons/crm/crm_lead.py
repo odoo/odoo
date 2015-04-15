@@ -883,6 +883,7 @@ class crm_lead(format_address, osv.osv):
                       (tree_view or False, 'tree'), (False, 'kanban'),
                       (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
+            'context': {'default_type': 'opportunity'}
         }
 
     def redirect_lead_view(self, cr, uid, lead_id, context=None):
