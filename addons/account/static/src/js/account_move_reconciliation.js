@@ -49,7 +49,7 @@ openerp.account = function (instance) {
             this.last_group_by = group_by;
             this.old_search = _.bind(this._super, this);
             var mod = new instance.web.Model("account.move.line", context, domain);
-            return mod.call("list_partners_to_reconcile", []).then(function(result) {
+            return mod.call("list_partners_to_reconcile", [context, domain]).then(function(result) {
                 var current = self.current_partner !== null ? self.partners[self.current_partner][0] : null;
                 self.partners = result;
                 var index = _.find(_.range(self.partners.length), function(el) {
