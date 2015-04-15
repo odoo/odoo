@@ -31,6 +31,8 @@ class Rating(models.Model):
     feedback = fields.Text('Feedback reason', help="Reason of the rating")
     access_token = fields.Char(string='Security Token', default=new_access_token, help="Access token to set the rating of the value")
 
+    message_id = fields.Many2one('mail.message', string="Linked message", help="A rating can be linked to a message.", index=True)
+
     @api.model
     def apply_rating(self, rate, res_model=None, res_id=None, token=None):
         """ apply a rating for given res_model/res_id or token. If the res_model is a mail.thread
@@ -118,15 +120,24 @@ class RatingMixin(models.AbstractModel):
             template.send_mail(rating.id, force_send=True)
 
     @api.multi
-    def rating_get_stats(self):
+    def rating_get_repartition(self, add_stats=False):
         """ get the repatition of rating grade for the given res_ids.
-            :return dictionnary where the key is the rating value (the note), and the value, the number of object (res_model, res_id) having the value
+            :param more_stats : flag to add stat to the result
+            :type more_stats : boolean
+            :return dictionnary where
+                - key is the rating value (integer), or (basestring) some statistic informations (average, total, ...)
+                - value is the number of object (res_model, res_id) having the value
         """
         data = self.env['rating.rating'].read_group([('res_model', '=', self._name), ('res_id', 'in', self.ids), ('rating', '>=', 0)], ['rating'], ['rating', 'res_id'])
         # init dict with all posible rate value, except -1 (no value for the rating)
-        res = dict.fromkeys(range(11), 0)
-        res.update((d['rating'], d['rating_count']) for d in data)
-        return res
+        result = dict.fromkeys(range(11), 0)
+        result.update((d['rating'], d['rating_count']) for d in data)
+        # add other stats
+        if add_stats:
+            rating_number = sum(result.values())
+            result['avg'] = sum([float(key*result[key]) for key in result])/rating_number if rating_number > 0 else 0
+            result['total'] = reduce(lambda x, y: y['rating_count']+x, data, 0)
+        return result
 
     @api.multi
     def rating_get_grades(self):
@@ -136,7 +147,7 @@ class RatingMixin(models.AbstractModel):
                                                 31-69%: Okay
                                                 70-100%: Great
         """
-        data = self.rating_get_stats()
+        data = self.rating_get_repartition()
         res = dict.fromkeys(['great', 'okay', 'bad'], 0)
         for key in data:
             if key >= 7:
@@ -146,3 +157,22 @@ class RatingMixin(models.AbstractModel):
             else:
                 res['bad'] += data[key]
         return res
+
+    @api.multi
+    def rating_get_stats(self):
+        """ get the statistics of the rating repatition
+            :return dictionnary where
+                - key is the the name of the information (stat name)
+                - value is statistic value : 'percent' contains the repartition in percentage, 'avg' is the average rate
+                  and 'total' is the number of rating
+        """
+        data = self.rating_get_repartition(add_stats=True)
+        result = {
+            'avg' : data['avg'],
+            'total' : data['total'],
+            'percent' : dict.fromkeys(range(11), 0),
+        }
+        for rate in data:
+            if not isinstance(rate, basestring): # avoid 'avg', 'total', ...
+                result['percent'][rate] = (data[rate] * 100) / data['total'] if data['total'] > 0 else 0
+        return result

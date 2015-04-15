@@ -334,7 +334,8 @@
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
                 <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
-            </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
+            </div>
+            <div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1" id="product_details">
                 <h1 itemprop="name" t-field="product.name">Product Name</h1>
                 <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
 
@@ -542,7 +543,16 @@
 
 <!-- Product options: OpenChatter -->
 
-<template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion">
+<template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating">
+    <xpath expr="//div[@id='product_details']" position="inside">
+      <!--<a href="#comments">-->
+        <t t-call="rating.rating_card">
+          <t t-set="rating_stat" t-value="rating_product"/>
+          <t t-set="max_rate" t-value="5"/>
+          <t t-set="min_rate" t-value="1"/>
+        </t>
+      <!--</a>-->
+    </xpath>
     <xpath expr="//div[@t-field='product.website_description']" position="after">
         <hr class="mb32"/>
         <section class="container">
@@ -566,6 +576,13 @@
                                 <h5 class="media-heading">
                                     <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
                                 </h5>
+                                <!-- rating associated to a mail.message -->
+                                <div t-if="rating_message_values.get(message.id)">
+                                  <t t-call="rating.rating_star_card">
+                                    <t t-set="rating_default_value" t-value="rating_message_values.get(message.id)"/>
+                                    <t t-set="rating_disabled" t-value="True"/>
+                                  </t>
+                                </div>
                                 <div t-field="message.body"/>
                                 <div>
                                     <div class="oe_msg_attachment" t-foreach='message.attachment_ids' t-as='attachment'>
@@ -587,8 +604,13 @@
                     </li>
                 </ul>
                 <div class="css_editable_mode_hidden">
+                    <hr t-if="product.website_message_ids"/>
                     <form id="comment" t-attf-action="/shop/product/comment/#{product.id}" method="POST">
                         <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
+                        <!-- add rating star widget -->
+                        <t t-call="rating.rating_star_card">
+                          <t t-set="rating_input_name" t-value="'rating'"/>
+                        </t>
                         <div class="pull-left mb32" style="width: 75%%">
                             <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
                             <a class="btn btn-primary mt8 a-submit">Post</a>
