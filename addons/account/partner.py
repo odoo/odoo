@@ -251,13 +251,14 @@ class res_partner(osv.osv):
     def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
         MoveLine = self.pool('account.move.line')
         AnalyticAccount = self.pool('account.analytic.account')
-        return {
-            partner_id: {
-                'journal_item_count': MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
-                'contracts_count': AnalyticAccount.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
-            }
-            for partner_id in ids
-        }
+        results = {}
+        for partner_id in ids:
+            results[partner_id] = {}
+            if 'contracts_count' in field_name:
+                results[partner_id]['contracts_count'] = AnalyticAccount.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context)
+            if 'journal_item_count' in field_name:
+                results[partner_id]['journal_item_count'] = MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context)
+        return results
 
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''

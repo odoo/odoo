@@ -62,6 +62,8 @@ class account_fiscalyear_close(osv.osv_memory):
                 raise osv.except_osv(_('Warning!'), _('The entries to reconcile should belong to the same company.'))
             r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto', 'opening_reconciliation': True})
             cr.execute('update account_move_line set reconcile_id = %s where id in %s',(r_id, tuple(ids),))
+            # reconcile_ref deptends from reconcile_id but was not recomputed
+            obj_acc_move_line._store_set_values(cr, uid, ids, ['reconcile_ref'], context=context)
             obj_acc_move_line.invalidate_cache(cr, uid, ['reconcile_id'], ids, context=context)
             return r_id
 

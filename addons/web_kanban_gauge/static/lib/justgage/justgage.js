@@ -859,7 +859,7 @@ function getColor(val, pct, col, noGradient, custSec) {
 
 /** Fix Raphael display:none tspan dy attribute bug */
 function setDy(elem, fontSize, txtYpos) {
-  if ((!ie || ie > 9) && elem.node.firstChild.attributes.dy) {
+  if ((!ie || ie > 8) && elem.node.firstChild.attributes.dy) {
     elem.node.firstChild.attributes.dy.value = 0;
   }
 }
