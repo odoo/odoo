@@ -4,4 +4,4 @@ Business Mementoes
 
 .. toctree::
 
-    Accounting Memento <https://odoo.com/documentation/functional/accounting.html>
+    Accounting Memento (US GAAP) <https://odoo.com/documentation/functional/accounting.html>
