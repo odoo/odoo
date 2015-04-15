@@ -154,16 +154,17 @@
 
 <template id="website.theme" name="Theme">
     <!-- Boostrap Fallback if server can't compute less files -->
-    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' editable="False"/>
     <link rel="stylesheet" href='/website/static/src/css/website.css'/>
+
 </template>
 
 <!-- Bootstrap Less File layout -->
 
 <template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[@id='bootstrap_css']" position="replace">
-        <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
-        <link rel="stylesheet" href='/website/static/src/less/colors.less'/>
+        <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less' editable="False"/>
+        <link rel="stylesheet" href='/website/static/src/less/colors.less' type="text/less"/>
     </xpath>
 </template>
 
