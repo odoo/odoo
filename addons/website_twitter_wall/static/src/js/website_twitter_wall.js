@@ -203,6 +203,9 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             if(this.shuffle)
                 list = _.shuffle(list);
             list = _.first(list, this.limit);
+            $(document).bind("clear_tweet_queue", function(e){
+                list = [];
+            });
             this.tweet_interval = setInterval(function() {
                 if(list.length) {
                     var pop_el = list[0];
@@ -254,6 +257,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
                 twitter_wall.toggle_shuffle();
                 break;
         }
+        $(document).trigger("clear_tweet_queue");
     });
 
     // Handle customization popover
@@ -262,6 +266,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         template: 'customize',
         init: function(parent, btn) {
             this._super(parent);
+            var self= this;
             var picker = btn.popover({
                 html: true,
                 content: function() {
@@ -276,7 +281,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             });
             picker.parent().on('click', '.odoo-tw-view-live-option-color', function() {
                 color = $(this).data('color-code');
-                $('body').css('background-color', color);
+                self.reset_colors(color);
             });
             picker.parent().on('click', '.theme', function(e) {
                 var $el = $(e.currentTarget).toggleClass("active");
@@ -287,9 +292,15 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             picker.parent().on('changeColor.colorpicker', '.colorinput', function(e) {
                 color = e.color.toHex();
                 $(".colorinput > input.form-control").val(color);
-                $('body').css('background-color', color);
+                self.reset_colors(color);
             });
         },
+        reset_colors:function(color){
+            $('<div class="ripple_wrapper"  style="position:fixed;bottom:-500px;right:-500px;border-top-left-radius:50%;border-bottom-left-radius:50%"></div>')
+                .appendTo('body' )
+                .css("background",color)
+                .animate({height:3000,width:3000},1200,function(){$('body').css('background-color', color);$(".odoo-tw-tweet").remove();$('.ripple_wrapper').remove();});
+        }
     });
     $("body").on('mouseover', '.colorpicker', function() {
         $(".odoo-tw-view-live-options").css("opacity", "1");

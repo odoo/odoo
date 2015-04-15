@@ -165,3 +165,54 @@ nav.odoo-tw-hide-onlive:hover .odoo-tw-view-live-options {
     left: 50%;
     transform: translate(-50%, 0);
 }
+
+.odoo-tw-tweet blockquote{
+    display: none;
+}
+.odoo-tw-tweet iframe {
+    -moz-animation-name: dropHeader;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: ease-in;
+    -moz-animation-duration: 1.2s;
+
+    -webkit-animation-name: dropHeader;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease-out;
+    -webkit-animation-duration: 1.2s;
+
+    animation-name: dropHeader;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 1.2s;
+}
+
+@-moz-keyframes dropHeader {
+    0% {
+        -moz-transform: translateY(-200px);
+    }
+    100% {
+        -moz-transform: translateY(0);
+    }
+}
+@-webkit-keyframes dropHeader {
+    0% {
+        opacity:0;
+        -webkit-transform: translateY(-300px);
+    }
+    75% {
+        opacity:0;
+    }
+    100% {
+        -webkit-transform: translateY(0);
+        opacity:1;
+    }
+}
+@keyframes dropHeader {
+    0% {
+        transform: translateY(-200px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
