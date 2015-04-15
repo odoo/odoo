@@ -435,50 +435,6 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
     }
 });
 
-var Many2OneButton = common.AbstractField.extend({
-    template: 'Many2OneButton',
-    init: function(field_manager, node) {
-        this._super.apply(this, arguments);
-    },
-    start: function() {
-        this._super.apply(this, arguments);
-        this.set_button();
-    },
-    set_button: function() {
-        var self = this;
-        if (this.$button) {
-            this.$button.remove();
-        }
-        this.string = '';
-        this.node.attrs.icon = this.get('value') ? '/web/static/src/img/icons/gtk-yes.png' : '/web/static/src/img/icons/gtk-no.png';
-        this.$button = $(QWeb.render('WidgetButton', {'widget': this}));
-        this.$button.addClass('oe_link').css({'padding':'4px'});
-        this.$el.append(this.$button);
-        this.$button.on('click', self.on_click);
-    },
-    on_click: function(ev) {
-        var self = this;
-        this.popup =  new common.FormOpenPopup(this);
-        this.popup.show_element(
-            this.field.relation,
-            this.get('value'),
-            this.build_context(),
-            {title: this.string}
-        );
-        this.popup.on('create_completed', self, function(r) {
-            self.set_value(r);
-        });
-    },
-    set_value: function(value_) {
-        if (value_ instanceof Array) {
-            value_ = value_[0];
-        }
-        value_ = value_ || false;
-        this.set('value', value_);
-        this.set_button();
-     },
-});
-
 /**
  * Abstract-ish ListView.List subclass adding an "Add an item" row to replace
  * the big ugly button in the header.
@@ -1870,7 +1826,6 @@ var X2ManyCounter = common.AbstractField.extend(common.ReinitializeFieldMixin, {
 
 core.form_widget_registry
     .add('many2one', FieldMany2One)
-    .add('many2onebutton', Many2OneButton)
     .add('many2many', FieldMany2Many)
     .add('many2many_tags', FieldMany2ManyTags)
     .add('many2many_kanban', FieldMany2ManyKanban)
