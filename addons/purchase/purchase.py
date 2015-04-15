@@ -868,7 +868,7 @@ class purchase_order(osv.osv):
         Orders will only be merged if:
         * Purchase Orders are in draft
         * Purchase Orders belong to the same partner
-        * Purchase Orders are have same stock location, same pricelist
+        * Purchase Orders are have same stock location, same pricelist, same currency
         Lines will only be merged if:
         * Order lines are exactly the same except for the quantity and unit
 
@@ -904,12 +904,13 @@ class purchase_order(osv.osv):
         # Compute what the new orders should contain
         new_orders = {}
 
-        order_lines_to_move = []
+        order_lines_to_move = {}
         for porder in [order for order in self.browse(cr, uid, ids, context=context) if order.state == 'draft']:
-            order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id'))
+            order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id', 'currency_id'))
             new_order = new_orders.setdefault(order_key, ({}, []))
             new_order[1].append(porder.id)
             order_infos = new_order[0]
+            order_lines_to_move.setdefault(order_key, [])
 
             if not order_infos:
                 order_infos.update({
@@ -920,6 +921,7 @@ class purchase_order(osv.osv):
                     'picking_type_id': porder.picking_type_id.id,
                     'location_id': porder.location_id.id,
                     'pricelist_id': porder.pricelist_id.id,
+                    'currency_id': porder.currency_id.id,
                     'state': 'draft',
                     'order_line': {},
                     'notes': '%s' % (porder.notes or '',),
@@ -933,8 +935,7 @@ class purchase_order(osv.osv):
                 if porder.origin:
                     order_infos['origin'] = (order_infos['origin'] or '') + ' ' + porder.origin
 
-            for order_line in porder.order_line:
-                order_lines_to_move += [order_line.id]
+            order_lines_to_move[order_key] += [order_line.id for order_line in porder.order_line]
 
         allorders = []
         orders_info = {}
@@ -948,7 +949,7 @@ class purchase_order(osv.osv):
             for key, value in order_data['order_line'].iteritems():
                 del value['uom_factor']
                 value.update(dict(key))
-            order_data['order_line'] = [(6, 0, order_lines_to_move)]
+            order_data['order_line'] = [(6, 0, order_lines_to_move[order_key])]
 
             # create the new order
             context.update({'mail_create_nolog': True})
