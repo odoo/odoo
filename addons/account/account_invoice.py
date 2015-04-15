@@ -271,7 +271,6 @@ class account_invoice(models.Model):
         store=True, readonly=True, compute='_compute_amount')
     amount_total = fields.Float(string='Total', digits=dp.get_precision('Account'),
         store=True, readonly=True, compute='_compute_amount')
-
     currency_id = fields.Many2one('res.currency', string='Currency',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=_default_currency, track_visibility='always')
@@ -1213,13 +1212,19 @@ class account_invoice_line(models.Model):
 
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_id', 'quantity',
-        'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id')
+        'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id')
     def _compute_price(self):
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
-        self.price_subtotal = taxes['total']
+        self.price_subtotal = price_subtotal_signed = taxes['total']
+        if self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
+            price_subtotal_signed = self.invoice_id.currency_id.with_context(date=self.invoice_id.invoice_date).compute(price_subtotal_signed, self.company_id.currency_id)
+        sign = self.invoice_id.type in ['in_invoice', 'out_refund'] and -1 or 1
+        self.price_subtotal_signed = price_subtotal_signed * sign
+
         if self.invoice_id:
             self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
+            self.price_subtotal_signed = self.invoice_id.currency_id.round(self.price_subtotal_signed)
 
     @api.model
     def _default_price_unit(self):
@@ -1270,6 +1275,9 @@ class account_invoice_line(models.Model):
         default=_default_price_unit)
     price_subtotal = fields.Float(string='Amount', digits= dp.get_precision('Account'),
         store=True, readonly=True, compute='_compute_price')
+    price_subtotal_signed = fields.Float(string='Amount Signed', digits=0,
+        store=True, readonly=True, compute='_compute_price',
+        help="Total amount in the currency of the company, negative for credit notes.")
     quantity = fields.Float(string='Quantity', digits= dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     discount = fields.Float(string='Discount (%)', digits= dp.get_precision('Discount'),
