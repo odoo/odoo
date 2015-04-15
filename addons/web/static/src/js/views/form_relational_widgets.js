@@ -1769,60 +1769,6 @@ var FieldMany2ManyCheckBoxes = AbstractManyField.extend(common.ReinitializeField
     },
 });
 
-/**
-    This field can be applied on many2many and one2many. It is a read-only field that will display a single link whose name is
-    "<number of linked records> <label of the field>". When the link is clicked, it will redirect to another act_window
-    action on the model of the relation and show only the linked records.
-
-    Widget options:
-
-    * views: The views to display in the act_window action. Must be a list of tuples whose first element is the id of the view
-      to display (or False to take the default one) and the second element is the type of the view. Defaults to
-      [[false, "tree"], [false, "form"]] .
-*/
-var X2ManyCounter = common.AbstractField.extend(common.ReinitializeFieldMixin, {
-    className: "oe_form_x2many_counter",
-    init: function() {
-        this._super.apply(this, arguments);
-        this.set("value", []);
-        _.defaults(this.options, {
-            "views": [[false, "tree"], [false, "form"]],
-        });
-    },
-    render_value: function() {
-        var text = _.str.sprintf("%d %s", this.val().length, this.string);
-        this.$().html(QWeb.render("X2ManyCounter", {text: text}));
-        this.$("a").click(_.bind(this.go_to, this));
-    },
-    go_to: function() {
-        return this.view.recursive_save().then(_.bind(function() {
-            var val = this.val();
-            var context = {};
-            if (this.field.type === "one2many") {
-                context["default_" + this.field.relation_field] = this.view.datarecord.id;
-            }
-            var domain = [["id", "in", val]];
-            return this.do_action({
-                type: 'ir.actions.act_window',
-                name: this.string,
-                res_model: this.field.relation,
-                views: this.options.views,
-                target: 'current',
-                context: context,
-                domain: domain,
-            });
-        }, this));
-    },
-    val: function() {
-        var value = this.get("value") || [];
-        if (value.length >= 1 && value[0] instanceof Array) {
-            value = value[0][2];
-        }
-        return value;
-    }
-});
-
-
 
 core.form_widget_registry
     .add('many2one', FieldMany2One)
@@ -1833,7 +1779,6 @@ core.form_widget_registry
     .add('one2many_list', FieldOne2Many)
     .add('many2many_binary', FieldMany2ManyBinaryMultiFiles)
     .add('many2many_checkboxes', FieldMany2ManyCheckBoxes)
-    .add('x2many_counter', X2ManyCounter);
 
 return {
     FieldMany2ManyTags: FieldMany2ManyTags,
