@@ -41,6 +41,9 @@
     <xpath expr="//table[@id='cart_products']/tbody//td[last()]/div" position="attributes">
         <attribute name="t-if">line.product_id.name !='Reward'</attribute>
     </xpath>
+    <xpath expr="//table[@id='cart_products']/tbody//td[4]//del" position="attributes">
+        <attribute name="t-if">line.product_id.name !='Reward'</attribute>
+    </xpath>
     <xpath expr="//table[@id='cart_products']/tbody//td[last()]" position="inside">
         <t t-if="line.product_id.name =='Reward'">
             <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-esc="int(line.product_uom_qty)"/>
