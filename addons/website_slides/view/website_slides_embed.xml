@@ -10,83 +10,9 @@
 
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
-            <t t-call="website_slides.pdf_js_lib"></t>
-            <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
-        </template>
-
-        <!--
-            Bundle for PDFJS lib
-            Since PDFJS is quite huge (40000 lines), please only load it when it is necessary.
-            For now, it is only use to display the PDF slide Viewer during an embed.
-            Bundlized, the size is reduced to 3000 lines.
-        -->
-        <template id="pdf_js_lib" name="PDF Js library">
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/shared/util.js"></script>
-            <!-- files required to handle PDF file. Found in https://github.com/mozilla/pdf.js/blob/master/examples/helloworld/index.html -->
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/display/api.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/display/metadata.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/display/canvas.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/display/webgl.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/display/pattern_helper.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/display/font_loader.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/display/annotation_helper.js"></script>
-            <!-- files normally dynamically loaded in worker_loader.js -->
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/network.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/chunked_stream.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/pdf_manager.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/core.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/obj.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/charsets.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/annotation.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/function.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/colorspace.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/crypto.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/pattern.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/evaluator.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/cmap.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/fonts.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/font_renderer.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/glyphlist.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/image.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/metrics.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/parser.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/ps_parser.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/stream.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/worker.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/arithmetic_decoder.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/jpg.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/jpx.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/jbig2.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/bidi.js"></script>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/core/murmurhash3.js"></script>
-            <!--
-                NOTE JEM : PDFJS not-minified load its assets dynamically. Not minify, this lib is huge (4000 lines).
-                To load PDFJS using odoo bundle, we create a custom worker_loader, to avoid reloading all the assets (core/*.js) dynamically.
-                Loading all this assets in a bundle can be problematic in debug mode, since we don't wait all assets to be loaded to start using PDFJS. That's why, in debug mode, we use the native loader,
-                otherwise our custom loader is used.
-            -->
-            <t t-if="not debug">
-                <script>
-                    // Use Odoo PDFJS Loader, to avoid dynamic assets loading
-                    PDFJS.workerSrc = '/website_slides/static/lib/pdfjs/worker_loader_by_odoo.js';
-                    PDFJS.disableWorker = true;
-                </script>
-            </t>
-            <t t-if="debug">
-                <script>
-                    // Specify the main script used to create a new PDF.JS web worker.
-                    // In production, leave this undefined or change it to point to the
-                    // combined `pdf.worker.js` file.
-                    PDFJS.workerSrc = '/website_slides/static/lib/pdfjs/worker_loader.js';
-                </script>
-            </t>
-            <!--
-                If no loader defined, this file will try to load pdf.worker.js (in build/).
-                It will crash since we don't use the minified version of PDFJS
-            -->
-            <script type="text/javascript" src="/website_slides/static/lib/pdfjs/pdf.js"></script>
-
+            <t t-call="website.pdf_js_lib"></t>
             <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
+            <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
         </template>
 
         <!--
