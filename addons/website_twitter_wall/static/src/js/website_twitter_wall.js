@@ -106,7 +106,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             new Customize(this, $("button[title='Customize']"));
             window.scrollTo(0, 0);
             $("body").css({"position": "fixed", "background-color": "#F1F1F1"});
-            $("body").addClass("odoo-tw-view-live-remove-border");
+            $("body").addClass("odoo-tw-view-live");
             $("center.odoo-tw-tweet > span").hide();
             $(".odoo-tw-view-tweet-delete").remove();
         } else {
@@ -203,7 +203,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             if(this.shuffle)
                 list = _.shuffle(list);
             list = _.first(list, this.limit);
-            $(document).bind("clear_tweet_queue", function(e){
+            $(document).bind("clear_tweet_queue", function(e) {
                 list = [];
             });
             this.tweet_interval = setInterval(function() {
@@ -296,10 +296,11 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             });
         },
         reset_colors:function(color){
-            $('<div class="ripple_wrapper"  style="position:fixed;bottom:-500px;right:-500px;border-top-left-radius:50%;border-bottom-left-radius:50%"></div>')
-                .appendTo('body' )
-                .css("background",color)
-                .animate({height:3000,width:3000},1200,function(){$('body').css('background-color', color);$(".odoo-tw-tweet").remove();$('.ripple_wrapper').remove();});
+            $('<div class="odoo-tw-ripple-wrapper" />').appendTo('body').css("background", color).animate({height: 3000, width: 3000}, 1200, function() {
+                $('body').css('background-color', color);
+                $('.odoo-tw-ripple-wrapper').remove();
+                $(".odoo-tw-tweet").remove();
+            });
         }
     });
     $("body").on('mouseover', '.colorpicker', function() {
