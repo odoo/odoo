@@ -31,7 +31,7 @@ class WebsiteTwitterWall(http.Controller):
     def twitter_wall_create(self, **kargs):
         """ Create new wall """
         values = dict((value, kargs[value]) for value in ['name', 'description', 'image', 'website_published', 'tweetus_ids'] if kargs.get(value))
-        if any(x in values['image'] for x in ['http', 'https']):
+        if kargs['is_url']:
             values['image'] = self._read_image(values['image'])
         try:
             request.env['twitter.agent'].create(values)

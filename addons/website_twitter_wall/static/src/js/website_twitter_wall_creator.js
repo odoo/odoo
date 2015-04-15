@@ -154,6 +154,7 @@ var Create = Widget.extend({
             'name': wall_name,
             'description': wall_description,
             'image': this.image,
+            'is_url': this.testRegex.test(this.image),
             'website_published': this.$(e.target).data("published"),
             'tweetus_ids': this.get_tag_ids()
         }).then(function (data) {
