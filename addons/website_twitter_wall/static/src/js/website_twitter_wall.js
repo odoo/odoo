@@ -288,6 +288,7 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             });
             picker.parent().on('click', '.odoo-tw-view-live-option-color', function() {
                 color = $(this).data('color-code');
+                $(".colorinput > input.form-control").val(color);
                 self.reset_colors(color);
             });
             picker.parent().on('click', '.theme', function(e) {
