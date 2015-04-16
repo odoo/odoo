@@ -220,12 +220,12 @@ class account_analytic_account(osv.osv):
         return res
 
     def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
-        result = {}
+        result = {'value': {}}
         if not invoice_on_timesheets:
             return {'value': {'to_invoice': False}}
         try:
             to_invoice = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'hr_timesheet_invoice.timesheet_invoice_factor1')
-            result['to_invoice'] = to_invoice
+            result['value']['to_invoice'] = to_invoice
         except ValueError:
             pass
         return result
