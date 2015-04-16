@@ -44,6 +44,7 @@
                 </xpath>
                 <xpath expr="//field[@name='project_id']" position="before">
                     <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position, pricelist_id)"/>
+                    <field name="require_payment"/>
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
                     <field name="website_description" invisible="1"/>
@@ -71,6 +72,7 @@
                                <div id="number_of_days">
                                    <field name="number_of_days" class="oe_inline"/> days
                                </div>
+                               <field name="require_payment"/>
                             </group>
                         </group>
                         <notebook>

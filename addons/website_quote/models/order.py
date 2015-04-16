@@ -36,6 +36,7 @@ class sale_quote_template(osv.osv):
         'note': fields.text('Terms and conditions'),
         'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True),
         'number_of_days': fields.integer('Quotation Duration', help='Number of days for the validity date computation of the quotation'),
+        'require_payment': fields.boolean('Immediate Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
     }
     def open_template(self, cr, uid, quote_id, context=None):
         return {
@@ -159,7 +160,8 @@ class sale_order(osv.osv):
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float",
             digits_compute=dp.get_precision('Account')),
-        'quote_viewed': fields.boolean('Quotation Viewed')
+        'quote_viewed': fields.boolean('Quotation Viewed'),
+        'require_payment': fields.boolean('Immediate Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
     }
 
     def _get_template_id(self, cr, uid, context=None):
@@ -180,7 +182,7 @@ class sale_order(osv.osv):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/quote/%s' % (quote.id)
+            'url': '/quote/%s/%s' % (quote.id, quote.access_token)
         }
 
     def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position=False, pricelist_id=False, context=None):
@@ -233,7 +235,14 @@ class sale_order(osv.osv):
         date = False
         if quote_template.number_of_days > 0:
             date = (datetime.datetime.now() + datetime.timedelta(quote_template.number_of_days)).strftime("%Y-%m-%d")
-        data = {'order_line': lines, 'website_description': quote_template.website_description, 'note': quote_template.note, 'options': options, 'validity_date': date}
+        data = {
+            'order_line': lines,
+            'website_description': quote_template.website_description,
+            'note': quote_template.note,
+            'options': options,
+            'validity_date': date,
+            'require_payment': quote_template.require_payment
+        }
         return {'value': data}
 
     def recommended_products(self, cr, uid, ids, context=None):
