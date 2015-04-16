@@ -21,6 +21,8 @@
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import Warning
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 import product
 
@@ -89,7 +91,7 @@ class stock_landed_cost(osv.osv):
         ),
         'state': fields.selection([('draft', 'Draft'), ('done', 'Posted'), ('cancel', 'Cancelled')], 'State', readonly=True, track_visibility='onchange', copy=False),
         'account_move_id': fields.many2one('account.move', 'Journal Entry', readonly=True, copy=False),
-        'account_journal_id': fields.many2one('account.journal', 'Account Journal', required=True),
+        'account_journal_id': fields.many2one('account.journal', 'Account Journal', required=True, states={'done': [('readonly', True)]}),
     }
 
     _defaults = {
@@ -119,41 +121,43 @@ class stock_landed_cost(osv.osv):
         Afterwards, for the goods that are already out of stock, we should create the out moves
         """
         aml_obj = self.pool.get('account.move.line')
-        aml_obj.create(cr, uid, {
+        base_line = {
             'name': line.name,
             'move_id': move_id,
             'product_id': line.product_id.id,
             'quantity': line.quantity,
-            'debit': line.additional_landed_cost,
-            'account_id': debit_account_id
-        }, context=context)
-        aml_obj.create(cr, uid, {
-            'name': line.name,
-            'move_id': move_id,
-            'product_id': line.product_id.id,
-            'quantity': line.quantity,
-            'credit': line.additional_landed_cost,
-            'account_id': credit_account_id
-        }, context=context)
+        }
+        debit_line = dict(base_line, account_id=debit_account_id)
+        credit_line = dict(base_line, account_id=credit_account_id)
+        diff = line.additional_landed_cost
+        if diff > 0:
+            debit_line['debit'] = diff
+            credit_line['credit'] = diff
+        else:
+            # negative cost, reverse the entry
+            debit_line['credit'] = -diff
+            credit_line['debit'] = -diff
+        aml_obj.create(cr, uid, debit_line, context=context)
+        aml_obj.create(cr, uid, credit_line, context=context)
         
         #Create account move lines for quants already out of stock
         if qty_out > 0:
-            aml_obj.create(cr, uid, {
-                                     'name': line.name + ": " + str(qty_out) + _(' already out'),
-                                     'move_id': move_id,
-                                     'product_id': line.product_id.id,
-                                     'quantity': qty_out,
-                                     'credit': line.additional_landed_cost * qty_out / line.quantity,
-                                     'account_id': debit_account_id
-                                     }, context=context)
-            aml_obj.create(cr, uid, {
-                                     'name': line.name + ": " + str(qty_out) + _(' already out'),
-                                     'move_id': move_id,
-                                     'product_id': line.product_id.id,
-                                     'quantity': qty_out,
-                                     'debit': line.additional_landed_cost * qty_out / line.quantity,
-                                     'account_id': already_out_account_id
-                                     }, context=context)
+            debit_line = dict(debit_line,
+                              name=(line.name + ": " + str(qty_out) + _(' already out')),
+                              quantity=qty_out)
+            credit_line = dict(credit_line,
+                              name=(line.name + ": " + str(qty_out) + _(' already out')),
+                              quantity=qty_out)
+            diff = diff * qty_out / line.quantity
+            if diff > 0:
+                debit_line['debit'] = diff
+                credit_line['credit'] = diff
+            else:
+                # negative cost, reverse the entry
+                debit_line['credit'] = -diff
+                credit_line['debit'] = -diff
+            aml_obj.create(cr, uid, debit_line, context=context)
+            aml_obj.create(cr, uid, credit_line, context=context)
         return True
 
     def _create_account_move(self, cr, uid, cost, context=None):
@@ -178,9 +182,12 @@ class stock_landed_cost(osv.osv):
             else:
                 costcor[valuation_line.cost_line_id] = valuation_line.additional_landed_cost
             tot += valuation_line.additional_landed_cost
-        res = (tot == landed_cost.amount_total)
+
+        prec = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
+        # float_compare returns 0 for equal amounts
+        res = not bool(float_compare(tot, landed_cost.amount_total, precision_digits=prec))
         for costl in costcor.keys():
-            if costcor[costl] != costl.price_unit:
+            if float_compare(costcor[costl], costl.price_unit, precision_digits=prec):
                 res = False
         return res
 
@@ -188,6 +195,8 @@ class stock_landed_cost(osv.osv):
         quant_obj = self.pool.get('stock.quant')
 
         for cost in self.browse(cr, uid, ids, context=context):
+            if cost.state != 'draft':
+                raise Warning(_('Only draft landed costs can be validated'))
             if not cost.valuation_adjustment_lines or not self._check_sum(cr, uid, cost, context=context):
                 raise osv.except_osv(_('Error!'), _('You cannot validate a landed cost which has no valid valuation lines.'))
             move_id = self._create_account_move(cr, uid, cost, context=context)
@@ -204,6 +213,7 @@ class stock_landed_cost(osv.osv):
                     else:
                         quant_dict[quant.id] += diff
                 for key, value in quant_dict.items():
+                    print value
                     quant_obj.write(cr, uid, key, {'cost': value}, context=context)
                 qty_out = 0
                 for quant in line.move_id.quant_ids:
@@ -214,8 +224,16 @@ class stock_landed_cost(osv.osv):
         return True
 
     def button_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
-        return True
+        cost = self.browse(cr, uid, ids, context=context)
+        if cost.state == 'done':
+            raise Warning(_('Validated landed costs cannot be cancelled, '
+                            'but you could create negative landed costs to reverse them'))
+        return cost.write({'state': 'cancel'})
+
+    def unlink(self, cr, uid, ids, context=None):
+        # cancel or raise first
+        self.button_cancel(cr, uid, ids, context)
+        return super(stock_landed_cost, self).unlink(cr, uid, ids, context=context)
 
     def compute_landed_cost(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('stock.valuation.adjustment.lines')

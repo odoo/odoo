@@ -111,9 +111,6 @@ class TestPropertyField(common.TransactionCase):
         self.partner._columns.update({
             'property_country': fields.property(type='many2one', relation="res.country", string="Country by company"),
         })
-        self.partner._all_columns.update({
-            'property_country': fields.column_info('property_country', self.partner._columns['property_country'], None, None, None),
-        })
         self.partner._field_create(cr)
 
         partner_id = self.partner.create(cr, alice, {

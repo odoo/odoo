@@ -97,6 +97,16 @@ class mrp_workcenter(osv.osv):
             value = {'costs_hour': cost.standard_price}
         return {'value': value}
 
+    def _check_capacity_per_cycle(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.capacity_per_cycle <= 0.0:
+                return False
+        return True
+
+    _constraints = [
+        (_check_capacity_per_cycle, 'The capacity per cycle must be strictly positive.', ['capacity_per_cycle']),
+    ]
+
 class mrp_routing(osv.osv):
     """
     For specifying the routings of Work Centers.
@@ -193,6 +203,7 @@ class mrp_bom(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c),
     }
     _order = "sequence"
+
 
     def _bom_find(self, cr, uid, product_tmpl_id=None, product_id=None, properties=None, context=None):
         """ Finds BoM for particular product and product uom.
@@ -357,6 +368,7 @@ class mrp_bom(osv.osv):
 class mrp_bom_line(osv.osv):
     _name = 'mrp.bom.line'
     _order = "sequence"
+    _rec_name = "product_id"
 
     def _get_child_bom_lines(self, cr, uid, ids, field_name, arg, context=None):
         """If the BOM line refers to a BOM, return the ids of the child BOM lines"""
@@ -975,6 +987,11 @@ class mrp_production(osv.osv):
                     stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
+
+        # Remove remaining products to consume if no more products to produce
+        if not production.move_created_ids and production.move_lines:
+            stock_mov_obj.action_cancel(cr, uid, [x.id for x in production.move_lines], context=context)
+
         self.signal_workflow(cr, uid, [production_id], 'button_produce_done')
         return True
 

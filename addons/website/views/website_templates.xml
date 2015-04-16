@@ -33,15 +33,15 @@
 
 <template id="website.submenu" name="Submenu">
     <li t-if="not submenu.child_id" t-att-class="
-        ((submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
+        ((submenu.url and submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
          request.httprequest.path == submenu.url) and 'active'
         ">
-        <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
+        <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
     <li t-if="submenu.child_id" t-attf-class="dropdown #{
-        ((submenu.url != '/' and [1 for submenu in submenu.child_id if request.httprequest.path.startswith(submenu.url)]) or
+        ((submenu.url and submenu.url != '/' and [1 for submenu in submenu.child_id if request.httprequest.path.startswith(submenu.url)]) or
          request.httprequest.path == submenu.url) and 'active'
         }">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -323,9 +323,14 @@
                     </div>
                     <ul class="list-inline js_language_selector mt16" t-if="(request.website_multilang and len(languages) &gt; 1) or editable">
                         <li t-foreach="languages" t-as="lg">
-                            <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
-                             t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
-                             <t t-esc="lg[1].split('/').pop()"/></a>
+                            <a
+                                t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                                t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None"
+                                t-att-data-lang="lg[0]"
+                                class="js_change_lang"
+                            >
+                              <t t-esc="lg[1].split('/').pop()"/>
+                            </a>
                         </li>
                         <li groups="base.group_website_publisher">
                             <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
@@ -447,6 +452,13 @@
 <template id="info" name="Odoo Information">
     <t t-call="website.layout">
       <div id="wrap">
+      </div>
+    </t>
+</template>
+
+<template id="show_website_info" inherit_id="website.info" customize_show="True" name="Show Odoo Information">
+    <xpath expr="//div[@id='wrap']" position="inside">
+
         <div class="oe_structure">
 
             <section class="container">
@@ -473,35 +485,37 @@
                     </dt>
                     <dd>
                         <span t-raw="app.summary"/>
-                    </dd><dd class="text-muted">
+                    </dd><dd class="text-muted" groups='base.group_no_one'>
                         Technical name: <span t-field="app.name"/>, updated: <span t-field="app.write_date"/>, author: <span t-field="app.author"/>
                     </dd>
                 </dl>
 
-                <h2>Installed Modules</h2>
-                <dl class="dl-horizontal">
-                    <t t-foreach="modules" t-as="app">
-                        <dt>
-                            <span t-raw="app.shortdesc"/>
-                        </dt>
-                        <dd t-if="app.summary">
-                            <span t-raw="app.summary"/>
-                        </dd><dd>
-                            Technical name: <span t-field="app.name"/>,
-                            updated: <span t-field="app.write_date"/>
-                            <t t-if="app.author">
-                                , author: <span t-field="app.author"/>
-                            </t>
-                        </dd>
-                    </t>
-                </dl>
+                <div groups='base.group_no_one'>
+                    <h2>Installed Modules</h2>
+                    <dl class="dl-horizontal">
+                        <t t-foreach="modules" t-as="app">
+                            <dt>
+                                <span t-raw="app.shortdesc"/>
+                            </dt>
+                            <dd t-if="app.summary">
+                                <span t-raw="app.summary"/>
+                            </dd><dd>
+                                Technical name: <span t-field="app.name"/>,
+                                updated: <span t-field="app.write_date"/>
+                                <t t-if="app.author">
+                                    , author: <span t-field="app.author"/>
+                                </t>
+                            </dd>
+                        </t>
+                    </dl>
+                </div>
 
 
             </section>
 
         </div>
-      </div>
-    </t>
+
+    </xpath>
 </template>
 
 <template id="default_page">

@@ -51,6 +51,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         # TODO: can't we just put auth=public, ... in web client ?
         return super(Website, self).web_login(*args, **kw)
 
+    @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
+    def change_lang(self, lang, r='/', **kwargs):
+        if lang == 'default':
+            lang = request.website.default_lang_code
+            r = '/%s%s' % (lang, r or '/')
+        redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
+        redirect.set_cookie('website_lang', lang)
+        return redirect
+
     @http.route('/page/<page:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
         values = {
@@ -231,13 +240,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.registry["ir.ui.view"].customize_template_get(
             request.cr, request.uid, xml_id, full=full, context=request.context)
 
-
     @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
         return request.registry["ir.ui.view"].get_view_translations(
             request.cr, request.uid, xml_id, lang=lang, context=request.context)
-
 
     @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
@@ -293,7 +300,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             website_url = url
             name = url.split("/").pop()
             attachment_id = Attachments.create(request.cr, request.uid, {
-                'name':name,
+                'name': name,
                 'type': 'url',
                 'url': url,
                 'res_model': 'ir.ui.view',
@@ -403,7 +410,10 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Server actions
     #------------------------------------------------------
-    @http.route('/website/action/<path_or_xml_id_or_id>', type='http', auth="public", website=True)
+    @http.route([
+        '/website/action/<path_or_xml_id_or_id>',
+        '/website/action/<path_or_xml_id_or_id>/<path:path>',
+        ], type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         res, action_id, action = None, None, None

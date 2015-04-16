@@ -79,6 +79,8 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'statement_id': statement_id,
                 'ref': line.ref,
                 'date': statement.date,
+                'amount_currency': line.amount_currency,
+                'currency_id': line.currency_id.id,
             }, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
