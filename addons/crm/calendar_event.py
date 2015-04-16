@@ -10,7 +10,6 @@ class calendar_event(osv.Model):
     """ Model for Calendar Event """
     _inherit = 'calendar.event'
     _columns = {
-        'phonecall_id': fields.many2one('crm.phonecall', 'Phonecall'),
         'opportunity_id': fields.many2one('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
     }
 

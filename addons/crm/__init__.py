@@ -4,8 +4,8 @@
 import crm
 import crm_lead
 import sales_team
+import models
 import calendar_event
-import crm_phonecall
 import report
 import wizard
 import res_partner

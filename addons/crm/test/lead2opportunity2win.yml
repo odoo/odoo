@@ -29,15 +29,6 @@
     assert lead.partner_id.id == ref("base.res_partner_2"), 'Partner mismatch!'
     assert lead.stage_id.id == ref("stage_lead1"), 'Stage of opportunity is incorrect!'
 -
-  Now I begin communication and schedule a phone call with the customer.
--
-  !python {model: crm.phonecall2phonecall}: |
-    import time
-    context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_3')],'active_id': ref('crm_case_3')})
-    call_id = self.create(cr, uid, {'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'name': "Bonjour M. Jean, Comment allez-vous? J'ai bien reçu votre demande, pourrions-nous en parler quelques minutes?"}, context=context)
-    self.action_schedule(cr, uid, [call_id], context=context)
--
   Now I schedule meeting with customer.
 -
   !python {model: crm.lead}: |

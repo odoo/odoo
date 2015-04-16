@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import crm
-from datetime import datetime
+from datetime import datetime, timedelta
+import logging
 from operator import itemgetter
 
+import crm
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools, api
@@ -14,6 +15,7 @@ from openerp.tools.translate import _
 from openerp.tools import email_re, email_split
 from openerp.exceptions import UserError, AccessError
 
+_logger = logging.getLogger(__name__)
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
@@ -155,14 +157,6 @@ class crm_lead(format_address, osv.osv):
             for opp_id in ids
         }
 
-    def _calls_count(self, cr, uid, ids, field_name, args, context=None):
-        res = dict.fromkeys(ids, 0)
-        phonecall_data = self.pool['crm.phonecall'].read_group(
-            cr, uid, [('opportunity_id', 'in', ids)], ['opportunity_id'], ['opportunity_id'], context=context)
-        for data in phonecall_data:
-            res[data['opportunity_id'][0]] = data['opportunity_id_count']
-        return res
-
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', track_visibility='onchange',
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
@@ -211,8 +205,14 @@ class crm_lead(format_address, osv.osv):
         'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
+        # CRM Actions
+        'next_activity_id': fields.many2one("crm.activity", "Next Activity", select=True),
+        'next_activity_1': fields.related("next_activity_id", "activity_1_id", "name", type="char", string="Next Activity 1"),
+        'next_activity_2': fields.related("next_activity_id", "activity_2_id", "name", type="char", string="Next Activity 2"),
+        'next_activity_3': fields.related("next_activity_id", "activity_3_id", "name", type="char", string="Next Activity 3"),
         'date_action': fields.date('Next Action Date', select=True),
-        'title_action': fields.char('Next Action'),
+        'title_action': fields.char('Next Action Summary'),
+
         'color': fields.integer('Color Index'),
         'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
         'partner_address_email': fields.related('partner_id', 'email', type='char', string='Partner Contact Email', readonly=True),
@@ -236,7 +236,6 @@ class crm_lead(format_address, osv.osv):
         'planned_cost': fields.float('Planned Costs'),
         'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
         'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', select=True, track_visibility='onchange'),
-        'calls_count': fields.function(_calls_count, string='# Phonecalls', type='integer'),
     }
 
     _defaults = {
@@ -380,6 +379,73 @@ class crm_lead(format_address, osv.osv):
         for stage_id, lead_ids in stages_leads.items():
             self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
         return True
+
+    def log_next_activity_1(self, cr, uid, ids, context=None):
+        return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_1_id', context=context)
+
+    def log_next_activity_2(self, cr, uid, ids, context=None):
+        return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_2_id', context=context)
+
+    def log_next_activity_3(self, cr, uid, ids, context=None):
+        return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_3_id', context=context)
+
+    def log_next_activity_done(self, cr, uid, ids, context=None, next_activity_name=False):
+        to_clear_ids = []
+        for lead in self.browse(cr, uid, ids, context=context):
+            if not lead.next_activity_id:
+                continue
+            body_html = """<div><b>${object.next_activity_id.name}</b></div>
+%if object.title_action:
+<div>${object.title_action}</div>
+%endif"""
+            body_html = self.pool['mail.template'].render_template(cr, uid, body_html, 'crm.lead', lead.id, context=context)
+            msg_id = lead.message_post(body_html, subtype_id=lead.next_activity_id.subtype_id.id)
+            # update subtype after posting NOT SURE
+
+            next_activity = next_activity_name and getattr(lead.next_activity_id, next_activity_name, False) or False
+            if next_activity:
+                date_action = False
+                if next_activity.days:
+                    date_action = (datetime.now() + timedelta(days=next_activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
+                lead.write({
+                    'next_activity_id': next_activity.id,
+                    'date_action': date_action,
+                    'title_action': next_activity.description,
+                })
+            else:
+                to_clear_ids.append(lead.id)
+
+        if to_clear_ids:
+            self.cancel_next_activity(cr, uid, to_clear_ids, context=context)
+        return True
+
+    def cancel_next_activity(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids,  {
+            'next_activity_id': False,
+            'date_action': False,
+            'title_action': False,
+        }, context=context)
+
+    def onchange_next_activity_id(self, cr, uid, ids, next_activity_id, context=None):
+        if not next_activity_id:
+            return {'value': {
+                'next_action1': False,
+                'next_action2': False,
+                'next_action3': False,
+                'title_action': False,
+                'date_action': False,
+            }}
+        activity = self.pool['crm.activity'].browse(cr, uid, next_activity_id, context=context)
+        date_action = False
+        if activity.days:
+            date_action = (datetime.now() + timedelta(days=activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        return {'value': {
+            'next_activity_1': activity.activity_1_id and activity.activity_1_id.name or False,
+            'next_activity_2': activity.activity_2_id and activity.activity_2_id.name or False,
+            'next_activity_3': activity.activity_3_id and activity.activity_3_id.name or False,
+            'title_action': activity.description,
+            'date_action': date_action,
+        }}
 
     def _merge_get_result_type(self, cr, uid, opps, context=None):
         """
@@ -534,13 +600,6 @@ class crm_lead(format_address, osv.osv):
                 attachment.write(values)
         return True
 
-    def _merge_opportunity_phonecalls(self, cr, uid, opportunity_id, opportunities, context=None):
-        phonecall_obj = self.pool['crm.phonecall']
-        for opportunity in opportunities:
-            for phonecall_id in phonecall_obj.search(cr, uid, [('opportunity_id', '=', opportunity.id)], context=context):
-                phonecall_obj.write(cr, uid, phonecall_id, {'opportunity_id': opportunity_id}, context=context)
-        return True
-
     def get_duplicated_leads(self, cr, uid, ids, partner_id, include_lost=False, context=None):
         """
         Search for opportunities that have the same partner and that arent done or cancelled
@@ -571,7 +630,6 @@ class crm_lead(format_address, osv.osv):
         self._merge_notify(cr, uid, highest, opportunities, context=context)
         self._merge_opportunity_history(cr, uid, highest, opportunities, context=context)
         self._merge_opportunity_attachments(cr, uid, highest, opportunities, context=context)
-        self._merge_opportunity_phonecalls(cr, uid, highest, opportunities, context=context)
 
     def merge_opportunity(self, cr, uid, ids, user_id=False, team_id=False, context=None):
         """
@@ -647,7 +705,6 @@ class crm_lead(format_address, osv.osv):
             'name': lead.name,
             'partner_id': customer and customer.id or False,
             'type': 'opportunity',
-            'date_action': fields.datetime.now(),
             'date_open': fields.datetime.now(),
             'email_from': customer and customer.email or lead.email_from,
             'phone': customer and customer.phone or lead.phone,
@@ -726,7 +783,6 @@ class crm_lead(format_address, osv.osv):
         :param int partner_id: partner to assign if any
         :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
-        #TODO this is a duplication of the handle_partner_assignation method of crm_phonecall
         partner_ids = {}
         for lead in self.browse(cr, uid, ids, context=context):
             # If the action is set to 'create' and no partner_id is set, create a new one
@@ -766,45 +822,6 @@ class crm_lead(format_address, osv.osv):
             if value:
                 self.write(cr, uid, [lead_id], value, context=context)
         return True
-
-    def schedule_phonecall(self, cr, uid, ids, schedule_time, call_summary, desc, phone, contact_name, user_id=False, team_id=False, categ_id=False, action='schedule', context=None):
-        """
-        :param string action: ('schedule','Schedule a call'), ('log','Log a call')
-        """
-        phonecall = self.pool.get('crm.phonecall')
-        model_data = self.pool.get('ir.model.data')
-        phonecall_dict = {}
-        if not categ_id:
-            try:
-                res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
-                categ_id = model_data.browse(cr, uid, res_id, context=context).res_id
-            except ValueError:
-                pass
-        for lead in self.browse(cr, uid, ids, context=context):
-            if not team_id:
-                team_id = lead.team_id and lead.team_id.id or False
-            if not user_id:
-                user_id = lead.user_id and lead.user_id.id or False
-            vals = {
-                'name': call_summary,
-                'opportunity_id': lead.id,
-                'user_id': user_id or False,
-                'categ_id': categ_id or False,
-                'description': desc or '',
-                'date': schedule_time,
-                'team_id': team_id or False,
-                'partner_id': lead.partner_id and lead.partner_id.id or False,
-                'partner_phone': phone or lead.phone or (lead.partner_id and lead.partner_id.phone or False),
-                'partner_mobile': lead.partner_id and lead.partner_id.mobile or False,
-                'priority': lead.priority,
-            }
-            new_id = phonecall.create(cr, uid, vals, context=context)
-            phonecall.write(cr, uid, [new_id], {'state': 'open'}, context=context)
-            if action == 'log':
-                phonecall.write(cr, uid, [new_id], {'state': 'done'}, context=context)
-            phonecall_dict[lead.id] = new_id
-            self.schedule_phonecall_send_note(cr, uid, [lead.id], new_id, action, context=context)
-        return phonecall_dict
 
     def redirect_opportunity_view(self, cr, uid, opportunity_id, context=None):
         models_data = self.pool.get('ir.model.data')
@@ -1005,22 +1022,6 @@ class crm_lead(format_address, osv.osv):
                 update_vals[key] = res.group(2).lower()
 
         return super(crm_lead, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
-
-    # ----------------------------------------
-    # OpenChatter methods and notifications
-    # ----------------------------------------
-
-    def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
-        phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
-        if action == 'log':
-            message = _('Logged a call for %(date)s. %(description)s')
-        else:
-            message = _('Scheduled a call for %(date)s. %(description)s')
-        phonecall_date = datetime.strptime(phonecall.date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        phonecall_usertime = fields.datetime.context_timestamp(cr, uid, phonecall_date, context=context).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        html_time = "<time datetime='%s+00:00'>%s</time>" % (phonecall.date, phonecall_usertime)
-        message = message % dict(date=html_time, description=phonecall.description)
-        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def log_meeting(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):
         if not duration:

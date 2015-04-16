@@ -29,6 +29,7 @@ class crm_opportunity_report(osv.Model):
 
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'team_id':fields.many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True),
+        'nbr_activities': fields.integer('# of Activities', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
@@ -51,9 +52,9 @@ class crm_opportunity_report(osv.Model):
         cr.execute("""
             CREATE OR REPLACE VIEW crm_opportunity_report AS (
                 SELECT
-                    id,
+                    c.id,
                     c.date_deadline,
-                    count(id) as nbr_cases,
+                    count(c.id) as nbr_cases,
 
                     c.date_open as opening_date,
                     c.date_closed as date_closed,
@@ -67,6 +68,7 @@ class crm_opportunity_report(osv.Model):
                     c.company_id,
                     c.priority,
                     c.team_id,
+                    activity.nbr_activities,
                     c.campaign_id,
                     c.source_id,
                     c.medium_id,
@@ -81,7 +83,14 @@ class crm_opportunity_report(osv.Model):
                     c.lost_reason,
                     c.date_conversion as date_conversion
                 FROM
-                    crm_lead c
+                    "crm_lead" c
+                LEFT JOIN (
+                    SELECT m.res_id, COUNT(*) nbr_activities
+                    FROM "mail_message" m
+                    WHERE m.model = 'crm.lead'
+                    GROUP BY m.res_id ) activity
+                ON
+                    (activity.res_id = c.id)
                 WHERE c.active = 'true'
-                GROUP BY c.id
+                GROUP BY c.id, activity.nbr_activities
             )""")

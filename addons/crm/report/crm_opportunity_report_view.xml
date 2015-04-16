@@ -63,6 +63,12 @@
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['create_date:month', 'country_id']}</field>
         </record>
+        <record id="ir_filters_crm_opportunity_report_next_action" model="ir.filters">
+            <field name="name">Team Activities</field>
+            <field name="model_id">crm.opportunity.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['team_id'], 'measures': ['nbr_activities']}</field>
+        </record>
 
         <!-- Opportunities by user and team Search View -->
         <record id="view_report_crm_opportunity_filter" model="ir.ui.view">

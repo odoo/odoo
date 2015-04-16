@@ -31,7 +31,7 @@
                 Use opportunities to keep track of your sales pipeline, follow
                 up potential sales and better forecast your future revenues.
               </p><p>
-                You will be able to plan meetings and phone calls from
+                You will be able to plan meetings and log activities from
                 opportunities, convert them into quotations, attach related
                 documents, track all discussions, and much more.
               </p>
@@ -98,12 +98,6 @@
                             icon="fa-calendar"
                             context="{'partner_id': active_id}">
                             <field string="Meetings" name="meeting_count" widget="statinfo"/>
-                        </button>
-                        <button class="oe_stat_button" type="action"
-                            name="%(crm.crm_phonecall_category_phone_incoming0)d"
-                            icon="fa-phone"
-                            context="{'search_default_partner_id': active_id, 'default_duration': 1.0}">
-                            <field string="Calls" name="phonecall_count" widget="statinfo"/>
                         </button>
                     </div>
                 </data>

@@ -319,6 +319,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">1</field>
             <field eval="time.strftime('%Y-%m-25')" name="date_deadline"/>
+            <field name="next_activity_id" ref="crm_activity_data_meeting"/>
             <field eval="time.strftime('%Y-%m-12')" name="date_action"/>
             <field name="title_action">Meeting for pricing information.</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
@@ -345,6 +346,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
             <field name="priority">2</field>
             <field eval="time.strftime('%Y-%m-23')" name="date_deadline"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Send Catalogue by Email</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
@@ -368,6 +370,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">1</field>
             <field eval="time.strftime('%Y-%m-12')" name="date_deadline"/>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Call to ask system requirement</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
@@ -396,6 +399,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor5])]"/>
             <field name="priority">2</field>
             <field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
+            <field name="next_activity_id" ref="crm_activity_data_meeting"/>
             <field eval="time.strftime('%Y-%m-1')" name="date_action"/>
             <field name="title_action">Convert to quote</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
@@ -421,6 +425,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor3,categ_oppor4])]"/>
             <field name="priority">1</field>
             <field eval="time.strftime('%Y-%m-8')" name="date_deadline"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
             <field eval="time.strftime('%Y-%m-3')" name="date_action"/>
             <field name="title_action">Send price list regarding our interventions</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
@@ -450,6 +455,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor4,categ_oppor6])]"/>
             <field name="priority">1</field>
             <field eval="time.strftime('%Y-%m-13')" name="date_deadline"/>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
             <field eval="time.strftime('%Y-%m-4')" name="date_action"/>
             <field name="title_action">Call to define real needs about training</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
@@ -478,6 +484,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">1</field>
             <field eval="time.strftime('%Y-%m-10')" name="date_deadline"/>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
             <field eval="time.strftime('%Y-%m-5')" name="date_action"/>
             <field name="title_action">Ask for the good receprion of the proposition</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
@@ -498,6 +505,7 @@ Andrew</field>
             <field name="partner_id" ref="base.res_partner_5"/>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor4,categ_oppor8])]"/>
             <field name="priority">2</field>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
@@ -512,6 +520,7 @@ Andrew</field>
             <field name="partner_id" ref="base.res_partner_7"/>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
             <field name="priority">2</field>
+            <field name="next_activity_id" ref="crm_activity_data_meeting"/>
             <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
@@ -531,6 +540,7 @@ Andrew</field>
             <field name="partner_id" ref="base.res_partner_17"/>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
             <field name="priority">1</field>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
             <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
@@ -547,6 +557,7 @@ Andrew</field>
             <field name="partner_id" ref="base.res_partner_18"/>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
             <field name="priority">0</field>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
@@ -567,6 +578,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
             <field name="priority">0</field>
             <field eval="time.strftime('%Y-%m-6')" name="date_deadline"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
@@ -591,6 +603,7 @@ Andrew</field>
             <field name="zip">B7313</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
             <field name="priority">2</field>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
             <field name="title_action">Conf call with technical service</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_root"/>
@@ -614,6 +627,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
             <field name="priority">2</field>
             <field eval="time.strftime('%Y-%m-23')" name="date_deadline"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Send Catalogue by Email</field>
             <field name="team_id" ref="sales_team.crm_team_2"/>
@@ -640,6 +654,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
             <field name="priority">2</field>
             <field eval="time.strftime('%Y-%m-23')" name="date_deadline"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Send Catalogue by Email</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
@@ -703,7 +718,7 @@ Andrew</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
             <field name="body"><![CDATA[<p>Hello</p>
-            <p>After our phonecall and discussion with our technical experts, here is the offer of YourCompany. We believe it will meet every requirement you had in mind. Please feel free to contact me for any detail or technical detail that is not clear enough for you.</p>
+            <p>After our discussion with our technical experts, here is the offer of YourCompany. We believe it will meet every requirement you had in mind. Please feel free to contact me for any detail or technical detail that is not clear enough for you.</p>
             <p>Notice that as agreed on phone, we offer you a <b>10% discount on the hardware</b>!</p>
             <p>Best regards,</p>]]></field>
             <field name="message_type">email</field>

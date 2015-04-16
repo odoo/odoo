@@ -20,10 +20,7 @@ class crm_configuration(osv.TransientModel):
             help='Allows you to communicate with Customer, process Customer query, and provide better help and support.\n'
                  '-This installs the module crm_helpdesk.'),
         'alias_prefix': fields.char('Default Alias Name for Leads'),
-        'alias_domain' : fields.char('Alias Domain'),
-        'group_scheduled_calls': fields.boolean("Schedule calls to manage call center",
-            implied_group='crm.group_scheduled_calls',
-            help="""This adds the menu 'Scheduled Calls' under 'Sales / Phone Calls'""")
+        'alias_domain' : fields.char('Alias Domain')
     }
 
     _defaults = {

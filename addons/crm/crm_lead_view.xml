@@ -89,15 +89,6 @@
             LEADS
         -->
         <act_window
-                id="act_crm_opportunity_crm_phonecall_new"
-                name="Phone calls"
-                groups="base.group_sale_salesman"
-                res_model="crm.phonecall"
-                view_mode="tree,calendar,form"
-                context="{'default_duration': 1.0 ,'default_opportunity_id': active_id}"
-                view_type="form"/>
-
-        <act_window
                 id="act_crm_opportunity_calendar_event_new"
                 name="Meetings"
                 res_model="calendar.event"
@@ -121,13 +112,7 @@
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="action"
-                            context="{'default_opportunity_id': active_id, 'search_default_opportunity_id': active_id, 'default_partner_id': partner_id, 'default_duration': 1.0}"
-                            name="%(crm.crm_phonecall_category_phone_incoming0)d" icon="fa-phone">
-                            <field string="Calls" name="calls_count" widget="statinfo"/>
-                        </button>
-                    </div>
+                    <div class="oe_button_box" name="button_box"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
@@ -309,7 +294,6 @@
                                         <t t-if="widget.editable"><li><a type="edit">Edit Opportunity</a></li></t>
                                         <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
                                         <li><a name="%(mail.action_email_compose_message_wizard)d" type="action" >Send Email</a></li>
-                                        <li><a type="action" name="%(crm.crm_phonecall_category_phone_incoming0)d">Calls</a></li>
                                         <li><a name="action_schedule_meeting" type="object">Schedule Meeting</a></li>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
@@ -402,11 +386,6 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="action"
-                                name="%(crm.crm_phonecall_category_phone_incoming0)d" icon="fa-phone"
-                                context="{'default_opportunity_id': active_id, 'search_default_opportunity_id': active_id, 'default_partner_id': partner_id, 'default_duration': 1.0}">
-                                <field string="Calls" name="calls_count" widget="statinfo"/>
-                            </button>
                             <button class="oe_stat_button" type="object"
                                 context="{'partner_id': partner_id}"
                                 name="action_schedule_meeting" icon="fa-calendar">
@@ -439,11 +418,34 @@
                             </group>
 
                             <group>
-                                <label for="title_action"/>
-                                <div class="o_row">
-                                    <field name="date_action" nolabel="1"/>
-                                    <span attrs="{'invisible': ['|', ('date_action', '=', False), ('title_action', '=', False)]}" class="oe_read_only"> - </span>
-                                    <field name="title_action"  nolabel="1" placeholder="e.g. Call for proposal"/>
+                                <label for="next_activity_id"/>
+                                <div>
+                                    <field name="next_activity_id"
+                                        class="oe_inline" options="{'no_create': True, 'no_open': True}"
+                                        domain="['|',('team_id','=',False),('team_id','=',team_id)]"
+                                        on_change="onchange_next_activity_id(next_activity_id)"/>
+                                    <span class="oe_form_field oe_read_only oe_inline"
+                                        attrs="{'invisible': ['|', ('next_activity_id', '=', False), ('date_action', '=', False)]}">&#160;on&#160;</span>
+                                    <field name="date_action" nolabel="1" attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
+                                    <field name="title_action" nolabel="1" placeholder="e.g. Discuss proposal"
+                                        attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
+                                    <div attrs="{'invisible': [('next_activity_id', '=', False)]}">
+                                        <button name="log_next_activity_done" string="Done" type="object" class="oe_link"/>
+                                        <button name="log_next_activity_1" type="object" class="oe_link" attrs="{'invisible': [('next_activity_1','=',False)]}">
+                                            <span>&#160;|&#160;</span>
+                                            <field name="next_activity_1" class="oe_inline" readonly="1"/>
+                                        </button>
+                                        <button name="log_next_activity_2" type="object" class="oe_link" attrs="{'invisible': [('next_activity_2','=',False)]}">
+                                            <span>&#160;|&#160;</span>
+                                            <field name="next_activity_2" class="oe_inline" readonly="1"/>
+                                        </button>
+                                        <button name="log_next_activity_3" type="object" class="oe_link" attrs="{'invisible': [('next_activity_3','=',False)]}">
+                                            <span>&#160;|&#160;</span>
+                                            <field name="next_activity_3" class="oe_inline" readonly="1"/>
+                                        </button>
+                                        <span>&#160;|&#160;</span>
+                                        <button name="cancel_next_activity" string="Cancel" type="object" class="oe_link"/>
+                                    </div>
                                 </div>
                                 <field name="date_deadline"/>
                                 <field name="priority" widget="priority"/>

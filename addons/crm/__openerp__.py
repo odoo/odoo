@@ -7,12 +7,12 @@
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'sequence': 2,
-    'summary': 'Leads, Opportunities, Phone Calls',
+    'summary': 'Leads, Opportunities, Activities',
     'description': """
 The generic OpenERP Customer Relationship Management
 ====================================================
 
-This application enables a group of people to intelligently and efficiently manage leads, opportunities, meetings and phone calls.
+This application enables a group of people to intelligently and efficiently manage leads, opportunities, meetings and activities.
 
 It manages key tasks such as communication, identification, prioritization, assignment, resolution and notification.
 
@@ -44,33 +44,27 @@ Dashboard for CRM will include:
         'web_planner',
     ],
     'data': [
+        'data/crm_action_data.xml',
         'crm_data.xml',
         'crm_lead_data.xml',
-        'crm_phonecall_data.xml',
         'crm_tip_data.xml',
 
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
         'wizard/crm_lead_to_opportunity_view.xml',
-
-        'wizard/crm_phonecall_to_phonecall_view.xml',
-
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
-
-        'crm_phonecall_view.xml',
-        'crm_phonecall_menu.xml',
-
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
+        'views/crm_action_views.xml',
 
         'calendar_event_menu.xml',
 
         'report/crm_lead_report_view.xml',
+        'report/crm_activity_report_view.xml',
         'report/crm_opportunity_report_view.xml',
-        'report/crm_phonecall_report_view.xml',
 
         'res_partner_view.xml',
 
@@ -85,7 +79,7 @@ Dashboard for CRM will include:
     'demo': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
-        'crm_phonecall_demo.xml',
+        'data/crm_action_demo.xml',
         'crm_action_rule_demo.xml',
     ],
     'test': [
@@ -95,7 +89,6 @@ Dashboard for CRM will include:
         'test/lead2opportunity_assign_salesmen.yml',
         'test/crm_lead_merge.yml',
         'test/crm_lead_cancel.yml',
-        'test/phonecalls.yml',
         'test/crm_lead_onchange.yml',
         'test/crm_lead_copy.yml',
         'test/crm_lead_unlink.yml',

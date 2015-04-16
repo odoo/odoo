@@ -50,16 +50,6 @@
         </record> 
 
 
-        <record model="gamification.goal.definition" id="definition_crm_nbr_call">
-            <field name="name">Logged Calls</field>
-            <field name="description">Log a certain number of calls to reach this goal</field>
-            <field name="computation_mode">count</field>
-            <field name="suffix">calls</field>
-            <field name="model_id" eval="ref('crm.model_crm_phonecall')" />
-            <field name="field_date_id" eval="ref('crm.field_crm_phonecall_date')" />
-            <field name="domain">[('user_id','=',user.id),('state','=','done')]</field>
-        </record> 
-
         <record model="gamification.goal.definition" id="definition_crm_nbr_new_opportunities">
             <field name="name">New Opportunities</field>
             <field name="description">Based on the opening date</field>
