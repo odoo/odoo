@@ -532,6 +532,7 @@ var AbstractManyField = common.AbstractField.extend({
             throw new Error("set_value of '"+this.name+"' must receive an list of ids without virtual ids.", ids);
         }
         if (_.find(ids, function(id) { return typeof(id) !== "number"; } )) {
+            this.dataset.reset_ids([]);
             return this.send_commands(ids);
         }
         this.dataset.reset_ids(ids);
@@ -638,7 +639,11 @@ var AbstractManyField = common.AbstractField.extend({
                             res = id;
                         });
                     case COMMANDS.UPDATE:
-                        return dataset.write(command[1], command[2], options);
+                        return dataset.write(command[1], command[2], options).then(function (id) {
+                            if (dataset.ids.indexOf(command[1]) === -1) { // on change can send an update command without a previous link
+                                dataset.ids.push(command[1]);
+                            }
+                        });
                     case COMMANDS.DELETE:
                         return dataset.unlink(command[1]);
                     case COMMANDS.LINK_TO:
@@ -727,11 +732,6 @@ var FieldOne2Many = AbstractManyField.extend({
         this.initial_is_loaded = this.is_loaded;
         this.is_started = false;
         this.set_value([]);
-        this.on('change:commands', this, function () {
-            if (this.is_started && !this.no_rerender) {
-                this.reload_current_view();
-            }
-        });
     },
     start: function() {
         this._super.apply(this, arguments);
