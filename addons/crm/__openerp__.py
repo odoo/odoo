@@ -1,25 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
-
-
 {
     'name': 'CRM',
     'version': '1.0',
@@ -27,18 +6,18 @@
     'sequence': 2,
     'summary': 'Leads, Opportunities, Phone Calls',
     'description': """
-The generic OpenERP Customer Relationship Management
+The generic Odoo Customer Relationship Management
 ====================================================
 
 This application enables a group of people to intelligently and efficiently manage leads, opportunities, meetings and phone calls.
 
 It manages key tasks such as communication, identification, prioritization, assignment, resolution and notification.
 
-OpenERP ensures that all cases are successfully tracked by users, customers and suppliers. It can automatically send reminders, escalate the request, trigger specific methods and many other actions based on your own enterprise rules.
+Odoo ensures that all cases are successfully tracked by users, customers and suppliers. It can automatically send reminders, escalate the request, trigger specific methods and many other actions based on your own enterprise rules.
 
-The greatest thing about this system is that users don't need to do anything special. The CRM module has an email gateway for the synchronization interface between mails and OpenERP. That way, users can just send emails to the request tracker.
+The greatest thing about this system is that users don't need to do anything special. The CRM module has an email gateway for the synchronization interface between mails and Odoo. That way, users can just send emails to the request tracker.
 
-OpenERP will take care of thanking them for their message, automatically routing it to the appropriate staff and make sure all future correspondence gets to the right place.
+Odoo will take care of thanking them for their message, automatically routing it to the appropriate staff and make sure all future correspondence gets to the right place.
 
 
 Dashboard for CRM will include:
@@ -46,7 +25,7 @@ Dashboard for CRM will include:
 * Planned Revenue by Stage and User (graph)
 * Opportunities by Stage (graph)
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'website': 'https://www.odoo.com/page/crm',
     'depends': [
         'base_action_rule',
@@ -61,10 +40,10 @@ Dashboard for CRM will include:
         'web_tip',
     ],
     'data': [
-        'crm_data.xml',
-        'crm_lead_data.xml',
-        'crm_phonecall_data.xml',
-        'crm_tip_data.xml',
+        'data/crm_data.xml',
+        'data/crm_lead_data.xml',
+        'data/crm_phonecall_data.xml',
+        'data/crm_tip_data.xml',
 
         'security/crm_security.xml',
         'security/ir.model.access.csv',
@@ -75,33 +54,34 @@ Dashboard for CRM will include:
 
         'wizard/crm_merge_opportunities_view.xml',
 
-        'crm_view.xml',
+        'wizard/base_partner_merge_view.xml',
 
-        'crm_phonecall_view.xml',
-        'crm_phonecall_menu.xml',
+        'views/crm_view.xml',
 
-        'crm_lead_view.xml',
-        'crm_lead_menu.xml',
+        'views/crm_phonecall_view.xml',
+        'views/crm_phonecall_menu.xml',
 
-        'calendar_event_menu.xml',
+        'views/crm_lead_view.xml',
+        'views/crm_lead_menu.xml',
+
+        'views/calendar_event_menu.xml',
 
         'report/crm_lead_report_view.xml',
         'report/crm_opportunity_report_view.xml',
         'report/crm_phonecall_report_view.xml',
 
-        'res_partner_view.xml',
+        'views/res_partner_view.xml',
 
-        'res_config_view.xml',
-        'base_partner_merge_view.xml',
+        'views/res_config_view.xml',
 
-        'sales_team_view.xml',
-        'views/crm.xml',
+        'views/sales_team_view.xml',
+        'views/crm_templates.xml',
     ],
     'demo': [
-        'crm_demo.xml',
-        'crm_lead_demo.xml',
-        'crm_phonecall_demo.xml',
-        'crm_action_rule_demo.xml',
+        'data/crm_team_demo.xml',
+        'data/crm_lead_demo.xml',
+        'data/crm_phonecall_demo.xml',
+        'data/crm_action_rule_demo.xml',
     ],
     'test': [
         'test/crm_access_group_users.yml',
@@ -116,8 +96,6 @@ Dashboard for CRM will include:
         'test/crm_lead_unlink.yml',
         'test/crm_lead_find_stage.yml',
     ],
-    'css': ['static/src/css/crm.css'],
     'installable': True,
     'application': True,
-    'auto_install': False,
 }

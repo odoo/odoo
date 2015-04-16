@@ -27,6 +27,7 @@ class crm_lead_to_project_issue_wizard(osv.TransientModel):
             lead = wizard.lead_id
 
             partner = self._find_matching_partner(cr, uid, context=context)
+            partner = partner.id if partner else False
             if not partner and (lead.partner_name or lead.contact_name):
                 partner_ids = Lead.handle_partner_assignation(cr, uid, [lead.id], context=context)
                 partner = partner_ids[lead.id]
