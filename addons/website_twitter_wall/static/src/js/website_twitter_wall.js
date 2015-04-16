@@ -109,6 +109,13 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             $("body").addClass("odoo-tw-view-live");
             $("center.odoo-tw-tweet > span").hide();
             $(".odoo-tw-view-tweet-delete").remove();
+            $('.odoo-tw-view-live').on('mouseup', function(e) {
+                if(!$(e.target).is('.popover *, .colorpicker *')) {
+                    $('.popover').each(function(){
+                        $(this.previousSibling).popover('hide');
+                    });
+                }
+            });
         } else {
             setTimeout(function() { window.location.reload(); }, 500);
         }
@@ -291,7 +298,6 @@ website.if_dom_contains('.odoo-tw-walls', function() {
             });
             picker.parent().on('changeColor.colorpicker', '.colorinput', function(e) {
                 color = e.color.toHex();
-                $(".colorinput > input.form-control").val(color);
                 self.reset_colors(color);
             });
         },
