@@ -513,7 +513,7 @@ var AbstractManyField = common.AbstractField.extend({
         this.set('value', []);
         this.starting_ids = [];
         this.view.on("load_record", this, function () {
-            self.starting_ids = self.get('value');
+            self.starting_ids = self.get('value').slice();
         });
         this.dataset.on('dataset_changed', this, function() {
             // the editable lists change the dataset without call AbstractManyField methods
