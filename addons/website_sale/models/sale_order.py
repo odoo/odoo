@@ -49,7 +49,8 @@ class sale_order(osv.Model):
     def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, line_id=None, context=None):
         so = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
 
-        values = self.pool.get('sale.order.line').product_id_change(cr, SUPERUSER_ID, [],
+        values = self.pool.get('sale.order.line').product_id_change(
+            cr, SUPERUSER_ID, [],
             pricelist=so.pricelist_id.id,
             product=product_id,
             partner_id=so.partner_id.id,
@@ -69,7 +70,7 @@ class sale_order(osv.Model):
 
         values['product_id'] = product_id
         values['order_id'] = order_id
-        if values.get('tax_id') != None:
+        if values.get('tax_id') is not None:
             values['tax_id'] = [(6, 0, values['tax_id'])]
         return values
 
@@ -79,7 +80,7 @@ class sale_order(osv.Model):
 
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
-            if line_id != False:
+            if line_id is not False:
                 line_ids = so._cart_find_product_line(product_id, line_id, context=context, **kwargs)
                 if line_ids:
                     line_id = line_ids[0]
@@ -94,7 +95,7 @@ class sale_order(osv.Model):
             # compute new quantity
             if set_qty:
                 quantity = set_qty
-            elif add_qty != None:
+            elif add_qty is not None:
                 quantity = sol.browse(cr, SUPERUSER_ID, line_id, context=context).product_uom_qty + (add_qty or 0)
 
             # Remove zero of negative lines
@@ -112,19 +113,22 @@ class sale_order(osv.Model):
         for order in self.browse(cr, uid, ids, context=context):
             s = set(j.id for l in (order.website_order_line or []) for j in (l.product_id.accessory_product_ids or []))
             s -= set(l.product_id.id for l in order.order_line)
-            product_ids = random.sample(s, min(len(s),3))
+            product_ids = random.sample(s, min(len(s), 3))
             return self.pool['product.product'].browse(cr, uid, product_ids, context=context)
+
 
 class website(orm.Model):
     _inherit = 'website'
 
     _columns = {
-        'pricelist_id': fields.related('user_id','partner_id','property_product_pricelist',
+        'pricelist_id': fields.related(
+            'user_id', 'partner_id', 'property_product_pricelist',
             type='many2one', relation='product.pricelist', string='Default Pricelist'),
-        'currency_id': fields.related('pricelist_id','currency_id',
+        'currency_id': fields.related(
+            'pricelist_id', 'currency_id',
             type='many2one', relation='res.currency', string='Default Currency'),
-         'salesperson_id': fields.many2one('res.users', 'Salesperson'),
-         'salesteam_id': fields.many2one('crm.team', 'Sales Team'),
+        'salesperson_id': fields.many2one('res.users', 'Salesperson'),
+        'salesteam_id': fields.many2one('crm.team', 'Sales Team'),
     }
 
     def sale_product_domain(self, cr, uid, ids, context=None):
@@ -180,8 +184,9 @@ class website(orm.Model):
 
                 values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], partner.id, context=context)['value']
                 if values.get('fiscal_position_id'):
-                    order_lines = map(int,sale_order.order_line)
-                    values.update(sale_order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [],
+                    order_lines = map(int, sale_order.order_line)
+                    values.update(sale_order_obj.onchange_fiscal_position(
+                        cr, SUPERUSER_ID, [],
                         values['fiscal_position_id'], [[6, 0, order_lines]], context=context)['value'])
 
                 values['partner_id'] = partner.id
@@ -199,7 +204,7 @@ class website(orm.Model):
                     sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
 
             # update browse record
-            if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id !=  partner.id:
+            if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id != partner.id:
                 sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order.id, context=context)
 
         return sale_order
