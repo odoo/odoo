@@ -1682,7 +1682,8 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             // to handle this as if it were a single value.
             value = value[0];
         }
-        return this.model.call('name_get', [value]).then(function (names) {
+        var context = instance.web.pyeval.eval('contexts', [this.view.dataset.get_context()]);
+        return this.model.call('name_get', [value], {context: context}).then(function (names) {
             if (_(names).isEmpty()) { return null; }
             return facet_from(self, names[0]);
         });
