@@ -532,7 +532,7 @@ var AbstractManyField = common.AbstractField.extend({
             throw new Error("set_value of '"+this.name+"' must receive an list of ids without virtual ids.", ids);
         }
         if (_.find(ids, function(id) { return typeof(id) !== "number"; } )) {
-            this.dataset.reset_ids([]);
+            this.dataset.alter_ids(this.starting_ids.slice());
             return this.send_commands(ids);
         }
         this.dataset.reset_ids(ids);
@@ -639,11 +639,7 @@ var AbstractManyField = common.AbstractField.extend({
                             res = id;
                         });
                     case COMMANDS.UPDATE:
-                        return dataset.write(command[1], command[2], options).then(function (id) {
-                            if (dataset.ids.indexOf(command[1]) === -1) { // on change can send an update command without a previous link
-                                dataset.ids.push(command[1]);
-                            }
-                        });
+                        return dataset.write(command[1], command[2], options);
                     case COMMANDS.DELETE:
                         return dataset.unlink(command[1]);
                     case COMMANDS.LINK_TO:
@@ -664,7 +660,7 @@ var AbstractManyField = common.AbstractField.extend({
 
         mutex.exec(function () {
             def.resolve(res);
-            self.internal_dataset_changed = true;
+            self.internal_dataset_changed = false;
             self.trigger("change:commands");
         });
         return def;
@@ -1438,7 +1434,7 @@ var Many2ManyListView = ListView.extend(/** @lends instance.web.form.Many2ManyLi
         );
         var self = this;
         pop.on("elements_selected", self, function(element_ids) {
-            return self.o2m.data_link_multi(element_ids);
+            return self.dataset.o2m.data_link_multi(element_ids);
         });
     },
     do_activate_record: function(index, id) {
