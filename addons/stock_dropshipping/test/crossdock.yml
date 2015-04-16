@@ -1,6 +1,11 @@
-- 
+-
+    Create a supplier
+-
+  !record {model: res.partner, id: supplier_crossdock}:
+    name: Supplier of crossdocking test
+-
   Create new product without any routes
-- 
+-
   !record {model: product.product, id: cross_shop_product}:
     name: PCE
     type: product
@@ -9,34 +14,76 @@
     standard_price: 70.0
     seller_ids:
       - delay: 1
-        name: base.res_partner_2
+        name: supplier_crossdock
         min_qty: 2.0
         qty: 5.0
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
-- 
-  Create a sales order with a line of 100 PCE incoming shipment, with route_id crossdock shipping.
-- 
+-
+  Configure the warehouse with input and output locations, so that the crossdock route is active
+-
+  !python {model: stock.warehouse, id: stock.warehouse0}: |
+    self.write({'reception_steps': 'two_steps', 'delivery_steps': 'pick_ship'})
+    assert self.crossdock_route_id.active, 'cross dock route is not active'
+-
+  Set the YourCompany+crossdock route on the product
+-
+  !python {model: product.product, id: cross_shop_product}: |
+    crossdock_route_id = self.env.ref('stock.warehouse0').crossdock_route_id.id
+    buy_route_id = self.env.ref('purchase.route_warehouse0_buy').id
+    self.route_ids = [crossdock_route_id, buy_route_id]
+-
+  Create a sales order with a line of 100 PCE incoming shipment
+-
   !record {model: sale.order, id: sale_order_crossdock_shpng}:
     partner_id: base.res_partner_4
     note: Create Sales order
     order_line:
       - product_id: cross_shop_product
         product_uom_qty: 100.00
+        price_unit: 1.22
 -
-    !python {model: sale.order.line}: |
-        route_warehouse0_crossdock = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).crossdock_route_id.id 
-        order = self.pool.get('sale.order').browse(cr, uid, ref('sale_order_crossdock_shpng'))
-        line_ids = [x.id for x in order.order_line]
-        self.write(cr, uid, line_ids, {'route_id': route_warehouse0_crossdock})
-- 
   Confirm sales order
-- 
+-
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_crossdock_shpng}
-- 
-    Check a quotation was created to a certain supplier and confirm so it becomes a confirmed purchase order
+-
+    Check the sales order created a procurement group which has a procurement of 100 pieces
+-
+  !python {model: procurement.group}: |
+      sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_crossdock_shpng'))
+      assert sale_record.procurement_group_id.procurement_ids[0].product_qty == 100
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
+-
+    Check a quotation was created to a certain supplier
 -
     !python {model: purchase.order}: |
-        po_id = self.search(cr, uid, [('partner_id', '=', ref('base.res_partner_2'))])
-        self.wkf_confirm_order(cr, uid, po_id)
+        po_id = self.search(cr, uid, [('partner_id', '=', ref('supplier_crossdock'))])
+        assert len(po_id) == 1, 'no quotation generated'
+        po_id = po_id[0]
+        po = self.browse(cr, uid, po_id)
+        assert po.location_id.name == 'Input'
+        assert po.state == 'draft'
+        ir_model_data = self.pool['ir.model.data']
+        ir_model_data.create(cr, uid, {'model': 'purchase.order', 'module': 'stock_dropshipping', 'res_id': po_id, 'name': 'crossdock_po'})
+-
+  I confirm the po
+-
+  !workflow {model: purchase.order, ref: crossdock_po, action: purchase_confirm}
+-
+    Check the generated picking
+-
+    !python {model: purchase.order, id: crossdock_po}: |
+        assert self.state == 'approved'
+        locations = []
+        move = self.picking_ids.move_lines
+        while True:
+            locations.append(move.location_dest_id.name)
+            move = move.move_dest_id
+            if not move:
+                break
+        assert locations == [u'Input', u'Output', u'Customers'], 'Wrong move location chain: %s' % locations
