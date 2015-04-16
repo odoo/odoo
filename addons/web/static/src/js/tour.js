@@ -665,7 +665,7 @@ var Tour = {
             if (step.sampleText) {
             
                 $element.trigger($.Event("keydown", { srcElement: $element[0] }));
-                if ($element.is("input") ) {
+                if ($element.is("input") || $element.is('textarea')) {
                     $element.val(step.sampleText);
                 } if ($element.is("select")) {
                     $element.val(step.sampleText);
