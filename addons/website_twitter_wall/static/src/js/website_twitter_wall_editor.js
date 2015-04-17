@@ -16,7 +16,8 @@ website.if_dom_contains('.odoo-tw-walls', function() {
         save: function() {
             var res = this._super();
             if ($('.odoo-tw-view-cover').length) {
-                ajax.jsonRpc("/twitter_wall/cover/" + $(".odoo-tw-walls").attr("wall_id"), 'call', {
+                ajax.jsonRpc("/twitter_wall/cover/", 'call', {
+                    'wall_id': $(".odoo-tw-walls").attr("wall_id"),
                     'url': $('.odoo-tw-view-cover').css('background-image').replace(/url\(|\)|"|'/g,'')
                 });
             }

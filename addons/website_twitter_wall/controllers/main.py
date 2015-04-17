@@ -100,9 +100,10 @@ class WebsiteTwitterWall(http.Controller):
         wall.unlink()
         return http.local_redirect('/twitter_walls')
 
-    @http.route(['/twitter_wall/cover/<model("twitter.agent"):wall>'], type='json', auth='user', website=True)
-    def twitter_wall_cover(self, wall, url):
+    @http.route(['/twitter_wall/cover'], type='json', auth='user', website=True)
+    def twitter_wall_cover(self, wall_id, url):
         """ Change image of cover """
+        wall = request.env['twitter.agent'].browse(int(wall_id))
         if wall:
             return wall.write({'image': self._read_image(url) if not url == 'none' else True})
 
