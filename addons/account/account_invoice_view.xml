@@ -255,7 +255,7 @@
                                 <group>
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
                                     <field name="user_id" string="Responsible" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
-                                    <field name="name" invisible="1"/>
+                                    <field name="name" attrs="{'invisible': [('type', '=', 'in_invoice')]}"/>
                                     <field name="payment_term" options="{'no_create': True}"/>
                                 </group>
                                 <group>
