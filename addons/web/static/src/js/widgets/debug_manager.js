@@ -53,16 +53,18 @@ if (core.debug) {
                 return;
             }
 
-            // Render the dropdown and append it
-            var dropdown_content = QWeb.render('WebClient.DebugDropdown', {
-                widget: self,
-                active_view: self.active_view,
-                view: self.view,
-                action: self.view_manager.action,
-                searchview: self.view_manager.searchview,
-                uid: session.uid,
+            this.session.user_has_group('base.group_system').then(function(is_admin) {
+                // Render the dropdown and append it
+                var dropdown_content = QWeb.render('WebClient.DebugDropdown', {
+                    widget: self,
+                    active_view: self.active_view,
+                    view: self.view,
+                    action: self.view_manager.action,
+                    searchview: self.view_manager.searchview,
+                    is_admin: is_admin,
+                });
+                $(dropdown_content).appendTo(self.$dropdown);
             });
-            $(dropdown_content).appendTo(self.$dropdown);
         },
         /**
          * Calls the appropriate callback when clicking on a Debug option

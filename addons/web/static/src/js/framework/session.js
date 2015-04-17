@@ -4,6 +4,7 @@ odoo.define('web.Session', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var utils = require('web.utils');
+var Model = require('web.Model');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -41,6 +42,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         // TODO: session store in cookie should be optional
         this.qweb_mutex = new utils.Mutex();
         this.currencies = {};
+        this._groups_def = {};
     },
     setup: function(origin, options) {
         // must be able to customize server
@@ -128,6 +130,17 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     session_logout: function() {
         $.bbq.removeState();
         return this.rpc("/web/session/destroy", {});
+    },
+    user_has_group: function(group) {
+        if (!this.uid) {
+            return $.when().resolve(false);
+        }
+        var def = this._groups_def[group];
+        if (!def) {
+            var Users = new Model('res.users');
+            def = this._groups_def[group] = Users.call('has_group', [group]);
+        }
+        return def;
     },
     get_cookie: function (name) {
         if (!this.name) { return null; }

@@ -136,10 +136,6 @@ function parse_value (value, descriptor, value_if_empty) {
             return tmp;
         case 'monetary':
         case 'float':
-            tmp = Number(value);
-            if (!isNaN(tmp))
-                return tmp;
-
             var tmp2 = value;
             do {
                 tmp = tmp2;
