@@ -369,7 +369,6 @@ class project(osv.osv):
         context['active_test'] = False
         default['state'] = 'open'
         default['line_ids'] = []
-        default['child_ids'] = []
         default['tasks'] = []
 
         # Don't prepare (expensive) data to copy children (analytic accounts),
