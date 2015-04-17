@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!--     BARCODE NOMENCLATURES     -->
+        <record model="ir.ui.view" id="view_card_reader_configuration_form">
+            <field name="name">Card Reader</field>
+            <field name="model">card_reader.configuration</field>
+            <field name="arch" type="xml">
+                <form string="Card Reader">
+                    <sheet>
+                        <div>
+                            <p>Encode the configuration given by your payment provider to be authentified on the bank network.</p>
+                        </div>
+                        <group col="2">
+                            <field name="merchant_id" />
+                            <field name="merchant_pwd" />
+                            <field name="payment_server" />
+                            <field name="url_base_action" />
+                            <field name="memo" />
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_card_reader_configuration_tree">
+            <field name="name">Card Reader</field>
+            <field name="model">card_reader.configuration</field>
+            <field name="arch" type="xml">
+                <tree string="Barcode Nomenclatures">
+                    <field name="payment_server" />
+                    <field name="merchant_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_configuration_form">
+            <field name="name">Card Reader</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">card_reader.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to configure your card reader.
+              </p>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_pos_config_form">
+            <field name="name">pos.config.form.view.inherit</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_config_form"></field>
+            <field name="arch" type="xml">
+                <sheet position='inside'>
+                    <group string="Card Reader Configuration" >
+                        <field name="card_reader" />
+                        <field name="operator_id" />
+                        <field name="card_reader_config_id" />
+                    </group>
+                </sheet>
+            </field>
+        </record>
+
+        <menuitem parent="point_of_sale.menu_point_config_product" action="card_reader.action_configuration_form" id="menu_pos_card_reader_config"
+            sequence="35"/>
+    </data>
+</openerp>

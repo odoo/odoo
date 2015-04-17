@@ -517,17 +517,9 @@ var BarcodeReader = core.Class.extend({
         }
         var parsed_result = this.barcode_parser.parse_barcode(code);
         
-        if(parsed_result.type in {'product':'', 'weight':'', 'price':''}){    //barcode is associated to a product
-            if(this.action_callback.product){
-                this.action_callback.product(parsed_result);
-            }
-        }
-        else if (parsed_result.type in {'cashier':'', 'client':'', 'discount':''}){ 
-            if(this.action_callback[parsed_result.type]){
-                this.action_callback[parsed_result.type](parsed_result);
-            }
-        }
-        else{
+        if (parsed_result.type in this.action_callback) {    //barcode is associated to a product
+            this.action_callback[parsed_result.type](parsed_result);
+        } else {
             this.action_callback.error(parsed_result);
         }
     },

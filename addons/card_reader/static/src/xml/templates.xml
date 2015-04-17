@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates id="template" inherit_id="point_of_sale.template">
+    <t t-name="PaymentConfirmPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup">
+                <p class="title">Electronic Payment</p>
+                <p class="body">
+                    Are you sure to valid the transaction ?<br />
+                    The total amount is<br />
+                    <strong><t t-esc="widget.options.total" /></strong>
+                </p>
+                <div class="footer">
+                    <div class="button confirm">Yes</div>
+                    <div class="button cancel">No</div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="PaymentTransactionPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup">
+                <p class="title">Electronic Payment</p>
+                <p class="body">Read card ...</p>
+            </div>
+        </div>
+    </t>
+
+    <t t-extend="PaymentScreen-Paymentlines">
+        <t t-jquery=".delete-button" t-operation="replace">
+            <td class="delete-button" t-att-data-cid="line.cid">
+            <t t-if="!line.paid"><i class="fa fa-times-circle" /></t>
+            </td>
+        </t>
+    </t>
+
+</templates>

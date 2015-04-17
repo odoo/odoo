@@ -1064,6 +1064,8 @@ class view(osv.osv):
 
     @api.cr_uid_ids_context
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
+        if not id_or_xml_id:
+            import pudb; pudb.set_trace()
         if isinstance(id_or_xml_id, list):
             id_or_xml_id = id_or_xml_id[0]
 

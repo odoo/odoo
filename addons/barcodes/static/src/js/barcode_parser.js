@@ -237,5 +237,6 @@ var BarcodeParser = Class.extend({
     },
 });
 
+console.log(BarcodeParser);
 return BarcodeParser;
 });

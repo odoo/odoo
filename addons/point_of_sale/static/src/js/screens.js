@@ -59,12 +59,12 @@ var ScreenWidget = PosBaseWidget.extend({
     // it will add the product to the order and go to barcode_product_screen. 
     barcode_product_action: function(code){
         var self = this;
-        if(self.pos.scan_product(code)){
-            if(self.barcode_product_screen){ 
+        if (self.pos.scan_product(code)) {
+            if (self.barcode_product_screen) {
                 self.gui.show_screen(self.barcode_product_screen);
             }
-        }else{
-            self.gui.show_popup('error-barcode',code.code);
+        } else {
+            this.barcode_error_action(code);
         }
     },
 
@@ -81,7 +81,7 @@ var ScreenWidget = PosBaseWidget.extend({
                 return true;
             }
         }
-        this.gui.show_popup('error-barcode',code.code);
+        this.barcode_error_action(code);
         return false;
     },
     
@@ -95,7 +95,7 @@ var ScreenWidget = PosBaseWidget.extend({
             this.pos.get_order().set_client(partner);
             return true;
         }
-        this.gui.show_popup('error-barcode',code.code);
+        this.barcode_error_action(code);
         return false;
     },
     
@@ -108,8 +108,14 @@ var ScreenWidget = PosBaseWidget.extend({
         }
     },
     // What happens when an invalid barcode is scanned : shows an error popup.
-    barcode_error_action: function(code){
-        this.gui.show_popup('error-barcode',code.code);
+    barcode_error_action: function(code) {
+        var show_code;
+        if (code.code.length > 32) {
+            show_code = code.code.substring(0,29)+'...';
+        } else {
+            show_code = code.code;
+        }
+        this.gui.show_popup('error-barcode',show_code);
     },
 
     // this method shows the screen and sets up all the widget related to this screen. Extend this method
@@ -123,11 +129,11 @@ var ScreenWidget = PosBaseWidget.extend({
         }
 
         this.pos.barcode_reader.set_action_callback({
-            'cashier': self.barcode_cashier_action ? function(code){ self.barcode_cashier_action(code); } : undefined ,
-            'product': self.barcode_product_action ? function(code){ self.barcode_product_action(code); } : undefined ,
-            'client' : self.barcode_client_action ?  function(code){ self.barcode_client_action(code);  } : undefined ,
-            'discount': self.barcode_discount_action ? function(code){ self.barcode_discount_action(code); } : undefined,
-            'error'   : self.barcode_error_action ?  function(code){ self.barcode_error_action(code);   } : undefined,
+            'cashier': _.bind(self.barcode_cashier_action, self),
+            'product': _.bind(self.barcode_product_action, self),
+            'client' : _.bind(self.barcode_client_action, self),
+            'discount': _.bind(self.barcode_discount_action, self),
+            'error'   : _.bind(self.barcode_error_action, self),
         });
     },
 
@@ -1533,6 +1539,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
     },
     // handle both keyboard and numpad input. Accepts
     // a string that represents the key pressed.
+    payment_input: function(input) { return; },
+    /*
     payment_input: function(input) {
         var newbuf = this.gui.numpad_input(this.inputbuffer, input, {'firstinput': this.firstinput});
 
@@ -1554,7 +1562,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 this.$('.paymentline.selected .edit').text(this.inputbuffer);
             }
         }
-    },
+    },*/
     click_numpad: function(button) {
             if (!this.pos.get_order().get_paymentlines().length) {
                 this.pos.get_order().add_paymentline( this.pos.cashregisters[0]);
@@ -1884,6 +1892,7 @@ return {
     ActionButtonWidget: ActionButtonWidget,
     define_action_button: define_action_button,
     ScreenWidget: ScreenWidget,
+    PaymentScreenWidget: PaymentScreenWidget,
     OrderWidget: OrderWidget,
 };
 

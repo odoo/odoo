@@ -158,7 +158,7 @@ var Gui = core.Class.extend({
             this.close_popup();
         }
         this.current_popup = this.popup_instances[name];
-        this.current_popup.show(options);
+        return this.current_popup.show(options);
     },
 
     // close the current popup.
