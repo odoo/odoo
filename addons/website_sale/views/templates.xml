@@ -641,6 +641,7 @@
                                           <strong t-esc="line.product_id.with_context(display_default_code=False).display_name"/>
                                       </a>
                                   </div>
+                                  <div class="text-muted" t-esc="'\n'.join(line.name.splitlines()[1:])"/>
                               </td>
                               <td class="text-center" name="price">
                                 <t t-if="(compute_currency(line.product_id.lst_price) - line.price_unit) &gt; 1">
