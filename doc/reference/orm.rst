@@ -408,7 +408,7 @@ added.
 
   the changes performed during the method are then sent to the client program
   and become visible to the user.
-  Warning: the fields used in the onchange decorator cannot be computed or related fields.
+  Warning: the fields used in the onchange decorator cannot be computed or related.
 
 * Both computed fields and new-API onchanges are automatically called by the
   client without having to add them in views
