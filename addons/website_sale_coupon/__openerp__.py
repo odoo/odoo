@@ -10,11 +10,10 @@
     'depends': ['website_sale'],
     'data': [
         'security/ir.model.access.csv',
-        'views/SaleCoupon.xml',
+        'views/sale_coupon_view.xml',
+        'views/sale_order_view.xml',
+        'views/product_view.xml',
         'views/templates.xml',
         'data/data.xml',
-    ],
-    'demo': [
-        #'demo.xml',
-    ],
+    ]
 }

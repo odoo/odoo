@@ -72,6 +72,18 @@ class TestSaleCouponCommon(common.TransactionCase):
             'categ_id': self.category_beverage.id,
         })
 
+        self.product_shoe = self.Product.create({
+            'name': 'Shoe',
+            'type': 'service',
+            'price': 100,
+        })
+
+        self.product_socks = self.Product.create({
+            'name': 'Socks',
+            'type': 'service',
+            'price': 10,
+        })
+
         self.couponprogram_1 = self.CouponProgram.create({
             'name': 'Buy 1 Mobile + get 1 cover free',
             'program_type': 'apply_immediately',
@@ -83,6 +95,7 @@ class TestSaleCouponCommon(common.TransactionCase):
             'reward_type': 'product',
             'reward_product_product_id': self.product_cover.id,
             'reward_quantity': 1,
+            'state': 'opened',
         })
 
         self.couponprogram_2 = self.CouponProgram.create({
@@ -96,6 +109,7 @@ class TestSaleCouponCommon(common.TransactionCase):
             'reward_type': 'product',
             'reward_product_product_id': self.product_harddisk.id,
             'reward_quantity': 1,
+            'state': 'opened',
         })
 
         self.couponprogram_3 = self.CouponProgram.create({
@@ -110,20 +124,22 @@ class TestSaleCouponCommon(common.TransactionCase):
             'reward_type': 'discount',
             'reward_discount_type': 'amount',
             'reward_discount_amount': 2,
+            'state': 'opened',
         })
 
         self.couponprogram_4 = self.CouponProgram.create({
-            'name': "Purchase for 1000 and above + 10'%' off on cart",
+            'name': "Purchase for 100 and above + 10'%' off on cart",
             'program_type': 'apply_immediately',
             'program_sequence': 1,
             'purchase_type': 'amount',
             'validity_type': 'day',
             'validity_duration': 15,
-            'minimum_amount': 1000,
+            'minimum_amount': 1500,
             'reward_type': 'discount',
             'reward_discount_type': 'percentage',
             'reward_discount_percentage': 10,
-            'reward_discount_on': 'cart'
+            'reward_discount_on': 'cart',
+            'state': 'opened',
         })
 
         self.couponprogram_5 = self.CouponProgram.create({
@@ -137,4 +153,18 @@ class TestSaleCouponCommon(common.TransactionCase):
             'reward_discount_on': 'specific_product',
             'reward_discount_on_product_id': self.product_pendrive_cover.id,
             'reward_discount_percentage': 10,
+            'state': 'opened',
+        })
+
+        self.couponprogram_6 = self.CouponProgram.create({
+            'name': 'Buy 1 Shoe + get 1 Socks free',
+            'program_type': 'public_unique_code',
+            'program_code': 'ODOO_AAAA',
+            'purchase_type': 'product',
+            'product_id': self.product_shoe.id,
+            'product_quantity': 1,
+            'reward_type': 'product',
+            'reward_product_product_id': self.product_socks.id,
+            'reward_quantity': 1,
+            'state': 'opened',
         })
