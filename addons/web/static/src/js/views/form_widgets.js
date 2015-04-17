@@ -793,6 +793,7 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         this.set("value", false);
         this.set("values", []);
         this.records_orderer = new utils.DropMisordered();
+
         this.field_manager.on("view_content_has_changed", this, function() {
             var domain = new data.CompoundDomain(this.build_domain()).eval();
             if (! _.isEqual(domain, this.get("domain"))) {
@@ -804,7 +805,7 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         common.ReinitializeFieldMixin.initialize_field.call(this);
         this.on("change:domain", this, this.query_values);
         this.set("domain", new data.CompoundDomain(this.build_domain()).eval());
-        this.on("change:values", this, this.render_value);
+        // this.on("change:values", this, this.render_value);
     },
     query_values: function() {
         var self = this;
@@ -889,19 +890,18 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
 });
 
 var TimeZone = FieldSelection.extend({
-    initialize_content: function() {
+    render_value: function() {
         var self = this;
+        var super_result = this._super();
         return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
-            var user_offset = result[0]['tz_offset'];
-            var offset = -(new Date().getTimezoneOffset());
-            var browser_offset = (offset < 0) ? "-" : "+";
-            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
-            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-            if (browser_offset !== user_offset) {
-                self.$el.append('<i class="fa fa-exclamation-triangle" style="color:red;margin:5px" title="Your Odoo preference timezone does not match your browser timezone: \n Your Odoo timezone is '+user_offset+'\n Your Browser timezone is '+browser_offset+'"   ></i>');
+            var offset = utils.check_timezone(result)
+            if (offset.browser_offset !== offset.user_offset) {
+                var $warning = $(QWeb.render('WebClient.timezone_warning', {message: _.str.sprintf("Your Odoo preference timezone does not match your browser timezone: \n Your Odoo timezone: %s \n Your Browser timezone: %s", offset.user_offset, offset.browser_offset)}));
+                $warning.appendTo(self.$el);
                 self.$el.css('display', 'inline-flex');
             }
         });
+        return super_result;
     },
 });
 
@@ -1598,7 +1598,7 @@ core.form_widget_registry
     .add('priority', Priority)
     .add('kanban_state_selection', KanbanSelection)
     .add('statinfo', StatInfo)
-    .add('tz_warning', TimeZone);
+    .add('tzinfo', TimeZone);
 
 
 /**

@@ -332,6 +332,15 @@ function assert (bool) {
     }
 }
 
+function check_timezone (result) {
+        var user_offset = result[0]['tz_offset'];
+        var offset = -(new Date().getTimezoneOffset());
+        var browser_offset = (offset < 0) ? "-" : "+";
+        browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+        browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+        return {'user_offset': user_offset, 'browser_offset': browser_offset};
+}
+
 var DropMisordered = Class.extend({
     /**
      * @constructs instance.web.DropMisordered
@@ -394,6 +403,7 @@ return {
     float_is_zero: float_is_zero,
     assert: assert,
     DropMisordered: DropMisordered,
+    check_timezone: check_timezone,
 };
 
 });

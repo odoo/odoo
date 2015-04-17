@@ -7,6 +7,8 @@ var framework = require('web.framework');
 var Model = require('web.Model');
 var session = require('web.session');
 var Widget = require('web.Widget');
+var data = require('web.data');
+var utils = require('web.utils');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -26,23 +28,9 @@ var SystrayMenu = Widget.extend({
                 f($(this));
             }
         });
-
+        self.timezone_mismatch();
         this.$el.parent().show();
-        this._super.apply(this, arguments);
-
-        return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
-            var user_offset = result[0]['tz_offset'];
-            var offset = -(new Date().getTimezoneOffset());
-            var browser_offset = (offset < 0) ? "-" : "+";
-            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
-            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-            if (browser_offset !== user_offset) {
-                $('.oe_timezone_icon').append('<i class="fa fa-exclamation-triangle" style="color:red;" title="Your Odoo preference timezone does not match your browser timezone: \n Your Odoo timezone is '+user_offset+' \n Your Browser timezone is '+browser_offset+'"></i>');
-                $('.oe_timezone_icon').css('display', 'inline-block');
-                $('.oe_timezone_icon a').css('display', 'inline');
-                $('.oe_timezone_icon a').first().css('padding-right', '48px');
-            }
-        });
+        return this._super.apply(this, arguments);
 
     },
     do_update: function () {
@@ -120,6 +108,16 @@ var SystrayMenu = Widget.extend({
                 dialogClass: 'oe_act_window',
                 title: _t("About"),
             }, $help).open();
+        });
+    },
+    timezone_mismatch: function() {
+        var self = this;
+        return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
+            var offset = utils.check_timezone(result)
+            if (offset.browser_offset !== offset.user_offset) {
+                self.$('.oe_timezone_icon').append($(QWeb.render('WebClient.timezone_warning', {message: _.str.sprintf("Your Odoo preference timezone does not match your browser timezone: \n Your Odoo timezone: %s \n Your Browser timezone: %s", offset.user_offset, offset.browser_offset)})));
+                self.$('.oe_timezone_icon').css('display', 'inline-flex');
+            }
         });
     },
 });
