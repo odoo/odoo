@@ -4,7 +4,7 @@
 
     var _t = openerp._t;
     openerp.im_odoo_support = {};
-    var COOKIE_NAME = 'livechat_conversation';
+    var COOKIE_NAME = 'odoo_livechat_conversation';
     var SERVICE_URL = 'https://services.odoo.com/';
 
     openerp.im_odoo_support.OdooSupport = openerp.Widget.extend({
