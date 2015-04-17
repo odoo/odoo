@@ -177,6 +177,8 @@ class im_livechat_channel(osv.Model):
         # create the session, and add the link with the given channel
         Session = self.pool["im_chat.session"]
         newid = Session.create(cr, SUPERUSER_ID, {'user_ids': user_to_add, 'channel_id': channel_id, 'anonymous_name' : anonymous_name}, context=context)
+        # update context to identify the operator
+        context['im_livechat_operator_id'] = user_id
         return Session.session_info(cr, SUPERUSER_ID, [newid], context=context)
 
     def test_channel(self, cr, uid, channel, context=None):
@@ -289,8 +291,11 @@ class im_chat_session(osv.Model):
         """ add the anonymous user in the user of the session """
         for session in self.browse(cr, uid, ids, context=context):
             users_infos = super(im_chat_session, self).users_infos(cr, uid, ids, context=context)
+            # identify the operator for the 'welcome message'
+            for user_profile in users_infos:
+                user_profile['is_operator'] = bool(user_profile['id'] == context.get('im_livechat_operator_id'))
             if session.anonymous_name:
-                users_infos.append({'id' : False, 'name' : session.anonymous_name, 'im_status' : 'online'})
+                users_infos.append({'id' : False, 'name' : session.anonymous_name, 'im_status' : 'online', 'is_operator' : False})
             return users_infos
 
     def quit_user(self, cr, uid, uuid, context=None):
