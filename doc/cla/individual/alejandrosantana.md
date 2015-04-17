@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Alejandro Santana alejandrosantana@anubia.es https://github.com/alejandrosantana
+Alejandro Santana tech@alejandrosantana.eu https://github.com/alejandrosantana
