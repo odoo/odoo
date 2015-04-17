@@ -116,8 +116,8 @@ class SaleCouponProgram(models.Model):
     coupon_ids = fields.One2many('sale.coupon', 'id', string="Coupon Id")
     applicability_id = fields.Many2one('sale.applicability', string="Applicability Id", ondelete='cascade', required=True)
     reward_id = fields.Many2one('sale.reward', string="Reward", ondelete='cascade', required=True)
-    count_sale_order = fields.Integer(compute='_compute_so_count', default=0, store=True)
-    count_coupons = fields.Integer(compute='_compute_coupon_count', default=0, store=True)
+    count_sale_order = fields.Integer(compute='_compute_so_count', default=0)
+    count_coupons = fields.Integer(compute='_compute_coupon_count', default=0)
     state = fields.Selection([('draft', 'Draft'), ('opened', 'Opened'), ('closed', 'Closed')], help="Shows the program states", default="draft")
     nbr_uses_public_unique_code = fields.Integer(string="Expiration use", default=1)
     sale_order_id = fields.Many2one('sale.order', "Sale order id")
@@ -143,7 +143,6 @@ class SaleCouponProgram(models.Model):
                         coupon.write({'state': 'expired'})
                 self.write({'state': 'closed'})
 
-    @api.one
     def _compute_so_count(self):
         count = 0
         sales_order_line = self.env['sale.order.line'].search([('coupon_program_id', '=', self.id)])
@@ -163,16 +162,13 @@ class SaleCouponProgram(models.Model):
 
     def check_is_program_expired(self, coupon_code):
         expiration_date = self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date())
-        if self.program_type == 'apply_immediately':
+        if self.program_type == 'generated_coupon' or 'apply_immediately':
             if fields.date.today() > expiration_date:
                 return True
-        if self.program_type == 'generated_coupon':
-            if fields.date.today() > expiration_date or \
+        if self.program_type == 'public_unique_code':
+            if fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date() or \
                self.count_sale_order == self.nbr_uses_public_unique_code:
                     return True
-        if self.program_type == 'public_unique_code':
-            if fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date():
-                return True
 
     def get_reward_string(self):
         if self.reward_type == 'product':
