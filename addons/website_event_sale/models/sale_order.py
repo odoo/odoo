@@ -95,4 +95,6 @@ class sale_order(osv.Model):
         elif ticket and new_qty > old_qty:
             line = OrderLine.browse(cr, uid, values['line_id'], context=context)
             line._update_registrations(confirm=False, registration_data=kwargs.get('registration_data', []))
+            # add in return values the registrations, to display them on website (or not)
+            values['attendee_ids'] = Attendee.search(cr, uid, [('sale_order_line_id', '=', line.id), ('state', '!=', 'cancel')], context=context)
         return values

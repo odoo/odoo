@@ -35,6 +35,8 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+MAX_CSS_RULES = 4095
+
 #--------------------------------------------------------------------
 # QWeb template engine
 #--------------------------------------------------------------------
@@ -479,7 +481,8 @@ class QWeb(orm.AbstractModel):
         bundle = AssetsBundle(xmlid, cr=cr, uid=uid, context=context, registry=self.pool)
         css = self.get_attr_bool(template_attributes.get('css'), default=True)
         js = self.get_attr_bool(template_attributes.get('js'), default=True)
-        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')))
+        async = self.get_attr_bool(template_attributes.get('async'), default=False)
+        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')), async=async)
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -675,10 +678,7 @@ class FieldConverter(osv.AbstractModel):
         lang_code = context.get('lang') or 'en_US'
         Lang = self.pool['res.lang']
 
-        lang_ids = Lang.search(cr, uid, [('code', '=', lang_code)], context=context) \
-               or  Lang.search(cr, uid, [('code', '=', 'en_US')], context=context)
-
-        return Lang.browse(cr, uid, lang_ids[0], context=context)
+        return Lang.browse(cr, uid, Lang._lang_get(cr, uid, lang_code), context=context)
 
 class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
@@ -1156,7 +1156,7 @@ class AssetsBundle(object):
     def can_aggregate(self, url):
         return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
 
-    def to_html(self, sep=None, css=True, js=True, debug=False):
+    def to_html(self, sep=None, css=True, js=True, debug=False, async=False):
         if sep is None:
             sep = '\n            '
         response = []
@@ -1174,11 +1174,16 @@ class AssetsBundle(object):
         else:
             url_for = self.context.get('url_for', lambda url: url)
             if css and self.stylesheets:
-                href = '/web/css/%s/%s' % (self.xmlid, self.version)
+                suffix = ''
+                if request:
+                    ua = request.httprequest.user_agent
+                    if ua.browser == "msie" and int((ua.version or '0').split('.')[0]) < 10:
+                        suffix = '.0'
+                href = '/web/css%s/%s/%s' % (suffix, self.xmlid, self.version)
                 response.append('<link href="%s" rel="stylesheet"/>' % url_for(href))
             if js:
                 src = '/web/js/%s/%s' % (self.xmlid, self.version)
-                response.append('<script type="text/javascript" src="%s"></script>' % url_for(src))
+                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(src)))
         response.extend(self.remains)
         return sep + sep.join(response)
 
@@ -1210,8 +1215,11 @@ class AssetsBundle(object):
             self.set_cache('js', content)
         return content
 
-    def css(self):
+    def css(self, page_number=None):
         """Generate css content from given bundle"""
+        if page_number is not None:
+            return self.css_page(page_number)
+
         content = self.get_cache('css')
         if content is None:
             content = self.preprocess_css()
@@ -1230,10 +1238,41 @@ class AssetsBundle(object):
 
             matches.append(content)
             content = u'\n'.join(matches)
-            if self.css_errors:
-                return content
-            self.set_cache('css', content)
+            if not self.css_errors:
+                self.set_cache('css', content)
+            content = content.encode('utf-8')
 
+        return content
+
+    def css_page(self, page_number):
+        content = self.get_cache('css.%d' % (page_number,))
+        if page_number:
+            return content
+        if content is None:
+            css = self.css().decode('utf-8')
+            re_rules = '([^{]+\{(?:[^{}]|\{[^{}]*\})*\})'
+            re_selectors = '()(?:\s*@media\s*[^{]*\{)?(?:\s*(?:[^,{]*(?:,|\{(?:[^}]*\}))))'
+            css_url = '@import url(\'/web/css.%%d/%s/%s\');' % (self.xmlid, self.version)
+            pages = [[]]
+            page = pages[0]
+            page_selectors = 0
+            for rule in re.findall(re_rules, css):
+                selectors = len(re.findall(re_selectors, rule))
+                if page_selectors + selectors < MAX_CSS_RULES:
+                    page_selectors += selectors
+                    page.append(rule)
+                else:
+                    pages.append([rule])
+                    page = pages[-1]
+                    page_selectors = selectors
+            if len(pages) == 1:
+                pages = []
+            for idx, page in enumerate(pages):
+                self.set_cache("css.%d" % (idx+1), ''.join(page))
+            content = '\n'.join(css_url % i for i in range(1,len(pages)+1))
+            self.set_cache("css.0", content)
+        if not content:
+            return self.css()
         return content
 
     def get_cache(self, type):

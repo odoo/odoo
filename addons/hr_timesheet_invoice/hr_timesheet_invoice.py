@@ -164,7 +164,7 @@ class account_analytic_line(osv.osv):
 
         date_due = False
         if partner.property_payment_term:
-            pterm_list= account_payment_term_obj.compute(cr, uid,
+            pterm_list = account_payment_term_obj.compute(cr, uid,
                     partner.property_payment_term.id, value=1,
                     date_ref=time.strftime('%Y-%m-%d'))
             if pterm_list:
@@ -250,9 +250,9 @@ class account_analytic_line(osv.osv):
                 if data.get('name', False):
                     details.append(line['name'])
                 if details:
-                    note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
+                    note.append(u' - '.join(map(lambda x: unicode(x) or '', details)))
             if note:
-                curr_invoice_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
+                curr_invoice_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '', note)))
         return curr_invoice_line
 
     def invoice_cost_create(self, cr, uid, ids, data=None, context=None):
@@ -279,8 +279,7 @@ class account_analytic_line(osv.osv):
                 currency_id = line.account_id.pricelist_id.currency_id.id
             if line.account_id.pricelist_id and line.account_id.pricelist_id.currency_id:
                 if line.account_id.pricelist_id.currency_id.id != currency_id and group_by_partner:
-                    raise UserError(_('Error!'),
-                        _('You cannot group invoices having different currencies on different analytic accounts for the same partner.'))
+                    raise UserError(_('You cannot group invoices having different currencies on different analytic accounts for the same partner.'))
 
             if group_by_partner:
                 key = (line.account_id.partner_id.id,
@@ -298,13 +297,13 @@ class account_analytic_line(osv.osv):
             # don't really care, what's important is the analytic lines that
             # will be used to create the invoice lines
 
-            partner = analytic_lines[0].account_id.partner_id # will be the same for every line
+            partner = analytic_lines[0].account_id.partner_id  # will be the same for every line
 
             curr_invoice = self._prepare_cost_invoice(cr, uid, partner, company_id, currency_id, analytic_lines, group_by_partner, context=context)
             invoice_context = dict(context,
                     lang=partner.lang,
-                    force_company=company_id, # set force_company in context so the correct product properties are selected (eg. income account)
-                    company_id=company_id) # set company_id in context, so the correct default journal will be selected
+                    force_company=company_id,  # set force_company in context so the correct product properties are selected (eg. income account)
+                    company_id=company_id)  # set company_id in context, so the correct default journal will be selected
             last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=invoice_context)
             invoices.append(last_invoice)
 
@@ -337,7 +336,6 @@ class account_analytic_line(osv.osv):
             self.write(cr, uid, [l.id for l in analytic_lines], {'invoice_id': last_invoice}, context=context)
             invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
-
 
 
 class hr_analytic_timesheet(osv.osv):

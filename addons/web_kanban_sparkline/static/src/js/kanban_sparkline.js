@@ -17,6 +17,15 @@ var SparklineBarWidget = AbstractField.extend({
         var self = this;
         var title = this.$node.html() || this.field.string;
         setTimeout(function () {
+            var tooltipFormatter =  function(sp, options, fields) {
+                var format =  $.spformat('<div class="jqsfield">{{offset:offset}} {{formatted_value}}</div>');
+                var result = '';
+                $.each(fields, function(i, field) {
+                        field.formatted_value = instance.web.format_value(field.value, { type : 'float' });
+                        result += format.render(field, options.get('tooltipValueLookups'), options);
+                })
+                return result;
+            }
             var field_value = JSON.parse(self.field.value);
             var value = _.pluck(field_value, 'value');
             var tooltips = _.pluck(field_value, 'tooltip');
@@ -29,6 +38,7 @@ var SparklineBarWidget = AbstractField.extend({
                     barSpacing: 1,
                     barColor: '#96d854',
                     tooltipFormat: tooltipFormat,
+                    tooltipFormatter: self.options.type == 'tristate' ? undefined : tooltipFormatter,
                     chartRangeMin: 0,
                     tooltipValueLookups: {
                         'offset': tooltips

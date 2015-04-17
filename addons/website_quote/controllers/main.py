@@ -36,7 +36,7 @@ class sale_quote(http.Controller):
     def view(self, order_id, pdf=None, token=None, message=False, **post):
         # use SUPERUSER_ID allow to access/view order for public user
         # only if he knows the private token
-        order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
+        order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id, request.context)
         now = time.strftime('%Y-%m-%d')
         dummy, action = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'sale', 'action_quotations')
         if token:

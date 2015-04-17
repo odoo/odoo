@@ -45,11 +45,24 @@ class ir_http(orm.AbstractModel):
         else:
             request.uid = request.session.uid
 
+    bots = "bot|crawl|slurp|spider|curl|wget".split("|")
+    def is_a_bot(self):
+        # We don't use regexp and ustr voluntarily
+        # timeit has been done to check the optimum method
+        ua = request.httprequest.environ.get('HTTP_USER_AGENT', '').lower()
+        try:
+            return any(bot in ua for bot in self.bots)
+        except UnicodeDecodeError:
+            return any(bot in ua.encode('ascii', 'ignore') for bot in self.bots)
+
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
         request.website = None
         func = None
         try:
+            if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
+                new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string
+                return werkzeug.utils.redirect(new_url, 301)
             func, arguments = self._find_handler()
             request.website_enabled = func.routing.get('website', False)
         except werkzeug.exceptions.NotFound:
@@ -57,7 +70,10 @@ class ir_http(orm.AbstractModel):
             # in all cases, website processes them
             request.website_enabled = True
 
-        request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
+        request.website_multilang = (
+            request.website_enabled and
+            func and func.routing.get('multilang', func.routing['type'] == 'http')
+        )
 
         if 'geoip' not in request.session:
             record = {}
@@ -78,11 +94,12 @@ class ir_http(orm.AbstractModel):
                 record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 
+        cook_lang = request.httprequest.cookies.get('website_lang')
         if request.website_enabled:
             try:
                 if func:
                     self._authenticate(func.routing['auth'])
-                else:
+                elif request.uid is None:
                     self._auth_method_public()
             except Exception as e:
                 return self._handle_exception(e)
@@ -92,10 +109,13 @@ class ir_http(orm.AbstractModel):
             request.context['website_id'] = request.website.id
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
+
             if first_pass:
                 if request.website_multilang:
+                    is_a_bot = self.is_a_bot()
                     # If the url doesn't contains the lang and that it's the first connection, we to retreive the user preference if it exists.
-                    if not path[1] in langs and not request.httprequest.cookies.get('session_id'):
+                    if not path[1] in langs and not is_a_bot:
+                        request.lang = cook_lang or request.lang
                         if request.lang not in langs:
                             # Try to find a similar lang. Eg: fr_BE and fr_FR
                             short = request.lang.split('_')[0]
@@ -104,13 +124,15 @@ class ir_http(orm.AbstractModel):
                                 request.lang = langs_withshort[0]
                             else:
                                 request.lang = request.website.default_lang_code
-                        # We redirect with the right language in url
-                        if request.lang != request.website.default_lang_code:
-                            path.insert(1, request.lang)
-                            path = '/'.join(path) or '/'
-                            return request.redirect(path + '?' + request.httprequest.query_string)
                     else:
                         request.lang = request.website.default_lang_code
+
+                    if request.lang != request.website.default_lang_code:
+                        path.insert(1, request.lang)
+                        path = '/'.join(path) or '/'
+                        redirect = request.redirect(path + '?' + request.httprequest.query_string)
+                        redirect.set_cookie('website_lang', request.lang)
+                        return redirect
 
             request.context['lang'] = request.lang
             if not request.context.get('tz'):
@@ -122,11 +144,17 @@ class ir_http(orm.AbstractModel):
                     if request.lang == request.website.default_lang_code:
                         # If language is in the url and it is the default language, redirect
                         # to url without language so google doesn't see duplicate content
-                        return request.redirect(path + '?' + request.httprequest.query_string, code=301)
+                        resp = request.redirect(path + '?' + request.httprequest.query_string, code=301)
+                        if cook_lang != request.lang:  # If default lang setted in url directly
+                            resp.set_cookie('website_lang', request.lang)
+                        return resp
                     return self.reroute(path)
             # bind modified context
             request.website = request.website.with_context(request.context)
-        return super(ir_http, self)._dispatch()
+        resp = super(ir_http, self)._dispatch()
+        if not cook_lang:
+            resp.set_cookie('website_lang', request.lang)
+        return resp
 
     def reroute(self, path):
         if not hasattr(request, 'rerouting'):

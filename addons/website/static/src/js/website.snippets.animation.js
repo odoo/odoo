@@ -61,9 +61,9 @@ function stop_animation() {
     });
 }
 
-load_called_template(); // if asset is placed into head, move this call into $(document).ready
-
 $(document).ready(function () {
+    load_called_template(); // if asset is placed into head, move this call into $(document).ready
+
     if ($(".o_gallery:not(.oe_slideshow)").size()) {
         // load gallery modal template
         website.add_template_file('/website/static/src/xml/website.gallery.xml');

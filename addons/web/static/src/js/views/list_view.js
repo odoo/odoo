@@ -108,6 +108,9 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         this.no_leaf = false;
         this.grouped = false;
 
+        if (!this.options.$pager || !this.options.$pager.length) {
+            this.options.$pager = false;
+        }
         // the view's number of records per page (|| section)
         this._limit = (this.options.limit ||
                        this.defaults.limit ||

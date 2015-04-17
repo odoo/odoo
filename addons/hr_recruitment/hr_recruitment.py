@@ -427,11 +427,11 @@ class hr_applicant(osv.Model):
             return 'hr_recruitment.mt_applicant_stage_changed'
         return super(hr_applicant, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
-    def message_get_reply_to(self, cr, uid, ids, context=None):
+    def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
         applicants = self.browse(cr, SUPERUSER_ID, ids, context=context)
         job_ids = set([applicant.job_id.id for applicant in applicants if applicant.job_id])
-        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(job_ids), context=context)
+        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(job_ids), default=default, context=context)
         return dict((applicant.id, aliases.get(applicant.job_id and applicant.job_id.id or 0, False)) for applicant in applicants)
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):

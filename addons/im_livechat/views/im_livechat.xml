@@ -76,9 +76,9 @@
             <!-- css style -->
             <link t-att-href="'%s/web/css/im_livechat.external_lib' % (url)" rel="stylesheet"/>
             <!-- js of all the required lib (internal and external) -->
-            <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript" />
+            <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript" async="async" />
             <!-- the loader -->
-            <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript" />
+            <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript" async="async" />
         </template>
 
         <!-- Template rendering all the scripts required to execute the Livechat from a page containing Odoo -->

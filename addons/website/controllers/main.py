@@ -34,7 +34,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def index(self, **kw):
         page = 'homepage'
         try:
-            main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
+            main_menu = request.env.ref('website.main_menu')
         except Exception:
             pass
         else:
@@ -60,6 +60,15 @@ class Website(openerp.addons.web.controllers.main.Home):
                 redirect = '/'
             return http.redirect_with_hash(redirect)
         return r
+
+    @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
+    def change_lang(self, lang, r='/', **kwargs):
+        if lang == 'default':
+            lang = request.website.default_lang_code
+            r = '/%s%s' % (lang, r or '/')
+        redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
+        redirect.set_cookie('website_lang', lang)
+        return redirect
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
@@ -225,7 +234,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.registry["ir.ui.view"].customize_template_get(
             request.cr, request.uid, key, full=full, bundles=bundles,
             context=request.context)
-
     @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
@@ -290,7 +298,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             uploads.append({'website_url': url})
             name = url.split("/").pop()                       # recover filename
             attachment_id = Attachments.create(request.cr, request.uid, {
-                'name':name,
+                'name': name,
                 'type': 'url',
                 'url': url,
                 'res_model': 'ir.ui.view',
@@ -412,7 +420,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def multi_render(self, ids_or_xml_ids, values=None):
         res = {}
         for id_or_xml_id in ids_or_xml_ids:
-            res[id_or_xml_id] = request.env["ir.ui.view"].render(id_or_xml_id, values=values, engine='ir.qweb')
+            res[id_or_xml_id] = request.registry["ir.ui.view"].render(request.cr, request.uid, id_or_xml_id, values=values, engine='ir.qweb', context=request.context)
         return res
 
     #------------------------------------------------------
@@ -428,7 +436,9 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route([
         '/website/image',
         '/website/image/<xmlid>',
+        '/website/image/<xmlid>/<int:max_width>x<int:max_height>',
         '/website/image/<xmlid>/<field>',
+        '/website/image/<xmlid>/<field>/<int:max_width>x<int:max_height>',
         '/website/image/<model>/<id>/<field>',
         '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
         ], auth="public", website=True)

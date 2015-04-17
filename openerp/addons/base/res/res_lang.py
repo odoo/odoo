@@ -177,11 +177,15 @@ class lang(osv.osv):
     ]
 
     @tools.ormcache(skiparg=3)
+    def _lang_get(self, cr, uid, lang):
+        lang_ids = self.search(cr, uid, [('code', '=', lang)]) or \
+                   self.search(cr, uid, [('code', '=', 'en_US')])
+        return lang_ids[0]
+
+    @tools.ormcache(skiparg=3)
     def _lang_data_get(self, cr, uid, lang, monetary=False):
         if type(lang) in (str, unicode):
-            lang = self.search(cr, uid, [('code', '=', lang)]) or \
-                self.search(cr, uid, [('code', '=', 'en_US')])
-            lang = lang[0]
+            lang = self._lang_get(cr, uid, lang)
         conv = localeconv()
         lang_obj = self.browse(cr, uid, lang)
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
@@ -190,8 +194,8 @@ class lang(osv.osv):
         return grouping, thousands_sep, decimal_point
 
     def write(self, cr, uid, ids, vals, context=None):
-        for lang_id in ids :
-            self._lang_data_get.clear_cache(self)
+        self._lang_get.clear_cache(self)
+        self._lang_data_get.clear_cache(self)
         return super(lang, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -209,6 +213,8 @@ class lang(osv.osv):
             trans_obj = self.pool.get('ir.translation')
             trans_ids = trans_obj.search(cr, uid, [('lang','=',language['code'])], context=context)
             trans_obj.unlink(cr, uid, trans_ids, context=context)
+        self._lang_get.clear_cache(self)
+        self._lang_data_get.clear_cache(self)
         return super(lang, self).unlink(cr, uid, ids, context=context)
 
     #

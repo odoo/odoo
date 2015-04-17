@@ -160,44 +160,71 @@
 
 <!-- Bootstrap Less File layout -->
 
-<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="False" customize_show="False">
+<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="True" customize_show="False">
     <xpath expr="//link[@id='bootstrap_css']" position="replace">
         <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
         <link rel="stylesheet" href='/website/static/src/less/colors.less'/>
     </xpath>
 </template>
 
+<!-- Default Options Toggle -->
+<template id="default_options" name="Default Customize Options" inherit_id="website.theme">
+  <xpath expr="//link[last()]" position="after">
+    <!-- Default options inherit from this view so we can easily disable it to reset all options -->
+    <t id="default_options" t-if="True"></t>
+  </xpath>
+</template>
+
 <!-- Option layout -->
 
-<template id="option_layout_boxed" name="option_layout_boxed" inherit_id="website.theme" active="False" customize_show="False">
-    <xpath expr="//link[last()]" position="after">
-        <link href="/website/static/src/less/option_layout_boxed.less" rel="stylesheet" type="text/less"/>
-    </xpath>
+<template id="option_layout_boxed" name="option_layout_boxed" inherit_id="website.default_options" active="False" customize_show="False">
+  <xpath expr="//t[@id='default_options']" position="inside">
+      <link href="/website/static/src/less/option_layout_boxed.less" rel="stylesheet" type="text/less"/>
+  </xpath>
 </template>
 
 <!-- Option color -->
 
-<template id="option_color_stone" name="option_color_stone" inherit_id="website.theme" active="False" customize_show="False">
-    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_stone.less" rel="stylesheet" type="text/less"/></xpath>
-</template>
-<template id="option_color_emerald" name="option_color_emerald" inherit_id="website.theme" active="False" customize_show="False">
-    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_emerald.less" rel="stylesheet" type="text/less"/></xpath>
-</template>
-<template id="option_color_cobalt" name="option_color_cobalt" inherit_id="website.theme" active="False" customize_show="False">
-    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_cobalt.less" rel="stylesheet" type="text/less"/></xpath>
-</template>
-<template id="option_color_amethyst" name="option_color_amethyst" inherit_id="website.theme" active="False" customize_show="False">
-    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_amethyst.less" rel="stylesheet" type="text/less"/></xpath>
-</template>
-<template id="option_color_ruby" name="option_color_ruby" inherit_id="website.theme" active="False" customize_show="False">
-    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_ruby.less" rel="stylesheet" type="text/less"/></xpath>
-</template>
-<template id="option_color_gold" name="option_color_gold" inherit_id="website.theme" active="False" customize_show="False">
-    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_gold.less" rel="stylesheet" type="text/less"/></xpath>
+<template id="option_color_stone" name="option_color_stone" inherit_id="website.default_options" active="False" customize_show="False">
+  <xpath expr="//t[@id='default_options']" position="inside">
+    <link href="/website/static/src/less/option_color_stone.less" rel="stylesheet" type="text/less"/>
+  </xpath>
 </template>
 
-<template id="option_font" name="option_font" inherit_id="website.theme" active="False" customize_show="False">
-    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_font.less" rel="stylesheet" type="text/less"/></xpath>
+<template id="option_color_emerald" name="option_color_emerald" inherit_id="website.default_options" active="False" customize_show="False">
+  <xpath expr="//t[@id='default_options']" position="inside">
+    <link href="/website/static/src/less/option_color_emerald.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<template id="option_color_cobalt" name="option_color_cobalt" inherit_id="website.default_options" active="False" customize_show="False">
+  <xpath expr="//t[@id='default_options']" position="inside">
+    <link href="/website/static/src/less/option_color_cobalt.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<template id="option_color_amethyst" name="option_color_amethyst" inherit_id="website.default_options" active="False" customize_show="False">
+  <xpath expr="//t[@id='default_options']" position="inside">
+    <link href="/website/static/src/less/option_color_amethyst.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<template id="option_color_ruby" name="option_color_ruby" inherit_id="website.default_options" active="False" customize_show="False">
+  <xpath expr="//t[@id='default_options']" position="inside">
+    <link href="/website/static/src/less/option_color_ruby.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<template id="option_color_gold" name="option_color_gold" inherit_id="website.default_options" active="False" customize_show="False">
+  <xpath expr="//t[@id='default_options']" position="inside">
+    <link href="/website/static/src/less/option_color_gold.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<template id="option_font" name="option_font" inherit_id="website.default_options" active="False" customize_show="False">
+  <xpath expr="//t[@id='default_options']" position="inside">
+    <link href="/website/static/src/less/option_font.less" rel="stylesheet" type="text/less"/>
+  </xpath>
 </template>
 
 </data>

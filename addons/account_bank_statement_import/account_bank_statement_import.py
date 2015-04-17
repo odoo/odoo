@@ -36,21 +36,47 @@ class account_bank_statement_import(osv.TransientModel):
         context = dict(context or {})
         #set the active_id in the context, so that any extension module could
         #reuse the fields chosen in the wizard if needed (see .QIF for example)
-        context.update({'active_id': ids[0]})
+        ctx = dict(context)
+        ctx['active_id'] = ids[0]
 
-        data_file = self.browse(cr, uid, ids[0], context=context).data_file
+        data_file = self.browse(cr, uid, ids[0], context=ctx).data_file
 
         # The appropriate implementation module returns the required data
-        currency_code, account_number, stmts_vals = self._parse_file(cr, uid, base64.b64decode(data_file), context=context)
+        currency_code, account_number, stmts_vals = self._parse_file(cr, uid, base64.b64decode(data_file), context=ctx)
         # Check raw data
-        self._check_parsed_data(cr, uid, stmts_vals, context=context)
+        self._check_parsed_data(cr, uid, stmts_vals, context=ctx)
         # Try to find the bank account and currency in odoo
-        currency_id, bank_account_id = self._find_additional_data(cr, uid, currency_code, account_number, context=context)
-        # Find or create the bank journal
-        journal_id = self._get_journal(cr, uid, currency_id, bank_account_id, account_number, context=context)
-        # Create the bank account if not already existing
-        if not bank_account_id and account_number:
-            self._create_bank_account(cr, uid, account_number, journal_id=journal_id, partner_id=uid, context=context)
+        currency_id, bank_account_id = self._find_additional_data(cr, uid, currency_code, account_number, context=ctx)
+        # Try to find the journal
+        journal_id = self._get_journal(cr, uid, currency_id, bank_account_id, account_number, context=ctx)
+        # If no journal found, ask the user about creating one
+        if not journal_id:
+            return self._journal_creation_wizard(cr, uid, currency_id, account_number, bank_account_id, context=ctx)
+        # Or directly finish the import
+        return self._finalize_import(cr, uid, bank_account_id, account_number, journal_id, stmts_vals, context=ctx)
+
+    def _journal_creation_wizard(self, cr, uid, currency_id, account_number, bank_account_id, context=None):
+        """ Calls a wizard that allows the user to accept/refuse journal creation """
+        return {
+            'name': _('Journal Creation'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.bank.statement.import.journal.creation',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'statement_import_transient_id': context['active_id'],
+                'default_currency_id': currency_id,
+                'default_account_number': account_number,
+                'bank_account_id': bank_account_id,
+                'default_name': _('Bank') + ' ' + account_number,
+            }
+        }
+
+    def _finalize_import(self, cr, uid, bank_account_id, account_number, journal_id, stmts_vals, context=None):
+        """ This part is separated from import_file so it can be called via the joutnal creation wizard
+            No CUD can happen before this method is called, so not calling it is like aborting the import.
+        """
         # Prepare statement data to be used for bank statements creation
         stmts_vals = self._complete_stmts_vals(cr, uid, stmts_vals, journal_id, account_number, context=context)
         # Create the bank statements
@@ -152,30 +178,11 @@ class account_bank_statement_import(osv.TransientModel):
             if currency_id and currency_id != journal_currency_id:
                 raise UserError(_('The currency of the bank statement is not the same as the currency of the journal !'))
 
-        # If there is no journal, create one (and its account)
-        if not journal_id and account_number:
-            journal_id = self._create_journal(cr, uid, currency_id, account_number, context=context)
-            if bank_account_id:
-                bank_pool.write(cr, uid, [bank_account_id], {'journal_id': journal_id}, context=context)
-
-        # If we couldn't find/create a journal, everything is lost
-        if not journal_id:
+        # If we couldn't find a journal and can't create one, everything is lost
+        if not journal_id and not account_number:
             raise UserError(_('Cannot find in which journal import this statement. Please manually select a journal.'))
 
         return journal_id
-
-    def _create_journal(self, cr, uid, currency_id, account_number, context=None):
-        """ Create a journal and its account """
-        wmca_pool = self.pool.get('wizard.multi.charts.accounts')
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-
-        vals_account = {'currency_id': currency_id, 'acc_name': account_number, 'account_type': 'bank', 'currency_id': currency_id}
-        vals_account = wmca_pool._prepare_bank_account(cr, uid, company, vals_account, context=context)
-        account_id = self.pool.get('account.account').create(cr, uid, vals_account, context=context)
-
-        vals_journal = {'currency_id': currency_id, 'acc_name': _('Bank') + ' ' + account_number, 'account_type': 'bank'}
-        vals_journal = wmca_pool._prepare_bank_journal(cr, uid, company, vals_journal, account_id, context=context)
-        return self.pool.get('account.journal').create(cr, uid, vals_journal, context=context)
 
     def _create_bank_account(self, cr, uid, account_number, journal_id=False, partner_id=False, context=None):
         try:
@@ -244,7 +251,7 @@ class account_bank_statement_import(osv.TransientModel):
                 else:
                     ignored_statement_lines_import_ids.append(line_vals['unique_import_id'])
             if len(filtered_st_lines) > 0:
-                # Remove values that won't be used to create records 
+                # Remove values that won't be used to create records
                 st_vals.pop('transactions', None)
                 for line_vals in filtered_st_lines:
                     line_vals.pop('account_number', None)
@@ -269,4 +276,3 @@ class account_bank_statement_import(osv.TransientModel):
             }]
 
         return statement_ids, notifications
-

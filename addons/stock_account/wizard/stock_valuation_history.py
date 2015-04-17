@@ -29,7 +29,7 @@ class wizard_valuation_history(osv.osv_memory):
             'domain': "[('date', '<=', '" + data['date'] + "')]",
             'name': _('Stock Value At Date'),
             'view_type': 'form',
-            'view_mode': 'tree,graph',
+            'view_mode': 'tree',
             'res_model': 'stock.history',
             'type': 'ir.actions.act_window',
             'context': ctx,

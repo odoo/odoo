@@ -30,7 +30,7 @@ from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare, float_round
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
-from openerp import SUPERUSER_ID, api, models
+from openerp import SUPERUSER_ID, api, models, fields as new_fields
 import openerp.addons.decimal_precision as dp
 from openerp.addons.procurement import procurement
 import logging
@@ -215,7 +215,7 @@ class stock_location_route(osv.osv):
     _columns = {
         'name': fields.char('Route Name', required=True),
         'sequence': fields.integer('Sequence'),
-        'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules', copy=True),
+        'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the route without removing it."),
         'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules', copy=True),
         'product_selectable': fields.boolean('Applicable on Product'),
@@ -302,7 +302,7 @@ class stock_quant(osv.osv):
         'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant", readonly=True, select=True),
         'packaging_type_id': fields.related('package_id', 'packaging_id', type='many2one', relation='product.packaging', string='Type of packaging', readonly=True, store=True),
         'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="The move the quant is reserved for", readonly=True, select=True),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True, select=True),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True, select=True, ondelete="restrict"),
         'cost': fields.float('Unit Cost'),
         'owner_id': fields.many2one('res.partner', 'Owner', help="This is the owner of the quant", readonly=True, select=True),
 
@@ -871,6 +871,10 @@ class stock_picking(osv.osv):
         context = dict(context or {}, active_ids=ids)
         return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_picking', context=context)
 
+    def do_print_picking_operations(self, cr, uid, ids, context=None):
+        '''This function prints the picking list with the pack operations and should be used in the bar code interface'''
+        context = dict(context or {}, active_ids=ids)
+        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_picking_operations', context=context)
 
     def action_confirm(self, cr, uid, ids, context=None):
         todo = []
@@ -1049,7 +1053,7 @@ class stock_picking(osv.osv):
 
         # If we encounter an UoM that is smaller than the default UoM or the one already chosen, use the new one instead.
         product_uom = {} # Determines UoM used in pack operations
-        for move in picking.move_lines:
+        for move in [x for x in picking.move_lines if x.state not in ('done', 'cancel')]:
             if not product_uom.get(move.product_id.id):
                 product_uom[move.product_id.id] = move.product_id.uom_id
             if move.product_uom.id != move.product_id.uom_id.id and move.product_uom.factor > product_uom[move.product_id.id].factor:
@@ -1132,7 +1136,7 @@ class stock_picking(osv.osv):
                 prevals[key[0]] = [val_dict]
         # prevals var holds the operations in order to create them in the same order than the picking stock moves if possible
         processed_products = set()
-        for move in picking.move_lines:
+        for move in [x for x in picking.move_lines if x.state not in ('done', 'cancel')]:
             if move.product_id.id not in processed_products:
                 vals += prevals.get(move.product_id.id, [])
                 processed_products.add(move.product_id.id)
@@ -1243,7 +1247,7 @@ class stock_picking(osv.osv):
         prod2move_ids = {}
         still_to_do = []
         #make a dictionary giving for each product, the moves and related quantity that can be used in operation links
-        for move in picking.move_lines:
+        for move in [x for x in picking.move_lines if x.state not in ('done', 'cancel')]:
             if not prod2move_ids.get(move.product_id.id):
                 prod2move_ids[move.product_id.id] = [{'move': move, 'remaining_qty': move.product_qty}]
             else:
@@ -1617,7 +1621,7 @@ class stock_production_lot(osv.osv):
 # Move
 # ----------------------------------------------------
 
-class stock_move(osv.osv):
+class stock_move(models.Model):
     _name = "stock.move"
     _description = "Stock Move"
     _order = 'picking_id, sequence, id'
@@ -1638,12 +1642,11 @@ class stock_move(osv.osv):
             res.append((line.id, name))
         return res
 
-    def _quantity_normalize(self, cr, uid, ids, name, args, context=None):
+    @api.depends('product_id', 'product_uom_qty', 'product_uom', 'product_id.uom_id')
+    def _quantity_normalize(self):
         uom_obj = self.pool.get('product.uom')
-        res = {}
-        for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, context=context)
-        return res
+        for m in self:
+            m.product_qty = uom_obj._compute_qty_obj(self.env.cr, self.env.uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, context=self.env.context)
 
     def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
         uom_obj = self.pool.get('product.uom')
@@ -1727,11 +1730,6 @@ class stock_move(osv.osv):
             res += [x.id for x in picking.move_lines]
         return res
 
-    def _get_moves_from_prod(self, cr, uid, ids, context=None):
-        if ids:
-            return self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', ids)], context=context)
-        return []
-
     def _set_product_qty(self, cr, uid, id, field, value, arg, context=None):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
             in the default product UoM. This code has been added to raise an error if a write is made given a value
@@ -1739,6 +1737,9 @@ class stock_move(osv.osv):
             detect errors.
         """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
+
+    product_qty = new_fields.Float(compute='_quantity_normalize', inverse='_set_product_qty', digits=0, store=True, string='Quantity',
+                                   help='Quantity in the default UoM of the product')
 
     _columns = {
         'sequence': fields.integer('Sequence'),
@@ -1748,8 +1749,6 @@ class stock_move(osv.osv):
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
-        'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, type='float', digits=0, store=True, string='Quantity',
-            help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
             required=True, states={'done': [('readonly', True)]},
             help="This is the quantity of products from an inventory "
@@ -1812,7 +1811,7 @@ class stock_move(osv.osv):
                                          states={'done': [('readonly', True)]}, help="Remaining Quantity in default UoM according to operations matched with this move"),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
-        'rule_id': fields.many2one('procurement.rule', 'Procurement Rule', help='The pull rule that created this stock move'),
+        'rule_id': fields.many2one('procurement.rule', 'Procurement Rule', help='The procurement rule that created this stock move'),
         'push_rule_id': fields.many2one('stock.location.path', 'Push Rule', help='The push rule that created this stock move'),
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
@@ -2533,7 +2532,7 @@ class stock_move(osv.osv):
         }
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']
-        new_move = self.copy(cr, uid, move.id, defaults)
+        new_move = self.copy(cr, uid, move.id, defaults, context=context)
 
         ctx = context.copy()
         ctx['do_not_propagate'] = True
@@ -3200,24 +3199,24 @@ class stock_warehouse(osv.osv):
         reception_route_id = route_obj.create(cr, uid, route_vals, context=context)
         wh_route_ids.append((4, reception_route_id))
         push_rules_list, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, True, values, reception_route_id, context=context)
-        #create the push/pull rules
+        #create the push/procurement rules
         for push_rule in push_rules_list:
             push_obj.create(cr, uid, vals=push_rule, context=context)
         for pull_rule in pull_rules_list:
-            #all pull rules in reception route are mto, because we don't want to wait for the scheduler to trigger an orderpoint on input location
+            #all procurement rules in reception route are mto, because we don't want to wait for the scheduler to trigger an orderpoint on input location
             pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
-        #create MTS route and pull rules for delivery and a specific route MTO to be set on the product
+        #create MTS route and procurement rules for delivery and a specific route MTO to be set on the product
         route_name, values = routes_dict[warehouse.delivery_steps]
         route_vals = self._get_reception_delivery_route(cr, uid, warehouse, route_name, context=context)
-        #create the route and its pull rules
+        #create the route and its procurement rules
         delivery_route_id = route_obj.create(cr, uid, route_vals, context=context)
         wh_route_ids.append((4, delivery_route_id))
         dummy, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, True, values, delivery_route_id, context=context)
         for pull_rule in pull_rules_list:
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
-        #create MTO pull rule and link it to the generic MTO route
+        #create MTO procurement rule and link it to the generic MTO route
         mto_pull_vals = self._get_mto_pull_rule(cr, uid, warehouse, values, context=context)[0]
         mto_pull_id = pull_obj.create(cr, uid, mto_pull_vals, context=context)
 
@@ -3235,7 +3234,7 @@ class stock_warehouse(osv.osv):
         #create route selectable on the product to resupply the warehouse from another one
         self._create_resupply_routes(cr, uid, warehouse, warehouse.resupply_wh_ids, warehouse.default_resupply_wh_id, context=context)
 
-        #return routes and mto pull rule to store on the warehouse
+        #return routes and mto procurement rule to store on the warehouse
         return {
             'route_ids': wh_route_ids,
             'mto_pull_id': mto_pull_id,
@@ -3270,7 +3269,7 @@ class stock_warehouse(osv.osv):
         route_name, values = routes_dict[new_delivery_step]
         route_obj.write(cr, uid, warehouse.delivery_route_id.id, {'name': self._format_routename(cr, uid, warehouse, route_name, context=context)}, context=context)
         dummy, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, True, values, warehouse.delivery_route_id.id, context=context)
-        #create the pull rules
+        #create the procurement rules
         for pull_rule in pull_rules_list:
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
@@ -3280,11 +3279,11 @@ class stock_warehouse(osv.osv):
         route_name, values = routes_dict[new_reception_step]
         route_obj.write(cr, uid, warehouse.reception_route_id.id, {'name': self._format_routename(cr, uid, warehouse, route_name, context=context)}, context=context)
         push_rules_list, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, True, values, warehouse.reception_route_id.id, context=context)
-        #create the push/pull rules
+        #create the push/procurement rules
         for push_rule in push_rules_list:
             push_obj.create(cr, uid, vals=push_rule, context=context)
         for pull_rule in pull_rules_list:
-            #all pull rules in receipt route are mto, because we don't want to wait for the scheduler to trigger an orderpoint on input location
+            #all procurement rules in receipt route are mto, because we don't want to wait for the scheduler to trigger an orderpoint on input location
             pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
@@ -3449,7 +3448,7 @@ class stock_warehouse(osv.osv):
         warehouse = self.browse(cr, uid, new_id, context=context)
         self.create_sequences_and_picking_types(cr, uid, warehouse, context=context)
 
-        #create routes and push/pull rules
+        #create routes and push/procurement rules
         new_objects_dict = self.create_routes(cr, uid, new_id, warehouse, context=context)
         self.write(cr, uid, warehouse.id, new_objects_dict, context=context)
         return new_id
@@ -3482,14 +3481,14 @@ class stock_warehouse(osv.osv):
         #rename location
         location_id = warehouse.lot_stock_id.location_id.id
         location_obj.write(cr, uid, location_id, {'name': code}, context=context)
-        #rename route and push-pull rules
+        #rename route and push-procurement rules
         for route in warehouse.route_ids:
             route_obj.write(cr, uid, route.id, {'name': route.name.replace(warehouse.name, name, 1)}, context=context)
             for pull in route.pull_ids:
                 pull_obj.write(cr, uid, pull.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context)
             for push in route.push_ids:
                 push_obj.write(cr, uid, push.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context)
-        #change the mto pull rule name
+        #change the mto procurement rule name
         if warehouse.mto_pull_id.id:
             pull_obj.write(cr, uid, warehouse.mto_pull_id.id, {'name': warehouse.mto_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
 
@@ -3514,7 +3513,7 @@ class stock_warehouse(osv.osv):
             for mto_pull_val in mto_pull_vals:
                 pull_obj.create(cr, uid, mto_pull_val, context=context)
         else:
-            # We need to delete all the MTO pull rules, otherwise they risk to be used in the system
+            # We need to delete all the MTO procurement rules, otherwise they risk to be used in the system
             pulls = pull_obj.search(cr, uid, ['&', ('route_id', '=', mto_route_id), ('location_id.usage', '=', 'transit'), ('location_src_id', '=', warehouse.lot_stock_id.id)], context=context)
             if pulls:
                 pull_obj.unlink(cr, uid, pulls, context=context)

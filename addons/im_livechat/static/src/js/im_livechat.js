@@ -65,6 +65,7 @@ im_chat_common.Conversation.include({
         }else{
             this._super.apply(this, arguments);
             utils.set_cookie(COOKIE_NAME, "", -1);
+            utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
         }
     },
 });
@@ -126,7 +127,8 @@ var LiveSupport = Widget.extend({
     build_button: function(channel, options, session, rule){
         var button = new ChatButton(null, channel, options, session);
         button.appendTo($("body"));
-        if (rule.action === 'auto_popup'){
+        var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup') ? JSON.parse(utils.get_cookie('im_livechat_auto_popup')) : true;
+        if (rule.action === 'auto_popup' && auto_popup_cookie){
             setTimeout(function() {
                 button.click();
             }, rule.auto_popup_timer*1000);

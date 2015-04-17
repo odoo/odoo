@@ -121,7 +121,7 @@ function prompt(options, qweb) {
     }, options || {});
 
     var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
-    type = type.length ? type[0] : 'text';
+    type = type.length ? type[0] : 'input';
     options.field_type = type;
     options.field_name = options.field_name || options[type];
 
@@ -358,6 +358,30 @@ dom_ready.then(function () {
             }).fail(function (err, data) {
                 error(data, '/web#return_label=Website&model='+$data.data('object')+'&id='+$data.data('id'));
             });
+        });
+
+        if (!$('.js_change_lang').length) {
+            // in case template is not up to date...
+            var links = $('ul.js_language_selector li a:not([data-oe-id])');
+            var m = $(_.min(links, function(l) { return $(l).attr('href').length; })).attr('href');
+            links.each(function() {
+                var t = $(this).attr('href');
+                var l = (t === m) ? "default" : t.split('/')[1];
+                $(this).data('lang', l).addClass('js_change_lang');
+            });
+        }
+
+        $(document).on('click', '.js_change_lang', function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+            // retrieve the hash before the redirect
+            var redirect = {
+                lang: self.data('lang'),
+                url: self.attr('href'),
+                hash: location.hash
+            };
+            location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
     });
 
     /* ----- KANBAN WEBSITE ---- */

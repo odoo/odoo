@@ -6,8 +6,7 @@
         <field name="model">report.stock.forecast</field>
         <field name="arch" type="xml">
             <pivot string="Stock Level forecast" disable_linking="True">
-                <field name="product_id" type="col"/>
-                <field name="cumulative_quantity" type="measure"/>
+                <field name="product_id" type="row"/>
                 <field name="quantity" type="measure"/>
             </pivot>
         </field>
@@ -17,7 +16,7 @@
         <field name="name">Stock.forecast.graph</field>
         <field name="model">report.stock.forecast</field>
         <field name="arch" type="xml">
-            <graph string="Stock Level forecast" type="pivot">
+            <graph string="Stock Level forecast" type="line">
                 <field name="product_id" type="col"/>
                 <field name="cumulative_quantity" type="measure"/>
             </graph>
@@ -32,8 +31,8 @@
                 <field name="product_id"/>
                 <field name="date"/>
                 <group expand="1" string="Group By">
-                    <filter string="Pivot" name="pivot_by" context="{'pivot_row_groupby': ['date:day'], 'pivot_column_groupby': ['product_id'],'pivot_measures': ['cumulative_quantity','quantity']}"/>
-                    <filter string="Graph" name="graph_by" context="{'graph_groupbys': ['date:day', 'product_id']}"/>
+                    <filter string="Pivot" name="pivot_by" context="{'pivot_row_groupby': ['product_id'], 'pivot_column_groupby': ['date:week'],'pivot_measures': ['quantity']}"/>
+                    <filter string="Graph" name="graph_by" context="{'graph_groupbys': ['date:week', 'product_id']}"/>
                 </group>
             </search>
         </field>

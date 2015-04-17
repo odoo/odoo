@@ -110,6 +110,8 @@ class EventMailRegistration(models.Model):
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
     def _compute_scheduled_date(self):
         if self.registration_id:
-            self.scheduled_date = datetime.strptime(self.registration_id.date_open, tools.DEFAULT_SERVER_DATETIME_FORMAT) + _INTERVALS[self.scheduler_id.interval_unit](self.scheduler_id.interval_nbr)
+            date_open = self.registration_id.date_open
+            date_open_datetime = date_open and datetime.strptime(date_open, tools.DEFAULT_SERVER_DATETIME_FORMAT) or fields.datetime.now()
+            self.scheduled_date = date_open_datetime + _INTERVALS[self.scheduler_id.interval_unit](self.scheduler_id.interval_nbr)
         else:
             self.scheduled_date = False

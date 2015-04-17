@@ -32,6 +32,13 @@ class stock_move(osv.osv):
             readonly=True),
     }
 
+    def get_price_unit(self, cr, uid, move, context=None):
+        """ Returns the unit price to store on the quant """
+        if move.purchase_line_id:
+            return move.price_unit
+
+        return super(stock_move, self).get_price_unit(cr, uid, move, context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -113,11 +120,26 @@ class stock_move(osv.osv):
             res['price_unit'] = purchase_line.price_unit
         return res
 
+    def _get_moves_taxes(self, cr, uid, moves, context=None):
+        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, context=context)
+        for move in moves:
+            if move.purchase_line_id:
+                is_extra_move[move.id] = False
+                extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.purchase_line_id.taxes_id])]
+        return (is_extra_move, extra_move_tax)
+
 
     def attribute_price(self, cr, uid, move, context=None):
         """
             Attribute price to move, important in inter-company moves or receipts with only one partner
         """
+        # The method attribute_price of the parent class sets the price to the standard product
+        # price if move.price_unit is zero. We don't want this behavior in the case of a purchase
+        # order since we can purchase goods which are free of charge (e.g. 5 units offered if 100
+        # are purchased).
+        if move.purchase_line_id:
+            return
+
         code = self.get_code_from_locs(cr, uid, move, context=context)
         if not move.purchase_line_id and code == 'incoming' and not move.price_unit:
             partner = move.picking_id and move.picking_id.partner_id or False
@@ -260,7 +282,7 @@ class stock_warehouse(osv.osv):
     def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
         res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, code, context=context)
         pull_obj = self.pool.get('procurement.rule')
-        #change the buy pull rule name
+        #change the buy procurement rule name
         if warehouse.buy_pull_id:
             pull_obj.write(cr, uid, warehouse.buy_pull_id.id, {'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
         return res

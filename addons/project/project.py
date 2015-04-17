@@ -707,7 +707,6 @@ class task(osv.osv):
             res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
                 res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
-            # TDE CHECK: if task.state in ('done','cancelled'):
             if task.stage_id and task.stage_id.fold:
                 res[task.id]['progress'] = 100.0
         return res
@@ -889,18 +888,23 @@ class task(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
         if context is None: context = {}
-        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
-        # this should be safe (no context passed to avoid side-effects)
-        obj_tm = users_obj.browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id
-        tm = obj_tm and obj_tm.name or 'Hours'
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
 
-        if tm in ['Hours','Hour']:
+        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
+        # this should be safe (no context passed to avoid side-effects)
+        obj_tm = users_obj.browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id
+        try:
+            # using get_object to get translation value
+            uom_hour = self.pool['ir.model.data'].get_object(cr, uid, 'product', 'product_uom_hour', context=context)
+        except ValueError:
+            uom_hour = False
+        if not obj_tm or not uom_hour or obj_tm.id == uom_hour.id:
             return res
 
         eview = etree.fromstring(res['arch'])
 
+        # if the project_time_mode_id is not in hours (so in days), display it as a float field
         def _check_rec(eview):
             if eview.attrib.get('widget','') == 'float_time':
                 eview.set('widget','float')
@@ -912,9 +916,13 @@ class task(osv.osv):
 
         res['arch'] = etree.tostring(eview)
 
+        # replace reference of 'Hours' to 'Day(s)'
         for f in res['fields']:
+            # TODO this NOT work in different language than english
+            # the field 'Initially Planned Hours' should be replaced by 'Initially Planned Days'
+            # but string 'Initially Planned Days' is not available in translation
             if 'Hours' in res['fields'][f]['string']:
-                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
+                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours', obj_tm.name)
         return res
 
     def get_empty_list_help(self, cr, uid, help, context=None):
@@ -1008,7 +1016,7 @@ class task(osv.osv):
     def set_remaining_time(self, cr, uid, ids, remaining_time=1.0, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             if (task.stage_id and task.stage_id.sequence <= 1) or (task.planned_hours == 0.0):
-                self.write(cr, uid, [task.id], {'planned_hours': remaining_time}, context=context)
+                self.write(cr, uid, [task.id], {'planned_hours': remaining_time + task.effective_hours}, context=context)
         self.write(cr, uid, ids, {'remaining_hours': remaining_time}, context=context)
         return True
 
@@ -1136,11 +1144,11 @@ class task(osv.osv):
             return 'project.mt_task_stage'
         return super(task, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
-    def message_get_reply_to(self, cr, uid, ids, context=None):
+    def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
         tasks = self.browse(cr, SUPERUSER_ID, ids, context=context)
         project_ids = set([task.project_id.id for task in tasks if task.project_id])
-        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(project_ids), context=context)
+        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(project_ids), default=default, context=context)
         return dict((task.id, aliases.get(task.project_id and task.project_id.id or 0, False)) for task in tasks)
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):

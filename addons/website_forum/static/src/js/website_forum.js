@@ -249,7 +249,8 @@ website.if_dom_contains('.website_forum', function () {
         }
         $textarea.summernote({
                 height: 150,
-                toolbar: toolbar
+                toolbar: toolbar,
+                styleWithSpan: false
             });
         $form.on('click', 'button, .a-submit', function () {
             $textarea.html($form.find('.note-editable').code());

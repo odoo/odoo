@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+import itertools
 import logging
 import math
 import re
@@ -9,6 +10,7 @@ from werkzeug.exceptions import Forbidden
 
 from openerp import _
 from openerp import api, fields, models
+from openerp import http
 from openerp import modules
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -315,31 +317,33 @@ class Post(models.Model):
     can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
     can_view = fields.Boolean('Can View', compute='_get_post_karma_rights')
 
-    @api.one
+    @api.multi
     def _get_post_karma_rights(self):
         user = self.env.user
-        post = self.sudo()
+        is_admin = user.id == SUPERUSER_ID
+        # sudoed recordset instead of individual posts so values can be
+        # prefetched in bulk
+        for post, post_sudo in itertools.izip(self, self.sudo()):
+            is_creator = post.create_uid == user
 
-        is_creator = post.create_uid.id == self._uid
+            post.karma_accept = post.forum_id.karma_answer_accept_own if post.parent_id.create_uid == user else post.forum_id.karma_answer_accept_all
+            post.karma_edit = post.forum_id.karma_edit_own if is_creator else post.forum_id.karma_edit_all
+            post.karma_close = post.forum_id.karma_close_own if is_creator else post.forum_id.karma_close_all
+            post.karma_unlink = post.forum_id.karma_unlink_own if is_creator else post.forum_id.karma_unlink_all
+            post.karma_comment = post.forum_id.karma_comment_own if is_creator else post.forum_id.karma_comment_all
+            post.karma_comment_convert = post.forum_id.karma_comment_convert_own if is_creator else post.forum_id.karma_comment_convert_all
 
-        self.karma_accept = self.forum_id.karma_answer_accept_own if post.parent_id and post.parent_id.create_uid.id == self._uid else self.forum_id.karma_answer_accept_all
-        self.karma_edit = self.forum_id.karma_edit_own if is_creator else self.forum_id.karma_edit_all
-        self.karma_close = self.forum_id.karma_close_own if is_creator else self.forum_id.karma_close_all
-        self.karma_unlink = self.forum_id.karma_unlink_own if is_creator else self.forum_id.karma_unlink_all
-        self.karma_comment = self.forum_id.karma_comment_own if is_creator else self.forum_id.karma_comment_all
-        self.karma_comment_convert = self.forum_id.karma_comment_convert_own if is_creator else self.forum_id.karma_comment_convert_all
-
-        self.can_ask = user.karma >= self.forum_id.karma_ask
-        self.can_answer = user.karma >= self.forum_id.karma_answer
-        self.can_accept = user.karma >= self.karma_accept
-        self.can_edit = user.karma >= self.karma_edit
-        self.can_close = user.karma >= self.karma_close
-        self.can_unlink = user.karma >= self.karma_unlink
-        self.can_upvote = user.karma >= self.forum_id.karma_upvote
-        self.can_downvote = user.karma >= self.forum_id.karma_downvote
-        self.can_comment = user.karma >= self.karma_comment
-        self.can_comment_convert = user.karma >= self.karma_comment_convert
-        self.can_view = user.karma >= self.karma_close or post.create_uid.karma > 0
+            post.can_ask = is_admin or user.karma >= post.forum_id.karma_ask
+            post.can_answer = is_admin or user.karma >= post.forum_id.karma_answer
+            post.can_accept = is_admin or user.karma >= post.karma_accept
+            post.can_edit = is_admin or user.karma >= post.karma_edit
+            post.can_close = is_admin or user.karma >= post.karma_close
+            post.can_unlink = is_admin or user.karma >= post.karma_unlink
+            post.can_upvote = is_admin or user.karma >= post.forum_id.karma_upvote
+            post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote
+            post.can_comment = is_admin or user.karma >= post.karma_comment
+            post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
+            post.can_view = is_admin or user.karma >= post.karma_close or post_sudo.create_uid.karma > 0
 
     @api.one
     @api.constrains('post_type', 'forum_id')
@@ -392,6 +396,14 @@ class Post(models.Model):
             post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
             self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
         return post
+
+    @api.multi
+    def check_mail_message_access(self, operation, model_obj=None):
+        for post in self:
+            # Make sure only author or moderator can edit/delete messages
+            if operation in ('write', 'unlink') and not post.can_edit:
+                raise KarmaError('Not enough karma to edit a post.')
+        return super(Post, self).check_mail_message_access(operation, model_obj=model_obj)
 
     @api.multi
     @api.depends('name', 'post_type')

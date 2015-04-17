@@ -90,7 +90,8 @@ class ir_http(osv.AbstractModel):
                     # All other exceptions mean undetermined status (e.g. connection pool full),
                     # let them bubble up
                     request.session.logout(keep_db=True)
-            getattr(self, "_auth_method_%s" % auth_method)()
+            if request.uid is None:
+                getattr(self, "_auth_method_%s" % auth_method)()
         except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
@@ -100,10 +101,18 @@ class ir_http(osv.AbstractModel):
 
     def _serve_attachment(self):
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
-        attach = self.pool['ir.attachment'].search_read(request.cr, openerp.SUPERUSER_ID, domain, ['__last_update', 'datas', 'mimetype', 'checksum'], context=request.context)
+        attach = self.pool['ir.attachment'].search_read(request.cr, openerp.SUPERUSER_ID, domain, ['__last_update', 'datas', 'name', 'mimetype', 'checksum'], context=request.context)
         if attach:
             wdate = attach[0]['__last_update']
-            datas = attach[0]['datas'] or '' # support empty ir_attachment
+            datas = attach[0]['datas'] or ''
+            name = attach[0]['name']
+
+            if not datas:
+                if name.startswith(('http://', 'https://', '/')):
+                    return werkzeug.utils.redirect(name, 301)
+                else:
+                    return werkzeug.wrappers.Response(status=204)     # NO CONTENT
+
             response = werkzeug.wrappers.Response()
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
             try:

@@ -153,6 +153,7 @@ class view(osv.osv):
 
     def _arch_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
+
         for view in self.browse(cr, uid, ids, context=context):
             arch_fs = None
             if config['dev_mode'] and view.arch_fs and view.xml_id:
@@ -927,7 +928,8 @@ class view(osv.osv):
     _read_template_cache = dict(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
     if config['dev_mode']:
         _read_template_cache['size'] = 0
-    @tools.ormcache_context(**_read_template_cache)
+
+    @tools.conditional(not tools.config['dev_mode'], tools.ormcache_context(**_read_template_cache))
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
@@ -950,7 +952,6 @@ class view(osv.osv):
             view_id = self.get_view_id(cr, uid, xml_id, context=context)
         return self._read_template(cr, uid, view_id, context=context)
 
-    @tools.ormcache(skiparg=3)
     def get_view_id(self, cr, uid, xml_id, context=None):
         return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
 

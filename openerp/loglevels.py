@@ -73,24 +73,40 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
     :raise: UnicodeError if value cannot be coerced to unicode
     :return: unicode string representing the given value
     """
+    # We use direct type comparison instead of `isinstance`
+    # as much as possible, in order to make the most common
+    # cases faster (isinstance/issubclass are significantly slower)
+    ttype = type(value)
+
+    if ttype is unicode:
+        return value
+
+    # special short-circuit for str, as we still needs to support
+    # str subclasses such as `openerp.tools.unquote`
+    if ttype is str or issubclass(ttype, str):
+
+        # try hint_encoding first, avoids call to get_encoding()
+        # for the most common case
+        try:
+            return unicode(value, hint_encoding, errors=errors)
+        except Exception:
+            pass
+
+        # rare: no luck with hint_encoding, attempt other ones
+        for ln in get_encodings(hint_encoding):
+            try:
+                return unicode(value, ln, errors=errors)
+            except Exception:
+                pass
+
     if isinstance(value, Exception):
         return exception_to_unicode(value)
 
-    if isinstance(value, unicode):
-        return value
-
-    if not isinstance(value, basestring):
-        try:
-            return unicode(value)
-        except Exception:
-            raise UnicodeError('unable to convert %r' % (value,))
-
-    for ln in get_encodings(hint_encoding):
-        try:
-            return unicode(value, ln, errors=errors)
-        except Exception:
-            pass
-    raise UnicodeError('unable to convert %r' % (value,))
+    # fallback for non-string values
+    try:
+        return unicode(value)
+    except Exception:
+        raise UnicodeError('unable to convert %r' % (value,))
 
 
 def exception_to_unicode(e):

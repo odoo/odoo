@@ -300,7 +300,8 @@ class sale_order(osv.osv):
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
-        payment_term = part.property_payment_term and part.property_payment_term.id or False
+        invoice_part = self.pool.get('res.partner').browse(cr, uid, addr['invoice'], context=context)
+        payment_term = invoice_part.property_payment_term and invoice_part.property_payment_term.id or False
         dedicated_salesman = part.user_id and part.user_id.id or uid
         val = {
             'partner_invoice_id': addr['invoice'],
@@ -363,14 +364,14 @@ class sale_order(osv.osv):
             'origin': order.name,
             'type': 'out_invoice',
             'reference': order.client_order_ref or order.name,
-            'account_id': order.partner_id.property_account_receivable.id,
+            'account_id': order.partner_invoice_id.property_account_receivable.id,
             'partner_id': order.partner_invoice_id.id,
             'journal_id': journal_ids[0],
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
             'payment_term': order.payment_term and order.payment_term.id or False,
-            'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
+            'fiscal_position': order.fiscal_position.id or order.partner_invoice_id.property_account_position.id,
             'date_invoice': context.get('date_invoice', False),
             'company_id': order.company_id.id,
             'user_id': order.user_id and order.user_id.id or False,
@@ -749,7 +750,7 @@ class sale_order(osv.osv):
                         order_line.append([4, line_id])
             else:
                 order_line.append(line)
-        return {'value': {'order_line': order_line}}
+        return {'value': {'order_line': order_line, 'amount_untaxed': False, 'amount_tax': False, 'amount_total': False}}
 
     def test_procurements_done(self, cr, uid, ids, context=None):
         for sale in self.browse(cr, uid, ids, context=context):

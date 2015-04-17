@@ -579,7 +579,7 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
     }
 
     eo = so;
-    if(!dom.isBR(sc) && !sc.textContent.match(/\S|\u00A0/)) {
+    if(!dom.isBR(sc) && !sc.textContent.match(/\S|\u00A0/) && !dom.isText(dom.hasContentBefore(sc)) && !dom.isText(dom.hasContentAfter(sc))) {
         ancestor = dom.node(sc);
         var text = document.createTextNode('\u00A0');
         $(sc).before(text);

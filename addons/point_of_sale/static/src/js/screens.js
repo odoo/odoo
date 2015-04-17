@@ -1129,7 +1129,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
 
         fields.id           = partner.id || false;
         fields.country_id   = fields.country_id || false;
-        fields.barcode        = fields.barcode ? this.pos.barcode_reader.sanitize_ean(fields.barcode) : false; 
+        fields.barcode      = fields.barcode || '';
 
         new Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
             self.saved_client_details(partner_id);
@@ -1316,7 +1316,6 @@ gui.define_screen({name:'clientlist', widget: ClientListScreenWidget});
 
 var ReceiptScreenWidget = ScreenWidget.extend({
     template: 'ReceiptScreenWidget',
-
     show: function(){
         this._super();
         var self = this;

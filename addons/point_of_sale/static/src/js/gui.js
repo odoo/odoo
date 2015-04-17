@@ -226,7 +226,7 @@ var Gui = core.Class.extend({
         var self = this;
         var ret = new $.Deferred();
         if (password) {
-            this.gui.show_popup('password',{
+            this.show_popup('password',{
                 'title': _t('Password ?'),
                 confirm: function(pw) {
                     if (pw !== password) {

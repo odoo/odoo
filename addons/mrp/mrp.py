@@ -207,6 +207,7 @@ class mrp_bom(osv.osv):
     }
     _order = "sequence"
 
+
     def _bom_find(self, cr, uid, product_tmpl_id=None, product_id=None, properties=None, context=None):
         """ Finds BoM for particular product and product uom.
         @param product_tmpl_id: Selected product.
@@ -1007,6 +1008,11 @@ class mrp_production(osv.osv):
                     stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
+
+        # Remove remaining products to consume if no more products to produce
+        if not production.move_created_ids and production.move_lines:
+            stock_mov_obj.action_cancel(cr, uid, [x.id for x in production.move_lines], context=context)
+
         self.signal_workflow(cr, uid, [production_id], 'button_produce_done')
         return True
 

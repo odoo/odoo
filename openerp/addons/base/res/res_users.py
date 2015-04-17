@@ -38,6 +38,9 @@ from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+# Only users who can modify the user (incl. the user herself) see the real contents of these fields
+USER_PRIVATE_FIELDS = ['password']
+
 #----------------------------------------------------------
 # Basic res.groups and res.users
 #----------------------------------------------------------
@@ -280,8 +283,10 @@ class res_users(osv.osv):
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
-            if 'password' in o and ('id' not in o or o['id'] != uid):
-                o['password'] = '********'
+            if ('id' not in o or o['id'] != uid):
+                for f in USER_PRIVATE_FIELDS:
+                    if f in o:
+                        o[f] = '********'
             return o
 
         if fields and (ids == [uid] or ids == uid):
@@ -718,16 +723,22 @@ class groups_view(osv.osv):
     def create(self, cr, uid, values, context=None):
         res = super(groups_view, self).create(cr, uid, values, context)
         self.update_user_groups_view(cr, uid, context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
         return res
 
     def write(self, cr, uid, ids, values, context=None):
         res = super(groups_view, self).write(cr, uid, ids, values, context)
         self.update_user_groups_view(cr, uid, context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(groups_view, self).unlink(cr, uid, ids, context)
         self.update_user_groups_view(cr, uid, context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
         return res
 
     def update_user_groups_view(self, cr, uid, context=None):

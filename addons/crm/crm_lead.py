@@ -150,7 +150,7 @@ class crm_lead(format_address, osv.osv):
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context and context.get('opportunity_id'):
-            action = self._get_formview_action(cr, user, context['opportunity_id'], context=context)
+            action = self.get_formview_action(cr, user, context['opportunity_id'], context=context)
             if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
                 view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
         res = super(crm_lead, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
@@ -876,6 +876,7 @@ class crm_lead(format_address, osv.osv):
                       (tree_view or False, 'tree'), (False, 'kanban'),
                       (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
+            'context': {'default_type': 'opportunity'}
         }
 
     def redirect_lead_view(self, cr, uid, lead_id, context=None):
@@ -982,11 +983,11 @@ class crm_lead(format_address, osv.osv):
             return 'crm.mt_lead_stage'
         return super(crm_lead, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
-    def message_get_reply_to(self, cr, uid, ids, context=None):
+    def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
         leads = self.browse(cr, SUPERUSER_ID, ids, context=context)
         team_ids = set([lead.team_id.id for lead in leads if lead.team_id])
-        aliases = self.pool['crm.team'].message_get_reply_to(cr, uid, list(team_ids), context=context)
+        aliases = self.pool['crm.team'].message_get_reply_to(cr, uid, list(team_ids), default=default, context=context)
         return dict((lead.id, aliases.get(lead.team_id and lead.team_id.id or 0, False)) for lead in leads)
 
     def get_formview_id(self, cr, uid, id, context=None):
@@ -1076,7 +1077,10 @@ class crm_lead(format_address, osv.osv):
             duration = _('unknown')
         else:
             duration = str(duration)
-        message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)") % (meeting_date, meeting_subject, duration)
+        meet_date = datetime.strptime(meeting_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        meeting_usertime = fields.datetime.context_timestamp(cr, uid, meet_date, context=context).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        html_time = "<time datetime='%s+00:00'>%s</time>" % (meeting_date, meeting_usertime)
+        message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)") % (html_time, meeting_subject, duration)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):

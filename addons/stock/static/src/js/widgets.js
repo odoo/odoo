@@ -946,12 +946,9 @@ var PickingMainWidget = MobileWidget.extend({
     },
     print_picking: function(){
         var self = this;
-        return new Model('stock.picking.type').call('read', [[self.picking_type_id], ['code'], new data.CompoundContext()])
-            .then(function(){
-                return new Model('stock.picking').call('do_print_picking',[[self.picking.id]])
-                       .then(function(action){
-                            return self.do_action(action);
-                       });
+        return new Model('stock.picking').call('do_print_picking',[[self.picking.id]])
+            .then(function(action){
+                 return self.do_action(action);
             });
     },
     picking_next: function(){

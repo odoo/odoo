@@ -1545,9 +1545,9 @@ class BaseModel(object):
                     x.pop(key, None)
                 return x
             ir_values_obj = self.pool.get('ir.values')
-            resprint = ir_values_obj.get(cr, uid, 'action', 'client_print_multi', [(self._name, False)], False, context)
-            resaction = ir_values_obj.get(cr, uid, 'action', 'client_action_multi', [(self._name, False)], False, context)
-            resrelate = ir_values_obj.get(cr, uid, 'action', 'client_action_relate', [(self._name, False)], False, context)
+            resprint = ir_values_obj.get_actions(cr, uid, 'client_print_multi', self._name, context=context)
+            resaction = ir_values_obj.get_actions(cr, uid, 'client_action_multi', self._name, context=context)
+            resrelate = ir_values_obj.get_actions(cr, uid, 'client_action_relate', self._name, context=context)
             resaction = [clean(action) for action in resaction if view_type == 'tree' or not action[2].get('multi')]
             resprint = [clean(print_) for print_ in resprint if view_type == 'tree' or not print_[2].get('multi')]
             #When multi="True" set it will display only in More of the list view
@@ -1808,7 +1808,7 @@ class BaseModel(object):
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
         try:
-            self.pool.cache.clear_prefix((self.pool.db_name, self._name))
+            self.pool.cache.clear_prefix((self._name,))
             self.pool._any_cache_cleared = True
         except AttributeError:
             pass
@@ -2422,8 +2422,12 @@ class BaseModel(object):
         """
         self._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
-        if context is None:
-            context = {}
+
+        # This prevents anything called by this method (in particular default
+        # values) from prefetching a field for which the corresponding column
+        # has not been added in database yet!
+        context = dict(context or {}, prefetch_fields=False)
+
         store_compute = False
         stored_fields = []              # new-style stored fields with compute
         todo_end = []

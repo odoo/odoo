@@ -517,7 +517,7 @@ function summernote_mousedown (event) {
     var r = range.create();
     if ($(r ? dom.node(r.sc) : event.srcElement || event.target).closest('#website-top-navbar, #oe_main_menu_navbar, .note-popover, .note-toolbar, .modal').length) {
         if (!$(event.target).is('input, select, label, button, a')) {
-            if (!remember_selection) {
+            if (!remember_selection && $editable[0]) {
                 remember_selection = range.create(dom.firstChild($editable[0]), 0);
             }
             try {
@@ -1218,7 +1218,7 @@ var RTE = Widget.extend({
             rng = $editable.data('range') || rng;
         }
         if (!rng && $target.length) {
-            rng = range.create($target[0],0);
+            rng = range.create($target.closest("*")[0],0);
         }
         if (rng) {
             try {

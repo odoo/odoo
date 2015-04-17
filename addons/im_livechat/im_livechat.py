@@ -26,6 +26,7 @@ import re
 
 from openerp.osv import osv, fields
 from openerp import api, models, tools
+from openerp import SUPERUSER_ID
 
 
 class im_livechat_channel(osv.Model):
@@ -155,7 +156,7 @@ class im_livechat_channel(osv.Model):
 
     def get_available_users(self, cr, uid, channel_id, context=None):
         """ get available user of a given channel """
-        channel = self.browse(cr, uid, channel_id, context=context)
+        channel = self.browse(cr, SUPERUSER_ID, channel_id, context=context)
         users = []
         for user_id in channel.user_ids:
             if (user_id.im_status == 'online'):
@@ -165,14 +166,18 @@ class im_livechat_channel(osv.Model):
     def get_channel_session(self, cr, uid, channel_id, anonymous_name, context=None):
         """ return a session given a channel : create on with a registered user, or return false otherwise """
         # get the avalable user of the channel
-        users = self.get_available_users(cr, uid, channel_id, context=context)
+        users = self.get_available_users(cr, SUPERUSER_ID, channel_id, context=context)
         if len(users) == 0:
             return False
         user_id = random.choice(users).id
+        # user to add to the session
+        user_to_add = [(4, user_id)]
+        if uid:
+            user_to_add.append((4, uid))
         # create the session, and add the link with the given channel
         Session = self.pool["im_chat.session"]
-        newid = Session.create(cr, uid, {'user_ids': [(4, user_id)], 'channel_id': channel_id, 'anonymous_name' : anonymous_name}, context=context)
-        return Session.session_info(cr, uid, [newid], context=context)
+        newid = Session.create(cr, SUPERUSER_ID, {'user_ids': user_to_add, 'channel_id': channel_id, 'anonymous_name' : anonymous_name}, context=context)
+        return Session.session_info(cr, SUPERUSER_ID, [newid], context=context)
 
     def test_channel(self, cr, uid, channel, context=None):
         if not channel:
@@ -227,14 +232,22 @@ class im_livechat_channel_rule(osv.Model):
 
     def match_rule(self, cr, uid, channel_id, url, country_id=False, context=None):
         """ determine if a rule of the given channel match with the given url """
-        domain = [('channel_id', '=', channel_id)]
+        def _match(rule_ids):
+            for rule in self.browse(cr, uid, rule_ids, context=context):
+                if re.search(rule.regex_url, url):
+                    return rule
+            return False
+        # first, search the country specific rules (the first match is returned)
         if country_id: # don't include the country in the research if geoIP is not installed
-            domain.append(('country_ids', 'in', country_id))
-        rule_ids = self.search(cr, uid, domain, context=context)
-        for rule in self.browse(cr, uid, rule_ids, context=context):
-            if re.search(rule.regex_url, url):
+            domain = [('country_ids', 'in', [country_id]), ('channel_id', '=', channel_id)]
+            rule_ids = self.search(cr, uid, domain, context=context)
+            rule = _match(rule_ids)
+            if rule:
                 return rule
-        return False
+        # second, fallback on the rules without country
+        domain = [('country_ids', '=', False), ('channel_id', '=', channel_id)]
+        rule_ids = self.search(cr, uid, domain, context=context)
+        return _match(rule_ids)
 
 
 class im_chat_session(osv.Model):

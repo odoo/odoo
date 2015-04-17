@@ -291,7 +291,9 @@ var BuildingBlock = Widget.extend({
                     }
                     // end
                 }
-                $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
+                if (!$(this).data("selector")) {
+                    $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
+                }
             });
 
         // select all default text to edit (if snippet default text)
@@ -310,7 +312,7 @@ var BuildingBlock = Widget.extend({
         // end
 
         // clean t-oe
-        $html.find('[data-oe-model]').each(function () {
+        $html.find('[data-oe-model], [data-oe-type]').each(function () {
             for (var k=0; k<this.attributes.length; k++) {
                 if (this.attributes[k].name.indexOf('data-oe-') === 0) {
                     $(this).removeAttr(this.attributes[k].name);
@@ -1125,6 +1127,11 @@ options.colorpicker = Option.extend({
 
         if (!this.$el.find('.colorpicker').length) {
             this.$el.find('li').append( core.qweb.render('website.colorpicker') );
+            }
+
+            if (this.$el.data('area')) {
+                this.$target = this.$target.find(this.$el.data('area'));
+                this.$el.removeData('area').removeAttr('area');
         }
 
         var classes = [];

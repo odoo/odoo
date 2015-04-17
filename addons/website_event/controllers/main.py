@@ -267,7 +267,7 @@ class website_event(http.Controller):
             registration_ids.append(
                 Registration.create(
                     cr, SUPERUSER_ID,
-                    Registration._prepare_attendee_values(cr, SUPERUSER_ID, registration),
+                    Registration._prepare_attendee_values(cr, uid, registration),
                     context=context))
 
         attendees = Registration.browse(cr, uid, registration_ids, context=context)

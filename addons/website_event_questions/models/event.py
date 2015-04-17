@@ -23,8 +23,8 @@ class EventRegistrationAnswer(models.Model):
     _name = 'event.registration.answer'
     _table = 'event_registration_answer'
 
-    event_answer_id = fields.Many2one('event.answer', required=True)
-    event_registration_id = fields.Many2one('event.registration', required=True)
+    event_answer_id = fields.Many2one('event.answer', required=True, ondelete='cascade')
+    event_registration_id = fields.Many2one('event.registration', required=True, ondelete='cascade')
 
 
 class EventRegistration(models.Model):

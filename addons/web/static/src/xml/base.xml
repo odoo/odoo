@@ -534,7 +534,7 @@
     <li class="oe_fields"><a href="#" data-action="get_view_fields">View Fields</a></li>
     <li class="oe_fvg"><a href="#" data-action="fvg">Fields View Get</a></li>
     <li class="oe_filters"><a href="#" data-action="manage_filters">Manage Filters</a></li>
-    <t t-if="uid === 1">
+    <t t-if="is_admin">
         <li class="oe_translate"><a href="#" data-action="translate">Technical Translation</a></li>
         <li class="oe_edit_view"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="active_view.controller.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/> View</a></li>
         <li class="oe_edit_searchview" t-if="searchview"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="searchview.view_id">Edit SearchView</a></li> 
@@ -1592,7 +1592,7 @@
     </t>
 </t>
 <t t-name="One2Many.listview" t-extend="ListView">
-    <t t-jquery="thead.ui-widget-header > tr:first">
+    <t t-jquery="thead > tr:first">
         this.removeAttr('t-if');
     </t>
 

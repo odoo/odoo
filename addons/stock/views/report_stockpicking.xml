@@ -71,7 +71,7 @@
                             </table>
                             <br/>
                             <br/>
-                            <table class="table table-condensed" t-if="not o.pack_operation_ids">
+                            <table class="table table-condensed">
                               <thead>
                                 <tr>
                                     <th><strong>Product</strong></th>
@@ -101,46 +101,6 @@
                                         </td>
                                         <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>
                                     </t>
-                                </tr>
-                              </tbody>
-                            </table>
-                            <table class="table table-condensed" t-if="o.pack_operation_ids">
-                              <thead>
-                                <tr>
-                                    <th><strong>Product</strong></th>
-                                    <th class="text-right"><strong>Quantity</strong></th>
-                                    <t t-if="o.picking_type_id.code != 'incoming'"><th><strong>Source</strong></th></t>
-                                    <th><strong>Barcode</strong></th>
-                                    <t t-if="o.picking_type_id.code != 'outgoing'"><th><strong>Destination</strong></th></t>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
-                                    <td><span t-field="pack_operation.product_id"/>
-                                        <t t-if="not pack_operation.product_id and pack_operation.package_id"><span  t-field="pack_operation.package_id"/></t></td>
-                                    <td class="text-right"><span t-field="pack_operation.product_qty"/> <span t-field="pack_operation.product_uom_id" groups="product.group_uom"/></td>
-                                    <t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="pack_operation.location_id"/>
-                                        <span t-if="pack_operation.package_id">:</span>
-                                        <span t-field="pack_operation.package_id"/>
-                                        <span t-if="pack_operation.lot_id">:</span>
-                                        <span t-field="pack_operation.lot_id"/>
-                                        </td>
-                                    </t>
-                                    <td>
-                                        <span t-if="pack_operation.lot_id">
-                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', pack_operation.lot_id.name, 600, 100)" style="width:300px;height:50px"/>
-                                        </span>
-                                        <span t-if="pack_operation.product_id and not pack_operation.lot_id and pack_operation.product_id.barcode">
-                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Barcode', pack_operation.product_id.barcode, 600, 100)" style="width:300px;height:50px"/>
-                                        </span>
-                                        <span t-if="pack_operation.package_id and not pack_operation.product_id">
-                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', pack_operation.package_id.name, 600, 100)" style="width:300px;height:50px"/>
-                                        </span>
-                                    </td>
-                                    <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="pack_operation.location_dest_id"/>
-                                        <span t-if="pack_operation.result_package_id">:</span>
-                                        <span t-field="pack_operation.result_package_id"/>
-                                    </td></t>
                                 </tr>
                               </tbody>
                             </table>
