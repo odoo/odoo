@@ -4,7 +4,6 @@ odoo.define('web.Session', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var utils = require('web.utils');
-var Model = require('web.Model');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -137,7 +136,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         }
         var def = this._groups_def[group];
         if (!def) {
-            var Users = new Model('res.users');
+            var Users = new openerp.web.Model('res.users');
             def = this._groups_def[group] = Users.call('has_group', [group]);
         }
         return def;
