@@ -34,19 +34,14 @@ class TwitterStream(models.Model, StreamListener):
         if self.agent_ids:
             def func(stream, user_ids):
                 return stream.filter(follow=user_ids)
-            # user_ids, last_agent = [], None
-            auth = Oauth(self.twitter_api_key, self.twitter_api_secret)
-            stream = None
-            user_ids = []
+            user_ids, last_agent = [], None
             for agent in self.agent_ids:
                 if agent['auth_user'] and agent['state'] != 'archive':
-                    auth.set_access_token(agent['twitter_access_token'], agent['twitter_access_token_secret'])
-                    stream = Stream(auth, self)
-                    # last_agent = agent
+                    last_agent = agent
                     user_ids.append(agent['auth_user'])
             if user_ids:
-                # auth = Oauth(self.twitter_api_key, self.twitter_api_secret)
-                # auth.set_access_token(last_agent['twitter_access_token'], last_agent['twitter_access_token_secret'])
+                auth = Oauth(self.twitter_api_key, self.twitter_api_secret)
+                auth.set_access_token(last_agent['twitter_access_token'], last_agent['twitter_access_token_secret'])
                 stream = Stream(auth, self)
                 self.streams_objs[self.id] = stream
                 start_new_thread(func, (stream, user_ids))
