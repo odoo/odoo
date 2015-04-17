@@ -407,7 +407,8 @@ added.
             self.field3 = True
 
   the changes performed during the method are then sent to the client program
-  and become visible to the user
+  and become visible to the user.
+  Warning: the fields used in the onchange decorator cannot be computed or related fields.
 
 * Both computed fields and new-API onchanges are automatically called by the
   client without having to add them in views
