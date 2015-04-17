@@ -7,7 +7,6 @@ var framework = require('web.framework');
 var Model = require('web.Model');
 var session = require('web.session');
 var Widget = require('web.Widget');
-var data = require('web.data');
 var utils = require('web.utils');
 
 var _t = core._t;

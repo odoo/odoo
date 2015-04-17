@@ -793,7 +793,6 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         this.set("value", false);
         this.set("values", []);
         this.records_orderer = new utils.DropMisordered();
-
         this.field_manager.on("view_content_has_changed", this, function() {
             var domain = new data.CompoundDomain(this.build_domain()).eval();
             if (! _.isEqual(domain, this.get("domain"))) {
@@ -805,7 +804,7 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         common.ReinitializeFieldMixin.initialize_field.call(this);
         this.on("change:domain", this, this.query_values);
         this.set("domain", new data.CompoundDomain(this.build_domain()).eval());
-        // this.on("change:values", this, this.render_value);
+        this.on("change:values", this, this.render_value);
     },
     query_values: function() {
         var self = this;
