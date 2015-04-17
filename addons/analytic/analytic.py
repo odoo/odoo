@@ -268,6 +268,7 @@ class account_analytic_account(osv.osv):
         default.update(
             code=False,
             line_ids=[],
+            child_ids=[],
             name=_("%s (copy)") % (analytic['name']))
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
