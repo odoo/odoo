@@ -261,13 +261,21 @@ class account_analytic_account(osv.osv):
     def name_create(self, cr, uid, name, context=None):
         raise osv.except_osv(_('Warning'), _("Quick account creation disallowed."))
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        """executed for all the objects down the hierarchy during copy"""
+        if not default:
+            default = {}
+        default.setdefault('code', False)
+        default.setdefault('line_ids', [])
+        return super(account_analytic_account, self).copy_data(cr, uid, id, default, context=context)
+
     def copy(self, cr, uid, id, default=None, context=None):
+        """ executed only on the toplevel copied object of the hierarchy.
+        Subobject are actually copied with copy_data"""
         if not default:
             default = {}
         analytic = self.browse(cr, uid, id, context=context)
         default.update(
-            code=False,
-            line_ids=[],
             name=_("%s (copy)") % (analytic['name']))
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
