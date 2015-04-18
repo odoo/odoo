@@ -1232,7 +1232,7 @@ class account_invoice_line(models.Model):
 
             sign = -1 if self.invoice_id.type in ['in_invoice', 'out_refund'] else 1
             self.price_subtotal = inv_cur.round(self.price_subtotal)
-            self.price_subtotal_signed = inv_cur.round(self.price_subtotal_signed * sign)
+            self.price_subtotal_signed = inv_cur.round(price_subtotal_signed * sign)
 
     @api.model
     def _default_price_unit(self):
