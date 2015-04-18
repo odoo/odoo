@@ -44,7 +44,7 @@ $('.oe_website_sale').each(function () {
             product_ids.push(entry[0]);});
         var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
 
-        openerp.jsonRpc("/shop/get_unit_price", 'call', {'product_ids': product_ids,'add_qty': parseInt(qty)})
+        ajax.jsonRpc("/shop/get_unit_price", 'call', {'product_ids': product_ids,'add_qty': parseInt(qty)})
         .then(function (data) {
             var current = product_dom.data("attribute_value_ids");
             for(var j=0; j < current.length; j++){
