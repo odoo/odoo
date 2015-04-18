@@ -136,7 +136,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         }
         var def = this._groups_def[group];
         if (!def) {
-            var Users = new openerp.web.Model('res.users');
+            var Model = window.openerp.web.Model;
+            var Users = new Model('res.users');
             def = this._groups_def[group] = Users.call('has_group', [group]);
         }
         return def;
