@@ -110,7 +110,8 @@ class document_file(osv.osv):
             ids.extend(parents[parent_id])
 
         # sort result according to the original sort ordering
-        ids = [id for id in orig_ids if id in ids]
+        set_ids = set(ids)
+        ids = [id for id in orig_ids if id in set_ids]
         return len(ids) if count else ids
 
     def copy(self, cr, uid, id, default=None, context=None):
