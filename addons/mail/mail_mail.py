@@ -113,6 +113,12 @@ class mail_mail(osv.Model):
                                 filter to further restrict the outgoing
                                 messages to send (by default all 'outgoing'
                                 messages are sent).
+
+                                If a 'mail_batch_size' key is present in
+                                context, it will be used to determine how many
+                                mails will be sent each time the queue is
+                                processed. Otherwise, the system parameter
+                                'mail.batch_size' will be used.
         """
         if context is None:
             context = {}
@@ -120,7 +126,11 @@ class mail_mail(osv.Model):
             filters = [('state', '=', 'outgoing')]
             if 'filters' in context:
                 filters.extend(context['filters'])
-            ids = self.search(cr, uid, filters, context=context)
+            limit = (context.get('mail_batch_size') or
+                     int(self.pool['ir.config_parameter']
+                         .get_param(cr, SUPERUSER_ID, 'mail.batch_size')) or
+                     None)
+            ids = self.search(cr, uid, filters, limit=limit, context=context)
         res = None
         try:
             # Force auto-commit - this is meant to be called by
