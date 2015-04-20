@@ -724,7 +724,7 @@ class mrp_production(osv.osv):
             #reset workcenter_lines in production order
             for line in results2:
                 line['production_id'] = production.id
-                workcenter_line_obj.create(cr, uid, line)
+                workcenter_line_obj.create(cr, uid, line, context)
         return results
 
     def action_compute(self, cr, uid, ids, properties=None, context=None):
@@ -1221,6 +1221,8 @@ class mrp_production(osv.osv):
         """ Confirms production order.
         @return: Newly generated Shipment Id.
         """
+        user_lang = self.pool.get('res.users').browse(cr, uid, [uid]).partner_id.lang
+        context = dict(context, lang=user_lang)
         uncompute_ids = filter(lambda x: x, [not x.product_lines and x.id or False for x in self.browse(cr, uid, ids, context=context)])
         self.action_compute(cr, uid, uncompute_ids, context=context)
         for production in self.browse(cr, uid, ids, context=context):
