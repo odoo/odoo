@@ -151,6 +151,8 @@ class _column(object):
 
     def __getattr__(self, name):
         """ Access a non-slot attribute. """
+        if name == '_args':
+            raise AttributeError(name)
         try:
             return self._args[name]
         except KeyError:
