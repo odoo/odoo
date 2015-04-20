@@ -24,6 +24,8 @@ import time
 
 from openerp.osv import fields, osv
 from openerp import api
+from openerp import exceptions
+
 
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
@@ -225,7 +227,7 @@ class res_partner(osv.osv):
                     'AND '+query+') AS l ' \
                     'RIGHT JOIN res_partner p ' \
                     'ON p.id = partner_id ) AS pl ' \
-                    'GROUP BY pid HAVING ' + where), 
+                    'GROUP BY pid HAVING ' + where),
                     (type,) + having_values)
         res = cr.fetchall()
         if not res:
@@ -253,11 +255,20 @@ class res_partner(osv.osv):
         AnalyticAccount = self.pool('account.analytic.account')
         results = {}
         for partner_id in ids:
-            results[partner_id] = {}
-            if 'contracts_count' in field_name:
-                results[partner_id]['contracts_count'] = AnalyticAccount.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context)
-            if 'journal_item_count' in field_name:
-                results[partner_id]['journal_item_count'] = MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context)
+            for field, getter in {
+                'contracts_count': lambda: (
+                    AnalyticAccount.search_count(
+                        cr,uid, [('partner_id', '=', partner_id)], context=context)
+                ),
+                'journal_item_count': lambda: (
+                    MoveLine.search_count(
+                        cr, uid, [('partner_id', '=', partner_id)], context=context)
+                )
+            }.items():
+                try:
+                    results.setdefault(partner_id, {})[field] = getter()
+                except exceptions.AccessError:
+                    results.setdefault(partner_id, {})[field] = None
         return results
 
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
