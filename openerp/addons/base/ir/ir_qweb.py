@@ -652,6 +652,8 @@ class FloatConverter(osv.AbstractModel):
 
     def precision(self, cr, uid, field, options=None, context=None):
         _, precision = field.digits or (None, None)
+        if options:
+            precision = options.get('digits', precision)
         return precision
 
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
