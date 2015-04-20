@@ -18,6 +18,7 @@ from collections import defaultdict
 from datetime import datetime
 from lxml import etree
 from os.path import join
+from xml.sax.saxutils import escape
 
 import config
 import misc
@@ -137,9 +138,109 @@ def encode(s):
         return s.encode('utf8')
     return s
 
+TRANSLATED_ELEMENTS = {
+    'a', 'abbr', 'audio', 'b', 'bdi', 'bdo', 'br', 'canvas', 'cite', 'code',
+    'data', 'datalist', 'del', 'dfn', 'em', 'embed', 'font', 'i', 'iframe',
+    'ins', 'kbd', 'keygen', 'map', 'mark', 'math', 'meter', 'object', 'output',
+    'progress', 'q', 'ruby', 's', 'samp', 'select', 'small', 'span', 'strong',
+    'sub', 'sup', 'svg', 'template', 'textarea', 'time', 'u', 'var', 'video',
+    'wbr', 'text',
+}
+
 TRANSLATED_ATTRS = {
     'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title',
 }
+
+def serialize(tag, attrib, content):
+    """ Return a serialized element with the given `tag`, attributes
+        `attrib`, and already-serialized `content`.
+    """
+    elem = etree.tostring(etree.Element(tag, attrib))
+    assert elem.endswith("/>")
+    return "%s>%s</%s>" % (elem[:-2], content, tag) if content else elem
+
+class XMLTranslator(object):
+    """ A sequence of serialized xml items, with some of them to translate
+        (todo) and others already translated (done). The purpose of this object
+        is to simplify the handling of phrasing elements (like <b>) that must be
+        translated together with their surrounding text.
+
+        For instance, the content of the "div" element below will be translated
+        as a whole (without surrounding spaces):
+
+            <div>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                <b>sed</b> do eiusmod tempor incididunt ut labore et dolore
+                magna aliqua. <span class="more">Ut enim ad minim veniam,
+                <em>quis nostrud exercitation</em> ullamco laboris nisi ut
+                aliquip ex ea commodo consequat.</span>
+            </div>
+
+    """
+    def __init__(self, callback):
+        self.callback = callback        # callback function to translate terms
+        self._done = []                 # translated strings
+        self._todo = []                 # todo strings that come after _done
+
+    def todo(self, text):
+        self._todo.append(text)
+
+    def all_todo(self):
+        return not self._done
+
+    def get_todo(self):
+        return "".join(self._todo)
+
+    def flush(self):
+        if self._todo:
+            todo = "".join(self._todo)
+            self._done.append(self.process_text(todo))
+            del self._todo[:]
+
+    def done(self, text):
+        self.flush()
+        self._done.append(text)
+
+    def get_done(self):
+        """ Complete the translations and return the result. """
+        self.flush()
+        return "".join(self._done)
+
+    def process_text(self, text):
+        """ Translate text.strip(), but keep the surrounding spaces from text. """
+        term = text.strip()
+        trans = term and self.callback(term)
+        return text.replace(term, trans) if trans else text
+
+    def process(self, node):
+        """ Process the given xml `node`: collect `todo` and `done` items. """
+        if isinstance(node, SKIPPED_ELEMENT_TYPES) or node.tag in SKIPPED_ELEMENTS:
+            # serialize the node as done, but keep its tail as todo
+            tail, node.tail = node.tail, None
+            self.done(etree.tostring(node))
+            self.todo(escape(tail or ""))
+            return
+
+        # process children nodes locally in child_trans
+        child_trans = XMLTranslator(self.callback)
+        child_trans.todo(escape(node.text or ""))
+        for child in node:
+            child_trans.process(child)
+
+        if (child_trans.all_todo() and
+                node.tag in TRANSLATED_ELEMENTS and
+                not any(attr.startswith("t-") for attr in node.attrib)):
+            # serialize the node element as todo
+            self.todo(serialize(node.tag, node.attrib, child_trans.get_todo()))
+        else:
+            # complete translations and serialize result as done
+            for attr in TRANSLATED_ATTRS:
+                if node.get(attr):
+                    node.set(attr, self.process_text(node.get(attr)))
+            self.done(serialize(node.tag, node.attrib, child_trans.get_done()))
+
+        # add node tail as todo
+        self.todo(escape(node.tail or ""))
 
 
 def xml_translate(callback, value):
@@ -149,29 +250,10 @@ def xml_translate(callback, value):
     if not value:
         return value
 
-    def process_text(text):
-        term = text.strip()
-        trans = term and callback(term)
-        return text.replace(term, trans) if trans else text
-
-    def process(node):
-        if not isinstance(node, SKIPPED_ELEMENT_TYPES):
-            if node.text:
-                node.text = process_text(node.text)
-        if node.tail:
-            node.tail = process_text(node.tail)
-        if node.tag == 'attribute' and node.get('name') in TRANSLATED_ATTRS:
-            if node.text:
-                node.text = process_text(node.text)
-        for attr in TRANSLATED_ATTRS:
-            if node.get(attr):
-                node.set(attr, process_text(node.get(attr)))
-        for child in node:
-            process(child)
-
+    trans = XMLTranslator(callback)
     root = etree.fromstring(encode(value))
-    process(root)
-    return etree.tostring(root, encoding='utf8')
+    trans.process(root)
+    return trans.get_done()
 
 
 #
