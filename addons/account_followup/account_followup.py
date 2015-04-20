@@ -23,6 +23,8 @@ from openerp import api
 from openerp.osv import fields, osv
 from lxml import etree
 from openerp.tools.translate import _
+from openerp import exceptions
+
 
 class followup(osv.osv):
     _name = 'account_followup.followup'
@@ -134,22 +136,24 @@ class res_partner(osv.osv):
         else:
             company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
         for partner in self.browse(cr, uid, ids, context=context):
-            amls = partner.unreconciled_aml_ids
             latest_date = False
             latest_level = False
             latest_days = False
             latest_level_without_lit = False
             latest_days_without_lit = False
-            for aml in amls:
-                if (aml.company_id == company) and (aml.followup_line_id != False) and (not latest_days or latest_days < aml.followup_line_id.delay):
-                    latest_days = aml.followup_line_id.delay
-                    latest_level = aml.followup_line_id.id
-                if (aml.company_id == company) and (not latest_date or latest_date < aml.followup_date):
-                    latest_date = aml.followup_date
-                if (aml.company_id == company) and (aml.blocked == False) and (aml.followup_line_id != False and 
-                            (not latest_days_without_lit or latest_days_without_lit < aml.followup_line_id.delay)):
-                    latest_days_without_lit =  aml.followup_line_id.delay
-                    latest_level_without_lit = aml.followup_line_id.id
+            try:
+                for aml in partner.unreconciled_aml_ids:
+                    if (aml.company_id == company) and (aml.followup_line_id != False) and (not latest_days or latest_days < aml.followup_line_id.delay):
+                        latest_days = aml.followup_line_id.delay
+                        latest_level = aml.followup_line_id.id
+                    if (aml.company_id == company) and (not latest_date or latest_date < aml.followup_date):
+                        latest_date = aml.followup_date
+                    if (aml.company_id == company) and (aml.blocked == False) and (aml.followup_line_id != False and 
+                                (not latest_days_without_lit or latest_days_without_lit < aml.followup_line_id.delay)):
+                        latest_days_without_lit =  aml.followup_line_id.delay
+                        latest_level_without_lit = aml.followup_line_id.id
+            except exceptions.AccessError:
+                pass
             res[partner.id] = {'latest_followup_date': latest_date,
                                'latest_followup_level_id': latest_level,
                                'latest_followup_level_id_without_lit': latest_level_without_lit}
@@ -336,14 +340,17 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, ids, context=context):
             worst_due_date = False
             amount_due = amount_overdue = 0.0
-            for aml in partner.unreconciled_aml_ids:
-                if (aml.company_id == company):
-                    date_maturity = aml.date_maturity or aml.date
-                    if not worst_due_date or date_maturity < worst_due_date:
-                        worst_due_date = date_maturity
-                    amount_due += aml.result
-                    if (date_maturity <= current_date):
-                        amount_overdue += aml.result
+            try:
+                for aml in partner.unreconciled_aml_ids:
+                    if (aml.company_id == company):
+                        date_maturity = aml.date_maturity or aml.date
+                        if not worst_due_date or date_maturity < worst_due_date:
+                            worst_due_date = date_maturity
+                        amount_due += aml.result
+                        if (date_maturity <= current_date):
+                            amount_overdue += aml.result
+            except exceptions.AccessError:
+                pass
             res[partner.id] = {'payment_amount_due': amount_due, 
                                'payment_amount_overdue': amount_overdue, 
                                'payment_earliest_due_date': worst_due_date}
