@@ -135,7 +135,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             loaded: function(self,users){ self.user = users[0]; },
         },{ 
             model:  'res.company',
-            fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id'],
+            fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'tax_calculation_rounding_method'],
             ids:    function(self){ return [self.user.company_id[0]] },
             loaded: function(self,companies){ self.company = companies[0]; },
         },{
@@ -1098,6 +1098,9 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var self = this;
             var res = [];
             var currency_rounding = this.pos.currency.rounding;
+            if (this.pos.company.tax_calculation_rounding_method == "round_globally"){
+               currency_rounding = currency_rounding * 0.00001;
+            }
             var base = price_unit;
             _(taxes).each(function(tax) {
                 if (tax.price_include) {
