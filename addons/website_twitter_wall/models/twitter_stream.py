@@ -84,3 +84,11 @@ class TwitterStream(models.Model, StreamListener):
                 self.env = api.Environment(new_cr, self.env.uid, self.env.context)
                 self.state = 'stop'
         return False
+
+    def on_disconnect(self, notice):
+        super(TwitterStream, self).on_disconnect(notice)
+        with api.Environment.manage():
+            with registry(self.env.cr.dbname).cursor() as new_cr:
+                self.env = api.Environment(new_cr, self.env.uid, self.env.context)
+                self.state = 'stop'
+        return False
