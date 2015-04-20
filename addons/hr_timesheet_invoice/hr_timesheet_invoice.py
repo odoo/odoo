@@ -159,14 +159,13 @@ class account_analytic_line(osv.osv):
             unit_price = total_price*-1.0 / total_qty
 
         factor = self.pool['hr_timesheet_invoice.factor'].browse(cr, uid, factor_id, context=uom_context)
-        factor_name = factor.customer_name or ''
         curr_invoice_line = {
             'price_unit': unit_price,
             'quantity': total_qty,
             'product_id': product_id,
             'discount': factor.factor,
             'invoice_id': invoice_id,
-            'name': factor_name,
+            'name': analytic_line_ids[0].name if not product_id else '',
             'uos_id': uom,
             'account_analytic_id': account.id,
         }
@@ -176,7 +175,6 @@ class account_analytic_line(osv.osv):
             factor_name = product_obj.name_get(cr, uid, [product_id], context=uom_context)[0][1]
             if factor.customer_name:
                 factor_name += ' - ' + factor.customer_name
-
                 general_account = product.property_account_income_id or product.categ_id.property_account_income_categ_id
                 if not general_account:
                     raise UserError(_("Configuration Error!") + '\n' + _("Please define income account for product '%s'.") % product.name)
@@ -259,7 +257,8 @@ class account_analytic_line(osv.osv):
             last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=invoice_context)
             invoices.append(last_invoice)
 
-            # use key (product, uom, user, invoiceable, analytic account, journal type)
+            # use key (dummy, product, uom, user, invoiceable, analytic account, journal type)
+            # dummy key added because it seperate invoice lines that doesn't have any product in line
             # creates one invoice line per key
             invoice_lines_grouping = {}
             for analytic_line in analytic_line_ids:
@@ -270,7 +269,8 @@ class account_analytic_line(osv.osv):
                 if not analytic_line.to_invoice:
                     raise UserError(_('Trying to invoice non invoiceable line for %s.') % (analytic_line.product_id.name))
 
-                key = (analytic_line.product_id.id,
+                key = (False if analytic_line.product_id else analytic_line.id,
+                    analytic_line.product_id.id,
                     analytic_line.product_uom_id.id,
                     analytic_line.user_id.id,
                     analytic_line.to_invoice.id,
@@ -279,12 +279,14 @@ class account_analytic_line(osv.osv):
                 invoice_lines_grouping.setdefault(key, []).append(analytic_line)
 
             # finally creates the invoice line
-            for (product_id, uom, user_id, factor_id, account, journal_type), lines_to_invoice in invoice_lines_grouping.items():
+            for (dummy, product_id, uom, user_id, factor_id, account, journal_type), lines_to_invoice in invoice_lines_grouping.items():
                 curr_invoice_line = self._prepare_cost_invoice_line(cr, uid, last_invoice,
                     product_id, uom, user_id, factor_id, account, lines_to_invoice,
                     journal_type, data, context=context)
 
-                invoice_line_obj.create(cr, uid, curr_invoice_line, context=context)
+                invoice = invoice_obj.browse(cr, uid, last_invoice, context=context);
+                line_context = dict(context, journal_id = invoice.journal_id.id)
+                invoice_line_obj.create(cr, uid, curr_invoice_line, context=line_context)
             self.write(cr, uid, [l.id for l in analytic_line_ids], {'invoice_id': last_invoice}, context=context)
             invoice_obj.compute_taxes(cr, uid, [last_invoice], context)
         return invoices
