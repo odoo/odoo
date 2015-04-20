@@ -99,7 +99,7 @@
                                         <field name="reward_discount_on_product_id" attrs="{'invisible': ['|', ('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}" placeholder="Select product"/>
                                         <field name="reward_partial_use" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" widget="radio"/>
                                         <field name="reward_gift_program_id" attrs="{'invisible': [('reward_type', '!=', 'coupon')]}" domain="[('program_type', '!=', 'apply_immediately'), ('state', '!=', 'closed')]" placeholder="Select program"/>
-                                        <field name="reward_shipping_free" widget="radio" class="oe_inline"/>
+                                        <!-- <field name="reward_shipping_free" widget="radio" class="oe_inline"/> -->
                                     </group>
                                 </form>
                             </page>

@@ -29,7 +29,7 @@ class SaleApplicability(models.Model):
                                       ('amount', 'Amount')], string="Type", required=True, default="product")
     product_id = fields.Many2one('product.product', string="Product")
     product_category_id = fields.Many2one('product.category', string="Product Categoy")
-    product_quantity = fields.Integer("Quantity", default=1)
+    product_quantity = fields.Integer("Quantity", default=1, help="Minimum quantity of product which is required to get reward")
     minimum_amount = fields.Float(string="Amount", help="Alteast amount, for that customer have to purchase to get the reward")
     applicability_tax = fields.Selection([('tax_included', 'Tax included'), ('tax_excluded', 'Tax excluded')], default="tax_excluded")
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.user.company_id)
@@ -53,7 +53,8 @@ class SaleReward(models.Model):
 
     reward_type = fields.Selection([('product', 'Product'),
                                     ('discount', 'Discount'),
-                                    ('coupon', 'Coupon')], string="Free gift", help="Type of reward to give to customer", default="product", required=True)
+                                    ('coupon', 'Coupon'),
+                                    ('free_shipping', 'Free Shipping')], string="Free gift", help="Type of reward to give to customer", default="product", required=True)
     reward_shipping_free = fields.Selection([('yes', 'Yes'), ('no', 'No')], string="Free Shipping", default="no", help="Shipment of the order is free or not")
     reward_product_product_id = fields.Many2one('product.product', string="Product")
     reward_quantity = fields.Integer(string="Quantity", default=1)
@@ -118,7 +119,7 @@ class SaleCouponProgram(models.Model):
     reward_id = fields.Many2one('sale.reward', string="Reward", ondelete='cascade', required=True)
     count_sale_order = fields.Integer(compute='_compute_so_count', default=0)
     count_coupons = fields.Integer(compute='_compute_coupon_count', default=0)
-    state = fields.Selection([('draft', 'Draft'), ('opened', 'Opened'), ('closed', 'Closed')], help="Shows the program states", default="draft")
+    state = fields.Selection([('draft', 'Draft'), ('opened', 'Opened'), ('closed', 'Closed')], help="Shows the program states\nDraft - Program will be save but can not be used\nOpened - Program cab be used\nClosed - Program can not be used", default="draft")
     nbr_uses_public_unique_code = fields.Integer(string="Expiration use", default=1)
     sale_order_id = fields.Many2one('sale.order', "Sale order id")
 
@@ -131,13 +132,12 @@ class SaleCouponProgram(models.Model):
         if self.program_type == 'public_unique_code':
             if fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date():
                 self.write({'state': 'closed'})
-        #close the program if it is expired
         if self.program_type == 'apply_immediately':
             if fields.date.today() > self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date()):
                 self.write({'state': 'closed'})
         if self.program_type == 'generated_coupon':
             if fields.date.today() > self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date()):
-                coupons_obj = self.env['sale.coupon'].search([('program_id', '=', self)])
+                coupons_obj = self.env['sale.coupon'].search([('program_id', '=', self.id)])
                 if coupons_obj:
                     for coupon in coupons_obj:
                         coupon.write({'state': 'expired'})
@@ -180,10 +180,6 @@ class SaleCouponProgram(models.Model):
                 return "Discount on " + self.reward_discount_on_product_id.name
             if self.reward_discount_on == 'cheapest_product':
                 return"Discount on cheapest product"
-
-    def check_is_program_closed(self):
-        if self.state == 'closed':
-            return True
 
     @api.multi
     def action_view_order(self, context=None):
