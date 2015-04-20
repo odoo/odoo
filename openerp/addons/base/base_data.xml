@@ -85,8 +85,14 @@ Administrator</span>]]></field>
             A group dedicated to the portal users, making groups
             restrictions more convenient.
         -->
+        <record model="ir.module.category" id="module_category_extra">
+            <field name="name">Other Extra Rights</field>
+            <field name="sequence">102</field>
+        </record>
+
         <record id="group_portal" model="res.groups">
             <field name="name">Portal</field>
+            <field name="category_id" ref="module_category_extra"/>
             <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual Odoo groups.</field>
         </record>
@@ -96,6 +102,7 @@ Administrator</span>]]></field>
         -->
         <record id="group_public" model="res.groups">
             <field name="name">Public</field>
+            <field name="category_id" ref="module_category_extra"/>
             <field name="comment">Public users have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual Odoo groups.</field>
         </record>
