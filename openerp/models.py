@@ -3768,6 +3768,18 @@ class BaseModel(object):
 
         return True
 
+    def log_access_write(self, cr, user, ids, vals, context=None):
+        log_access_vals = {}
+        for field in LOG_ACCESS_COLUMNS:
+            if vals.get(field, None) != None:
+                log_access_vals[field] = vals[field]
+        if not log_access_vals:
+            return True
+        self._log_access = False
+        result = self._write(cr, user, ids, log_access_vals, context=context)
+        self._log_access = True
+        return result
+
     def _write(self, cr, user, ids, vals, context=None):
         # low-level implementation of write()
         if not context:
