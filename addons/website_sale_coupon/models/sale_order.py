@@ -8,10 +8,15 @@ from openerp.exceptions import MissingError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    #reward_coupon_program_id = fields.Many2one('sale.couponprogram', string="Coupon program")
-    coupon_program_ids = fields.One2many('sale.couponprogram', 'sale_order_id', string='Coupon Programs')
-    applied_coupon_ids = fields.One2many('sale.coupon', 'used_in_order_id', string="Applied Coupons")
-    #generated_coupon_ids = fields.One2many('sale.coupon', 'origin_order_id', string="Generated coupons")
+    coupon_program_id = fields.Many2one('sale.couponprogram', string="Coupon program")
+    all_coupon_program_id = fields.One2many('sale.couponprogram', 'sale_order_id', string='Coupon Programs')
+    all_applied_coupons = fields.One2many('sale.coupon', 'used_in_order_id', string="Applied Coupons")
+    all_generated_coupons = fields.One2many('sale.coupon', 'origin_order_id', string="Generated coupons")
+    reward_amouunt = fields.Float(compute='_compute_reward_total')
+
+    @api.onchange('amount_total')
+    def _compute_reward_total(self):
+        self.reward_amouunt = sum([line.price_unit * line.product_uom_qty for line in self.order_line.search([('order_id', '=', self.id), ('product_id', '=', self.env.ref('website_sale_coupon.product_product_reward').id)])])
 
     @api.multi
     def _merge_duplicate_product_line(self):

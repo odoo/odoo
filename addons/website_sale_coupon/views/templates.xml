@@ -21,6 +21,31 @@
             </div>
         </div>
     </xpath>
+    <xpath expr="//table[@id='cart_products']/tbody" position="replace">
+        <t t-foreach="website_sale_order.website_order_line" t-as="line">
+            <tr t-if="line.product_id.name !='Reward'">
+                <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
+                <td t-if="line.product_id.product_tmpl_id">
+                    <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+                        <span t-field="line.product_id.image_small"
+                            t-field-options='{"widget": "image", "class": "img-rounded"}'/>
+                    </a>
+                </td>
+                <td t-if="line.product_id.product_tmpl_id">
+                    <strong t-field="line.product_id.with_context(display_default_code=False).display_name"/>
+                </td>
+                <td class="text-center">
+                    <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
+                     "widget": "monetary",
+                     "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                    }'/>
+                </td>
+                <td>
+                    <div t-esc="line.product_uom_qty"/>
+                </td>
+            </tr>
+        </t>
+    </xpath>
 </template>
 
 <template id="sales_coupon_code_cart" inherit_id="website_sale.cart" active="True">
@@ -38,16 +63,22 @@
             </div>
         </div>
     </xpath>
-    <xpath expr="//table[@id='cart_products']/tbody//td[last()]/div" position="attributes">
+    <xpath expr="//table[@id='cart_products']/tbody//tr" position="attributes">
         <attribute name="t-if">line.product_id.name !='Reward'</attribute>
     </xpath>
-    <xpath expr="//table[@id='cart_products']/tbody//td[4]//del" position="attributes">
-        <attribute name="t-if">line.product_id.name !='Reward'</attribute>
-    </xpath>
-    <xpath expr="//table[@id='cart_products']/tbody//td[last()]" position="inside">
-        <t t-if="line.product_id.name =='Reward'">
-            <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-esc="int(line.product_uom_qty)"/>
-        </t>
+</template>
+
+<template id="sales_coupon_reward" inherit_id="website_sale.total">
+    <xpath expr="//table[@id='cart_total']/thead//tr[last()]" position="after">
+        <tr width="120" class="text-muted" id="order_reward_amount">
+            <td><abbr>Reward:</abbr></td>
+            <td class="text-right">
+                <span t-field="website_sale_order.reward_amouunt" style="white-space: nowrap;" t-field-options='{
+                      "widget": "monetary",
+                      "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                    }'/>
+            </td>
+        </tr>
     </xpath>
 </template>
 </odoo>
