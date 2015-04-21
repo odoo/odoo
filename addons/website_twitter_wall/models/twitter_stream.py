@@ -25,9 +25,17 @@ class TwitterStream(models.Model, StreamListener):
     def start(self, cr):
         """ Start streaming """
         if not hasattr(self, '_id'):
-            stream_id = self.search(cr, SUPERUSER_ID, [], limit=1)
+            stream_id = self.search(cr, SUPERUSER_ID, [('state', '!=', 'start')], limit=1)
             for stream in self.browse(cr, SUPERUSER_ID, stream_id):
                 stream.start_streaming()
+
+    def clear_caches(self):
+        with api.Environment.manage():
+            with registry(self.pool.db_name).cursor() as new_cr:
+                self.env = api.Environment(new_cr, SUPERUSER_ID, {'lang': 'en_US'})
+                stream = self.env['twitter.stream'].search([('state', '=', 'start')], limit=1)
+                stream.state = 'stop'
+        return super(TwitterStream, self).clear_caches()
 
     @api.one
     def start_streaming(self):
