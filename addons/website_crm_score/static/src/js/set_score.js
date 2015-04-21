@@ -11,17 +11,20 @@
         start: function() {
             this._super.apply(this, arguments);
             var self = this;
-            this.is_tracked().then(function(data){
-                var add = $('<input type="checkbox" required="required"/>');
-                if (data[0]['track']) {
-                    add.attr('checked','checked');
-                    self.track = true;
-                }
-                else {
-                    self.track = false;
-                }
-                self.$el.find('h3[class="track-page"]').append(add);
-            });
+            var track_page_el = self.$el.find('h3[class="track-page"]');
+            if (track_page_el.length){
+                    this.is_tracked().then(function(data){
+                    var add = $('<input type="checkbox" required="required"/>');
+                    if (data[0]['track']) {
+                        add.attr('checked','checked');
+                        self.track = true;
+                    }
+                    else {
+                        self.track = false;
+                    }
+                    track_page_el.append(add);
+                });
+            }
         },
         is_tracked: function(val) {
             var obj = website.seo.Configurator.prototype.getMainObject();
