@@ -358,16 +358,16 @@ class mail_thread(osv.osv):
         existing_msg_ids = []
         # should mainly be True as message_parse generate one if missing
         # but, what about Odoo generated email returned to itself ?
-        if msg.get('message_id', False):
+        if msg.get('message-id', False):
             msg_obj = self.pool.get('mail.message')
-            domain = [('message_id', '=', msg.get('message_id'))]
+            domain = [('message-id', '=', msg.get('message-id'))]
             existing_msg_ids = msg_obj.search(cr,
                                               SUPERUSER_ID,
                                               domain,
                                               context=context)
             if existing_msg_ids:
                 _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
-                                msg.get('from'), msg.get('to'), msg.get('message_id'))
+                                msg.get('from'), msg.get('to'), msg.get('message-id'))
             else:
                 if msg.get('references') or msg.get('in-reply-to'):
                     references = msg.get('references') or msg.get('in-reply-to')
