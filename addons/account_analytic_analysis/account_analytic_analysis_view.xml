@@ -382,6 +382,11 @@
                         icon="fa-book"
                         name="%(action_contract_invoices_all)d"
                         type="action"/>
+                    <button class="oe_inline oe_stat_button"
+                            type="object" name="open_contract_invoices"
+                            icon="fa-pencil-square-o fa-fw" help="Overdue Invoices">
+                        <div><strong><field name="total_overdue" widget="monetary"/></strong><br/>Overdue</div>
+                    </button>
                 </xpath>
             </field>
         </record>
