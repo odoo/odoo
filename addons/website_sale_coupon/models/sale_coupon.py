@@ -26,9 +26,12 @@ class SaleApplicability(models.Model):
     validity_duration = fields.Integer("Validity Duration", default=1, help="Validity duration can be set according to validity type")
     expiration_use = fields.Integer("Expiration use", default=1, help="Number of Times coupon can be Used")
     purchase_type = fields.Selection([('product', 'Product'), ('category', 'Category'),
-                                      ('amount', 'Amount')], string="Type", required=True, default="product")
-    product_id = fields.Many2one('product.product', string="Product")
-    product_category_id = fields.Many2one('product.category', string="Product Categoy")
+                                      ('amount', 'Amount')], string="Type", required=True, default="product",
+                                     help="Product - On purchase of selected product, reward will be given\n" +
+                                          "Category - On purchase of any product from selected category, reward will be given\n" +
+                                          "Amount - On Purchase of entered amount or above than, reward will be given")
+    product_id = fields.Many2one('product.product', string="Product", help="On Purchase of selected product, reward will be provided")
+    product_category_id = fields.Many2one('product.category', string="Product Categoy", help="On purchase of any product from selected category, reward will be given ")
     product_quantity = fields.Integer("Quantity", default=1, help="Minimum quantity of product which is required to get reward")
     minimum_amount = fields.Float(string="Amount", help="Alteast amount, for that customer have to purchase to get the reward")
     applicability_tax = fields.Selection([('tax_included', 'Tax included'), ('tax_excluded', 'Tax excluded')], default="tax_excluded")
@@ -54,18 +57,29 @@ class SaleReward(models.Model):
     reward_type = fields.Selection([('product', 'Product'),
                                     ('discount', 'Discount'),
                                     ('coupon', 'Coupon'),
-                                    ('free_shipping', 'Free Shipping')], string="Free gift", help="Type of reward to give to customer", default="product", required=True)
-    reward_shipping_free = fields.Selection([('yes', 'Yes'), ('no', 'No')], string="Free Shipping", default="no", help="Shipment of the order is free or not")
-    reward_product_product_id = fields.Many2one('product.product', string="Product")
-    reward_quantity = fields.Integer(string="Quantity", default=1)
+                                    ('free_shipping', 'Free Shipping')], string="Free gift", default="product", required=True,
+                                   help="Product - Seleted product will be provided reward\n" +
+                                        "Discount - Discount will be provided as reward\n" +
+                                        "Coupon - Coupon code will be provided for further use as reward\n" +
+                                        "Free Shipping - No shipment charge will be applied")
+    #reward_shipping_free = fields.Selection([('yes', 'Yes'), ('no', 'No')], string="Free Shipping", default="no", help="Shipment of the order is free or not")
+    reward_product_product_id = fields.Many2one('product.product', string="Product", help="Reward Product")
+    reward_quantity = fields.Integer(string="Quantity", default=1, help="Reward product quantity")
     reward_gift_program_id = fields.Many2one('sale.couponprogram', string="Coupon program")
     reward_discount_type = fields.Selection([('no', 'No'), ('percentage', 'Percentage'),
-                                             ('amount', 'Fixed Amount')], string="Apply a discount", default="no")
+                                             ('amount', 'Fixed Amount')], string="Apply a discount", default="no",
+                                            help="No - No discount will be given\n" +
+                                                 "Percentage - Entered percentage discount will be given\n" +
+                                                 "Amount - Entered fixed amount discount will be given")
     reward_discount_percentage = fields.Float("Discount", help='The discount in percentage')
     reward_discount_amount = fields.Float("Discount", help='The discount in fixed amount')
     reward_discount_on = fields.Selection([('cart', 'On cart'), ('cheapest_product', 'On cheapest product'),
-                                           ('specific_product', 'On specific product')], string="Discount On", default="cart")
-    reward_discount_on_product_id = fields.Many2one('product.product', string="Product")
+                                           ('specific_product', 'On specific product')], string="Discount On", default="cart",
+                                          help="On cart - Discount on whole cart\n" +
+                                               "Cheapest product - Discount on cheapest product of the cart\n" +
+                                               "Specific product - Discount on seleted specific product")
+    reward_discount_on_product_id = fields.Many2one('product.product', string="Product",
+                                                    help="Reward discount on specific product will be provided on this seleted product")
     reward_tax = fields.Selection([('tax_included', 'Tax included'),
                                    ('tax_excluded', 'Tax excluded')], string="Tax", default="tax_excluded")
     reward_partial_use = fields.Selection([('yes', 'Yes'), ('no', 'No')], default="no", string="Partial use", help="The reward can be used partially or not")
@@ -111,7 +125,10 @@ class SaleCouponProgram(models.Model):
     program_code = fields.Char(string="Program Code")
     program_type = fields.Selection([('apply_immediately', 'Apply Immediately'), ('public_unique_code',
                                      'Public Unique Code'), ('generated_coupon', 'Generated Coupon')],
-                                    string="Program Type", help="The type of the coupon program", required=True, default="apply_immediately")
+                                    string="Program Type", required=True, default="apply_immediately",
+                                    help="Apply Immediately - No coupon will be required, if applicability is getting matched, reward will be provided\n" +
+                                         "Public unique code - Generated unique will be required to get reward\n" +
+                                         "Generated coupon - Coupon code will be required to get reward\n")
     active = fields.Boolean(string="Active", default=True, help="Coupon program is active or inactive")
     program_sequence = fields.Integer(string="Sequence", help="According to sequence, one rule is selected from multiple defined rules to apply")
     coupon_ids = fields.One2many('sale.coupon', 'id', string="Coupon Id")
@@ -119,13 +136,20 @@ class SaleCouponProgram(models.Model):
     reward_id = fields.Many2one('sale.reward', string="Reward", ondelete='cascade', required=True)
     count_sale_order = fields.Integer(compute='_compute_so_count', default=0)
     count_coupons = fields.Integer(compute='_compute_coupon_count', default=0)
-    state = fields.Selection([('draft', 'Draft'), ('opened', 'Opened'), ('closed', 'Closed')], help="Shows the program states\nDraft - Program will be save but can not be used\nOpened - Program cab be used\nClosed - Program can not be used", default="draft")
-    nbr_uses_public_unique_code = fields.Integer(string="Expiration use", default=1)
+    state = fields.Selection([('draft', 'Draft'), ('opened', 'Opened'), ('closed', 'Closed')],
+                             help="Draft - Program will be save but can not be used\n" +
+                                  "Opened - Program cab be used\n" +
+                                  "Closed - Program can not be used", default="draft")
+    nbr_uses_public_unique_code = fields.Integer(string="Expiration use", default=1, help="maximum number of times, the can be used")
     sale_order_id = fields.Many2one('sale.order', "Sale order id")
 
     _sql_constraints = [
         ('unique_program_code', 'unique(program_code)', 'The program code must be unique!'),
     ]
+
+    # def _compute_public_unique_code(self):
+    #     if self.program_type == 'public_unique_code':
+    #         self.program_code = 'PUC' + (hashlib.sha1(str(random.getrandbits(256)).encode('utf-8')).hexdigest()[:7]).upper()
 
     def _compute_program_state(self):
         #close the program when count reach to maximum
@@ -143,12 +167,14 @@ class SaleCouponProgram(models.Model):
                         coupon.write({'state': 'expired'})
                 self.write({'state': 'closed'})
 
+    @api.one
     def _compute_so_count(self):
         count = 0
         sales_order_line = self.env['sale.order.line'].search([('coupon_program_id', '=', self.id)])
         if sales_order_line:
             for order in sales_order_line:
                 count += 1
+
         self.count_sale_order = count
         self._compute_program_state()
 
@@ -204,8 +230,17 @@ class SaleCouponProgram(models.Model):
             'target': 'new',
         }
 
+    @api.onchange('reward_type')
+    def set_default_value(self):
+        self.reward_discount_type = 'no'
+        self.reward_discount_on = 'cart'
+        self.reward_discount_amount = 0
+        self.reward_discount_percentage = 0
+
     @api.one
     def action_opened(self):
+        if self.program_type == 'public_unique_code':
+            self.program_code = 'PUC' + (hashlib.sha1(str(random.getrandbits(256)).encode('utf-8')).hexdigest()[:7]).upper()
         self.state = 'opened'
 
     @api.one

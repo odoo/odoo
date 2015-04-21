@@ -35,7 +35,7 @@
                         <group>
                             <group>
                                 <field name="program_type" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="program_code" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')], 'readonly':[('state','!=','draft')], 'required': [('program_type','=','public_unique_code')]}"/>
+                                <field name="program_code" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')], 'readonly': 1}"/>
                             </group>
                             <group>
                                     <field name="active"/>
@@ -98,8 +98,7 @@
                                             ['|', ('reward_discount_type', '!=', 'percentage'),('reward_type', '!=', 'discount')]}" widget="radio"/>
                                         <field name="reward_discount_on_product_id" attrs="{'invisible': ['|', ('reward_discount_on', '!=', 'specific_product'), ('reward_type', '!=', 'discount')]}" placeholder="Select product"/>
                                         <field name="reward_partial_use" attrs="{'invisible': ['|',('reward_discount_type', '!=', 'amount'),('reward_type', '!=', 'discount')]}" widget="radio"/>
-                                        <field name="reward_gift_program_id" attrs="{'invisible': [('reward_type', '!=', 'coupon')]}" domain="[('program_type', '!=', 'apply_immediately'), ('state', '!=', 'closed')]" placeholder="Select program"/>
-                                        <!-- <field name="reward_shipping_free" widget="radio" class="oe_inline"/> -->
+                                        <field name="reward_gift_program_id" attrs="{'invisible': [('reward_type', '!=', 'coupon')]}" domain="[('program_type', '=', 'generated_coupon'), ('state', '!=', 'closed')]" placeholder="Select program"/>
                                     </group>
                                 </form>
                             </page>

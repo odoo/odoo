@@ -8,10 +8,10 @@ from openerp.exceptions import MissingError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    #reward_coupon_program_id = fields.Many2one('sale.couponprogram', string="Coupon program")
+    # reward_coupon_program_id = fields.Many2many('sale.couponprogram', string="Coupon program")
+    generated_coupon_ids = fields.One2many('sale.coupon', 'origin_order_id', string="Generated coupons")
     coupon_program_ids = fields.One2many('sale.couponprogram', 'sale_order_id', string='Coupon Programs')
     applied_coupon_ids = fields.One2many('sale.coupon', 'used_in_order_id', string="Applied Coupons")
-    #generated_coupon_ids = fields.One2many('sale.coupon', 'origin_order_id', string="Generated coupons")
     reward_amouunt = fields.Float(compute='_compute_reward_total')
 
     @api.onchange('amount_total')
@@ -37,7 +37,7 @@ class SaleOrder(models.Model):
             '&', ('purchase_type', '=', 'amount'), '|',
             '&', ('reward_tax', '=', 'tax_excluded'), ('minimum_amount', '<=', amount),
             '&', ('reward_tax', '=', 'tax_included'), ('minimum_amount', '<=', amount_untaxed),
-            '|', ('partner_id', '=', None), ('partner_id', '=', partner_id.id)]
+            '|', ('partner_id', '=', False), ('partner_id', '=', partner_id.id)]
 
     def _search_reward_programs(self, domain=[]):
         program = self.env['sale.couponprogram'].search(self._prepare_domain(domain, self.amount_total, self.amount_untaxed, self.partner_id),
@@ -72,6 +72,15 @@ class SaleOrder(models.Model):
     def _check_reward_on_order(self, order, domain, program_type):
         remove_reward_lines = []
         reward_lines = order.order_line.filtered(lambda x: x.coupon_program_id.purchase_type == 'amount' and x.coupon_program_id.program_type == program_type)
+        #to remove rerward coupon lines
+        # for program in self.reward_coupon_program_id:
+        #     if program.purchase_type == 'product':
+        #         pass
+        #     if program.purchase_type == 'category':
+        #         pass
+        #     if program.purchase_type == 'amount':
+        #         if self.amount_total < program.minimum_amount:
+        #             program = False
         for reward_line in reward_lines:
             program = reward_line.coupon_program_id
             #check for customer
@@ -163,13 +172,12 @@ class SaleOrder(models.Model):
         self._create_discount_reward(program, discount_amount, coupon_code)
 
     def _process_reward_coupon(self, program, coupon_code):
-        pass
-        #self.coupon_program_id = program.reward_gift_program_id.id
-        #self.reward_program_ids = program.id
+        self.coupon_program_ids += program
 
     def _process_reward_free_shipping(self, program, coupon_code):
         delivery_charge_line = self.order_line.filtered(lambda x: x.product_id.is_delivery_charge_product)
-        if delivery_charge_line:
+        reward_line = self.order_line.filtered(lambda x: x.coupon_program_id == program and x.generated_from_line_id.id is False)
+        if delivery_charge_line and not reward_line:
             vals = {
                 'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
                 'name': _("Free Shipping"),
@@ -182,6 +190,7 @@ class SaleOrder(models.Model):
             }
             self.order_line.with_context(noreward=True).create(vals)
             program.sale_order_id = self.id
+            #self.coupon_program_ids += program
 
     def _create_discount_reward(self, program, discount_amount, coupon_code):
         reward_product_id = self.env.ref('website_sale_coupon.product_product_reward')
@@ -204,6 +213,7 @@ class SaleOrder(models.Model):
             }
             self.order_line.with_context(noreward=True).create(vals)
             program.sale_order_id = self.id
+            # self.coupon_program_ids += program
             if coupon_code:
                 coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
                 if coupon_obj:
@@ -355,6 +365,7 @@ class SaleOrderLine(models.Model):
             }
             self.with_context(noreward=True).create(vals)
             program.sale_order_id = self.order_id.id
+            # self.order_id.coupon_program_ids += program
             if coupon_code:
                 coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
                 if coupon_obj:
@@ -405,10 +416,8 @@ class SaleOrderLine(models.Model):
                 discount_amount = sum([x.price_unit * (program.reward_discount_percentage / 100) for x in self.order_id.order_line if x.product_id == program.reward_discount_on_product_id])
         self._create_discount_reward(program, 1, discount_amount, coupon_code)
 
-        def _process_reward_coupon(self, program, coupon_code):
-            pass
-            #self.order_id.coupon_program_id = program.reward_gift_program_id.id
-            #self.order_id.reward_program_ids = program.id
+    def _process_reward_coupon(self, program, coupon_code):
+        self.order_id.coupon_program_ids += program
 
     def _process_reward_free_shipping(self, program, coupon_code):
         delivery_charge_line = self.order_id.order_line.filtered(lambda x: x.product_id.is_delivery_charge_product)
@@ -426,6 +435,7 @@ class SaleOrderLine(models.Model):
             }
             self.with_context(noreward=True).create(vals)
             program.sale_order_id = self.order_id.id
+            # self.order_id.coupon_program_ids += program
 
     @api.multi
     def unlink(self):
@@ -473,12 +483,11 @@ class SaleOrderLine(models.Model):
             self.process_rewards(programs, False)
         return programs
 
-    # @api.multi
-    # def button_confirm(self):
-    #     res = super(SaleOrderLine, self).button_confirm()
-    #     line = self[0]
-    #     if line.order_id.coupon_program_id:
-    #         coupon_obj = self.env['sale.coupon']
-    #         for coupon_program in self.order_id.coupon_program_id:
-    #             coupon_obj.create({'program_id': coupon_program.id, 'nbr_uses': 1, 'origin_order_id': line.order_id.id})
-    #     return res
+    @api.multi
+    def button_confirm(self):
+        res = super(SaleOrderLine, self).button_confirm()
+        line = self[0]
+        coupon_obj = self.env['sale.coupon']
+        for program in line.order_id.coupon_program_ids.filtered(lambda x: x.reward_type == 'coupon'):
+                coupon_obj.create({'program_id': program.reward_gift_program_id.id, 'nbr_uses': 1, 'origin_order_id': line.order_id.id})
+        return res
