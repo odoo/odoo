@@ -232,16 +232,16 @@ class mrp_bom(osv.osv):
         domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
                             '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT))]
         # order to prioritize bom with product_id over the one without
-        ids = self.search(cr, uid, domain, order='product_id', context=context)
+        ids = self.search(cr, uid, domain, order='sequence, product_id', context=context)
         # Search a BoM which has all properties specified, or if you can not find one, you could
-        # pass a BoM without any properties
+        # pass a BoM without any properties with the smallest sequence
         bom_empty_prop = False
         for bom in self.pool.get('mrp.bom').browse(cr, uid, ids, context=context):
             if not set(map(int, bom.property_ids or [])) - set(properties or []):
-                if properties and not bom.property_ids:
-                    bom_empty_prop = bom.id
-                else:
+                if not properties or bom.property_ids:
                     return bom.id
+                elif not bom_empty_prop:
+                    bom_empty_prop = bom.id
         return bom_empty_prop
 
     def _bom_explode(self, cr, uid, bom, product, factor, properties=None, level=0, routing_id=False, previous_products=None, master_bom=None, context=None):
