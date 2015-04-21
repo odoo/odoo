@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Assets Management',
+    'name': 'Assets & Revenue Recognitions Management',
     'version': '1.0',
     'depends': ['account_accountant'],
     'author': 'Odoo S.A.',
     'description': """
-Assets management.
-==========================================
+Assets management
+=================
+Manage assets owned by a company or a person.
+Keeps track of depreciations, and creates corresponding journal entries.
 
-This Module manages the assets owned by a company or an individual. It will keep 
-track of depreciation's occurred on those assets. And it allows to create Move's 
-of the depreciation lines.
+Revenue recognition
+===================
+Manage revenue recognition on product sales.
+Keeps track of the revenue recognition installments, and creates corresponding journal entries.
 
     """,
     'website': 'https://www.odoo.com/page/accounting',
