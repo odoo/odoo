@@ -523,6 +523,11 @@
                         name="%(action_account_analytic_overdue_all)d"
                         context="{'search_default_template_id': [active_id], 'default_template_id': active_id}"
                         type="action" attrs="{'invisible': [('type','!=','template')]}"/>
+                    <button class="oe_inline oe_stat_button"
+                            type="object" name="open_contract_invoices"
+                            icon="fa-pencil-square-o fa-fw" help="Overdue Invoices">
+                        <div class="o_form_field o_stat_info"><strong><field name="total_overdue" widget="monetary"/></strong><br/>Overdue</div>
+                    </button>
                 </div>
 
             </field>
