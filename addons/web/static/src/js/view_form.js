@@ -636,7 +636,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             // If field is not defined in the view, just ignore it
             if (field) {
                 var value_ = values[f];
-                if (field.get_value() != value_) {
+                if (field.get_value() !== value_) {
                     field._inhibit_on_change_flag = true;
                     field.set_value(value_);
                     field._inhibit_on_change_flag = false;
