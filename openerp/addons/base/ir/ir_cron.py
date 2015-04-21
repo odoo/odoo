@@ -185,6 +185,9 @@ class ir_cron(osv.osv):
             if numbercall:
                 # Reschedule our own main cron thread if necessary.
                 # This is really needed if this job runs longer than its rescheduling period.
+                nextcall = nextcall.astimezone(pytz.UTC)
+                # transform nextCall to UTC before scheduling job,
+                # as SUPERUSER (job['user_id']) may have a timezone too...
                 nextcall = calendar.timegm(nextcall.timetuple())
                 openerp.cron.schedule_wakeup(nextcall, cr.dbname)
         finally:
