@@ -41,7 +41,7 @@ var CrashManager = core.Class.extend({
         }
         if (error.code == -32098) {
             $.blockUI({ message: '' , overlayCSS: {'z-index': 9999, backgroundColor: '#FFFFFF', opacity: 0.0, cursor: 'wait'}});
-            var $indicator = $('<div class="oe_indicator">' + _t("Trying to reconnect... ") + '<i class="fa fa-refresh fa-spin"></i></div>');
+            var $indicator = $('<div class="oe_indicator">' + _t("Trying to reconnect... ") + '<i class="fa fa-refresh"></i></div>');
             $indicator.prependTo("body");
             var timeinterval = setInterval(function(){
                 ajax.jsonRpc('/web/webclient/version_info').then(function() {
