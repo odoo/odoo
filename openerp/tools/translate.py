@@ -218,7 +218,7 @@ def serialize(tag, attrib, content):
     """ Return a serialized element with the given `tag`, attributes
         `attrib`, and already-serialized `content`.
     """
-    elem = etree.tostring(etree.Element(tag, attrib), encoding='utf8')
+    elem = etree.tostring(etree.Element(tag, attrib))
     assert elem.endswith("/>")
     return "%s>%s</%s>" % (elem[:-2], content, tag) if content else elem
 
@@ -274,7 +274,7 @@ class XMLTranslations(object):
         if isinstance(node, SKIPPED_ELEMENT_TYPES) or node.tag in SKIPPED_ELEMENTS:
             # serialize the node as done, but keep its tail as todo
             tail, node.tail = node.tail, None
-            self.done(etree.tostring(node, encoding='utf8'))
+            self.done(etree.tostring(node))
             self.todo(escape(tail or ""))
             return
 
