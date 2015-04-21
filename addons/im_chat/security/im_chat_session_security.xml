@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
-        <record id="message_rule_1" model="ir.rule">
+        <record id="im_chat_message_rule_user" model="ir.rule">
             <field name="name">Can only read messages that you sent or messages sent to you</field>
             <field name="model_id" ref="model_im_chat_message"/>
             <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
@@ -12,7 +12,7 @@
             <field name="perm_create" eval="1"/>
         </record>
 
-        <record id="users_rule_1" model="ir.rule">
+        <record id="im_chat_session_rule_user" model="ir.rule">
             <field name="name">Can only modify your session</field>
             <field name="model_id" ref="model_im_chat_session"/>
             <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
@@ -23,7 +23,7 @@
             <field name="perm_create" eval="1"/>
         </record>
 
-        <record id="session_relation_rule_1" model="ir.rule">
+        <record id="im_chat_session_relation_rule_user" model="ir.rule">
             <field name="name">Can only modify your own session relations</field>
             <field name="model_id" ref="model_im_chat_conversation_state"/>
             <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
@@ -34,4 +34,4 @@
             <field name="perm_create" eval="1"/>
         </record>
     </data>
-</openerp>
+</odoo>

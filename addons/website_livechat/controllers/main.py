@@ -4,12 +4,12 @@ from openerp import http
 from openerp.http import request
 
 
-class website_rating_livechat(http.Controller):
+class WebsiteLivechat(http.Controller):
 
     @http.route('/livechat/', type='http', auth="public", website=True)
     def channel_list(self, **kw):
         # display the list of the channel
-        channels = request.env['im_livechat.channel'].sudo().search([('website_published','=', True)])
+        channels = request.env['im_livechat.channel'].search([('website_published', '=', True)])
         values = {
             'channels' : channels
         }

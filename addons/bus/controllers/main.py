@@ -16,8 +16,7 @@ class BusController(openerp.http.Controller):
     def send(self, channel, message):
         if not isinstance(channel, basestring):
             raise Exception("bus.Bus only string channels are allowed.")
-        registry, cr, uid = request.registry, request.cr, request.session.uid
-        return registry['bus.bus'].sendone(cr, uid, channel, message)
+        return request.env['bus.bus'].sendone(channel, message)
 
     # override to add channels
     def _poll(self, dbname, channels, last, options):

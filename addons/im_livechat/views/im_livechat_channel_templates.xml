@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- Template rendering the external HTML support page -->
@@ -84,8 +84,8 @@
         <!-- Template rendering all the scripts required to execute the Livechat from a page containing Odoo -->
         <template id="internal_loader" name="All the scripts to launch the LiveSupport from an internal Web Page">
             <!-- css style -->
-            <link property='stylesheet' t-att-href="'%s/web/css/im_livechat.internal_lib' % (url)" rel="stylesheet"/>
-            <!-- js of all the required lib (internal and external) -->
+            <link t-att-href="'%s/web/css/im_livechat.internal_lib' % (url)" rel="stylesheet"/>
+            <!-- js of all the required lib -->
             <script t-att-src="'%s/web/js/im_livechat.internal_lib' % (url)" type="text/javascript" />
             <!-- the loader -->
             <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript" />
@@ -114,7 +114,6 @@
             <script type="text/javascript" src="/web/static/src/js/framework/widget.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/registry.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/session.js"></script>
-            <!--<script type="text/javascript" src="/web/static/src/js/framework/model.js"></script>-->
             <script type="text/javascript" src="/web/static/src/js/framework/utils.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/core.js"></script>
 
@@ -169,4 +168,4 @@
         </template>
 
     </data>
-</openerp>
+</odoo>

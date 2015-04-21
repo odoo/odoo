@@ -2,17 +2,7 @@
 <openerp>
     <data>
 
-        <!-- History : form, list and search views -->
-        <record id="action_session_history" model="ir.actions.act_window">
-            <field name="name">History</field>
-            <field name="res_model">im_chat.session</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">list,form</field>
-            <field name="domain">[('channel_id', '!=', None)]</field>
-            <field name="context">{'group_by': ['channel_id', 'create_date:month']}</field>
-        </record>
-
-        <record id="im_chat_session_search" model="ir.ui.view">
+        <record id="im_chat_session_view_search" model="ir.ui.view">
             <field name="name">im_chat.session.search</field>
             <field name="model">im_chat.session</field>
             <field name="arch" type="xml">
@@ -30,7 +20,7 @@
             </field>
         </record>
 
-        <record id="im_chat_session_list_view" model="ir.ui.view">
+        <record id="im_chat_session_view_tree" model="ir.ui.view">
             <field name="name">im_chat.session.tree</field>
             <field name="model">im_chat.session</field>
             <field name="arch" type="xml">
@@ -42,7 +32,7 @@
             </field>
         </record>
 
-        <record id="im_chat_session_form_view" model="ir.ui.view">
+        <record id="im_chat_session_view_form" model="ir.ui.view">
             <field name="name">im_chat.session.form</field>
             <field name="model">im_chat.session</field>
             <field name="arch" type="xml">
@@ -85,6 +75,28 @@
                     </sheet>
                 </form>
             </field>
+        </record>
+
+
+        <record id="im_chat_session_action" model="ir.actions.act_window">
+            <field name="name">History</field>
+            <field name="res_model">im_chat.session</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('channel_id', '!=', None)]</field>
+            <field name="context">{'group_by': ['channel_id', 'create_date:month']}</field>
+        </record>
+
+        <record id="im_chat_session_action_from_channel" model="ir.actions.act_window">
+            <field name="name">Sessions</field>
+            <field name="res_model">im_chat.session</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('channel_id', 'in', [active_id])]</field>
+            <field name="context">{
+                'search_default_channel_id': [active_id],
+                'default_channel_id': active_id,
+            }</field>
+            <field name="search_view_id" ref="im_chat_session_view_search"/>
         </record>
 
     </data>

@@ -1,30 +1,33 @@
 # -*- coding: utf-8 -*-
-
-from openerp.osv import osv, fields
-
+from openerp import api, fields, models
 
 
-class res_users(osv.osv):
+class ResUsers(models.Model):
+
     _inherit = "res.users"
 
-    def _get_im_status(self, cr, uid, ids, fields, arg, context=None):
-        """ function computing the im_status field of the users """
-        r = dict((i, 'offline') for i in ids)
-        status_ids = self.pool['im_chat.presence'].search(cr, uid, [('user_id', 'in', ids)], context=context)
-        status = self.pool['im_chat.presence'].browse(cr, uid, status_ids, context=context)
-        for s in status:
-            r[s.user_id.id] = s.status
-        return r
+    im_status = fields.Char('IM Status', compute='_compute_im_status')
 
-    _columns = {
-        'im_status' : fields.function(_get_im_status, type="char", string="IM Status"),
-    }
+    @api.multi
+    def _compute_im_status(self):
+        """ Compute the im_status of the users """
+        res = dict((uid, 'offline') for uid in self.ids)
+        presences = self.env['im_chat.presence'].search([('user_id', 'in', self.ids)])
+        for presence in presences:
+            res[presence.user_id.id] = presence.status
+        for user in self:
+            user.im_status = res.get(user.id)
 
-    def im_search(self, cr, uid, name, limit=20, context=None):
-        """ search users with a name and return its id, name and im_status """
-        result = [];
+    @api.model
+    def im_search(self, name, limit=20):
+        """ Search users with a name and return its id, name and im_status.
+            Note : the user must be logged
+            :param name : the user name to search
+            :param limit : the limit of result to return
+        """
+        result = []
         # find the employee group
-        group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
+        group_employee = self.env['ir.model.data'].get_object_reference('base', 'group_user')[1]
 
         where_clause_base = " U.active = 't' "
         query_params = ()
@@ -33,7 +36,7 @@ class res_users(osv.osv):
             query_params = query_params + ('%'+name+'%',)
 
         # first query to find online employee
-        cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+        self._cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
                 FROM im_chat_presence S
                     JOIN res_users U ON S.user_id = U.id
                     JOIN res_partner P ON P.id = U.partner_id
@@ -43,12 +46,12 @@ class res_users(osv.osv):
                         AND S.status = 'online'
                 ORDER BY P.name
                 LIMIT %s
-        ''', query_params + (uid, group_employee, limit))
-        result = result + cr.dictfetchall()
+        ''', query_params + (self._uid, group_employee, limit))
+        result = result + self._cr.dictfetchall()
 
         # second query to find other online people
-        if(len(result) < limit):
-            cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+        if len(result) < limit:
+            self._cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
                 FROM im_chat_presence S
                     JOIN res_users U ON S.user_id = U.id
                     JOIN res_partner P ON P.id = U.partner_id
@@ -57,12 +60,12 @@ class res_users(osv.osv):
                         AND S.status = 'online'
                 ORDER BY P.name
                 LIMIT %s
-            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit-len(result)))
-            result = result + cr.dictfetchall()
+            ''', query_params + (tuple([u["id"] for u in result]) + (self._uid,), limit-len(result)))
+            result = result + self._cr.dictfetchall()
 
         # third query to find all other people
-        if(len(result) < limit):
-            cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+        if len(result) < limit:
+            self._cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
                 FROM res_users U
                     LEFT JOIN im_chat_presence S ON S.user_id = U.id
                     LEFT JOIN res_partner P ON P.id = U.partner_id
@@ -70,6 +73,6 @@ class res_users(osv.osv):
                         AND U.id NOT IN %s
                 ORDER BY P.name
                 LIMIT %s
-            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit-len(result)))
-            result = result + cr.dictfetchall()
+            ''', query_params + (tuple([u["id"] for u in result]) + (self._uid,), limit-len(result)))
+            result = result + self._cr.dictfetchall()
         return result

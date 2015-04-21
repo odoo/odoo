@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
-        <record model="ir.ui.view" id="view_livechat_support_session_pivot">
+        <record id="im_livechat_report_view_pivot" model="ir.ui.view">
             <field name="name">im_livechat.report.pivot</field>
             <field name="model">im_livechat.report</field>
             <field name="arch" type="xml">
@@ -15,7 +15,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_livechat_support_session_graph">
+        <record id="im_livechat_report_view_graph" model="ir.ui.view">
             <field name="name">im_livechat.report.graph</field>
             <field name="model">im_livechat.report</field>
             <field name="arch" type="xml">
@@ -26,7 +26,7 @@
             </field>
         </record>
 
-        <record id="im_livechat_session_search" model="ir.ui.view">
+        <record id="im_livechat_report_view_search" model="ir.ui.view">
             <field name="name">im_livechat.report.search</field>
             <field name="model">im_livechat.report</field>
             <field name="arch" type="xml">
@@ -49,7 +49,7 @@
             </field>
         </record>
 
-        <record id="action_livechat_support_report" model="ir.actions.act_window">
+        <record id="im_livechat_report_action" model="ir.actions.act_window">
             <field name="name">Livechat Support Report</field>
             <field name="res_model">im_livechat.report</field>
             <field name="view_type">form</field>
@@ -58,9 +58,18 @@
         </record>
 
 
-        <menuitem id="menu_reporting_livechat" name="Report" parent="menu_livechat_root" sequence="50" groups="group_im_livechat_manager"/>
+        <menuitem
+            id="menu_reporting_livechat"
+            name="Report"
+            parent="menu_livechat_root"
+            sequence="50"
+            groups="im_livechat_group_manager"/>
 
-        <menuitem name="Support Statistics" parent="menu_reporting_livechat" id="livechat_support_report_session" action="action_livechat_support_report"/>
+        <menuitem
+            id="livechat_support_report_session"
+            name="Support Statistics"
+            parent="menu_reporting_livechat"
+            action="im_livechat_report_action"/>
 
     </data>
-</openerp>
+</odoo>

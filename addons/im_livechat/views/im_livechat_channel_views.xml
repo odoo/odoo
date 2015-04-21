@@ -2,10 +2,7 @@
 <openerp>
     <data>
 
-        <!--
-            Views for im_livechat.channel
-        -->
-        <record id="action_support_channels" model="ir.actions.act_window">
+        <record id="im_livechat_channel_action" model="ir.actions.act_window">
             <field name="name">Live Chat Channels</field>
             <field name="res_model">im_livechat.channel</field>
             <field name="view_mode">kanban,form</field>
@@ -23,8 +20,8 @@
             </field>
         </record>
 
-        <record id="support_channel_kanban" model="ir.ui.view">
-            <field name="name">support_channel.kanban</field>
+        <record id="im_livechat_channel_view_kanban" model="ir.ui.view">
+            <field name="name">im_livechat.channel.kanban</field>
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
                 <kanban>
@@ -55,8 +52,8 @@
                                                 </i>
                                             </p>
                                             <div style="margin-top:5px;">
-                                                <button t-if="record.are_you_inside.raw_value" name="quit" type="object" class="btn btn-default btn-xs">Quit</button>
-                                                <button t-if="! record.are_you_inside.raw_value" name="join" type="object" class="btn btn-info btn-xs">Join</button>
+                                                <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-default btn-xs">Quit</button>
+                                                <button t-if="! record.are_you_inside.raw_value" name="action_join" type="object" class="btn btn-info btn-xs">Join</button>
                                             </div>
                                         </div>
                                     </div>
@@ -68,11 +65,11 @@
             </field>
         </record>
 
-        <record id="support_channel_form" model="ir.ui.view">
-            <field name="name">support_channel.form</field>
+        <record id="im_livechat_channel_view_form" model="ir.ui.view">
+            <field name="name">im_livechat.channel.form</field>
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
-                <form string="Support Channels" version="7.0">
+                <form>
                 <sheet>
                     <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
@@ -81,14 +78,13 @@
                             <field name="name" placeholder="e.g. YourWebsite.com"/>
                         </h1>
                         <div>
-                            <button type="object" name="join" class="oe_highlight" string="Join Channel" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
-                            <button type="object" name="quit" string="Leave Channel" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
-                            <button type="object" name="test_channel" string="Test" attrs='{"invisible": [["web_page", "=", False]]}'/>
+                            <button type="object" name="action_join" class="oe_highlight" string="Join Channel" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
+                            <button type="object" name="action_quit" string="Leave Channel" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
                             <field name="are_you_inside" invisible="1"/>
                         </div>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('nbr_session','=', 0)]}" name="%(action_session_channel)d" icon="fa-comments">
+                        <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('nbr_session','=', 0)]}" name="%(im_chat_session_action_from_channel)d" icon="fa-comments">
                             <field string="Sessions" name="nbr_session" widget="statinfo"/>
                         </button>
                         <button name="action_view_rating" attrs="{'invisible':[('rating_percentage_satisfaction','=', -1)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
@@ -146,10 +142,8 @@
 
 
 
-        <!--
-            Views for im_livechat_channel_rule
-        -->
-        <record id="im_livechat_channel_rule_tree_view" model="ir.ui.view">
+        <!-- im_livechat.channel.rule -->
+        <record id="im_livechat_channel_rule_view_tree" model="ir.ui.view">
             <field name="name">im.livechat.channel.rule.tree</field>
             <field name="model">im_livechat.channel.rule</field>
             <field name="arch" type="xml">
@@ -162,7 +156,7 @@
             </field>
         </record>
 
-        <record id="im_livechat_channel_rule_form_view" model="ir.ui.view">
+        <record id="im_livechat_channel_rule_view_form" model="ir.ui.view">
             <field name="name">im_livechat.channel.rule.form</field>
             <field name="model">im_livechat.channel.rule</field>
             <field name="type">form</field>
@@ -185,11 +179,27 @@
 
 
         <!-- Menu items -->
-        <menuitem id="menu_livechat_root" groups="group_im_livechat" name="Live Chat" sequence="34"/>
+        <menuitem
+            id="menu_livechat_root"
+            name="Live Chat"
+            groups="im_livechat_group_user"
+            sequence="34"/>
 
-        <menuitem name="Channels" parent="menu_livechat_root" id="support_channels" action="action_support_channels" groups="group_im_livechat" sequence="5"/>
+        <menuitem
+            id="support_channels"
+            name="Channels"
+            parent="menu_livechat_root"
+            action="im_livechat_channel_action"
+            groups="im_livechat_group_user"
+            sequence="5"/>
 
-        <menuitem name="History" parent="menu_livechat_root" id="session_history" action="action_session_history" groups="group_im_livechat" sequence="10"/>
+        <menuitem
+            id="session_history"
+            name="History"
+            parent="menu_livechat_root"
+            action="im_chat_session_action"
+            groups="im_livechat_group_user"
+            sequence="10"/>
 
     </data>
 </openerp>

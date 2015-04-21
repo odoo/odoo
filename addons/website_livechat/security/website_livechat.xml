@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <record model="ir.rule" id="website_channel_public">
+        <record id="im_livechat_channel_rule_public" model="ir.rule">
             <field name="name">website_livechat.channel.public</field>
             <field name="model_id" ref="im_livechat.model_im_livechat_channel"/>
             <field name="domain_force">[('website_published', '=', True)]</field>

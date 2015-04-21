@@ -3,7 +3,8 @@ from openerp import api, models, fields
 from openerp.addons.website.models.website import slug
 
 
-class im_livechat_channel(models.Model):
+class ImLivechatChannel(models.Model):
+
     _name = 'im_livechat.channel'
     _inherit = ['im_livechat.channel', 'website.published.mixin']
 

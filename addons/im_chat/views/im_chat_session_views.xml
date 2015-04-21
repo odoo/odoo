@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
-        <record id="action_im_chat_shortcode" model="ir.actions.act_window">
+        <!-- im_chat.shortcode -->
+        <record id="im_chat_shortcode_action" model="ir.actions.act_window">
             <field name="name">Chat Shortcode</field>
             <field name="res_model">im_chat.shortcode</field>
             <field name="view_mode">tree,form</field>
@@ -15,7 +16,7 @@
             </field>
         </record>
 
-        <record id="im_chat_shortcode_tree_view" model="ir.ui.view">
+        <record id="im_chat_shortcode_view_tree" model="ir.ui.view">
             <field name="name">im_chat.shortcode.tree</field>
             <field name="model">im_chat.shortcode</field>
             <field name="arch" type="xml">
@@ -27,7 +28,7 @@
             </field>
         </record>
 
-        <record id="im_chat_shortcode_form_view" model="ir.ui.view">
+        <record id="im_chat_shortcode_view_form" model="ir.ui.view">
             <field name="name">im_chat.shortcode.form</field>
             <field name="model">im_chat.shortcode</field>
             <field name="arch" type="xml">
@@ -44,4 +45,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

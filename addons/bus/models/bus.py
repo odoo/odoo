@@ -2,19 +2,19 @@
 import datetime
 import json
 import logging
+import random
 import select
+import simplejson
 import threading
 import time
-import random
 
-import simplejson
 import openerp
-from openerp.osv import osv, fields
-from openerp.http import request
+from openerp import api, fields, models
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
+# longpolling timeout connection
 TIMEOUT = 50
 
 #----------------------------------------------------------
@@ -28,53 +28,67 @@ def hashable(key):
         key = tuple(key)
     return key
 
-class ImBus(osv.Model):
-    _name = 'bus.bus'
-    _columns = {
-        'id' : fields.integer('Id'),
-        'create_date' : fields.datetime('Create date'),
-        'channel' : fields.char('Channel'),
-        'message' : fields.char('Message'),
-    }
 
-    def gc(self, cr, uid):
+class ImBus(models.Model):
+
+    _name = 'bus.bus'
+
+    create_date = fields.Datetime('Create date')
+    channel = fields.Char('Channel')
+    message = fields.Char('Message')
+
+    @api.model
+    def gc(self):
         timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT*2)
         domain = [('create_date', '<', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
-        ids  = self.search(cr, openerp.SUPERUSER_ID, domain)
-        self.unlink(cr, openerp.SUPERUSER_ID, ids)
+        return self.sudo().search(domain).unlink()
 
-    def sendmany(self, cr, uid, notifications):
+    @api.model
+    def sendmany(self, notifications):
         channels = set()
         for channel, message in notifications:
             channels.add(channel)
             values = {
-                "channel" : json_dump(channel),
-                "message" : json_dump(message)
+                "channel": json_dump(channel),
+                "message": json_dump(message)
             }
-            self.pool['bus.bus'].create(cr, openerp.SUPERUSER_ID, values)
-            cr.commit()
+            self.sudo().create(values)
+            self.env.cr.commit()
             if random.random() < 0.01:
-                self.gc(cr, uid)
+                self.gc()
         if channels:
             with openerp.sql_db.db_connect('postgres').cursor() as cr2:
                 cr2.execute("notify imbus, %s", (json_dump(list(channels)),))
 
-    def sendone(self, cr, uid, channel, message):
-        self.sendmany(cr, uid, [[channel, message]])
+    @api.model
+    def sendone(self, channel, message):
+        self.sendmany([[channel, message]])
 
-    def poll(self, cr, uid, channels, last=0):
+    @api.model
+    def poll(self, channels, last=0):
         # first poll return the notification in the 'buffer'
         if last == 0:
             timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
             domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
-        else:
-            # else returns the unread notifications
-            domain = [('id','>',last)]
+        else:  # else returns the unread notifications
+            domain = [('id', '>', last)]
         channels = [json_dump(c) for c in channels]
-        domain.append(('channel','in',channels))
-        notifications = self.search_read(cr, openerp.SUPERUSER_ID, domain)
-        return [{"id":notif["id"], "channel": simplejson.loads(notif["channel"]), "message":simplejson.loads(notif["message"])} for notif in notifications]
+        domain.append(('channel', 'in', channels))
+        notifications = self.sudo().search_read(domain)
+        # list of notification to return
+        result = []
+        for notif in notifications:
+            result.append({
+                'id': notif['id'],
+                'channel': simplejson.loads(notif['channel']),
+                'message': simplejson.loads(notif['message']),
+            })
+        return result
 
+
+#----------------------------------------------------------
+# Dispatcher
+#----------------------------------------------------------
 class ImDispatch(object):
     def __init__(self):
         self.channels = {}
@@ -97,8 +111,8 @@ class ImDispatch(object):
         # or wait for future ones
         if not notifications:
             event = self.Event()
-            for c in channels:
-                self.channels.setdefault(hashable(c), []).append(event)
+            for channel in channels:
+                self.channels.setdefault(hashable(channel), []).append(event)
             try:
                 event.wait(timeout=timeout)
                 with registry.cursor() as cr:
@@ -116,7 +130,7 @@ class ImDispatch(object):
             cr.execute("listen imbus")
             cr.commit();
             while True:
-                if select.select([conn], [], [], TIMEOUT) == ([],[],[]):
+                if select.select([conn], [], [], TIMEOUT) == ([], [], []):
                     pass
                 else:
                     conn.poll()
@@ -125,10 +139,10 @@ class ImDispatch(object):
                         channels.extend(json.loads(conn.notifies.pop().payload))
                     # dispatch to local threads/greenlets
                     events = set()
-                    for c in channels:
-                        events.update(self.channels.pop(hashable(c),[]))
-                    for e in events:
-                        e.set()
+                    for channel in channels:
+                        events.update(self.channels.pop(hashable(channel), []))
+                    for event in events:
+                        event.set()
 
     def run(self):
         while True:

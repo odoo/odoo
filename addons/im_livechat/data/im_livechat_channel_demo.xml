@@ -1,22 +1,20 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
-
-        <record id="channel_website" model="im_livechat.channel">
+        <record id="im_livechat_channel_demo" model="im_livechat.channel">
             <field name="name">YourWebsite.com</field>
             <field name="default_message">Hello, how may I help you?</field>
         </record>
 
-        <record id="group_im_livechat" model="res.groups">
-            <field name="users" eval="[(4, ref('base.user_demo'))]"/>
-        </record>
-
-        <record id="channel_rule" model="im_livechat.channel.rule">
+        <record id="im_livechat_channel_rule_demo" model="im_livechat.channel.rule">
             <field name="regex_url">/im_livechat/</field>
             <field name="action">auto_popup</field>
             <field name="auto_popup_timer">3</field>
-            <field name="channel_id" ref="channel_website" />
+            <field name="channel_id" ref="im_livechat_channel_demo" />
         </record>
 
+        <record id="im_livechat.im_livechat_group_user" model="res.groups">
+            <field name="users" eval="[(4, ref('base.user_demo'))]"/>
+        </record>
     </data>
-</openerp>
+</odoo>
