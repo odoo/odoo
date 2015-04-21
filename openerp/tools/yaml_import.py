@@ -487,6 +487,7 @@ class YamlInterpreter(object):
                             if key not in fields:
                                 # do not shadow values explicitly set in yaml.
                                 record_dict[key] = process_val(key, val)
+                                # locals_dict.update(record_dict)
                         else:
                             _logger.debug("The returning field '%s' from your on_change call '%s'"
                                             " does not exist either on the object '%s', either in"
