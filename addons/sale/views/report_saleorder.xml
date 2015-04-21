@@ -52,13 +52,16 @@
                 </div>
             </div>
 
+            <!-- Is there a discount on at least one line? -->
+            <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
+
             <table class="table table-condensed">
                 <thead>
                     <tr>
                         <th>Description</th>
                         <th class="text-right">Quantity</th>
                         <th class="text-right">Unit Price</th>
-                        <th class="text-right"><span groups="sale.group_discount_per_so_line">Disc.(%)</span></th>
+                        <th t-if="display_discount" class="text-right"><span groups="sale.group_discount_per_so_line">Disc.(%)</span></th>
                         <th class="text-right">Taxes</th>
                         <th class="text-right">Price</th>
                     </tr>
@@ -75,7 +78,7 @@
                         <td class="text-right">
                             <span t-field="l.price_unit"/>
                         </td>
-                        <td class="text-right" groups="sale.group_discount_per_so_line">
+                        <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
                             <span t-field="l.discount"/>
                         </td>
                         <td>

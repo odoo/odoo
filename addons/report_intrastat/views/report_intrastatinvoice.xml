@@ -38,6 +38,9 @@
                 </div>
             </div>
 
+            <!-- Is there a discount on at least one line? -->
+            <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line])"/>
+
             <table class="table table-condensed">
                 <thead>
                     <tr>
@@ -48,7 +51,7 @@
                         <th class="text-right">Quantity</th>
                         <th groups="product.group_uom">Unit of measure</th>
                         <th class="text-right">Unit Price</th>
-                        <th class="text-right" groups="sale.group_discount_per_so_line">Discount (%)</th>
+                        <th class="text-right" t-if="display_discount" groups="sale.group_discount_per_so_line">Discount (%)</th>
                         <th class="text-right">Amount</th>
                     </tr>
                 </thead>
@@ -61,7 +64,7 @@
                         <td class="text-right"><span t-field="l.quantity"/></td>
                         <td groups="product.group_uom"><span t-field="l.uos_id"/></td>
                         <td class="text-right"><span t-field="l.price_unit"/></td>
-                        <td groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
+                        <td t-if="display_discount" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
                         <td class="text-right">
                             <span t-field="l.price_subtotal"
                                 t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
