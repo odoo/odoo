@@ -30,6 +30,8 @@ import xmlrpclib
 from osv import osv, fields
 from tools.translate import _
 from mail_message import decode, to_email
+from openerp import SUPERUSER_ID
+
 
 _logger = logging.getLogger('mail')
 
@@ -353,27 +355,41 @@ class mail_thread(osv.osv):
             del msg['attachments']
 
         res_id = False
-        if msg.get('references') or msg.get('in-reply-to'):
-            references = msg.get('references') or msg.get('in-reply-to')
-            match = tools.reference_re.search(references)
-            if match: res_id = match.group(1)
-        if not res_id:
-            match = tools.res_re.search(msg['subject'])
-            if match: res_id = match.group(1)
-        if res_id:
-            res_id = int(res_id)
-            if model_pool.exists(cr, uid, res_id) and hasattr(model_pool, 'message_update'):
-                    model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
+        existing_msg_ids = []
+        # should mainly be True as message_parse generate one if missing
+        # but, what about Odoo generated email returned to itself ?
+        if msg.get('message_id', False):
+            msg_obj = self.pool.get('mail.message')
+            domain = [('message_id', '=', msg.get('message_id'))]
+            existing_msg_ids = msg_obj.search(cr,
+                                              SUPERUSER_ID,
+                                              domain,
+                                              context=context)
+            if existing_msg_ids:
+                _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
+                                msg.get('from'), msg.get('to'), msg.get('message_id'))
             else:
-                # referenced thread was not found, we'll have to create a new one
-                res_id = False
-        if not res_id:
-            if hasattr(model_pool, 'message_new'):
-                res_id = model_pool.message_new(cr, uid, msg, custom_values, context=context)
-            else:
-                raise Exception('No message_new() method on target model %s, cannot deliver mail!' % model)
-        #To forward the email to other followers
-        self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
+                if msg.get('references') or msg.get('in-reply-to'):
+                    references = msg.get('references') or msg.get('in-reply-to')
+                    match = tools.reference_re.search(references)
+                    if match: res_id = match.group(1)
+                if not res_id:
+                    match = tools.res_re.search(msg['subject'])
+                    if match: res_id = match.group(1)
+                if res_id:
+                    res_id = int(res_id)
+                    if model_pool.exists(cr, uid, res_id) and hasattr(model_pool, 'message_update'):
+                            model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
+                    else:
+                        # referenced thread was not found, we'll have to create a new one
+                        res_id = False
+                if not res_id:
+                    if hasattr(model_pool, 'message_new'):
+                        res_id = model_pool.message_new(cr, uid, msg, custom_values, context=context)
+                    else:
+                        raise Exception('No message_new() method on target model %s, cannot deliver mail!' % model)
+                #To forward the email to other followers
+                self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
         return res_id
 
     # for backwards-compatibility with old scripts
