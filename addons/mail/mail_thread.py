@@ -360,7 +360,7 @@ class mail_thread(osv.osv):
         # but, what about Odoo generated email returned to itself ?
         if msg.get('message-id', False):
             msg_obj = self.pool.get('mail.message')
-            domain = [('message-id', '=', msg.get('message-id'))]
+            domain = [('message_id', '=', msg.get('message-id'))]
             existing_msg_ids = msg_obj.search(cr,
                                               SUPERUSER_ID,
                                               domain,
