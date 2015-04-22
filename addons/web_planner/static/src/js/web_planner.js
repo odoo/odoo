@@ -1,4 +1,4 @@
-odoo.define('planner.planner', function (require) {
+odoo.define('web.planner', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -39,7 +39,7 @@ var PlannerLauncher = Widget.extend({
         if (!_.isEmpty(this.planner_by_menu)) {
             def.resolve(self.planner_by_menu);
         }else{
-            (new Model('planner.planner')).query().all().then(function(res) {
+            (new Model('web.planner')).query().all().then(function(res) {
                 _.each(res, function(planner){
                     self.planner_by_menu[planner.menu_id[0]] = planner;
                     self.planner_by_menu[planner.menu_id[0]].data = $.parseJSON(self.planner_by_menu[planner.menu_id[0]].data) || {};
@@ -135,7 +135,7 @@ var PlannerDialog = Widget.extend({
     // ui
     _setup_view: function(){
         var self = this;
-        return (new Model('planner.planner')).call('render', [self.planner.view_id[0], self.planner.planner_application]).then(function(res) {
+        return (new Model('web.planner')).call('render', [self.planner.view_id[0], self.planner.planner_application]).then(function(res) {
             self.$('.content_page').html(res);
             // add footer to each page
             self.add_pages_footer();
@@ -268,7 +268,7 @@ var PlannerDialog = Widget.extend({
         this._save_planner_data();
     },
     _save_planner_data: function() {
-        return (new Model('planner.planner')).call('write', [this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}]);
+        return (new Model('web.planner')).call('write', [this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}]);
     },
     // user actions
     mark_as_done: function(ev) {

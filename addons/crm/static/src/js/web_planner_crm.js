@@ -1,7 +1,7 @@
 odoo.define('planner_crm.planner', function (require) {
 "use strict";
 
-var planner = require('planner.planner');
+var planner = require('web.planner');
 
 planner.PlannerDialog.include({
     prepare_planner_event: function() {

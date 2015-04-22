@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 {
     'name': 'Planner',
     'category': 'Planner',
@@ -10,10 +9,11 @@
     'depends': ['web'],
     'data': [
         'security/ir.model.access.csv',
-        'views/planner.xml',
-        'security/planner_security.xml',
+        'security/web_planner_security.xml',
+        'views/web_planner_templates.xml',
+        'views/web_planner_views.xml',
     ],
-    'qweb': ['static/src/xml/planner.xml'],
+    'qweb': ['static/src/xml/web_planner.xml'],
     'installable': True,
     'auto_install': True,
 }

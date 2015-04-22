@@ -13,7 +13,7 @@ class Planner(models.Model):
     generate the values used to display in specific planner pages
     """
 
-    _name = 'planner.planner'
+    _name = 'web.planner'
     _description = 'Planner'
 
     @api.model
@@ -24,10 +24,11 @@ class Planner(models.Model):
     menu_id = fields.Many2one('ir.ui.menu', string='Menu', required=True)
     view_id = fields.Many2one('ir.ui.view', string='Template', required=True)
     progress = fields.Integer(string="Progress Percentage", default=5)
-    # used to store the data filled by user in planner(JSON Data)
+    # data field is used to store the data filled by user in planner(JSON Data)
     data = fields.Text(string='Data')
     tooltip_planner = fields.Html(string='Planner Tooltips', translate=True)
     planner_application = fields.Selection('_get_planner_application', string='Planner Application', required=True)
+    active = fields.Boolean(string="Active", default=True, help="If the active field is set to False, it will allow you to hide the planner. This change requires a refreshing a your page.")
 
     @api.model
     def render(self, template_id, planner_app):
@@ -42,7 +43,9 @@ class Planner(models.Model):
 
     @api.model
     def prepare_backend_url(self, action_xml_id, view_type='list', module_name=None):
-        """ prepare the backend url to the given action, or to the given module view. """
+        """ prepare the backend url to the given action, or to the given module view.
+            :returns dict : the value used to render the planer template
+        """
         action = self.env.ref(action_xml_id, False)
         url = "/web#view_type=%s&action=%s" % (view_type, action and action.id or '')
         if module_name:

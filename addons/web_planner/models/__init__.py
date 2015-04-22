@@ -1,3 +1,2 @@
 # -*- coding: utf-8 -*-
-
-import planner_crm
+import web_planner
