@@ -440,7 +440,7 @@ class ir_translation(osv.osv):
         for record in records:
             # get field value and terms to translate
             value = record[field_name]
-            terms = set(field.get_terms(value))
+            terms = set(field.get_trans_terms(value))
             record_trans = trans.search([
                 ('type', '=', 'model'),
                 ('name', '=', "%s,%s" % (model_name, field_name)),
@@ -577,7 +577,7 @@ class ir_translation(osv.osv):
                                 WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
                             );
                         """
-                for term in set(fld.get_terms(src)):
+                for term in set(fld.get_trans_terms(src)):
                     self._cr.execute(query, {
                         'name': "%s,%s" % (fld.model_name, fld.name),
                         'res_id': rid,

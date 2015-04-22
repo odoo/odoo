@@ -884,7 +884,7 @@ def trans_generate(lang, modules, cr):
                     value = obj[field_name] or ''
                 except:
                     continue
-                for term in set(field_def.get_terms(value)):
+                for term in set(field_def.get_trans_terms(value)):
                     push_translation(module, 'model', name, xml_name, encode(term))
 
         # End of data for ir.model.data query results

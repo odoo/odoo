@@ -1133,7 +1133,7 @@ class _String(Field):
     def _description_translate(self, env):
         return bool(self.translate)
 
-    def get_terms(self, value):
+    def get_trans_terms(self, value):
         """ Return the sequence of terms to translate found in `value`. """
         if not callable(self.translate):
             return [value] if value else []
