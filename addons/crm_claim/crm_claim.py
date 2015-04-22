@@ -59,13 +59,9 @@ class crm_claim(osv.osv):
     _order = "priority,date desc"
     _inherit = ['mail.thread']
 
-    def _get_default_team_id(self, cr, uid, context=None):
-        """ Gives default team by checking if present in the context """
-        return self.pool.get('crm.lead')._resolve_team_id_from_context(cr, uid, context=context) or False
-
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        team_id = self._get_default_team_id(cr, uid, context=context)
+        team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context)
         return self.stage_find(cr, uid, [], team_id, [('sequence', '=', '1')], context=context)
 
     _columns = {
@@ -103,7 +99,7 @@ class crm_claim(osv.osv):
 
     _defaults = {
         'user_id': lambda s, cr, uid, c: uid,
-        'team_id': lambda s, cr, uid, c: s._get_default_team_id(cr, uid, c),
+        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
         'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': '1',
