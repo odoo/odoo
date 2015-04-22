@@ -1410,12 +1410,12 @@ class calendar_event(osv.Model):
         ]
 
     @api.cr_uid_ids_context
-    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         if isinstance(thread_id, basestring):
             thread_id = get_real_ids(thread_id)
         if context.get('default_date'):
             del context['default_date']
-        return super(calendar_event, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
+        return super(calendar_event, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         return super(calendar_event, self).message_subscribe(cr, uid, get_real_ids(ids), partner_ids, subtype_ids=subtype_ids, context=context)

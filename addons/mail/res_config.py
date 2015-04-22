@@ -1,58 +1,36 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
 
 import urlparse
 import datetime
 
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.osv import osv, fields
+from openerp import fields, models, tools
 
 
-class project_configuration(osv.TransientModel):
+class BaseConfiguration(models.TransientModel):
+    """ Inherit the base settings to add a counter of failed email + configure
+    the alias domain. """
     _inherit = 'base.config.settings'
 
-    _columns = {
-        'fail_counter': fields.integer('Fail Mail', readonly=True),
-        'alias_domain': fields.char('Alias Domain',
-                                     help="If you have setup a catch-all email domain redirected to "
-                                          "the Odoo server, enter the domain name here."),
-    }
+    fail_counter = fields.Integer('Fail Mail', readonly=True)
+    alias_domain = fields.Char('Alias Domain', help="If you have setup a catch-all email domain redirected to "
+                               "the Odoo server, enter the domain name here.")
 
-    def get_default_fail_counter(self, cr, uid, ids, context=None):
+    def get_default_fail_counter(self):
         previous_date = datetime.datetime.now() - datetime.timedelta(days=30)
         return {
-            'fail_counter': self.pool.get('mail.mail').search(cr, uid, [('date', '>=', previous_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', '=', 'exception')], count=True, context=context),
+            'fail_counter': self.env['mail.mail'].sudo().search([('date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)), ('state', '=', 'exception')], count=True)
         }
 
-    def get_default_alias_domain(self, cr, uid, ids, context=None):
-        alias_domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", default=None, context=context)
+    def get_default_alias_domain(self):
+        alias_domain = self.env["ir.config_parameter"].get_param("mail.catchall.domain", default=None)
         if alias_domain is None:
-            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
+            domain = self.env["ir.config_parameter"].get_param("web.base.url")
             try:
                 alias_domain = urlparse.urlsplit(domain).netloc.split(':')[0]
             except Exception:
                 pass
         return {'alias_domain': alias_domain or False}
 
-    def set_alias_domain(self, cr, uid, ids, context=None):
-        config_parameters = self.pool.get("ir.config_parameter")
-        for record in self.browse(cr, uid, ids, context=context):
-            config_parameters.set_param(cr, uid, "mail.catchall.domain", record.alias_domain or '', context=context)
+    def set_alias_domain(self):
+        for record in self:
+            self.env['ir.config_parameter'].set_param("mail.catchall.domain", record.alias_domain or '')

@@ -39,7 +39,7 @@ Could you please send me the details ?</field>
             <field name="body"><![CDATA[<p>Hello,<br />
             I am Jacques from Le Club SARL. I am interested to attend a training organized in your company.<br />
             Can you send me the details ?</p>]]></field>
-            <field name="type">email</field>
+            <field name="message_type">email</field>
         </record>
 
         <record id="crm_case_2" model="crm.lead">
@@ -70,7 +70,7 @@ Could you please send me the details ?</field>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="res_id" ref="crm_case_2"/>
             <field name="body">Want to know features and benefits to use the new software.</field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
         </record>
 
         <record id="crm_case_3" model="crm.lead">
@@ -661,7 +661,7 @@ Andrew</field>
             <p>Hello,</p>
             <p>I am interested in your company's products and I plan to buy a new laptop having latest technologies as well as an affordable price.</p>
             <p>Could you please send me the product catalog?</p>]]></field>
-            <field name="type">email</field>
+            <field name="message_type">email</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="email_from">virginie@agrolait.fr</field>
             <field name="author_id" eval="False"/>
@@ -670,7 +670,7 @@ Andrew</field>
             <field name="subject">Re: Plan to buy RedHat servers</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="body"><![CDATA[<p>Dear customer,<br/>
             Thanks for showing interest in our products! As requested, I send to you our products catalog.<br />
@@ -692,7 +692,7 @@ Andrew</field>
                 <li>a total capacity of about 2 TB</li>
             </ul>
             <p>Best regards,</p>]]></field>
-            <field name="type">email</field>
+            <field name="message_type">email</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="parent_id" ref="msg_case15_1"/>
             <field name="email_from">virginie@agrolait.fr</field>
@@ -706,7 +706,7 @@ Andrew</field>
             <p>After our phonecall and discussion with our technical experts, here is the offer of YourCompany. We believe it will meet every requirement you had in mind. Please feel free to contact me for any detail or technical detail that is not clear enough for you.</p>
             <p>Notice that as agreed on phone, we offer you a <b>10% discount on the hardware</b>!</p>
             <p>Best regards,</p>]]></field>
-            <field name="type">email</field>
+            <field name="message_type">email</field>
             <field name="parent_id" ref="msg_case15_1"/>
             <field name="author_id" ref="base.partner_demo"/>
         </record>
@@ -715,7 +715,7 @@ Andrew</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_17"/>
             <field name="body"><![CDATA[<p>They just want pricing information about our services. I think sending our catalog should be sufficient.</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
         </record>
@@ -727,7 +727,7 @@ Andrew</field>
             I am Leland Martinez, from the Delta PC. Maybe you remember, we talked a bit last month at this international conference.<br />
             We would like to attend a training, but we are not quite sure about what we can ask. Maybe we should meet and talk about that?<br />
             Best regards,</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="author_id" ref="base.res_partner_4"/>
         </record>
@@ -735,7 +735,7 @@ Andrew</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_18"/>
             <field name="body"><![CDATA[<p>It seems very interesting. As you say, first of all we will have to define precisely what the training will be about, and your precise needs.</p>]]></field>
-            <field name="type">comment</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="parent_id" ref="msg_case18_1"/>
             <field name="author_id" ref="base.partner_demo"/>

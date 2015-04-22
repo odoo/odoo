@@ -24,6 +24,7 @@ from dateutil import relativedelta
 from lxml import etree
 import time
 
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.addons.resource.faces import task as Task
@@ -1144,6 +1145,7 @@ class task(osv.osv):
             return 'project.mt_task_stage'
         return super(task, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
         tasks = self.browse(cr, SUPERUSER_ID, ids, context=context)
@@ -1166,7 +1168,7 @@ class task(osv.osv):
         new_task = self.browse(cr, uid, res, context=context)
         if new_task.project_id and new_task.project_id.alias_name:  # check left-part is not already an alias
             email_list = filter(lambda x: x.split('@')[0] != new_task.project_id.alias_name, email_list)
-        partner_ids = filter(lambda x: x, self._find_partner_from_emails(cr, uid, None, email_list, context=context, check_followers=False))
+        partner_ids = filter(lambda x: x, self._find_partner_from_emails(cr, uid, email_list, check_followers=False))
         self.message_subscribe(cr, uid, [res], partner_ids, context=context)
         return res
 

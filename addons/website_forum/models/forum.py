@@ -202,7 +202,7 @@ class Post(models.Model):
         string='Type', default='question', required=True)
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
-        domain=lambda self: ['&', ('model', '=', self._name), ('type', 'in', ['email', 'comment'])],
+        domain=lambda self: ['&', ('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])],
         string='Post Messages', help="Comments on forum post",
     )
     # history
@@ -397,13 +397,13 @@ class Post(models.Model):
             self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
         return post
 
-    @api.multi
-    def check_mail_message_access(self, operation, model_obj=None):
-        for post in self:
+    @api.model
+    def check_mail_message_access(self, res_ids, operation, model_name=None):
+        if operation in ('write', 'unlink') and (not model_name or model_name == 'forum.post'):
             # Make sure only author or moderator can edit/delete messages
-            if operation in ('write', 'unlink') and not post.can_edit:
+            if any(not post.can_edit for post in self.browse(res_ids)):
                 raise KarmaError('Not enough karma to edit a post.')
-        return super(Post, self).check_mail_message_access(operation, model_obj=model_obj)
+        return super(Post, self).check_mail_message_access(res_ids, operation, model_name=model_name)
 
     @api.multi
     @api.depends('name', 'post_type')
@@ -546,7 +546,7 @@ class Post(models.Model):
         values = {
             'author_id': self.sudo().create_uid.partner_id.id,  # use sudo here because of access to res.users model
             'body': tools.html_sanitize(self.content, strict=True, strip_style=True, strip_classes=True),
-            'type': 'comment',
+            'message_type': 'comment',
             'subtype': 'mail.mt_comment',
             'date': self.create_date,
         }
@@ -619,8 +619,8 @@ class Post(models.Model):
         return "/forum/%s/question/%s" % (post.forum_id.id, res_id)
 
     @api.cr_uid_ids_context
-    def message_post(self, cr, uid, thread_id, type='notification', subtype=None, context=None, **kwargs):
-        if thread_id and type == 'comment':  # user comments have a restriction on karma
+    def message_post(self, cr, uid, thread_id, message_type='notification', subtype=None, context=None, **kwargs):
+        if thread_id and message_type == 'comment':  # user comments have a restriction on karma
             if isinstance(thread_id, (list, tuple)):
                 post_id = thread_id[0]
             else:
@@ -633,7 +633,7 @@ class Post(models.Model):
             # TDE END FIXME
             if not post.can_comment:
                 raise KarmaError('Not enough karma to comment')
-        return super(Post, self).message_post(cr, uid, thread_id, type=type, subtype=subtype, context=context, **kwargs)
+        return super(Post, self).message_post(cr, uid, thread_id, message_type=message_type, subtype=subtype, context=context, **kwargs)
 
 
 class PostReason(models.Model):
