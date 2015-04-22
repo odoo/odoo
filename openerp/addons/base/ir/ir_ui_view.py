@@ -952,7 +952,8 @@ class view(osv.osv):
         return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
 
     def clear_cache(self):
-        self._read_template.clear_cache(self)
+        if not tools.config['dev_mode']:
+            self._read_template.clear_cache(self)
 
     def _contains_branded(self, node):
         return node.tag == 't'\
