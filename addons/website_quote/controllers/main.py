@@ -60,7 +60,7 @@ class sale_quote(http.Controller):
             'message': message and int(message) or False,
             'option': bool(filter(lambda x: not x.line_id, order.options)),
             'order_valid': (not order.validity_date) or (now <= order.validity_date),
-            'days_valid': max(days, 0),
+            'days_valid': days,
             'action': action
         }
         return request.website.render('website_quote.so_quotation', values)

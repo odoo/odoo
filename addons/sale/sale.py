@@ -343,6 +343,8 @@ class sale_order(osv.osv):
         val.update(delivery_onchange['value'])
         if pricelist:
             val['pricelist_id'] = pricelist
+        if not self._get_default_team_id(cr, uid, context=context) and part.team_id:
+            val['team_id'] = part.team_id.id
         sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
         if sale_note: val.update({'note': sale_note})  
         return {'value': val}

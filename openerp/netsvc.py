@@ -22,6 +22,7 @@
 import logging
 import logging.handlers
 import os
+import platform
 import pprint
 import release
 import sys
@@ -144,8 +145,10 @@ def init_logger():
         # SysLog Handler
         if os.name == 'nt':
             handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
+        elif platform.system() == 'Darwin':
+            handler = logging.handlers.SysLogHandler('/var/run/log')
         else:
-            handler = logging.handlers.SysLogHandler()
+            handler = logging.handlers.SysLogHandler('/dev/log')
         format = '%s %s' % (release.description, release.version) \
                 + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
