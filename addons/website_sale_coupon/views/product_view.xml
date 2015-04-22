@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-  <data>
-        <record model="ir.ui.view" id="sale_product_form">
-             <field name="name">sale.product.form</field>
-             <field name="model">product.template</field>
-             <field name="inherit_id" ref="product.product_template_form_view"/>
-             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Information']/group[last()]" position="inside">
-                    <group style="width: 50px">
-                       <field name="is_delivery_charge_product"/>
-                    </group>
-                </xpath>
-             </field>
-        </record>
-    </data>
-</openerp>
+<odoo>
+    <record id="sale_product_form_inherit" model="ir.ui.view">
+         <field name="name">sale.product.form</field>
+         <field name="model">product.template</field>
+         <field name="inherit_id" ref="product.product_template_form_view"/>
+         <field name="arch" type="xml">
+            <xpath expr="//page[@string='Information']/group[last()]" position="inside">
+                <group style="width: 50px">
+                   <field name="is_delivery_charge_product"/>
+                </group>
+            </xpath>
+         </field>
+    </record>
+</odoo>

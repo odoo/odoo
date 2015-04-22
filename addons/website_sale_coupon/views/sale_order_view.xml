@@ -1,73 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-  <data>
-       <record model="ir.ui.view" id="sale_coupon_form">
-             <field name="name">sale.coupon.form</field>
-             <field name="model">sale.order</field>
-             <field name="inherit_id" ref="sale.view_order_form" />
-             <field name="arch" type="xml">
-                <xpath expr="//header/button[@name='cancel']" position="before">
-                    <button name="open_apply_coupon_wizard" string="Apply coupon" type="object" groups="base.group_user" states="draft"/>
-                </xpath>
-                <xpath expr="//page[@string='Other Information']/group[last()]" position="after">
-                    <group name="coupon_programs" string="Applied Rules">
-                        <div>
-                            <field name="coupon_program_ids">
-                                <tree create="false" edit="false" delete="false">
-                                    <field name="name"/>
-                                    <field name="program_type"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                        </div>
-                    </group>
-                    <group name="applied_coupons" string="Applied Coupons">
-                        <div>
-                            <field name="applied_coupon_ids">
-                                <tree create="false" edit="false" delete="false">
-                                    <field name="coupon_code"/>
-                                    <field name="program_id"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                        </div>
-                    </group>
-                    <group name="generated_coupons" string="Reward Coupons">
-                        <div>
-                            <field name="generated_coupon_ids">
-                                <tree create="false" edit="false" delete="false">
-                                    <field name="coupon_code"/>
-                                    <field name="program_id"/>
-                                </tree>
-                            </field>
-                        </div>
-                    </group>
-                </xpath>
-             </field>
-        </record>
-        <record id="action_sale_order_view" model="ir.actions.act_window">
-            <field name="name">Sale order form</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">tree</field>
-            <field name="view_mode">tree</field>
-        </record>
-                <record id="action_order_line_product_tree" model="ir.actions.act_window">
-            <field name="context">{}</field><!-- force empty -->
-            <field name="name">Sales Order Lines</field>
-            <field name="res_model">sale.order.line</field>
-            <field name="view_id" ref="sale.view_order_line_tree"/>
-        </record>
-        <!--         <record model="ir.ui.view" id="sale_coupon_form">
-             <field name="name">sale.coupon.form</field>
-             <field name="model">sale.order</field>
-             <field name="inherit_id" ref="sale.view_order_form" />
-             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Other Information']/group[last()]" position="after">
-                    <group name="coupon_programs" string="Coupons">
-                        <field name="coupon_program_id"/>
-                    </group>
-                </xpath>
-             </field>
+<odoo>
+   <record id="sale_coupon_form_inherit" model="ir.ui.view">
+         <field name="name">sale.coupon.form</field>
+         <field name="model">sale.order</field>
+         <field name="inherit_id" ref="sale.view_order_form" />
+         <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='cancel']" position="before">
+                <button name="open_apply_coupon_wizard" string="Apply coupon" type="object" groups="base.group_user" states="draft"/>
+            </xpath>
+            <xpath expr="//page[@string='Other Information']/group[last()]" position="after">
+                <group name="coupon_programs" string="Applied Rules">
+                    <div>
+                        <field name="coupon_program_ids">
+                            <tree create="false" edit="false" delete="false">
+                                <field name="name"/>
+                                <field name="program_type"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </div>
+                </group>
+                <group name="applied_coupons" string="Applied Coupons">
+                    <div>
+                        <field name="applied_coupon_ids">
+                            <tree create="false" edit="false" delete="false">
+                                <field name="coupon_code"/>
+                                <field name="program_id"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </div>
+                </group>
+                <group name="generated_coupons" string="Reward Coupons">
+                    <div>
+                        <field name="generated_coupon_ids">
+                            <tree create="false" edit="false" delete="false">
+                                <field name="coupon_code"/>
+                                <field name="program_id"/>
+                            </tree>
+                        </field>
+                    </div>
+                </group>
+            </xpath>
+         </field>
+    </record>
+    <record id="action_sale_order_view" model="ir.actions.act_window">
+        <field name="name">Sale order form</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">tree</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <record id="action_order_line_product_tree" model="ir.actions.act_window">
+        <field name="context">{}</field><!-- force empty -->
+        <field name="name">Sales Order Lines</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_id" ref="sale.view_order_line_tree"/>
+    </record>
+    <!--         <record model="ir.ui.view" id="sale_coupon_form">
+         <field name="name">sale.coupon.form</field>
+         <field name="model">sale.order</field>
+         <field name="inherit_id" ref="sale.view_order_form" />
+         <field name="arch" type="xml">
+            <xpath expr="//page[@string='Other Information']/group[last()]" position="after">
+                <group name="coupon_programs" string="Coupons">
+                    <field name="coupon_program_id"/>
+                </group>
+            </xpath>
+         </field>
         </record> -->
-    </data>
-</openerp>
+</odoo>
