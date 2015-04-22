@@ -33,7 +33,7 @@ class event_track(models.Model):
     speaker_ids = fields.Many2many('res.partner', string='Speakers')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     state = fields.Selection([
-        ('draft', 'Proposal'), ('confirmed', 'Confirmed'), ('announced', 'Announced'), ('published', 'Published')],
+        ('draft', 'Proposal'), ('confirmed', 'Confirmed'), ('announced', 'Announced'), ('published', 'Published'), ('refused', 'Refused')],
         'Status', default='draft', required=True, copy=False, track_visibility='onchange')
     description = fields.Html('Track Description', translate=True)
     date = fields.Datetime('Track Date')
