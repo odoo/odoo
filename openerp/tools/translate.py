@@ -140,7 +140,7 @@ def encode(s):
 
 # which elements are translated inline
 TRANSLATED_ELEMENTS = {
-    'a', 'abbr', 'audio', 'b', 'bdi', 'bdo', 'br', 'canvas', 'cite', 'code',
+    'abbr', 'audio', 'b', 'bdi', 'bdo', 'br', 'canvas', 'cite', 'code',
     'data', 'datalist', 'del', 'dfn', 'em', 'embed', 'font', 'i', 'iframe',
     'ins', 'kbd', 'keygen', 'map', 'mark', 'math', 'meter', 'object', 'output',
     'progress', 'q', 'ruby', 's', 'samp', 'select', 'small', 'span', 'strong',

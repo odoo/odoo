@@ -391,7 +391,12 @@ class ir_translation(osv.osv):
         """ Return a function mapping a (trans_id, source, value) to a value.
         This method is called before querying the database for translations.
         """
-        return lambda tid, src, value: value
+        if self._context.get('edit_translations'):
+            # TODO: this part should be moved to module web_editor
+            self.insert_missing(field, records)
+            return lambda tid, src, value: '<span data-oe-translation-id="%s">%s</span>' % (tid, value)
+        else:
+            return lambda tid, src, value: value
 
     @api.model
     def _get_terms_translations(self, field, records):
