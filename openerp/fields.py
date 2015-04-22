@@ -1141,6 +1141,33 @@ class _String(Field):
         self.translate(lambda t: terms.append(t) or t, value)
         return terms
 
+    def get_trans_func(self, records):
+        """ Return a translation function `translate` for `self` on the given
+        records; the function call `translate(record_id, value)` translates the
+        field value to the language given by the environment of `records`.
+        """
+        if callable(self.translate):
+            # TODO: add a condition like context.get('website') for executing
+            # the code below: XML/HTML fields should be translated in the
+            # frontend by a specific widget that uses the English value and term
+            # translations
+            rec_src_trans = records.env['ir.translation']._get_terms_translations(
+                self.model_name, self.name, records.env.lang, records.ids)
+
+            def translate(record_id, value):
+                src_trans = rec_src_trans[record_id]
+                callback = lambda term: src_trans.get(term) or term
+                return self.translate(callback, value)
+
+        else:
+            rec_trans = records.env['ir.translation']._get_ids(
+                '%s,%s' % (self.model_name, self.name), 'model', records.env.lang, records.ids)
+
+            def translate(record_id, value):
+                return rec_trans.get(record_id) or value
+
+        return translate
+
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a

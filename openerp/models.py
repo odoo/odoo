@@ -3245,33 +3245,19 @@ class BaseModel(object):
             result.extend(cr.dictfetchall())
 
         ids = [vals['id'] for vals in result]
+        fetched = self.browse(ids)
 
         if ids:
             # translate the fields if necessary
             if context.get('lang'):
-                ir_translation = env['ir.translation']
                 for field in fields_pre:
                     if field.inherited:
                         continue
-                    f = field.name
-                    translate = field.column.translate
-                    if callable(translate):
-                        # TODO: add a condition like context.get('website') for
-                        # executing the code below: XML/HTML fields should be
-                        # translated in the frontend by a specific widget that
-                        # uses the English value and term translations
-                        res_trans = ir_translation._get_terms_translations(
-                            self._name, f, context['lang'], ids
-                        )
+                    if field.column.translate:
+                        f = field.name
+                        translate = field.get_trans_func(fetched)
                         for vals in result:
-                            rec_trans = res_trans[vals['id']]
-                            vals[f] = translate(lambda t: rec_trans.get(t) or t, vals[f])
-                    elif translate:
-                        res_trans = ir_translation._get_ids(
-                            '%s,%s' % (self._name, f), 'model', context['lang'], ids
-                        )
-                        for vals in result:
-                            vals[f] = res_trans.get(vals['id']) or vals[f]
+                            vals[f] = translate(vals['id'], vals[f])
 
             # apply the symbol_get functions of the fields we just read
             for field in fields_pre:
@@ -3329,7 +3315,6 @@ class BaseModel(object):
             record._cache.update(record._convert_to_cache(vals, validate=False))
 
         # store failed values in cache for the records that could not be read
-        fetched = self.browse(ids)
         missing = self - fetched
         if missing:
             extras = fetched - self
