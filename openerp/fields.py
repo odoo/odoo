@@ -1121,6 +1121,14 @@ class Monetary(Field):
         return self.convert_to_write(value, record)
 
 
+# map (translation_id, source, value) into a (source, value) pair
+def map_trans_default((_, src, value)):
+    return src, value
+
+def map_trans_website((tid, src, value)):
+    return src, '<span data-oe-translation-id="%s">%s</span>' % (tid, value)
+
+
 class _String(Field):
     """ Abstract class for string fields. """
     _slots = {
@@ -1151,11 +1159,16 @@ class _String(Field):
             # the code below: XML/HTML fields should be translated in the
             # frontend by a specific widget that uses the English value and term
             # translations
-            rec_src_trans = records.env['ir.translation']._get_terms_translations(
+            rec_trans = records.env['ir.translation']._get_terms_translations(
                 self.model_name, self.name, records.env.lang, records.ids)
 
+            if records._context.get('website_translate'):
+                map_trans = map_trans_website
+            else:
+                map_trans = map_trans_default
+
             def translate(record_id, value):
-                src_trans = rec_src_trans[record_id]
+                src_trans = dict(map(map_trans, rec_trans[record_id]))
                 callback = lambda term: src_trans.get(term) or term
                 return self.translate(callback, value)
 
