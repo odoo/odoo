@@ -297,6 +297,9 @@ class mrp_bom(osv.osv):
                 if not product or (set(map(int,bom_line_id.attribute_value_ids or [])) - set(map(int,product.attribute_value_ids))):
                     continue
 
+            if set(map(int, bom_line_id.property_ids or [])) - set(properties or []):
+                continue
+
             if previous_products and bom_line_id.product_id.product_tmpl_id.id in previous_products:
                 raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
 
