@@ -69,6 +69,7 @@ class change_production_qty(osv.osv_memory):
         prod_obj = self.pool.get('mrp.production')
         bom_obj = self.pool.get('mrp.bom')
         move_obj = self.pool.get('stock.move')
+        proc_obj = self.pool.get('procurement.order')
         for wiz_qty in self.browse(cr, uid, ids, context=context):
             prod = prod_obj.browse(cr, uid, record_id, context=context)
             prod_obj.write(cr, uid, [prod.id], {'product_qty': wiz_qty.product_qty})
@@ -93,8 +94,10 @@ class change_production_qty(osv.osv_memory):
                 for r in product_details:
                     if r['product_id'] == move.product_id.id:
                         move_obj.write(cr, uid, [move.id], {'product_uom_qty': r['product_qty']})
+                        proc_obj.write(cr, uid, proc_obj.search(cr, uid, [('move_dest_id', '=', move.id)], context=context), {'product_qty': r['product_qty']})
             if prod.move_prod_id:
                 move_obj.write(cr, uid, [prod.move_prod_id.id], {'product_uom_qty' :  wiz_qty.product_qty})
+                proc_obj.write(cr, uid, proc_obj.search(cr, uid, [('move_dest_id', '=', prod.move_prod_id.id)], context=context), {'product_qty': wiz_qty.product_qty})
             self._update_product_to_produce(cr, uid, prod, wiz_qty.product_qty, context=context)
         return {}
 
