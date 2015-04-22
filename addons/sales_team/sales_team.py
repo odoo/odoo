@@ -63,6 +63,28 @@ class crm_team(osv.Model):
             team_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
         return team_result
 
+    def _get_default_team_id(self, cr, uid, user_id=None, context=None):
+        team_id = self._resolve_team_id_from_context(cr, uid, context=context) or False
+        if not team_id:
+            team_ids = self.search(cr, uid, [('member_ids', '=', user_id or uid)], limit=1, context=context)
+            team_id = team_ids[0] if team_ids else False
+        return team_id
+
+    def _resolve_team_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of team based on the value of 'default_team_id'
+            context key, or None if it cannot be resolved to a single
+            Sales Team.
+        """
+        if context is None:
+            context = {}
+        if type(context.get('default_team_id')) in (int, long):
+            return context.get('default_team_id')
+        if isinstance(context.get('default_team_id'), basestring):
+            team_ids = self.name_search(cr, uid, name=context['default_team_id'], context=context)
+            if len(team_ids) == 1:
+                return int(team_ids[0][0])
+        return None
+
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
         'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True, string="Full Name"),
