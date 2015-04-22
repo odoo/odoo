@@ -1,5 +1,5 @@
-// FONTS
 
+/**************** FONTS ****************/
 @font-face {
     font-family: 'Simple-Line-Icons';
     src:url('/web_planner/static/src/fonts/Simple-Line-Icons.eot');
@@ -11,9 +11,9 @@
     font-style: normal;
 }
 
+/**************** ICON ****************/
 // use data attributes for inserting  icons
 // http://www.issme.net/india/assets/plugins/line-icons/
-
 [data-icon]:before {
     font-family: 'Simple-Line-Icons';
     content: attr(data-icon);
@@ -27,7 +27,8 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-//Animations
+/************** ANIMATIONS *************/
+// 'marked' effects
 @keyframes markAnim {
     0% {
         opacity: 0;
@@ -103,7 +104,7 @@
     }
 }
 
-//bounce effect
+// 'bounce' effect
 @-webkit-keyframes bounceIn {
   0%, 20%, 40%, 60%, 80%, 100% {
     -webkit-transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
@@ -173,6 +174,7 @@
   }
 }
 
+/**************** MENU PROGRESS BAR ****************/
 #oe_main_menu_navbar.navbar {
     .oe_planner_systray {
         width: 100px;
@@ -189,61 +191,72 @@
     }
 }
 
+/**************** PLANNER MODAL ****************/
 #PlannerModal {
 
     font-family: "Lato", serif;
+
+    a {
+        color: #2E917D
+    }
+    .btn-default {
+        background-color: transparent;
+        color: #7C7C7C;
+        line-height: 19px;
+    }
+    .btn-default:hover {
+        color: #333;
+    }
+    .btn-primary {
+        background: #21b799;
+        border-color: #26A38A;
+        color: white;
+    }
+    .btn-primary:hover {
+        background-color: #2E917D;
+        color: white;
+    }
+    .odoo_purple, a.btn.odoo_purple {
+        background-color: #A24689;
+        color: white;
+    }
+    .odoo_purple.btn:hover{
+        background: #a24689;
+        color: #fff;
+    }
 
     .planner-page{
         display : none;
     }
     .planner-dialog {
         width: 85%;
-        font-family: "Lato", serif;
         max-width: 1024px;
         overflow: hidden;
         margin-left: auto;
         margin-right: auto;
 
-        //button close
+        // button close
         button.close {
-            opacity: 1;
             line-height: 30px;
-            font-size: 16px;
             color: rgba(51, 51, 51, 0.54);
             position: absolute;
             right: 15px;
-            z-index: 9999;
+            z-index:9999;
         }
-        button.close:hover {color:#222;}
+        button.close:hover {
+            color:#222;
+        }
+
+        // modal core
         .modal-content {
-            border-radius: 2px;
             background: #f3f3f3;
         }
         .modal-body {
-            padding: 0;
             overflow: hidden;
             max-height: inherit;
         }
-        .row.oe_planner {padding: 0 15px;}
-        .mb1{
-            margin-bottom: 1em!important;
-        }
-        .mb2{
-            margin-bottom: 2em!important;
-        }
-        .mb3{
-            margin-bottom: 3em!important;
-        }
-        .mb5{
-            margin-bottom: 5em!important;
-        }
-        .odoo_purple, a.btn.odoo_purple {
-            background-color: #A24689;
-            color: white;
-        }
-        .odoo_purple.btn:hover{
-            background: #a24689;
-            color: #fff;
+        .row.oe_planner {
+            padding: 0 15px;
         }
         .planner_footer {
             padding: 0;
@@ -264,16 +277,16 @@
                 border-bottom: 1px solid #E5E5E5;
                 opacity: 0.3;
             }
-
             > div {
                 padding: 1em 15px;
                 background: #f7f7f7;
                 min-height: 60px;
             }
+            // mark/uncheck button animation
             button.fa-check-square-o {
+                left: 5em;
                 font-size: 2em;
                 border: none;
-
                 &:focus {outline:none}
                 &:hover:before{
                     content: "\f096";
@@ -289,9 +302,7 @@
             }
             button.fa-check-square-o:after {
                 color: #7C7C7C;
-                content: "Unckeck";
                 position: absolute;
-                left: 5.5em;
                 font-size: .5em;
                 opacity: 0;
                 -webkit-transition: all 0.3s ease-in-out;
@@ -300,7 +311,6 @@
                 -o-transition:      all 0.3s ease-in-out;
             }
             button.fa-check-square-o:hover:after {
-                left: 5em;
                 opacity: 1;
                 -webkit-transition: all 0.3s ease-in-out;
                 -moz-transition:    all 0.3s ease-in-out;
@@ -308,8 +318,6 @@
                 -o-transition:      all 0.3s ease-in-out;
             }
             .btn-next i {
-                transform: translateY(1px);
-                font-size: 1.3em;
                 margin-left: 10px;
             }
             .span-next {
@@ -317,7 +325,6 @@
                 right: 9em;
                 top: 0.8em;
                 opacity: 0;
-                line-height: 2.2em;
                 height: 1.3em;
                 font-size: 1em;
                 display: block;
@@ -330,9 +337,6 @@
             .next-block:hover .span-next {
                 right: 9.6em;
                 opacity: 1;
-            }
-            .mark_as_done span {
-                font-family: "Lato", serif;
             }
         }
          // MARKED ANIMATION
@@ -386,7 +390,6 @@
                     padding: 6px 0 0 8px;
                     font-weight: bold;
                     color: #727272;
-                    font-size: 13px;
                 }
                 .progress {
                     background-color: #C4C4C4;
@@ -395,19 +398,13 @@
                 }
                 .progress-bar {
                     background: #A24689;
-                    background: -moz-linear-gradient(top,  #cc59ab 0%, #a24689 8%);
-                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cc59ab), color-stop(8%,#a24689));
-                    background: -webkit-linear-gradient(top,  #cc59ab 0%,#a24689 8%);
-                    background: -o-linear-gradient(top,  #cc59ab 0%,#a24689 8%);
-                    background: -ms-linear-gradient(top,  #cc59ab 0%,#a24689 8%);
-                    background: linear-gradient(to bottom,  #cc59ab 0%,#a24689 8%);
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc59ab', endColorstr='#a24689',GradientType=0 );
                     border-radius: 4px;
                     height: 95%;
                     box-shadow: 0 1px 0 #7A3067;
                 }
             }
         }
+        // MENU MOBILE
         .dropdown.mobile {
             padding: 10px 12px 0 0px;
             .dropdown-menu{
@@ -508,7 +505,6 @@
             > li:last-child { border-bottom: 0;}
 
             li.header {
-                h5{padding-left: 0px}
                 div.dropdown { display: inline;float:right; }
                 span {position: relative; left: 0;}
                 a {
@@ -525,7 +521,6 @@
                     margin-bottom: 10px;
                     font-family: sans-serif;
                     font-size: 17px;
-                    color: #8A6D3B;
                     border: none;
                     background: #F5E7CF;
                 }
@@ -533,20 +528,9 @@
                     font-size: 14px;
                     color: rgb(126, 95, 41);
                     background: #fcf8e3;
-                    background: -moz-linear-gradient(top,  #fcf8e3 0%, #FFF8D7 100%);
-                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcf8e3), color-stop(100%,#FFF8D7));
-                    background: -webkit-linear-gradient(top,  #fcf8e3 0%,#FFF8D7 100%);
-                    background: -o-linear-gradient(top,  #fcf8e3 0%,#FFF8D7 100%);
-                    background: -ms-linear-gradient(top,  #fcf8e3 0%,#FFF8D7 100%);
-                    background: linear-gradient(to bottom,  #fcf8e3 0%,#FFF8D7 100%);
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcf8e3', endColorstr='#FFF8D7',GradientType=0 );
-                    padding: 0 1em;
                     position: relative;
                     box-shadow: inset 0 10px 10px -9px #A89E64;
-                    margin: 0px -10px 0px -55px;
-
-                    h5 {padding: 14px 0 0; display: inline-block;}
-                    ul { padding: 0 20px 20px 50px;}
+                    padding-top: 15px;
                     li {font-style: italic;}
                 }
             }
@@ -615,30 +599,6 @@
                 font-weight: 100;
                 margin-bottom: 0.5em;
             }
-        }
-    }
-    &.odoo_colors {
-        a {color: #2E917D}
-        a:hover, a:focus {color: #21b799; text-decoration: none;}
-        textarea:focus, input:focus, select:focus, option:focus, .btn:focus, a:focus {outline-color: #26A38A;}
-        .btn-default {
-            background-color: transparent;
-            color: #7C7C7C;
-            line-height: 19px;
-        }
-        .btn-default:hover {
-            color: #333;
-        }
-        .btn-primary {
-            background: #21b799;
-            border-color: #26A38A;
-            text-shadow: 0 1px 0 #2E917D;
-            line-height: 19px;
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #2E917D;
-            color: white;
         }
     }
     // PARAGRAPHS
