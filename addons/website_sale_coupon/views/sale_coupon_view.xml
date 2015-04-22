@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
   <data>
         <record model="ir.ui.view" id="coupon_program_form_view">
             <field name="name">Sale Coupon Program</field>
@@ -35,7 +35,7 @@
                         <group>
                             <group>
                                 <field name="program_type" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="program_code" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')], 'readonly': 1}"/>
+                                <field name="program_code" attrs="{'invisible': [('program_type', '!=', 'public_unique_code')], 'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
                                     <field name="active"/>
@@ -199,7 +199,7 @@
 
         <record id="action_coupon_tree" model="ir.actions.act_window">
             <field name="context">{}</field><!-- force empty -->
-            <field name="name">Sales coupons</field>
+            <field name="name">Coupons</field>
             <field name="res_model">sale.coupon</field>
             <field name="view_id" ref="coupon_tree_view"/>
         </record>
@@ -222,4 +222,4 @@
         <menuitem id="base.menu_sales_config" parent="base.menu_base_config" sequence="1" name="Sales"/>
         <menuitem action="action_sale_coupon_configuration" id="base.menu_coupon_type_config" parent="base.menu_sales_config"/>
   </data>
-</openerp>
+</odoo>

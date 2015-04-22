@@ -141,15 +141,10 @@ class SaleCouponProgram(models.Model):
                                   "Opened - Program cab be used\n" +
                                   "Closed - Program can not be used", default="draft")
     nbr_uses_public_unique_code = fields.Integer(string="Expiration use", default=1, help="maximum number of times, the can be used")
-    sale_order_id = fields.Many2one('sale.order', "Sale order id")
 
     _sql_constraints = [
         ('unique_program_code', 'unique(program_code)', 'The program code must be unique!'),
     ]
-
-    # def _compute_public_unique_code(self):
-    #     if self.program_type == 'public_unique_code':
-    #         self.program_code = 'PUC' + (hashlib.sha1(str(random.getrandbits(256)).encode('utf-8')).hexdigest()[:7]).upper()
 
     def _compute_program_state(self):
         #close the program when count reach to maximum
@@ -169,32 +164,18 @@ class SaleCouponProgram(models.Model):
 
     @api.one
     def _compute_so_count(self):
-        count = 0
-        sales_order_line = self.env['sale.order.line'].search([('coupon_program_id', '=', self.id)])
-        if sales_order_line:
-            for order in sales_order_line:
-                count += 1
-
-        self.count_sale_order = count
+        self.count_sale_order = self.env['sale.order'].search_count([('coupon_program_ids', '=', self.id)])
         self._compute_program_state()
 
     def _compute_coupon_count(self):
-        count = 0
-        coupons = self.env['sale.coupon'].search([('program_id', '=', self.id)])
-        if coupons:
-            for coupon in coupons:
-                count += 1
-        self.count_coupons = count
+        self.count_coupons = self.env['sale.coupon'].search_count([('program_id', '=', self.id)])
 
     def check_is_program_expired(self, coupon_code):
         expiration_date = self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date())
-        if self.program_type == 'generated_coupon' or 'apply_immediately':
-            if fields.date.today() > expiration_date:
+        if (self.program_type == ('generated_coupon' or 'apply_immediately') and fields.date.today() > expiration_date) or \
+           (self.program_type == 'public_unique_code' and (fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date() or
+           self.count_sale_order == self.nbr_uses_public_unique_code)):
                 return True
-        if self.program_type == 'public_unique_code':
-            if fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date() or \
-               self.count_sale_order == self.nbr_uses_public_unique_code:
-                    return True
 
     def get_reward_string(self):
         if self.reward_type == 'product':
@@ -209,8 +190,8 @@ class SaleCouponProgram(models.Model):
 
     @api.multi
     def action_view_order(self, context=None):
-        res = self.env['ir.actions.act_window'].for_xml_id('website_sale_coupon', 'action_order_line_product_tree', context=context)
-        res['domain'] = [('coupon_program_id', '=', self.id)]
+        res = self.env['ir.actions.act_window'].for_xml_id('website_sale_coupon', 'action_sale_order_tree_view', context=context)
+        res['domain'] = [('coupon_program_ids', '=', self.id)]
         return res
 
     @api.multi
@@ -239,8 +220,8 @@ class SaleCouponProgram(models.Model):
 
     @api.one
     def action_opened(self):
-        if self.program_type == 'public_unique_code':
-            self.program_code = 'PUC' + (hashlib.sha1(str(random.getrandbits(256)).encode('utf-8')).hexdigest()[:7]).upper()
+        # if self.program_type == 'public_unique_code':
+        #     self.program_code = 'PUC' + (hashlib.sha1(str(random.getrandbits(256)).encode('utf-8')).hexdigest()[:7]).upper()
         self.state = 'opened'
 
     @api.one
