@@ -190,12 +190,14 @@ class SaleOrder(models.Model):
                 'coupon_id': coupon_code
             }
             self.order_line.with_context(noreward=True).create(vals)
-            self.coupon_program_ids += program
+            if program not in self.coupon_program_ids:
+                self.coupon_program_ids += program
 
     def _create_discount_reward(self, program, discount_amount, coupon_code):
         reward_product_id = self.env.ref('website_sale_coupon.product_product_reward')
         reward_lines = self.order_line.filtered(lambda x: x.generated_from_line_id.id is False and x.product_id.id == reward_product_id.id and x.coupon_program_id == program)
         if discount_amount <= 0 and reward_lines:
+            self.write({'coupon_program_ids': [(3, reward_lines.coupon_program_id.id, _)]})
             reward_lines.unlink()
         elif discount_amount > 0 and reward_lines:
             reward_lines.with_context(noreward=True).write({'price_unit': -discount_amount})
@@ -212,7 +214,8 @@ class SaleOrder(models.Model):
                 'coupon_id': coupon_code
             }
             self.order_line.with_context(noreward=True).create(vals)
-            self.coupon_program_ids += program
+            if program not in self.coupon_program_ids:
+                self.coupon_program_ids += program
             if coupon_code:
                 coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
                 if coupon_obj:
@@ -279,10 +282,16 @@ class SaleOrder(models.Model):
             if coupon_obj.state == 'used':
                 return {'error': _('Coupon %s has been used.') % (coupon_code)}
             program = coupon_obj.program_id
-        if program.check_is_program_expired(coupon_code):
+        if program.check_is_program_expired():
             return {'error': _('Code %s has been expired') % (coupon_code)}
         if program.state == 'closed':
             return {'error': _('Program has been closed')}
+        coupon_applied_status = self._apply_coupon(program, coupon_code)
+        if coupon_applied_status is not None and coupon_applied_status.get('error'):
+            return coupon_applied_status
+        return {'update_price': True}
+
+    def _apply_coupon(self, program, coupon_code):
         if program.program_type != 'apply_immediately':
             if program.purchase_type == 'amount' and ((self.amount_total >= program.minimum_amount and program.reward_tax == 'tax_excluded') or
                                                      (self.amount_untaxed >= program.minimum_amount and program.reward_tax == 'tax_excluded')):
@@ -306,8 +315,6 @@ class SaleOrder(models.Model):
                         return {'error': _('Code %s is already applied') % (coupon_code)}
                     else:
                         line.process_rewards(program, coupon_code)
-            #self._check_for_free_shipping(coupon_code)
-        return {'update_price': True}
 
     @api.multi
     def process_rewards(self, programs, coupon_code):
@@ -346,6 +353,7 @@ class SaleOrderLine(models.Model):
         reward_product_id = self.env.ref('website_sale_coupon.product_product_reward').id
         reward_lines = self.order_id.order_line.filtered(lambda x: x.generated_from_line_id == self and x.product_id.id == reward_product_id and x.coupon_program_id == program)
         if discount_amount <= 0 and reward_lines:
+            self.order_id.write({'coupon_program_ids': [(3, reward_lines.coupon_program_id.id, _)]})
             reward_lines.unlink()
         elif discount_amount > 0 and reward_lines:
             for reward_line in reward_lines:
@@ -363,7 +371,8 @@ class SaleOrderLine(models.Model):
                 'coupon_id': coupon_code
             }
             self.with_context(noreward=True).create(vals)
-            self.order_id.coupon_program_ids += program
+            if program not in self.order_id.coupon_program_ids:
+                self.order_id.coupon_program_ids += program
             if coupon_code:
                 coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
                 if coupon_obj:
@@ -433,7 +442,8 @@ class SaleOrderLine(models.Model):
                 'coupon_id': coupon_code
             }
             self.with_context(noreward=True).create(vals)
-            self.order_id.coupon_program_ids += program
+            if program not in self.order_id.coupon_program_ids:
+                self.order_id.coupon_program_ids += program
 
     @api.multi
     def unlink(self):

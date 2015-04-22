@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import common
-import coupon_program_1
-import coupon_program_2
-import coupon_program_3
-import coupon_program_4
-import coupon_program_5
-import coupon_program_6
+import test_PUC_buy_1_get_1_free
+import test_buy_1_from_category_get_2_dollar_off
+import test_buy_1_get_10_percent_off_on_another_product
+import test_buy_1_get_free
+import test_buy_2_get_1_free
+import test_purchase_more_than_1500_get_10_percent_off_on_cart

@@ -45,17 +45,19 @@
                 </xpath>
              </field>
         </record>
-<!--         <record id="action_sale_order_view" model="ir.actions.act_window">
-            <field name="name">Sale order form</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">tree</field>
-            <field name="view_mode">tree</field>
-        </record> -->
+
         <record id="action_sale_order_tree_view" model="ir.actions.act_window">
             <field name="context">{}</field><!-- force empty -->
             <field name="name">Sales Order</field>
             <field name="res_model">sale.order</field>
             <field name="view_id" ref="sale.view_order_tree"/>
+        </record>
+
+        <record id="action_sale_order_view" model="ir.actions.act_window">
+            <field name="name">Sale order form</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
         </record>
     </data>
 </odoo>

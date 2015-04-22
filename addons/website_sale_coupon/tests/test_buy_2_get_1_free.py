@@ -6,8 +6,7 @@ class TestSaleCoupon(TestSaleCouponCommon):
     def test_sale_coupon_type(self):
 
         order_id = self.SaleOrder.create({
-            'partner_id': self.partner_id.id,
-            'order_line': [(0, 0, {'product_id': self.product_mobile.id, 'product_uom_qty': 1})]})
+            'partner_id': self.partner_id.id})
 
         # # ######### buy 2 Hard disk get 1 hard disk free
         order_id.write({'order_line': [(0, 0, {'product_id': self.product_harddisk.id, 'product_uom_qty': 2})]})

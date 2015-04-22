@@ -148,19 +148,15 @@ class SaleCouponProgram(models.Model):
 
     def _compute_program_state(self):
         #close the program when count reach to maximum
-        if self.program_type == 'public_unique_code':
-            if fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date():
+        expiration_date = self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date())
+        if (self.program_type == 'public_unique_code' and fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date()) or \
+           (self.program_type == 'apply_immediately' and fields.date.today() > expiration_date) or \
+           (self.program_type == 'generated_coupon' and fields.date.today() > expiration_date):
                 self.write({'state': 'closed'})
-        if self.program_type == 'apply_immediately':
-            if fields.date.today() > self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date()):
-                self.write({'state': 'closed'})
-        if self.program_type == 'generated_coupon':
-            if fields.date.today() > self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date()):
-                coupons_obj = self.env['sale.coupon'].search([('program_id', '=', self.id)])
-                if coupons_obj:
+                if self.program_type == 'generated_coupon':
+                    coupons_obj = self.env['sale.coupon'].search([('program_id', '=', self.id)])
                     for coupon in coupons_obj:
                         coupon.write({'state': 'expired'})
-                self.write({'state': 'closed'})
 
     @api.one
     def _compute_so_count(self):
@@ -170,7 +166,7 @@ class SaleCouponProgram(models.Model):
     def _compute_coupon_count(self):
         self.count_coupons = self.env['sale.coupon'].search_count([('program_id', '=', self.id)])
 
-    def check_is_program_expired(self, coupon_code):
+    def check_is_program_expired(self):
         expiration_date = self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date())
         if (self.program_type == ('generated_coupon' or 'apply_immediately') and fields.date.today() > expiration_date) or \
            (self.program_type == 'public_unique_code' and (fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date() or
@@ -220,8 +216,6 @@ class SaleCouponProgram(models.Model):
 
     @api.one
     def action_opened(self):
-        # if self.program_type == 'public_unique_code':
-        #     self.program_code = 'PUC' + (hashlib.sha1(str(random.getrandbits(256)).encode('utf-8')).hexdigest()[:7]).upper()
         self.state = 'opened'
 
     @api.one
@@ -256,6 +250,6 @@ class GetCouponCode(models.TransientModel):
     @api.multi
     def process_coupon(self):
         sale_order_id = self.env['sale.order'].browse(self._context.get('active_ids'))
-        coupon_applied_satus = sale_order_id.apply_coupon_reward(self.textbox_coupon_code)
-        if coupon_applied_satus.get('error'):
-            raise UserError(_(coupon_applied_satus.get('error')))
+        coupon_applied_status = sale_order_id.apply_coupon_reward(self.textbox_coupon_code)
+        if coupon_applied_status.get('error'):
+            raise UserError(_(coupon_applied_status.get('error')))

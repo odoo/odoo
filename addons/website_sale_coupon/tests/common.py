@@ -17,7 +17,7 @@ class TestSaleCouponCommon(common.TransactionCase):
         self.SaleOrder = self.env['sale.order']
         self.Category = self.env['product.category']
         self.reward_product = self.env.ref('website_sale_coupon.product_product_reward')
-
+        self.SaleGetCoupon = self.env['sale.get.coupon']
         # create partner for sale order.
         self.partner_id = self.Partner.create({
             'name': 'Steve Bucknor',
