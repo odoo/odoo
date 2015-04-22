@@ -920,52 +920,6 @@
         </div>
     </t>
 
-    <t t-name="UnsentOrdersPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-unsent-orders">
-                <p class="title">Unsent Orders</p>
-                <t t-if='widget.pos.db.get_orders().length === 0'>
-                    <p class='body'>
-                        There are no unsent orders
-                    </p>
-                </t>
-                <t t-if='widget.pos.db.get_orders().length > 0'>
-                    <p class='body traceback'>
-                        <t t-esc='JSON.stringify(widget.pos.db.get_orders(),null,2)' />
-                    </p>
-                </t>
-                <div class="footer">
-                    <div class="button confirm">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="UnpaidOrdersPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-unpaid-orders">
-                <p class="title">Unpaid Orders</p>
-                <t t-if='widget.pos.db.get_unpaid_orders().length === 0'>
-                    <p class='body'>
-                        There are no unpaid orders
-                    </p>
-                </t>
-                <t t-if='widget.pos.db.get_unpaid_orders().length > 0'>
-                    <p class='body traceback'>
-                        <t t-esc='JSON.stringify(widget.pos.db.get_unpaid_orders(),null,2)' />
-                    </p>
-                </t>
-                <div class="footer">
-                    <div class="button confirm">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="SelectionPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-selection">
@@ -1034,6 +988,42 @@
                         Cancel 
                     </div>
                     <div class="button confirm">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="OrderImportPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-import">
+                <p class="title">Finished Importing Orders</p>
+                <t t-if="widget.options and widget.options.report">
+                    <t t-set="report" t-value="widget.options.report" />
+                    <t t-set="unpaid_skipped" t-value="(report.unpaid_skipped_existing || 0) + (report.unpaid_skipped_session || 0)" />
+                    <ul class='body'>
+                        <li>Successfully imported <b><t t-esc='report.paid || 0'/></b> paid orders</li>
+                        <li>Successfully  imported <b><t t-esc='report.unpaid || 0'/></b> unpaid orders</li>
+                        <t t-if="unpaid_skipped">
+                            <li><b><t t-esc="unpaid_skipped"/></b> unpaid orders could not be imported
+                                <ul>
+                                    <li><b><t t-esc="report.unpaid_skipped_existing || 0" /></b> were duplicates of existing orders</li>
+                                    <li><b><t t-esc="report.unpaid_skipped_session || 0" /></b> belong to another session:
+                                        <t t-if="report.unpaid_skipped_sessions">
+                                            <ul>
+                                                <li>Session ids: <b><t t-esc="JSON.stringify(report.unpaid_skipped_sessions)" /></b></li> 
+                                            </ul>
+                                        </t>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+                        </t>
+                    </ul>
+                </t>
+                <div class="footer">
+                    <div class="button cancel">
                         Ok
                     </div>
                 </div>
@@ -1143,15 +1133,17 @@
                     <li class="button custom_ean">Scan EAN-13</li>
                 </ul>
 
-                <p class="category">Unsent Orders</p>
+                <p class="category">Orders</p>
+
                 <ul>
-                    <li class="button show_orders">Show All Unsent Orders</li>
-                    <li class="button delete_orders">Delete All Unsent Orders</li>
-                </ul>
-                <p class="category">Unpaid Orders</p>
-                <ul>
-                    <li class="button show_unpaid_orders">Show All Unpaid Orders</li>
-                    <li class="button delete_unpaid_orders">Delete All Unpaid Orders</li>
+                    <li class="button delete_orders">Delete Paid Orders</li>
+                    <li class="button delete_unpaid_orders">Delete Unpaid Orders</li>
+                    <li class="button export_paid_orders">Export Paid Orders</li>
+                    <li class="button export_unpaid_orders">Export Unpaid Orders</li>
+                    <li class="button import_orders" style="position:relative">
+                        Import Orders
+                        <input type="file" style="opacity:0;position:absolute;top:0;left:0;right:0;bottom:0;margin:0;cursor:pointer"/>
+                    </li>
                 </ul>
 
                 <p class="category">Hardware Status</p>

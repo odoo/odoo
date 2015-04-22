@@ -140,6 +140,14 @@ exports.PosModel = Backbone.Model.extend({
     // used during loading such as object ids, etc. 
     models: [
     {
+        label:  'version',
+        loaded: function(self){
+            return session.rpc('/web/webclient/version_info',{}).done(function(version) {
+                self.version = version;
+            });
+        },
+
+    },{ 
         model:  'res.users',
         fields: ['name','company_id'],
         ids:    function(self){ return [session.uid]; },
@@ -773,6 +781,127 @@ exports.PosModel = Backbone.Model.extend({
         }
         return true;
     },
+
+    // Exports the paid orders (the ones waiting for internet connection)
+    export_paid_orders: function() {
+        return JSON.stringify({
+            'paid_orders':  this.db.get_orders(),
+            'session':      this.pos_session.name,
+            'session_id':    this.pos_session.id,
+            'date':         (new Date()).toUTCString(),
+            'version':      this.version.server_version_info,
+        },null,2);
+    },
+
+    // Exports the unpaid orders (the tabs) 
+    export_unpaid_orders: function() {
+        return JSON.stringify({
+            'unpaid_orders': this.db.get_unpaid_orders(),
+            'session':       this.pos_session.name,
+            'session_id':    this.pos_session.id,
+            'date':          (new Date()).toUTCString(),
+            'version':       this.version.server_version_info,
+        },null,2);
+    },
+
+    // This imports paid or unpaid orders from a json file whose
+    // contents are provided as the string str.
+    // It returns a report of what could and what could not be
+    // imported.
+    import_orders: function(str) {
+        var json = JSON.parse(str);
+        var report = {
+            // Number of paid orders that were imported
+            paid: 0,
+            // Number of unpaid orders that were imported
+            unpaid: 0,
+            // Orders that were not imported because they already exist (uid conflict)
+            unpaid_skipped_existing: 0,
+            // Orders that were not imported because they belong to another session
+            unpaid_skipped_session:  0,
+            // The list of session ids to which skipped orders belong.
+            unpaid_skipped_sessions: [],
+        };
+
+        if (json.paid_orders) {
+            for (var i = 0; i < json.paid_orders.length; i++) {
+                this.db.add_order(json.paid_orders[i].data);
+            }
+            report.paid = json.paid_orders.length;
+            this.push_order();
+        } 
+
+        if (json.unpaid_orders) {
+
+            var orders  = [];
+            var existing = this.get_order_list();
+            var existing_uids = {};
+            var skipped_sessions = {};
+            
+            for (var i = 0; i < existing.length; i++) {
+                existing_uids[existing[i].uid] = true;
+            }
+
+            for (var i = 0; i < json.unpaid_orders.length; i++) {
+                var order = json.unpaid_orders[i];
+                if (order.pos_session_id !== this.pos_session.id) {
+                    report.unpaid_skipped_session += 1;
+                    skipped_sessions[order.pos_session_id] = true;
+                } else if (existing_uids[order.uid]) {
+                    report.unpaid_skipped_existing += 1;
+                } else {
+                    orders.push(new exports.Order({},{
+                        pos: this,
+                        json: order,
+                    }));
+                } 
+            }
+
+            orders = orders.sort(function(a,b){
+                return a.sequence_number - b.sequence_number;
+            });
+
+            if (orders.length) {
+                report.unpaid = orders.length;
+                this.get('orders').add(orders);
+            }
+
+            report.unpaid_skipped_sessions = _.keys(skipped_sessions);
+        }
+
+        return report;
+    },
+
+    _load_orders: function(){
+        var jsons = this.db.get_unpaid_orders();
+        var orders = [];
+        var not_loaded_count = 0; 
+
+        for (var i = 0; i < jsons.length; i++) {
+            var json = jsons[i];
+            if (json.pos_session_id === this.pos_session.id) {
+                orders.push(new exports.Order({},{
+                    pos:  this,
+                    json: json,
+                }));
+            } else {
+                not_loaded_count += 1;
+            }
+        }
+
+        if (not_loaded_count) {
+            console.info('There are '+not_loaded_count+' locally saved unpaid orders belonging to another session');
+        }
+        
+        orders = orders.sort(function(a,b){
+            return a.sequence_number - b.sequence_number;
+        });
+
+        if (orders.length) {
+            this.get('orders').add(orders);
+        }
+    },
+        
 });
 
 // Add fields to the list of read fields when a model is loaded

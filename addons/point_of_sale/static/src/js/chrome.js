@@ -254,21 +254,15 @@ var DebugWidget = PosBaseWidget.extend({
         this.$('.button.barcode').click(function(){
             self.pos.barcode_reader.scan(self.$('input.ean').val());
         });
-        this.$('.button.show_orders').click(function(){
-            self.gui.show_popup('unsent-orders');
-        });
         this.$('.button.delete_orders').click(function(){
             self.gui.show_popup('confirm',{
-                'title': _t('Delete Unsent Orders ?'),
-                'body':  _t('This operation will permanently destroy all unsent orders from the local storage. You will lose all the data. This operation cannot be undone.'),
+                'title': _t('Delete Paid Orders ?'),
+                'body':  _t('This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone.'),
                 confirm: function(){
                     self.pos.db.remove_all_orders();
                     self.pos.set({synch: { state:'connected', pending: 0 }});
                 },
             });
-        });
-        this.$('.button.show_unpaid_orders').click(function(){
-            self.gui.show_popup('unpaid-orders');
         });
         this.$('.button.delete_unpaid_orders').click(function(){
             self.gui.show_popup('confirm',{
@@ -280,6 +274,32 @@ var DebugWidget = PosBaseWidget.extend({
                 },
             });
         });
+
+        this.$('.button.export_unpaid_orders').click(function(){
+            self.gui.download_file(self.pos.export_unpaid_orders(),
+                "unpaid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+        });
+
+        this.$('.button.export_paid_orders').click(function() {
+            self.gui.download_file(self.pos.export_paid_orders(),
+                "paid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+        });
+
+        this.$('.button.import_orders input').on('change', function(event) {
+            var file = event.target.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    var report = self.pos.import_orders(event.target.result);
+                    self.gui.show_popup('orderimport',{report:report});
+                };
+                
+                reader.readAsText(file);
+            }
+        });
+
         _.each(this.events, function(name){
             self.pos.proxy.add_notification(name,function(){
                 self.$('.event.'+name).stop().clearQueue().css({'background-color':'#6CD11D'}); 

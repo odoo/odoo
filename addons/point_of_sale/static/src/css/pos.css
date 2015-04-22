@@ -819,7 +819,7 @@ td {
     background: url("../img/search.png") no-repeat 15px;
     background-color: white;
     border-radius: 20px;
-    font-family: Lato;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
     font-size: 13px;
 }
 .pos .searchbox input:focus {
@@ -2062,6 +2062,8 @@ td {
     border-radius: 3px;
     box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
     z-index:1200;
+    font-family: 'Lato';
+    font-family: Lato;
 }
 .pos .popup .body {
     font-weight: normal;
@@ -2239,6 +2241,23 @@ td {
     float: none;
     display: inline-block;
 }
+
+.pos .popup .body ul,
+.pos .popup ul.body {
+    text-align: left;
+    margin-left: 1em;
+}
+.pos .popup .body li {
+    text-indent: 1em;
+}
+.pos .popup .body li:before {
+    content: '—';
+    position: relative;
+    font-size: 0.6em;
+    left: -1em;
+    bottom: 0.2em;
+}
+
 
 /*  ********* The Webkit Scrollbar  ********* */
 

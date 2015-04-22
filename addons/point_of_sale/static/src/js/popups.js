@@ -221,14 +221,9 @@ var PasswordPopupWidget = NumberPopupWidget.extend({
 });
 gui.define_popup({name:'password', widget: PasswordPopupWidget});
 
-var UnsentOrdersPopupWidget = ConfirmPopupWidget.extend({
-    template: 'UnsentOrdersPopupWidget',
+var OrderImportPopupWidget = PopupWidget.extend({
+    template: 'OrderImportPopupWidget',
 });
-gui.define_popup({name:'unsent-orders', widget: UnsentOrdersPopupWidget});
-
-var UnpaidOrdersPopupWidget = ConfirmPopupWidget.extend({
-    template: 'UnpaidOrdersPopupWidget',
-});
-gui.define_popup({name:'unpaid-orders', widget: UnpaidOrdersPopupWidget});
+gui.define_popup({name:'orderimport', widget: OrderImportPopupWidget});
 
 });

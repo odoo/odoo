@@ -299,6 +299,30 @@ var Gui = core.Class.extend({
         $('body').append('<audio src="'+src+'" autoplay="true"></audio>');
     },
 
+    /* ---- Gui: FILE I/O ---- */
+
+    // This will make the browser download 'contents' as a 
+    // file named 'name'
+    // if 'contents' is not a string, it is converted into
+    // a JSON representation of the contents. 
+    download_file: function(contents, name) {
+        var URL = window.URL || window.webkitURL;
+        
+        if (typeof contents !== 'string') {
+            contents = JSON.stringify(contents,null,2);
+        }
+
+        var blob = new Blob([contents]);
+
+        var evt  = document.createEvent("HTMLEvents");
+            evt.initEvent("click");
+
+        $("<a>",{
+            download: name || 'document.txt',
+            href: URL.createObjectURL(blob),
+        }).get(0).dispatchEvent(evt);
+    },
+
     /* ---- Gui: KEYBOARD INPUT ---- */
 
     // This is a helper to handle numpad keyboard input. 
