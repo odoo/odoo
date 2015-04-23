@@ -13,5 +13,4 @@ class TestSaleCoupon(TestSaleCouponCommon):
         applicable_line = order_id.order_line.filtered(lambda x: x.product_id == self.product_shoe)
         reward_line = order_id.order_line.filtered(lambda x: x.product_id == self.reward_product and x.generated_from_line_id.id is applicable_line)
         self.assertFalse(reward_line, "Reward line is created before entering the code")
-        wizard = self.SaleGetCoupon.create({'textbox_coupon_code': 'ODOO_AAAA'})
-        print "<<<<<<<>>>>", wizard.process_coupon()
+        order_id.apply_coupon_reward('ODOO_AAAA')

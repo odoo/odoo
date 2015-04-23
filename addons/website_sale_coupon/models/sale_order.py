@@ -81,7 +81,7 @@ class SaleOrder(models.Model):
             #check discount amount if discount is on cart
             if (program.reward_discount_on == 'cart' and
                program.reward_discount_type == 'percentage' and
-               program.reward_type == 'discount') or program.reward_discount_on == 'cheapest_product':
+               program.reward_type == 'discount') or program.reward_discount_on == 'cheapest_product' or program.reward_discount_type == 'amount':
                 if program.applicability_tax == 'tax_excluded':
                     amount = order.amount_total
                 if program.applicability_tax == 'tax_included':
@@ -156,7 +156,10 @@ class SaleOrder(models.Model):
 
     def _process_reward_discount(self, program, coupon_code):
         if program.reward_discount_type == 'amount':
-            discount_amount = program.reward_discount_amount
+            if self.amount_total < program.reward_discount_amount:
+                discount_amount = self.amount_total
+            else:
+                discount_amount = program.reward_discount_amount
         elif program.reward_discount_type == 'percentage':
             if program.reward_discount_on == 'cart':
                 reward_line = self.order_line.filtered(lambda x: x.generated_from_line_id.id is False and x.coupon_program_id == program)
@@ -183,7 +186,7 @@ class SaleOrder(models.Model):
                 'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
                 'name': _("Free Shipping"),
                 'product_uom_qty': 1,
-                'price_unit': -delivery_charge_line.price_unit,
+                'price_unit': (-1) * delivery_charge_line.price_unit,
                 'order_id': self.id,
                 'coupon_program_id': program.id,
                 'generated_from_line_id': False,
@@ -239,7 +242,7 @@ class SaleOrder(models.Model):
             self._merge_duplicate_product_line()
             if vals.get('order_line'):
                 self.apply_immediately_reward()
-            return res
+                return res
         return True
 
     def is_reward_line_updated(self, vals):
@@ -412,7 +415,10 @@ class SaleOrderLine(models.Model):
     def _process_reward_discount(self, program, coupon_code):
         discount_amount = 0
         if program.reward_discount_type == 'amount':
-            discount_amount = program.reward_discount_amount
+            if self.order_id.amount_total < program.reward_discount_amount:
+                discount_amount = self.order_id.amount_total
+            else:
+                discount_amount = program.reward_discount_amount
         elif program.reward_discount_type == 'percentage':
             if program.reward_discount_on == 'cart':
                 discount_amount = self.order_id.amount_total * (program.reward_discount_percentage / 100)
@@ -435,7 +441,7 @@ class SaleOrderLine(models.Model):
                 'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
                 'name': _("Free Shipping"),
                 'product_uom_qty': 1,
-                'price_unit': -delivery_charge_line.price_unit,
+                'price_unit': (-1) * delivery_charge_line.price_unit,
                 'order_id': self.order_id.id,
                 'coupon_program_id': program.id,
                 'generated_from_line_id': self.id,
@@ -477,6 +483,13 @@ class SaleOrderLine(models.Model):
             pass
         return res
 
+    @api.model
+    def create(self, vals):
+        res = super(SaleOrderLine, self).create(vals)
+        if res.product_id.is_delivery_charge_product:
+            res.order_id.apply_immediately_reward()
+        return res
+
     @api.multi
     def process_rewards(self, programs, coupon_code):
         for program in programs:
@@ -489,6 +502,18 @@ class SaleOrderLine(models.Model):
         if programs:
             self.process_rewards(programs, False)
         return programs
+
+    # @api.one
+    # def send_mail_to_user(self):
+    #     mail_values = {
+    #         'subject': "Reward coupon",
+    #         'body': "Reward coupon",
+    #         'email_from': self.env.user.login,
+    #         'body_html': "sdcs",
+    #         'recipient_ids': "pgu@odoo.com"
+    #     }
+    #     mail_mail_id = self.env['mail.mail'].create(mail_values)
+    #     self.pool['mail.mail'].send(mail_mail_id, auto_commit=False, context=None)
 
     @api.multi
     def button_confirm(self):

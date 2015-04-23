@@ -13,7 +13,7 @@ class SaleApplicability(models.Model):
     _name = 'sale.applicability'
     _description = "Sales Coupon Applicability"
 
-    partner_id = fields.Many2one('res.partner', string="Limit to a single customer", help="Coupon program will work only for the perticular selected customer")
+    partner_id = fields.Many2one('res.partner', string="Limit to a single customer", help="Coupon program will work for selected customer only")
     date_from = fields.Date("Date From", help="Date on which coupon will get activated", default=fields.date.today())
     date_to = fields.Date("Date To", help="Date after which coupon will get deactivated", default=fields.date.today() + relativedelta(days=1))
     validity_type = fields.Selection(
@@ -140,7 +140,7 @@ class SaleCouponProgram(models.Model):
                              help="Draft - Program will be save but can not be used\n" +
                                   "Opened - Program cab be used\n" +
                                   "Closed - Program can not be used", default="draft")
-    nbr_uses_public_unique_code = fields.Integer(string="Expiration use", default=1, help="maximum number of times, the can be used")
+    nbr_uses_public_unique_code = fields.Integer(string="Expiration use", default=1, help="maximum number of times, the program can be used")
 
     _sql_constraints = [
         ('unique_program_code', 'unique(program_code)', 'The program code must be unique!'),
