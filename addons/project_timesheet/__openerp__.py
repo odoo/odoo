@@ -33,16 +33,18 @@ with the effect of creating, editing and deleting either ways.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
-    'depends': ['resource', 'project', 'hr_timesheet', 'hr_timesheet_invoice', 'account_analytic_analysis', 'procurement'],
+    'images': ['images/invoice_task_work.jpeg', 'images/my_timesheet.jpeg', 'images/working_hour.jpeg'],
+    'depends': ['resource', 'project', 'account_analytic_analysis', 'procurement'],
     'data': [
         'security/ir.model.access.csv',
         'security/project_timesheet_security.xml',
-        'project_timesheet_view.xml',
+        'report/project_report_view.xml',
+        'wizard/hr_timesheet_sign_in_out_view.xml',
+        'project_timesheet_view.xml'
     ],
     'demo': ['project_timesheet_demo.xml'],
     'test': [
         'test/worktask_entry_to_timesheetline_entry.yml',
-        'test/work_timesheet.yml',
     ],
     'installable': True,
     'auto_install': True,

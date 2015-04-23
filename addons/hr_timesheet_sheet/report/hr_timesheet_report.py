@@ -52,11 +52,11 @@ class hr_timesheet_report(osv.osv):
                     sum(total_attendance) / coalesce(sum(j.count),1) as total_attendance
                 FROM hr_timesheet_sheet_sheet_day d left join (
                     SELECT
-                        h.sheet_id,
+                        a.sheet_id,
                         a.date,
                         count(*)
-                    FROM account_analytic_line a inner join  hr_analytic_timesheet h ON (h.line_id=a.id)
-                    GROUP BY h.sheet_id, a.date
+                    FROM account_analytic_line a
+                    GROUP BY a.sheet_id, a.date
                 ) j ON (d.sheet_id = j.sheet_id AND d.name = j.date)
                 GROUP BY d.sheet_id, d.name
             )
@@ -73,7 +73,7 @@ class hr_timesheet_report(osv.osv):
                         htss.state"""
 
     def _from(self):
-        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (hat.sheet_id=htss.id) join totals as t on (t.sheet_id = hat.sheet_id and t.date = aal.date)"
+        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (aal.sheet_id=htss.id) join totals as t on (t.sheet_id = aal.sheet_id and t.date = aal.date)"
 
     def _group_by(self):
         return super(hr_timesheet_report, self)._group_by() + """,

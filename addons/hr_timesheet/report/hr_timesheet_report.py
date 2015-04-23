@@ -1,28 +1,26 @@
 
-from openerp import tools
-from openerp.osv import fields,osv
+from openerp import tools, models, fields
 from openerp.addons.decimal_precision import decimal_precision as dp
 
-class hr_timesheet_report(osv.osv):
+class hr_timesheet_report(models.Model):
     _name = "hr.timesheet.report"
     _description = "Timesheet"
     _auto = False
-    _columns = {
-        'date': fields.date('Date', readonly=True),
-        'name': fields.char('Description', size=64,readonly=True),
-        'product_id' : fields.many2one('product.product', 'Product',readonly=True),
-        'journal_id' : fields.many2one('account.analytic.journal', 'Journal',readonly=True),
-        'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
-        'user_id': fields.many2one('res.users', 'User',readonly=True),
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account',readonly=True),
-        'company_id': fields.many2one('res.company', 'Company',readonly=True),
-        'cost': fields.float('Cost', readonly=True, digits_compute=dp.get_precision('Account')),
-        'quantity': fields.float('Time', readonly=True),  # TDE FIXME master: rename into time
-    }
+
+    date = fields.Date('Date', readonly=True)
+    name = fields.Char('Description', size=64,readonly=True)
+    product_id = fields.Many2one('product.product', 'Product',readonly=True)
+    journal_id = fields.Many2one('account.analytic.journal', 'Journal',readonly=True)
+    general_account_id = fields.Many2one('account.account', 'General Account', readonly=True)
+    user_id = fields.Many2one('res.users', 'User',readonly=True)
+    account_id = fields.Many2one('account.analytic.account', 'Analytic Account',readonly=True)
+    company_id = fields.Many2one('res.company', 'Company',readonly=True)
+    cost = fields.Float('Cost', readonly=True, digits_compute=dp.get_precision('Account'))
+    quantity = fields.Float('Time', readonly=True)  # TDE FIXME master: rename into time
 
     def _select(self):
         select_str = """
-             SELECT min(hat.id) as id,
+             SELECT min(aal.id) as id,
                     aal.date as date,
                     sum(aal.amount) as cost,
                     sum(aal.unit_amount) as quantity,
@@ -38,8 +36,7 @@ class hr_timesheet_report(osv.osv):
 
     def _from(self):
         from_str = """
-                account_analytic_line as aal
-                    inner join hr_analytic_timesheet as hat ON (hat.line_id=aal.id)
+            FROM account_analytic_line as aal
         """
         return from_str
 
@@ -56,11 +53,20 @@ class hr_timesheet_report(osv.osv):
         """
         return group_by_str
 
+    def _where(self):
+        where_str = """
+            WHERE aal.is_timesheet IS TRUE
+        """
+        return where_str
+
     def init(self, cr):
         # self._table = hr_timesheet_report
         tools.drop_view_if_exists(cr, self._table)
         cr.execute("""CREATE or REPLACE VIEW %s as (
             %s
-            FROM ( %s )
             %s
-            )""" % (self._table, self._select(), self._from(), self._group_by()))
+            %s
+            %s
+            )""" % (self._table, self._select(), self._from(), self._where(), self._group_by()))
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -64,7 +64,7 @@
                         <field name="date_start"/>
                         <field name="server_date"/>
                         <separator string="Work done in the last period" colspan="4" />
-                        <field name="account_id" colspan="2"/>
+                        <field name="account_id" colspan="2" required="1"/>
                         <field name="info" colspan="2"/>
                         <field name="date"/>
                         <label string="(Keep empty for current time)" colspan="2"/>
@@ -73,7 +73,7 @@
 
                     <footer>
                         <button string="Change Work" name="sign_out_result" type="object" class="oe_highlight"/>
-                        <button string="Stop Working" name="sign_out_result_end" type="object" class="oe_highlight"/>
+                        <button string="Stop Working" name="sign_out_result_end" type="object" class="oe_highlight" context="{'default_is_timesheet':1}"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>

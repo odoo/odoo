@@ -2,6 +2,20 @@
 <openerp>
     <data>
 
+        <record id="view_project_tree_inherited" model="ir.ui.view">
+            <field name="name">project.project.tree.inherited</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="planned_hours" widget="float_time"/>
+                    <field name="total_hours" widget="float_time"/>
+                    <field name="effective_hours" widget="float_time"/>
+                    <field name="progress_rate" widget="progressbar"/>
+                </field>
+            </field>
+        </record>
+
         <record id="project_invoice_form" model="ir.ui.view">
             <field name="name">Inherit project form : Invoicing Data</field>
             <field name="model">project.project</field>
@@ -20,6 +34,12 @@
                         <field name="analytic_account_id" readonly="1" required="0" class="oe_inline" nolabel="1"/>.
                     </p>
                 </xpath>
+                <field name="privacy_visibility" position="after">
+                    <field name="planned_hours" widget="float_time"
+                            groups="project.group_time_work_estimation_tasks"/>
+                    <field name="effective_hours" widget="float_time"
+                            groups="project.group_time_work_estimation_tasks"/>
+                </field>
                 <xpath expr='//div[@name="buttons"]' position="inside">
                     <button class="oe_inline oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':[('invoice_on_timesheets','=',False)]}"
                         icon="fa-calendar" string="Timesheets"/>
@@ -40,6 +60,7 @@
                 </xpath>
             </field>
         </record>
+
         <record id="view_account_analytic_line_search_account_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.search.account_id</field>
             <field name="model">account.analytic.line</field>
@@ -47,6 +68,9 @@
             <field name="arch" type="xml">
                  <field name="account_id" position="replace">
                      <field name="account_id" string="Analytic account/project"/>
+                 </field>
+                 <field name="account_id" position="after">
+                    <field name="task_id"/>
                  </field>
             </field>
          </record>
@@ -56,17 +80,20 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
-                   <field name="account_id" string="Analytic Account/Project" on_change="on_change_account_id(account_id)"/>
+                   <field name="account_id" string="Analytic Account/Project"/>
                 </field>
             </field>
         </record>
        <record id="view_account_analytic_line_tree_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
-                <field name="account_id"  position="replace">
-                    <field name="account_id" string="Analytic account/project" on_change="on_change_account_id(account_id)"/>
+                <field name="account_id"  position="attributes">
+                    <attribute name="string">Analytic account/project</attribute>
+                </field>
+                <field name="account_id" position="after">
+                    <field name="task_id" domain="[('project_id.analytic_account_id', '=' , account_id)]"/>
                 </field>
             </field>
         </record>
@@ -87,7 +114,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="hr_timesheet.action_hr_timesheet_sign_in"
+        <menuitem action="project_timesheet.action_hr_timesheet_sign_in"
             id="menu_hr_timesheet_sign_in"
             parent="hr_attendance.menu_hr_attendance"
             sequence="5" groups="base.group_hr_attendance" />
@@ -123,5 +150,65 @@
         <menuitem id="menu_invoicing_contracts" parent="menu_project_billing" sequence="4"
             action="account_analytic_analysis.action_account_analytic_overdue"/>
 
+        <record model="ir.ui.view" id="view_task_form2_inherited">
+            <field name="name">project.task.form.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2" />
+            <field name="arch" type="xml">
+                <field name="categ_ids" position="after">
+                    <field name="analytic_account_id" invisible="1"/>
+                    <field name="progress" widget="progressbar"
+                                groups="project.group_time_work_estimation_tasks"/>
+                </field>
+                <xpath expr="//notebook/page[@name='description_page']" position="after">
+                    <page string="Timesheets">
+                    <field name="timesheet_ids" groups="project.group_tasks_work_on_tasks" context="{'default_account_id' : analytic_account_id, 'default_is_timesheet' : 1}">
+                        <tree editable="top" string="Timesheet Activities">
+                            <field name="date"/>
+                            <field name="user_id" required="1"/>
+                            <field name="name"/>
+                            <field name="account_id" on_change="on_change_account_id(account_id, is_timesheet, user_id, context)"/>
+                            <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" sum="Total time" widget="float_time"/>
+                            <field name="to_invoice"/>
+                            <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" invisible="1"/>
+                            <field name="journal_id" invisible="1"/>
+                            <field name="amount" sum="Total cost" invisible="1"/>
+                            <field name="general_account_id" invisible="1"/>
+                            <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" required="1" domain="[('type','=','service')]" invisible="1"/>
+                            <field name="is_timesheet" invisible="1"/>
+                        </tree>
+                    </field>
+                    <group>
+                     <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
+                        <field name="effective_hours" widget="float_time" groups="project.group_time_work_estimation_tasks"/>
+                        <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" groups="project.group_time_work_estimation_tasks"/>
+                     </group>
+                    </group>
+                </page>
+                </xpath>
+                <xpath expr="//tree[@name='delegated_task']" position="inside">
+                    <field name="effective_hours" widget="float_time"/>
+                    <field name="progress" widget="progressbar"/>
+                    <field name="remaining_hours" widget="float_time"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_task_tree2_inherited" model="ir.ui.view">
+            <field name="name">project.task.tree.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2" />
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <field name="planned_hours" position="after">
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
+                    <field name="total_hours" invisible="1"/>
+                    <field name="effective_hours" widget="float_time" sum="Spent Hours" invisible="1"/>
+                </field>
+                <field name="date_end" position="after">
+                    <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
+                </field>
+            </field>
+        </record>
     </data>
 </openerp>

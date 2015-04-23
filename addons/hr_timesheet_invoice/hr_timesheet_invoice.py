@@ -41,36 +41,12 @@ class hr_timesheet_invoice_factor(osv.osv):
 
 
 class account_analytic_account(osv.osv):
-    def _invoiced_calc(self, cr, uid, ids, name, arg, context=None):
-        obj_invoice = self.pool.get('account.invoice')
-        res = {}
-
-        cr.execute('SELECT account_id as account_id, l.invoice_id '
-                'FROM hr_analytic_timesheet h LEFT JOIN account_analytic_line l '
-                    'ON (h.line_id=l.id) '
-                    'WHERE l.account_id = ANY(%s)', (ids,))
-        account_to_invoice_map = {}
-        for rec in cr.dictfetchall():
-            account_to_invoice_map.setdefault(rec['account_id'], []).append(rec['invoice_id'])
-
-        for account in self.browse(cr, uid, ids, context=context):
-            invoice_ids = filter(None, list(set(account_to_invoice_map.get(account.id, []))))
-            for invoice in obj_invoice.browse(cr, uid, invoice_ids, context=context):
-                res.setdefault(account.id, 0.0)
-                res[account.id] += invoice.amount_untaxed
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
-
-        return res
-
     _inherit = "account.analytic.account"
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist',
             help="The product to invoice is defined on the employee form, the price will be deducted by this pricelist on the product."),
         'amount_max': fields.float('Max. Invoice Price',
             help="Keep empty if this contract is not limited to a total fixed price."),
-        'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
-            help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
             help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sales order), you should invoice the rest on timesheet with a 80% ratio."),
     }
@@ -108,14 +84,6 @@ class account_analytic_line(osv.osv):
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoiceable', help="It allows to set the discount while making invoice, keep empty if the activities should not be invoiced."),
     }
 
-    def _default_journal(self, cr, uid, context=None):
-        proxy = self.pool.get('hr.employee')
-        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        if record_ids:
-            employee = proxy.browse(cr, uid, record_ids[0], context=context)
-            return employee.journal_id and employee.journal_id.id or False
-        return False
-
     def _default_general_account(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
@@ -126,7 +94,6 @@ class account_analytic_line(osv.osv):
         return False
 
     _defaults = {
-        'journal_id' : _default_journal,
         'general_account_id' : _default_general_account,
     }
 
@@ -134,6 +101,12 @@ class account_analytic_line(osv.osv):
         self._check_inv(cr, uid, ids, vals)
         return super(account_analytic_line,self).write(cr, uid, ids, vals,
                 context=context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        for line in self.browse(cr, uid, ids):
+            if line.invoice_id.id:
+                raise UserError(_('You cannot delete an invoiced analytic line!'))
+        return super(account_analytic_line,self).unlink(cr, uid, ids, context)
 
     def _check_inv(self, cr, uid, ids, vals):
         select = ids
@@ -337,23 +310,23 @@ class account_analytic_line(osv.osv):
             invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
 
-
-class hr_analytic_timesheet(osv.osv):
-    _inherit = "hr.analytic.timesheet"
-    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False):
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, is_timesheet=False, context=None):
         res = {}
-        if not account_id:
-            return res
-        res.setdefault('value',{})
-        acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
-        st = acc.to_invoice.id
-        res['value']['to_invoice'] = st or False
-        if acc.state=='pending':
-            res['warning'] = {
-                'title': 'Warning',
-                'message': 'The analytic account is in pending state.\nYou should not work on this account !'
-            }
-        return res
+        if is_timesheet:
+            if not account_id:
+                return res
+            res.setdefault('value',{})
+            acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id, context=context)
+            st = acc.to_invoice.id
+            res['value']['to_invoice'] = st or False
+            if acc.state=='pending':
+                res['warning'] = {
+                    'title': 'Warning',
+                    'message': 'The analytic account is in pending state.\nYou should not work on this account !'
+                }
+            elif acc.state == 'close' or acc.state == 'cancelled':
+                raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
+        return res    
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"

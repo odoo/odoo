@@ -28,7 +28,7 @@
 -
   I assign account on analytic account line.
 -
-  !python {model: hr.analytic.timesheet}: |
+  !python {model: account.analytic.line}: |
     self.on_change_account_id(cr, uid, [ref('account_analytic_line_developyamlforhrmodule1')], ref('analytic.analytic_agrolait'))
 -
   I create a Tax Code
