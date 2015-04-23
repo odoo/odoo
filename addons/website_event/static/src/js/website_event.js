@@ -24,6 +24,18 @@ $(document).ready(function () {
                 });
             });
         });
+
+        $('#event_search, #category_submit').click(function (e){
+            $('#search_event .dropdown-menu').toggle();
+            $('.oe_event_submit_btn').hide();
+        });
+        $('#search_event .dropdown-menu').click(function(event){
+            event.stopPropagation();
+        });
+        $(document).click(function () {
+            $('#search_event .dropdown-menu').hide();
+            $('.oe_event_submit_btn').show();
+        })
 });
 
 });

@@ -23,6 +23,10 @@ class website_event(http.Controller):
         searches.setdefault('date', 'all')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
+        searches.setdefault('search', '')
+        searches.setdefault('search_category', '')
+        searches.setdefault('category_searches', '')
+        searches.setdefault('remove_search', '')
 
         domain_search = {}
 
@@ -78,6 +82,28 @@ class website_event(http.Controller):
             domain_search["country"] = ['|', ("country_id", "=", int(searches["country"])), ("country_id", "=", False)]
         elif searches["country"] == 'online':
             domain_search["country"] = [("country_id", "=", False)]
+
+        if searches['search']:
+            domain_search["search"] = [('name', 'ilike', searches['search'])]
+
+        searches_list = []
+        if searches['search_category'] and searches['search_category'] not in searches_list:
+            searches_list.append(searches['search_category'])
+
+        if searches['category_searches']:
+            [searches_list.append(item) for item in eval(searches['category_searches']) if item not in searches_list]
+
+        if searches['remove_search'] and searches['remove_search'] in searches_list:
+            searches_list.remove(searches['remove_search'])
+        searches['category_searches'] = searches_list
+
+        search_domain = []
+        for test in searches_list:
+            if not search_domain:
+                search_domain = [('type', 'ilike', test)]
+            else:
+                search_domain = ['|',('type', 'ilike', test)] + search_domain
+        domain_search["search_category"] = search_domain
 
         def dom_without(without):
             domain = [('state', "in", ['draft', 'confirm', 'done'])]
@@ -140,6 +166,8 @@ class website_event(http.Controller):
             'current_date': current_date,
             'current_country': current_country,
             'current_type': current_type,
+            'current_search': searches['search'],
+            'category_searches': searches['category_searches'],
             'event_ids': events_ids,
             'dates': dates,
             'types': types,
