@@ -650,7 +650,7 @@ exports.PosModel = Backbone.Model.extend({
         var invoiced = new $.Deferred(); 
 
         if(!order.get_client()){
-            invoiced.reject('error-no-client');
+            invoiced.reject({code:400, message:'Missing Customer', data:{}});
             return invoiced;
         }
 
@@ -668,8 +668,8 @@ exports.PosModel = Backbone.Model.extend({
 
             var transfer = self._flush_orders([self.db.get_order(order_id)], {timeout:30000, to_invoice:true});
             
-            transfer.fail(function(){
-                invoiced.reject('error-transfer');
+            transfer.fail(function(error){
+                invoiced.reject(error);
                 done.reject();
             });
 

@@ -1804,7 +1804,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             invoiced.fail(function(error){
                 self.invoicing = false;
-                if (error === 'error-no-client') {
+                if (error.message === 'Missing Customer') {
                     self.gui.show_popup('confirm',{
                         'title': _t('Please select the Customer'),
                         'body': _t('You need to select the customer before you can invoice an order.'),
@@ -1812,10 +1812,20 @@ var PaymentScreenWidget = ScreenWidget.extend({
                             self.gui.show_screen('clientlist');
                         },
                     });
-                } else {
+                } else if (error.code < 0) {        // XmlHttpRequest Errors
                     self.gui.show_popup('error',{
                         'title': _t('The order could not be sent'),
                         'body': _t('Check your internet connection and try again.'),
+                    });
+                } else if (error.code === 200) {    // OpenERP Server Errors
+                    self.gui.show_popup('error-traceback',{
+                        'title': error.data.message || _t("Server Error"),
+                        'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
+                    });
+                } else {                            // ???
+                    self.gui.show_popup('error',{
+                        'title': _t("Unknown Error"),
+                        'body':  _t("The order could not be sent to the server due to an unknown error"),
                     });
                 }
             });
