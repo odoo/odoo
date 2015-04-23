@@ -281,6 +281,15 @@ class hr_employee(osv.osv):
             that receive the context without the wrapper. """
         return self.message_unsubscribe_users(cr, uid, ids, context=context)
 
+    def action_open_employee_kanban(self, cr, uid, context=None):
+        emp_id = self.search(cr, uid, [('user_id', '=', uid)], limit=1, context=context)
+        department_id = emp_id and self.browse(cr, uid, emp_id, context=context).department_id or False
+
+        action = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'hr.open_view_employee_list_my', context=context)
+        result = action.read()[0]
+        result['context'] = {'user_department_id': department_id and department_id.id}
+        return result
+
     def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
         """Show the suggestion of employees if display_employees_suggestions if the
         user perference allows it. """
