@@ -847,6 +847,10 @@ var ActionButtonWidget = PosBaseWidget.extend({
     highlight: function(highlight){
         this.$el.toggleClass('highlight',!!highlight);
     },
+    // alternative highlight color
+    altlight: function(altlight){
+        this.$el.toggleClass('altlight',!!altlight);
+    },
 });
 
 /* -------- The Product Screen -------- */

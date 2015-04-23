@@ -301,6 +301,8 @@ var TableWidget = PosBaseWidget.extend({
             if (orders[i].hasChangesToPrint()) {
                 notifications.printing = true;
                 break;
+            } else if (orders[i].hasSkippedChanges()) {
+                notifications.skipped  = true;
             }
         }
         return notifications;

@@ -35,7 +35,7 @@
                     t-att-style='"height: " + Math.ceil(widget.fill * 100) + "%;"'
                     ></span>
                 <t t-if='widget.order_count'>
-                    <span t-att-class='"order-count " + (widget.notifications.printing ? "notify-printing":"")'><t t-esc='widget.order_count'/></span>
+                    <span t-att-class='"order-count " + (widget.notifications.printing ? "notify-printing":"") + (widget.notifications.skipped ? "notify-skipped" : "")'><t t-esc='widget.order_count'/></span>
                 </t>
                 <span class='label'>
                     <t t-esc='widget.table.name' />
