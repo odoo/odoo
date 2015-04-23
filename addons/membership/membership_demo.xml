@@ -5,8 +5,7 @@
 <!-- Demo Data for Memberships  -->
     <record id="membership_0" model="product.product">
         <field name="membership">True</field>
-        <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
-        <field eval="time.strftime('%Y-12-31')" name="membership_date_to"/>
+        <field name="membership_duration">24</field>
         <field name="name">Gold Membership</field>
         <field name="list_price">180</field>
         <field name="categ_id" ref="product.product_category_1"/>
@@ -15,8 +14,7 @@
     </record>
     <record id="membership_1" model="product.product">
         <field name="membership">True</field>
-        <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
-        <field eval="time.strftime('%Y-12-31')" name="membership_date_to"/>
+        <field name="membership_duration">12</field>
         <field name="name">Silver Membership</field>
         <field name="categ_id" ref="product.product_category_1"/>
         <field name="list_price">80</field>
@@ -25,8 +23,7 @@
     </record>
     <record id="membership_2" model="product.product">
         <field name="membership">True</field>
-        <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
-        <field eval="time.strftime('%Y-12-31')" name="membership_date_to"/>
+        <field name="membership_duration">6</field>
         <field name="name">Basic Membership</field>
         <field name="categ_id" ref="product.product_category_1"/>
         <field name="list_price">40</field>
@@ -79,6 +76,17 @@
     </record>
     <record id="base.res_partner_17" model="res.partner">
         <field name="associate_member" ref="base.res_partner_2"/>
+    </record>
+
+    <!-- Demo data for Expired memberships -->
+    <record id="membership_expired_1" model="membership.membership_line">
+        <field eval="time.strftime('%Y-%m-%d')" name='date'/>
+        <field name="partner" ref="base.res_partner_12"/>
+        <field name="membership_id" ref="membership_1"/>
+        <field name="member_price">80</field>
+        <field eval="time.strftime('2013-01-01')" name="date_from"/>
+        <field eval="time.strftime('2013-12-31')" name="date_to"/>
+        <field name="state">paid</field>
     </record>
     </data>
 </openerp>

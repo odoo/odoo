@@ -17,7 +17,6 @@
                     <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>
                         <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
-                        <filter string='From Month' icon="terp-go-month" domain="[]" context="{'group_by' : 'membership_date_from'}"/>
                     </group>
                 </search>
             </field>
@@ -30,8 +29,7 @@
             <field name="arch" type="xml">
                 <tree string="Membership products">
                     <field name="name"/>
-                    <field name="membership_date_from"/>
-                    <field name="membership_date_to"/>
+                    <field name="membership_duration"/>
                     <field name="list_price" string="Membership Fee"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="uom_id" invisible="1"/>
@@ -46,37 +44,38 @@
             <field name="priority">50</field>
             <field name="arch" type="xml">
                 <form string="Membership products">
-                    <label for="name" class="oe_edit_only"/>
-                    <h1>
-                        <field name="name"/>
-                    </h1>
-                    <group>
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
                         <group>
-                            <field name="default_code"/>
-                            <field name="categ_id"/>
-                            <field name="membership" invisible="1"/>
-                            <field name="company_id"
-                                groups="base.group_multi_company"
-                                options="{'no_create': True}"/>
-                            <field name="active"/>
+                            <group>
+                                <field name="default_code"/>
+                                <field name="categ_id"/>
+                                <field name="membership" invisible="1"/>
+                                <field name="company_id"
+                                    groups="base.group_multi_company"
+                                    widget="selection"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <label for="membership_duration"/>
+                                <div>
+                                    <field name="membership_duration" class="oe_inline"/>months
+                                </div>
+                                <field name="list_price" string="Membership Fee"/>
+                                <field
+                                    name="property_account_income"
+                                    domain="[('type', '!=', 'view')]"/>
+                                <field name="taxes_id" widget="many2many_tags" string="Taxes"/>
+                            </group>
                         </group>
-                        <group>
-                            <label for="membership_date_from" string="Membership Duration"/>
-                            <div>
-                                <field name="membership_date_from" required="1" class="oe_inline"/> -
-                                <field name="membership_date_to" required="1" class="oe_inline"/>
-                            </div>
-                            <field name="list_price" string="Membership Fee"/>
-                            <field
-                                name="property_account_income"
-                                domain="[('type', '!=', 'view')]"/>
-                            <field name="taxes_id" widget="many2many_tags" string="Taxes"/>
-                        </group>
-                    </group>
-                    <label for="description"/>
-                    <field colspan="4" name="description" placeholder="Add a description..."/>
-                    <label for="description_sale"/>
-                    <field colspan="4" name="description_sale" placeholder="This note will be displayed on quotations..."/>
+                        <label for="description"/>
+                        <field colspan="4" name="description" placeholder="Add a description..."/>
+                        <label for="description_sale"/>
+                        <field colspan="4" name="description_sale" placeholder="This note will be displayed on quotations..."/>
+                    </sheet>
                  </form>
             </field>
         </record>
@@ -87,15 +86,20 @@
             <field name="priority">6</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="type" position="after">
-                    <field name="membership" readonly="0" attrs="{'invisible': [('type', '!=', 'service')]}"/>
-                </field>
-                <field name="description" position="before">
-                    <group attrs="{'invisible':[('membership','=',False)]}">
-                        <field name="membership_date_from" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
-                        <field name="membership_date_to" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
-                    </group>
-                </field>
+                <div name="options" position="inside">
+                    <field name="membership" readonly="0"/>
+                    <label for="membership"/>
+                </div>
+                <page string="Accounting" position="after">
+                    <page string="Membership" attrs="{'invisible':[('membership','=',False)]}">
+                        <group>
+                            <label for="membership_duration"/>
+                            <div>
+                                <field name="membership_duration" class="oe_inline"/>months
+                            </div>
+                        </group>
+                    </page>
+                </page>
             </field>
         </record>
 
@@ -217,6 +221,70 @@
 
         <!-- PARTNERS -->
 
+        <record model="ir.ui.view" id="membership_expired_form">
+            <field name="name">Expired Memberships</field>
+            <field name="model">membership.membership_line</field>
+            <field name="arch" type="xml">
+                <form string="Expired Memberships" create="false" edit="false" delete='false'>
+                    <group>
+                        <group>
+                            <field string="Member" name="partner"/>
+                            <field name="membership_id"/>
+                            <field name="member_price"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name='date'/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="membership_expired_tree">
+            <field name="name">Expired Memberships</field>
+            <field name="model">membership.membership_line</field>
+            <field name="arch" type="xml">
+                <tree string="Expired Memberships" create="false" edit="false" delete='false'>
+                    <field name='date'/>
+                    <field string="Member" name="partner"/>
+                    <field name="membership_id"/>
+                    <field name="member_price"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_expired_memberships_filter" model="ir.ui.view">
+            <field name="name">Expired Memberships</field>
+            <field name="model">membership.membership_line</field>
+            <field name="arch" type="xml">
+                <search string="Expired Memberships">
+                    <field name="date_to"/>
+                    <filter string="Expired memberships" name="expired_memberships" domain="[('date_to','&lt;',(context_today()-datetime.timedelta(days=0)).strftime('%Y-%m-%d'))]" />
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_membership_expired">
+            <field name="name">Expired Memberships</field>
+            <field name="res_model">membership.membership_line</field>
+            <field name="search_view_id" ref="view_expired_memberships_filter"/>
+            <field name="context">{"search_default_expired_memberships": 1}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no membership to renew.
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Membership to Renew" parent="menu_membership" id="menu_membership_expired" sequence="3" action="action_membership_expired"/>
+
         <record model="ir.ui.view" id="view_partner_tree">
             <field name="name">res.partner.tree.form.inherit</field>
             <field name="model">res.partner</field>
@@ -236,43 +304,54 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Membership">
+                        <div class="oe_title">
+                            <h1><field name="current_membership_id"/></h1>
+                        </div>
+                        <div class="oe_right oe_button_box">
+                            <button name="return_action_to_open"
+                                type="object"
+                                class="oe_stat_button oe_inline"
+                                icon="fa-users">
+                                <field name="count_membership" widget="statinfo" string="Memberships"/>
+                            </button>
+                        </div>
+                        <field name="membership_state" widget="state_membership"/>
                         <group>
                             <group>
-                                <field name="free_member"/>
-                                <label for="membership_state"/>
-                                <div>
-                                    <field name="membership_state"/>
-                                    <button name="%(action_membership_invoice_view)d" type="action" string="Buy Membership" 
-                                        attrs="{'invisible':[('free_member','=',True)]}" class="oe_link"/>
-                                </div>
+                                <field name="membership_start" attrs="{'invisible':[('membership_start','=',False)]}"/>
+                                <field name="membership_stop" attrs="{'invisible':[('membership_stop','=',False)]}"/>
                             </group>
                             <group>
                                 <field name="associate_member" attrs="{'invisible':[('free_member','=',True)]}"/>
-                                <field name="membership_start" attrs="{'invisible':[('membership_start','=',False)]}"/>
-                                <field name="membership_stop" attrs="{'invisible':[('membership_stop','=',False)]}"/>
                                 <field name="membership_cancel" attrs="{'invisible':[('membership_cancel','=',False)]}"/>
+                                <field name="free_member"/>
                             </group>
                         </group>
-                        <field name="member_lines" nolabel="1" colspan="4" readonly="1">
-                            <tree string="Memberships">
-                                <field name="date"/>
-                                <field name="membership_id"/>
-                                <field name="member_price"/>
-                                <field name="account_invoice_id"/>
-                                <field name="state"/>
-                            </tree>
-                            <form string="Memberships">
-                                <field name="date"/>
-                                <field name="member_price"/>
-                                <field name="membership_id"/>
-                                <field name="account_invoice_id"/>
-                                <field name="state" colspan="4"/>
-                            </form>
-                        </field>
-
                     </page>
                 </notebook>
             </field>
+        </record>
+
+        <record model="ir.ui.view" id="membership_products_count_tree">
+            <field name="name">Past Membership</field>
+            <field name="model">membership.membership_line</field>
+            <field name="arch" type="xml">
+                <tree string="Past Membership products" create="false">
+                    <field name="date"/>
+                    <field name="membership_id"/>
+                    <field name="member_price"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_membership_product_count_view">
+            <field name="name">Past Membership</field>
+            <field name="res_model">membership.membership_line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="membership_products_count_tree"/>
         </record>
 
         <!-- MEMBERSHIP/REPORTING -->
