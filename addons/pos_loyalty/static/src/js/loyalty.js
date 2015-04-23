@@ -315,13 +315,17 @@ models.Order = models.Order.extend({
             });
         }
     },
-        
-    validate: function(){
+    
+    finalize: function(){
         var client = this.get_client();
         if ( client ) {
             client.loyalty_points = this.get_new_total_points();
+            // The client list screen has a cache to avoid re-rendering
+            // the client lines, and so the point updates may not be visible ...
+            // We need a better GUI framework !
+            this.pos.gui.screen_instances.clientlist.partner_cache.clear_node(client.id);
         }
-        _super.prototype.validate.apply(this,arguments);
+        _super.prototype.finalize.apply(this,arguments);
     },
 
     export_for_printing: function(){

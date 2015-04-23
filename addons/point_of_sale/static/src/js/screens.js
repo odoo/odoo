@@ -209,6 +209,14 @@ var DomCache = core.Class.extend({
         }
         return node;
     },
+    clear_node: function(key) {
+        var cached = this.cache[key];
+        if (cached) {
+            delete this.cache[key];
+            delete this.access_time[key];
+            this.size --;
+        }
+    },
     get_node: function(key){
         var cached = this.cache[key];
         if(cached){
