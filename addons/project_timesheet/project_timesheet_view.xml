@@ -122,6 +122,21 @@
         </record>
         <menuitem id="menu_invoicing_contracts" parent="menu_project_billing" sequence="4"
             action="account_analytic_analysis.action_account_analytic_overdue"/>
+            
+        <record id="project_task_form_view" model="ir.ui.view">
+            <field name="name">Inherits : Project Task form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <field name="project_id" position="attributes">
+                    <attribute name="on_change">onchange_project(project_id)</attribute>
+                </field>
+                <xpath expr='//field[@name="project_id"]' position='after'>
+                    <field name="contract_state" widget="label_selection" attrs="{'invisible': ['|', ('project_id', '=', False), ('partner_id', '=', False)]}"
+                    options="{'classes': {'template': 'default', 'draft': 'info', 'open': 'success', 'pending': 'danger', 'close': 'danger', 'cancelled': 'warning'}}" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>

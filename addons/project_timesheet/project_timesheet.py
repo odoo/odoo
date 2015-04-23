@@ -21,6 +21,7 @@
 import time
 import datetime
 
+from openerp.addons.analytic.models import analytic
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
@@ -232,6 +233,19 @@ class project_work(osv.osv):
 class task(osv.osv):
     _inherit = "project.task"
 
+    _columns = {
+        'contract_state': fields.related('project_id', 'analytic_account_id', 'state', relation="account.analytic.account", string='Contract Status', type='selection', selection=analytic.ANALYTIC_ACCOUNT_STATE),
+    }
+    
+    def onchange_project(self, cr, uid, ids, project_id, context=None):
+        result = super(task, self).onchange_project(cr, uid, ids, project_id, context=context)
+        if not project_id:
+            return result
+        result['value'] = result.get('value', {})
+        project = self.pool['project.project'].browse(cr, uid, project_id, context=context)
+        result['value']['contract_state'] = project.analytic_account_id.state
+        return result
+        
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for task_obj in self.browse(cr, uid, ids, *args, **kwargs):
             if task_obj.work_ids:
