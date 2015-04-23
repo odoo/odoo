@@ -234,7 +234,9 @@ models.Order = models.Order.extend({
                 continue;
             } else if(reward.type === 'gift' && reward.point_cost > this.get_spendable_points()) {
                 continue;
-            } 
+            } else if(reward.type === 'resale' && this.get_spendable_points() <= 0) {
+                continue;
+            }
             rewards.push(reward);
         }
         return rewards;
@@ -424,7 +426,6 @@ screens.OrderWidget.include({
         }
 
         if (this.pos.loyalty &&
-            order.get_client() &&
             this.getParent().action_buttons &&
             this.getParent().action_buttons.loyalty) {
 
