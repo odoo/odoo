@@ -930,6 +930,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         opportunity = self.browse(cr, uid, ids[0], context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
         res['context'] = {
+            'search_default_opportunity_id': opportunity.id,
             'default_opportunity_id': opportunity.id,
             'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
             'default_partner_ids' : opportunity.partner_id and [opportunity.partner_id.id] or False,
