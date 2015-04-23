@@ -76,8 +76,10 @@
         <field name="act_window_id" ref="action_evaluation_report_all"/>
     </record>
 
-
-    <menuitem action="action_evaluation_report_all" id="menu_evaluation_report_all" parent="hr.menu_hr_reporting" sequence="2" groups="base.group_hr_manager"/>
+    <menuitem id="menu_hr_evaluation_report" parent="menu_hr_evaluation_root" sequence="99"
+        name="Reports"/>
+    <menuitem action="action_evaluation_report_all" id="menu_evaluation_report_all" 
+        parent="menu_hr_evaluation_report" sequence="2" groups="base.group_hr_manager"/>
 
     </data>
 </openerp>

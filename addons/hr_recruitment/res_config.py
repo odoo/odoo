@@ -24,8 +24,8 @@ from openerp.osv import fields, osv
 
 
 class hr_applicant_settings(osv.TransientModel):
-    _name = 'hr.config.settings'
-    _inherit = ['hr.config.settings', 'fetchmail.config.settings']
+    _name = 'hr.recruitment.config.settings'
+    _inherit = ['res.config.settings', 'fetchmail.config.settings']
 
     _columns = {
         'module_document': fields.boolean('Allow the automatic indexation of resumes',

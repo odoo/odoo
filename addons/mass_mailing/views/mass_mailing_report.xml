@@ -60,8 +60,11 @@
            <field name="help">Mass Mailing Statistics allows you to check different mailing related information like number of bounced mails, opened mails, replied mails. You can sort out your analysis by different groups to get accurate grained analysis.</field>
        </record>
 
-       <menuitem name="Mass Mailing Analysis" id="menu_mass_mailing_report" sequence="1"
-            parent="base.marketing_reporting_menu" action="action_mail_statistics_report"/>
+       <menuitem name="Mass Mailing" id="mass_mailing_menu_root" sequence="14"/>
+       <menuitem name="Reports" id="menu_mass_mailing_report" sequence="99"
+            parent="mass_mailing_menu_root"/>
+       <menuitem name="Mass Mailing Analysis" id="menu_mass_mailing_analysis" sequence="1"
+            parent="menu_mass_mailing_report" action="action_mail_statistics_report"/>
 
     </data>
 </openerp>

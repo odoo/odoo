@@ -2,46 +2,6 @@
 <openerp>
     <data>
 
-
-        <record model="ir.ui.view" id="project_issue_version_search_view">
-            <field name="name">Issue Version</field>
-            <field name="model">project.issue.version</field>
-            <field name="arch" type="xml">
-                <search string="Issue Version">
-                    <field name="name" string="Issue Version"/>
-                    <field name="active"/>
-                </search>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="project_issue_version_form_view">
-            <field name="name">Issue Version</field>
-            <field name="model">project.issue.version</field>
-            <field name="arch" type="xml">
-                <form string="Issue Version">
-                    <group col="2">
-                        <field name="name"/>
-                        <field name="active"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="project_issue_version_action" model="ir.actions.act_window">
-            <field name="name">Versions</field>
-            <field name="res_model">project.issue.version</field>
-            <field name="view_type">form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new version.
-              </p><p>
-                Define here the different versions of your products on which
-                you can work on issues.
-              </p>
-            </field>
-        </record>
-
-        <menuitem  action="project_issue_version_action" id="menu_project_confi" name="Issues Versions" parent="base.menu_definitions" sequence="2"/>
-
-
         <record model="ir.ui.view" id="project_issue_form_view">
             <field name="name">Project Issue Tracker Form</field>
             <field name="model">project.issue</field>
@@ -80,7 +40,6 @@
                             </div>
                         </group>
                         <group>
-                            <field name="version_id" groups="base.group_user"/>
                             <field name="priority" groups="base.group_user" widget="priority"/>
                             <label for="task_id" groups="base.group_user"/>
                             <div groups="base.group_user">
@@ -131,7 +90,6 @@
                     <field name="project_id"/>
                     <field name="priority" string="Priority" groups="base.group_user"/>
                     <field name="create_date"/>
-                    <field name="version_id" widget="selection"/>
                     <field name="user_id"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
                     <field name="stage_id" widget="selection" readonly="1"/>
@@ -221,7 +179,6 @@
                                     <div>
                                         <b><field name="name"/></b> <br/>
                                         <field name="partner_id"/> <br/>
-                                        <field name="version_id"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
                                         <field name="categ_ids"/>
@@ -280,7 +237,6 @@
                     <field name="name" string="Feature description"/>
                     <field name="partner_id"/>
                     <field name="priority" string="Priority"/>
-                    <field name="version_id"/>
                     <field name="user_id"/>
                     <field name="stage_id" widget="selection" readonly="1"/>
                 </tree>

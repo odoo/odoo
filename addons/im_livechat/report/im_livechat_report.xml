@@ -58,9 +58,9 @@
         </record>
 
 
-        <menuitem id="menu_reporting_livechat" name="Livechat" parent="base.menu_reporting" sequence="50"/>
+        <menuitem id="menu_reporting_livechat" name="Report" parent="menu_livechat_root" sequence="50" groups="group_im_livechat_manager"/>
 
-        <menuitem name="Support Statistics" parent="menu_reporting_livechat" id="livechat_support_report_session" action="action_livechat_support_report" groups="group_im_livechat_manager" />
+        <menuitem name="Support Statistics" parent="menu_reporting_livechat" id="livechat_support_report_session" action="action_livechat_support_report"/>
 
     </data>
 </openerp>

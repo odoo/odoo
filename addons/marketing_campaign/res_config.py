@@ -4,8 +4,8 @@ from openerp.osv import fields, osv
 
 
 class MarketingCampaignConfig(osv.TransientModel):
-    _name = 'marketing.config.settings'
-    _inherit = 'marketing.config.settings'
+    _name = 'marketing.campaign.config.settings'
+    _inherit = 'res.config.settings'
 
     _columns = {
         'module_marketing_campaign_crm_demo': fields.boolean(

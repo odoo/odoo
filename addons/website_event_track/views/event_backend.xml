@@ -179,7 +179,7 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
 </p></field>
         </record>
 
-        <menuitem name="Event Tracks" id="menu_event_track" action="action_event_track" parent="event.event_main_menu" groups="event.group_event_user"/>
+        <menuitem name="Event Tracks" id="menu_event_track" action="action_event_track" parent="event.event_main_menu" groups="base.group_no_one"/>
 
         <!-- EVENTS/CONFIGURATION/EVENT locations -->
         <record model="ir.ui.view" id="view_event_location_form">
@@ -209,7 +209,7 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="res_model">event.track.location</field>
         </record>
         <menuitem name="Event Locations" id="menu_event_track_location"
-            action="action_event_track_location" parent="event.event_configuration"
+            action="action_event_track_location" parent="event.menu_event_configuration"
             groups="base.group_no_one"/>
 
         <!-- EVENTS/CONFIGURATION/EVENT Sponsor Types -->
@@ -241,7 +241,7 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="name">Sponsor Types</field>
             <field name="res_model">event.sponsor.type</field>
         </record>
-        <menuitem id="menu_event_sponsor_type" action="action_event_sponsor_type" parent="event.event_configuration" groups="base.group_no_one"/>
+        <menuitem id="menu_event_sponsor_type" action="action_event_sponsor_type" parent="event.menu_event_configuration" groups="base.group_no_one"/>
 
         <!-- EVENT.SPONSOR VIEWS -->
         <record model="ir.ui.view" id="view_event_sponsor_tree">
@@ -301,7 +301,8 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="name">Track Tags</field>
             <field name="res_model">event.track.tag</field>
         </record>
-        <menuitem id="menu_event_track_tag" action="action_event_track_tag" parent="event.event_configuration" groups="base.group_no_one"/>
+        <menuitem id="menu_event_track_tag" action="action_event_track_tag" 
+            parent="event.menu_event_configuration" groups="base.group_no_one"/>
 
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
         <record model="ir.ui.view" id="view_event_form">

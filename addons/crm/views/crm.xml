@@ -6,5 +6,11 @@
                 <link rel="stylesheet" href="/crm/static/src/css/crm.css"/>
             </xpath>
         </template>
+        <template id="assets_backend" name="planner crm assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link href="/crm/static/src/less/web_planner_crm.less" rel="stylesheet" type="text/less"/>
+                <script type="text/javascript" src="/crm/static/src/js/web_planner_crm.js"></script>
+            </xpath>
+        </template>
     </data>
 </openerp>

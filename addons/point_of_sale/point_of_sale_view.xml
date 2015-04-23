@@ -7,7 +7,7 @@
             id="menu_point_root"
             groups="group_pos_manager,group_pos_user"
             icon="fa-suitcase"
-            sequence="30"/>
+            sequence="7"/>
 
         <record model="ir.ui.view" id="view_pos_pos_form">
             <field name="name">pos.order</field>
@@ -159,9 +159,8 @@
             </field>
         </record>
 
-        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="10"/>
-        <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="2" groups="group_pos_manager,group_pos_user"/>
-        <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
+        <menuitem name="Orders" id="menu_point_of_sale" parent="menu_point_root" sequence="10"/>
+        <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
 
         <record id="product_template_action" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -190,7 +189,7 @@
         <menuitem
             action="product_template_action"
             id="menu_pos_products"
-            parent="menu_point_of_sale_product" sequence="0"/>
+            parent="menu_point_of_sale" sequence="3"/>
 
         <record model="ir.ui.view" id="view_pos_order_line">
             <field name="name">Sale lines</field>
@@ -523,7 +522,9 @@
               </p>
             </field>
         </record>
-        <menuitem action="product_pos_category_action" id="menu_product_pos_category" parent="menu_point_of_sale_product" sequence="2" />
+        <menuitem name="Point of Sales" parent="base.menu_config"
+            id="menu_point_config_product" sequence="3" groups="group_pos_manager"/>
+        <menuitem action="product_pos_category_action" id="menu_product_pos_category" parent="menu_point_config_product" sequence="20" />
         <!-- END -->
 
         <record id="action_edit_ean" model="ir.actions.act_window">
@@ -585,9 +586,6 @@
 
         <!-- END -->
 
-        <menuitem name="Configuration" parent="menu_point_root"
-            id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
-
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Payment Methods</field>
             <field name="res_model">account.journal</field>
@@ -634,7 +632,7 @@
         </record>
 
         <!--  Miscellaneous Operations/Reporting -->
-        <menuitem name="Point of Sale" parent="base.menu_reporting" id="menu_point_rep" sequence="4" groups="group_pos_manager"/>
+        <menuitem name="Reports" parent="menu_point_root" id="menu_point_rep" sequence="99" groups="group_pos_manager"/>
         <!-- Invoice -->
 
         <record model="ir.actions.act_window" id="action_pos_invoice">
@@ -936,7 +934,7 @@
 
 
         <record model="ir.actions.act_window" id="action_pos_session">
-            <field name="name">All Sessions</field>
+            <field name="name">Sessions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.session</field>
             <field name="view_type">form</field>
@@ -961,7 +959,7 @@
             parent="menu_point_of_sale"
             action="action_pos_session"
             id="menu_pos_session_all"
-            sequence="1"
+            sequence="2"
             groups="group_pos_manager"/>
 
         <record id="view_pos_order_filter" model="ir.ui.view">
@@ -989,8 +987,8 @@
         </record>
 
         <menuitem action="action_pos_session_opening"
-            parent="menu_point_of_sale"
-            id="menu_pos_session_opening" sequence="0"/>
+            parent="menu_point_root" name="Dashboard"
+            id="menu_pos_dashboard" sequence="1"/>
 
         <record model="ir.ui.view" id="pos_ean13_generator">
             <field name="name">pos.ean_wizard</field>

@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-    <menuitem name="Recruitment"
-        id="menu_hr_recruitment_recruitment"
-        parent="hr.menu_hr_configuration"
-        groups="base.group_hr_manager"
-        sequence="2"/>
+        
+    <menuitem id="menu_hr_recruitment_configuration" name="Recuitment" parent="base.menu_config"
+            sequence="19"/>
 
     <!-- Stage -->
     <record id="hr_job_stage_act" model="ir.actions.act_window">
@@ -617,7 +614,7 @@
     <menuitem
         id="menu_hr_recruitment_stage"
         name="Stages"
-        parent="menu_hr_recruitment_recruitment"
+        parent="menu_hr_recruitment_configuration"
         action="hr_recruitment_stage_act"
         sequence="1" groups="base.group_no_one"/>
 
@@ -658,7 +655,7 @@
      <menuitem
             id="menu_hr_recruitment_degree"
             name="Degrees"
-            parent="menu_hr_recruitment_recruitment"
+            parent="menu_hr_recruitment_configuration"
             action="hr_recruitment_degree_action"
             sequence="5" groups="base.group_no_one"/>
 
@@ -698,7 +695,7 @@
 
     <menuitem
         id="menu_hr_recruitment_source"
-        parent="menu_hr_recruitment_recruitment"
+        parent="menu_hr_recruitment_configuration"
         action="hr_recruitment_source_action"
         groups="base.group_no_one"
         sequence="10"/>

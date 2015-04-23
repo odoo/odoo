@@ -129,23 +129,23 @@
         <!-- MENU -->
 
         <!-- Top menu item -->
-        <menuitem name="Messaging"
+        <menuitem name="Chat"
           id="mail.mail_feeds_main"
           groups="base.group_user"
           icon="fa-envelope"
-          sequence="10"/>
+          sequence="1"/>
 
         <!-- Left-side menu: Feeds -->
-        <menuitem id="mail.mail_feeds" name="Messaging" parent="mail.mail_feeds_main" groups="base.group_user" sequence="10"/>
-        <menuitem id="mail_my_stuff" name="Organizer" parent="mail.mail_feeds_main"/>
+        <menuitem id="mail.mail_inbox" name="Inbox" parent="mail.mail_feeds_main" groups="base.group_user" sequence="1" action="action_mail_inbox_feeds"/>
 
-        <record id="mail_inboxfeeds" model="ir.ui.menu">
+<!--        <record id="mail_inboxfeeds" model="ir.ui.menu">
           <field name="name">Inbox</field>
           <field name="sequence" eval="10"/>
           <field name="action" ref="action_mail_inbox_feeds"/>
-          <field name="parent_id" ref="mail.mail_feeds"/>
+          <field name="parent_id" ref="mail.mail_inbox"/>
         </record>
-        <record id="mail_tomefeeds" model="ir.ui.menu">
+ -->
+   <!-- <record id="mail_tomefeeds" model="ir.ui.menu">
           <field name="name">To: me</field>
           <field name="sequence" eval="11"/>
           <field name="action" ref="action_mail_to_me_feeds"/>
@@ -162,6 +162,7 @@
           <field name="sequence" eval="16"/>
           <field name="action" ref="action_mail_archives_feeds"/>
           <field name="parent_id" ref="mail.mail_feeds"/>
-        </record>
+        </record> 
+      -->
     </data>
 </openerp>

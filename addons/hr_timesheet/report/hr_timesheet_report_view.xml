@@ -59,8 +59,10 @@
             <field name="context">{}</field>  <!-- force empty -->
         </record>
 
+        <menuitem id="menu_timesheets_reports" name="Reports"
+            parent="hr_attendance.timesheet_menu_root" sequence="99" groups="base.group_hr_manager"/>
         <menuitem action="action_hr_timesheet_report_stat_all"  id="menu_hr_timesheet_report_all"
-            parent="hr.menu_hr_reporting" groups="base.group_hr_manager" sequence="3"/>
+            parent="menu_timesheets_reports"  sequence="3"/>
 
     </data>
 </openerp>
