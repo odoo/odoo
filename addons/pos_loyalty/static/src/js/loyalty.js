@@ -358,7 +358,7 @@ var LoyaltyButton = screens.ActionButtonWidget.extend({
 
         var rewards = order.get_available_rewards();
         if (rewards.length === 0) {
-            this.gui.show_popup('error',{
+            this.gui.show_popup('alert',{
                 'title': 'No Rewards Available',
                 'body':  'There are no rewards available for this customer as part of the loyalty program',
             });
