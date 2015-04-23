@@ -673,7 +673,7 @@ class task(osv.osv):
         if project_id:
             search_domain += ['|', ('project_ids', '=', project_id), ('id', 'in', ids)]
         else:
-            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+            search_domain += [('id', 'in', ids), ('case_default', '=', True)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
