@@ -180,7 +180,9 @@ class survey_mail_compose_message(osv.TransientModel):
                     'state': 'new',
                     'token': token,
                     'partner_id': partner_id,
-                    'email': email})
+                    'email': email,
+                    'survey_model': wizard.model,
+                    'survey_res_id': wizard.res_id})
                 return token
 
         for wizard in self.browse(cr, uid, ids, context=context):

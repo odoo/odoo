@@ -891,7 +891,9 @@ class survey_user_input(osv.Model):
         'print_url': fields.related('survey_id', 'print_url', type='char',
                                     string="Public link to the empty survey"),
 
-        'quizz_score': fields.function(_quizz_get_score, type="float", string="Score for the quiz")
+        'quizz_score': fields.function(_quizz_get_score, type="float", string="Score for the quiz"),
+        'survey_model': fields.char('Survey Model'),
+        'survey_res_id': fields.integer('Survey Document')
     }
     _defaults = {
         'date_create': fields.datetime.now,

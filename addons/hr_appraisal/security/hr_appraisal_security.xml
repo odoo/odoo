@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- make Employee users Survey users -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('base.group_survey_user'))]"/>
+    </record>
+
+    <record id="survey.menu_surveys" model="ir.ui.menu">
+        <field eval="[(4,ref('base.group_hr_manager'))]" name="groups_id"/>
+    </record>
+    <record id="survey.menu_surveys_configuration" model="ir.ui.menu">
+        <field eval="[(4,ref('base.group_hr_manager'))]" name="groups_id"/>
+    </record>
+
+    <record id="hr_appraisal_all_rule" model="ir.rule">
+        <field name="name">All Appraisal</field>
+        <field name="model_id" ref="model_hr_appraisal"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_hr_user'))]"/>
+    </record>
+
+    <record id="hr_appraisal_emp_rule" model="ir.rule">
+        <field name="name">Employee Appraisal</field>
+        <field name="model_id" ref="model_hr_appraisal"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="survey.survey_input_users_access" model="ir.rule">
+        <field name="domain_force">['|',('partner_id', '=', user.partner_id.id), ('create_uid', '=', user.id)]</field>
+    </record>
+
+    <!-- Multi - Company Rules -->
+
+    <record model="ir.rule" id="hr_appraisal_comp_rule">
+        <field name="name">Appraisal multi-company</field>
+        <field name="model_id" ref="model_hr_appraisal"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+</odoo>

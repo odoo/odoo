@@ -35,15 +35,29 @@ var GaugeWidget = AbstractField.extend({
         // parameters
         var max_value = this.options.max_value || 100;
         if (this.options.max_field) {
-            max_value = this.getParent().record[this.options.max_field].raw_value;
+            var record = this.getParent().record[this.options.max_field]
+            if (record.type == "one2many"){
+                max_value = record.raw_value.length;
+            } else {
+                max_value = record.raw_value;
+            }
         }
         var label = this.options.label || "";
         if (this.options.label_field) {
-            label = this.getParent().record[this.options.label_field].raw_value;
+            var record = this.getParent().record[this.options.label_field]
+            if (record.type == "one2many"){
+                label = record.raw_value.length;
+            } else {
+                label = record.raw_value;
+            }
         }
         var title = this.$node.html() || this.field.string;
         // current gauge value
-        var val = this.field.raw_value;
+        if (this.field.type == 'one2many'){
+            var val = this.field.raw_value.length;
+        } else {
+            var val = this.field.raw_value;
+        }
         if (_.isArray(JSON.parse(val))) {
             val = JSON.parse(val);
         }
@@ -51,7 +65,12 @@ var GaugeWidget = AbstractField.extend({
         // displayed value under gauge
         var gauge_value = value;
         if (this.options.gauge_value_field) {
-            gauge_value = this.getParent().record[this.options.gauge_value_field].raw_value;
+            var record = this.getParent().record[this.options.gauge_value_field]
+            if (record.type == "one2many"){
+                gauge_value = record.raw_value.length;
+            } else {
+                gauge_value = record.raw_value;
+            }
         }
         // var unique_id = _.uniqueId("JustGage");
 
