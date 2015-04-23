@@ -892,11 +892,10 @@ var TimeZone = FieldSelection.extend({
     render_value: function() {
         var self = this;
         var super_result = this._super();
-        return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
-            var offset = utils.check_timezone(result)
-            if (offset.browser_offset !== offset.user_offset) {
-                var $warning = $(QWeb.render('WebClient.timezone_warning', {message: _.str.sprintf("Your Odoo preference timezone does not match your browser timezone: \n Your Odoo timezone: %s \n Your Browser timezone: %s", offset.user_offset, offset.browser_offset)}));
-                $warning.appendTo(self.$el);
+        utils.check_timezone_mismatch(core.mixins.EventDispatcherMixin, new Model('res.users')).then(function(result) {
+            if (result) {
+                var $warning = $(QWeb.render('WebClient.timezone_warning', {message: result}));
+                $warning.appendTo(self.el);
                 self.$el.css('display', 'inline-flex');
             }
         });

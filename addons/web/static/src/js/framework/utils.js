@@ -332,13 +332,18 @@ function assert (bool) {
     }
 }
 
-function check_timezone (result) {
+function check_timezone_mismatch (mixins, Model) {
+    var self = this;
+    return mixins.alive(Model.call('read', [[openerp.session.uid], ['tz_offset']])).then(function(result) {
         var user_offset = result[0]['tz_offset'];
         var offset = -(new Date().getTimezoneOffset());
         var browser_offset = (offset < 0) ? "-" : "+";
         browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
         browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-        return {'user_offset': user_offset, 'browser_offset': browser_offset};
+        if (browser_offset !== user_offset) {
+            return _.str.sprintf(_t("Your Odoo preference timezone does not match your browser timezone: \n Your Odoo timezone: "+user_offset+" \n Your Browser timezone: "+browser_offset));
+        }
+    });
 }
 
 var DropMisordered = Class.extend({
@@ -403,7 +408,7 @@ return {
     float_is_zero: float_is_zero,
     assert: assert,
     DropMisordered: DropMisordered,
-    check_timezone: check_timezone,
+    check_timezone_mismatch: check_timezone_mismatch,
 };
 
 });

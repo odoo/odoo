@@ -27,7 +27,7 @@ var SystrayMenu = Widget.extend({
                 f($(this));
             }
         });
-        self.timezone_mismatch();
+        self.check_timezone();
         this.$el.parent().show();
         return this._super.apply(this, arguments);
 
@@ -109,13 +109,13 @@ var SystrayMenu = Widget.extend({
             }, $help).open();
         });
     },
-    timezone_mismatch: function() {
+    check_timezone: function() {
         var self = this;
-        return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
-            var offset = utils.check_timezone(result)
-            if (offset.browser_offset !== offset.user_offset) {
-                self.$('.oe_timezone_icon').append($(QWeb.render('WebClient.timezone_warning', {message: _.str.sprintf("Your Odoo preference timezone does not match your browser timezone: \n Your Odoo timezone: %s \n Your Browser timezone: %s", offset.user_offset, offset.browser_offset)})));
-                self.$('.oe_timezone_icon').css('display', 'inline-flex');
+        utils.check_timezone_mismatch(core.mixins.EventDispatcherMixin, new Model('res.users')).then(function(result) {
+            if (result) {
+                var $warning = $(QWeb.render('WebClient.timezone_warning', {message: result}));
+                $warning.appendTo(self.$el.find('.oe_timezone_icon'));
+                self.$el.find('.oe_timezone_icon').css('display', 'inline-flex');
             }
         });
     },
