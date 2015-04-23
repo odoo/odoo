@@ -111,7 +111,7 @@ class website_hr_recruitment(http.Controller):
         }
         for f in ['email_from', 'partner_name', 'description']:
             value[f] = post.get(f)
-        for f in ['department_id', 'job_id']:
+        for f in ['department_id', 'job_id', 'stage_id']:
             value[f] = int(post.get(f) or 0)
         # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
         value['partner_phone'] = post.pop('phone', False)
