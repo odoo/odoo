@@ -76,7 +76,10 @@ class mail_message(osv.Model):
         if context and context.get('default_type') and context.get('default_type') not in [
                 val[0] for val in self._columns['type'].selection]:
             context = dict(context, default_type=None)
-        return super(mail_message, self).default_get(cr, uid, fields, context=context)
+        res = super(mail_message, self).default_get(cr, uid, fields, context=context)
+        if res.get('model') and (not fields or 'model_id' in fields):
+            res.update(self.change_model(cr, uid, res.get('model'), context=context)['value'])
+        return res
 
     def _get_to_read(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
@@ -142,7 +145,9 @@ class mail_message(osv.Model):
         'parent_id': fields.many2one('mail.message', 'Parent Message', select=True,
             ondelete='set null', help="Initial thread message."),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
-        'model': fields.char('Related Document Model', size=128, select=1),
+        'model_id': fields.many2one('ir.model', string='Application', select=True),
+        'model': fields.related('model_id', 'model', type='char', string='Related Document Model',
+                                select=True, store=True, readonly=True),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.char('Message Record Name', help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id',
@@ -187,6 +192,11 @@ class mail_message(osv.Model):
         'body': '',
         'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
     }
+
+    def change_model(self, cr, uid, model, context=None):
+        if not model:
+            return {'value': {'model_id': False}}
+        return {'value': {'model_id': self.pool['ir.model'].search(cr, uid, [('model', '=', model)], limit=1, context=context)[0]}}
 
     #------------------------------------------------------
     # Vote/Like
@@ -823,6 +833,8 @@ class mail_message(osv.Model):
         context = dict(context or {})
         default_starred = context.pop('default_starred', False)
 
+        if 'model' in values and 'model_id' not in values:
+            values.update(self.change_model(cr, uid, values.get('model'), context=context)['value'])
         if 'email_from' not in values:  # needed to compute reply_to
             values['email_from'] = self._get_default_from(cr, uid, context=context)
         if not values.get('message_id'):
@@ -853,6 +865,11 @@ class mail_message(osv.Model):
         self.check_access_rule(cr, uid, ids, 'read', context=context)
         res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         return res
+
+    def write(self, cr, uid, ids, values, context=None):
+        if 'model' in values and 'model_id' not in values:
+            values.update(self.change_model(cr, uid, values.pop('model'), context=context)['value'])
+        return super(mail_message, self).write(cr, uid, ids, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete attachments that are directly attached to the message (should only happen

@@ -205,7 +205,7 @@ class mail_compose_message(osv.TransientModel):
             result['record_name'] = parent.record_name,
             subject = tools.ustr(parent.subject or parent.record_name or '')
             if not values.get('model'):
-                result['model'] = parent.model
+                result.update(self.change_model(cr, uid, parent.model, context=context)['value'])
             if not values.get('res_id'):
                 result['res_id'] = parent.res_id
             partner_ids = values.get('partner_ids', list()) + [partner.id for partner in parent.partner_ids]
