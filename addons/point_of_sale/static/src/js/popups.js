@@ -11,6 +11,7 @@ var gui = require('point_of_sale.gui');
 
 
 var PopupWidget = PosBaseWidget.extend({
+    template: 'PopupWidget',
     init: function(parent, args) {
         this._super(parent, args);
         this.options = {};
@@ -84,6 +85,7 @@ var PopupWidget = PosBaseWidget.extend({
     click_item: function(){},
     click_numad: function(){},
 });
+gui.define_popup({name:'alert', widget: PopupWidget});
 
 var ErrorPopupWidget = PopupWidget.extend({
     template:'ErrorPopupWidget',

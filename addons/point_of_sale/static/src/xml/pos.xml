@@ -807,6 +807,20 @@
         </receipt>
     </t>
 
+    <t t-name="PopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-alert">
+                <p class="title"><t t-esc=" widget.options.title || 'Alert' " /></p>
+                <p class="body"><t t-esc=" widget.options.body || '' "/></p>
+                <div class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-error">
