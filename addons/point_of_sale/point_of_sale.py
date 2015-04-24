@@ -79,6 +79,7 @@ class pos_config(osv.osv):
         'iface_big_scrollbars': fields.boolean('Large Scrollbars',help='For imprecise industrial touchscreens'),
         'iface_fullscreen':     fields.boolean('Fullscreen', help='Display the Point of Sale in full screen mode'),
         'iface_print_auto': fields.boolean('Automatic Receipt Printing', help='The receipt will automatically be printed at the end of each order'),
+        'iface_print_skip_screen': fields.boolean('Skip Receipt Screen', help='The receipt screen will be skipped if the receipt can be printed automatically.'),
         'iface_precompute_cash': fields.boolean('Prefill Cash Payment',  help='The payment input will behave similarily to bank payment input, and will be prefilled with the exact due amount'),
         'iface_tax_included':   fields.boolean('Include Taxes in Prices', help='The displayed prices will always include all taxes, even if the taxes have been setup differently'),
         'iface_start_categ_id': fields.many2one('pos.category','Start Category', help='The point of sale will display this product category by default. If no category is specified, all available products will be shown'),
@@ -201,6 +202,7 @@ class pos_config(osv.osv):
         'pricelist_id': _default_pricelist,
         'iface_invoicing': True,
         'iface_print_auto': True,
+        'iface_print_skip_screen': True,
         'stock_location_id': _get_default_location,
         'company_id': _get_default_company,
         'barcode_nomenclature_id': _get_default_nomenclature,
@@ -1298,7 +1300,6 @@ class account_bank_statement_line(osv.osv):
     _columns= {
         'pos_statement_id': fields.many2one('pos.order', string="POS statement", ondelete='cascade'),
     }
-
 
 class pos_order_line(osv.osv):
     _name = "pos.order.line"

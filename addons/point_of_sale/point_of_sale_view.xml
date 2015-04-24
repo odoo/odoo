@@ -701,12 +701,13 @@
                                 <field name="iface_precompute_cash" />
                                 <field name="iface_start_categ_id" />
                                 <field name="tip_product_id" />
+                                <field name="iface_tax_included" />
                             </group>
                             <group>
                                 <field name="iface_fullscreen" />
                                 <field name="iface_big_scrollbars" />
                                 <field name="iface_print_auto" />
-                                <field name="iface_tax_included" />
+                                <field name="iface_print_skip_screen"  attrs="{'invisible' : [('iface_print_auto', '=', False)]}" />
                             </group>
                         </group>
                         <group string="Hardware Proxy / PosBox" >

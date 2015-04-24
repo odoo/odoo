@@ -1337,13 +1337,19 @@ var ReceiptScreenWidget = ScreenWidget.extend({
 
         if (this.should_auto_print()) {
             this.print();
+            if (this.should_close_immediately()){
+                this.click_next();
+            }
         } else {
             this.lock_screen(false);
         }
 
     },
-    should_auto_print: function(){
+    should_auto_print: function() {
         return this.pos.config.iface_print_auto && !this.pos.get_order()._printed;
+    },
+    should_close_immediately: function() {
+        return this.pos.config.iface_print_via_proxy && this.pos.config.iface_print_skip_screen;
     },
     lock_screen: function(locked) {
         this._locked = locked;
