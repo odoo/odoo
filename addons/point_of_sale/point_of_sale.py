@@ -706,7 +706,7 @@ class pos_order(osv.osv):
         'sequence_number': fields.integer('Sequence Number', help='A session-unique sequence number for the order'),
 
         'session_id' : fields.many2one('pos.session', 'Session', 
-                                        #required=True,
+                                        required=True,
                                         select=1,
                                         domain="[('state', '=', 'opened')]",
                                         states={'draft' : [('readonly', False)]},
