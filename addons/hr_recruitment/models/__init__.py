@@ -1,0 +1,3 @@
+import hr_department
+import hr_recruitment
+import hr_recruitment_config_settings

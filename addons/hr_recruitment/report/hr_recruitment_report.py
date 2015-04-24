@@ -3,7 +3,7 @@
 
 from openerp import tools
 from openerp.osv import fields, osv
-from .. import hr_recruitment
+from ..models import hr_recruitment
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 
