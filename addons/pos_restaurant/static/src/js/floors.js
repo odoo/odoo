@@ -678,13 +678,7 @@ models.Order = models.Order.extend({
         if (!this.table) {
             this.table = this.pos.table;
         }
-        if (!this.customer_count) {
-            if (this.table) {
-                this.customer_count = this.table.seats;
-            } else {
-                this.customer_count = 1;
-            }
-        }
+        this.customer_count = this.customer_count || 1;
         this.save_to_db();
     },
     export_as_JSON: function() {
