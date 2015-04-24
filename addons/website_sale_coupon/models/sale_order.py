@@ -156,7 +156,7 @@ class SaleOrder(models.Model):
 
     def _process_reward_discount(self, program, coupon_code):
         if program.reward_discount_type == 'amount':
-            if coupon_code is False or not program.partial_use:
+            if coupon_code is False or program.reward_partial_use is False:
                 if self.amount_total < program.reward_discount_amount:
                     discount_amount = self.amount_total
                 else:
@@ -235,7 +235,7 @@ class SaleOrder(models.Model):
     def _set_coupon_reward(self, coupon_code, program, discount_amount, desc):
         coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
         if coupon_obj:
-            if program.reward_discount_type == 'amount' and program.partial_use:
+            if program.reward_discount_type == 'amount' and program.reward_partial_use is True:
                 if discount_amount + coupon_obj.used_discount_amount == program.discount_amount:
                     coupon_obj.state = 'used'
                     coupon_obj.nbr_used = coupon_obj.nbr_used + 1
@@ -403,7 +403,7 @@ class SaleOrderLine(models.Model):
     def _set_coupon_reward(self, coupon_code, program, discount_amount, desc):
         coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
         if coupon_obj:
-            if program.reward_discount_type == 'amount' and program.partial_use:
+            if program.reward_discount_type == 'amount' and program.reward_partial_use is True:
                 if discount_amount + coupon_obj.used_discount_amount == program.reward_discount_amount:
                     coupon_obj.state = 'used'
                     coupon_obj.nbr_used = coupon_obj.nbr_used + 1
@@ -448,7 +448,7 @@ class SaleOrderLine(models.Model):
     def _process_reward_discount(self, program, coupon_code):
         discount_amount = 0
         if program.reward_discount_type == 'amount':
-            if coupon_code is False or not program.partial_use:
+            if coupon_code is False or program.reward_partial_use is False:
                 if self.order_id.amount_total < program.reward_discount_amount:
                     discount_amount = self.order_id.amount_total
                 else:
@@ -497,28 +497,28 @@ class SaleOrderLine(models.Model):
     @api.multi
     def unlink(self):
         res = True
+        coupon_obj = self.env['sale.coupon']
         try:
             #check if reward line of coupon is deleted
-            reward_lines = self.filtered(lambda x: x.coupon_id is not False)
-            coupon_obj = self.env['sale.coupon']
-            for line in reward_lines:
+            for line in self.filtered(lambda x: x.coupon_id is not False):
                 coupon = coupon_obj.search([('coupon_code', '=', line.coupon_id)])
                 if coupon:
                     coupon.state = 'new'
-                    coupon.reward_name = ""
                     coupon.used_in_order_id = False
-                    if coupon.nbr_used > 1:
-                        coupon.nbr_used -= 1
-                    else:
-                        coupon.nbr_used = 0
+                    coupon.nbr_used = 0
+                    if coupon.program_id.reward_discount_type == 'amount' and \
+                       coupon.program_id.reward_partial_use is True and \
+                       coupon.product_id.program_type == 'generated_coupon':
+                            coupon.used_discount_amount -= ((-1)*line.price_unit)
                     self.order_id.write({'coupon_program_ids': [(3, coupon.program_id.id, _)]})
             #check if any reward line is deleted
-            reward_lines = self.order_id.order_line.filtered(lambda x: x.generated_from_line_id.id in self.ids)
+            reward_lines_to_remove = self.order_id.order_line.filtered(lambda x: x.generated_from_line_id.id in self.ids)
+            #to delete the reward line of amount
             for line_obj in self:
                 line = self.order_id.order_line.filtered(lambda x: x.generated_from_line_id.id is False and (x.coupon_program_id.reward_product_product_id == line_obj.product_id or x.coupon_program_id.reward_discount_on_product_id == line_obj.product_id))
                 if line:
-                    reward_lines += line
-            for reward_line in reward_lines:
+                    reward_lines_to_remove += line
+            for reward_line in reward_lines_to_remove:
                 self.order_id.write({'coupon_program_ids': [(3, reward_line.coupon_program_id.id, _)]})
                 reward_line.unlink()
             res = super(SaleOrderLine, self).unlink()

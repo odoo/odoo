@@ -65,7 +65,7 @@ class SaleReward(models.Model):
     #reward_shipping_free = fields.Selection([('yes', 'Yes'), ('no', 'No')], string="Free Shipping", default="no", help="Shipment of the order is free or not")
     reward_product_product_id = fields.Many2one('product.product', string="Product", help="Reward Product")
     reward_quantity = fields.Integer(string="Quantity", default=1, help="Reward product quantity")
-    reward_gift_program_id = fields.Many2one('sale.couponprogram', string="Coupon program")
+    reward_gift_program_id = fields.Many2one('sale.couponprogram', string="Coupon program", domain=[('program_type', '=', 'generated_coupon')])
     reward_discount_type = fields.Selection([('no', 'No'), ('percentage', 'Percentage'),
                                              ('amount', 'Fixed Amount')], string="Apply a discount", default="no",
                                             help="No - No discount will be given\n" +
@@ -147,6 +147,10 @@ class SaleCouponProgram(models.Model):
     _sql_constraints = [
         ('unique_program_code', 'unique(program_code)', 'The program code must be unique!'),
     ]
+
+    @api.onchange('program_type')
+    def _set_partial_use(self):
+        self.reward_partial_use = False
 
     def _check_is_program_valid(self):
         if fields.date.today() >= datetime.strptime(self.date_from, "%Y-%m-%d").date() and \
