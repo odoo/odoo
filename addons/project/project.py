@@ -1184,7 +1184,7 @@ class task(base_stage, osv.osv):
             'day(s)': 'd', 'days': 'd', 'day': 'd', 'd': 'd',
             'month(s)': 'm', 'months': 'm', 'month': 'month', 'm': 'm',
             'week(s)': 'w', 'weeks': 'w', 'week': 'w', 'w': 'w',
-            'hour(s)': 'h', 'hours': 'H', 'hour': 'H', 'h': 'H',
+            'hour(s)': 'H', 'hours': 'H', 'hour': 'H', 'h': 'H',
         }.get(company.project_time_mode_id.name.lower(), "hour(s)")
         for task in tasks:
             if task.state in ('done','cancelled'):
