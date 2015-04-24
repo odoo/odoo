@@ -770,6 +770,9 @@
       <p>
           Have a coupon code? Fill in this field and apply.
       </p>
+      <t t-if="code_not_available">
+          <p class="bg-warning">This promo code is not available</p>
+      </t>
       <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist" method="post" class="mb32">
           <div class="input-group">
               <input name="promo" class='form-control' type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or ''"/>
@@ -1516,6 +1519,24 @@
 <template id="orders_followup_link" name="Orders Followup Link from User Account" inherit_id="website.layout">
   <xpath expr="//li[@class='dropdown']/ul/li[contains(.,'Logout')]" position="before">
     <li><a href="/shop/orders" role="menuitem">My Orders</a></li>
+  </xpath>
+</template>
+
+<template id="pricelist_selector" inherit_id="website.layout" name="Website Sale - Switcher Pricelist">
+  <xpath expr="//header//ul[@id='top_menu']/li" position="before">
+      <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
+      <li t-att-class="website_sale_pricelists and len(website_sale_pricelists)>1 and 'dropdown' or 'hidden'">
+        <t t-set="curr_pl" t-value="website.get_current_pricelist()"/>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <t t-esc="curr_pl and curr_pl.name or ' - '" />
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li t-foreach="website_sale_pricelists" t-as="pl" >
+            <a t-att-href="'/shop/change_pricelist/%s' % pl.id"><span class='switcher_pricelist' t-att-data-pl_id="pl.id" t-esc="pl.name"/></a>
+          </li>
+        </ul>
+      </li>
   </xpath>
 </template>
 
