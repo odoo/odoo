@@ -218,7 +218,6 @@ class sale_order(osv.osv):
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
         'note': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note,
         'team_id': lambda s, cr, uid, c: s._get_default_team_id(cr, uid, c),
-        'pricelist_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.list0'),
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -277,7 +276,7 @@ class sale_order(osv.osv):
         return {'warning': warning, 'value': value}
 
     def get_salenote(self, cr, uid, ids, partner_id, context=None):
-        context_lang = context.copy() 
+        context_lang = context.copy()
         if partner_id:
             partner_lang = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context).lang
             context_lang.update({'lang': partner_lang})
@@ -314,7 +313,7 @@ class sale_order(osv.osv):
         if pricelist:
             val['pricelist_id'] = pricelist
         sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
-        if sale_note: val.update({'note': sale_note})  
+        if sale_note: val.update({'note': sale_note})
         return {'value': val}
 
     def create(self, cr, uid, vals, context=None):
@@ -419,7 +418,7 @@ class sale_order(osv.osv):
             view of one of the newly created invoices
         """
         mod_obj = self.pool.get('ir.model.data')
-        
+
         # create invoices through the sales orders' workflow
         inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
         self.signal_workflow(cr, uid, ids, 'manual_invoice')
@@ -565,7 +564,7 @@ class sale_order(osv.osv):
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         self.signal_workflow(cr, uid, ids, 'order_confirm')
         return True
-        
+
     def action_wait(self, cr, uid, ids, context=None):
         context = context or {}
         for o in self.browse(cr, uid, ids):
@@ -592,7 +591,7 @@ class sale_order(osv.osv):
         try:
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
-            compose_form_id = False 
+            compose_form_id = False
         ctx = dict()
         ctx.update({
             'default_model': 'sale.order',
@@ -724,7 +723,7 @@ class sale_order(osv.osv):
         fpos = False
         if fiscal_position:
             fpos = fiscal_obj.browse(cr, uid, fiscal_position, context=context)
-        
+
         for line in order_lines:
             # create    (0, 0,  { fields })
             # update    (1, ID, { fields })
@@ -806,7 +805,7 @@ class sale_order_line(osv.osv):
         res = dict.fromkeys(ids, False)
         for this in self.browse(cr, uid, ids, context=context):
             res[this.id] = this.invoice_lines and \
-                all(iline.invoice_id.state != 'cancel' for iline in this.invoice_lines) 
+                all(iline.invoice_id.state != 'cancel' for iline in this.invoice_lines)
         return res
 
     def _order_lines_from_invoice(self, cr, uid, ids, context=None):
@@ -1243,7 +1242,7 @@ class product_template(osv.Model):
         for template in self.browse(cr, uid, ids, context=context):
             res[template.id] = sum([p.sales_count for p in template.product_variant_ids])
         return res
-    
+
     def action_view_sales(self, cr, uid, ids, context=None):
         act_obj = self.pool.get('ir.actions.act_window')
         mod_obj = self.pool.get('ir.model.data')
@@ -1254,8 +1253,8 @@ class product_template(osv.Model):
         result = act_obj.read(cr, uid, [result], context=context)[0]
         result['domain'] = "[('product_id','in',[" + ','.join(map(str, product_ids)) + "])]"
         return result
-    
-    
+
+
     _columns = {
         'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
 
