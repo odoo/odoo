@@ -360,6 +360,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
         for (var i = 0; i < this.table_widgets.length; i++) { 
             this.table_widgets[i].renderElement();
         }
+        this.check_empty_floor();
     },
     click_floor_button: function(event,$el){
         var floor = this.pos.floors_by_id[$el.data('id')];
@@ -370,6 +371,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
             this.floor = floor;
             this.selected_table = null;
             this.renderElement();
+            this.check_empty_floor();
         }
     },
     background_image_url: function(floor) { 
@@ -491,6 +493,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
             'seats': 1,
         });
         this.select_table(tw);
+        this.check_empty_floor();
     },
     new_table_name: function(name){
         if (name) {
@@ -542,6 +545,16 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
 
         if (!this.editing) {
             this.deselect_tables();
+        }
+    },
+    check_empty_floor: function(){
+        if (!this.floor.tables.length) {
+            if (!this.editing) {
+                this.toggle_editing();
+            }
+            this.$('.empty-floor').removeClass('oe_hidden');
+        } else {
+            this.$('.empty-floor').addClass('oe_hidden');
         }
     },
     update_toolbar: function(){
