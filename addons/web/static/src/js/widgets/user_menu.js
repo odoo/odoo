@@ -114,8 +114,7 @@ var SystrayMenu = Widget.extend({
         utils.check_timezone_mismatch(core.mixins.EventDispatcherMixin, new Model('res.users')).then(function(result) {
             if (result) {
                 var $warning = $(QWeb.render('WebClient.timezone_warning', {message: result}));
-                $warning.appendTo(self.$el.find('.oe_timezone_icon'));
-                self.$el.find('.oe_timezone_icon').css('display', 'inline-flex');
+                $warning.appendTo(self.$el.find('.oe_timezone_icon a'));
             }
         });
     },
