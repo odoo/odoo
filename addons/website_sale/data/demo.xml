@@ -785,5 +785,70 @@ Weight: 1.1 ounces</field>
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
         </record>
 
+
+        <record id="list_christmas" model="product.pricelist">
+            <field name="name">Christmas Pricelist</field>
+            <field name="type">sale</field>
+        </record>
+        <record id="ver_christmas" model="product.pricelist.version">
+            <field name="pricelist_id" ref="list_christmas"/>
+            <field name="name">Christmas Pricelist Version</field>
+        </record>
+        <record id="item_christmas" model="product.pricelist.item">
+            <field name="price_version_id" ref="ver_christmas"/>
+            <field name="base" ref="product.list_price"/>
+            <field name="price_discount">-0.2</field>
+            <field name="sequence">10</field>
+            <field name="name">Christmas Pricelist Line</field>
+        </record>
+
+        <record id="list_benelux" model="product.pricelist">
+            <field name="name">Benelux Pricelist</field>
+            <field name="type">sale</field>
+        </record>
+        <record id="ver_benelux" model="product.pricelist.version">
+            <field name="pricelist_id" ref="list_benelux"/>
+            <field name="name">Benelux Pricelist Version</field>
+        </record>
+        <record id="item_benelux" model="product.pricelist.item">
+            <field name="price_version_id" ref="ver_benelux"/>
+            <field name="base" ref="product.list_price"/>
+            <field name="price_discount">-0.1</field>
+            <field name="sequence">10</field>
+            <field name="name">Benelux Pricelist Line</field>
+        </record>
+
+        <record id="benelux" model="res.country.group">
+            <field name="name">BeNeLux</field>
+            <field name="country_ids" eval="[(6,0,[
+                ref('base.be'),ref('base.lu'),ref('base.nl')])]"/>
+        </record>
+
+        <record id="US_CA" model="res.country.group">
+            <field name="name">US-CA</field>
+            <field name="country_ids" eval="[(6,0,[
+                ref('base.us'),ref('base.ca')])]"/>
+        </record>
+
+        <record id="wlist-US" model="website_pricelist">
+            <field name="selectable" eval="True" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="pricelist_id" ref='product.list0' />
+            <field name="country_group_ids" eval="[(6,0,[ref('US_CA')])]" />
+        </record>
+
+        <record id="wlist-CHRISTMAS" model="website_pricelist">
+            <field name="selectable" eval="False" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="pricelist_id" ref='list_christmas' />
+            <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
+        </record>
+
+        <record id="wlist-BENELUX" model="website_pricelist">
+            <field name="selectable" eval="True" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="pricelist_id" ref='list_benelux' />
+            <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
+        </record>
     </data>
 </openerp>

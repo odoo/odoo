@@ -105,14 +105,7 @@ class QueryURL(object):
 
 
 def get_pricelist():
-    cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-    sale_order = context.get('sale_order')
-    if sale_order:
-        pricelist = sale_order.pricelist_id
-    else:
-        partner = pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
-        pricelist = partner.property_product_pricelist
-    return pricelist
+    return request.website.get_current_pricelist()
 
 class website_sale(http.Controller):
 
@@ -137,6 +130,13 @@ class website_sale(http.Controller):
                 for p in product.product_variant_ids]
 
         return attribute_value_ids
+
+    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
+    def pricelist_change(self, pl_id, **post):
+        if request.website.is_pricelist_available(pl_id.id, context=request.context):
+            request.session['website_sale_current_pl'] = pl_id.id
+            request.website.sale_get_order(force_pricelist=pl_id.id, context=request.context)
+        return request.redirect(request.httprequest.referrer or '/shop')
 
     @http.route(['/shop',
         '/shop/page/<int:page>',
@@ -305,7 +305,12 @@ class website_sale(http.Controller):
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
     def pricelist(self, promo, **post):
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, uid, pool, context = request.cr, request.uid, request.registry, request.context
+        pl = pool['product.pricelist'].search(cr, SUPERUSER_ID, [('code', '=', promo)], context=context)
+        if pl:
+            if not request.website.is_pricelist_available(pl[0], context=context):
+                return request.redirect("/shop/cart?code_not_available=1")
+
         request.website.sale_get_order(code=promo, context=context)
         return request.redirect("/shop/cart")
 
@@ -331,11 +336,13 @@ class website_sale(http.Controller):
                 _order = order.with_context(pricelist=order.pricelist_id.id)
             values['suggested_products'] = _order._cart_accessories()
 
+        if post.get('code_not_available'):
+            values['code_not_available'] = post.get('code_not_available')
+
         return request.website.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
-        cr, uid, context = request.cr, request.uid, request.context
         request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=float(add_qty), set_qty=float(set_qty))
         return request.redirect("/shop/cart")
 
@@ -660,7 +667,6 @@ class website_sale(http.Controller):
         request.session['sale_last_order_id'] = order.id
 
         request.website.sale_get_order(update_pricelist=True, context=context)
-
         return request.redirect("/shop/payment")
 
     #------------------------------------------------------
@@ -993,6 +999,6 @@ class website_sale(http.Controller):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         products = pool['product.product'].browse(cr, uid, product_ids, context=context)
         partner = pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
+        pricelist_id = request.website.get_current_pricelist(context=context).id
         prices = pool['product.pricelist'].price_rule_get_multi(cr, uid, [], [(product, add_qty, partner) for product in products], context=context)
         return {product_id: prices[product_id][pricelist_id][0] for product_id in product_ids}
