@@ -7,7 +7,6 @@ var framework = require('web.framework');
 var Model = require('web.Model');
 var session = require('web.session');
 var Widget = require('web.Widget');
-var utils = require('web.utils');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -27,7 +26,6 @@ var SystrayMenu = Widget.extend({
                 f($(this));
             }
         });
-        self.check_timezone();
         this.$el.parent().show();
         return this._super.apply(this, arguments);
 
@@ -107,15 +105,6 @@ var SystrayMenu = Widget.extend({
                 dialogClass: 'oe_act_window',
                 title: _t("About"),
             }, $help).open();
-        });
-    },
-    check_timezone: function() {
-        var self = this;
-        utils.check_timezone_mismatch(core.mixins.EventDispatcherMixin, new Model('res.users')).then(function(result) {
-            if (result) {
-                var $warning = $(QWeb.render('WebClient.timezone_warning', {message: result}));
-                $warning.appendTo(self.$el.find('.oe_timezone_icon a'));
-            }
         });
     },
 });

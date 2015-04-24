@@ -892,11 +892,23 @@ var TimeZone = FieldSelection.extend({
     render_value: function() {
         var self = this;
         var super_result = this._super();
-        utils.check_timezone_mismatch(core.mixins.EventDispatcherMixin, new Model('res.users')).then(function(result) {
+        self.$label.find('.oe_tz_warning').remove();
+        new Model('res.users').call('read', [[openerp.session.uid], ['tz_offset']]).done(function(result){
             if (result) {
-                var $warning = $(QWeb.render('WebClient.timezone_warning', {message: result}));
-                $warning.appendTo(self.el);
-                self.$el.css('display', 'inline-flex');
+                var user_offset = result[0]['tz_offset'];
+                var offset = -(new Date().getTimezoneOffset());
+                var browser_offset = (offset < 0) ? "-" : "+";
+                browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+                browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+                if (browser_offset !== user_offset) {
+                    self.$label.css('white-space', 'normal');
+                    $(QWeb.render('WebClient.timezone_warning')).appendTo(self.$label);
+                    var options = _.extend({
+                        delay: { show: 501, hide: 0 },
+                        title: _t("Timezone Mismatch : The timezone of your browser doesn't match the one of your user. The time in Odoo is displayed according to your user preferences timezone."),
+                    });
+                    self.$label.find('.oe_tz_warning').tooltip(options);
+                }
             }
         });
         return super_result;
