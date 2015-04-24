@@ -64,11 +64,15 @@ class sale_order(osv.osv):
 
     def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
+        StockPicking = self.pool.get('stock.picking')
         for sale in self.browse(cr, uid, ids, context=context):
-            if not sale.procurement_group_id:
-                res[sale.id] = []
-                continue
-            res[sale.id] = self.pool.get('stock.picking').search(cr, uid, [('group_id', '=', sale.procurement_group_id.id)], context=context)
+            picking_ids = []
+            if sale.procurement_group_id:
+                picking_ids = StockPicking.search(cr, uid, [('group_id', '=', sale.procurement_group_id.id)], context=context)
+            res[sale.id] = {
+                'picking_ids': picking_ids,
+                'delivery_count': len(picking_ids)
+            }
         return res
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
@@ -89,12 +93,6 @@ class sale_order(osv.osv):
         invoice_vals['incoterms_id'] = order.incoterm.id or False
         return invoice_vals
 
-    def _get_delivery_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for order in self.browse(cr, uid, ids, context=context):
-            res[order.id] = len(order.picking_ids)
-        return res
-
     _columns = {
         'incoterm': fields.many2one('stock.incoterms', 'Incoterms', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
@@ -110,8 +108,8 @@ class sale_order(osv.osv):
                 'procurement.order': (_get_orders_procurements, ['state'], 10)
             }),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
-        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
-        'delivery_count': fields.function(_get_delivery_count, type='integer', string='Delivery Orders'),
+        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale', multi='_get_picking_ids'),
+        'delivery_count': fields.function(_get_picking_ids, type='integer', string='Delivery Orders', multi='_get_picking_ids'),
     }
     _defaults = {
         'warehouse_id': _get_default_warehouse,
