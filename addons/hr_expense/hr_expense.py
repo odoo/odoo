@@ -364,7 +364,6 @@ class hr_expense_expense(osv.osv):
             'view_id': view_id,
             'res_model': 'account.move',
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
             'res_id': expense.account_move_id.id,
         }

@@ -445,7 +445,6 @@ class purchase_order(osv.osv):
             'res_model': 'account.invoice',
             'context': "{'type':'in_invoice', 'journal_type': 'purchase'}",
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
             'res_id': inv_ids and inv_ids[0] or False,
         }

@@ -948,7 +948,6 @@ class pos_order(osv.osv):
             'view_id': False,
             'context':context,
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
         }
         return abs
@@ -1026,7 +1025,6 @@ class pos_order(osv.osv):
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
             'res_id': inv_ids and inv_ids[0] or False,
         }

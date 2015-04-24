@@ -130,5 +130,4 @@ class account_analytic_account(osv.osv):
             'view_mode': 'tree,form',
             'domain' : domain,
             'res_model': 'account.analytic.line',
-            'nodestroy': True,
         }

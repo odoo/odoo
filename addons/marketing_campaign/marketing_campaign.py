@@ -764,7 +764,6 @@ class marketing_campaign_workitem(osv.osv):
                 'views': [(view_id and view_id[1] or 0, 'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-                'nodestroy':True,
                 'context': "{'template_id':%d,'default_res_id':%d}"%
                                 (wi_obj.activity_id.email_template_id.id,
                                  wi_obj.res_id)

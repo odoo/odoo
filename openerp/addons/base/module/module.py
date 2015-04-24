@@ -42,7 +42,6 @@ ACTION_DICT = {
     'res_model': 'base.module.upgrade',
     'target': 'new',
     'type': 'ir.actions.act_window',
-    'nodestroy': True,
 }
 
 def backup(path, raise_exception=True):

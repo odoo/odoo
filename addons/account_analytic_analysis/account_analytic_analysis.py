@@ -538,7 +538,6 @@ class account_analytic_account(osv.osv):
             'context': context,
             'domain' : [('order_id','in',sale_ids)],
             'res_model': 'sale.order.line',
-            'nodestroy': True,
         }
 
     # Allows quick creation of accounts only in specific cases
@@ -644,7 +643,6 @@ class account_analytic_account(osv.osv):
             'view_mode': 'tree,form',
             'domain' : domain,
             'res_model': 'account.analytic.line',
-            'nodestroy': True,
         }
 
     def _prepare_invoice_data(self, cr, uid, contract, context=None):
