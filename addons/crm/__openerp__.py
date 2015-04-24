@@ -59,6 +59,7 @@ Dashboard for CRM will include:
         'fetchmail',
         'utm',
         'web_tip',
+        'web_planner',
     ],
     'data': [
         'crm_data.xml',
