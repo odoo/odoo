@@ -214,7 +214,6 @@ class sale_order(osv.osv):
             'view_mode': 'form',
             'view_id': view_id,
             'target': 'current',
-            'nodestroy': True,
         }
 
     def _track_subtype(self, cr, uid, ids, init_values, context=None):
@@ -401,7 +400,6 @@ class sale_order(osv.osv):
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
             'res_id': new_inv_ids and new_inv_ids[0] or False,
         }

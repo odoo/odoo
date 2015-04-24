@@ -299,7 +299,6 @@ class project(osv.osv):
                 'views': [(form_view['res_id'],'form'),(tree_view['res_id'],'tree')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view['res_id'],
-                'nodestroy': True
             }
 
     # set active value for a project, its sub projects and its tasks

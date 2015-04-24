@@ -83,9 +83,7 @@ class res_config_configurable(osv.osv_memory):
         next = self._next_action(cr, uid, context=context)
         _logger.info('next action is %s', next)
         if next:
-            res = next.action_launch(context=context)
-            res['nodestroy'] = False
-            return res
+            return next.action_launch(context=context)
 
         return {
             'type': 'ir.actions.client',

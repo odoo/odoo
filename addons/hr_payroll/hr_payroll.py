@@ -319,7 +319,6 @@ class hr_payslip(osv.osv):
             'view_type': 'form',
             'res_model': 'hr.payslip',
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
             'domain': "[('id', 'in', %s)]" % [id_copy],
             'views': [(tree_res, 'tree'), (form_res, 'form')],

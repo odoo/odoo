@@ -718,7 +718,6 @@ class fleet_vehicle_log_contract(osv.Model):
             'view_type': 'tree,form',
             'res_model': 'fleet.vehicle.log.contract',
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'domain': '[]',
             'res_id': newid,
             'context': {'active_id':newid}, 

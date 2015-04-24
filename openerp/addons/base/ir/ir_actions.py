@@ -1158,7 +1158,6 @@ Launch Manually Once: after having been launched manually, it sets automatically
         if act_type != 'ir.actions.act_window':
             return res
         res.setdefault('context','{}')
-        res['nodestroy'] = True
 
         # Open a specific record when res_id is provided in the context
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
