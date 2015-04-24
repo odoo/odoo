@@ -13,17 +13,17 @@ class SaleApplicability(models.Model):
     _name = 'sale.applicability'
     _description = "Sales Coupon Applicability"
 
-    partner_id = fields.Many2one('res.partner', string="Limit to a single customer", help="Coupon program will work for selected customer only")
-    date_from = fields.Date("Date From", help="Date on which coupon will get activated", default=fields.date.today())
-    date_to = fields.Date("Date To", help="Date after which coupon will get deactivated", default=fields.date.today() + relativedelta(days=1))
-    validity_type = fields.Selection(
-        [('day', 'Day(s)'),
-         ('week', 'Week(s)'),
-         ('month', 'Month(s)'),
-         ('year', 'Year(s)'),
-         ], string='Validity Type', required=True, default='day',
-        help="Validity Type can be based on either day, month, week or year.")
-    validity_duration = fields.Integer("Validity Duration", default=1, help="Validity duration can be set according to validity type")
+    partner_id = fields.Many2one('res.partner', string="Customer", help="Coupon program will work for selected customer only")
+    date_from = fields.Date("Date From", help="Date on which program will get activated", default=fields.date.today())
+    date_to = fields.Date("Date To", help="Date after which program will get deactivated", default=fields.date.today() + relativedelta(days=1))
+    #validity_type = fields.Selection(
+        # [('day', 'Day(s)'),
+        #  ('week', 'Week(s)'),
+        #  ('month', 'Month(s)'),
+        #  ('year', 'Year(s)'),
+        #  ], string='Validity Type', required=True, default='day',
+        # help="Validity Type can be based on either day, month, week or year.")
+    #validity_duration = fields.Integer("Validity Duration", default=1, help="Validity duration can be set according to validity type")
     expiration_use = fields.Integer("Expiration use", default=1, help="Number of Times coupon can be Used")
     purchase_type = fields.Selection([('product', 'Product'), ('category', 'Category'),
                                       ('amount', 'Amount')], string="Type", required=True, default="product",
@@ -39,15 +39,15 @@ class SaleApplicability(models.Model):
     currency_id = fields.Many2one("res.currency", readonly=True, default=lambda self: self.env.user.company_id.currency_id.id)
     product_uom_name = fields.Char(string="Uom", related='product_id.product_tmpl_id.uom_id.name', store=True, readonly=True)
 
-    def get_expiration_date(self, start_date):
-        if self.validity_type == 'day':
-            return start_date + relativedelta(days=(self.validity_duration))
-        if self.validity_type == 'month':
-            return start_date + relativedelta(months=self.validity_duration)
-        if self.validity_type == 'week':
-            return start_date + relativedelta(days=(self.validity_duration * 7))
-        if self.validity_type == 'year':
-            return start_date + relativedelta(months=(self.validity_duration * 12))
+    # def get_expiration_date(self, start_date):
+    #     if self.validity_type == 'day':
+    #         return start_date + relativedelta(days=(self.validity_duration))
+    #     if self.validity_type == 'month':
+    #         return start_date + relativedelta(months=self.validity_duration)
+    #     if self.validity_type == 'week':
+    #         return start_date + relativedelta(days=(self.validity_duration * 7))
+    #     if self.validity_type == 'year':
+    #         return start_date + relativedelta(months=(self.validity_duration * 12))
 
 
 class SaleReward(models.Model):
@@ -73,8 +73,8 @@ class SaleReward(models.Model):
                                                  "Amount - Entered fixed amount discount will be given")
     reward_discount_percentage = fields.Float("Discount", help='The discount in percentage')
     reward_discount_amount = fields.Float("Discount", help='The discount in fixed amount')
-    reward_discount_on = fields.Selection([('cart', 'On cart'), ('cheapest_product', 'On cheapest product'),
-                                           ('specific_product', 'On specific product')], string="Discount On", default="cart",
+    reward_discount_on = fields.Selection([('cart', 'On Cart'), ('cheapest_product', 'On Cheapest Product'),
+                                           ('specific_product', 'On Specific Product')], string="Discount On", default="cart",
                                           help="On cart - Discount on whole cart\n" +
                                                "Cheapest product - Discount on cheapest product of the cart\n" +
                                                "Specific product - Discount on seleted specific product")
@@ -111,10 +111,12 @@ class SaleCoupon(models.Model):
     reward_name = fields.Char(string="Reward", help="Reward on coupon")
     used_by_partner_id = fields.Many2one('res.partner', string="Customer", related='used_in_order_id.partner_id')
     expiration_date = fields.Date("Expiration date", compute='_set_expiration_date', default=fields.date.today())
+    used_discount_amount = fields.Integer("Used discount amount")
 
     @api.one
     def _set_expiration_date(self):
-        self.expiration_date = self.program_id.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date())
+        #self.expiration_date = self.program_id.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date())
+        self.expiration_date = self.program_id.date_to
 
 
 class SaleCouponProgram(models.Model):
@@ -146,10 +148,16 @@ class SaleCouponProgram(models.Model):
         ('unique_program_code', 'unique(program_code)', 'The program code must be unique!'),
     ]
 
+    def _check_is_program_valid(self):
+        if fields.date.today() >= datetime.strptime(self.date_from, "%Y-%m-%d").date() and \
+           fields.date.today() <= datetime.strptime(self.date_to, "%Y-%m-%d").date():
+            return True
+
     def _compute_program_state(self):
         #close the program when count reach to maximum
-        expiration_date = self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date())
-        if (self.program_type == 'public_unique_code' and fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date()) or \
+        #expiration_date = self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date())
+        expiration_date = datetime.strptime(self.date_to, "%Y-%m-%d").date()
+        if (self.program_type == 'public_unique_code' and fields.date.today() > expiration_date) or \
            (self.program_type == 'apply_immediately' and fields.date.today() > expiration_date) or \
            (self.program_type == 'generated_coupon' and fields.date.today() > expiration_date):
                 self.write({'state': 'closed'})
@@ -157,6 +165,11 @@ class SaleCouponProgram(models.Model):
                     coupons_obj = self.env['sale.coupon'].search([('program_id', '=', self.id)])
                     for coupon in coupons_obj:
                         coupon.write({'state': 'expired'})
+
+    # @api.onchange('program_type')
+    # def _set_program_code(self):
+    #     if self.program_type == 'public_unique_code' and self.program_code is False:
+    #         self.program_code = self.env['ir.sequence'].next_by_code('sale.couponprogram')
 
     @api.one
     def _compute_so_count(self):
@@ -167,10 +180,14 @@ class SaleCouponProgram(models.Model):
         self.count_coupons = self.env['sale.coupon'].search_count([('program_id', '=', self.id)])
 
     def check_is_program_expired(self):
-        expiration_date = self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date())
-        if (self.program_type == ('generated_coupon' or 'apply_immediately') and fields.date.today() > expiration_date) or \
-           (self.program_type == 'public_unique_code' and (fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date() or
-           self.count_sale_order == self.nbr_uses_public_unique_code)):
+        # expiration_date = self.applicability_id.get_expiration_date(datetime.strptime(self.create_date, "%Y-%m-%d %H:%M:%S").date())
+        # if (self.program_type == ('generated_coupon' or 'apply_immediately') and fields.date.today() > expiration_date) or \
+        #    (self.program_type == 'public_unique_code' and (fields.date.today() > datetime.strptime(self.date_to, "%Y-%m-%d").date() or
+        #    self.count_sale_order == self.nbr_uses_public_unique_code)):
+        expiration_date = datetime.strptime(self.date_to, "%Y-%m-%d").date()
+        if (self.program_type == 'public_unique_code' and (fields.date.today() > expiration_date or self.count_sale_order == self.nbr_uses_public_unique_code)) or \
+           (self.program_type == 'apply_immediately' and fields.date.today() > expiration_date) or \
+           (self.program_type == 'generated_coupon' and fields.date.today() > expiration_date):
                 return True
 
     def get_reward_string(self):

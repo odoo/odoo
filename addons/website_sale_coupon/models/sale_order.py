@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
                 domain += [('reward_discount_on', '!=', 'cheapest_product'), ('reward_discount_on', '!=', 'specific_product'), ('reward_type', '=', 'discount')]
                 program = self.env['sale.couponprogram'].search(self._prepare_domain(domain, self.amount_total - reward_line.price_unit, self.amount_untaxed - reward_line.price_unit, self.partner_id),
                                                                 limit=1, order='program_sequence')
-        if program:
+        if program and program._check_is_program_valid():
             return program
 
     @api.multi
@@ -156,10 +156,16 @@ class SaleOrder(models.Model):
 
     def _process_reward_discount(self, program, coupon_code):
         if program.reward_discount_type == 'amount':
-            if self.amount_total < program.reward_discount_amount:
-                discount_amount = self.amount_total
+            if coupon_code is False or not program.partial_use:
+                if self.amount_total < program.reward_discount_amount:
+                    discount_amount = self.amount_total
+                else:
+                    discount_amount = program.reward_discount_amount
             else:
-                discount_amount = program.reward_discount_amount
+                coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
+                discount_amount = program.reward_discount_amount - coupon_obj.used_discount_amount
+                if self.amount_total < discount_amount:
+                    discount_amount = self.order_id.amount_total
         elif program.reward_discount_type == 'percentage':
             if program.reward_discount_on == 'cart':
                 reward_line = self.order_line.filtered(lambda x: x.generated_from_line_id.id is False and x.coupon_program_id == program)
@@ -181,18 +187,22 @@ class SaleOrder(models.Model):
     def _process_reward_free_shipping(self, program, coupon_code):
         delivery_charge_line = self.order_line.filtered(lambda x: x.product_id.is_delivery_charge_product)
         reward_line = self.order_line.filtered(lambda x: x.coupon_program_id == program and x.generated_from_line_id.id is False)
-        if delivery_charge_line and not reward_line:
-            vals = {
-                'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
-                'name': _("Free Shipping"),
-                'product_uom_qty': 1,
-                'price_unit': (-1) * delivery_charge_line.price_unit,
-                'order_id': self.id,
-                'coupon_program_id': program.id,
-                'generated_from_line_id': False,
-                'coupon_id': coupon_code
-            }
+        vals = {
+            'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
+            'name': _("Free Shipping"),
+            'product_uom_qty': 1,
+            'price_unit': (-1) * delivery_charge_line.price_unit,
+            'order_id': self.id,
+            'coupon_program_id': program.id,
+            'generated_from_line_id': False,
+            'coupon_id': coupon_code
+        }
+        if delivery_charge_line and not reward_line and delivery_charge_line.price_unit != 0.0:
             self.order_line.with_context(noreward=True).create(vals)
+            if program not in self.coupon_program_ids:
+                self.coupon_program_ids += program
+        if reward_line and reward_line.price_unit != delivery_charge_line.price_unit:
+            reward_line.with_context(noreward=True).write(vals)
             if program not in self.coupon_program_ids:
                 self.coupon_program_ids += program
 
@@ -220,12 +230,23 @@ class SaleOrder(models.Model):
             if program not in self.coupon_program_ids:
                 self.coupon_program_ids += program
             if coupon_code:
-                coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
-                if coupon_obj:
+                self._set_coupon_reward(coupon_code, program, discount_amount, desc)
+
+    def _set_coupon_reward(self, coupon_code, program, discount_amount, desc):
+        coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
+        if coupon_obj:
+            if program.reward_discount_type == 'amount' and program.partial_use:
+                if discount_amount + coupon_obj.used_discount_amount == program.discount_amount:
                     coupon_obj.state = 'used'
-                    coupon_obj.used_in_order_id = self.id
                     coupon_obj.nbr_used = coupon_obj.nbr_used + 1
-                    coupon_obj.reward_name = desc
+                coupon_obj.used_discount_amount += discount_amount
+                coupon_obj.used_in_order_id = self.id
+                coupon_obj.reward_name = desc
+            else:
+                coupon_obj.state = 'used'
+                coupon_obj.nbr_used = coupon_obj.nbr_used + 1
+                coupon_obj.used_in_order_id = self.id
+                coupon_obj.reward_name = desc
 
     @api.model
     def create(self, vals):
@@ -377,12 +398,24 @@ class SaleOrderLine(models.Model):
             if program not in self.order_id.coupon_program_ids:
                 self.order_id.coupon_program_ids += program
             if coupon_code:
-                coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
-                if coupon_obj:
+                self._set_coupon_reward(coupon_code, program, discount_amount, desc)
+
+    def _set_coupon_reward(self, coupon_code, program, discount_amount, desc):
+        coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
+        if coupon_obj:
+            if program.reward_discount_type == 'amount' and program.partial_use:
+                if discount_amount + coupon_obj.used_discount_amount == program.reward_discount_amount:
                     coupon_obj.state = 'used'
-                    coupon_obj.used_in_order_id = self.order_id.id
                     coupon_obj.nbr_used = coupon_obj.nbr_used + 1
-                    coupon_obj.reward_name = desc
+                coupon_obj.used_discount_amount += discount_amount
+                coupon_obj.used_in_order_id = self.order_id.id
+                coupon_obj.reward_name = desc
+            else:
+                coupon_obj.state = 'used'
+                coupon_obj.nbr_used = coupon_obj.nbr_used + 1
+                coupon_obj.used_in_order_id = self.order_id.id
+                coupon_obj.reward_name = desc
+                coupon_obj.used_discount_amount += discount_amount
 
     def _process_reward_product(self, program, coupon_code):
         product_lines = self.order_id.order_line.filtered(lambda x: x.product_id == program.reward_product_product_id)
@@ -415,10 +448,16 @@ class SaleOrderLine(models.Model):
     def _process_reward_discount(self, program, coupon_code):
         discount_amount = 0
         if program.reward_discount_type == 'amount':
-            if self.order_id.amount_total < program.reward_discount_amount:
-                discount_amount = self.order_id.amount_total
+            if coupon_code is False or not program.partial_use:
+                if self.order_id.amount_total < program.reward_discount_amount:
+                    discount_amount = self.order_id.amount_total
+                else:
+                    discount_amount = program.reward_discount_amount
             else:
-                discount_amount = program.reward_discount_amount
+                coupon_obj = self.env['sale.coupon'].search([('coupon_code', '=', coupon_code)])
+                discount_amount = program.reward_discount_amount - coupon_obj.used_discount_amount
+                if self.order_id.amount_total < discount_amount:
+                    discount_amount = self.order_id.amount_total
         elif program.reward_discount_type == 'percentage':
             if program.reward_discount_on == 'cart':
                 discount_amount = self.order_id.amount_total * (program.reward_discount_percentage / 100)
@@ -436,18 +475,22 @@ class SaleOrderLine(models.Model):
     def _process_reward_free_shipping(self, program, coupon_code):
         delivery_charge_line = self.order_id.order_line.filtered(lambda x: x.product_id.is_delivery_charge_product)
         reward_line = self.order_id.order_line.filtered(lambda x: x.coupon_program_id == program and x.generated_from_line_id == self)
-        if delivery_charge_line and not reward_line:
-            vals = {
-                'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
-                'name': _("Free Shipping"),
-                'product_uom_qty': 1,
-                'price_unit': (-1) * delivery_charge_line.price_unit,
-                'order_id': self.order_id.id,
-                'coupon_program_id': program.id,
-                'generated_from_line_id': self.id,
-                'coupon_id': coupon_code
-            }
+        vals = {
+            'product_id': self.env.ref('website_sale_coupon.product_product_reward').id,
+            'name': _("Free Shipping"),
+            'product_uom_qty': 1,
+            'price_unit': (-1) * delivery_charge_line.price_unit,
+            'order_id': self.order_id.id,
+            'coupon_program_id': program.id,
+            'generated_from_line_id': self.id,
+            'coupon_id': coupon_code
+        }
+        if delivery_charge_line and not reward_line and delivery_charge_line.price_unit != 0.0:
             self.with_context(noreward=True).create(vals)
+            if program not in self.order_id.coupon_program_ids:
+                self.order_id.coupon_program_ids += program
+        if reward_line and reward_line.price_unit != delivery_charge_line.price_unit:
+            reward_line.with_context(noreward=True).write(vals)
             if program not in self.order_id.coupon_program_ids:
                 self.order_id.coupon_program_ids += program
 
@@ -493,7 +536,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def process_rewards(self, programs, coupon_code):
         for program in programs:
-            if not self.order_id.check_reward_type_discount_on_cart(program):
+            if (not self.order_id.check_reward_type_discount_on_cart(program)) and (program._check_is_program_valid()):
                 getattr(self, '_process_reward_' + program.reward_type)(program, coupon_code)
 
     @api.multi
