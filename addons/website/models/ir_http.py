@@ -45,7 +45,7 @@ class ir_http(orm.AbstractModel):
         else:
             request.uid = request.session.uid
 
-    bots = "bot|crawl|slurp|spider|curl|wget".split("|")
+    bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
     def is_a_bot(self):
         # We don't use regexp and ustr voluntarily
         # timeit has been done to check the optimum method
