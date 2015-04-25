@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <template id="allpay_acquirer_button">
+            <form t-if="acquirer.allpay_merchant_id" t-att-action="tx_url" method="post" target="_self">
+                <input type="hidden" name="MerchantID" t-att-value="tx_values['MerchantID']"/>
+                <input type="hidden" name="MerchantTradeNo" t-att-value="tx_values['MerchantTradeNo']"/>
+                <input type="hidden" name="MerchantTradeDate" t-att-value="tx_values['MerchantTradeDate']"/>
+                <input type="hidden" name="PaymentType" t-att-value="tx_values['PaymentType']"/>
+                <input type="hidden" name="TotalAmount" t-att-value="tx_values['TotalAmount']"/>
+                <input type="hidden" name="TradeDesc" t-att-value="tx_values['TradeDesc']"/>
+                <input type="hidden" name="ItemName" t-att-value="tx_values['ItemName']"/>
+                <input type="hidden" name="ChoosePayment" t-att-value="tx_values['ChoosePayment']"/>
+                <input type="hidden" name="ReturnURL" t-att-value="tx_values['ReturnURL']"/>
+                <input type="hidden" name="CheckMacValue" t-att-value="tx_values['CheckMacValue']"/>
+                <button type="submit" width="100px"
+                        t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_allpay/static/src/img/logo_pay200x55.png"/>
+                    <span t-if="submit_txt">
+                        <t t-esc="submit_txt"/>
+                        <span class="fa fa-long-arrow-right"/>
+                    </span>
+                </button>
+            </form>
+        </template>
+
+    </data>
+</openerp>

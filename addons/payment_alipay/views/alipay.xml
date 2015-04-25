@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <template id="alipay_acquirer_button">
+                <form t-if="acquirer.alipay_partner_account" t-att-action="tx_url" method="post" target="_self">
+                    <input type="hidden" name="service" t-att-value="tx_values['service']"/>
+                    <input type="hidden" name="partner" t-att-value="tx_values['partner']"/>
+                    <input type="hidden" name="seller_email" t-att-value="tx_values['seller_email']"/>
+                    <input type="hidden" name="seller_id" t-att-value="tx_values['seller_id']"/>
+                    <input type="hidden" name="_input_charset" t-att-value="tx_values['_input_charset']"/>
+                    <input type="hidden" name="out_trade_no" t-att-value="tx_values['out_trade_no']"/>
+                    <input type="hidden" name="subject" t-att-value="tx_values['subject']"/>
+                    <input type="hidden" name="payment_type" t-att-value="tx_values['payment_type']"/>
+                    <input type="hidden" name="body" t-att-value="tx_values['body']"/>
+                    <input type="hidden" name="return_url" t-att-value="tx_values['return_url']"/>
+                    <input type="hidden" name="notify_url" t-att-value="tx_values['notify_url']"/>
+
+                    <t t-if=" tx_values['service'] in ['create_direct_pay_by_user' ] ">
+                        <input type="hidden" name="total_fee" t-att-value="tx_values['total_fee']"/>
+                    </t>
+
+                    <t t-if=" tx_values['service'] in ['create_partner_trade_by_buyer','trade_create_by_buyer' ] ">
+                        <input type="hidden" name="logistics_type" t-att-value="tx_values['logistics_type']"/>
+                        <input type="hidden" name="logistics_fee" t-att-value="tx_values['logistics_fee']"/>
+                        <input type="hidden" name="logistics_payment" t-att-value="tx_values['logistics_payment']"/>
+                        <input type="hidden" name="price" t-att-value="tx_values['price']"/>
+                        <input type="hidden" name="quantity" t-att-value="tx_values['quantity']"/>
+                    </t>
+
+                    <input type="hidden" name="sign" t-att-value="tx_values['sign']"/>
+                    <input type="hidden" name="sign_type" t-att-value="tx_values['sign_type']"/>
+                <button type="submit" width="100px"
+                        t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_alipay/static/src/img/alipay_icon.png"/>
+                    <span t-if="submit_txt">
+                        <t t-esc="submit_txt"/>
+                        <span class="fa fa-long-arrow-right"/>
+                    </span>
+                </button>
+            </form> 
+        </template>
+
+    </data>
+</openerp>
