@@ -1,26 +1,22 @@
 # -*- coding: utf-'8' "-*-"
 
-import base64
 try:
     import simplejson as json
 except ImportError:
     import json
 import logging
 import urlparse
-import werkzeug.urls
-import urllib2
+from urllib import urlencode
+import sys
 
 import util
-from urllib import urlencode, urlopen
-
 from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_tenpay.controllers.main import TenpayController
-from openerp.osv import osv, fields
-from openerp.tools.float_utils import float_compare
 from openerp import SUPERUSER_ID
 from openerp.http import request
-from openerp import models, fields, api, exceptions, _
-import sys
+from openerp import api
+from openerp.osv import osv, fields
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 
