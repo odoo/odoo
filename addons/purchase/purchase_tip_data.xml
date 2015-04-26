@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <record model="web.tip" id="purchase_tip_1">
-            <field name="description">Click here to process the reception of the purchase by product.</field>
+            <field name="description">This button allows to mark the following products as received.</field>
             <field name="model">stock.move</field>
             <field name="mode">list</field>
             <field name="action_id" ref="stock.action_receipt_picking_move"/>
@@ -12,7 +12,7 @@
         </record>
 
         <record model="web.tip" id="purchase_tip_2">
-            <field name="description">If a product has been broken or damaged during the transport, you can throw it away from your warehouse by cliking here.</field>
+            <field name="description">If a product has been broken or damaged during the transport, you can scrap it with this button.</field>
             <field name="model">stock.move</field>
             <field name="mode">list</field>
             <field name="action_id" ref="stock.action_receipt_picking_move"/>
@@ -22,13 +22,13 @@
         </record>
 
         <record model="web.tip" id="purchase_tip_3">
-            <field name="description">Track efficiently your orders. Here you can see all the shipments needed for this order. You will also be able to manage the stock moves from here.</field>
+            <field name="description">Get all the shipments related to this order.</field>
             <field name="model">purchase.order</field>
             <field name="mode">form</field>
             <field name="action_id" ref="purchase.purchase_form_action"/>
             <field name="trigger_selector">.oe_form_buttons_view:visible,div.oe_right.oe_button_box > button</field>
             <field name="highlight_selector">div.oe_right.oe_button_box:visible > button:nth-child(1)</field>
             <field name="placement">bottom</field>
-        </record>      
+        </record>
     </data>
 </openerp>

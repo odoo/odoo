@@ -1,21 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <record model="web.tip" id="crm_tip_1">
-            <field name="title">Import from LinkedIn</field>
-            <field name="description">Import your contacts directly from LinkedIn. It is much easier than creating them manually</field>
-            <field name="action_id" ref="base.action_partner_form"/>
-            <field name="model">res.partner</field>
-            <field name="mode">kanban</field>
-            <!-- TODO Add relevant selectors when linkedin button is implemented -->
-            <field name="trigger_selector"></field>
-            <field name="highlight_selector"></field>
-            <field name="placement">bottom</field>
-        </record>
 
         <record model="web.tip" id="crm_tip_2">
             <field name="title"></field>
-            <field name="description">By clicking here, you can keep track of your sales opportunities for this customer. You will be able to plan meetings and calls.</field>
+            <field name="description">Zoom to the opportunities related to this customer. You will be able to come back to the customer using the breadcrumb.</field>
             <field name="action_id" ref="base.action_partner_form"/>
             <field name="model">res.partner</field>
             <field name="mode">form</field>
@@ -26,7 +15,7 @@
 
         <record model="web.tip" id="crm_tip_3">
             <field name="title"></field>
-            <field name="description">This is where you navigate through your process. Click here to go back to where you came from.</field>
+            <field name="description">Use the breadcrumb to go back to preceeding screens. This is super useful to navigate between documents.</field>
             <field name="model">crm.lead</field>
             <field name="type">opportunity</field>
             <field name="mode">form</field>
@@ -37,7 +26,7 @@
 
         <record model="web.tip" id="crm_tip_4">
             <field name="title"></field>
-            <field name="description"><![CDATA[You can change the stage of your opportunities by simply <b>drag and dropping</b> the opportunity in another column.]]></field>
+            <field name="description"><![CDATA[You can change the stage of your opportunities by simply <b>drag and dropping</b> the opportunity into another column.]]></field>
             <field name="model">crm.lead</field>
             <field name="mode">kanban</field>
             <field name="trigger_selector">.oe_kanban_record:visible</field>
