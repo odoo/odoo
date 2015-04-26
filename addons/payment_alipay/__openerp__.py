@@ -6,7 +6,7 @@
     'summary': 'Payment Acquirer: Alipay Implementation',
     'version': '1.0',
     'description': """Alipay Payment Acquirer""",
-    'author': 'Odoo CN, Jeffery <jeffery9@gmail.com>',
+    'author': 'Odoo CN Team, Jeffery Chen Fan <jeffery9@gmail.com>',
     'depends': ['payment'],
     'data': [
         'views/alipay.xml',

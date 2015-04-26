@@ -6,7 +6,7 @@
     'summary': 'Payment Acquirer: allPay Implementation',
     'version': '1.0',
     'description': """allPay Payment Acquirer""",
-    'author': 'Odoo CN, Jeffery <jeffery9@gmail.com>',
+    'author': 'Odoo CN Team, Jeffery Chen Fan <jeffery9@gmail.com>',
     'depends': ['payment'],
     'data': [
         'views/allpay.xml',
