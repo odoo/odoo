@@ -2352,10 +2352,11 @@ instance.web.list.ProgressBar = instance.web.list.Column.extend({
      * @private
      */
     _format: function (row_data, options) {
-        return _.template(
-            '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
-                value: _.str.sprintf("%.0f", row_data[this.id].value || 0)
-            });
+        var data = row_data[this.id];
+        this.value = data.value || 0;
+        this.min = 0;
+        this.max = 100;
+        return QWeb.render('FieldProgressBar', {widget: this});
     }
 });
 instance.web.list.Handle = instance.web.list.Column.extend({

@@ -3007,13 +3007,11 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
 */
 instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
     template: 'FieldProgressBar',
-    render_value: function() {
-        this.$el.progressbar({
-            value: this.get('value') || 0,
-            disabled: this.get("effective_readonly")
-        });
-        var formatted_value = instance.web.format_value(this.get('value') || 0, { type : 'float' });
-        this.$('span').html(formatted_value + '%');
+    render_value: function(){
+        this.value = instance.web.format_value(this.get('value') || 0, { type : 'float' });
+        this.min = 0;
+        this.max = 100;
+        this.$el.html(instance.web.qweb.render("FieldProgressBar", {widget: this}));
     }
 });
 
