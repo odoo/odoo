@@ -73,6 +73,7 @@ class AcquirerAlipay(osv.Model):
         'fees_dom_var': 0.0,
         'fees_int_fixed': 0.0,
         'fees_int_var': 0.0,
+        'alipay_interface_type' : 'trade_create_by_buyer',
     }
 
     def alipay_compute_fees(self, cr, uid, id, amount, currency_id, country_id, context=None):
