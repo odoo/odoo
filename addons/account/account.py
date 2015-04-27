@@ -1755,7 +1755,7 @@ class account_tax_code(osv.osv):
         res2 = {}
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
-                amount = res.get(record.id, 0.0)
+                amount = res.get(record.id) or 0.0
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
