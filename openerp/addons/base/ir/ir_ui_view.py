@@ -1051,15 +1051,15 @@ class view(osv.osv):
                     if model_value._obj==node_obj:
                         _Node_Field=model_key
                         _Model_Field=model_value._fields_id
-                    flag=False
                     for node_key,node_value in _Node_Obj._columns.items():
                         if node_value._type=='one2many':
                              if node_value._obj==conn_obj:
-                                 if src_node in _Arrow_Obj._columns and flag:
+                                 # _Source_Field = "Incoming Arrows" (connected via des_node)
+                                 if node_value._fields_id == des_node:
                                     _Source_Field=node_key
-                                 if des_node in _Arrow_Obj._columns and not flag:
+                                 # _Destination_Field = "Outgoing Arrows" (connected via src_node)
+                                 if node_value._fields_id == src_node:
                                     _Destination_Field=node_key
-                                    flag = True
 
         datas = _Model_Obj.read(cr, uid, id, [],context)
         for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):
