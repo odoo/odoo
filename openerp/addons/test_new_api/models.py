@@ -85,7 +85,7 @@ class Discussion(models.Model):
         'test_new_api_discussion_category', 'discussion', 'category')
     participants = fields.Many2many('res.users')
     messages = fields.One2many('test_new_api.message', 'discussion')
-    message_changes = fields.Integer(string='Message changes')
+    message_concat = fields.Text(string='Message concatenate')
 
     @api.onchange('moderator')
     def _onchange_moderator(self):
@@ -93,7 +93,7 @@ class Discussion(models.Model):
 
     @api.onchange('messages')
     def _onchange_messages(self):
-        self.message_changes = len(self.messages)
+        self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
 class Message(models.Model):

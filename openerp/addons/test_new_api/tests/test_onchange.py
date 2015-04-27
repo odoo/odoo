@@ -193,8 +193,9 @@ class TestOnChange(common.TransactionCase):
             'categories': [(4, cat.id) for cat in discussion.categories],
             'messages': messages,
             'participants': [(4, usr.id) for usr in discussion.participants],
-            'message_changes': 0,
+            'message_concat': False,
         }
         result = discussion.onchange(values, 'messages', field_onchange)
-        self.assertIn('message_changes', result['value'])
-        self.assertEqual(result['value']['message_changes'], len(discussion.messages))
+        self.assertIn('message_concat', result['value'])
+        self.assertEqual(result['value']['message_concat'],
+                         "\n".join(["%s:%s" % (m.name, m.body) for m in discussion.messages]))

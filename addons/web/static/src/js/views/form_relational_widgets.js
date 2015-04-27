@@ -926,9 +926,8 @@ var One2ManyListView = ListView.extend({
         this._mousedown_blur_line = function (event) {
             if (self.__focus) {
                 self.__ignore_blur = true;
-                var $dom = self.editor.$el.add(self.$el);
                 if ($(event.target).closest("button, *:not(.oe_form_field_one2many_list_row_add) > a").length ||
-                    ($dom.index(event.target) === -1 && !_.any($(event.target).parents(), function (p) { return $dom.index(p) !== -1 ; }))) {
+                    (!$(event.target).closest(self.editor.$el[0]).length && !$(event.target).closest(self.$el[0]).length)) {
                     self.__ignore_blur = false;
                 }
             }
