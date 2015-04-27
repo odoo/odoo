@@ -16,8 +16,9 @@ class TestSaleCouponCommon(common.TransactionCase):
         self.Product = self.env['product.product']
         self.SaleOrder = self.env['sale.order']
         self.Category = self.env['product.category']
-        self.reward_product = self.env.ref('website_sale_coupon.product_product_reward')
         self.SaleGetCoupon = self.env['sale.get.coupon']
+        self.reward_product = self.env.ref('website_sale_coupon.product_product_reward')
+
         # create partner for sale order.
         self.partner_id = self.Partner.create({
             'name': 'Steve Bucknor',
@@ -84,11 +85,34 @@ class TestSaleCouponCommon(common.TransactionCase):
             'price': 10,
         })
 
+        self.product_laptop = self.Product.create({
+            'name': 'Laptop',
+            'type': 'service',
+            'price': 100,
+        })
+
+        self.product_refrigerator = self.Product.create({
+            'name': 'Refrigerator',
+            'type': 'service',
+            'price': 150,
+        })
+
+        self.product_iphone = self.Product.create({
+            'name': 'iPhone',
+            'type': 'service',
+            'price': 150,
+        })
+
+        self.product_delivery_charge = self.Product.create({
+            'name': 'Standard Delivery',
+            'type': 'service',
+            'price': 10.0,
+            'is_delivery_charge_product': True,
+        })
+
         self.couponprogram_1 = self.CouponProgram.create({
             'name': 'Buy 1 Mobile + get 1 cover free',
             'program_type': 'apply_immediately',
-            'validity_type': 'day',
-            'validity_duration': 15,
             'purchase_type': 'product',
             'product_id': self.product_mobile.id,
             'product_quantity': 1,
@@ -102,8 +126,6 @@ class TestSaleCouponCommon(common.TransactionCase):
             'name': "Buy 2 Hard disk + get 1 hard disk free",
             'program_type': 'apply_immediately',
             'purchase_type': 'product',
-            'validity_type': 'day',
-            'validity_duration': 15,
             'product_id': self.product_harddisk.id,
             'product_quantity': 2,
             'reward_type': 'product',
@@ -118,8 +140,6 @@ class TestSaleCouponCommon(common.TransactionCase):
             'program_sequence': 1,
             'purchase_type': 'category',
             'product_category_id': self.category_beverage.id,
-            'validity_type': 'day',
-            'validity_duration': 15,
             'product_quantity': 2,
             'reward_type': 'discount',
             'reward_discount_type': 'amount',
@@ -132,8 +152,6 @@ class TestSaleCouponCommon(common.TransactionCase):
             'program_type': 'apply_immediately',
             'program_sequence': 1,
             'purchase_type': 'amount',
-            'validity_type': 'day',
-            'validity_duration': 15,
             'minimum_amount': 1500,
             'reward_type': 'discount',
             'reward_discount_type': 'percentage',
@@ -157,7 +175,7 @@ class TestSaleCouponCommon(common.TransactionCase):
         })
 
         self.couponprogram_6 = self.CouponProgram.create({
-            'name': 'Buy 1 Shoe + get 1 Socks free',
+            'name': 'PUC Buy 1 Shoe + get 1 Socks free',
             'program_type': 'public_unique_code',
             'program_code': 'ODOO_AAAA',
             'purchase_type': 'product',
@@ -166,5 +184,39 @@ class TestSaleCouponCommon(common.TransactionCase):
             'reward_type': 'product',
             'reward_product_product_id': self.product_socks.id,
             'reward_quantity': 1,
+            'state': 'opened',
+        })
+
+        self.couponprogram_7 = self.CouponProgram.create({
+            'name': "GER Buy 1 laptop + get 10'%' off on cart",
+            'program_type': 'generated_coupon',
+            'purchase_type': 'product',
+            'product_id': self.product_laptop.id,
+            'product_quantity': 1,
+            'reward_type': 'discount',
+            'reward_discount_type': 'percentage',
+            'reward_discount_on': 'cart',
+            'reward_discount_percentage': 10,
+            'state': 'opened',
+        })
+
+        self.couponprogram_8 = self.CouponProgram.create({
+            'name': 'Buy 1 refrigerator + get shipment free',
+            'program_type': 'apply_immediately',
+            'purchase_type': 'product',
+            'product_id': self.product_refrigerator.id,
+            'product_quantity': 1,
+            'reward_type': 'free_shipping',
+            'state': 'opened',
+        })
+
+        self.couponprogram_9 = self.CouponProgram.create({
+            'name': "Buy 1 iPhone + get coupon for 10'%' off the laptop",
+            'program_type': 'apply_immediately',
+            'purchase_type': 'product',
+            'product_id': self.product_iphone.id,
+            'product_quantity': 1,
+            'reward_type': 'coupon',
+            'reward_gift_program_id': self.couponprogram_7.id,
             'state': 'opened',
         })
