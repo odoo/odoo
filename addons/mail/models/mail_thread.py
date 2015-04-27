@@ -23,7 +23,7 @@ from urllib import urlencode
 from openerp import _, api, fields, models, SUPERUSER_ID
 from openerp import exceptions
 from openerp import tools
-from openerp.addons.mail.mail_message import decode
+from openerp.addons.mail.models.mail_message import decode
 from openerp.tools.safe_eval import safe_eval as eval
 
 

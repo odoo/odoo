@@ -22,8 +22,8 @@
 import logging
 import re
 
-from openerp.addons.mail.mail_message import decode
-from openerp.addons.mail.mail_thread import decode_header
+from openerp.addons.mail.models.mail_message import decode
+from openerp.addons.mail.models.mail_thread import decode_header
 from openerp.osv import osv
 
 _logger = logging.getLogger(__name__)
