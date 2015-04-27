@@ -21,14 +21,16 @@ class GoogleCalendarController(http.Controller):
             client_id = request.env['google.service'].with_context(kw.get('local_context')).get_client_id('calendar')
 
             if not client_id or client_id == '':
-                if GoogleCalendar.can_authorize_google():
-                    action = request.env.ref('google_calendar.action_config_settings_google_calendar')
-                    result['action'] = action.id.id
-                return {
+
+                result = {
                     "status": "need_config_from_admin",
                     "url": '',
-                    "action": action.id
                 }
+                if GoogleCalendar.can_authorize_google():
+                    action = request.env.ref('google_calendar.action_config_settings_google_calendar')
+                    result['action'] = action.id
+
+                return result
 
             # Checking that user have already accepted Odoo to access his calendar !
             if GoogleCalendar.need_authorize():
