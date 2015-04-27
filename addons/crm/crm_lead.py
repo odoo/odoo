@@ -917,6 +917,7 @@ class crm_lead(format_address, osv.osv):
         if lead.partner_id:
             partner_ids.append(lead.partner_id.id)
         res['context'] = {
+            'search_default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
             'default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
             'default_partner_id': lead.partner_id and lead.partner_id.id or False,
             'default_partner_ids': partner_ids,
