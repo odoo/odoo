@@ -421,7 +421,14 @@ class purchase_order(osv.osv):
             inv_ids+= [invoice.id for invoice in po.invoice_ids]
         if not inv_ids:
             raise UserError(_('Please create Invoices.'))
-        result['domain'] = [('id', 'in', inv_ids)]
+
+        if len(inv_ids) > 1:
+            result['domain'] = [('id', 'in', inv_ids)]
+        else:
+            res = mod_obj.xmlid_to_res_id(cr, uid, 'account.invoice_supplier_form')
+            result['views'] = [(res, 'form')]
+            result['res_id'] = inv_ids and inv_ids[0] or False
+        return result
 
     def view_invoice(self, cr, uid, ids, context=None):
         '''
