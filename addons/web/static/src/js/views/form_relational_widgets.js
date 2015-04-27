@@ -512,17 +512,20 @@ var AbstractManyField = common.AbstractField.extend({
         this.dataset.child_name = this.name;
         this.set('value', []);
         this.starting_ids = [];
+        this.has_not_committed_changes = false;
         this.view.on("load_record", this, function () {
             self.starting_ids = self.get('value').slice();
         });
         this.dataset.on('dataset_changed', this, function() {
+            self.has_not_committed_changes = true;
             // the editable lists change the dataset without call AbstractManyField methods
-            if (!this.internal_dataset_changed) {
-                this.trigger("change:commands");
+            if (!self.internal_dataset_changed) {
+                self.trigger("change:commands");
             }
         });
         this.on("change:commands", this, function () {
-            this.set({'value': this.dataset.ids.slice()});
+            self.has_not_committed_changes = false;
+            self.set({'value': self.dataset.ids.slice()});
         });
     },
 
@@ -626,6 +629,7 @@ var AbstractManyField = common.AbstractField.extend({
         var dataset = this.dataset;
         var res = true;
         options = options || {};
+        var tmp = this.internal_dataset_changed;
         this.internal_dataset_changed = true;
 
         _.each(command_list, function(command) {
@@ -660,7 +664,7 @@ var AbstractManyField = common.AbstractField.extend({
 
         mutex.exec(function () {
             def.resolve(res);
-            self.internal_dataset_changed = false;
+            self.internal_dataset_changed = tmp;
             self.trigger("change:commands");
         });
         return def;
@@ -710,6 +714,10 @@ var AbstractManyField = common.AbstractField.extend({
         });
 
         return command_list;
+    },
+
+    is_valid: function () {
+        return !this.has_not_committed_changes && this._super();
     },
 
     is_false: function() {
@@ -826,7 +834,7 @@ var FieldOne2Many = AbstractManyField.extend({
             def.resolve();
         });
         this.viewmanager.on("switch_mode", self, function(n_mode) {
-            $.when(self.save_any_view()).done(function() {
+            $.when(self.commit_value()).done(function() {
                 if (n_mode === "list") {
                     $.async_when().done(function() {
                         self.reload_current_view();
@@ -864,19 +872,9 @@ var FieldOne2Many = AbstractManyField.extend({
         }
     },
     commit_value: function() {
-        return this.save_any_view();
-    },
-    save_any_view: function() {
         var view = this.get_active_view();
-        if (view) {
-            if (this.viewmanager.active_view.type === "form") {
-                if (view.controller.is_initialized.state() !== 'resolved') {
-                    return $.when(false);
-                }
-                return $.when(view.controller.save());
-            } else if (this.viewmanager.active_view.type === "list") {
-                return $.when(view.controller.ensure_saved());
-            }
+        if (view && view.type === "list" && view.controller.__focus) {
+            return view.controller._on_blur_one2many(true);
         }
         return $.when(false);
     },
@@ -902,7 +900,15 @@ var One2ManyDataSet = data.BufferedDataSet.extend({
     get_context: function() {
         this.context = this.o2m.build_context();
         return this.context;
-    }
+    },
+    create: function(data, options) {
+        var self = this;
+        var def = this._super(data, options);
+        def.then(function (id) {
+            self.trigger("dataset_changed", id, data, options);
+        });
+        return def;
+    },
 });
 
 var One2ManyListView = ListView.extend({
@@ -914,13 +920,20 @@ var One2ManyListView = ListView.extend({
         }));
         this.on('edit:after', this, this.proxy('_after_edit'));
         this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
-    },
-    start: function () {
-        var ret = this._super();
-        this.$el
-            .off('mousedown.handleButtons')
-            .on('mousedown.handleButtons', 'table button, div a.oe_m2o_cm_button', this.proxy('_button_down'));
-        return ret;
+
+        /* detect if the user try to exit the one2many widget */
+        var self = this;
+        this._mousedown_blur_line = function (event) {
+            if (self.__focus) {
+                self.__ignore_blur = true;
+                var $dom = self.editor.$el.add(self.$el);
+                if ($(event.target).closest("button, *:not(.oe_form_field_one2many_list_row_add) > a").length ||
+                    ($dom.index(event.target) === -1 && !_.any($(event.target).parents(), function (p) { return $dom.index(p) !== -1 ; }))) {
+                    self.__ignore_blur = false;
+                }
+            }
+        };
+        $(document).on('mousedown', this._mousedown_blur_line);
     },
     is_valid: function () {
         var self = this;
@@ -1031,10 +1044,43 @@ var One2ManyListView = ListView.extend({
             }
         });
     },
+    start_edition: function (record, options) {
+        if (!this.__focus) {
+            this._on_focus_one2many();
+        }
+        return this._super(record, options);
+    },
+    _on_focus_one2many: function () {
+        this.dataset.o2m.internal_dataset_changed = true;
+        this.__focus = true;
+    },
+    _on_blur_one2many: function (force) {
+        var self = this;
+        var def;
 
+        if (this.__ignore_blur && !force) {
+            this.__ignore_blur = false;
+            return;
+        }
+
+        this.__focus = false;
+        this.dataset.o2m.internal_dataset_changed = false;
+
+        if (this.editor.form.is_dirty()) {
+            def = this.ensure_saved();
+        } else {
+            def = this.cancel_edition();
+        }
+
+        def.then(function () {
+            if (self.dataset.o2m.has_not_committed_changes) {
+                self.dataset.trigger('dataset_changed');
+            }
+        });
+        return def;
+    },
     _after_edit: function () {
-        this.__ignore_blur = false;
-        this.editor.form.on('blurred', this, this._on_form_blur);
+        this.editor.form.on('blurred', this, this._on_blur_one2many);
 
         // The form's blur thing may be jiggered during the edition setup,
         // potentially leading to the o2m instasaving the row. Cancel any
@@ -1042,38 +1088,7 @@ var One2ManyListView = ListView.extend({
         this.editor.form.widgetFocused();
     },
     _before_unedit: function () {
-        this.editor.form.off('blurred', this, this._on_form_blur);
-    },
-    _button_down: function () {
-        // If a button is clicked (usually some sort of action button), it's
-        // the button's responsibility to ensure the editable list is in the
-        // correct state -> ignore form blurring
-        this.__ignore_blur = true;
-    },
-    /**
-     * Handles blurring of the nested form (saves the currently edited row),
-     * unless the flag to ignore the event is set to ``true``
-     *
-     * Makes the internal form go away
-     */
-    _on_form_blur: function () {
-        if (this.__ignore_blur) {
-            this.__ignore_blur = false;
-            return;
-        }
-        // FIXME: why isn't there an API for this?
-        if (this.editor.form.$el.hasClass('oe_form_dirty')) {
-            this.ensure_saved();
-            return;
-        }
-        this.cancel_edition();
-    },
-    keypress_ENTER: function () {
-        // blurring caused by hitting the [Return] key, should skip the
-        // autosave-on-blur and let the handler for [Return] do its thing (save
-        // the current row *anyway*, then create a new one/edit the next one)
-        this.__ignore_blur = true;
-        this._super.apply(this, arguments);
+        this.editor.form.off('blurred', this, this._on_blur_one2many);
     },
     do_delete: function (ids) {
         var confirm = window.confirm;
@@ -1091,6 +1106,10 @@ var One2ManyListView = ListView.extend({
         }
 
         return this._super(record);
+    },
+    destroy: function () {
+        this._super();
+        $(document).off('mousedown', this._mousedown_blur_line);
     }
 });
 
