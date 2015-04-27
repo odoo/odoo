@@ -731,6 +731,7 @@ instance.web.search.Input = instance.web.Widget.extend( /** @lends instance.web.
      */
     init: function (parent) {
         this._super(parent);
+        this.searchview = parent;
         this.load_attrs({});
     },
     /**
@@ -1376,7 +1377,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             // to handle this as if it were a single value.
             value = value[0];
         }
-        var context = instance.web.pyeval.eval('contexts', [this.view.dataset.get_context()]);
+        var context = instance.web.pyeval.eval('contexts', [this.searchview.dataset.get_context()]);
         return this.model.call('name_get', [value], {context: context}).then(function (names) {
             if (_(names).isEmpty()) { return null; }
             return facet_from(self, names[0]);
