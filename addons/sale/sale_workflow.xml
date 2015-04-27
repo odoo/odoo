@@ -129,7 +129,7 @@
         </record>
         <record id="trans_wait_invoice_invoice_manual" model="workflow.transition">
             <field name="act_from" ref="act_wait_invoice"/>
-            <field name="act_to" ref="act_invoice"/>
+            <field name="act_to" ref="act_invoice_end"/>
             <field name="signal">manual_invoice</field>
         </record>
         <record id="trans_invoice_invoice_end" model="workflow.transition">
