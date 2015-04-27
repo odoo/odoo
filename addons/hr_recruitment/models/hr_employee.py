@@ -1,26 +1,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from openerp import api, fields, models
 
 
-class hr_employee(osv.Model):
+class hr_employee(models.Model):
     _inherit = "hr.employee"
 
-    def _newly_hired_employee(self, cr, uid, ids, field_name, arg, context=None):
-        data = self.pool['hr.applicant'].read_group(cr, uid,
-            [('emp_id', 'in', ids), ('job_id.state', '=', 'recruit')],
-            ['emp_id'], ['emp_id'], context=context)
-        result = dict.fromkeys(ids, False)
-        for d in data:
-            if d['emp_id_count'] >= 1:
-                result[d['emp_id'][0]] = True
-        return result
+    newly_hired_employee = fields.Boolean('Newly hired employee', compute='_compute_newly_hired_employee',
+                                          search='_search_newly_hired_employee')
 
-    def _search_newly_hired_employee(self, cr, uid, obj, name, args, context=None):
-        applicant_ids = self.pool['hr.applicant'].search_read(cr, uid, [('job_id.state', '=', 'recruit')], ['emp_id'], context=context)
-        hired_emp_ids = [applicant['emp_id'][0] for applicant in applicant_ids if applicant['emp_id']]
-        return [('id', 'in', hired_emp_ids)]
+    @api.multi
+    def _compute_newly_hired_employee(self):
+        read_group_result = self.env['hr.applicant'].read_group(
+            [('emp_id', 'in', self.ids), ('job_id.state', '=', 'recruit')],
+            ['emp_id'], ['emp_id'])
+        result = dict((data['emp_id'], data['emp_id_count'] > 0) for data in read_group_result)
+        for record in self:
+            record.newly_hired_employee = result.get(record.id, False)
 
-    _columns = {
-        'newly_hired_employee': fields.function(_newly_hired_employee, fnct_search=_search_newly_hired_employee, type='boolean', string='Newly hired employees')
-    }
+    def _search_newly_hired_employee(self, operator, value):
+        applicants = self.env['hr.applicant'].search([('job_id.state', '=', 'recruit')])
+        return [('id', 'in', applicants.ids)]

@@ -2,8 +2,15 @@
 from openerp import api, fields, models
 
 
-class hr_department(models.Model):
+class HrDepartment(models.Model):
     _inherit = 'hr.department'
+
+    new_applicant_count = fields.Integer(
+        compute='_compute_new_applicant_count', string='New Applicant')
+    new_hired_employee = fields.Integer(
+        compute='_compute_recruitment_stats', string='New Hired Employee')
+    expected_employee = fields.Integer(
+        compute='_compute_recruitment_stats', string='Expected Employee')
 
     @api.multi
     def _compute_new_applicant_count(self):
@@ -24,10 +31,3 @@ class hr_department(models.Model):
         for department in self:
             department.new_hired_employee = new_emp.get(department.id, 0)
             department.expected_employee = expected_emp.get(department.id, 0)
-
-    new_applicant_count = fields.Integer(
-        compute='_compute_new_applicant_count', string='New Applicant')
-    new_hired_employee = fields.Integer(
-        compute='_compute_recruitment_stats', string='New Hired Employee')
-    expected_employee = fields.Integer(
-        compute='_compute_recruitment_stats', string='Expected Employee')

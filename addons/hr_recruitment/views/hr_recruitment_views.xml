@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
+
     <!-- Stage -->
     <record id="hr_job_stage_act" model="ir.actions.act_window">
         <field name="name">Recruitment / Applicants Stages</field>
@@ -118,8 +118,7 @@
                 </div>
                 <group>
                     <group>
-                        <field name="partner_id"
-                                on_change="onchange_partner_id(partner_id)"/>
+                        <field name="partner_id"/>
                         <field name="email_from" widget="email"/>
                         <field name="partner_phone"/>
                         <field name="partner_mobile"/>
@@ -141,7 +140,7 @@
                     <group string="Job">
                         <field name="survey" invisible="1"/>
                         <field name="response_id" invisible="1"/>
-                        <field name="job_id" on_change="onchange_job(job_id,stage_id)"/>
+                        <field name="job_id"/>
                         <field name="department_id"/>
                         <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}' />
                     </group>
@@ -663,7 +662,7 @@
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">kanban,tree,form,graph,calendar</field>
         <field name="context">{
-            'search_default_department_id': [active_id],
+            'search_default_department_id': active_id,
             'default_department_id': active_id}
         </field>
         <field name="domain">[('stage_id.sequence','&lt;=','1')]</field>
