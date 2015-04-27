@@ -19,6 +19,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
@@ -52,13 +53,13 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = 0
             if line.product_id:
-                res[line.id] = round(line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uos_qty), 2)
+                res[line.id] = line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uos_qty)
         return res
 
     _columns = {
-        'margin': fields.function(_product_margin, string='Margin',
+        'margin': fields.function(_product_margin, string='Margin', digits_compute= dp.get_precision('Product Price'),
               store = True),
-        'purchase_price': fields.float('Cost Price', digits=(16,2))
+        'purchase_price': fields.float('Cost Price', digits_compute= dp.get_precision('Product Price'))
     }
 
 
@@ -70,6 +71,8 @@ class sale_order(osv.osv):
         for sale in self.browse(cr, uid, ids, context=context):
             result[sale.id] = 0.0
             for line in sale.order_line:
+                if line.state == 'cancel':
+                    continue
                 result[sale.id] += line.margin or 0.0
         return result
 
@@ -83,5 +86,5 @@ class sale_order(osv.osv):
         'margin': fields.function(_product_margin, string='Margin', help="It gives profitability by calculating the difference between the Unit Price and the cost price.", store={
                 'sale.order.line': (_get_order, ['margin', 'purchase_price'], 20),
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20),
-                }),
+                }, digits_compute= dp.get_precision('Product Price')),
     }

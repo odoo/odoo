@@ -87,6 +87,7 @@ The Dashboard for the Sales Manager will include
         'test/cancel_order.yml',
         'test/delete_order.yml',
         'test/edi_sale_order.yml',
+        'test/canceled_lines_order.yml',
     ],
     'css': ['static/src/css/sale.css'],
     'installable': True,

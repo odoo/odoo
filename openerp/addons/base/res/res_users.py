@@ -334,6 +334,8 @@ class res_users(osv.osv):
                 # if partner is global we keep it that way
                 if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']: 
                     user.partner_id.write({'company_id': user.company_id.id})
+            # clear default ir values when company changes
+            self.pool['ir.values'].get_defaults_dict.clear_cache(self.pool['ir.values'])
         # clear caches linked to the users
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         clear = partial(self.pool['ir.rule'].clear_cache, cr)

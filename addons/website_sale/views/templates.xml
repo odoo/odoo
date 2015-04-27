@@ -282,8 +282,7 @@
   <t t-call="website.layout">
       <t t-set="additional_title" t-value="product.name"/>
       <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
-
-        <section class="container mt8">
+        <section t-attf-class="container mt8 oe_website_sale #{(compute_currency(product.lst_price) - product.price) &gt; 0.1 and 'discount'}" id="product_detail">
           <div class="row">
             <div class="col-sm-4">
                 <ol class="breadcrumb">
@@ -303,9 +302,6 @@
                 </t>
             </div>
           </div>
-        </section>
-
-        <section t-attf-class="container oe_website_sale #{(compute_currency(product.lst_price) - product.price) &gt; 0.1 and 'discount'}" id="product_detail">
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
                 <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
