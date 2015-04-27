@@ -7,8 +7,8 @@
 
     <record id="view_crm_meeting_search" model="ir.ui.view">
         <field name="name">CRM - Meetings Search</field>
-        <field name="model">crm.meeting</field>
-        <field name="inherit_id" ref="base_calendar.view_crm_meeting_search"/>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_search"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position="after">
                 <field name="opportunity_id"/>
