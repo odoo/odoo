@@ -144,15 +144,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                         account.name AS name,  \
                         account.code AS code \
                     FROM account_move_line AS line, \
-                        account_account AS account \
+                        account_account AS account, \
+                        account_move as move \
                     WHERE line.state <> %s \
+                        AND line.move_id = move.id \
                         AND line.tax_code_id = %s  \
                         AND line.account_id = account.id \
                         AND account.company_id = %s \
                         AND line.period_id IN %s\
                         AND account.active \
+                        AND move.state <> %s \
                     GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
-                        company_id, periods_ids,))
+                        company_id, periods_ids, 'draft',))
         res = self.cr.dictfetchall()
 
         i = 0
