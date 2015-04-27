@@ -1333,10 +1333,16 @@ class account_invoice(osv.Model):
         for order in purchase_order_obj.browse(cr, uid, po_ids, context=context):
             purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
             invoiced = []
+            shipped = True
+            # for invoice method manual or order, don't care about shipping state
+            # for invoices based on incoming shippment, beware of partial deliveries
+            if (order.invoice_method == 'picking' and
+                    not all(picking.invoice_state in ['invoiced'] for picking in order.picking_ids)):
+                shipped = False
             for po_line in order.order_line:
-                if any(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
+                if all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
                     invoiced.append(po_line.id)
-            if invoiced:
+            if invoiced and shipped:
                 self.pool['purchase.order.line'].write(cr, uid, invoiced, {'invoiced': True})
             workflow.trg_write(uid, 'purchase.order', order.id, cr)
         return res

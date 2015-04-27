@@ -2707,9 +2707,11 @@ class stock_move(osv.osv):
                 continue
             partial_data = partial_datas.get('move%s'%(move.id), False)
             assert partial_data, _('Missing partial picking data for move #%s.') % (move.id)
-            product_qty = partial_data.get('product_qty',0.0)
+            product_uom = partial_data.get('product_uom', False)
+            product_qty = partial_data.get('product_qty', 0.0)
+            product_qty = self.pool['product.uom']._compute_qty(cr, uid, product_uom, product_qty, move.product_uom.id)
             move_product_qty[move.id] = product_qty
-            product_uom = partial_data.get('product_uom',False)
+
             product_price = partial_data.get('product_price',0.0)
             product_currency = partial_data.get('product_currency',False)
             prodlot_ids[move.id] = partial_data.get('prodlot_id')

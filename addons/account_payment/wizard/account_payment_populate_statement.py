@@ -92,6 +92,7 @@ class account_payment_populate_statement(osv.osv_memory):
                         'date': line.date or time.strftime('%Y-%m-%d'),
                         'amount': abs(amount),
                         'period_id': statement.period_id.id,
+                        'payment_rate_currency_id': statement.currency.id,
                 }
                 voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
 
