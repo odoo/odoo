@@ -10,4 +10,4 @@ Laurent Destailleur ldestailleur@teclib.com https://github.com/eldy
 
 List of contributors:
 
-Laurent Destailleur eldy@teclib.com https://github.com/eldy
+Laurent Destailleur ldestailleur@teclib.com https://github.com/eldy
