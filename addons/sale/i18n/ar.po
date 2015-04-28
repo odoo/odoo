@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-04-15 11:24+0000\n"
+"Last-Translator: yosra yasser <y.yasser@diamondvision.me>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:17+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-16 05:54+0000\n"
+"X-Generator: Launchpad (build 17428)\n"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
@@ -169,6 +169,12 @@ msgid ""
 "             \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
 msgstr ""
+"*يتم تعيين حالة 'المسودة' عندما تكون أوامر البيع ذات الصلة فى حالة المسودة "
+".\n"
+"*يتم تعيين حالة 'التأكيد' عندما تكون أوامر البيع ذات الصلة مؤكدة .\n"
+"*يتم تعيين حالة الإستثناء عندما تكون أوامر البيع ذات الصلة محددة كإستثناء .\n"
+"*يتم تعيين حالة 'تم' عندما تكون خطوط أوامر البيع قد تم الإنتهاء منها .\n"
+"*يتم تعيين حالة 'الإلغاء' عندما يقوم المستخدم بإلغاء أوامر البيع ذات الصلة ."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -257,16 +263,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"فيما يلى قائمة لكل خط أمر بيع حتى تتم فوترته . يمكنك \n"
+"فوترة أمر البيع جزئياً,بواسطة خطوط أوامر البيع . أنت \n"
+"لن تحتاج لهذه القائمة إذا قُمت بالفوتره من أوامر التسليم أو \n"
+"إذا قُمت بفوترة المبيعات كلياً .\n"
+"</p>\n"
+"            "
 
 #. module: sale
 #: help:sale.order.line,address_allotment_id:0
 msgid "A partner to whom the particular product needs to be allotted."
-msgstr ""
+msgstr "شريك للمنتج المعين الذى يحتاج إلى تخصيص."
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "عناوين فى أوامر البيع"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -293,13 +306,13 @@ msgstr "منتج الدفع المقدم"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %%"
-msgstr ""
+msgstr "مسبقا من %s %%"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %s"
-msgstr ""
+msgstr "مسبقا من %s %s"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -307,6 +320,8 @@ msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
 msgstr ""
+"بعد النقر فوق \"إظهار خطوط الفاتورة\"، حدد خطوط الفاتورة وانشاء الفاتورة من "
+"\"المزيد\" فى القائمة المنسدلة."
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
@@ -316,6 +331,9 @@ msgid ""
 "                    or a fixed price (for advances) directly from the sales "
 "order form if you prefer."
 msgstr ""
+"سيتم إصدار فاتورة كافة العناصر الموجودة في خطوط الاوامر هذه .يمكنك أيضا عمل "
+"فاتورة مئوية من أجل البيع \n"
+"أو سعر ثابت (للسلف) مباشرة من شكل اوامر المبيعات إذا كنت تفضل ذلك."
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -330,12 +348,12 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
 msgid "Allow batch invoicing of delivery orders through journals"
-msgstr ""
+msgstr "السماح بالدفع بالفواتير لأوامر التسليم من خلال اليومية"
 
 #. module: sale
 #: field:sale.config.settings,module_warning:0
 msgid "Allow configuring alerts by customer or products"
-msgstr ""
+msgstr "تسمح بتكوين تنبيهات من قبل العملاء أو المنتجات"
 
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
@@ -345,7 +363,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr ""
+msgstr "يسمح وضع خصم على خطوط أوامر البيع"
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -378,6 +396,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"يسمح للإدارة أسعار مختلفة على أساس القواعد لكل فئة من العملاء.\n"
+"مثلا: 10٪ لتجار التجزئة والترويج له من 5 يورو على هذا المنتج، الخ"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
@@ -420,7 +440,7 @@ msgstr "يسمح لك باختيار والحفاظ على وحدات قياس �
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "يسمح لك بتحديد الحساب التحليلي على أوامر البيع."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_delivery_address:0
@@ -437,12 +457,12 @@ msgstr "تحليل الحساب"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "الحسابات التحليلية للمبيعات"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "الحسابات التحليلية للمبيعات"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -456,6 +476,8 @@ msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
 msgstr ""
+"قبل اختيار المنتج،\n"
+"اختر العميل في نموذج المبيعات."
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -482,7 +504,7 @@ msgstr "إلغاء"
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Cancel Line"
-msgstr ""
+msgstr "إلغاء الخط"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -492,7 +514,7 @@ msgstr "إلغاء الطلب"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Quotation"
-msgstr ""
+msgstr "إلغاء عروض الأسعار"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -511,7 +533,7 @@ msgstr "لا يمكن الغاء طلب البيع!"
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
+msgstr "لا يمكنك حذف خط أمر البيع الذي هو في حالة '%s'."
 
 #. module: sale
 #: code:addons/sale/sale.py:1140
@@ -520,6 +542,8 @@ msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"لا يمكن العثور على خط لائحة الأسعار المطابق مع هذا المنتج والكمية.\n"
+"يجب عليك تغيير إما المنتج، والكمية أو لائحة الأسعار."
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -581,7 +605,7 @@ msgstr "خطأ في الإعدادات!"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Confirm Sale"
-msgstr ""
+msgstr "تأكيد البيع"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -596,17 +620,17 @@ msgstr "مؤكد"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "تأكيد خطوط أوامر البيع لم يتم تسليمها بعد"
 
 #. module: sale
 #: field:sale.order,project_id:0
 msgid "Contract / Analytic"
-msgstr ""
+msgstr "العقد / تحليل"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contract Features"
-msgstr ""
+msgstr "ميزات العقد"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -616,7 +640,7 @@ msgstr "ادارة العقود"
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "Create & View Invoice"
-msgstr ""
+msgstr "إنشاء و عرض الفاتورة"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
@@ -636,7 +660,7 @@ msgstr "إنشاء الفواتير"
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoice"
-msgstr ""
+msgstr "إنشاء و عرض الفاتورة"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
@@ -723,7 +747,7 @@ msgstr "تاريخ إنشاء أمر المبيعات"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Default Options"
-msgstr ""
+msgstr "الخيارات الإفتراضية"
 
 #. module: sale
 #: field:res.company,sale_note:0
@@ -760,7 +784,7 @@ msgstr "الوقت اللازم للتسليم"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Delivery address for current sales order."
-msgstr ""
+msgstr "عنوان التسليم لأوامر البيع الحالية."
 
 #. module: sale
 #: field:sale.order.line,name:0
@@ -781,12 +805,12 @@ msgstr "الخصم (%)"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "خصم على الخطوط"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
-msgstr ""
+msgstr "عرض الهوامش فى أوامر البيع"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
@@ -832,7 +856,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr ""
+msgstr "تفعيل فواتير خطوط أوامر البيع"
 
 #. module: sale
 #: code:addons/sale/sale.py:154
@@ -864,7 +888,7 @@ msgstr ""
 #: code:addons/sale/sale.py:589
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr ""
+msgstr "أولا الغاء جميع الفواتير المرفقة بأمر البيع هذا."
 
 #. module: sale
 #: field:sale.order,fiscal_position:0
@@ -874,7 +898,7 @@ msgstr "الوضع المالي"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Fixed price (deposit)"
-msgstr ""
+msgstr "سعر ثابت (إيداع)"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -916,12 +940,12 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "توليد الفواتير على أساس خطوط أوامر البيع"
 
 #. module: sale
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
-msgstr ""
+msgstr "يعطي النظام تسلسل عند عرض قائمة من خطوط أوامر البيع."
 
 #. module: sale
 #: help:sale.order,state:0
@@ -933,6 +957,11 @@ msgid ""
 "The 'Waiting Schedule' status is set when the invoice is confirmed           "
 "    but waiting for the scheduler to run on the order date."
 msgstr ""
+"يعطي حالة عروض الأسعار أو أمر البيع.\n"
+"يتم تعيين حالة استثناء تلقائيا عند حدوث عملية إلغاء في المصادقة على الفاتورة "
+"(فاتورة استثناء) أو في عملية قطف قائمة (الشحنات الاستثنائية).\n"
+"يتم تعيين حالة \"في الانتظار الجدول الزمني 'عندما يتم تأكيد الفاتورة ولكن في "
+"انتظار جدولة لتشغيل على تاريخ الأمر."
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -982,6 +1011,8 @@ msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
 msgstr ""
+"إذا قمت بتغيير لائحة الأسعار لهذا الأمر (والعملة في نهاية المطاف)، لن يتم "
+"تحديث أسعار خطوط الأوامر القائمة."
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1051,12 +1082,12 @@ msgstr "سطور الفواتير"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr ""
+msgstr "أمر فاتورة"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "فاتورة أمر بيع"
 
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
@@ -1106,7 +1137,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sales order"
-msgstr ""
+msgstr "فاتورة أوامر البيع بأكملها"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1118,7 +1149,7 @@ msgstr "مفوتر"
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 msgid "Invoiced Ratio"
-msgstr ""
+msgstr "نسبة الفواتير"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1155,7 +1186,7 @@ msgstr "يشير إلى أنه تمّ تسديد الفاتورة."
 #. module: sale
 #: help:sale.order,invoice_exists:0
 msgid "It indicates that sales order has at least one invoice."
-msgstr ""
+msgstr "فإنه يشير إلى أن أمر البيع لديه فاتورة واحدة على الأقل."
 
 #. module: sale
 #: field:sale.order,message_last_post:0
@@ -1209,7 +1240,7 @@ msgstr "مبيعاتي"
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "خطوط أوامر البيع الخاصة بى"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1231,13 +1262,13 @@ msgstr ""
 #: code:addons/sale/sale.py:1132
 #, python-format
 msgid "No Pricelist ! : "
-msgstr ""
+msgstr "لا يوجد لائحة أسعار ! : "
 
 #. module: sale
 #: code:addons/sale/sale.py:1143
 #, python-format
 msgid "No valid pricelist line found ! :"
-msgstr ""
+msgstr "أي خط للائحة أسعار صالحة موجود!"
 
 #. module: sale
 #: help:sale.order.line,delay:0
@@ -1254,7 +1285,7 @@ msgstr "التسعيرات السابقة"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Delivery Order"
-msgstr ""
+msgstr "عند تسليم الطلبية"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -1271,11 +1302,16 @@ msgid ""
 "Before delivery: A draft invoice is created from the sales order and must be "
 "paid before the products can be delivered."
 msgstr ""
+"عند الطلب: مسودة الفاتورة يمكن أن تنشأ عند أوامر المبيعات عند الحاجة.\n"
+"على أمر التسليم: مسودة الفاتورة يمكن أن تنشأ عند أمر التسليم عندما يتم تسليم "
+"المنتجات.\n"
+"قبل التسليم: يتم إنشاء مسودة الفاتورة من أمر المبيعات ويجب أن تدفع قبل أن "
+"يتم تسليم المنتجات."
 
 #. module: sale
 #: field:sale.config.settings,module_analytic_user_function:0
 msgid "One employee can have different roles per contract"
-msgstr ""
+msgstr "موظف واحد يمكن أن يكون له أدوار مختلفة لكل عقد"
 
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
@@ -1297,7 +1333,7 @@ msgstr "سطور الأوامر"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 msgid "Order Lines to Invoice"
-msgstr ""
+msgstr "خطوط الأوامر للفاتورة"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1308,7 +1344,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
+msgstr "رقم الطلب"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1339,7 +1375,7 @@ msgstr "مرجع الطلب"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Ordered date of the sales order"
-msgstr ""
+msgstr "تاريخ أمر من أوامر المبيعات"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1381,18 +1417,18 @@ msgstr "النسبة"
 #: code:addons/sale/sale.py:935
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "يرجى تحديد حساب الدخل لهذا المنتج:\"%s\" (id:%d)."
 
 #. module: sale
 #: code:addons/sale/sale.py:391
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr ""
+msgstr "برجاء تحديد يومية المبيعات لهذه الشركة: \"%s\" (id:%d)."
 
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr ""
+msgstr "إعداد فواتير على أساس الجداول الزمنية"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1454,7 +1490,7 @@ msgstr "المنتج"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Product Features"
-msgstr ""
+msgstr "ميزات المنتج"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -1474,7 +1510,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "الخصائص على الخطوط"
 
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_tree
@@ -1508,7 +1544,7 @@ msgstr "التسعيرة / الأمر"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "تاريخ عرض السعر"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
@@ -1518,7 +1554,7 @@ msgstr "رقم عرض السعر"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation N°"
-msgstr "اقتباس بالعدد"
+msgstr "رقم عرض السعر"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
@@ -1528,24 +1564,24 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "تم إرسال عرض الأسعار"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "تمت الموافقة على عرض الأسعار"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
-msgstr ""
+msgstr "تم إنشاء عرض السعر"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "تم إرسال عروض الاسعار"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1560,7 +1596,7 @@ msgstr "التسعيرات"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "تحليل عروض الأسعار"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1570,7 +1606,7 @@ msgstr "عروض الأسعار والمبيعات"
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
 msgid "Rate of created quotation per duration"
-msgstr ""
+msgstr "معدل إنشاء عروض الأسعار بالمدة"
 
 #. module: sale
 #: field:crm.case.section,monthly_invoiced:0
@@ -1605,7 +1641,7 @@ msgstr ""
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of created quotations per month."
-msgstr ""
+msgstr "العائد من عروض الأسعار بالشهر"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1625,7 +1661,7 @@ msgstr "ينشأ خط طلب البيع الفاتورة"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Sale to Invoice"
-msgstr ""
+msgstr "من البيع للفاتورة"
 
 #. module: sale
 #: view:product.product:sale.product_form_view_sale_order_button
@@ -1678,7 +1714,7 @@ msgstr "أمر المبيعات"
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "تأكيد أمر البيع"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -1696,12 +1732,12 @@ msgstr "سطور أوامر المبيعات"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "خطوط أوامر البيع جاهزة للفوترة"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "خطوط أوامر البيع ذات الصلة بأوامر البيع الخاصة بى"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1709,11 +1745,13 @@ msgid ""
 "Sales Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
+"خطوط أوامر المبيعات التي يتم تأكيدها، القيام بها أو في حالة استثناء، ولم يتم "
+"حتى الآن إصدار فواتير"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Sales Order Lines that are in 'done' state"
-msgstr ""
+msgstr "خطوط أوامر المبيعات التي هي في الحالة \"تم\""
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1733,7 +1771,7 @@ msgstr "طلبات البيع الجاهزة للفوترة"
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Sales Order that haven't yet been confirmed"
-msgstr ""
+msgstr "أوامر البيع التى لم يتم التصديق عليها بعد"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1777,7 +1815,7 @@ msgstr "المبيعات ذات الخلل"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Sales order lines done"
-msgstr ""
+msgstr "خطوط أمر المبيعات تم"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1812,6 +1850,8 @@ msgid ""
 "                You may have to create it and set it as a default value on "
 "this field."
 msgstr ""
+"حدد المنتج من نوع الخدمة وهو ما يسمى 'مقدما المنتج.\n"
+"قد تحتاج لإنشائه وتعيينه كقيمة افتراضية على هذا الحقل."
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1820,6 +1860,9 @@ msgid ""
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
 msgstr ""
+"حدد الطريقة التي تريد بها فاتورة هذا الأمر. هذا \n"
+"سيخلق مسودة الفاتورة التي يمكن تعديلها \n"
+"قبل المصادقة عليها."
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1850,12 +1893,12 @@ msgstr ""
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Show Lines to Invoice"
-msgstr ""
+msgstr "عرض الخطوط للفاتورة"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Some order lines"
-msgstr ""
+msgstr "بعض خطوط الأوامر"
 
 #. module: sale
 #: field:sale.order,origin:0
@@ -1924,7 +1967,7 @@ msgstr "الحساب التحليلي المتعلق بأمر بيع"
 #. module: sale
 #: field:sale.config.settings,time_unit:0
 msgid "The default working time unit for services is"
-msgstr ""
+msgstr "وحدة وقت العمل الافتراضية للخدمات هو"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -1949,6 +1992,8 @@ msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
 msgstr ""
+"ليس هناك تعريف للوضع المالي أو حساب لفئة الدخل المحددة للخصائص الافتراضية من "
+"فئات المنتجات."
 
 #. module: sale
 #: code:addons/sale/sale.py:154
@@ -1960,7 +2005,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
 msgid "There is no income account defined as global property."
-msgstr ""
+msgstr "لا يوجد حساب للدخل يعرف بأنه الملكية العالمية."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:100
@@ -1990,7 +2035,7 @@ msgstr ""
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr ""
+msgstr "هذا يسمح بتثبيت وحدة مبيعات_تحليل _الخطط"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -2054,6 +2099,8 @@ msgid ""
 "To allow your salesman to make invoices for sales order lines using the menu "
 "'Lines to Invoice'."
 msgstr ""
+"للسماح للبائع الخاصة بك لجعل فواتير خطوط أوامر البيع ان تستخدم قائمة 'خطوط "
+"الى الفاتورة \"."
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -2081,7 +2128,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr ""
+msgstr "إطلاق أوامر التسليم تلقائياً من أوامر البيع"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2143,16 +2190,19 @@ msgid ""
 "with\n"
 "                        your customer."
 msgstr ""
+"استخدام عقد ليكون قادرا على إدارة الخدمات الخاصة بك مع \n"
+"فواتير متعددة كجزء من نفس العقد مع \n"
+"العميل."
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
 msgid "Use contracts management"
-msgstr ""
+msgstr "إستخدام عقود الإدارة"
 
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
 msgid "Use multiple analytic accounts on sales"
-msgstr ""
+msgstr "استخدام حسابات تحليلية متعددة في المبيعات"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
@@ -2178,7 +2228,7 @@ msgstr "بإنتظار الجدول"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Warehouse Features"
-msgstr ""
+msgstr "ميزات المستودع"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -2206,32 +2256,32 @@ msgstr "الوزن"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "ما الذى تريد فوترته ؟"
 
 #. module: sale
 #: code:addons/sale/sale.py:990
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr ""
+msgstr "لا يمكنك إلغاء خط أمر المبيعات الذي تمت بالفعل في الفاتورة."
 
 #. module: sale
 #: code:addons/sale/sale.py:605
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
-msgstr ""
+msgstr "أنت لا تستطيع التأكد من أوامر البيع التى لا تمتلك خط."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #, python-format
 msgid "You cannot create invoice when sales order is not confirmed."
-msgstr ""
+msgstr "لا يمكنك إنشاء فاتورة حالة عدم التصديق عليها من المبيعات."
 
 #. module: sale
 #: code:addons/sale/sale.py:523
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr ""
+msgstr "لا يمكنك أمتلاك مجموعة مبيعات لديها عملات مختلفة لنفس الشريك ."
 
 #. module: sale
 #: code:addons/sale/sale.py:1130
@@ -2240,12 +2290,14 @@ msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"يجب عليك تحديد لائحة الأسعار أو العميل فى نموذج المبيعات !\n"
+"يرجى تعيين أحد قبل اختيار المنتج."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "You shouldn't manually invoice the following sale order %s"
-msgstr ""
+msgstr "يجب عليك ألا تقوم بفوترة أمر البيع التالى يدوياً  %s"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -2262,7 +2314,7 @@ msgstr "أو"
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "sale.group_delivery_invoice_address"
-msgstr ""
+msgstr "sale.group_delivery_invoice_address"
 
 #~ msgid "Order Date"
 #~ msgstr "تاريخ الأمر"

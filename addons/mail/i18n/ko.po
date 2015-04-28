@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-09-03 02:53+0000\n"
-"Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
+"PO-Revision-Date: 2015-03-16 09:04+0000\n"
+"Last-Translator: ChangJoon Lee <lee@serialimage.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:53+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-17 05:48+0000\n"
+"X-Generator: Launchpad (build 17389)\n"
 "Language: ko\n"
 
 #. module: mail
@@ -49,7 +49,7 @@ msgstr "(이메일주소가 없음)"
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
-msgstr ""
+msgstr "<div><p>안녕하세요,</p><p>%s 님이 다음 %s 문서에 귀하를 초대했습니다: %s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
@@ -68,6 +68,11 @@ msgid ""
 "                        </p>\n"
 "                        %(static_help)s"
 msgstr ""
+"<p class='oe_view_nocontent_create'>\n"
+"                            여기를 클릭하여 새 %(document)s 문서를 보내거나 다음 주소로 이메일을 "
+"발송하십시오: <a href='mailto:%(email)s'>%(email)s</a>\n"
+"                        </p>\n"
+"                        %(static_help)s"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:145
@@ -76,6 +81,8 @@ msgid ""
 "<p class='oe_view_nocontent_create'>Click here to add new "
 "%(document)s</p>%(static_help)s"
 msgstr ""
+"<p class='oe_view_nocontent_create'>여기를 클릭하여 새 %(document)s "
+"추가</p>%(static_help)s"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_inbox_feeds
@@ -91,6 +98,12 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>좋아요!</b> 받은 편집함이 비어있습니다.\n"
+"                </p><p>\n"
+"                    받은 편지함에는 개인 메세지나 사용자가 따르는 사람이나 문서의 관련 정보와 이메일을 포함합니다.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
@@ -102,6 +115,12 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>개인 메세지 없음.</b>\n"
+"                </p><p>\n"
+"                    이 목록에는 사용자게 발송된 메세지가 나타납니다.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_star_feeds
@@ -116,6 +135,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>할 일 없음.</b>\n"
+"                </p><p>\n"
+"                    받은 편지함의 메세지를 처리할 때, <i>할일</i>로 설정할 수 있습니다. 이 메뉴에서 사용자의 "
+"모든 할일을 처리할 수 있습니다.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_archives_feeds
@@ -164,7 +190,7 @@ msgstr "접근 그룹"
 #. module: mail
 #: help:mail.message.subtype,default:0
 msgid "Activated by default when subscribing."
-msgstr ""
+msgstr "가입시 자동 활성화됨"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -186,7 +212,7 @@ msgstr "팔로워 추가"
 #: code:addons/mail/static/src/xml/mail.xml:161
 #, python-format
 msgid "Add an internal note that will not be sent to the followers"
-msgstr ""
+msgstr "팔로워에게 전달되지 않을 내부 노트를 추가합니다."
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -273,7 +299,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail_followers.xml:62
 #, python-format
 msgid "And"
-msgstr ""
+msgstr "그리고"
 
 #. module: mail
 #: help:mail.compose.message,no_auto_thread:0
@@ -375,7 +401,7 @@ msgstr "최상의 영업 관례"
 #. module: mail
 #: model:mail.group,name:mail.group_board
 msgid "Board meetings"
-msgstr ""
+msgstr "임원 회의"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form

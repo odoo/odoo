@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-03-10 15:31+0000\n"
+"Last-Translator: ChangJoon Lee <lee@serialimage.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:14+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-11 05:48+0000\n"
+"X-Generator: Launchpad (build 17389)\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
@@ -97,6 +97,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>안녕하세요 ${object.partner_id.name}님,</p>\n"
+"    \n"
+"    <p>${object.company_id.name}의 ${object.state in ('draft', 'sent') and "
+"'request for quotation' or 'purchase order confirmation'} 입니다 : </p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>참조</strong><br />\n"
+"       &nbsp;&nbsp;주문번호: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;주문총계: <strong>${object.amount_total} "
+"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;주문일: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;주문 참조번호: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;귀사의 참조번호: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;담당자: <a href=\"mailto:${object.validator.email or "
+"''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>문의 사항이 있으시면, 언제든지 연락주세요.</p>\n"
+"    <p>감사합니다!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                전화:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase
@@ -202,28 +277,28 @@ msgstr ""
 #: code:addons/purchase/stock.py:198
 #, python-format
 msgid " Buy"
-msgstr ""
+msgstr " 구입"
 
 #. module: purchase
 #: field:product.product,purchase_count:0
 #: field:product.template,purchase_count:0
 msgid "# Purchases"
-msgstr ""
+msgstr "# 구입"
 
 #. module: purchase
 #: field:res.partner,supplier_invoice_count:0
 msgid "# Supplier Invoices"
-msgstr ""
+msgstr "# 공급자 명세서"
 
 #. module: purchase
 #: field:purchase.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "줄의 수"
 
 #. module: purchase
 #: field:res.partner,purchase_order_count:0
 msgid "# of Purchase Order"
-msgstr ""
+msgstr "주문서의 수"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
@@ -238,7 +313,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "(update)"
-msgstr ""
+msgstr "(업데이트)"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -389,7 +464,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
 msgid "Address Book"
-msgstr ""
+msgstr "주소록"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
@@ -451,13 +526,13 @@ msgstr "분석 계정"
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "구매 분석 회계"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
 #: field:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Analytic accounting for purchases"
-msgstr ""
+msgstr "구매 분석 회계"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -467,7 +542,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Approve Order"
-msgstr ""
+msgstr "주문 승인"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
@@ -483,27 +558,27 @@ msgstr "이 주문들을 합치겠습니까 ?"
 #. module: purchase
 #: field:purchase.order.line,procurement_ids:0
 msgid "Associated procurements"
-msgstr ""
+msgstr "관련 조달"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
-msgstr ""
+msgstr "평균 배달 시간"
 
 #. module: purchase
 #: field:purchase.report,price_average:0
 msgid "Average Price"
-msgstr ""
+msgstr "평균 가격"
 
 #. module: purchase
 #: field:stock.warehouse,buy_pull_id:0
 msgid "BUY rule"
-msgstr ""
+msgstr "매입 규칙"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr ""
+msgstr "매입 주문 줄에 기초"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
@@ -518,41 +593,41 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on generated draft invoice"
-msgstr ""
+msgstr "생성된 명세서 초안에 기초"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr ""
+msgstr "입고에 기초"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on purchase order lines"
-msgstr ""
+msgstr "매입 주문 줄에 기초"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.order,state:0
 msgid "Bid Received"
-msgstr ""
+msgstr "입찰 수신됨"
 
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr ""
+msgstr "입찰 수신일"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
 msgid "Bid Valid Until"
-msgstr ""
+msgstr "다음까지 입찰 유효"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1171
 #: code:addons/purchase/stock.py:192
 #, python-format
 msgid "Buy"
-msgstr ""
+msgstr "구매"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_calendar
@@ -574,7 +649,7 @@ msgstr ""
 #: view:product.template:purchase.product_template_search_view_purchase
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr ""
+msgstr "구매 가능"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1189
@@ -614,12 +689,12 @@ msgstr ""
 #. module: purchase
 #: field:purchase.report,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "분류"
 
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Category of product"
-msgstr ""
+msgstr "제품 분류"
 
 #. module: purchase
 #: field:purchase.config.settings,group_advance_purchase_requisition:0
@@ -629,7 +704,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "회사"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -637,30 +712,30 @@ msgstr ""
 #: view:purchase.report:purchase.view_purchase_order_search
 #: field:purchase.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "회사"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:515
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "이메일 작성"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 msgid "Configuration"
-msgstr ""
+msgstr "구성"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1231
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "설정 오류!"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Configure Purchases"
-msgstr ""
+msgstr "구매 환경설정"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
@@ -670,7 +745,7 @@ msgstr "확정"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Confirm Order"
-msgstr ""
+msgstr "주문 확정"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
@@ -680,7 +755,7 @@ msgstr "확정됨"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
 msgid "Create invoices"
-msgstr ""
+msgstr "송장 생성"
 
 #. module: purchase
 #: field:purchase.config.settings,create_uid:0
@@ -688,7 +763,7 @@ msgstr ""
 #: field:purchase.order.line,create_uid:0
 #: field:purchase.order.line_invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "작성자:"
 
 #. module: purchase
 #: field:purchase.config.settings,create_date:0
@@ -697,22 +772,22 @@ msgstr ""
 #: field:purchase.order.line,create_date:0
 #: field:purchase.order.line_invoice,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "작성일:"
 
 #. module: purchase
 #: field:purchase.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "통화"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Customer Address"
-msgstr ""
+msgstr "고객 주소"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Customer Address (Direct Delivery)"
-msgstr ""
+msgstr "고객 주소 (직접 배송)"
 
 #. module: purchase
 #: field:purchase.order,date_approve:0
@@ -790,7 +865,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,picking_type_id:0
 msgid "Deliver To"
-msgstr ""
+msgstr "배송지"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -850,7 +925,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:1384
 #, python-format
 msgid "Draft Purchase Order created"
-msgstr ""
+msgstr "주문서 초안이 작성됨"
 
 #. module: purchase
 #: code:addons/purchase/edi/purchase_order.py:132
@@ -957,13 +1032,13 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_2_stock_picking
 msgid "In Shipments"
-msgstr ""
+msgstr "배송중"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:337
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
+msgstr "주문서를 삭제하기 위해서는 먼저 취소해야 합니다."
 
 #. module: purchase
 #: help:purchase.config.settings,group_advance_purchase_requisition:0
@@ -1042,7 +1117,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoice Received"
-msgstr ""
+msgstr "계산서 수신됨"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1500
@@ -1054,7 +1129,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:1480
 #, python-format
 msgid "Invoice received"
-msgstr ""
+msgstr "계산서 수신됨"
 
 #. module: purchase
 #: field:stock.picking,reception_to_invoice:0
@@ -1082,7 +1157,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
 msgid "Invoices generated for a purchase order"
-msgstr ""
+msgstr "주문서에 대한 인보이스가 생성되었습니다."
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
@@ -1199,7 +1274,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
 msgid "Merge Purchase orders"
-msgstr ""
+msgstr "주문서 병합"
 
 #. module: purchase
 #: view:purchase.order.group:purchase.view_purchase_order_group
@@ -1219,7 +1294,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
-msgstr ""
+msgstr "월별 구입"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1276,12 +1351,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "On Purchase Order Lines"
-msgstr ""
+msgstr "주문서 줄에"
 
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
 msgid "Open Purchase Menu"
-msgstr ""
+msgstr "구매 메뉴 열기"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
@@ -1289,12 +1364,12 @@ msgstr ""
 #: field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
 msgid "Order Date"
-msgstr ""
+msgstr "주문일"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "주문일:"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
@@ -1439,7 +1514,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr ""
+msgstr "견적요청서 인쇄"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1511,13 +1586,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase"
-msgstr ""
+msgstr "구매"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr ""
+msgstr "구매 분석"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -1530,12 +1605,12 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Purchase Confirmed"
-msgstr ""
+msgstr "구매 확인됨"
 
 #. module: purchase
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
-msgstr ""
+msgstr "구매 리드 타임"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.action_report_purchase_order
@@ -1552,7 +1627,7 @@ msgstr "구매 주문"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "구매 주문 번호"
 
 #. module: purchase
 #: field:account.invoice.line,purchase_line_id:0
@@ -1642,7 +1717,7 @@ msgstr ""
 msgid ""
 "Put an address if you want to deliver directly from the supplier to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr ""
+msgstr "공급자가 고객에게 직접 배송하기를 원하는 경우 주소를 입력하십시오. 그외에는, 비워두면 사용자의 회사로 배달됩니다."
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1671,34 +1746,34 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ"
-msgstr "RFQ"
+msgstr "견적요청서"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "RFQ & Bid"
-msgstr ""
+msgstr "견적요청서와 입찰"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "견적요청서 승인됨"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "견적요청서 확인됨"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr ""
+msgstr "견적요청서 완료"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:327
 #: code:addons/purchase/purchase.py:945
 #, python-format
 msgid "RFQ created"
-msgstr ""
+msgstr "견적요청서 생성됨"
 
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
@@ -1708,27 +1783,27 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr ""
+msgstr "견적요청서와 구매"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Print RFQ"
-msgstr ""
+msgstr "견적요청서 재인쇄"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr ""
+msgstr "이메일로 견적요청서 재전송"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Receive Invoice"
-msgstr ""
+msgstr "인보이스 수신"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Receive Products"
-msgstr ""
+msgstr "제품 입고"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -1794,7 +1869,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr ""
+msgstr "견적 요청"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
@@ -1841,12 +1916,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr ""
+msgstr "주문서를 이메일로 발송"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr ""
+msgstr "견적요청서를 이메일로 발송"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1881,7 +1956,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Status"
-msgstr ""
+msgstr "상태"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -1936,7 +2011,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
-msgstr ""
+msgstr "공급자 참조번호"
 
 #. module: purchase
 #: field:purchase.order,amount_tax:0
@@ -2057,7 +2132,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
 msgid "Total Untaxed amount"
-msgstr ""
+msgstr "세전 금액 합계"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -2118,12 +2193,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
 msgid "Untaxed"
-msgstr ""
+msgstr "과세 전"
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "과세되지 않은 금액"
+msgstr "세전 금액"
 
 #. module: purchase
 #: field:purchase.config.settings,group_costing_method:0

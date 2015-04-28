@@ -6,16 +6,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-04-26 08:14+0000\n"
+"Last-Translator: user3 <Unknown>\n"
+"Language-Team: Russian <http://translate.starlight-"
+"biz.com//projects/odoo/project_timesheet/ru/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:13+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-27 05:41+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
+"Language: ru\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
@@ -28,6 +30,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите, чтобы добавить договор с покупателем.\n"
+"              </p><p>\n"
+"                Здесь вы найдете контракты, связанные с проектами вашего\n"
+"                покупателя, что позволит вам отслеживать прогресс "
+"выставления счета.\n"
+"              </p>\n"
+"            "
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:56
@@ -36,6 +46,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
 "'%s'.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Записать ваши журналы учета рабочего "
+"времени для проекта '%s'.</p>"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -48,6 +60,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Здесь вы найдете журналы учета рабочего времени и "
+"совершенные вами покупки для контрактов, на которые можно повторно выписать "
+"счет покупателю.\n"
+"                Если Вы хотите сделать запись новых вакансий для выставления "
+"счета, тогда Вы должны использовать меню журнала учета рабочего времени.\n"
+"              </p>\n"
+"            "
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:59
@@ -56,32 +76,34 @@ msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
 "defined in the contract.</p>"
 msgstr ""
+"<p>Журналы учета рабочего времени по этому проекту можно выставить %s, в "
+"соответствии с условиями, оговоренными в контракте.</p>"
 
 #. module: project_timesheet
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
 msgid "Analytic Account/Project"
-msgstr ""
+msgstr "Счет аналитики/Проект"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Позиция аналитики"
 
 #. module: project_timesheet
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_search_account_inherit
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_tree_inherit_account_id
 msgid "Analytic account/project"
-msgstr ""
+msgstr "Счет аналитики/проект"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "April"
-msgstr ""
+msgstr "Апрель"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "August"
-msgstr ""
+msgstr "Август"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:82
@@ -90,138 +112,140 @@ msgstr ""
 #: code:addons/project_timesheet/project_timesheet.py:97
 #, python-format
 msgid "Bad Configuration!"
-msgstr ""
+msgstr "Плохая конфигурация!"
 
 #. module: project_timesheet
 #: view:project.project:project_timesheet.project_invoice_search
 msgid "Billable"
-msgstr ""
+msgstr "Оплачиваемый"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "Договоры к продлению"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
 msgid "Customer Projects"
-msgstr ""
+msgstr "Проекты клиента"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 #: field:report.timesheet.task.user,name:0
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "December"
-msgstr ""
+msgstr "Декабрь"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "February"
-msgstr ""
+msgstr "Февраль"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 msgid "Group By"
-msgstr ""
+msgstr "Группировать по"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 msgid "Group by month of date"
-msgstr ""
+msgstr "Группировать по месяцу в дате"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 msgid "Group by year of date"
-msgstr ""
+msgstr "Группировать по году в дате"
 
 #. module: project_timesheet
 #: view:project.project:project_timesheet.view_project_kanban_inherited
 msgid "Hours"
-msgstr ""
+msgstr "Часы"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:294
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Неверное действие!"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:321
 #, python-format
 msgid "Invalid Analytic Account!"
-msgstr ""
+msgstr "Неверный счет аналитики!"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks"
-msgstr ""
+msgstr "Задачи по выставлению счета"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
 msgid "Invoicing"
-msgstr ""
+msgstr "Выставление счета"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "January"
-msgstr ""
+msgstr "Январь"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "July"
-msgstr ""
+msgstr "Июль"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "June"
-msgstr ""
+msgstr "Июнь"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "March"
-msgstr ""
+msgstr "Март"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "May"
-msgstr ""
+msgstr "Май"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 #: field:report.timesheet.task.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "Месяц"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "November"
-msgstr ""
+msgstr "Ноябрь"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "October"
-msgstr ""
+msgstr "Октябрь"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Партнёр"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:83
 #, python-format
 msgid "Please define employee for user \"%s\". You must create one."
 msgstr ""
+"Пожалуйста, определите сотрудника для пользователя \"%s\". Вы должны создать "
+"его."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:91
@@ -230,6 +254,8 @@ msgid ""
 "Please define journal on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"Пожалуйста, определите журнал по соответствующему сотруднику.\n"
+"Заполните вкладку журнала учета рабочего времени в форме сотрудника."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:87
@@ -239,6 +265,9 @@ msgid ""
 "employee.\n"
 "Fill in the HR Settings tab of the employee form."
 msgstr ""
+"Пожалуйста, определите товар и счет категории товара по соответствующему "
+"сотруднику.\n"
+"Заполните вкладку настроек по работе с персоналом в форме сотрудника."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:98
@@ -248,77 +277,80 @@ msgid ""
 "employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"Пожалуйста, определите товар и счет категории товара по соответствующему "
+"сотруднику.\n"
+"Заполните вкладку журнала учета рабочего времени в форме сотрудника."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
 msgid "Project"
-msgstr ""
+msgstr "Проект"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
 msgid "Project Task Work"
-msgstr ""
+msgstr "Рабочая задача проекта"
 
 #. module: project_timesheet
 #: field:project.task.work,hr_analytic_timesheet_id:0
 msgid "Related Timeline Id"
-msgstr ""
+msgstr "ID соответствующих сроков выполнения"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "September"
-msgstr ""
+msgstr "Сентябрь"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
 msgid "Sign in / Sign out by Project"
-msgstr ""
+msgstr "Вход/Выход по проекту"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Задача"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,task_hrs:0
 msgid "Task Hours"
-msgstr ""
+msgstr "Часы задачи"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
 #: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
 #: view:report.timesheet.task.user:project_timesheet.view_task_hour_per_month_graph
 msgid "Task Hours Per Month"
-msgstr ""
+msgstr "Часы задачи в месяц"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 msgid "Tasks by User"
-msgstr ""
+msgstr "Задачи пользователя"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
 msgid "Timesheet Hours"
-msgstr ""
+msgstr "Часы журнала учета рабочего времени"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:67
 #: view:project.project:project_timesheet.project_invoice_form
 #, python-format
 msgid "Timesheets"
-msgstr ""
+msgstr "Табели"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 #: field:report.timesheet.task.user,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 #: field:report.timesheet.task.user,year:0
 msgid "Year"
-msgstr ""
+msgstr "Год"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:294
@@ -327,6 +359,8 @@ msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
 msgstr ""
+"Вы не можете удалить партнера, который назначен по проекту, но Вы можете "
+"снять флажок с активной графы."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:321
@@ -334,3 +368,5 @@ msgstr ""
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
 msgstr ""
+"Вы не можете выбрать аналитический учет, который находится в статусе Закрыт "
+"или Отменен."

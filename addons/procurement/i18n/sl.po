@@ -1,21 +1,23 @@
 # Slovenian translation for openobject-addons
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-03-24 16:23+0000\n"
+"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
+"Language-Team: Slovenian <translate@matmoz.si>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:06+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-25 06:08+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
+"Language: sl\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -43,6 +45,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Ustvari oskrbo.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Oskrbovalni nalogi</b> predstavljajo potrebo po določeni "
+"količini proizvodov v danem času na dani lokaciji.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Prodajni nalogi</b> so običajni vir nabavnih nalogov (a "
+"so ločen dokument). \n"
+"                <br/>Glede na parametre nabave in nastavitve proizvoda, "
+"nabavni motor poskuša zadovoljiti potrebo po rezervaciji proizvodov v "
+"zalogi, naroča proizvode dobaviteljem ali poda proizvodni nalog, itd...\n"
+"              </p>\n"
+"              <p>\n"
+"                Do <b>oskrbovalne izjeme</b> pride, ko sistem ne najde "
+"načina, da bi zadovoljil oskrbo. Nekatere izjeme se samodejno razrešijo, "
+"druge pa potrebujejo ročno posredovanje (te identificira specifično "
+"sporočilo o napaki).\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -67,11 +90,29 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Ustvari oskrbovalni nalog.  \n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Oskrbovalni nalog</b> knjiži potrebo po specifičnem\n"
+"                proizvodu na specifični lokaciji. Oskrbovalne naloge "
+"običajno\n"
+"                samodejno ustvarijo <i>prodajni nalogi, 'vlečna' logistična "
+"pravila ali\n"
+"                pravila minimalne zaloge.</i>\n"
+"              </p>\n"
+"              <p>\n"
+"                Ko je oskrbovalni nalog potrjen, samodejno ustvari "
+"operacije\n"
+"                potrebne za izpolnitev potreb: predlog\n"
+"                nabavnega naloga, proizvodni nalog, itd.\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
 msgid "Action"
-msgstr ""
+msgstr "Dejanje"
 
 #. module: procurement
 #: field:procurement.rule,active:0
@@ -81,17 +122,17 @@ msgstr "Aktivno"
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "All at once"
-msgstr ""
+msgstr "Vse naenkrat"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
-msgstr "Prekliči"
+msgstr "Preklic"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Cancel Procurement"
-msgstr "Preklic oskrbe"
+msgstr "Preklic oskrbovanja"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -102,12 +143,12 @@ msgstr "Preklicano"
 #: code:addons/procurement/procurement.py:156
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Ni možno brisati naloga za oskrbo , ki ima status  %s."
+msgstr "Brisanje oskrbovalnih nalogov v stanju %s ni možno."
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr ""
+msgstr "Preveri oskrbovanje"
 
 #. module: procurement
 #: help:procurement.order,rule_id:0
@@ -115,22 +156,25 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but "
 "can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
+"Pravilo izbrano za razreševanje oskrbovanj. Običajno ga uporablja sistem, a "
+"lahko ga tudi ročno ustvari upravitelj oskrbovanja, da bi vsilil neobičajno "
+"obnašanje."
 
 #. module: procurement
 #: field:procurement.order,company_id:0
 #: field:procurement.rule,company_id:0
 msgid "Company"
-msgstr "Podjetje"
+msgstr "Družba"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Izvršba vseh oskrbovanj v ozadju."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr "Izvedi vse načrtovalce"
+msgstr "Izvršba vseh razvrščevalnikov"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -143,7 +187,7 @@ msgstr "Potrjeno"
 #: field:procurement.order.compute.all,create_uid:0
 #: field:procurement.rule,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: procurement
 #: field:procurement.group,create_date:0
@@ -151,17 +195,17 @@ msgstr ""
 #: field:procurement.order.compute.all,create_date:0
 #: field:procurement.rule,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: procurement
 #: help:procurement.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum zadnjega objavljenega sporočila na zapisu."
 
 #. module: procurement
 #: field:procurement.group,move_type:0
 msgid "Delivery Method"
-msgstr ""
+msgstr "Način dostave"
 
 #. module: procurement
 #: field:procurement.order,name:0
@@ -171,7 +215,7 @@ msgstr "Opis"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Done"
-msgstr "Končano"
+msgstr "Opravljeno"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -186,7 +230,7 @@ msgstr "Izjeme"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "External note..."
-msgstr "Eksterna zabeležka..."
+msgstr "Zunanja opomba..."
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -196,12 +240,12 @@ msgstr "Dodatne informacije"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Fixed"
-msgstr ""
+msgstr "Stalna"
 
 #. module: procurement
 #: field:procurement.rule,group_id:0
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Stalna oskrbovalna skupina"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -211,25 +255,27 @@ msgstr "Sledilci"
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "General Information"
-msgstr ""
+msgstr "Splošni podatki"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Group By"
-msgstr "Združeno po"
+msgstr "Združi po"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "Oskrbovanja skupine"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Povzetek (število sporočil,..)"
+msgstr ""
+"Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v "
+"html formatu, da se lahko vstavlja v poglede kanban."
 
 #. module: procurement
 #: field:procurement.group,id:0
@@ -237,23 +283,25 @@ msgstr "Povzetek (število sporočil,..)"
 #: field:procurement.order.compute.all,id:0
 #: field:procurement.rule,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Če je izbrano, zahtevajo nova sporočila vašo pozornost."
+msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 
 #. module: procurement
 #: help:procurement.rule,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr ""
+"Če je polje neoznačeno, bo omogočilo skrivanje pravila, ne da bi ga "
+"odstranili."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:155
 #, python-format
 msgid "Invalid Action!"
-msgstr "Napačno dejanje!"
+msgstr "Nepravilno dejanje!"
 
 #. module: procurement
 #: field:procurement.order,message_is_follower:0
@@ -263,7 +311,7 @@ msgstr "Je sledilec"
 #. module: procurement
 #: field:procurement.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum zadnjega sporočila"
 
 #. module: procurement
 #: field:procurement.group,write_uid:0
@@ -271,7 +319,7 @@ msgstr ""
 #: field:procurement.order.compute.all,write_uid:0
 #: field:procurement.rule,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnjič posodobil"
 
 #. module: procurement
 #: field:procurement.group,write_date:0
@@ -279,7 +327,7 @@ msgstr ""
 #: field:procurement.order.compute.all,write_date:0
 #: field:procurement.rule,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -289,7 +337,7 @@ msgstr "Zamuja"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr ""
+msgstr "Pustiti prazno"
 
 #. module: procurement
 #: view:res.company:procurement.mrp_company
@@ -304,18 +352,18 @@ msgstr "Sporočila"
 #. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
-msgstr "Sporočila in zgodovina sporočil"
+msgstr "Komunikacije in kronologija"
 
 #. module: procurement
 #: field:procurement.rule,name:0
 msgid "Name"
-msgstr "Ime"
+msgstr "Naziv"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:212
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Ni pravila, ki bi ustrezalo temu oskrbovanju"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -330,12 +378,12 @@ msgstr "Ni nujno"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Notes"
-msgstr ""
+msgstr "Opombe"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "Delno"
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -347,96 +395,96 @@ msgstr "Prioriteta"
 #: view:procurement.order:procurement.procurement_form_view
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Procurement"
-msgstr "Oskrba"
+msgstr "Oskrbovanje"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action5
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Procurement Exceptions"
-msgstr "Napake oskrbe"
+msgstr "Oskrbovalne izjeme"
 
 #. module: procurement
 #: field:procurement.order,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "Oskrbovalna skupina"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
 msgid "Procurement Lines"
-msgstr "Postavke oskrbe"
+msgstr "Oskrbovalne postavke"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action
 msgid "Procurement Orders"
-msgstr "Interni nalog oskrbe"
+msgstr "Oskrbovalni nalogi"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Oskrbovalno naročilo"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Oskrbovalno pravilo"
 
 #. module: procurement
 #: view:procurement.group:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Oskrbovalna skupina"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Procurement started late"
-msgstr "Zamuda pri oskrbi"
+msgstr "Zamuda pri zagonu oskrbovanja"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_exceptions
 #: view:procurement.group:procurement.procurement_group_form_view
 #: field:procurement.group,procurement_ids:0
 msgid "Procurements"
-msgstr "Oskrba"
+msgstr "Oskrbovanje"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 #: field:procurement.order,product_id:0
 msgid "Product"
-msgstr "Izdelek"
+msgstr "Proizvod"
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
 msgid "Product Unit of Measure"
-msgstr "Enota mere izdelka"
+msgstr "EM proizvoda"
 
 #. module: procurement
 #: field:procurement.order,product_uos:0
 msgid "Product UoS"
-msgstr "Enota prodaje izdelka"
+msgstr "Prodajna EM proizvoda"
 
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Razširi"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Opcije širitve"
 
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Širitev oskrbovalne skupine"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Pull Rule"
-msgstr ""
+msgstr "Vlečno pravilo"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_tree
 msgid "Pull Rules"
-msgstr ""
+msgstr "Vlečna pravila"
 
 #. module: procurement
 #: field:procurement.order,product_qty:0
@@ -446,12 +494,12 @@ msgstr "Količina"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "Ponovno potrdi oskrbovanje"
 
 #. module: procurement
 #: field:procurement.group,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Sklic"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -459,22 +507,24 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
 msgstr ""
+"Sklic dokumenta, ki je ustvaril to oskrbovanje.\n"
+"Samodejno dopolni Odoo."
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "Pravilo"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Run Procurement"
-msgstr "Izračun oskrbe"
+msgstr "Zagon oskrbovanja"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Run Schedulers"
-msgstr "Zagon načrtovalca"
+msgstr "Zagon razvrščevalnikov"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -489,27 +539,27 @@ msgstr "Načrtovani datum"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Načrtovani mesec"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Scheduler Parameters"
-msgstr "Parametri načrtovalca"
+msgstr "Parametri razvrščevalnika"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr ""
+msgstr "Časovno razvrščanje"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Search Procurement"
-msgstr "Iskanje internih oskrbnih nalogov"
+msgstr "Iskanje oskrbovanj"
 
 #. module: procurement
 #: field:procurement.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Zaporedje"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -530,7 +580,7 @@ msgstr "Povzetek"
 #. module: procurement
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr ""
+msgstr "To polje bo izpolnilo izvor pakiranja in naziv premikov"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
@@ -545,7 +595,7 @@ msgstr "Neprebrana sporočila"
 #. module: procurement
 #: field:procurement.order,product_uos_qty:0
 msgid "UoS Quantity"
-msgstr "Količina v enoti za prodajo"
+msgstr "Količina v EM prodaje"
 
 #. module: procurement
 #: selection:procurement.order,priority:0

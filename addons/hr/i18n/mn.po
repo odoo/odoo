@@ -8,20 +8,20 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-04-26 03:20+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:44+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-27 05:37+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
 
 #. module: hr
 #: code:addons/hr/hr.py:158
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (хуулбар)"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -36,6 +36,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ ажилтан нэмэхдээ дарна уу.\n"
+"              </p><p>\n"
+"                Odoo ажилтаны хуудсын тусламжтай ажилтан бүрийн\n"
+"                талаарх бүх мэдээллийг хялбархан олох боломжтой.\n"
+"                Холбогдох хаяг, ажлын байр, ажил дээрээ байгаа эсэх гэх "
+"мэт.\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -49,6 +58,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Хэлтэс үүсгэхдээ дарна уу.\n"
+"              </p><p>\n"
+"                Odoo-н хэлтсийн бүтэц нь ажилчинд холбоотой бүх баримтыг\n"
+"                хэлтсийн бүтцээр удирдахад тусладаг: зардал, цагийн хуудас, "
+"амралт чөлөө, \n"
+"                ажилтан авах гэх мэт\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -158,6 +176,8 @@ msgid ""
 "By default 'Closed', set it to 'In Recruitment' if recruitment process is "
 "going on for this job position."
 msgstr ""
+"Анхныхаараа 'Хаагдсан', хэрэв ажилтан авах энэ ажлын байр дээр явагдаж "
+"байгаа бол  'Хүний нөөцийн бүрдүүлэлтэнд' болгож өөрчилнө үү."
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
@@ -241,7 +261,7 @@ msgstr "Алба, хэлтсүүдээ үүсгэх"
 #: field:hr.employee.category,create_uid:0
 #: field:hr.job,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: hr
 #: field:hr.config.settings,create_date:0
@@ -250,7 +270,7 @@ msgstr ""
 #: field:hr.employee.category,create_date:0
 #: field:hr.job,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн огноо"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
@@ -266,7 +286,7 @@ msgstr "Төрсөн огноо"
 #: help:hr.employee,message_last_post:0
 #: help:hr.job,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
 
 #. module: hr
 #: view:hr.department:hr.view_department_filter
@@ -292,7 +312,7 @@ msgstr "Хэлтсүүд"
 #. module: hr
 #: field:res.users,display_employees_suggestions:0
 msgid "Display Employees Suggestions"
-msgstr ""
+msgstr "Ажилтныг зөвлөхийг харуулах"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -302,7 +322,7 @@ msgstr "Салсан"
 #. module: hr
 #: field:hr.config.settings,module_hr_gamification:0
 msgid "Drive engagement with challenges and badges"
-msgstr ""
+msgstr "Сорилт болон медалиар оролцоог хөтлөх"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -319,7 +339,7 @@ msgstr "Ажилтны зэрэглэл"
 #. module: hr
 #: field:hr.employee.category,name:0
 msgid "Employee Tag"
-msgstr ""
+msgstr "Ажилчны Пайз"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -374,7 +394,7 @@ msgstr "Алдаа! Тойрог хамааралтай ажилчдыг үүс�
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected New Employees"
-msgstr ""
+msgstr "Шинэ ажилтан хүлээгдсэн"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -395,7 +415,7 @@ msgstr "Эмэгтэй"
 #: view:hr.employee:hr.hr_kanban_view_employees
 #, python-format
 msgid "Follow"
-msgstr ""
+msgstr "Дагах"
 
 #. module: hr
 #: field:hr.employee,message_follower_ids:0
@@ -406,7 +426,7 @@ msgstr "Дагагчид"
 #. module: hr
 #: view:hr.employee:hr.hr_kanban_view_employees
 msgid "Following"
-msgstr ""
+msgstr "Дагаж байгаа"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -417,7 +437,7 @@ msgstr "Хүйс"
 #: view:hr.employee:hr.view_employee_filter
 #: view:hr.job:hr.view_job_filter
 msgid "Group By"
-msgstr ""
+msgstr "Бүлэглэх"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -427,7 +447,7 @@ msgstr "HR тохиргоонууд"
 #. module: hr
 #: field:hr.job,no_of_hired_employee:0
 msgid "Hired Employees"
-msgstr ""
+msgstr "Цалинт ажилтангууд"
 
 #. module: hr
 #: help:hr.employee,message_summary:0
@@ -464,7 +484,7 @@ msgstr "Хүний нөөцийн менежмент"
 #: field:hr.employee.category,id:0
 #: field:hr.job,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
@@ -525,7 +545,7 @@ msgstr "Ажлын байрны нэр"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Position"
-msgstr ""
+msgstr "Ажлын байр"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -536,7 +556,7 @@ msgstr "Ажлын байрууд"
 #. module: hr
 #: field:hr.employee,job_id:0
 msgid "Job Title"
-msgstr ""
+msgstr "Ажлын нэр"
 
 #. module: hr
 #: field:hr.department,jobs_ids:0
@@ -548,7 +568,7 @@ msgstr "Ажлын байр"
 #: field:hr.employee,message_last_post:0
 #: field:hr.job,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Сүүлийн зурвасын огноо"
 
 #. module: hr
 #: field:hr.config.settings,write_uid:0
@@ -557,7 +577,7 @@ msgstr ""
 #: field:hr.employee.category,write_uid:0
 #: field:hr.job,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: hr
 #: field:hr.config.settings,write_date:0
@@ -565,7 +585,7 @@ msgstr ""
 #: field:hr.employee,write_date:0
 #: field:hr.employee.category,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: hr
 #: field:hr.employee,last_login:0
@@ -575,7 +595,7 @@ msgstr "Сүүлийн холболт"
 #. module: hr
 #: view:hr.job:hr.view_hr_job_form
 msgid "Launch Recruitment"
-msgstr ""
+msgstr "Хүний нөөцийн бүрдүүлэлтийг эхлүүлэх"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -701,12 +721,14 @@ msgid ""
 "Number of hired employee must be less than expected number of employee in "
 "recruitment."
 msgstr ""
+"Цалинт ажилтангууд нь хүний нөөцийн бүрдүүлэлтийн хүлээгдсэн тооноос бага "
+"байх ёстой."
 
 #. module: hr
 #: help:hr.job,no_of_hired_employee:0
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
-msgstr ""
+msgstr "Энэ ажлын байрны хүний нөөц бүрдүүлэлтийн шат дах цалинт ажилтны тоо"
 
 #. module: hr
 #: help:hr.job,no_of_recruitment:0
@@ -746,7 +768,7 @@ msgstr "Толгой хэлтэс"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Employee Tag"
-msgstr ""
+msgstr "Ажилтны эцэг пайз"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -786,12 +808,12 @@ msgstr "Ажилтнуудын гэрээний баримт"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment Closed"
-msgstr ""
+msgstr "Хүний нөөцийн бүрдүүлэлт хаагдсан"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr ""
+msgstr "Хүнийн нөөцийн бүрдүүлэлт явагдаж байгаа"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -836,7 +858,7 @@ msgstr "Ганц бие"
 #. module: hr
 #: field:hr.employee,image_small:0
 msgid "Small-sized photo"
-msgstr ""
+msgstr "Жижиг хэмжээт зураг"
 
 #. module: hr
 #: help:hr.employee,image_small:0
@@ -886,7 +908,7 @@ msgstr "Харьяалагдсан"
 #: code:addons/hr/static/src/xml/suggestions.xml:15
 #, python-format
 msgid "Suggested Employees"
-msgstr ""
+msgstr "Зөвлөх ажилтангууд"
 
 #. module: hr
 #: field:hr.employee,message_summary:0
@@ -909,6 +931,7 @@ msgstr "Авъяасын менежмент"
 msgid ""
 "The name of the job position must be unique per department in company!"
 msgstr ""
+"Ажлын байрны нэр нь компаний хэлтэс тус бүрт үл давтагдах байх ёстой!"
 
 #. module: hr
 #: help:hr.employee,image:0
@@ -951,7 +974,7 @@ msgstr "hr_expense модулийг суулгах"
 #. module: hr
 #: help:hr.config.settings,module_hr_gamification:0
 msgid "This installs the module hr_gamification."
-msgstr ""
+msgstr "Энэ нь hr_gamification модулийг суулгадаг."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
@@ -991,7 +1014,7 @@ msgstr "Таамаглагдсан нийт ажилтан"
 #. module: hr
 #: view:hr.employee:hr.hr_kanban_view_employees
 msgid "Unfollow"
-msgstr ""
+msgstr "Дагахаа болих"
 
 #. module: hr
 #: field:hr.employee,message_unread:0
@@ -1002,7 +1025,7 @@ msgstr "Уншаагүй зурвасууд"
 #. module: hr
 #: field:hr.job,write_date:0
 msgid "Update Date"
-msgstr ""
+msgstr "Шинэчилсэн огноо"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -1014,6 +1037,8 @@ msgstr "Хэрэглэгчид"
 #, python-format
 msgid "Welcome to %s! Please help him/her take the first steps with Odoo!"
 msgstr ""
+"%s тавтай морилно уу! Манайхан түүнд Odoo-д эхний алхамуудад суралцахад "
+"туслаж дэмжээрэй!"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1053,7 +1078,7 @@ msgstr "ж. Хагас Цаг"
 #. module: hr
 #: view:hr.job:hr.view_hr_job_form
 msgid "new employee(s) expected"
-msgstr ""
+msgstr "шинэ ажилтан хүлээгдсэн"
 
 #. module: hr
 #: view:hr.job:hr.view_hr_job_form
