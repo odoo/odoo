@@ -62,6 +62,7 @@ You can choose flexible invoicing methods:
         'test/picking_order_policy.yml',
         'test/prepaid_order_policy.yml',
         'test/sale_order_onchange.yml',
+        'test/sale_order_canceled_line.yml',
     ],
     'installable': True,
     'auto_install': True,

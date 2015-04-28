@@ -1,21 +1,23 @@
 # Slovenian translation for openobject-addons
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-03-24 16:05+0000\n"
+"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
+"Language-Team: Slovenian <translate@matmoz.si>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:27+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-25 06:08+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
+"Language: sl\n"
 
 #. module: account_voucher
 #: help:account.voucher,state:0
@@ -29,11 +31,17 @@ msgid ""
 "\n"
 "* The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * Status 'Osnutek' za vpisovanje novih in nepotrjenih temeljnic\n"
+"* Status 'Pro-forma' za Pro-forma temeljnice, ki nimajo številkedokumenta.   "
+"                      \n"
+"* Status 'Knjiženo', za temeljnice s številko dokumenta inpostavkami "
+"temeljnice ustvarjenimi na kontu                          \n"
+"* Status 'Preklicano' ob preklicu temeljnice."
 
 #. module: account_voucher
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr "# postavk"
+msgstr "# postavk temeljnice"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
@@ -57,6 +65,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Ustvari novo plačilo dobavitelju.\n"
+"              </p><p>\n"
+"                Odoo omogoča sledenje plačil in spremljanje stanja odprtih "
+"postavk do dobaviteljev.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -71,7 +86,10 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Novo potrdilo o prodaji\n"
+"                Ustvari novo prodajno potrdilo.\n"
+"              </p><p>\n"
+"                Ko je prodajno potrdilo potrjeno, lahko knjižiteplačilo\n"
+"                kupca vezano na to potrdilo.\n"
 "              </p>\n"
 "            "
 
@@ -90,6 +108,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Vknjiži novo plačilo. \n"
+"              </p><p>\n"
+"                Vnesite kupca in plačilno metodo in nato\n"
+"                ročno ustvarite vknjižbo plačila ali pa Odoo samodejno poda "
+"predlog\n"
+"                o uskladitvi tega plačila z odprtimi\n"
+"                računi ali prodajnimi potrdili.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -104,6 +132,9 @@ msgid ""
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Novo potrdilo o prevzemu\n"
+"              </p><p>\n"
+"                Ko je potrdilo o prevzemu potrjeno, lahko vknjižite\n"
+"                plačilo kupca vezano na to potrdilo o prevzemu.\n"
 "              </p>\n"
 "            "
 
@@ -120,11 +151,10 @@ msgid ""
 "        "
 msgstr ""
 "<p>\n"
-"           S tem poročilom lahko imate pregled fakturiranih zneskov vašemu\n"
-"            kupcu, prav tako pa tudi zamude pri plačilih. Z orodjem za "
-"iskanje lahko\n"
-"            prilagodite vaše poročilo o računih in tako dobite analizo,\n"
-"            ki jo potrebujete.\n"
+"           To poročilo omogoča pregled obračunanih zneskov kupcu\n"
+"            in zamude pri plačilih. Z orodjem za iskanje lahko\n"
+"            prilagodite računska poročila ter prilagodite\n"
+"            to analizo svojim potrebam.\n"
 "          </p>\n"
 "        "
 
@@ -138,13 +168,13 @@ msgstr "Konto"
 #. module: account_voucher
 #: field:account.voucher,move_id:0
 msgid "Account Entry"
-msgstr "Vknjižba"
+msgstr "Kontni vnos"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr "Plačilo"
+msgstr "Temeljnica"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
@@ -166,18 +196,19 @@ msgstr "Analitični konto"
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Are you sure to unreconcile and cancel this record ?"
-msgstr "Res želite preklicati ta zapis?"
+msgstr ""
+"Ste prepričani v preklic uskladitve za ta zapis in izbris tega zapisa?"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Are you sure you want to cancel this receipt?"
-msgstr "Res želite preklicati to potrdilo o prevzemu?"
+msgstr "Res želite preklicati to prejemek?"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Are you sure you want to unreconcile this record?"
-msgstr "Res želite razveljaviti to uskladitev ?"
+msgstr "Res želite razveljaviti uskladitev za to vknjižbo?"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:276
@@ -192,7 +223,7 @@ msgstr ""
 #. module: account_voucher
 #: field:sale.receipt.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
-msgstr "Pov. Zamuda Plačila"
+msgstr "Pov. zamuda plačil"
 
 #. module: account_voucher
 #: field:sale.receipt.report,due_delay:0
@@ -218,20 +249,20 @@ msgstr "Plačevanje računov"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 msgid "Cancel"
-msgstr "Prekliči"
+msgstr "Preklic"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Cancel Receipt"
-msgstr "Preklic"
+msgstr "Preklic prejemka"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Cancel Voucher"
-msgstr "Preklic"
+msgstr "Preklic temeljnice"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -243,7 +274,7 @@ msgstr "Preklicano"
 #: code:addons/account_voucher/account_voucher.py:959
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr "Ni možno izbrisati odprtega ali plačanega potrdila."
+msgstr "Odprtih ali že plačanih temeljnic ni mogoče brisati."
 
 #. module: account_voucher
 #: help:account.voucher,audit:0
@@ -251,8 +282,8 @@ msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
 msgstr ""
-"Označite , če niste sigurni v pravilnost knjiženja in želite da nekdo to "
-"preveri."
+"Če niste prepričani v pravilnost knjiženja in želite da nekdo to preveri, "
+"označite."
 
 #. module: account_voucher
 #: field:account.voucher,company_id:0
@@ -268,7 +299,7 @@ msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
 msgstr ""
-"Razlika med zneskom v glavi in vsemi razporejenimi zneski na postavkah."
+"Razlika med zneskom temeljnice in vsoto dodelitev na postavkah temeljnice."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1057
@@ -284,24 +315,24 @@ msgstr "Proti konto"
 #. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Counterpart Comment"
-msgstr "Zaznamek - proti konto"
+msgstr "Zaznamek na proti kontu"
 
 #. module: account_voucher
 #: field:account.voucher,create_uid:0
 #: field:account.voucher.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: account_voucher
 #: field:account.voucher,create_date:0
 #: field:account.voucher.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
 msgid "Credit"
-msgstr "Zasluge"
+msgstr "V dobro"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
@@ -350,7 +381,7 @@ msgstr "Datum"
 #. module: account_voucher
 #: help:account.voucher,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum zadnjega sporočila pri tem zapisu."
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -360,12 +391,12 @@ msgstr "V breme"
 #. module: account_voucher
 #: field:account.voucher,line_dr_ids:0
 msgid "Debits"
-msgstr "Obremenitve"
+msgstr "Bremena"
 
 #. module: account_voucher
 #: field:account.voucher,type:0
 msgid "Default Type"
-msgstr "Privzeta vrsta"
+msgstr "Privzeti tip"
 
 #. module: account_voucher
 #: field:account.voucher.line,name:0
@@ -402,7 +433,7 @@ msgstr "Osnutek"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Draft Vouchers"
-msgstr "Osnutki"
+msgstr "Osnutki temeljnic"
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -414,12 +445,12 @@ msgstr "Datum zapadlosti"
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Due Month"
-msgstr ""
+msgstr "Mesec zapadlosti"
 
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr "Datum knjiženja"
+msgstr "Dejanski datum knjiženja"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:518
@@ -436,7 +467,7 @@ msgstr "Menjalni tečaj"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Expense Lines"
-msgstr "Vrstice stroškov"
+msgstr "Postavke stroškov"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
@@ -448,7 +479,8 @@ msgstr "Razširjeni filtri..."
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
-msgstr "Polja imajo interni namen, samo za oznako večvalutnosti plačila."
+msgstr ""
+"Polja internega namena le za določitev, ali je temeljnica več valutna ali ne"
 
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
@@ -465,7 +497,7 @@ msgstr "Polna uskladitev"
 #: code:addons/account_voucher/account_voucher.py:1104
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Pojdite na nastavitveno ploščo"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -475,7 +507,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Združi po"
 
 #. module: account_voucher
 #: field:account.voucher,currency_help_label:0
@@ -487,14 +519,16 @@ msgstr "Pomoč"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Povzetek (število sporočil,..)"
+msgstr ""
+"Povzetek pogovorov (število sporočil,..). Povzetek je neposredno v html "
+"formatu, da se lahko neposredno vstavi v poglede tipa kanban."
 
 #. module: account_voucher
 #: field:account.voucher,id:0
 #: field:account.voucher.line,id:0
 #: field:sale.receipt.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -547,7 +581,7 @@ msgstr "Dnevnik"
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
 msgid "Journal Item"
-msgstr "Postavka"
+msgstr "Dnevniška postavka"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -557,13 +591,13 @@ msgstr "Postavka"
 #: view:account.voucher:account_voucher.view_voucher_form
 #: field:account.voucher,move_ids:0
 msgid "Journal Items"
-msgstr "Postavke"
+msgstr "Dnevniške postavke"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
 msgid "Journal Vouchers"
-msgstr "Dnevnik računov"
+msgstr "Dnevnik temeljnic"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -573,24 +607,24 @@ msgstr "Obdrži odprto"
 #. module: account_voucher
 #: field:account.voucher,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum zadnjega sporočila"
 
 #. module: account_voucher
 #: field:account.voucher,write_uid:0
 #: field:account.voucher.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnjič posodobil"
 
 #. module: account_voucher
 #: field:account.voucher,write_date:0
 #: field:account.voucher.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
 msgid "Memo"
-msgstr "Zapisek"
+msgstr "Memorandum"
 
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
@@ -600,12 +634,12 @@ msgstr "Sporočila"
 #. module: account_voucher
 #: help:account.voucher,message_ids:0
 msgid "Messages and communication history"
-msgstr "Sporočila in zgodovina sporočil"
+msgstr "Komunikacije in kronologija komunikacij"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr "Več valutno potrdilo"
+msgstr "Več valutna temeljnica"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
@@ -626,12 +660,12 @@ msgstr "Število"
 #. module: account_voucher
 #: help:account.voucher,tax_id:0
 msgid "Only for tax excluded from price"
-msgstr "Samo za davek, izvzet iz cene"
+msgstr "Samo za davek izvzet iz cene"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
-msgstr "Odprto stanje"
+msgstr "Otvoritveno stanje"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -672,7 +706,7 @@ msgstr "Plačani znesek"
 #. module: account_voucher
 #: field:account.voucher,paid_amount_in_company_currency:0
 msgid "Paid Amount in Company Currency"
-msgstr "Plačan znesek v osnovni valuti"
+msgstr "Plačani znesek v valuti družbe"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -697,7 +731,7 @@ msgstr "Plačilo računa"
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
-msgstr "Plačaj direkto"
+msgstr "Plačaj neposredno"
 
 #. module: account_voucher
 #: code:addons/account_voucher/invoice.py:34
@@ -709,7 +743,7 @@ msgstr "Plačilo računa"
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
-msgstr ""
+msgstr "Odloženo plačilo ali združevanje sredstev"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
@@ -739,17 +773,17 @@ msgstr "Informacije o plačilu"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Payment Method"
-msgstr "Način plačila"
+msgstr "Plačilna metoda"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 msgid "Payment Options"
-msgstr "Načini plačila"
+msgstr "Opcije plačila"
 
 #. module: account_voucher
 #: field:account.voucher,payment_rate_currency_id:0
 msgid "Payment Rate Currency"
-msgstr "Tačaj valute plačila"
+msgstr "Tečaj valute plačila"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -803,7 +837,7 @@ msgstr "Vknjiži"
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: selection:sale.receipt.report,state:0
 msgid "Posted"
-msgstr "Oddano"
+msgstr "Knjiženo"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -812,7 +846,7 @@ msgstr "Oddano"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 msgid "Posted Vouchers"
-msgstr "Knjižena potrdila"
+msgstr "Knjižene temeljnice"
 
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
@@ -829,7 +863,7 @@ msgstr "Pro-forma"
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Pro-forma Vouchers"
-msgstr "Pro-forma potrdila"
+msgstr "Pro-forma temeljnice"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -840,7 +874,7 @@ msgstr "Nabava"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr "Potrdilo nabave"
+msgstr "Potrdilo o prevzemu"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
@@ -851,7 +885,7 @@ msgstr "Potrdila o prevzemu"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr "Potrdila o nakupu"
+msgstr "Nabavna temeljnica"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
@@ -863,12 +897,12 @@ msgstr "Prejemek"
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
-msgstr "Uskladi plačila"
+msgstr "Uskladi stanje plačil"
 
 #. module: account_voucher
 #: field:account.voucher,reference:0
 msgid "Ref #"
-msgstr "Ref #"
+msgstr "Sklic #"
 
 #. module: account_voucher
 #: view:account.invoice:account_voucher.view_invoice_customer
@@ -885,7 +919,7 @@ msgstr "Prodaja"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Sales Information"
-msgstr "Informacije prodaje"
+msgstr "Informacije o prodaji"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
@@ -895,18 +929,18 @@ msgstr "Postavke prodaje"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Sales Receipt"
-msgstr "Potrdilo prodaje"
+msgstr "Prodajni prejemek"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_sale_receipt_report
 msgid "Sales Receipt Statistics"
-msgstr "Statistika prodajnih potrdil"
+msgstr "Statistika prodajnih prejemkov"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr "Potrdila prodaje"
+msgstr "Prodajni prejemki"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
@@ -914,7 +948,7 @@ msgstr "Potrdila prodaje"
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_graph
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "Analiza prodajnih prejemkov"
 
 #. module: account_voucher
 #: field:sale.receipt.report,user_id:0
@@ -928,7 +962,7 @@ msgstr "Prodajalec"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 msgid "Search Vouchers"
-msgstr "Iskanje potrdil o plačilu"
+msgstr "Iskalnik temeljnic"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -937,7 +971,7 @@ msgstr "Iskanje potrdil o plačilu"
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Set to Draft"
-msgstr "Preklopi v pripravo"
+msgstr "Nastavi kot osnutek"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -990,7 +1024,7 @@ msgstr "Plačila dobaviteljem"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Supplier Voucher"
-msgstr "Potrdilo dobavitela"
+msgstr "Temeljnica dobavitelja"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -1007,7 +1041,7 @@ msgstr "Znesek davka"
 #. module: account_voucher
 #: help:account.voucher,paid:0
 msgid "The Voucher has been totally paid."
-msgstr "Račun je v celoti plačan."
+msgstr "Temeljnica je v celoti plačana."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1202
@@ -1022,7 +1056,7 @@ msgid ""
 "currency (in 'Payment Rate Currency' field)  and the voucher currency."
 msgstr ""
 "Za to plačilo bo uporabljen tečaj, med izbrano valuto (v polju \"tečaj "
-"valute plačila\") in valuto plačila."
+"valute plačila\") in valuto temeljnice."
 
 #. module: account_voucher
 #: help:account.voucher,payment_option:0
@@ -1033,7 +1067,7 @@ msgid ""
 "reconcile it with the payment(s)"
 msgstr ""
 "Izberemo, kaj želimo narediti z morebitnimi razlikami med plačanim zneskom "
-"in vsoto prirejenih zneskov. Razlika lahko ostane odprta na partnerjevem "
+"in vsoto dodeljenih zneskov. Razlika lahko ostane odprta na partnerjevem "
 "kontu ali pa se uskladi z plačili."
 
 #. module: account_voucher
@@ -1042,6 +1076,8 @@ msgid ""
 "This sentence helps you to know how to specify the payment rate by giving "
 "you the direct effect it has"
 msgstr ""
+"Pomoč za določanje plačilnih razmerij s prikazom njihovega neposrednega "
+"učinka"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1061,7 +1097,7 @@ msgstr "Skupaj"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Total Allocation"
-msgstr "Skupaj"
+msgstr "Skupaj dodeljeno"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
@@ -1078,12 +1114,12 @@ msgstr "Skupaj z davkom"
 #. module: account_voucher
 #: field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
-msgstr "Skupno brez davka"
+msgstr "Skupaj brez davka"
 
 #. module: account_voucher
 #: help:account.voucher,reference:0
 msgid "Transaction reference number."
-msgstr "Referenca transakcije"
+msgstr "Sklic transakcije"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
@@ -1105,7 +1141,7 @@ msgstr "Prekliči uskladitev"
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
-msgstr "Neto"
+msgstr "Neobdavčeni znesek"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -1113,17 +1149,17 @@ msgstr "Neto"
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Validate"
-msgstr "Potrditev"
+msgstr "Overitev"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Validate Payment"
-msgstr "Potrditev plačila"
+msgstr "Overitev plačila"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Validated Vouchers"
-msgstr "Potrjena potrdila"
+msgstr "Overjene temeljnice"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1136,61 +1172,61 @@ msgstr "Potrjena potrdila"
 #: model:res.request.link,name:account_voucher.req_link_voucher
 #, python-format
 msgid "Voucher"
-msgstr "Potrdilo"
+msgstr "Temeljnica"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_tree
 #: view:account.voucher:account_voucher.view_voucher_tree_nocreate
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 msgid "Voucher Entries"
-msgstr "Postavke"
+msgstr "Vpisi v temeljnice"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Voucher Entry"
-msgstr "Potrdilo o plačilu"
+msgstr "Vpis v temeljnico"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Voucher Items"
-msgstr "Postavke"
+msgstr "Predmeti temeljnice"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
 #: view:account.voucher.line:account_voucher.view_voucher_line_form
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
-msgstr "Postavke"
+msgstr "Postavke temeljnice"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 msgid "Voucher Payment"
-msgstr "Plačilo računa"
+msgstr "Plačilo temeljnice"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.account_cash_statement_graph
 msgid "Voucher Statistics"
-msgstr "Statistika"
+msgstr "Statistika temeljnice"
 
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr "Status"
+msgstr "Status temeljnice"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "Potrdila"
+msgstr "Vpisi v temeljnice"
 
 #. module: account_voucher
 #: field:account.voucher,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Sporočila iz spletne strani"
 
 #. module: account_voucher
 #: help:account.voucher,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Kronologija komunikacij spletne strani"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:377
@@ -1207,7 +1243,7 @@ msgstr "Analitični konto odpisov"
 #: code:addons/account_voucher/account_voucher.py:1202
 #, python-format
 msgid "Wrong voucher line"
-msgstr "Napačna postavka"
+msgstr "Napačna postavka temeljnice"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
@@ -1224,6 +1260,8 @@ msgid ""
 "automatically the booking of accounting entries related to differences "
 "between exchange rates."
 msgstr ""
+"Nastavite konto 'Pridobitev iz menjalnega tečaja' za samodejno knjiženje "
+"kontnih vnosov vezanih na razlike med menjalnimi tečaji."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1097
@@ -1233,6 +1271,8 @@ msgid ""
 "automatically the booking of accounting entries related to differences "
 "between exchange rates."
 msgstr ""
+"Nastavite konto 'Izgub iz menjalnega tečaja' za samodejno knjiženje kontnih "
+"vnosov vezanih na razlike med menjalnimi tečaji."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1114
