@@ -873,10 +873,6 @@ class task(osv.osv):
             new_attachment_ids.append(attachment.copy(cr, uid, attachment_id, default={'res_id': delegated_task_id}, context=context))
         return new_attachment_ids
 
-    def _get_effective_hours(self, task):
-        # this method is override in project_timesheet modules.
-        return 0.0
-
     def _prepare_delegate_values(self, cr, uid, ids, delegate_data, context=None):
         delegate_values = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -1007,14 +1003,14 @@ class task(osv.osv):
         return result
 
     def unlink(self, cr, uid, ids, context=None):
-        if context == None:
+        if context is None:
             context = {}
         self._check_child_task(cr, uid, ids, context=context)
         res = super(task, self).unlink(cr, uid, ids, context)
         return res
 
-    def _get_total_hours(self, task):
-        return self._get_effective_hours(task) + task.remaining_hours
+    def _get_total_hours(self):
+        return self.remaining_hours
 
     def _generate_task(self, cr, uid, tasks, ident=4, context=None):
         context = context or {}
@@ -1026,7 +1022,7 @@ class task(osv.osv):
             result += '''
 %sdef Task_%s():
 %s  todo = \"%.2fH\"
-%s  effort = \"%.2fH\"''' % (ident,task.id, ident,task.remaining_hours, ident, self._get_total_hours(task))
+%s  effort = \"%.2fH\"''' % (ident,task.id, ident,task.remaining_hours, ident, task._get_total_hours())
             start = []
             for t2 in task.parent_ids:
                 start.append("up.Task_%s.end" % (t2.id,))

@@ -559,6 +559,16 @@ class account_analytic_account(osv.osv):
             'nodestroy': True,
         }
 
+    # Allows quick creation of accounts only in specific cases
+    def name_create(self, cr, uid, name, context=None):
+        if context is None:
+            context = {}
+        group_template_required = self.pool['res.users'].has_group(cr, uid, 'account_analytic_analysis.group_template_required')
+        if context.get('default_invoice_on_timesheets') and not group_template_required:
+            rec_id = self.create(cr, uid, {self._rec_name: name}, context)
+            return self.name_get(cr, uid, [rec_id], context)[0]
+        return super(account_analytic_account, self).name_create(cr, uid, name, context=context)
+
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         if not template_id:
             return {}

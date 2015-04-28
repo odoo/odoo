@@ -188,6 +188,9 @@ class task(osv.osv):
             res.append(line['task_id'][0])
         return res
 
+    def _get_total_hours(self):
+        return super(task, self)._get_total_hours() + self.effective_hours
+
     _columns = {
         'remaining_hours': fields.function(_hours_get, string='Remaining Hours', multi='line_id', help="Total remaining time, can be re-estimated periodically by the assignee of the task.",
             store = {

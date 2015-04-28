@@ -293,19 +293,6 @@ class hr_timesheet_sheet(osv.osv):
         return dom
 
 
-class account_analytic_account(osv.osv):
-    _inherit = "account.analytic.account"
-
-    def name_create(self, cr, uid, name, context=None):
-        if context is None:
-            context = {}
-        group_template_required = self.pool['res.users'].has_group(cr, uid, 'account_analytic_analysis.group_template_required')
-        if not context.get('default_invoice_on_timesheets') or group_template_required:
-            return super(account_analytic_account, self).name_create(cr, uid, name, context=context)
-        rec_id = self.create(cr, uid, {self._rec_name: name}, context)
-        return self.name_get(cr, uid, [rec_id], context)[0]
-
-
 class account_analytic_line(osv.osv):
     _inherit = "account.analytic.line"
 
