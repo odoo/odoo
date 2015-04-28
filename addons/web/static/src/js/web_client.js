@@ -117,11 +117,12 @@ var WebClient = Widget.extend({
         core.bus.on('display_notification_warning', this, function (title, message) {
             self.notification.warn(title, message);
         });
-        window.onerror = function (message, file, line) {
+        window.onerror = function (message, file, line, col, error) {
+            var traceback = error ? error.stack : '';
             crash_manager.show_error({
                 type: _t("Client Error"),
                 message: message,
-                data: {debug: file + ':' + line}
+                data: {debug: file + ':' + line + "\n" + _t('Traceback:') + "\n" + traceback}
             });
         };
 
