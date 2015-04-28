@@ -3,7 +3,7 @@
 import urlparse
 import datetime
 
-from openerp import fields, models, tools
+from openerp import api, fields, models, tools
 
 
 class BaseConfiguration(models.TransientModel):
@@ -15,12 +15,14 @@ class BaseConfiguration(models.TransientModel):
     alias_domain = fields.Char('Alias Domain', help="If you have setup a catch-all email domain redirected to "
                                "the Odoo server, enter the domain name here.")
 
+    @api.multi
     def get_default_fail_counter(self):
         previous_date = datetime.datetime.now() - datetime.timedelta(days=30)
         return {
-            'fail_counter': self.env['mail.mail'].sudo().search([('date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)), ('state', '=', 'exception')], count=True)
+            'fail_counter': self.env['mail.mail'].sudo().search_count([('date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)), ('state', '=', 'exception')]),
         }
 
+    @api.multi
     def get_default_alias_domain(self):
         alias_domain = self.env["ir.config_parameter"].get_param("mail.catchall.domain", default=None)
         if alias_domain is None:
@@ -31,6 +33,7 @@ class BaseConfiguration(models.TransientModel):
                 pass
         return {'alias_domain': alias_domain or False}
 
+    @api.multi
     def set_alias_domain(self):
         for record in self:
             self.env['ir.config_parameter'].set_param("mail.catchall.domain", record.alias_domain or '')
