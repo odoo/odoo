@@ -25,13 +25,13 @@
     <data noupdate="1">
 
         <!-- Categories -->
-        <record id="project_issue_category_01" model="project.category">
+        <record id="project_issue_tags_00" model="project.tags">
             <field name="name">Little problem</field>
         </record>
-        <record id="project_issue_category_02" model="project.category">
+        <record id="project_issue_tags_01" model="project.tags">
             <field name="name">PBCK</field>
         </record>
-        <record id="project_issue_category_03" model="project.category">
+        <record id="project_issue_tags_02" model="project.tags">
             <field name="name">Deadly bug</field>
         </record>
 
@@ -48,8 +48,8 @@
             <field name="name">Bug in Accounts module</field>
             <field name="email_from">agr@agrolait.com</field>
             <field name="stage_id" ref="project.project_stage_1"/>
-            <field name="categ_ids" eval="[(6, 0, [
-                    ref('project_issue_category_01')])]"/>
+            <field name="tag_ids" eval="[(6, 0, [
+                    ref('project_issue_tags_00')])]"/>
         </record>
 
         <record id="crm_case_programnotgivingproperoutput0" model="project.issue">
@@ -75,9 +75,9 @@
             <field name="project_id" ref="project.project_project_5"/>
             <field name="name">Output incorrect</field>
             <field name="stage_id" ref="project.project_stage_2"/>
-            <field name="categ_ids" eval="[(6, 0, [
-                    ref('project_issue_category_01'),
-                    ref('project_issue_category_02')])]"/>
+            <field name="tag_ids" eval="[(6, 0, [
+                    ref('project_issue_tags_00'),
+                    ref('project_issue_tags_01')])]"/>
         </record>
 
         <record id="crm_case_problemloadingpage0" model="project.issue">
@@ -117,9 +117,9 @@
             <field name="project_id" ref="project.project_project_4"/>
             <field name="name">Programming Error</field>
             <field name="stage_id" ref="project.project_stage_0"/>
-            <field name="categ_ids" eval="[(6, 0, [
-                    ref('project_issue_category_02'),
-                    ref('project_issue_category_03')])]"/>
+            <field name="tag_ids" eval="[(6, 0, [
+                    ref('project_issue_tags_01'),
+                    ref('project_issue_tags_02')])]"/>
         </record>
 
         <record id="crm_case_logicalerrorinprogram0" model="project.issue">
