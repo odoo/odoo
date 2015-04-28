@@ -13,8 +13,7 @@ class event_config_settings(osv.TransientModel):
             'Organize few days event with track, full agenda, own menu in website'),
         'module_website_event_questions': fields.boolean(
             'Ask questions to online subscribers',
-            help='Install the website_event_questions module',
-            implied_group='event.group_website_event_questions'),
+            help='Install the website_event_questions module'),
         'auto_confirmation': fields.boolean(
             'Automate events and subscription confirmation', help='Unselect this option to manually manage draft event and draft subscription'),
         'group_email_scheduling': fields.boolean(
