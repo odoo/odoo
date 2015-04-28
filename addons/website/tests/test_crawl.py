@@ -10,6 +10,7 @@ import re
 
 _logger = logging.getLogger(__name__)
 
+@openerp.tests.category('website')
 class Crawler(openerp.tests.HttpCase):
     """ Test suite crawling an openerp CMS instance and checking that all
     internal links lead to a 200 response.

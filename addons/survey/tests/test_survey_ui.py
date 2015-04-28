@@ -1,9 +1,9 @@
 import openerp.tests
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
-@openerp.tests.common.at_install(False)
-@openerp.tests.common.post_install(True)
+@openerp.tests.category('website')
+@openerp.tests.at_install(False)
+@openerp.tests.post_install(True)
 class TestUi(openerp.tests.HttpCase):
 
     def test_01_admin_survey_tour(self):
