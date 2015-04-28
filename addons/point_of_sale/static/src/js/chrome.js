@@ -6,6 +6,7 @@ var gui = require('point_of_sale.gui');
 var keyboard = require('point_of_sale.keyboard');
 var models = require('point_of_sale.models');
 var core = require('web.core');
+var CrashManager = require('web.CrashManager');
 
 
 var _t = core._t;
@@ -404,7 +405,6 @@ var ProxyStatusWidget = StatusWidget.extend({
     },
 });
 
-
 /*--------------------------------------*\
  |             THE CHROME               |
 \*======================================*/
@@ -453,6 +453,8 @@ var Chrome = PosBaseWidget.extend({
             self.disable_rubberbanding();
             self.ready.resolve();
             self.loading_hide();
+            self.replace_crashmanager();
+            self.pos.push_order();
         }).fail(function(err){   // error when loading models data from the backend
             self.loading_error(err);
         });
@@ -484,6 +486,31 @@ var Chrome = PosBaseWidget.extend({
         if(this.pos.config.iface_big_scrollbars){
             this.$el.addClass('big-scrollbars');
         }
+    },
+
+    // displays a system error with the error-traceback
+    // popup.
+    show_error: function(error) {
+        this.gui.show_popup('error-traceback',{
+            'title': error.message,
+            'body':  error.message + '\n' + error.data.debug + '\n',
+        });
+    },
+
+    // replaces the error handling of the existing crashmanager which
+    // uses jquery dialog to display the error, to use the pos popup
+    // instead
+    replace_crashmanager: function() {
+        var self = this;
+        CrashManager.include({
+            show_error: function(error) {
+                if (self.gui) {
+                    self.show_error(error);
+                } else {
+                    this._super(error);
+                }
+            },
+        });
     },
 
     click_logo: function() {

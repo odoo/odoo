@@ -99,6 +99,13 @@ gui.define_popup({name:'error', widget: ErrorPopupWidget});
 
 var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
     template:'ErrorTracebackPopupWidget',
+    show: function(opts) {
+        var self = this;
+        this._super(opts);
+        this.$('.download').off('click').click(function(){
+            self.gui.download_file(self.options.body,'traceback.txt');
+        });
+    }
 });
 gui.define_popup({name:'error-traceback', widget: ErrorTracebackPopupWidget});
 

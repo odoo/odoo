@@ -95,7 +95,6 @@ exports.PosModel = Backbone.Model.extend({
          this.barcode_reader.connect();
          this.load_orders();
          this.set_start_order();
-         this.push_order();
          if(this.config.use_proxy){
              return this.connect_to_proxy();
          }
