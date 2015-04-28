@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-08 21:12+0000\n"
-"Last-Translator: Florian Hatat <Unknown>\n"
+"PO-Revision-Date: 2015-04-21 08:52+0000\n"
+"Last-Translator: Lionel Sausin - Numérigraphe <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:56+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-22 06:13+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:262
@@ -44,7 +44,7 @@ msgstr "%s (copie)"
 #: code:addons/mrp/mrp.py:977
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%s produits"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -129,7 +129,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Cliquer pour créer une nomenclature. \n"
+"                Cliquez pour créer une nomenclature. \n"
 "              </p><p>\n"
 "                Les nomenclatures permettent de définir la liste des "
 "matières premières nécessaires\n"
@@ -165,6 +165,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer un groupe de propriétés.\n"
+"              </p><p>\n"
+"                Définissez un groupe de propriétés spécifiques qui peut être "
+"attribué à une nomenclature et à une commande.\n"
+"                Les propriétés permettent à Odoo de déterminer "
+"automatiquement la bonne nomenclature en fonction des \n"
+"                informations de la commande saisies par le vendeur.\n"
+"              </p><p>\n"
+"                Par exemple, dans le groupe de propriété \"garantie\", vous "
+"avez deux propriétés: \"1 an de garantie\" et \"3 ans de\n"
+"                garantie\". Selon la propriété sélectionnée dans le bon de "
+"commande, Odoo prévoira une fabrication\n"
+"                avec la nomenclature correspondante.            \n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -184,7 +200,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Cliquer pour créer un ordre de fabrication. \n"
+"                Cliquez pour créer un ordre de fabrication. \n"
 "              </p><p>\n"
 "                Un ordre de fabrication, basé sur une nomenclature, sera\n"
 "                constitué de matières premières consommées et de produits "
@@ -193,7 +209,7 @@ msgstr ""
 "                Les ordres de fabrication sont généralement proposés "
 "automatiquement en fonction\n"
 "                des besoins clients ou des règles automatiques comme la "
-"règle du stock minimum.\n"
+"règle de stock minimum.\n"
 "              </p>\n"
 "            "
 
@@ -296,7 +312,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
-msgstr "Autorise une planification détaillée de l'ordre de fabrication"
+msgstr "Permet une planification détaillée des ordres de travail"
 
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_properties:0
@@ -316,6 +332,14 @@ msgid ""
 "* Notes for the technician and for the final customer.\n"
 "-This installs the module mrp_repair."
 msgstr ""
+"Permet de gérer toutes les réparations produits\n"
+"* Ajout/suppression de produit pour la réparation\n"
+"*Impact sur les stocks\n"
+"*Facturation (produits et/ou services)\n"
+"*Gestion de la garantie\n"
+"*Rapport sur les devis de réparation\n"
+"*Commentaires pour les techniciens et pour le client final\n"
+"-Ceci installe le module mrp_repair"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
@@ -353,6 +377,8 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Délai moyen pour produire cet article. Dans le cas d'une nomenclature a "
+"plusieurs niveaux, les délais de fabrication des composants seront ajoutés."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -368,11 +394,12 @@ msgstr "Nom de la nomenclature"
 #: help:mrp.bom.line,attribute_value_ids:0
 msgid "BOM Product Variants needed form apply this line."
 msgstr ""
+"Variantes d'articles nécessaires pour appliquer cette ligne de nomenclature."
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
 msgid "BOM Ref"
-msgstr "Référence nomenclature"
+msgstr "Nomenclature Ref."
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
@@ -383,7 +410,7 @@ msgstr "Structure de la nomenclature"
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "Composants de cette nomenclature"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:44
@@ -393,6 +420,9 @@ msgid ""
 "raw material %s to proceed further in your production. Please use the "
 "'Produce' button to do so."
 msgstr ""
+"Pour satisfaire les exigences de l'article %s, vous devez attribuer un "
+"numéro de lot à votre matière première %s pour pouvoir continuer la "
+"fabrication. Pour cela veuillez utiliser le bouton \"Produire\"."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -450,6 +480,9 @@ msgstr "Nomenclature"
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
+"La nomenclature \"%s\" contient un composant appelant aussi cette "
+"nomenclature, donc il y a un problème de boucle récursive pour le produit: "
+"\"%s\"."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:315
@@ -462,7 +495,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr ""
+msgstr "Type de composant"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
@@ -478,7 +511,7 @@ msgstr "Type de nomenclature"
 #: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "Pas de chemin de fabrication générique trouvé."
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -505,6 +538,8 @@ msgstr "Annulé"
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
+"Impossible de consommer un mouvement avec une quantité négative ou égale à "
+"zéro."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:605
@@ -554,7 +589,7 @@ msgstr "Modifier les quantités d'articles"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Check Availability"
-msgstr ""
+msgstr "Vérifier la disponibilité"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -632,13 +667,13 @@ msgstr "Consommer et produire"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Détail des produits consommés"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr ""
+msgstr "Mouvement de consommation de stock"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -662,7 +697,7 @@ msgstr "Articles consommés"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "Utilisés pour"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -711,7 +746,7 @@ msgstr "Information de coût"
 #: field:mrp.workcenter.load,create_uid:0
 #: field:stock.move.consume,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Créée par"
 
 #. module: mrp
 #: field:change.production.qty,create_date:0
@@ -732,7 +767,7 @@ msgstr ""
 #: field:mrp.workcenter.load,create_date:0
 #: field:stock.move.consume,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Créée le"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -750,7 +785,7 @@ msgstr "Coût des cycles"
 #: help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Date du dernier message posté sur cet enregistrement"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -868,6 +903,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "generated by a Manufacturing Order"
 msgstr ""
+"Force à indiquer un numéro de série pour tous les mouvements de stock "
+"contenant cet article et générés par un ordre de fabrication"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
@@ -900,12 +937,12 @@ msgstr "Donne l'ordre d'affichage de la liste des ordres de fabrication"
 #. module: mrp
 #: help:mrp.bom.line,sequence:0
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "Donne l'ordre de classement pour l'affichage"
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr ""
+msgstr "Grouper par"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -960,13 +997,15 @@ msgstr "Coût horaire"
 #: field:report.workcenter.load,id:0
 #: field:stock.move.consume,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
+"Si une variante d'article est définie, la nomenclature n'est disponible que "
+"pour cet article."
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0
@@ -1040,7 +1079,7 @@ msgstr ""
 #: field:mrp.production,message_last_post:0
 #: field:mrp.production.workcenter.line,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Date du dernier message"
 
 #. module: mrp
 #: field:change.production.qty,write_uid:0
@@ -1061,7 +1100,7 @@ msgstr ""
 #: field:mrp.workcenter.load,write_uid:0
 #: field:stock.move.consume,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Dernière modification par"
 
 #. module: mrp
 #: field:change.production.qty,write_date:0
@@ -1082,7 +1121,7 @@ msgstr ""
 #: field:mrp.workcenter.load,write_date:0
 #: field:stock.move.consume,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Modifié le"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1109,7 +1148,7 @@ msgstr "Emplacement où le système stockera les produits finis."
 #: field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
-msgstr ""
+msgstr "Lot"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -1136,17 +1175,17 @@ msgstr "Responsable"
 #: code:addons/mrp/stock.py:256
 #, python-format
 msgid "Manufacture"
-msgstr ""
+msgstr "Produire"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_pull_id:0
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "Règles de production"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_to_resupply:0
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "Produire dans cet entrepot"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -1284,7 +1323,7 @@ msgstr "Nouveau"
 #: code:addons/mrp/procurement.py:127
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "Pas de nomenclature définie pour cet article!"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1359,7 +1398,7 @@ msgstr "Ouvrir le menu MRP"
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Operation"
-msgstr ""
+msgstr "Opération"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
@@ -1389,7 +1428,7 @@ msgstr "Gamme parente"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Partner Ref:"
-msgstr ""
+msgstr "Référence chez le  partenaire :"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1409,7 +1448,7 @@ msgstr "Par semaine"
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr ""
+msgstr "Fantôme"
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1418,6 +1457,9 @@ msgid ""
 "manufacturing orders,it will be directly replaced by the raw materials of "
 "its own BoM, without triggeringan extra manufacturing order."
 msgstr ""
+"Composant fantome : Ce composant n'apparaît pas dans les composants de "
+"l'ordre de fabrication. Il est directement remplacé par les composants de sa "
+"propre nomenclature sans déclencher un ordre de fabrication supplémentaire"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -1429,7 +1471,7 @@ msgstr "Planification"
 #: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "Veuillez indiquer la quantité correcte."
 
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
@@ -1445,7 +1487,7 @@ msgstr "Imprimer la structure des coûts de l'article"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Printing date:"
-msgstr ""
+msgstr "Date d'impression"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1460,7 +1502,7 @@ msgstr "Approvisionnement"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Règle d'approvisionnement"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1519,7 +1561,7 @@ msgstr "Production d'articles"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "Lignes de consommation de l'article fabriqué"
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -1543,7 +1585,7 @@ msgstr "Arrondi d'article"
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Modèle d'article"
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos:0
@@ -1592,12 +1634,12 @@ msgstr "Quantité d'article en UdV"
 #. module: mrp
 #: field:mrp.bom,product_id:0
 msgid "Product Variant"
-msgstr ""
+msgstr "Variante d'article"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Product:"
-msgstr ""
+msgstr "Article :"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1624,12 +1666,12 @@ msgstr "Ordre de production n°"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Ordre de fabrication pour les articles produits"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "Ordre de fabrication pour les composants"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1649,7 +1691,7 @@ msgstr "Postes de charge de production"
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr ""
+msgstr "Progression de la fabrication"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1672,7 +1714,7 @@ msgstr "Articles"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "Produits consommés"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1748,12 +1790,12 @@ msgstr "Quantité"
 #. module: mrp
 #: field:mrp.product.produce.line,product_qty:0
 msgid "Quantity (in default UoM)"
-msgstr ""
+msgstr "Quantité (dans l'unité de mesure par défaut)"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Quantity:"
-msgstr ""
+msgstr "Quantité:"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
@@ -1866,14 +1908,14 @@ msgid ""
 "materials."
 msgstr ""
 "Les gammes permettent de créer et de gérer les opérations de fabrication à "
-"suivre au sein de vos postes de charge afin de produire les produit. Elles "
+"suivre au sein de vos postes de charge afin de produire les produits. Elles "
 "sont rattachées aux nomenclatures qui définissent les matières premières "
 "nécessaires."
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "SO Number:"
-msgstr ""
+msgstr "Numéro de commande :"
 
 #. module: mrp
 #: field:mrp.production,date_planned:0
@@ -1883,17 +1925,17 @@ msgstr "Date planifiée"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Date planifiée, par mois"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Date planifiée"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Mois planifié"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1925,7 +1967,7 @@ msgstr "Rechercher une nomenclature"
 #. module: mrp
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "Rechercher des composants d'une nomenclature"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1964,7 +2006,7 @@ msgstr "Séquence"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Set"
-msgstr ""
+msgstr "Changer"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -1972,6 +2014,9 @@ msgid ""
 "Set: When processing a sales order for this product, the delivery order will "
 "contain the raw materials, instead of the finished product."
 msgstr ""
+"Set : quand une commande client est générée avec ce produit, le bon de "
+"livraison contient les composants de cette nomenclature à la place du "
+"produit fini."
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1981,7 +2026,7 @@ msgstr "Document d'origine"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Document:"
-msgstr ""
+msgstr "Document source:"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -2052,7 +2097,7 @@ msgstr "Prix fournisseur par unité de mesure"
 #. module: mrp
 #: help:stock.move,consumed_for:0
 msgid "Technical field used to make the traceability of produced products"
-msgstr ""
+msgstr "Champ Technique utilisé pour la tracabilité produit"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:333
@@ -2099,7 +2144,7 @@ msgid ""
 "properties specified on the sales order and the Bill of Material."
 msgstr ""
 "La sélection de la nomenclature appropriée dépendra des propriétés "
-"spécifiées sur la commande d'achat et la nomenclature."
+"spécifiées sur la commande de vente et la nomenclature."
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
@@ -2108,6 +2153,9 @@ msgid ""
 "lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
 msgstr ""
+"Ceci permet d'ajouter l'état et les dates de début et de fin dans les lignes "
+"du dossier de fabrication (dans l'onglet \"poste de charge\").\n"
+"-Ceci installe le module mrp_operations."
 
 #. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
@@ -2119,6 +2167,12 @@ msgid ""
 "* Product Attributes.\n"
 "-This installs the module product_manufacturer."
 msgstr ""
+"Permet de définir les propriétés suivantes pour un produit :\n"
+"*Fabricant\n"
+"*Référence article chez le fabricant\n"
+"*Code article chez le fabricant\n"
+"*Attributs de l'article\n"
+"-Ceci installe le module product_manufacturer."
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
@@ -2161,7 +2215,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "A consommer"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162
@@ -2190,12 +2244,12 @@ msgstr "Qté Totale"
 #. module: mrp
 #: field:product.template,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "Suivre les lots de production"
 
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
 msgid "Track production"
-msgstr ""
+msgstr "suivre la production"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2232,7 +2286,7 @@ msgstr "Messages non lus"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Update"
-msgstr ""
+msgstr "Mettre à jour"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2254,13 +2308,13 @@ msgstr "Valide du"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "Valide à partir d'une date dans le mois"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Valide à partir du mois"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
@@ -2273,22 +2327,25 @@ msgstr "Valide jusqu'au"
 #: help:mrp.bom.line,date_stop:0
 msgid "Validity of component. Keep empty if it's always valid."
 msgstr ""
+"Validité du composant. Laisser vide si ce composant est toujours valide."
 
 #. module: mrp
 #: help:mrp.bom,date_start:0
 #: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
 msgstr ""
+"Validité de la nomenclature. Laisser vide si ce composant est toujours "
+"valide."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "Variante"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
 msgid "Variants"
-msgstr ""
+msgstr "Variantes"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2321,14 +2378,14 @@ msgstr "Attention !"
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Messages du site web"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Historique de communication du site web"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2348,6 +2405,9 @@ msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
 "linked to manufacturing activities, receipts of products and delivery orders."
 msgstr ""
+"Les variations hebdomadaires de la valeur du stock vous permettent de suivre "
+"l'évolution de cette valeur de stock en tenant compte des fabrications et "
+"mouvements de réceptions et livraisons."
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view
@@ -2363,7 +2423,7 @@ msgstr ""
 #: help:stock.warehouse,manufacture_to_resupply:0
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "Les articles fabriqués peuvent l'être dans cet entrepôt"
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -2468,13 +2528,13 @@ msgstr "Centre de cout de %s %s"
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr "Ordre de fabrication"
+msgstr "Ordre de travail"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: view:website:mrp.report_mrporder
 msgid "Work Orders"
-msgstr "Ordres de Travail"
+msgstr "Ordres de travail"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -2494,6 +2554,10 @@ msgid ""
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
 msgstr ""
+"Vous pouvez configurer la gestion des sous-articles dans les nomenclatures.\n"
+"Sans ce module: A + B + C -> D.\n"
+"Avec ce module: A + B + C -> D + E.\n"
+"-Ceci installe le module mrp_byproduct."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:339
@@ -2502,17 +2566,20 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
+"Il n'est pas possible de supprimer une nomenclature liées à des ordres de "
+"fabrication en cours. Merci de fermer ou d'annuler les ordres de fabrication "
+"concernés d'abord."
 
 #. module: mrp
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "Vous devez affecter un numéro de série pour l'article %s"
 
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited
 msgid "days"
-msgstr ""
+msgstr "jours"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -2545,7 +2612,7 @@ msgstr "plus"
 #: field:mrp.product.produce.line,track_production:0
 #: field:mrp.production,ready_production:0
 msgid "unknown"
-msgstr ""
+msgstr "inconnu"
 
 #~ msgid "BoM Hierarchy"
 #~ msgstr "Hiérarchie de la nomenclature"
