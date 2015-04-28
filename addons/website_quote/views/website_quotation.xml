@@ -97,7 +97,6 @@
           <h2 class="page-header">Terms &amp; Conditions</h2>
           <p t-field="quotation.note"/>
       </section>
-      <t t-call="website_quote.quotation_toolbar"/>
   </template>
 
   <template id="change_quantity" inherit_id="website_quote.pricing" active="False" customize_show="True" name="Change Quantity">
@@ -118,58 +117,6 @@
       </xpath>
   </template>
 
-  <template id="chatter">
-      <section id="discussion" class="hidden-print">
-          <h1 class="page-header">History</h1>
-          <ul class="media-list" id="comments-list">
-              <t t-foreach="quotation.message_ids" t-as="message">
-                  <li class="media" t-if="message.type not in ['comment', 'notification'] or message.subtype_id">
-                      <div class="media-body">
-                          <img class="media-object pull-left" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
-                          <div class="media-body">
-                              <h5 class="media-heading">
-                                  <span t-raw="message.author_id.name"/> <small>on <span t-raw="message.date"/></small>
-                              </h5>
-                              <div t-raw="message.body"/>
-                          </div>
-                      </div>
-                  </li>
-              </t>
-          </ul>
-      </section>
-  </template>
-
-  <!-- Options:Quotation Chatter: user can reply -->
-  <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" customize_show="True" inherit_id="website_quote.chatter">
-      <xpath expr="//h1" position="after">
-          <section class="mb32 css_editable_mode_hidden hidden-print">
-              <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
-                  <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
-                  <div class="pull-left mb32" style="width: 75%%">
-                      <textarea rows="4" name="comment" class="form-control" placeholder="Send us a note..."></textarea>
-                      <button type="submit" class="btn btn-primary mt8">Send</button>
-                  </div>
-              </form>
-          </section>
-          <div class="clearfix"/>
-      </xpath>
-  </template>
-
-  <template id="quotation_toolbar">
-      <div class="text-center hidden-print" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-          <a class="btn btn-success fa fa-check" data-toggle="modal" data-target="#modalaccept"
-            t-if="order_valid">
-              Accept
-          </a>
-          <a class="btn btn-info fa fa-comment" type="submit" href="#discussion">
-              Feedback
-          </a>
-          <a class="btn btn-danger fa fa-times" data-toggle="modal" data-target="#modaldecline">
-              Reject
-          </a>
-      </div>
-  </template>
-
   <!-- Complete page of the quotation -->
   <template id="so_quotation" name="Product Quotation">
       <t t-call="website.layout">
@@ -188,9 +135,6 @@
                                   Contact us for new quote.
                               </a>
                               <div class="mt8" t-if="order_valid">
-                                  <a type="submit" href="#discussion">
-                                      Ask Changes
-                                  </a> or
                                   <a data-toggle="modal" data-target="#modaldecline">
                                       Reject
                                   </a>
@@ -241,7 +185,7 @@
                       </div>
                   </div>
                   <!-- Page content -->
-                  <div class="col-md-9">
+                  <div id="quote_content" class="col-md-9">
 
                       <div class="alert alert-success alert-dismissable" t-if="message==1">
                           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
@@ -315,10 +259,15 @@
 
                       <t t-call="website_quote.so_quotation_content"/>
 
-                      <!--
-                        DO NOT include the chatter in the so_quotation_content, since chatter template required website, which is not given to render a report
-                      -->
-                      <t t-call="website_quote.chatter"/>
+                      <div class="text-center hidden-print mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
+                          <a class="btn btn-success fa fa-check" data-toggle="modal" data-target="#modalaccept" t-if="order_valid">
+                              Accept
+                          </a>
+                          <a class="btn btn-danger fa fa-times" data-toggle="modal" data-target="#modaldecline">
+                              Reject
+                          </a>
+                      </div>
+
                   </div><!-- //col-md-9 -->
               </div>
             </div>
@@ -326,6 +275,50 @@
       </t>
   </template>
 
+  <template id="chatter" name="Allow Comments &amp; History" customize_show="True" inherit_id="website_quote.so_quotation">
+      <xpath expr="//div[@id='quote_content']" position="inside">
+          <section id="discussion" class="hidden-print">
+              <h1 class="page-header">History</h1>
+              <!-- Options:Quotation Chatter: user can reply -->
+              <section class="mb32 css_editable_mode_hidden hidden-print">
+                  <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
+                      <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
+                      <div class="pull-left mb32" style="width: 75%%">
+                          <textarea rows="4" name="comment" class="form-control" placeholder="Send us a note..."></textarea>
+                          <button type="submit" class="btn btn-primary mt8">Send</button>
+                      </div>
+                  </form>
+              </section>
+              <div class="clearfix"/>
+              <!-- Options:Quotation Chatter: user can view history -->
+              <ul class="media-list" id="comments-list">
+                  <t t-foreach="quotation.message_ids" t-as="message">
+                      <li class="media" t-if="message.message_type not in ['comment', 'notification'] or message.subtype_id">
+                          <div class="media-body">
+                              <img class="media-object pull-left" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
+                              <div class="media-body">
+                                  <h5 class="media-heading">
+                                      <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
+                                  </h5>
+                                  <div t-field="message.body"/>
+                              </div>
+                          </div>
+                      </li>
+                  </t>
+              </ul>
+          </section>
+      </xpath>
+      <xpath expr="//a[@data-target='#modaldecline']" position="before">
+          <a type="submit" href="#discussion">
+              Ask Changes
+          </a> or
+      </xpath>
+      <xpath expr="//div[@id='quotation_toolbar']/a[@data-target='#modaldecline']" position="before">
+          <a class="btn btn-info fa fa-comment" type="submit" href="#discussion">
+              Feedback
+          </a>
+      </xpath>
+  </template>
 
   <!--
       Quotation content : intro, informations, order lines, remarks, descriptions ....
