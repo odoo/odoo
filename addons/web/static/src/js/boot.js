@@ -114,7 +114,7 @@
                         }
                     }
                 }
-                console.warn('Warning: some modules could not be started for missing dependencies.', jobs);
+                console.warn('Warning: some modules could not be started, most likely because of missing dependencies.', jobs);
             }
             // _.each(factories, function (value, key) {
             //     delete factories[key];
