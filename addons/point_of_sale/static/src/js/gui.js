@@ -266,6 +266,38 @@ var Gui = core.Class.extend({
 
     close: function() {
         var self = this;
+        var pending = this.pos.db.get_orders().length;
+
+        if (!pending) {
+            this._close();
+        } else {
+            this.pos.push_order().always(function() {
+                var pending = self.pos.db.get_orders().length;
+                if (!pending) {
+                    self._close();
+                } else {
+                    var reason = self.pos.get('failed') ? 
+                                 'configuration errors' : 
+                                 'internet connection issues';  
+
+                    self.show_popup('confirm', {
+                        'title': _t('Offline Orders'),
+                        'body':  _t(['Some orders could not be submitted to',
+                                     'the server due to ' + reason + '.',
+                                     'You can exit the Point of Sale, but do',
+                                     'not close the session before the issue',
+                                     'has been resolved.'].join(' ')),
+                        'confirm': function() {
+                            self._close();
+                        },
+                    });
+                }
+            });
+        }
+    },
+
+    _close: function() {
+        var self = this;
         this.chrome.loading_show();
         this.chrome.loading_message(_t('Closing ...'));
 

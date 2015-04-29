@@ -71,15 +71,6 @@ exports.PosModel = Backbone.Model.extend({
             'selectedOrder':    null,
         });
 
-        this.bind('change:synch',function(pos,synch){
-            clearTimeout(self.synch_timeout);
-            self.synch_timeout = setTimeout(function(){
-                if(synch.state !== 'disconnected' && synch.pending > 0){
-                    self.set('synch',{state:'disconnected', pending:synch.pending});
-                }
-            },3000);
-        });
-
         this.get('orders').bind('remove', function(order,_unused_,options){ 
             self.on_removed_order(order,options.index,options.reason); 
         });
@@ -617,7 +608,8 @@ exports.PosModel = Backbone.Model.extend({
 
     // saves the order locally and try to send it to the backend. 
     // it returns a deferred that succeeds after having tried to send the order and all the other pending orders.
-    push_order: function(order) {
+    push_order: function(order, opts) {
+            opts = opts || {};
         var self = this;
 
         if(order){
@@ -627,7 +619,7 @@ exports.PosModel = Backbone.Model.extend({
         var pushed = new $.Deferred();
 
         this.flush_mutex.exec(function(){
-            var flushed = self._flush_orders(self.db.get_orders());
+            var flushed = self._flush_orders(self.db.get_orders(), opts);
 
             flushed.always(function(ids){
                 pushed.resolve();
@@ -705,6 +697,13 @@ exports.PosModel = Backbone.Model.extend({
             });
 
             return server_ids;
+        }).fail(function(error, event){
+            var pending = self.db.get_orders().length;
+            if (self.get('failed')) {
+                self.set('synch', { state: 'error', pending: pending });
+            } else {
+                self.set('synch', { state: 'disconnected', pending: pending });
+            }
         });
     },
 
@@ -742,6 +741,7 @@ exports.PosModel = Backbone.Model.extend({
             _.each(orders, function (order) {
                 self.db.remove_order(order.id);
             });
+            self.set('failed',false);
             return server_ids;
         }).fail(function (error, event){
             if(error.code === 200 ){    // Business Logic Error, not a connection problem
@@ -749,10 +749,15 @@ exports.PosModel = Backbone.Model.extend({
                 if (error.data.exception_type == 'warning') {
                     delete error.data.debug;
                 }
-                self.gui.show_popup('error-traceback',{
-                    'title': error.data.message,
-                    'body':  error.data.debug
-                });
+
+                // Hide error if already shown before ... 
+                if ((!self.get('failed') || options.show_error) && !options.to_invoice) {
+                    self.gui.show_popup('error-traceback',{
+                        'title': error.data.message,
+                        'body':  error.data.debug
+                    });
+                }
+                self.set('failed',error)
             }
             // prevent an error popup creation by the rpc failure
             // we want the failure to be silent as we send the orders in the background

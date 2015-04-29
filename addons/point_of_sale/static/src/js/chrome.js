@@ -316,7 +316,7 @@ var DebugWidget = PosBaseWidget.extend({
 // status in the point of sale header.
 
 var StatusWidget = PosBaseWidget.extend({
-    status: ['connected','connecting','disconnected','warning'],
+    status: ['connected','connecting','disconnected','warning','error'],
     set_status: function(status,msg){
         for(var i = 0; i < this.status.length; i++){
             this.$('.js_'+this.status[i]).addClass('oe_hidden');
@@ -344,7 +344,7 @@ var SynchNotificationWidget = StatusWidget.extend({
             self.set_status(synch.state, synch.pending);
         });
         this.$el.click(function(){
-            self.pos.push_order();
+            self.pos.push_order(null,{'show_error':true});
         });
     },
 });
