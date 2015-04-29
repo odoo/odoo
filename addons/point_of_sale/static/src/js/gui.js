@@ -26,6 +26,7 @@ var Gui = core.Class.extend({
         this.current_screen = null; 
 
         this.chrome.ready.then(function(){
+            self.close_other_tabs();
             var order = self.pos.get_order();
             if (order) {
                 self.show_saved_screen(order);
@@ -172,6 +173,36 @@ var Gui = core.Class.extend({
     // is there an active popup ?
     has_popup: function() {
         return !!this.current_popup;
+    },
+
+    /* ---- Gui: INTER TAB COMM ---- */
+
+    // This sets up automatic pos exit when open in
+    // another tab.
+    close_other_tabs: function() {
+        var self = this;
+
+        localStorage['message'] = '';
+        localStorage['message'] = JSON.stringify({
+            'message':'close_tabs',
+            'session': this.pos.pos_session.id,
+        });
+
+        window.addEventListener("storage", function(event) {
+            var msg = event.data;
+
+            if ( event.key === 'message' && event.newValue) {
+
+                var msg = JSON.parse(event.newValue);
+                if ( msg.message  === 'close_tabs' &&
+                     msg.session  ==  self.pos.pos_session.id ) {
+
+                    console.info('POS / Session opened in another window. EXITING POS')
+                    self._close();
+                }
+            }
+
+        }, false);
     },
 
     /* ---- Gui: ACCESS CONTROL ---- */
