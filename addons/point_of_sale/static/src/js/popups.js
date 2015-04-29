@@ -8,6 +8,7 @@ odoo.define('point_of_sale.popups', function (require) {
 
 var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
+var _t  = require('web.core')._t;
 
 
 var PopupWidget = PosBaseWidget.extend({
@@ -102,8 +103,15 @@ var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
     show: function(opts) {
         var self = this;
         this._super(opts);
+
         this.$('.download').off('click').click(function(){
             self.gui.download_file(self.options.body,'traceback.txt');
+        });
+
+        this.$('.email').off('click').click(function(){
+            self.gui.send_email( self.pos.company.email,
+                _t('IMPORTANT: Bug Report From Odoo Point Of Sale'),
+                self.options.body);
         });
     }
 });

@@ -305,6 +305,7 @@ var Gui = core.Class.extend({
     // file named 'name'
     // if 'contents' is not a string, it is converted into
     // a JSON representation of the contents. 
+
     download_file: function(contents, name) {
         var URL = window.URL || window.webkitURL;
         
@@ -321,6 +322,18 @@ var Gui = core.Class.extend({
             download: name || 'document.txt',
             href: URL.createObjectURL(blob),
         }).get(0).dispatchEvent(evt);
+    },
+
+    /* ---- Gui: EMAILS ---- */
+
+    // This will launch the user's email software
+    // with a new email with the address, subject and body
+    // prefilled.
+
+    send_email: function(address, subject, body) {
+        window.open("mailto:" + address + 
+                          "?subject=" + (subject ? window.encodeURIComponent(subject) : '') +
+                          "&body=" + (body ? window.encodeURIComponent(body) : ''));
     },
 
     /* ---- Gui: KEYBOARD INPUT ---- */
