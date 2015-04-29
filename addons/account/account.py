@@ -226,31 +226,27 @@ class account_account(osv.osv):
     _description = "Account"
     _parent_store = True
 
+    def _where_calc(self, cr, uid, domain, active_test=True, context=None):
+        '''Override to map 'code' search and apply journal entry control'''
+        for pos, leaf in enumerate(domain):
+            if leaf[0] == 'code' and leaf[1] in ('like', 'ilike') and leaf[2]:
+                domain[pos] = ('code', '=like', tools.ustr(leaf[2].replace('%', '')) + '%')
+            elif leaf[0] == 'journal_id':
+                journal = self.pool.get('account.journal').browse(cr, uid, leaf[2], context=context) if leaf[2] else None
+                if not journal or not (journal.account_control_ids or journal.type_control_ids):  # No journal entry control
+                    domain[pos] = ('type', 'not in', ('consolidation', 'view'))
+                    continue
+                user_type_ids = [t.id for t in journal.type_control_ids]
+                ids1 = super(account_account, self).search(cr, uid, [('user_type', 'in', user_type_ids)])
+                ids1 += [a.id for a in journal.account_control_ids]
+                domain[pos] = ('id', 'in', ids1)
+
+        return super(account_account, self)._where_calc(cr, uid, domain, active_test, context)
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        if context is None:
-            context = {}
-        pos = 0
-
-        while pos < len(args):
-
-            if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
-                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
-            if args[pos][0] == 'journal_id':
-                if not args[pos][2]:
-                    del args[pos]
-                    continue
-                jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2], context=context)
-                if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
-                    args[pos] = ('type','not in',('consolidation','view'))
-                    continue
-                ids3 = map(lambda x: x.id, jour.type_control_ids)
-                ids1 = super(account_account, self).search(cr, uid, [('user_type', 'in', ids3)])
-                ids1 += map(lambda x: x.id, jour.account_control_ids)
-                args[pos] = ('id', 'in', ids1)
-            pos += 1
-
-        if context and context.has_key('consolidate_children'): #add consolidated children of accounts
+        '''Override to handle consolidate_children context parameter'''
+        if context and context.has_key('consolidate_children'):  # add consolidated children of accounts
             ids = super(account_account, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
             for consolidate_child in self.browse(cr, uid, context['account_id'], context=context).child_consol_ids:
