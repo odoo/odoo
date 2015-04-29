@@ -451,6 +451,7 @@ var Chrome = PosBaseWidget.extend({
             self.build_chrome();
             self.build_widgets();
             self.disable_rubberbanding();
+            self.disable_backpace_back();
             self.ready.resolve();
             self.loading_hide();
             self.replace_crashmanager();
@@ -548,6 +549,15 @@ var Chrome = PosBaseWidget.extend({
             }
             event.preventDefault();
         });
+    },
+
+    // prevent backspace from performing a 'back' navigation
+    disable_backpace_back: function() {
+       $(document).on("keydown", function (e) {
+           if (e.which === 8 && !$(e.target).is("input, textarea")) {
+               e.preventDefault();
+           }
+       });
     },
 
     loading_error: function(err){
