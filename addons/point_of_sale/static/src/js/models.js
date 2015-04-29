@@ -1523,6 +1523,7 @@ exports.Order = Backbone.Model.extend({
             user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
             uid: this.uid,
             sequence_number: this.sequence_number,
+            creation_date: this.creation_date,
         };
     },
     export_for_printing: function(){
