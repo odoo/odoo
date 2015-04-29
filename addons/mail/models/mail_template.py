@@ -164,7 +164,7 @@ class MailTemplate(models.Model):
     def onchange_model_id(self):
         # TDE CLEANME: should'nt it be a stored related ?
         if self.model_id:
-            self.model = self.env['ir.model'].browse(self.model_id).model
+            self.model = self.model_id.model
         else:
             self.model = False
 
