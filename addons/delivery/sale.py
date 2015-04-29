@@ -48,6 +48,7 @@ class sale_order(osv.osv):
         grid_obj = self.pool.get('delivery.grid')
         carrier_obj = self.pool.get('delivery.carrier')
         acc_fp_obj = self.pool.get('account.fiscal.position')
+        currency_obj = self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids, context=context):
             grid_id = carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id)
             if not grid_id:
@@ -61,6 +62,10 @@ class sale_order(osv.osv):
             taxes = grid.carrier_id.product_id.taxes_id
             fpos = order.fiscal_position or False
             taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
+            price_unit = grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context)
+            if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
+                price_unit = currency_obj.compute(cr, uid, order.company_id.currency_id.id, order.pricelist_id.currency_id.id,
+                    price_unit, context=dict(context or {}, date=order.date_order))
             #create the sale order line
             line_obj.create(cr, uid, {
                 'order_id': order.id,
@@ -68,7 +73,7 @@ class sale_order(osv.osv):
                 'product_uom_qty': 1,
                 'product_uom': grid.carrier_id.product_id.uom_id.id,
                 'product_id': grid.carrier_id.product_id.id,
-                'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
+                'price_unit': price_unit,
                 'tax_id': [(6,0,taxes_ids)],
                 'type': 'make_to_stock'
             })
