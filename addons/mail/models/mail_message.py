@@ -31,7 +31,7 @@ class Message(models.Model):
 
     _message_read_limit = 30
     _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read', 'email_from',
-        'message_type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name']
+        'message_type', 'vote_user_ids', 'attachment_ids', 'tracking_value_ids' ,'author_id', 'partner_ids', 'record_name']
     _message_record_name_length = 18
     _message_read_more_limit = 1024
 
@@ -98,6 +98,7 @@ class Message(models.Model):
         'res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
         help='Users that voted for this message')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server', readonly=1)
+    tracking_value_ids = fields.One2many('mail.tracking.value', 'mail_message_id', string='Tracking values')
 
     @api.depends('notification_ids')
     def _get_to_read(self):
@@ -236,32 +237,43 @@ class Message(models.Model):
         """
         pid = self.env.user.partner_id.id
 
-        # 1. Aggregate partners (author_id and partner_ids) and attachments
-        partner_ids = set()
-        attachment_ids = set()
+        # 1. Aggregate partners (author_id and partner_ids), attachments and tracking values
+        partners = self.env['res.partner']
+        attachments = self.env['ir.attachment']
+        trackings = self.env['mail.tracking.value']
         for key, message in message_tree.iteritems():
             if message.author_id:
-                partner_ids |= set([message.author_id.id])
+                partners |= message.author_id
             if message.subtype_id and message.notified_partner_ids:  # take notified people of message with a subtype
-                partner_ids |= set([partner.id for partner in message.notified_partner_ids])
+                partners |= message.notified_partner_ids
             elif not message.subtype_id and message.partner_ids:  # take specified people of message without a subtype (log)
-                partner_ids |= set([partner.id for partner in message.partner_ids])
+                partners |= message.partner_ids
             if message.attachment_ids:
-                attachment_ids |= set([attachment.id for attachment in message.attachment_ids])
+                attachments |= message.attachment_ids
+            if message.tracking_value_ids:
+                trackings |= message.tracking_value_ids
         # Read partners as SUPERUSER -> display the names like classic m2o even if no access
-        partners = self.env['res.partner'].sudo().browse(partner_ids).name_get()
-        partner_tree = dict((partner[0], partner) for partner in partners)
+        partners_names = partners.sudo().name_get()
+        partner_tree = dict((partner[0], partner) for partner in partners_names)
 
         # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
-        attachments = self.env['ir.attachment'].sudo().browse(attachment_ids).read(['id', 'datas_fname', 'name', 'file_type_icon'])
+        attachments_data = attachments.sudo().read(['id', 'datas_fname', 'name', 'file_type_icon'])
         attachments_tree = dict((attachment['id'], {
             'id': attachment['id'],
             'filename': attachment['datas_fname'],
             'name': attachment['name'],
             'file_type_icon': attachment['file_type_icon'],
-        }) for attachment in attachments)
+        }) for attachment in attachments_data)
 
-        # 3. Update message dictionaries
+        # 3. Tracking values
+        tracking_tree = dict((tracking.id, {
+            'id': tracking.id,
+            'changed_field': tracking.field_desc,
+            'old_value': tracking.get_old_display_value()[0],
+            'new_value': tracking.get_new_display_value()[0],
+        }) for tracking in trackings)
+
+        # 4. Update message dictionaries
         for message_dict in messages:
             message_id = message_dict.get('id')
             message = message_tree[message_id]
@@ -280,13 +292,20 @@ class Message(models.Model):
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:
                     attachment_ids.append(attachments_tree[attachment.id])
+            tracking_value_ids = []
+            for tracking_value in message.tracking_value_ids:
+                if tracking_value.id in tracking_tree:
+                    tracking_value_ids.append(tracking_tree[tracking_value.id])
+
             message_dict.update({
                 'is_author': pid == author[0],
                 'author_id': author,
                 'partner_ids': partner_ids,
                 'attachment_ids': attachment_ids,
+                'tracking_value_ids': tracking_value_ids,
                 'user_pid': pid
                 })
+
         return True
 
     @api.multi
@@ -306,22 +325,10 @@ class Message(models.Model):
         vote_nb = len(self.vote_user_ids)
         has_voted = self._uid in [user.id for user in self.vote_user_ids]
 
-        try:
-            if parent_id:
-                max_length = 300
-            else:
-                max_length = 100
-            body_short = tools.html_email_clean(self.body, remove=False, shorten=True, max_length=max_length)
-
-        except Exception:
-            body_short = '<p><b>Encoding Error : </b><br/>Unable to convert this message (id: %s).</p>' % self.id
-            _logger.exception(Exception)
-
         return {'id': self.id,
-                'type': self.message_type,
+                'message_type': self.message_type,
                 'subtype': self.subtype_id.name if self.subtype_id else False,
                 'body': self.body,
-                'body_short': body_short,
                 'model': self.model,
                 'res_id': self.res_id,
                 'record_name': self.record_name,
@@ -338,108 +345,17 @@ class Message(models.Model):
                 'has_voted': has_voted,
                 'is_favorite': self.starred,
                 'attachment_ids': [],
+                'tracking_value_ids': [],
             }
-
-    @api.model
-    def _message_read_add_expandables(self, messages, message_tree, parent_tree,
-            message_unload_ids=[], thread_level=0, domain=[], parent_id=False):
-        """ Create expandables for message_read, to load new messages.
-            1. get the expandable for new threads
-                if display is flat (thread_level == 0):
-                    fetch message_ids < min(already displayed ids), because we
-                    want a flat display, ordered by id
-                else:
-                    fetch message_ids that are not childs of already displayed
-                    messages
-            2. get the expandables for new messages inside threads if display
-               is not flat
-                for each thread header, search for its childs
-                    for each hole in the child list based on message displayed,
-                    create an expandable
-
-            :param list messages: list of message structure for the Chatter
-                widget to which expandables are added
-            :param dict message_tree: dict [id]: browse record of this message
-            :param dict parent_tree: dict [parent_id]: [child_ids]
-            :param list message_unload_ids: list of message_ids we do not want
-                to load
-            :return bool: True
-        """
-        def _get_expandable(domain, message_nb, parent_id, max_limit):
-            return {
-                'domain': domain,
-                'nb_messages': message_nb,
-                'type': 'expandable',
-                'parent_id': parent_id,
-                'max_limit':  max_limit,
-            }
-
-        if not messages:
-            return True
-        message_ids = sorted(message_tree.keys())
-
-        # 1. get the expandable for new threads
-        if thread_level == 0:
-            exp_domain = domain + [('id', '<', min(message_unload_ids + message_ids))]
-        else:
-            exp_domain = domain + ['!', ('id', 'child_of', message_unload_ids + parent_tree.keys())]
-        more_count = self.search_count(exp_domain)
-        if more_count:
-            # inside a thread: prepend
-            if parent_id:
-                messages.insert(0, _get_expandable(exp_domain, -1, parent_id, True))
-            # new threads: append
-            else:
-                messages.append(_get_expandable(exp_domain, -1, parent_id, True))
-
-        # 2. get the expandables for new messages inside threads if display is not flat
-        if thread_level == 0:
-            return True
-        for message_id in message_ids:
-            message = message_tree[message_id]
-
-            # generate only for thread header messages (TDE note: parent_id may be False is uid cannot see parent_id, seems ok)
-            if message.parent_id:
-                continue
-
-            # check there are message for expandable
-            child_ids = set([child.id for child in message.child_ids]) - set(message_unload_ids)
-            child_ids = sorted(list(child_ids), reverse=True)
-            if not child_ids:
-                continue
-
-            # make groups of unread messages
-            id_min, id_max, nb = max(child_ids), 0, 0
-            for child_id in child_ids:
-                if not child_id in message_ids:
-                    nb += 1
-                    if id_min > child_id:
-                        id_min = child_id
-                    if id_max < child_id:
-                        id_max = child_id
-                elif nb > 0:
-                    exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
-                    idx = [msg.get('id') for msg in messages].index(child_id) + 1
-                    # messages.append(_get_expandable(exp_domain, nb, message_id, False))
-                    messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False))
-                    id_min, id_max, nb = max(child_ids), 0, 0
-                else:
-                    id_min, id_max, nb = max(child_ids), 0, 0
-            if nb > 0:
-                exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
-                idx = [msg.get('id') for msg in messages].index(message_id) + 1
-                # messages.append(_get_expandable(exp_domain, nb, message_id, id_min))
-                messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False))
-
-        return True
 
     @api.cr_uid_context
-    def message_read_wrapper(self, cr, uid, ids=None, domain=None, message_unload_ids=None,
-                        thread_level=0, context=None, parent_id=False, limit=None):
-        return self.message_read(cr, uid, ids, domain=domain, message_unload_ids=message_unload_ids, thread_level=thread_level, parent_id=parent_id, limit=limit)
+    def message_read_wrapper(self, cr, uid, ids=None, domain=None, context=None,
+                             thread_level=0, parent_id=False, limit=None, child_limit=None):
+        return self.message_read(cr, uid, ids, domain=domain, thread_level=thread_level, context=context, 
+                                 parent_id=parent_id, limit=limit, child_limit=child_limit)
 
     @api.multi
-    def message_read(self, domain=None, message_unload_ids=None, thread_level=0, parent_id=False, limit=None):
+    def message_read(self, domain=None, thread_level=0, context= None, parent_id=False, limit=None, child_limit=None):
         """ Read messages from mail.message, and get back a list of structured
             messages to be displayed as discussion threads. If IDs is set,
             fetch these records. Otherwise use the domain to fetch messages.
@@ -447,31 +363,33 @@ class Message(models.Model):
             well formed threads, if uid has access to them.
 
             After reading the messages, expandable messages are added in the
-            message list (see ``_message_read_add_expandables``). It consists
-            in messages holding the 'read more' data: number of messages to
-            read, domain to apply.
+            message list. It consists in messages holding the 'read more' data: 
+            number of messages to read, domain to apply.
 
             :param list ids: optional IDs to fetch
             :param list domain: optional domain for searching ids if ids not set
-            :param list message_unload_ids: optional ids we do not want to fetch,
-                because i.e. they are already displayed somewhere
             :param int parent_id: context of parent_id
                 - if parent_id reached when adding ancestors, stop going further
                   in the ancestor search
                 - if set in flat mode, ancestor_id is set to parent_id
             :param int limit: number of messages to fetch, before adding the
                 ancestors and expandables
-            :return list: list of message structure for the Chatter widget
+            :param int child_limit: number of child messages to fetch
+            :return dict: 
+                - int: number of messages read (status 'unread' to 'read')
+                - list: list of threads [[messages_of_thread1], [messages_of_thread2]]
         """
         assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
+
         domain = domain if domain is not None else []
-        message_unload_ids = message_unload_ids if message_unload_ids is not None else []
-        if message_unload_ids:
-            domain += [('id', 'not in', message_unload_ids)]
         limit = limit or self._message_read_limit
+        child_limit = child_limit or self._message_read_limit
+
         message_tree = {}
-        message_list = []
         parent_tree = {}
+        child_ids = []
+        parent_ids = []
+        exp_domain = []
 
         # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
         if not self.ids and domain:
@@ -497,24 +415,73 @@ class Message(models.Model):
                     message_tree[parent.id] = parent
             # newest messages first
             parent_tree.setdefault(tree_parent_id, [])
-            if tree_parent_id != message_id:
-                parent_tree[tree_parent_id].append(message_tree[message_id]._message_read_dict(parent_id=tree_parent_id))
 
-        if thread_level:
-            for key, message_id_list in parent_tree.iteritems():
-                message_id_list.sort(key=lambda item: item['id'])
-                message_id_list.insert(0, message_tree[key]._message_read_dict())
+        # build thread structure
+        # for each parent_id: get child messages, add message expandable and parent message if needed [child1, child2, expandable, parent_message]
+        # add thread expandable if it remains some uncaught parent_id
+        if self.ids and len(self.ids) > 0:
+            for parent in parent_tree:
+                parent_ids.append(parent)
 
-        # create final ordered message_list based on parent_tree
-        parent_list = parent_tree.items()
-        parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]) if item[1] else item[0], reverse=True)
-        message_list = [message for (key, msg_list) in parent_list for message in msg_list]
+                if not thread_level:
+                    child_ids = self.ids;
+                    exp_domain = domain + [('id', '<', min(child_ids))]
+                else:
+                    child_ids = [msg.id for msg in self.browse(parent).child_ids][0:child_limit]
+                    exp_domain = [('parent_id', '=', parent), ('id', '>', parent)]
+                    if len(child_ids):
+                        exp_domain += [('id', '<', min(child_ids))]
 
-        # get the child expandable messages for the tree
-        self._message_read_dict_postprocess(message_list, message_tree)
-        self._message_read_add_expandables(message_list, message_tree, parent_tree,
-            thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id)
-        return message_list
+                for cid in child_ids:
+                    if cid not in message_tree:
+                        message_tree[cid] = self.browse(cid)
+                    parent_tree[parent].append(message_tree[cid]._message_read_dict(parent_id=parent))
+
+                if parent and thread_level:
+                    parent_tree[parent].sort(key=lambda item: item['id'])
+                    parent_tree[parent].reverse();
+                    parent_tree[parent].append(message_tree[parent]._message_read_dict())
+
+                self._message_read_dict_postprocess(parent_tree[parent], message_tree)
+
+                # add 'message' expandable (inside a thread)
+                more_count = self.search_count(exp_domain)
+                if more_count:
+                    exp = {'message_type':'expandable',
+                           'domain': exp_domain,
+                           'nb_messages': more_count,
+                           'parent_id': parent}
+
+                    if parent and thread_level: 
+                        #insert expandable before parent message
+                        parent_tree[parent].insert(len(parent_tree[parent])-1, exp)
+                    else:
+                        #insert expandable at the end of the message list
+                        parent_tree[parent].append(exp)
+
+            # create final ordered parent_list based on parent_tree
+            parent_list = parent_tree.values()
+            parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item]), reverse=True)
+
+            #add 'thread' expandable 
+            if thread_level:
+                exp_domain = domain + [('id', '<', min(self.ids)), ('id', 'not in', parent_ids), ('parent_id', 'not in', parent_ids)]
+                more_count = self.search_count(exp_domain)
+                if more_count:
+                    parent_list.append([{'message_type':'expandable',
+                                        'domain': exp_domain,
+                                        'nb_messages': more_count,
+                                        'parent_id': parent_id}])
+
+            nb_read = 0
+            if context and 'mail_read_set_read' in context and context['mail_read_set_read']: 
+                nb_read = self.set_message_read(True, create_missing=False)
+
+        else:
+            nb_read = 0
+            parent_list = [] 
+
+        return {'nb_read': nb_read, 'threads': parent_list}
 
     @api.multi
     def get_like_names(self, limit=10):

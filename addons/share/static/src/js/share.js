@@ -93,7 +93,7 @@ Sidebar.include({
  *   an action. We do this because 'invite' is based on the share
  *   mechanism, and it tries to share an action.
  */
-mail.RecordThread.include( {
+mail.TimelineRecordThread.include( {
     start: function() {
         var start_res = this._super.apply(this, arguments);
         if (has_action_id) {

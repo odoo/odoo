@@ -107,6 +107,22 @@ function breakword(str){
     return out;
 }
 
+function bindTooltipTo($el, value, position) {
+    $el.tooltip({
+        'title': value,
+        'placement': position,
+        'html': true,
+        'trigger': 'manual',
+        'animation': false,
+    }).on("mouseleave", function () {
+        setTimeout(function () {
+            if (!$(".tooltip:hover").length) {
+                $el.tooltip("hide");
+            }
+        }, 100);
+    });
+}
+
 return {
     parse_email: parse_email,
     get_image: get_image,
@@ -115,6 +131,7 @@ return {
     get_text2html: get_text2html,
     expand_domain: expand_domain,
     breakword: breakword,
+    bindTooltipTo: bindTooltipTo,
 };
 
 });

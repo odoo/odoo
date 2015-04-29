@@ -426,57 +426,27 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def message_track(self, tracked_fields, initial_values):
-
-        def convert_for_display(value, col_info):
-            if not value and col_info['type'] == 'boolean':
-                return 'False'
-            if not value:
-                return ''
-            if col_info['type'] == 'many2one':
-                return value.name_get()[0][1]
-            if col_info['type'] == 'selection':
-                return dict(col_info['selection'])[value]
-            return value
-
-        def format_message(message_description, tracked_values):
-            message = ''
-            if message_description:
-                message = '<span>%s</span>' % message_description
-            for name, change in tracked_values.items():
-                message += '<div> &nbsp; &nbsp; &bull; <b>%s</b>: ' % change.get('col_info')
-                if change.get('old_value'):
-                    message += '%s &rarr; ' % change.get('old_value')
-                message += '%s</div>' % change.get('new_value')
-            return message
-
         if not tracked_fields:
             return True
 
         for record in self:
             initial = initial_values[record.id]
             changes = set()
-            tracked_values = {}
+            tracking_value_ids = []
 
             # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
             for col_name, col_info in tracked_fields.items():
-                field = self._fields[col_name]
                 initial_value = initial[col_name]
-                record_value = getattr(record, col_name)
+                new_value = getattr(record, col_name)
 
-                if record_value == initial_value and getattr(field, 'track_visibility', None) == 'always':
-                    tracked_values[col_name] = dict(
-                        col_info=col_info['string'],
-                        new_value=convert_for_display(record_value, col_info),
-                    )
-                elif record_value != initial_value and (record_value or initial_value):  # because browse null != False
-                    if getattr(field, 'track_visibility', None) in ['always', 'onchange']:
-                        tracked_values[col_name] = dict(
-                            col_info=col_info['string'],
-                            old_value=convert_for_display(initial_value, col_info),
-                            new_value=convert_for_display(record_value, col_info),
-                        )
+                if new_value != initial_value and (new_value or initial_value):  # because browse null != False
+                    tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value,  col_name, col_info)
+                    if tracking:
+                        tracking_value_ids.append([0, 0, tracking])
+
                     if col_name in tracked_fields:
                         changes.add(col_name)
+
             if not changes:
                 continue
 
@@ -500,10 +470,10 @@ class MailThread(models.AbstractModel):
                 if not (subtype_rec and subtype_rec.exists()):
                     _logger.debug('subtype %s not found' % subtype_xmlid)
                     continue
-                message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)
+                record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
             else:
-                message = format_message('', tracked_values)
-            record.message_post(body=message, subtype=subtype_xmlid)
+                record.message_post(tracking_value_ids=tracking_value_ids)
+
         return True
 
     #------------------------------------------------------
@@ -1509,7 +1479,6 @@ class MailThread(models.AbstractModel):
                      content_subtype='html', **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
-
             :param int thread_id: thread ID to post into, or list with one ID;
                 if False/0, mail.message model will also be set as False
             :param str body: body of the message, usually raw HTML that will
@@ -1520,7 +1489,6 @@ class MailThread(models.AbstractModel):
                 parent partners to the message in case of private discussion
             :param tuple(str,str) attachments or list id: list of attachment tuples in the form
                 ``(name,content)``, where content is NOT base64 encoded
-
             Extra keyword arguments will be used as default column values for the
             new mail.message record. Special cases:
                 - attachment_ids: supposed not attached to any document; attach them

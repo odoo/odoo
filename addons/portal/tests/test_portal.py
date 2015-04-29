@@ -91,7 +91,7 @@ class test_portal(TestMail):
         msg = group_pigs.message_post(body='My body', partner_ids=[self.user_employee.partner_id.id, self.user_portal.partner_id.id], type='comment', subtype='mail.mt_comment')
         # Chell has no read access to pigs -> should redirect to Portal Inbox
         action = self.env['mail.thread'].with_context({'params': {'message_id': msg.id}}).sudo(self.user_portal).message_redirect_action()
-        self.assertEqual(action.get('type'), 'ir.actions.client',
-                        'URL redirection: action without parameters should redirect to client action Inbox')
+        self.assertEqual(action.get('type'), 'ir.actions.act_window',
+                        'URL redirection: action without parameters should redirect to act_window Inbox')
         self.assertEqual(action.get('id'), port_act_id,
-                        'URL redirection: action without parameters should redirect to client action Inbox')
+                        'URL redirection: action without parameters should redirect to act_window Inbox')

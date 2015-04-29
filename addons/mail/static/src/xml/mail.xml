@@ -1,356 +1,257 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<template>
 
-    <!--
-        mail.Widget template used to namespace the css -->
-    <t t-name="mail.Root">
-        <div class="oe_mail">
-        </div>
-    </t>
+<templates>
 
-    <!--
-        mail.compose_message template
-        This template holds the composition form to write a note or send
-        an e-mail. It contains by default a textarea, that will be replaced
-        by another composition form in the main wall composition form, or
-        for main thread composition form in document form view.
-
-        mail.compose_message.compact template
-        This template holds the composition form to write a message, this box is converted into
-        mail.compose_message when focus on textarea
-        -->
-    <t t-name="mail.compose_message">
-        <div t-if="widget.show_composer and !widget.options.readonly" t-attf-class="oe_msg oe_msg_composer #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
-            <div class="oe_msg_left">
-                <img class="oe_msg_icon" alt="User img" t-attf-src="#{widget.avatar}"/>
-            </div>
-            <div class="oe_msg_center">
-                <div class="oe_msg_content">
-                    <button class="oe_full" title="Open the full mail composer"><i class='fa fa-pencil-square-o'/></button>
-                    <t t-call="mail.thread.list_recipients"/>
-                    <textarea class="field_text"></textarea>
-                </div>
-                <div class="oe_msg_footer">
-                    <div class="oe_msg_attachment_list"></div>
-                    <button class="oe_post">
-                        <t t-if="!widget.is_log">Send</t>
-                        <t t-if="widget.is_log">Log an internal note</t>
-                    </button>
-                    <t t-call="mail.compose_message.add_attachment"/>
-                </div>
-            </div>
-        </div>
-        <div t-if="widget.show_compact_message and !widget.show_composer and !widget.options.readonly" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
-            <t t-if="widget.options.view_mailbox">
-                <div class="field_text oe_compact oe_compact_inbox">
-                    <t t-if="widget.options.compose_placeholder" t-raw="widget.options.compose_placeholder"/>
-                    <t t-if="!widget.options.compose_placeholder and widget.options.view_mailbox">Share with my followers...</t>
-                </div>
-            </t>
-            <t t-if="!widget.options.view_mailbox">
-                <div class="field_text oe_compact oe_compact_record">
-                    <a class="oe_compose_post" t-if="widget.options.compose_placeholder"><t t-raw="widget.options.compose_placeholder"/></a>
-                    <a class="oe_compose_post" t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox"
-                    	title="Send a message. Followers will be notified.">Send a message</a>
-                    <t t-if="widget.options.display_log_button">
-                       <span class="oe_grey oe_sep_word">or</span>
-                       <a class="oe_compose_log" title="Log a note. Followers will not be notified.">Log an internal note</a>
+<div t-name="TimelineView.buttons" class="o_timeline_buttons">
+    <t t-if="widget.options.action_buttons !== false">
+        <button type="button" class="o_timeline_button_new btn btn-primary btn-sm">
+            New message
+        </button>
+        <t t-if="!widget.options.readonly and widget.options.show_write_to_followers">
+            <span class="oe_alternative">
+                <span class="oe_fade">or</span>
+                <div class="oe_bounce_container">
+                    <t t-if="widget.options.compose_placeholder">
+                        <a class="o_timeline_share text-info"><t t-raw="widget.options.compose_placeholder"/></a>
+                    </t>
+                    <t t-if="! widget.options.compose_placeholder">
+                        <a class="o_timeline_share text-info">Write to my followers</a>
                     </t>
                 </div>
-            </t>
-        </div>
-        <span t-if="!(widget.show_compact_message and !widget.show_composer) and !widget.show_composer" class="oe_placeholder_compose"></span>
-    </t>
-
-    <!--
-        mail.compose_message.add_attachment template
-        Small template to be inserted in the composition for add attachments
-        -->
-    <t t-name="mail.compose_message.add_attachment">
-        <span class="oe_attachment_file">
-            <span class="oe_add">
-                <!-- uploader of file -->
-                <button class="oe_attach"><i class="fa fa-paperclip"/></button>
-                <span class='oe_attach_label'>Attach a File</span>
-                <t t-call="HiddenInputFile">
-                    <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                    <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
-                    <input type="hidden" name="model" value="mail.compose.message"/>
-                    <input type="hidden" name="id" value="0"/>
-                    <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
-                </t>
             </span>
-        </span>
-    </t>
-
-    <!--
-        mail.thread.message.attachments template
-        Template used to display attachments in a mail.message
-        -->
-    <t t-name="mail.thread.message.attachments">
-        <t t-foreach='widget.attachment_ids' t-as='attachment'>
-            <t t-if="attachment.file_type_icon !== 'webimage'">
-                <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
-                    <a t-att-href='attachment.url' target="_blank">
-                        <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type_icon + '.png'"></img>
-                        <div class='oe_name'><t t-raw='attachment.name' /></div>
-                    </a>
-                    <div class="oe_delete" t-if="!attachment.upload">
-                        <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
-                    </div>
-                    <div class='oe_progress_bar'>
-                        uploading
-                    </div>
-                </div>
-            </t>
-            <t t-if="attachment.file_type_icon === 'webimage'">
-                <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
-                    <a t-att-href='attachment.url' target="_blank">
-                        <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
-                        <div class='oe_name'><t t-raw='attachment.name' /></div>
-                    </a>
-                    <div class="oe_delete" t-if="!attachment.upload">
-                        <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
-                    </div>
-                    <div class='oe_progress_bar'>
-                        uploading
-                    </div>
-                </div>
-            </t>
         </t>
     </t>
+</div>
 
-    <!--
-        template to the recipients list
-        -->
-    <t t-name="mail.thread.list_recipients">
-        <div class="oe_mail_list_recipients" t-if="!widget.is_log">
-            To:
-            <t t-if="!widget.is_private">
-                <span class="oe_all_follower">
-                    <t t-if="widget.parent_thread.parent_message.record_name">
-                        Followers of <t t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'"/>
-                    </t>
-                    <t t-if="!widget.parent_thread.parent_message.record_name and widget.options.view_inbox">My Followers</t>
-                    <t t-if="!widget.parent_thread.parent_message.record_name and !widget.options.view_inbox">Followers of this document</t>
-                </span>
-            </t>
-            <t t-set="inc" t-value="0"/>
-            <t t-foreach="widget.partner_ids" t-as="partner">
-                <t t-if="widget.is_private or (widget.user_pid != partner[0])">
-                    <t t-if="!widget.is_private and inc==0"> and </t>
-	                <span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/>
-                        <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-esc="partner[1]"/></a>
-                        <t t-if="!widget.options.show_link" t-esc="partner[1]"/>
-	                </span>
-	                <t t-set="inc" t-value="inc+1"/>
-	            </t>
-            </t>
-            <t t-if="widget.partner_ids.length > 3">
-                <span class="oe_more">, <a><t t-esc="widget.partner_ids.length - 3"/> others...</a></span>
-                <a class="oe_more_hidden">&lt;&lt;&lt;</a>
-            </t>
+<div t-name="TimelineWall" t-attf-class="o_timeline #{widget.options.view_inbox ? 'o_timeline_inbox' : 'o_timeline_chatter'}">
+    <div class="o_timeline_buttons"/>
+    <div class="o_timeline-placeholder"></div>
+    <t t-if="widget.options.view_inbox">
+        <aside class="o_timeline_inbox_aside"></aside>
+    </t>
+</div>
+
+<t t-name="ComposeMessage">
+    <div t-if="widget.show_composer and !widget.options.readonly" 
+         class="o_timeline_msg o_timeline_msg_composer_compact">
+        <div class="o_timeline_msg o_timeline_msg_composer">
+            <div class="o_timeline_msg_center">
+                <div class="o_timeline_msg_content">
+                    <button class="oe_full" title="Open the full mail composer">
+                        <i class='fa fa-pencil-square-o'/>
+                    </button>
+                    <t t-call="ThreadListRecipients"/>
+                    <textarea class="field_text"></textarea>
+                </div>
+                <div class="o_timeline_msg_footer">
+                    <div class="o_timeline_msg_attachment_list"></div>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="oe_post btn btn-primary">
+                            <t t-if="!widget.is_log">Send</t>
+                            <t t-if="widget.is_log">Log</t>
+                        </button>
+                        <t t-call="ComposeMessage.AddAttachment"/>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="oe_recipients" t-if="!widget.is_log">
+    </div>
+
+    <div t-if="widget.show_compact_message and !widget.show_composer and !widget.options.readonly" 
+         class="o_timeline_msg o_timeline_msg_composer_compact">
+        <t t-if="!widget.options.view_inbox">
+            <div class="field_text o_timeline_compact o_timeline_compact_record">
+                <div class="btn-group btn-group-sm">
+                <button type="button" class="o_timeline_compose_post btn btn-primary"
+                        t-if="widget.options.compose_placeholder">
+                        <t t-raw="widget.options.compose_placeholder"/>
+                </button>
+                <button type="button" class="o_timeline_compose_post btn btn-primary" 
+                        t-if="!widget.options.compose_placeholder and !widget.options.view_inbox"
+                        title="Send a message. Followers will be notified.">
+                        New message
+                </button>
+                </div>
+                <t t-if="widget.options.display_log_button">
+                   <span class="text-muted o_timeline_sep_word">or</span>
+                   <div class="btn-group btn-group-sm">
+                   <button class="o_timeline_compose_log btn btn-link btn-small" 
+                           title="Log a note. Followers will not be notified.">
+                        Log an internal node
+                   </button>
+                   </div>
+                </t>
+            </div>
+        </t>
+    </div>
+
+    <span t-if="!(widget.show_compact_message and !widget.show_composer) and !widget.show_composer" 
+          class="oe_placeholder_compose"></span>
+</t>
+
+<!--
+    ComposeMessage.AddAttachment template
+    Small template to be inserted in the composition for add attachments
+    -->
+<t t-name="ComposeMessage.AddAttachment">
+    <span class="oe_attachment_file">
+        <span class="oe_add">
+            <!-- uploader of file -->
+            <button class="oe_attach"><i class="fa fa-paperclip"/></button> 
+            <span class='oe_attach_label'>Attach a file</span>
+            <t t-call="HiddenInputFile">    
+                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                <input type="hidden" name="model" value="mail.compose.message"/>
+                <input type="hidden" name="id" value="0"/>
+                <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+            </t>
+        </span>
+    </span>
+</t>
+
+<!--
+    template to the recipients list
+    -->
+<t t-name="ThreadListRecipients">
+    <div class="o_timeline_list_recipients" t-if="!widget.is_log">
+        To:
+        <t t-if="!widget.is_private">
+            <span class="o_timeline_all_follower">
+                <t t-if="widget.parent_thread.parent_message.record_name">
+                    Followers of 
+                    <t t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'"/>
+                </t>
+                <t t-if="!widget.parent_thread.parent_message.record_name and widget.options.view_mailbox">
+                    My Followers </t>
+                <t t-if="!widget.parent_thread.parent_message.record_name and !widget.options.view_mailbox">
+                    Followers of this document </t>
+            </span>
+        </t>
+        <t t-set="inc" t-value="0"/>
+        <t t-foreach="widget.partner_ids" t-as="partner">
+            <t t-if="widget.is_private or (widget.user_pid != partner[0])">
+                <t t-if="!widget.is_private and inc==0"> and </t>
+                <span t-attf-class="o_timeline_partner_follower #{inc>=3?'oe_hidden':''}">
+                    <t t-if="inc" t-raw="', '"/>
+                    <a t-if="widget.options.show_link" 
+                       t-attf-href="#model=res.partner&amp;id=#{partner[0]}">
+                           <t t-esc="partner[1]"/>
+                    </a>
+                    <t t-if="!widget.options.show_link" t-esc="partner[1]"/>
+                </span>
+                <t t-set="inc" t-value="inc+1"/>
+            </t>
+        </t>
+
+        <t t-if="widget.partner_ids.length > 3">
+            <span class="oe_more">
+                , <a><t t-esc="widget.partner_ids.length - 3"/> others...</a>
+            </span>
+        </t>
+    
+        <div class="o_timeline_recipients" t-if="!widget.is_log">
             <t t-foreach='widget.recipients' t-as='recipient'>
                 <label t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
-                    <input type="checkbox" t-att-checked="recipient.checked ? 'checked' : undefined" t-att-data="recipient.full_name"/>
+                    <input type="checkbox" 
+                           t-att-checked="recipient.checked ? 'checked' : undefined" 
+                           t-att-data="recipient.full_name"/>
                     <t t-esc="recipient.name"/> 
                     <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
                     <t t-if="!recipient.email_address">(no email address)</t>
                 </label>
             </t>
         </div>
-        <div t-if="widget.is_log">
-            <span>Log an internal note which will not be sent to followers. Note that users reading the document can read internal notes.</span>
-        </div>
-    </t>
-
-    <!-- 
-        wall main template
-        Template used to display the communication history in the wall.
-        -->
-    <div t-name="mail.wall" class="oe-view-manager oe_mail_wall oe_view_manager_current">
-        <div class="oe-control-panel">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6 oe-cp-title">
-                        <ol class="oe-view-title breadcrumb">
-                            <li class="active"><t t-esc="widget.action.name"/></li>
-                        </ol>
-                    </div>
-                    <div class="oe-cp-search-view col-md-6" />
-                </div>
-                <div class="row">
-                    <div class="col-sm-6 col-sm-offset-6">
-                        <div class="oe-search-options btn-group"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="oe-view-manager-content">
-            <div class="oe_mail-placeholder"></div>
-            <aside class="oe_mail_wall_aside"></aside>
-        </div>
     </div>
-
-    <!--
-        Empty template that holds the sidebar of the Wall
-        -->
-    <t t-name="mail.wall.sidebar">
-        <div class="oe_mail_wall_sidebar"></div>
-    </t>
-
-    <!--
-        display message on the wall when there are no message
-        -->
-    <t t-name="mail.wall_no_message">
-        <div class="oe_view_nocontent">No messages.</div>
-    </t>
-
-    <!--
-        error message for uploading
-        -->
-    <t t-name="mail.error_upload">Uploading error</t>
-    <t t-name="mail.error_upload_please_wait">Please, wait while the file is uploading.</t>
-
-    <!--
-        record_thread main template
-        Template used to display the communication history in documents
-        form view.
-        -->
-    <div t-name="mail.record_thread" class="oe_record_thread">
-        <div class="oe_mail-placeholder">
-        </div>
-    </div>
-
-    <t t-name="mail.thread">
-        <div t-attf-class="oe_thread #{widget.root?'oe_root_thread':''}"/>
-    </t>
-
-    <!-- default layout -->
-    <t t-name="mail.thread.message">
-        <div t-attf-class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} #{widget.subtype ? '' : 'oe_msg_nobody'} oe_msg_#{widget.message_type}">
-
-            <div class='oe_msg_left'>
-                <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
-                    <img class="oe_msg_icon" t-att-src="widget.avatar"/>
-                </a>
-                <img t-if="!widget.options.show_link" class="oe_msg_icon" t-att-src="widget.avatar"/>
-            </div>
-
-            <div class="oe_msg_center">
-                <div class='oe_msg_icons' t-if="!widget.options.readonly">
-                    <span class='oe_read' t-if="widget.options.show_read"><i title="Done" class="fa fa-check"/></span>
-                    <span class='oe_unread' t-if="widget.is_favorite and widget.options.show_unread"><i title="Set back to Todo" class="fa fa-inbox"/></span>
-                    <span class='oe_unread' t-if="!widget.is_favorite and widget.options.show_unread"><i title="Move to Inbox" class="fa fa-inbox"/></span>
-                    <span class='oe_reply' t-if="widget.options.show_reply_button"><i title="Reply" class="fa fa-reply"/></span>
-                    <span t-attf-class="oe_star #{widget.is_favorite?'oe_starred':''}"><i title="Mark as Todo" class="fa fa-star"/></span>
-                </div>
-                <!-- message itself -->
-                <div class="oe_msg_content">
-                    <h1 t-if="(widget.show_record_name or widget.subject) and !widget.thread_level" class="oe_msg_title">
-                        <a t-if="widget.options.show_link and widget.show_record_name" class="oe_mail_action_model"
-                            t-attf-href="#action=mail.action_mail_redirect&amp;model=#{widget.model}&amp;res_id=#{widget.res_id}">
-                            <t t-esc="widget.record_name"/>
-                        </a>
-                        <span t-if="!widget.options.show_link and widget.show_record_name"><t t-esc="widget.record_name"/></span>
-                        <t t-if="widget.show_record_name and widget.subject">: </t>
-                        <t t-if="widget.subject" t-esc="widget.subject"/>
-                    </h1>
-                    <div class="oe_msg_body">
-                        <t t-if="widget.body_short">
-                            <div class="oe_msg_body_short"><t t-raw="widget.body_short"/></div>
-                            <div class="oe_msg_body_long" style="display: none;"><t t-raw="widget.body"/><span class="oe_mail_reduce"><a href="#">read less</a></span></div>
-                        </t>
-                        <t t-if="! widget.body_short">
-                            <t t-raw="widget.body"/>
-                        </t>
-                    </div>
-                </div>
-                <div class="oe_msg_footer">
-                    <t t-if="widget.attachment_ids.length > 0">
-                        <div class="oe_msg_attachment_list"></div>
-                    </t>
-                    <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-data-partner="widget.author_id[0]" class="oe_mail_action_author"><t t-esc="widget.author_id[2]"/></a>
-                    <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-esc="widget.author_id[2]"/></span>
-                    <t t-if="widget.message_type == 'notification'">
-                        updated document
-                        <t t-if="widget.partner_ids.length > 0">
-                            <span class='oe_subtle'>•</span>
-                        </t>
-                    </t>
-                    <t t-if="widget.message_type == 'comment' and ! widget.subtype and widget.partner_ids.length == 0">
-                        logged a note
-                    </t>
-                    <t t-if="(widget.message_type == 'comment' or widget.message_type == 'email') and (widget.subtype or widget.partner_ids.length > 0)">
-                        <!-- Remove nobody if user have no rights on partner that will display 'portal to nobody 5 minutes ago' that will confuse to end user, now it display 'portal 5 minutes ago' if no rights.-->
-                        <t t-if="widget.partner_ids.length > 0">
-                            to
-                        </t>
-                    </t>
-                    <t t-if="widget.message_type == 'notification' or ( (widget.message_type == 'email' or widget.message_type == 'comment') and (widget.subtype or widget.partner_ids.length > 0))"
-                            t-foreach="widget.partner_ids.slice(0, 3)" t-as="partner">
-                        <span t-attf-class="oe_partner_follower">
-                        <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}" t-att-data-partner="partner[0]" class="oe_mail_action_author"><t t-esc="partner[1]"/></a>
-                        <t t-if="!widget.options.show_link" t-esc="partner[1]"/>
-                        </span>
-                        <t t-if="!partner_last">,</t>
-                    </t>
-                    <t t-if="widget.partner_ids.length > 3">
-                        <span t-att-title="widget.extra_partners_str">and <t t-esc="widget.extra_partners_nbr"/> more</span>
-                    </t>
-                    <t t-if="widget.message_type == 'notification' and widget.partner_ids.length > 0">
-                        notified
-                    </t>
-                    <span class='oe_subtle'>•</span>
-                    <span t-att-title="widget.date">
-                        <t t-if="widget.timerelative" t-esc="widget.timerelative"/>
-                        <t t-if="!widget.timerelative" t-raw="widget.display_date"/>
-                    </span>
-                    <span t-if="!widget.options.readonly" class='oe_subtle'>•</span>
-                    <t t-if="!widget.options.readonly" t-call="mail.thread.message.vote"/>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <!-- expandable message layout -->
-    <t t-name="mail.thread.expandable">
-        <div t-attf-class="oe_msg oe_msg_#{widget.message_type} #{widget.max_limit ? 'oe_max_limit' : ''} #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
-            <div class="oe_msg_content oe_msg_more_message">
-                <div class='oe_separator'></div>
-                <a t-if="widget.nb_messages &lt;= 0" class="oe_msg_fetch_more">show more message</a>
-                <a t-if="widget.nb_messages === 1" class="oe_msg_fetch_more">show one more message</a>
-                <a t-if="widget.nb_messages &gt; 1" class="oe_msg_fetch_more">show <t t-esc="widget.nb_messages" /> more messages</a>
-            </div>
-        </div>
-    </t>
-
-    <!--
-        mail.compose_message.button_top_bar
-        render of the button on the user bar for open wizard compose message
-        -->
-    <t t-name="mail.compose_message_top_button">
-        <li title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
-            <a href="#">
-                <i class="fa fa-envelope-o fa-fw"></i>
-            </a>
-        </li>
-    </t>
-
-    <!-- mail.thread.message.vote
-        Template used to display Like/Unlike in a mail.message
-    -->
-    <span t-name="mail.thread.message.vote">
-        <span class="oe_mail_vote_count" t-if='widget.vote_nb > 0'>
-            <t t-esc='widget.vote_nb' />
-            <i class="fa fa-thumbs-o-up"></i>
+    <div class="o_timeline_is_log" t-if="widget.is_log">
+        <span class="text-muted">
+            Log an internal note which will not be sent to followers. 
+            Note that users reading the document can read internal notes.
         </span>
-        <a href='#' class="oe_msg_vote">
-            <t t-if="!widget.has_voted">like</t>
-            <t t-if="widget.has_voted">unlike</t>
-        </a>
-    </span>
+    </div>
+</t>
 
-</template>
+<div t-name="MailThread" class="oe_thread">
+    <div t-attf-class="#{widget.options.view_inbox ? 'o_timeline_thread_parent' : ''}">
+        <t t-raw="widget.content"/>
+    </div>
+    <t t-if="!widget.messages.length and !widget.root">
+        <t t-call="NoMessage" />
+    </t>
+</div>
+
+<!--
+    mail.thread.message.attachments template
+    Template used to display attachments in a mail.message
+    -->
+<t t-name="ThreadMessageAttachments">
+    <t t-foreach='widget.format_attachments(record)' t-as='attachment'>
+        <t t-if="attachment.file_type_icon !== 'webimage'">
+            <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
+                <a t-att-href='attachment.url' target="_blank">
+                    <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type_icon + '.png'"></img>
+                    <div class='oe_name'><t t-raw='attachment.name' /></div>
+                </a>
+                <div class='oe_delete oe_e'>
+                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
+                </div>
+                <div class='oe_progress_bar'>
+                    uploading
+                </div>
+            </div>
+        </t>
+        <t t-if="attachment.file_type_icon === 'webimage'">
+            <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
+                <a t-att-href='attachment.url' target="_blank">
+                    <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
+                    <div class='oe_name'><t t-raw='attachment.name'/></div>
+                </a>
+                <div class='oe_delete oe_e'>
+                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
+                </div>
+                <div class='oe_progress_bar'>
+                    uploading
+                </div>
+            </div>
+        </t>
+    </t>
+</t>
+
+<t t-name="MessageReadUnread">
+    <i t-if="record.options.show_read" title="Done" 
+       class="oe_read fa fa-check" t-att-data-id="record.id"/>
+    <i t-if="record.is_favorite and record.options.show_unread" title="Set back to Todo" 
+       class="oe_unread fa fa-inbox" t-att-data-id="record.id"/>
+    <i t-if="!record.is_favorite and record.options.show_unread" title="Move to Inbox" 
+       class="oe_unread fa fa-inbox" t-att-data-id="record.id"/>
+</t>
+
+<t t-name="MessageVote">
+    <span class="o_timeline_vote_count" t-att-data-id="record.id" t-if='record.vote_nb > 0'>
+        <t t-esc='record.vote_nb'/><i class="fa fa-thumbs-o-up" t-att-data-id="record.id"></i>
+    </span>
+    <t t-if="!record.has_voted">Like</t>
+    <t t-if="record.has_voted">Unlike</t>
+</t>
+
+<t t-name="NoMessage">
+    <div class="oe_view_nocontent">No message.</div>
+</t>
+
+<t t-name="TimelineSidebar">
+    <div class="o_timeline_sidebar"></div>
+</t>
+
+<!--
+    ComposeMessage.ButtonTopBar
+    render of the button on the user bar for open wizard compose message
+    -->
+<t t-name="ComposeMessageTopButton">
+    <li title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
+        <a href="#">
+            <i class="fa fa-envelope-o fa-fw"></i>
+        </a>
+    </li>
+</t>
+
+</templates>

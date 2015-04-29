@@ -119,11 +119,11 @@ var Sidebar = Widget.extend({
     }
 });
 
-mail.Wall.include({
+mail.TimelineView.include({
     start: function() {
         this._super();
         var sidebar = new Sidebar(this);
-        sidebar.appendTo($('.oe_mail_wall_aside'));
+        sidebar.appendTo($('.o_timeline__inbox_aside'));
     },
 });
 

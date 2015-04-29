@@ -7,9 +7,9 @@
     </t>
     <t t-name="gamification.ChallengeSummary">
         <div class="oe_goal">
-            <div>
+            <div class="oe_gamification_title">
                 <i class="oe_update_challenge fa fa-refresh" rol="button" t-attf-id="{challenge.id}"/>
-                <h4><t t-esc="challenge.name" /></h4>
+                <span><t t-esc="challenge.name" /></span>
             </div>
 
             <t t-if="challenge.visibility_mode == 'personal'">
