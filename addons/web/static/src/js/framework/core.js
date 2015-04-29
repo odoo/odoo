@@ -21,22 +21,22 @@ var _lt = translation._lt;
 var Bus = Class.extend(mixins.EventDispatcherMixin, {
     init: function() {
         mixins.EventDispatcherMixin.init.call(this, parent);
-        var self = this;
-        // TODO fme: allow user to bind keys for some global actions.
-        //           check gtk bindings
-        // http://unixpapa.com/js/key.html
-        _.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
-            $('html').on(evtype, function(ev) {
-                self.trigger(evtype, ev);
-            });
-        });
-        _.each('resize,scroll'.split(','), function(evtype) {
-            $(window).on(evtype, function(ev) {
-                self.trigger(evtype, ev);
-            });
-        });
     },
 });
+
+var main_bus = new Bus ();
+
+_.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
+    $('html').on(evtype, function(ev) {
+        main_bus.trigger(evtype, ev);
+    });
+});
+_.each('resize,scroll'.split(','), function(evtype) {
+    $(window).on(evtype, function(ev) {
+        main_bus.trigger(evtype, ev);
+    });
+});
+
 
 // Underscore customization
 //-------------------------------------------------------------------------
@@ -172,7 +172,7 @@ return {
     Class: Class,
     Bus: Bus,
     mixins: mixins,
-    bus: new Bus (),
+    bus: main_bus,
     _t: _t,
     _lt: _lt,
 
