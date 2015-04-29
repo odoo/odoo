@@ -394,5 +394,10 @@
         $('[data-target="#oe_applications"]').attr("data-target", "#oe_applications_collapse");
     });
 
+    openerp.Tour.autoRunning = false;
+    website.ready().then(function () {
+        setTimeout(openerp.Tour.running,0);
+    });
+
     return website;
 })();
