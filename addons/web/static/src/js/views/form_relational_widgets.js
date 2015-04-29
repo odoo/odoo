@@ -850,7 +850,9 @@ var FieldOne2Many = AbstractManyField.extend({
             });
         });
         $.async_when().done(function () {
-            self.viewmanager.appendTo(self.$el);
+            if (!self.isDestroyed()) {
+                self.viewmanager.appendTo(self.$el);
+            }
         });
         return def;
     },
