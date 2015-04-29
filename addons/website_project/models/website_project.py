@@ -1,9 +1,12 @@
-from openerp.osv import orm
+# -*- coding: utf-8 -*-
+from openerp import models
 
-class project(orm.Model):
+
+class Project(models.Model):
     _name = 'project.project'
-    _inherit = ['project.project','website.seo.metadata']
+    _inherit = ['project.project', 'website.seo.metadata']
 
-class task(orm.Model):
+
+class Task(models.Model):
     _name = 'project.task'
-    _inherit = ['project.task','website.seo.metadata']
+    _inherit = ['project.task', 'website.seo.metadata']
