@@ -294,7 +294,7 @@ class pos_session(osv.osv):
                                    ),
         'currency_id' : fields.related('config_id', 'currency_id', type="many2one", relation='res.currency', string="Currency"),
         'start_at' : fields.datetime('Opening Date', readonly=True), 
-        'stop_at' : fields.datetime('Closing Date', readonly=True),
+        'stop_at' : fields.datetime('Closing Date', readonly=True, copy=False),
 
         'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
