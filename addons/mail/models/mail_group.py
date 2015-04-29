@@ -76,27 +76,28 @@ class MailGroup(models.Model):
         ).create(vals)
         group.alias_id.write({"alias_force_thread_id": group.id, 'alias_parent_thread_id': group.id})
 
-        # Create client action for this group and link the menu to it
+        # Create action window for this group and link the menu to it
         inbox_ref = self.env.ref('mail.action_mail_group_feeds')
         search_ref = self.env.ref('mail.view_message_search')
-        params = {
-            'search_view_id': search_ref.id,
-            'domain': [
-                ('model', '=', 'mail.group'),
-                ('res_id', '=', group.id),
-            ],
-            'context': {
-                'default_model': 'mail.group',
-                'default_res_id': group.id,
-            },
-            'res_model': 'mail.message',
-            'thread_level': 1,
-            'header_description': group._get_header(),
-            'view_mailbox': True,
-            'compose_placeholder': 'Send a message to the group',
-        }
-        new_action = inbox_ref.sudo().copy(default={'params': str(params), 'name': vals['name']})
-        menu.write({'action': 'ir.actions.client,%d' % new_action.id, 'mail_group_id': group.id})
+        act_domain = [('model', '=', 'mail.group'), ('res_id', '=', group.id)]
+        act_context = {'default_model': 'mail.group',
+                       'default_res_id': group.id,
+                       'options': {'view_mailbox': False,
+                                   'view_inbox': True,
+                                   'read_action': 'read',
+                                   'compose_placeholder': 'Send a message to the group'},
+                        'params': {'header_description': group._get_header(),
+                                   'name': vals['name'],}
+                      }
+        act_res_model = 'mail.message'
+        act_search_view_id = search_ref.id 
+
+        new_action = inbox_ref.sudo().copy(default={'domain': act_domain, 
+                                                    'context': act_context,
+                                                    'res_model': act_res_model,
+                                                    'search_view_id': act_search_view_id,
+                                                    'name': vals['name']})
+        menu.write({'action': 'ir.actions.act_window,%d' % new_action.id, 'mail_group_id': group.id})
 
         if vals.get('group_ids'):
             group._subscribe_users()
@@ -126,12 +127,11 @@ class MailGroup(models.Model):
         result = super(MailGroup, self).write(vals)
         if vals.get('group_ids'):
             self._subscribe_users()
-        # if description, name or alias is changed: update client action
+        # if description, name or alias is changed: update action window
         if vals.get('description') or vals.get('name') or vals.get('alias_id') or vals.get('alias_name'):
             for group in self:
-                new_params = group.menu_id.action.params
-                new_params['header_description'] = group._generate_header_description()
-                group.menu_id.action.sudo().write({'params': str(new_params)})
+                if (vals.get('name')):
+                    group.menu_id.action.sudo().write({'name': vals.get('name')})
         # if name is changed: update menu
         if vals.get('name'):
             self.sudo().mapped('menu_id').write({'name': vals.get('name')})

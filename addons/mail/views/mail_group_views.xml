@@ -2,20 +2,11 @@
 <openerp>
     <data>
         <!-- this record will be dynamically adapted to each new menu created -->
-        <record id="action_mail_group_feeds" model="ir.actions.client">
+        <record model="ir.actions.act_window" id="action_mail_group_feeds">
             <field name="name">Discussion Group</field>
-            <field name="tag">mail.wall</field>
             <field name="res_model">mail.message</field>
-            <field name="context">{
-            }</field>
-            <field name="params">{
-                'read_action': 'read'
-            }</field>
-            <field name="help" type="html">
-                <p>
-                    No message in this group.
-                </p>
-            </field>
+            <field name="view_type">form</field>
+            <field name="view_mode">timeline</field>
         </record>
 
         <!-- Group Kanban View  !-->

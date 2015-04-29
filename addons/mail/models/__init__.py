@@ -2,6 +2,7 @@
 
 import ir_attachment
 import mail_message_subtype
+import mail_tracking_value
 import mail_alias
 import mail_followers
 import mail_message

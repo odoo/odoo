@@ -192,6 +192,7 @@ class view(osv.osv):
             ('form','Form'),
             ('graph', 'Graph'),
             ('pivot', 'Pivot'),
+            ('timeline', 'Timeline'),
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),

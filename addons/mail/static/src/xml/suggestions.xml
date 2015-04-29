@@ -2,18 +2,17 @@
 <template>
 
     <!-- Groups placeholder in sidebar -->
-    <t t-extend="mail.wall.sidebar">
-        <t t-jquery=".oe_mail_wall_sidebar" t-operation="append">
+    <t t-extend="TimelineSidebar">
+        <t t-jquery=".o_timeline_sidebar" t-operation="append">
             <div class="oe_suggestions_groups"></div>
         </t>
     </t>
 
-
     <!-- Suggested groups -->
-    <div t-name="mail.suggestions.groups" class="oe_sidebar_suggestion oe_suggestion_group">
+    <div t-name="TimelineSuggestionGroups" class="oe_sidebar_suggestion oe_suggestion_group">
         <div class="oe_suggest_title">
             <i class="oe_suggestion_remove oe_suggestion_group fa fa-remove"/>
-            <h2>Suggested Groups</h2>
+            <span>Suggested Groups</span>
         </div>
         <div class="oe_suggest_items">
             <t t-foreach="widget.groups" t-as="result">
@@ -27,12 +26,13 @@
                         <a class="oe_suggestion_item_name" t-attf-href="#model=mail.group&amp;id=#{result.id}"><t t-esc="result.name"/></a>
                         <i class="oe_suggestion_remove_item oe_suggestion_group fa fa-remove" t-att-id="result.id"/>
                         <br/>
-                        <button t-att-id="result.id" class="oe_suggestion_join">Join Group</button>
+                        <div class="btn-group btn-group-sm"> 
+                            <button type="button" class="btn btn-default oe_suggestion_join" t-att-id="result.id">Join Group</button>
+                        </div>
                     </div>
                 </div>
             </t>
         </div>
     </div>
-
 
 </template>
