@@ -10,17 +10,7 @@
 </t>
 <t t-name="Notification">
     <div class="oe_notification" t-translation="off">
-        <div id="oe_notification_default">
-            <a class="ui-notify-cross ui-notify-close" href="#">x</a>
-            <h1>#{title}</h1>
-            <p>#{text}</p>
-        </div>
-        <div id="oe_notification_alert" class="ui-state-error">
-            <a class="ui-notify-cross ui-notify-close" href="#">x</a>
-            <span style="float:left; margin:2px 5px 0 0;" class="ui-icon ui-icon-alert"></span>
-            <h1>#{title}</h1>
-            <p>#{text}</p>
-        </div>
+        <div class='notifications top-right'></div>
     </div>
 </t>
 <t t-name="Dialog">
@@ -451,7 +441,7 @@
             <dd><t t-esc="browser_offset"/></dd>
         </dl>
 
-        <p><a href="#">Click here to change your user's timezone.</a></p>
+        <p><a href="#" class="btn-link">Click here to change your user's timezone.</a></p>
     </div>
 </t>
 <t t-name="WebClient.timezone_systray">

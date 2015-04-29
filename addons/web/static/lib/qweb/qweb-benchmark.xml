@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template">
-<t t-name="benchmark"><div id="oe_notification" class="oe_notification">
-        <div id="oe_notification_default">
-            <a class="ui-notify-cross ui-notify-close" href="#">x</a>
-            <h1>title</h1>
-            <p>text</p>
-        </div>
-        <div id="oe_notification_alert" class="ui-state-error">
-            <a class="ui-notify-cross ui-notify-close" href="#">x</a>
-            <span style="float:left; margin:2px 5px 0 0;" class="ui-icon ui-icon-alert"></span>
-            <h1>title</h1>
-            <p>text</p>
-        </div>
+<t t-name="benchmark">
+    <div id="oe_notification" class="oe_notification">
+        <div class='notifications top-right'></div>
     </div>
     <t t-js="d">
         d.iter = 'one,two,three,four,five'.split(',')
@@ -39,18 +30,10 @@
             (<t t-esc="i"/>)
         </t>
     </div>
-    <div id="oe_notification" class="oe_notification">
-        <div id="oe_notification_default">
-            <a class="ui-notify-cross ui-notify-close" href="#">x</a>
-            <h1>title</h1>
-            <p>text</p>
-        </div>
-    </div>
 </t>
 <t t-name="benchmark_call">
-    <div id="oe_notification_alert" class="ui-state-error">
-        <a class="ui-notify-cross ui-notify-close" href="#">x</a>
-        <span style="float:left; margin:2px 5px 0 0;" class="ui-icon ui-icon-alert"></span>
+    <div id="oe_notification" class="oe_notification">
+        <div class='notifications top-right'></div>
         <h1>Here's your value : (<t t-esc="0"/>) !!</h1>
     </div>
 </t>

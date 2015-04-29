@@ -153,7 +153,7 @@ widgets.SidebarFilter.include({
 
 WebClient.include({
     get_notif_box: function(me) {
-        return $(me).closest(".ui-notify-message-style");
+        return $(me).closest(".notifications");
     },
     get_next_notif: function() {
         var self= this;
@@ -166,7 +166,7 @@ WebClient.include({
                         if (!($.find(".eid_"+res.event_id)).length) {
                             res.title = QWeb.render('notify_title', {'title': res.title, 'id' : res.event_id});
                             res.message += QWeb.render("notify_footer");
-                            var a = self.do_notify(res.title,res.message,true);
+                            self.do_notify(res.title,res.message,true);
                             
                             $(".link2event").on('click', function() {
                                 self.rpc("/web/action/load", {
@@ -176,11 +176,11 @@ WebClient.include({
                                     return self.action_manager.do_action(r);
                                 });
                             });
-                            a.element.find(".link2recall").on('click',function() {
-                                self.get_notif_box(this).find('.ui-notify-close').trigger("click");
+                            self.$el.find(".link2recall").on('click',function() {
+                                self.get_notif_box(this).find('.close').trigger("click");
                             });
-                            a.element.find(".link2showed").on('click',function() {
-                                self.get_notif_box(this).find('.ui-notify-close').trigger("click");
+                            self.$el.find(".link2showed").on('click',function() {
+                                self.get_notif_box(this).find('.close').trigger("click");
                                 self.rpc("/calendar/notify_ack");
                             });
                         }

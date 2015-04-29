@@ -10,10 +10,6 @@ var Notification = Widget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$el.notify({
-            speed: 500,
-            expires: 2500
-        });
     },
     notify: function(title, text, sticky) {
         sticky = !!sticky;
@@ -21,10 +17,13 @@ var Notification = Widget.extend({
         if (sticky) {
             opts.expires = false;
         }
-        return this.$el.notify('create', {
-            title: title,
-            text: text
-        }, opts);
+        var html = "<b>"+title+"</b><p>"+text+"</p>"
+        return this.$el.find('.top-right').notify({ 
+            closable: true,
+            message: { html: html},
+            fadeOut: {enabled: false},
+            type: 'info',
+        }).show();
     },
     warn: function(title, text, sticky) {
         sticky = !!sticky;
@@ -32,10 +31,13 @@ var Notification = Widget.extend({
         if (sticky) {
             opts.expires = false;
         }
-        return this.$el.notify('create', 'oe_notification_alert', {
-            title: title,
-            text: text
-        }, opts);
+        var html = "<i class='fa fa-exclamation-triangle' /><b>"+title+"</b><p>"+text+"</p>"
+        return this.$el.find('.top-right').notify({ 
+            closable: true,
+            message: { html: html},
+            fadeOut: {enabled: true},
+            type: 'danger',
+        }).show()
     }
 });
 

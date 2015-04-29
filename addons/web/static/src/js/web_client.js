@@ -238,15 +238,13 @@ var WebClient = Widget.extend({
             if (browser_offset !== user_offset) {
                 var $icon = $(QWeb.render('WebClient.timezone_systray'));
                 $icon.on('click', function() {
-                    var notification = self.do_warn(_t("Timezone Mismatch"), QWeb.render('WebClient.timezone_notification', {
+                    self.do_warn(_t("Timezone Mismatch"), QWeb.render('WebClient.timezone_notification', {
                         user_timezone: session.user_context.tz || 'UTC',
                         user_offset: user_offset,
                         browser_offset: browser_offset,
                     }), true);
-                    notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
-                        notification.close();
-                    }).find('a').on('click', function() {
-                        notification.close();
+                    self.$el.find('.oe_webclient_timezone_notification a').on('click', function() {
+                        self.$el.find('.close').trigger("click");
                         self.user_menu.on_menu_settings();
                         return false;
                     });
