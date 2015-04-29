@@ -360,6 +360,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             }).done(null, function() {
                 def.reject();
             });
+            return def;
         });
         return def;
     },
