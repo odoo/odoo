@@ -574,6 +574,7 @@ class pos_order(osv.osv):
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'pos_reference':ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
+            'date_order':   ui_order['creation_date']
         }
 
     def _payment_fields(self, cr, uid, ui_paymentline, context=None):
