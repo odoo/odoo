@@ -227,24 +227,19 @@ class account_account(osv.osv):
     _parent_store = True
 
     def _where_calc(self, cr, uid, domain, active_test=True, context=None):
-        '''Override to map 'code' search and apply journal constrains'''
-        pos = 0
-        while pos < len(domain):
-            if domain[pos][0] == 'code' and domain[pos][1] in ('like', 'ilike') and domain[pos][2]:
-                domain[pos] = ('code', '=like', tools.ustr(domain[pos][2].replace('%', '')) + '%')
-            if domain[pos][0] == 'journal_id':
-                if not domain[pos][2]:
-                    del domain[pos]
-                    continue
-                jour = self.pool.get('account.journal').browse(cr, uid, domain[pos][2], context=context)
-                if (not (jour.account_control_ids or jour.type_control_ids)) or not domain[pos][2]:
+        '''Override to map 'code' search and apply journal entry control'''
+        for pos, leaf in enumerate(domain):
+            if leaf[0] == 'code' and leaf[1] in ('like', 'ilike') and leaf[2]:
+                domain[pos] = ('code', '=like', tools.ustr(leaf[2].replace('%', '')) + '%')
+            elif leaf[0] == 'journal_id':
+                journal = self.pool.get('account.journal').browse(cr, uid, leaf[2], context=context) if leaf[2] else None
+                if not journal or not (journal.account_control_ids or journal.type_control_ids):  # No journal entry control
                     domain[pos] = ('type', 'not in', ('consolidation', 'view'))
                     continue
-                ids3 = map(lambda x: x.id, jour.type_control_ids)
-                ids1 = super(account_account, self).search(cr, uid, [('user_type', 'in', ids3)])
-                ids1 += map(lambda x: x.id, jour.account_control_ids)
+                user_type_ids = [t.id for t in journal.type_control_ids]
+                ids1 = super(account_account, self).search(cr, uid, [('user_type', 'in', user_type_ids)])
+                ids1 += [a.id for a in journal.account_control_ids]
                 domain[pos] = ('id', 'in', ids1)
-            pos += 1
 
         return super(account_account, self)._where_calc(cr, uid, domain, active_test, context)
 
