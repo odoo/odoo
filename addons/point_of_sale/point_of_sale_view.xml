@@ -826,6 +826,7 @@
                                 <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'point_of_sale.group_pos_manager', 'base.group_sale_manager']}"/>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="config_id"/>
+                                <field name="rescue" attrs="{'invisible': [('rescue', '=', False)]}" />
                             </group>
                             <group>
                                 <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
