@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <!-- Inherit Phonecalls search View  -->
+    <record id="crm_phonecalls_filter_inherit" model="ir.ui.view">
+        <field name="name">crm.phonecalls.search.inherit.claim</field>
+        <field name="model">crm.phonecall</field>
+        <field name="inherit_id" ref="crm.view_crm_case_phonecalls_filter"/>
+        <field name="arch" type="xml">
+        	<field name="user_id" position="after">
+        		<field name="claim_id"/>
+        	</field>
+        </field>
+    </record>
+
+</odoo>
