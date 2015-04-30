@@ -232,16 +232,16 @@ class mrp_bom(osv.osv):
         domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
                             '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT))]
         # order to prioritize bom with product_id over the one without
-        ids = self.search(cr, uid, domain, order='product_id', context=context)
+        ids = self.search(cr, uid, domain, order='sequence, product_id', context=context)
         # Search a BoM which has all properties specified, or if you can not find one, you could
-        # pass a BoM without any properties
+        # pass a BoM without any properties with the smallest sequence
         bom_empty_prop = False
         for bom in self.pool.get('mrp.bom').browse(cr, uid, ids, context=context):
             if not set(map(int, bom.property_ids or [])) - set(properties or []):
-                if properties and not bom.property_ids:
-                    bom_empty_prop = bom.id
-                else:
+                if not properties or bom.property_ids:
                     return bom.id
+                elif not bom_empty_prop:
+                    bom_empty_prop = bom.id
         return bom_empty_prop
 
     def _bom_explode(self, cr, uid, bom, product, factor, properties=None, level=0, routing_id=False, previous_products=None, master_bom=None, context=None):
@@ -296,6 +296,9 @@ class mrp_bom(osv.osv):
             if bom_line_id.attribute_value_ids:
                 if not product or (set(map(int,bom_line_id.attribute_value_ids or [])) - set(map(int,product.attribute_value_ids))):
                     continue
+
+            if set(map(int, bom_line_id.property_ids or [])) - set(properties or []):
+                continue
 
             if previous_products and bom_line_id.product_id.product_tmpl_id.id in previous_products:
                 raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
@@ -724,7 +727,7 @@ class mrp_production(osv.osv):
             #reset workcenter_lines in production order
             for line in results2:
                 line['production_id'] = production.id
-                workcenter_line_obj.create(cr, uid, line)
+                workcenter_line_obj.create(cr, uid, line, context)
         return results
 
     def action_compute(self, cr, uid, ids, properties=None, context=None):
@@ -1221,6 +1224,8 @@ class mrp_production(osv.osv):
         """ Confirms production order.
         @return: Newly generated Shipment Id.
         """
+        user_lang = self.pool.get('res.users').browse(cr, uid, [uid]).partner_id.lang
+        context = dict(context, lang=user_lang)
         uncompute_ids = filter(lambda x: x, [not x.product_lines and x.id or False for x in self.browse(cr, uid, ids, context=context)])
         self.action_compute(cr, uid, uncompute_ids, context=context)
         for production in self.browse(cr, uid, ids, context=context):

@@ -177,7 +177,7 @@ class website(orm.Model):
                 values['partner_id'] = partner.id
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
 
-                if flag_pricelist or values.get('fiscal_position') != fiscal_position:
+                if flag_pricelist or values.get('fiscal_position', False) != fiscal_position:
                     update_pricelist = True
 
             # update the pricelist

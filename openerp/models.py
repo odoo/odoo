@@ -1093,6 +1093,13 @@ class BaseModel(object):
             ids = False
         return {'ids': ids, 'messages': messages}
 
+    def _add_fake_fields(self, cr, uid, fields, context=None):
+        from openerp.fields import Char, Integer
+        fields[None] = Char('rec_name')
+        fields['id'] = Char('External ID')
+        fields['.id'] = Integer('Database ID')
+        return fields
+
     def _extract_records(self, cr, uid, fields_, data,
                          context=None, log=lambda a: None):
         """ Generates record dicts from the data sequence.
@@ -1108,13 +1115,9 @@ class BaseModel(object):
         * "id" is the External ID for the record
         * ".id" is the Database ID for the record
         """
-        from openerp.fields import Char, Integer
         fields = dict(self._fields)
         # Fake fields to avoid special cases in extractor
-        fields[None] = Char('rec_name')
-        fields['id'] = Char('External ID')
-        fields['.id'] = Integer('Database ID')
-
+        fields = self._add_fake_fields(cr, uid, fields, context=context)
         # m2o fields can't be on multiple lines so exclude them from the
         # is_relational field rows filter, but special-case it later on to
         # be handled with relational fields (as it can have subfields)

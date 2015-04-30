@@ -19,7 +19,7 @@
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//td[last()]" position="inside">
     <t t-if="line.linked_line_id">
-      <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-esc="int(line.product_uom_qty)"/>
+      <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
     </t>
   </xpath>
 </template>
@@ -48,7 +48,7 @@
                   <span t-field="product.image_medium" t-field-options='{"widget": "image" }'/>
                 </td>
                 <td colspan="2">
-                  <strong t-field="product.name"/>
+                  <strong t-field="product.display_name"/>
                   <div class="text-muted">
                     <div t-field="product.description_sale"/>
                     <div class="js_attributes"/>
@@ -106,15 +106,13 @@
                   </div>
                 </td>
                 <td>
-                  <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
-                  <span class="text-danger" style="text-decoration: line-through; white-space: nowrap;"
+                  <span class="text-danger oe_optional" t-att-style="'' if (compute_currency(product.lst_price) - product.price) &gt; 0.1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
                       "from_currency": "website.currency_id",
                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                    }'/><br/>
-                  </t>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-field="product.price"
                     t-field-options='{

@@ -810,7 +810,7 @@ class account_invoice(models.Model):
             # create the analytical lines, one move line per invoice line
             iml = inv._get_analytic_lines()
             # check if taxes are all computed
-            compute_taxes = account_invoice_tax.compute(inv)
+            compute_taxes = account_invoice_tax.compute(inv.with_context(lang=inv.partner_id.lang))
             inv.check_tax_lines(compute_taxes)
 
             # I disabled the check_total feature
@@ -841,7 +841,7 @@ class account_invoice(models.Model):
             # create one move line for the total and possibly adjust the other lines amount
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
 
-            name = inv.name or inv.supplier_invoice_number or '/'
+            name = inv.supplier_invoice_number or inv.name or '/'
             totlines = []
             if inv.payment_term:
                 totlines = inv.with_context(ctx).payment_term.compute(total, date_invoice)[0]

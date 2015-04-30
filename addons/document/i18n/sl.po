@@ -1,21 +1,23 @@
 # Slovenian translation for openobject-addons
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-03-24 16:07+0000\n"
+"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
+"Language-Team: Slovenian <translate@matmoz.si>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:39+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-25 06:08+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
+"Language: sl\n"
 
 #. module: document
 #: field:report.document.file,nbr:0
@@ -50,9 +52,9 @@ msgid ""
 "        "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"            Kliknite za kreiranje novega dokumenta. \n"
+"            Ustvarjanje novega dokumenta. \n"
 "          </p><p>\n"
-"            Nabor dokumentov vam omogoča dostop do vseh priponk, kot so\n"
+"            Shramba dokumentov vam omogoča dostop do vseh priponk, kot so\n"
 "            elektronska pošta, projektni dokumenti, računi itd.\n"
 "          </p>\n"
 "        "
@@ -64,9 +66,9 @@ msgid ""
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
 "to the current record, in dynamic folders"
 msgstr ""
-"A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
+"Python izraz za ocenjevanje polja.\n"
+"Uporabite lahko 'dir_id' za trenutni imenik, 'res_id', 'res_model' kot sklic "
+"na trenutni zapis v dinamičnih imenikih"
 
 #. module: document
 #: field:document.directory.content.type,active:0
@@ -81,7 +83,7 @@ msgstr "Vse uporabniške datoteke"
 #. module: document
 #: view:report.document.user:document.view_report_document_user_search
 msgid "All users files"
-msgstr "Vse uporabnikove datoteke"
+msgstr "Vse uporabniške datoteke"
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -89,7 +91,7 @@ msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
 msgstr ""
-"Skladno z nadrejenim modelom ta ID pripne to mapo k ustreznemu zapisu "
+"Skladno z nadrejenim modelom ta ID pripne ta imenik k ustreznemu zapisu "
 "nadrejenega modela."
 
 #. module: document
@@ -102,12 +104,12 @@ msgstr "April"
 #: code:addons/document/static/src/js/document.js:7
 #, python-format
 msgid "Attachment(s)"
-msgstr "Priponke"
+msgstr "Priloge"
 
 #. module: document
 #: view:ir.attachment:document.view_document_file_tree
 msgid "Attachments"
-msgstr "Priponke"
+msgstr "Priloge"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -121,6 +123,8 @@ msgid ""
 "name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
+"Označite polje če želite, da naziv datoteke vsebuje naziv zapisa.\n"
+"Če je nastavljeno, mora biti imenik vezan na vire."
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -128,30 +132,30 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
-"Označite, če želite uporabiti isto drevesno strukturo kot objekt, izbran "
-"sistemsko."
+"Označite, če želite uporabiti isto drevesno strukturo kot objekt izbran v "
+"sistemu."
 
 #. module: document
 #: field:document.directory,child_ids:0
 msgid "Children"
-msgstr "Otroci"
+msgstr "Podrejeno"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 #: field:document.directory,company_id:0
 msgid "Company"
-msgstr "Podjetje"
+msgstr "Družba"
 
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
-msgstr "Konfiguriraj mape"
+msgstr "Nastavitev imenikov"
 
 #. module: document
 #: field:document.directory.content,name:0
 msgid "Content Name"
-msgstr "Ime vsebine"
+msgstr "Naziv vsebine"
 
 #. module: document
 #: field:document.directory.content.type,name:0
@@ -166,7 +170,7 @@ msgstr "Vsebina"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "Polja konteksta"
 
 #. module: document
 #: field:document.configuration,create_uid:0
@@ -175,7 +179,7 @@ msgstr ""
 #: field:document.directory.dctx,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: document
 #: field:document.configuration,create_date:0
@@ -184,7 +188,7 @@ msgstr ""
 #: field:document.directory.dctx,create_date:0
 #: field:document.storage,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -195,7 +199,7 @@ msgstr "Avtor"
 #: field:document.directory,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
-msgstr "Ustvarjeno"
+msgstr "Datum nastanka"
 
 #. module: document
 #: field:document.directory,write_date:0
@@ -210,7 +214,7 @@ msgstr "December"
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid "Define words in the context, for all child directories and files"
-msgstr "Določite besede v kontekstu, za vse podrejene mape in datoteke."
+msgstr "Določite besede v kontekstu za vse podrejene mape in datoteke."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -229,7 +233,7 @@ msgstr "Imeniki"
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
-msgstr "Struktura map"
+msgstr "Struktura imenikov"
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -245,7 +249,7 @@ msgstr "Imenik"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr "Konfiguracija mape"
+msgstr "Nastavitve imenika"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content
@@ -260,36 +264,36 @@ msgstr "Tip vsebine imenika"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "Dinamična vsebina imenika"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 #: field:report.document.user,type:0
 msgid "Directory Type"
-msgstr "Vrsta imenika"
+msgstr "Tip imenika"
 
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr "Mapa ne more biti sama sebi nadrejena!"
+msgstr "Imenik ne more biti nadrejen sam sebi!"
 
 #. module: document
 #: code:addons/document/document.py:347
 #, python-format
 msgid "Directory name contains special characters!"
-msgstr "Ime mape vsebuje posebne znake!"
+msgstr "Naziv imenika vsebuje posebne znake!"
 
 #. module: document
 #: code:addons/document/document.py:337
 #: code:addons/document/document.py:342
 #, python-format
 msgid "Directory name must be unique!"
-msgstr "Ime mape mora biti enoznačno!"
+msgstr "Naziv imenika mora biti unikaten!"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Document Directory"
-msgstr ""
+msgstr "Imenik dokumentov"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -299,7 +303,7 @@ msgstr "Upravljanje dokumentov"
 #. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
-msgstr "Vrsta dokumenta"
+msgstr "Tip dokumenta"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
@@ -314,7 +318,7 @@ msgstr "Domena"
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid "Dynamic context"
-msgstr "Dinamična vsebina"
+msgstr "Dinamični kontekst"
 
 #. module: document
 #: help:document.directory,type:0
@@ -325,6 +329,10 @@ msgid ""
 "resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
 msgstr ""
+"Vsak imenik je lahko tipa Statičen ali pa povezan z drugim virom. Statični "
+"imenik, tako kot pri operacijskih sistemih, je klasični imenik (mapa), ki "
+"vsebuje datoteke. Imeniki povezani s sistemskimi viri vsebujejo samodejne "
+"pod-imenike za vsak tip vira definiran v nadrejenem imeniku."
 
 #. module: document
 #: code:addons/document/document.py:573
@@ -335,7 +343,7 @@ msgstr "Napaka pri pisanju dokumenta."
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You cannot create recursive directories."
-msgstr "Napaka! Ne morete kreirati rekurzivnih map."
+msgstr "Napaka! Ne morete ustvariti rekurzivnih imenikov."
 
 #. module: document
 #: field:document.directory.dctx,expr:0
@@ -363,7 +371,8 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr ""
-"Polje, namenjeno imenu izvorne mape. Če je prazno, bo uporabljeno \"ime\"."
+"Polje, namenjeno imenu izvornega imenika. Če je prazno, bo uporabljeno "
+"\"ime\"."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -373,7 +382,7 @@ msgstr "Polja"
 #. module: document
 #: field:report.document.user,datas_fname:0
 msgid "File Name"
-msgstr "Ime datoteke"
+msgstr "Naziv datoteke"
 
 #. module: document
 #: field:report.document.file,file_size:0
@@ -431,22 +440,22 @@ msgstr "Najdi vse vire"
 #. module: document
 #: selection:document.directory,type:0
 msgid "Folders per resource"
-msgstr ""
+msgstr "Imeniki po viru"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
+msgstr "Za vsak tukajšnji vnos se v imeniku pojavijo navidezne datoteke."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid "Generated Files"
-msgstr "Generirana polja"
+msgstr "Ustvarjena polja"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Group By"
-msgstr ""
+msgstr "Združi po"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -463,7 +472,7 @@ msgstr "Skupine"
 #: field:report.document.file,id:0
 #: field:report.document.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: document
 #: help:document.directory,resource_find_all:0
@@ -472,7 +481,7 @@ msgid ""
 "false, only ones that have this as parent."
 msgstr ""
 "Če je označeno, bodo poiskane vse priponke, ki ustrezajo temu viru. V "
-"nasprotnem primeru samo tiste, kateri je ta vir nadrejen."
+"nasprotnem primeru samo tiste, katerim je ta vir nadrejen."
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
@@ -482,11 +491,15 @@ msgid ""
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
+"Če tu vpišete objekt, se bo predloga imenika pojavila pod vsemi temi "
+"objekti. Takšni imeniki so \"priloženi\" specifičnemu modelu ali zapisu, "
+"prav tako kot priponke. Ne določajte nadrejenega imenika, če izberete "
+"nadrejeni model."
 
 #. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
-msgstr "Vključi ime zapisa"
+msgstr "Vključi naziv zapisa"
 
 #. module: document
 #: view:ir.attachment:document.view_document_file_form
@@ -512,7 +525,7 @@ msgstr "Junij"
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
 msgid "Knowledge Application Configuration"
-msgstr "Nastaviteve"
+msgstr "Nastavitve aplikacije Baza znanja"
 
 #. module: document
 #: field:document.directory,write_uid:0
@@ -526,7 +539,7 @@ msgstr "Uporabnik, ki je zadnji spreminjal"
 #: field:document.directory.dctx,write_uid:0
 #: field:document.storage,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnjič posodobil"
 
 #. module: document
 #: field:document.configuration,write_date:0
@@ -535,7 +548,7 @@ msgstr ""
 #: field:document.directory.dctx,write_date:0
 #: field:document.storage,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -550,12 +563,12 @@ msgstr "Maj"
 #. module: document
 #: field:document.directory.content.type,mimetype:0
 msgid "Mime Type"
-msgstr "Vrsta datoteke"
+msgstr "MIME tip"
 
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
-msgstr "Oznaka modela"
+msgstr "ID modela"
 
 #. module: document
 #: view:ir.attachment:document.view_document_file_form
@@ -581,12 +594,12 @@ msgstr "Moji dokumenti"
 #. module: document
 #: field:document.directory,name:0
 msgid "Name"
-msgstr "Ime"
+msgstr "Naziv"
 
 #. module: document
 #: field:document.directory,resource_field:0
 msgid "Name field"
-msgstr "Polje imena"
+msgstr "Polje naziva"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -606,6 +619,10 @@ msgid ""
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
 msgstr ""
+"Odoo upravljanje dokumentov podpira prirejanje navideznih map z dokumenti. "
+"Navidezna mapa dokumenta se uporablja za upravljanje datotek, pripetih k "
+"dokumentu, ali za tiskanje in nalaganje poročil. To orodje samodejno ustvari "
+"registre v skladu z instaliranimi moduli."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -613,7 +630,7 @@ msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
 msgstr ""
-"Samo člani te skupine bodo imeli dostop do te mape in njenih datotek."
+"Samo člani te skupine bodo imeli dostop do tega imenika in njegovih datotek."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
@@ -627,12 +644,12 @@ msgstr "Lastnik"
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid "PDF Report"
-msgstr "Poročilo v PDF"
+msgstr "PDF poročilo"
 
 #. module: document
 #: field:document.directory,parent_id:0
 msgid "Parent Directory"
-msgstr "Matična mapa"
+msgstr "Nadrejeni imenik"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
@@ -664,12 +681,12 @@ msgstr "Poročilo"
 #. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
-msgstr "Oznaka vira"
+msgstr "ID vira"
 
 #. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
-msgstr "Model virov"
+msgstr "Model vira"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
@@ -679,7 +696,7 @@ msgstr "Viri"
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Search Document Directory"
-msgstr ""
+msgstr "Iskanje po imeniku dokumentov"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -691,7 +708,7 @@ msgstr "Varnost"
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr ""
+msgstr "Izberite objekt in imeli boste po en imenik za vsak zapis tega vira."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -731,17 +748,17 @@ msgstr "Pripona"
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr "Ime mape mora biti enolično!"
+msgstr "Naziv imenika mora biti unikaten!"
 
 #. module: document
 #: sql_constraint:ir.attachment:0
 msgid "The filename must be unique in a directory !"
-msgstr "Ime v mapi mora biti enolično!"
+msgstr "Naziv datoteke mora biti unikaten za imenik!"
 
 #. module: document
 #: help:document.directory.dctx,field:0
 msgid "The name of the field."
-msgstr "Ime polja."
+msgstr "Naziv polja."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -749,6 +766,8 @@ msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
 msgstr ""
+"Te skupine NE vplivajo na podrejene imenike, za katere se mora definirati "
+"svoje skupine."
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -765,8 +784,7 @@ msgstr "Tip"
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Uporabite domeno, če želite aktivirati avtomatično filtriranje vidnih virov."
+msgstr "Uporabite domeno, če želite samodejno filtriranje vidnih virov."
 
 #. module: document
 #: view:report.document.user:document.view_report_document_user_search
@@ -792,8 +810,8 @@ msgid ""
 "When executing this wizard, it will configure your directories automatically "
 "according to modules installed."
 msgstr ""
-"Z izvedbo tega čarovnika bodo vaše mape ustvarjene avtomatično glede na "
-"instalirane module."
+"Z izvedbo tega čarovnika bodo vaši imeniki samodejno ustvarjeni glede na "
+"nameščene module."
 
 #. module: document
 #: field:report.document.user,name:0
@@ -803,7 +821,7 @@ msgstr "Leto"
 #. module: document
 #: view:ir.attachment:document.view_document_file_form
 msgid "on"
-msgstr "vklopljeno"
+msgstr "na"
 
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
