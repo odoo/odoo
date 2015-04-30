@@ -1673,7 +1673,11 @@
     <input type="number" class="field_integer" value = "0" step="1"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input type="number" class="field_float" value = "0.0" step="0.01"/>
+    <input class="field_float"
+        t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
+        t-attf-title="Number using #{widget.decimal_point  || '.' } as decimal separator."
+        t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
+        t-attf-value="0#{widget.decimal_point || '.' }0" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
     <select>
