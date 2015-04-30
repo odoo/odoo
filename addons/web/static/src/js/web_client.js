@@ -191,7 +191,6 @@ var WebClient = Widget.extend({
 
         self.bind_hashchange();
         self.set_title();
-        self.check_timezone();
         if (self.client_options.action_post_login) {
             self.action_manager.do_action(self.client_options.action_post_login);
             delete(self.client_options.action_post_login);
@@ -225,35 +224,6 @@ var WebClient = Widget.extend({
             });
         });
         return false;
-    },
-    check_timezone: function() {
-        var self = this;
-        return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
-            var user_offset = result[0]['tz_offset'];
-            var offset = -(new Date().getTimezoneOffset());
-            // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
-            var browser_offset = (offset < 0) ? "-" : "+";
-            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
-            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-            if (browser_offset !== user_offset) {
-                var $icon = $(QWeb.render('WebClient.timezone_systray'));
-                $icon.on('click', function() {
-                    var notification = self.do_warn(_t("Timezone Mismatch"), QWeb.render('WebClient.timezone_notification', {
-                        user_timezone: session.user_context.tz || 'UTC',
-                        user_offset: user_offset,
-                        browser_offset: browser_offset,
-                    }), true);
-                    notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
-                        notification.close();
-                    }).find('a').on('click', function() {
-                        notification.close();
-                        self.user_menu.on_menu_settings();
-                        return false;
-                    });
-                });
-                $icon.prependTo(window.$('.oe_systray'));
-            }
-        });
     },
     /**
      * When do_action is performed on the WebClient, forward it to the main ActionManager

@@ -28,6 +28,7 @@ var SystrayMenu = Widget.extend({
         });
         this.$el.parent().show();
         return this._super.apply(this, arguments);
+
     },
     do_update: function () {
         var self = this;
