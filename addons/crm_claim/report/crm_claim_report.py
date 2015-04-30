@@ -1,64 +1,38 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
-from openerp.osv import fields,osv
+from openerp import models, fields
 from openerp import tools
 
-AVAILABLE_PRIORITIES = [
-   ('0', 'Low'),
-   ('1', 'Normal'),
-   ('2', 'High')
-]
 
+class CrmClaimReport(models.Model):
 
-class crm_claim_report(osv.osv):
     """ CRM Claim Report"""
 
     _name = "crm.claim.report"
-    _auto = False
     _description = "CRM Claim Report"
+    _auto = False
 
-    _columns = {
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'team_id':fields.many2one('crm.team', 'Team', oldname='section_id', readonly=True),
-        'nbr': fields.integer('# of Claims', readonly=True),  # TDE FIXME master: rename into nbr_claims
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True, select=True),
-        'claim_date': fields.datetime('Claim Date', readonly=True),
-        'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'stage_id': fields.many2one ('crm.stage', 'Stage', readonly=True,domain="[('team_ids','=',team_id)]"),
-        'categ_id': fields.many2one('crm.claim.category', 'Category',readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-        'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
-        'date_closed': fields.datetime('Close Date', readonly=True, select=True),
-        'date_deadline': fields.date('Deadline', readonly=True, select=True),
-        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'email': fields.integer('# Emails', size=128, readonly=True),
-        'subject': fields.char('Claim Subject', readonly=True)
-    }
+    user_id = fields.Many2one('res.users', string='User', readonly=True)
+    team_id = fields.Many2one('crm.team', string='Team', oldname='section_id', readonly=True)
+    nbr = fields.Integer(string='# of Claims', readonly=True)  # TDE FIXME master: rename into nbr_claims
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    create_date = fields.Datetime(string='Create Date', index=True, readonly=True)
+    claim_date = fields.Datetime(string='Claim Date', readonly=True)
+    delay_close = fields.Float(
+        string='Delay to close', digits=(16, 2), group_operator="avg", readonly=True, help="Number of Days to close the case")
+    stage_id = fields.Many2one('crm.stage', string='Stage', readonly=True, domain="[('team_ids', '=', team_id)]")
+    categ_id = fields.Many2one('crm.claim.category', string='Category', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], string='Priority')
+    type_action = fields.Selection([('correction', 'Corrective Action'), ('prevention', 'Preventive Action')], string='Action Type')
+    date_closed = fields.Datetime(string='Close Date', index=True, readonly=True)
+    date_deadline = fields.Date(string='Deadline', index=True, readonly=True)
+    delay_expected = fields.Float(string='Overpassed Deadline', digits=(16, 2), group_operator="avg", readonly=True)
+    email = fields.Integer(string='# Emails', readonly=True)
+    subject = fields.Char(string='Claim Subject', readonly=True)
 
     def init(self, cr):
-
         """ Display Number of cases And Team Name
         @param cr: the current row, from the database cursor,
          """
