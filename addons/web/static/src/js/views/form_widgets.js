@@ -888,6 +888,52 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
     }
 });
 
+/**
+    This widget is intended to display a warning near a label of a 'timezone' field
+    indicating if the browser timezone is identical (or not) to the selected timezone.
+    This widget depends on a field given with the param 'tz_offset_field', which contains
+    the time difference between UTC time and local time, in minutes.
+*/
+var TimezoneMismatch = FieldSelection.extend({
+    initialize_content: function(){
+        this._super.apply(this, arguments);
+        this.tz_offset_field = (this.options && this.options.tz_offset_field) || this.tz_offset_field || 'tz_offset';
+        this.set({"tz_offset": this.field_manager.get_field_value(this.tz_offset_field)});
+        this.on("change:tz_offset", this, this.render_value);
+    },
+    start: function(){
+        this._super.apply(this, arguments);
+        // trigger a render_value when tz_offset field change
+        this.field_manager.on("field_changed:" + this.tz_offset_field, this, function() {
+            this.set({"tz_offset": this.field_manager.get_field_value(this.tz_offset_field)});
+        });
+    },
+    check_timezone: function(){
+        var user_offset = this.get('tz_offset');
+        if (user_offset) {
+            var offset = -(new Date().getTimezoneOffset());
+            var browser_offset = (offset < 0) ? "-" : "+";
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+            return (browser_offset !== user_offset);
+        }
+        return false;
+    },
+    render_value: function(){
+        this._super.apply(this, arguments);
+        if(this.check_timezone()){
+            this.$label.find('.oe_tz_warning').remove();
+            var options = _.extend({
+                delay: { show: 501, hide: 0 },
+                title: _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Odoo is displayed according to your field timezone."),
+            });
+            this.$label.css('white-space', 'normal');
+            $(QWeb.render('WebClient.timezone_warning')).appendTo(this.$label);
+            this.$label.find('.oe_tz_warning').tooltip(options);
+        }
+    }
+});
+
 var FieldRadio = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     template: 'FieldRadio',
     events: {
@@ -1579,7 +1625,8 @@ core.form_widget_registry
     .add('monetary', FieldMonetary)
     .add('priority', Priority)
     .add('kanban_state_selection', KanbanSelection)
-    .add('statinfo', StatInfo);
+    .add('statinfo', StatInfo)
+    .add('timezone_mismatch', TimezoneMismatch);
 
 
 /**
