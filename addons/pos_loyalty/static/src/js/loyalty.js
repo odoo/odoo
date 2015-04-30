@@ -19,7 +19,6 @@ models.load_models([
         domain: function(self){ return [['id','=',self.config.loyalty_id[0]]]; },
         loaded: function(self,loyalties){ 
             self.loyalty = loyalties[0]; 
-            console.log('loyalty',self.loyalty);
         },
     },{
         model: 'loyalty.rule',
