@@ -55,6 +55,8 @@ exports.PosModel = Backbone.Model.extend({
         this.partners = [];
         this.cashier = null;
         this.cashregisters = [];
+        this.fiscal_position_tax = {};
+        this.fiscal_position = {};
         this.taxes = [];
         this.pos_session = null;
         this.config = null;
@@ -174,7 +176,7 @@ exports.PosModel = Backbone.Model.extend({
         }
     },{
         model:  'res.partner',
-        fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','barcode','write_date'],
+        fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','barcode','write_date','property_account_position'],
         domain: [['customer','=',true]], 
         loaded: function(self,partners){
             self.partners = partners;
@@ -357,7 +359,19 @@ exports.PosModel = Backbone.Model.extend({
             });
 
         },
-    },  {
+    },{
+        model:  'account.fiscal.position',
+        fields: ['country_id','auto_apply'],
+        loaded: function(self, fiscal_position){
+            self.fiscal_position = fiscal_position;
+        },
+    },{
+        model:  'account.fiscal.position.tax',
+        fields: ['position_id', 'tax_src_id', 'tax_dest_id'],
+        loaded: function(self, fiscal_position_tax){
+            self.fiscal_position_tax = fiscal_position_tax;
+        },
+     },  {
         label: 'fonts',
         loaded: function(){
             var fonts_loaded = new $.Deferred();
@@ -440,7 +454,6 @@ exports.PosModel = Backbone.Model.extend({
                     load_model(index+1);
                     return;
                 }
-
                 var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
                 var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
                 var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 
@@ -886,7 +899,7 @@ exports.Orderline = Backbone.Model.extend({
         this.discountStr = '0';
         this.type = 'unit';
         this.selected = false;
-        this.id       = orderline_id++; 
+        this.id       = orderline_id++;
     },
     init_from_JSON: function(json) {
         this.product = this.pos.db.get_product_by_id(json.product_id);
@@ -1084,11 +1097,23 @@ exports.Orderline = Backbone.Model.extend({
     get_tax: function(){
         return this.get_all_prices().tax;
     },
+    get_fiscal_tax: function(){
+        var product_tax = this.get_product().taxes_id.slice(0);
+        if(product_tax && this.order.fiscal_position_id){
+            var fiscal_tax = this.order.fiscal_tax;
+            for(var p = 0; p < product_tax.length; p++){
+                if(fiscal_tax.hasOwnProperty(product_tax[p])){
+                    product_tax[p] = fiscal_tax[product_tax[p]];
+                }
+            }
+        }
+        return product_tax;
+    },
     get_applicable_taxes: function(){
         var i;
         // Shenaningans because we need
         // to keep the taxes ordering.
-        var ptaxes_ids = this.get_product().taxes_id;
+        var ptaxes_ids = this.get_fiscal_tax();
         var ptaxes_set = {};
         for (i = 0; i < ptaxes_ids.length; i++) {
             ptaxes_set[ptaxes_ids[i]] = true;
@@ -1105,7 +1130,7 @@ exports.Orderline = Backbone.Model.extend({
         return this.get_all_prices().taxDetails;
     },
     get_taxes: function(){
-        var taxes_ids = this.get_product().taxes_id;
+        var taxes_ids = this.get_fiscal_tax();
         var taxes = [];
         for (var i = 0; i < taxes_ids.length; i++) {
             taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
@@ -1290,6 +1315,8 @@ exports.Order = Backbone.Model.extend({
         this.paymentlines   = new PaymentlineCollection(); 
         this.pos_session_id = this.pos.pos_session.id;
         this.finalized      = false; // if true, cannot be modified.
+        this.fiscal_position_id = false;
+        this.fiscal_tax = {};
 
         this.set({ client: null });
 
@@ -1379,6 +1406,7 @@ exports.Order = Backbone.Model.extend({
             user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
             uid: this.uid,
             sequence_number: this.sequence_number,
+            fiscal_position_id: this.fiscal_position_id,
         };
     },
     export_for_printing: function(){
@@ -1809,10 +1837,39 @@ exports.Order = Backbone.Model.extend({
     is_to_invoice: function(){
         return this.to_invoice;
     },
+    get_fiscal_tax: function(fiscal_id){
+        var fposition_tax = this.pos.fiscal_position_tax;
+        var fiscal_tax = {};
+        if(fiscal_id){
+            for(var f = 0; f < fposition_tax.length; f++ ){
+                if(fposition_tax[f].position_id[0] == fiscal_id){
+                    fiscal_tax[fposition_tax[f].tax_src_id[0]] = fposition_tax[f].tax_dest_id[0];
+                }
+            }
+        }
+        return fiscal_tax;
+    },
+    get_fiscal_position_id: function(client){
+        var fposition = this.pos.fiscal_position;
+        if(client){
+            if(client.property_account_position[0]){
+                return client.property_account_position[0]
+            } else if (client.country_id){
+                for(var f = 0; f < fposition.length; f++){
+                    if(fposition[f].auto_apply == true && fposition[f].country_id[0] == client.country_id[0] ){
+                        return fposition[f].id;
+                    }
+                }
+            }
+        }
+        return false;
+    },
     /* ---- Client / Customer --- */
     // the client related to the current order.
     set_client: function(client){
         this.assert_editable();
+        this.fiscal_position_id = this.get_fiscal_position_id(client);
+        this.fiscal_tax = this.get_fiscal_tax(this.fiscal_position_id);
         this.set('client',client);
     },
     get_client: function(){
