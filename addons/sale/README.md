@@ -33,7 +33,7 @@ Your Address Book
 
 So many features, so easy to use.
 
-Load customer data from LinkedIn, assign tags to your prospects, manage
+Assign tags to your prospects, manage
 relationships between contacts and store all customer's preferences including
 pricing, billing conditions, addresses, payment terms, etc.
 
