@@ -102,8 +102,14 @@
 
     <t t-name="ActionpadWidget">
         <div class="actionpad">
-            <button class='button set-customer'>
-                <i class='fa fa-user' /> Customer
+            <button t-attf-class='button set-customer #{ ( widget.pos.get_client() and widget.pos.get_client().name.length > 10) ? "decentered" : "" }' >
+                <i class='fa fa-user' /> 
+                <t t-if="widget.pos.get_client()">
+                    <t t-esc="widget.pos.get_client().name" />
+                </t>
+                <t t-if="!widget.pos.get_client()">
+                    Customer
+                </t>
             </button>
             <button class='button pay'>
                 <div class='pay-circle'>
@@ -595,7 +601,15 @@
 
                     <div class='payment-buttons'>
                         <div class='button js_set_customer'>
-                            <i class='fa fa-user' />Customer
+                            <i class='fa fa-user' /> 
+                            <span class='js_customer_name'> 
+                                <t t-if="widget.pos.get_client()">
+                                    <t t-esc="widget.pos.get_client().name" />
+                                </t>
+                                <t t-if="!widget.pos.get_client()">
+                                    Customer
+                                </t>
+                            </span>
                         </div>
                         <t t-if='widget.pos.config.iface_invoicing'>
                             <t t-if='widget.pos.get_order()'>
@@ -1204,10 +1218,7 @@
                             <span class='order-sequence'>
                                 <t t-esc='order.sequence_number' />
                             </span>
-                            <t t-if="order.get_client()">
-                                <i class='fa fa-user'/>
-                            </t>
-                            <t t-esc="(order.get_client() ? order.get_client_name()+' : ':'') + moment(order.creation_date).format('hh:mm')"/>
+                            <t t-esc="moment(order.creation_date).format('hh:mm')"/>
                         </span>
                     </t>
                     <t t-if='order !== widget.pos.get_order()'>

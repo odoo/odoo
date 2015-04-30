@@ -622,6 +622,7 @@ td {
     border-bottom-left-radius: 4px;
 }
 .pos .actionpad .button {
+    position: relative;
     display: block;
     height: 54px;
     width: 100%;
@@ -669,6 +670,26 @@ td {
     position: relative;
     top: -1px;
     left: 3px;
+}
+
+.pos .actionpad .button.set-customer{
+    padding-left: 40px;
+    padding-right: 40px;
+}
+.pos .actionpad .button.set-customer.decentered {
+    padding-left: 40px;
+    padding-right: 5px;
+}
+.pos .actionpad .button .fa-user {
+    position: absolute;
+    left: 13px;
+    top: 13px;
+    margin-right: 8px;
+    font-size: 18px;
+    background: rgba(255, 255, 255, 0.5);
+    line-height: 30px;
+    width: 30px;
+    border-radius: 100%;
 }
 
 /*  ********* The Numpad ********* */

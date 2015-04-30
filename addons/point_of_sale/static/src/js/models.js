@@ -69,11 +69,20 @@ exports.PosModel = Backbone.Model.extend({
             'synch':            { state:'connected', pending:0 }, 
             'orders':           new OrderCollection(),
             'selectedOrder':    null,
+            'selectedClient':   null,
         });
 
         this.get('orders').bind('remove', function(order,_unused_,options){ 
             self.on_removed_order(order,options.index,options.reason); 
         });
+
+        // Forward the 'client' attribute on the selected order to 'selectedClient'
+        function update_client() {
+            var order = self.get_order();
+            this.set('selectedClient', order ? order.get_client() : null );
+        }
+        this.get('orders').bind('add remove change', update_client, this);
+        this.bind('change:selectedOrder', update_client, this);
 
         // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
         // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
@@ -586,6 +595,14 @@ exports.PosModel = Backbone.Model.extend({
     // return the current order
     get_order: function(){
         return this.get('selectedOrder');
+    },
+
+    get_client: function() {
+        var order = this.get_order();
+        if (order) {
+            return order.get_client();
+        }
+        return null;
     },
 
     // change the current order

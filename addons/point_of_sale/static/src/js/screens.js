@@ -381,6 +381,14 @@ var NumpadWidget = PosBaseWidget.extend({
 
 var ActionpadWidget = PosBaseWidget.extend({
     template: 'ActionpadWidget',
+    init: function(parent, options) {
+        var self = this;
+        this._super(parent, options);
+
+        this.pos.bind('change:selectedClient', function() {
+            self.renderElement();
+        });
+    },
     renderElement: function() {
         var self = this;
         this._super();
@@ -1506,6 +1514,11 @@ var PaymentScreenWidget = ScreenWidget.extend({
             self.payment_input(key);
             event.preventDefault();
         };
+
+        this.pos.bind('change:selectedClient', function() {
+            console.log('Customer changed');
+            self.customer_changed();
+        }, this);
     },
     // resets the current input buffer
     reset_input: function(){
@@ -1659,6 +1672,10 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 self.render_paymentlines();
             }
         });
+    },
+    customer_changed: function() {
+        var client = this.pos.get_client();
+        this.$('.js_customer_name').text( client ? client.name : _t('Customer') ); 
     },
     click_set_customer: function(){
         this.gui.show_screen('clientlist');
