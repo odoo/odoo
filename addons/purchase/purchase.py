@@ -1578,6 +1578,8 @@ class product_template(osv.Model):
     def action_view_purchases(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'purchase.action_purchase_line_product_tree', context=context)
+        form_view = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'purchase.purchase_order_line_form2')
+        result['views'][1] = (form_view, 'form')
         result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
         return result
 
@@ -1596,6 +1598,8 @@ class product_product(osv.Model):
         if isinstance(ids, (int, long)):
             ids = [ids]
         result = self.pool['product.template']._get_act_window_dict(cr, uid, 'purchase.action_purchase_line_product_tree', context=context)
+        form_view = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'purchase.purchase_order_line_form2')
+        result['views'][1] = (form_view, 'form')
         result['domain'] = "[('product_id','in',[" + ','.join(map(str, ids)) + "])]"
         return result
 
