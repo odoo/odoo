@@ -4,15 +4,14 @@ odoo.define('web.DataExport', function (require) {
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
-var Dialog = require('web.Dialog');
+var Widget = require('web.Widget');
 var framework = require('web.framework');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
-var DataExport = Dialog.extend({
+var DataExport = Widget.extend({
     template: 'ExportTreeView',
-    dialog_title: {toString: function () { return _t("Export Data"); }},
     events: {
         'click #add_field': function () {
             var self = this;
@@ -23,67 +22,90 @@ var DataExport = Dialog.extend({
                     var string = $(this).attr('string');
                     self.add_field(id, string);
                 });
+            self.show_buttons();
         },
         'click #remove_field': function () {
             this.$('#fields_list option:selected').remove();
+            if (!(this.$('#fields_list option').val())) {
+                this.hide_buttons();
+            }
         },
         'click #remove_all_field': function () {
             this.$('#fields_list').empty();
+            this.hide_buttons();
         },
-        'click #export_new_list': 'on_show_save_list',
+        'click .oe_export_file':'on_click_export_data',
+        'click #oe_export_cancel': 'exit',
         'click #move_up':'on_click_move_up',
         'click #move_down':'on_click_move_down',
+        'click #add_export_list': 'on_save_export_list',
     },
-    init: function(parent, dataset) {
+    init: function(parent, action) {
         var self = this;
-        var options = {
-            buttons: [
-                {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
-                {text: _t("Export To File"), click: function () { self.on_click_export_data(); }}
-            ],
-            close: function () { self.close();}
-        };
-        this._super(parent, options);
+        this._super(parent);
         this.records = {};
-        this.dataset = dataset;
+        this.action = action;
+        this.domain = action.params.domain;
+        this.model_name = action.params.view;
+        this.ascending = true;
+        this.selected_ids = action.params.selected_ids;
         this.exports = new data.DataSetSearch(
-            this, 'ir.exports', this.dataset.get_context());
+            this, 'ir.exports', this.action.params.context);
     },
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
+        var export_fields = this.$("#fields_list option").map(function() {
+            return $(this).val();
+        }).get();
 
+        var domain = this.action.params.domain;
         var got_fields = new $.Deferred();
-        this.$el.find('#import_compat').change(function() {
-            self.$el.find('#fields_list').empty();
+        if (!export_fields.length) {
+            self.hide_buttons();
+        }
+        this.show_exports_list()
+        this.$el.find("#import_compat").on('change',function(){
             self.$el.find('#field-tree-structure').remove();
-            var import_comp = self.$el.find("#import_compat").val();
+            var import_comp = "";
+            if($(this).is(":checked")){
+                import_comp = self.$el.find("#import_compat").prop("checked");
+            }
             self.rpc("/web/export/get_fields", {
-                model: self.dataset.model,
+                model: self.action.params.model,
                 import_compat: !!import_comp,
             }).done(function (records) {
                 got_fields.resolve();
                 self.on_show_data(records);
             });
-        }).change();
-
-        var got_domain = this.getParent().get_active_domain().then(function (domain) {
+        });
+        this.$el.find("#import_compat").trigger('change');
+        var got_domain = $.when(domain).then(function (domain) {
             if (domain === undefined) {
-                self.ids_to_export = self.getParent().get_selected_ids();
-                self.domain = self.dataset.domain;
-            }
-            else {
+                self.ids_to_export = self.selected_ids;
+                self.domain = self.action.params.domain;
+            }else {
                 self.ids_to_export = false;
                 self.domain = domain;
             }
-            self.on_show_domain();
         });
 
         return $.when(
             got_fields,
             got_domain,
-            this.rpc('/web/export/formats', {}).done(this.do_setup_export_formats),
-            this.show_exports_list());
+            this.rpc('/web/export/formats', {})
+            .done(function (formats){
+                self.$el.find('#export_format').append(QWeb.render('Export.Formats', {'formats': formats}))
+                self.$el.find('#export_format input:first').attr("checked","checked");
+            }));
+    },
+    show_buttons: function () {
+        this.$el.find(".oe_export_file").removeAttr("disabled");
+        this.$el.find(".oe_button_unable").removeAttr("disabled");
+    },
+    hide_buttons: function () {
+        this.$el.find(".oe_export_file").attr("disabled", "disabled");
+        this.$el.find(".oe_button_unable").attr("disabled","disabled")
     },
     on_click_move_up: function () {
         var prev_row = this.$('#fields_list option:selected').first().prev();
@@ -99,18 +121,10 @@ var DataExport = Dialog.extend({
             next_row.after(selected_rows);
         }
     },
-    do_setup_export_formats: function (formats) {
-        var $fmts = this.$el.find('#export_format');
-        _(formats).each(function (format) {
-            var opt = new Option(format.label, format.tag);
-            if (format.error) {
-                opt.disabled = true;
-                opt.replaceChild(
-                    document.createTextNode(
-                        _.str.sprintf("%s — %s", format.label, format.error)),
-                    opt.childNodes[0]);
-            }
-            $fmts.append(opt);
+    exit: function () {
+        this.do_action({
+            type: 'ir.actions.client',
+            tag: 'history_back'
         });
     },
     show_exports_list: function() {
@@ -120,17 +134,20 @@ var DataExport = Dialog.extend({
             return $.when();
         }
         return this.exports.read_slice(['name'], {
-            domain: [['resource', '=', this.dataset.model]]
+            domain: [['resource', '=', this.action.params.model]]
         }).done(function (export_list) {
-            if (!export_list.length) {
-                return;
-            }
             self.$el.find('#ExistsExportList').append(QWeb.render('Exists.ExportList', {'existing_exports': export_list}));
             self.$el.find('#saved_export_list').change(function() {
                 self.$el.find('#fields_list option').remove();
                 var export_id = self.$el.find('#saved_export_list option:selected').val();
                 if (export_id) {
-                    self.rpc('/web/export/namelist', {'model': self.dataset.model, export_id: parseInt(export_id, 10)}).done(self.do_load_export_field);
+                    self.$el.find("#delete_export_list").show();
+                    self.rpc('/web/export/namelist', {
+                        'model': self.action.params.model, export_id: parseInt(export_id, 10)
+                    }).done(self.do_load_export_field);
+                }else {
+                    self.$el.find('#delete_export_list').hide();
+                    self.hide_buttons();
                 }
             });
             self.$el.find('#delete_export_list').click(function() {
@@ -138,11 +155,13 @@ var DataExport = Dialog.extend({
                 if (select_exp.val()) {
                     self.exports.unlink([parseInt(select_exp.val(), 10)]);
                     select_exp.remove();
-                    self.$el.find("#fields_list option").remove();
-                    if (self.$el.find('#saved_export_list option').length <= 1) {
+                    if (self.$el.find('#saved_export_list option').length == 1) {
                         self.$el.find('#ExistsExportList').hide();
                     }
                 }
+                self.hide_buttons();
+                self.$el.find('#fields_list option').remove();
+                self.$el.find('#delete_export_list').hide();
             });
         });
     },
@@ -151,28 +170,18 @@ var DataExport = Dialog.extend({
         _(field_list).each(function (field) {
             export_node.append(new Option(field.label, field.name));
         });
+        this.show_buttons();
     },
-    on_show_save_list: function() {
+    on_save_export_list: function() {
         var self = this;
         var current_node = self.$el.find("#savenewlist");
-        if (!(current_node.find("label")).length) {
-            current_node.append(QWeb.render('ExportNewList'));
-            current_node.find("#add_export_list").click(function() {
-                var value = current_node.find("#savelist_name").val();
-                if (value) {
-                    self.do_save_export_list(value);
-                } else {
-                    alert(_t("Please enter save field list name"));
-                }
-            });
+        var value = self.$el.find("#savelist_name").val();
+        if (value) {
+            self.do_save_export_list(value);
         } else {
-            if (current_node.is(':hidden')) {
-                current_node.show();
-                current_node.find("#savelist_name").val("");
-            } else {
-               current_node.hide();
-            }
+            alert(_t("Please enter save field list name"));
         }
+            current_node.find('#savelist_name').val("");
     },
     do_save_export_list: function(value) {
         var self = this;
@@ -182,20 +191,16 @@ var DataExport = Dialog.extend({
         }
         this.exports.create({
             name: value,
-            resource: this.dataset.model,
+            resource: this.action.params.model,
             export_fields: _(fields).map(function (field) {
                 return [0, 0, {name: field}];
             })
         }).then(function (export_list_id) {
-            if (!export_list_id) {
-                return;
-            }
             if (!self.$el.find("#saved_export_list").length || self.$el.find("#saved_export_list").is(":hidden")) {
                 self.show_exports_list();
             }
             self.$el.find("#saved_export_list").append( new Option(value, export_list_id) );
         });
-        this.on_show_save_list();
     },
     on_click: function(id, record) {
         var self = this;
@@ -211,7 +216,7 @@ var DataExport = Dialog.extend({
         }
 
         if (!record.loaded) {
-            var import_comp = self.$el.find("#import_compat").val();
+            var import_comp = self.$el.find("#import_compat").prop("checked");
             self.rpc("/web/export/get_fields", {
                 model: model,
                 prefix: prefix,
@@ -226,9 +231,6 @@ var DataExport = Dialog.extend({
         } else {
             self.showcontent(record.id);
         }
-    },
-    on_show_domain: function() {
-        this.$el.find('tr').first().find('td').append(QWeb.render('ExportTreeView-Domain', {'record': this}));
     },
     on_show_data: function(result, after) {
         var self = this;
@@ -392,6 +394,7 @@ var DataExport = Dialog.extend({
                 && !this.$el.find("#fields_list option[value='" + field_id + "']").length) {
             field_list.append(new Option(string, field_id));
         }
+        this.show_buttons();
     },
     get_fields: function() {
         var export_fields = this.$("#fields_list option").map(function() {
@@ -416,27 +419,24 @@ var DataExport = Dialog.extend({
         }
         exported_fields.unshift({name: 'id', label: 'External ID'});
 
-        var export_format = this.$el.find("#export_format").val();
+        var export_format = this.$el.find("input:radio[name=formats]:checked").val();
 
         framework.blockUI();
         this.session.get_file({
             url: '/web/export/' + export_format,
             data: {data: JSON.stringify({
-                model: this.dataset.model,
+                model: this.action.params.model,
                 fields: exported_fields,
                 ids: this.ids_to_export,
                 domain: this.domain,
-                context: this.dataset.context,
-                import_compat: !!this.$el.find("#import_compat").val(),
+                context: this.action.context,
+                import_compat: !!this.$el.find("#import_compat").prop("checked"),
             })},
             complete: framework.unblockUI,
             error: crash_manager.rpc_error.bind(crash_manager),
         });
     },
-    close: function() {
-        this._super();
-    }
 });
 
-return DataExport;
+core.action_registry.add('export', DataExport);
 });
