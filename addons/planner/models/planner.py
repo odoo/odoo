@@ -45,6 +45,8 @@ class Planner(models.Model):
         """ prepare the backend url to the given action, or to the given module view. """
         action = self.env.ref(action_xml_id, False)
         url = "/web#view_type=%s&action=%s" % (view_type, action and action.id or '')
+        if not action:
+            url += "&model=ir.module.module"
         if module_name:
             module = self.env['ir.module.module'].search([('name', '=', module_name)], limit=1)
             if module:
