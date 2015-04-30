@@ -78,8 +78,7 @@ class payroll_advice(osv.osv):
         'date': lambda * a: time.strftime('%Y-%m-%d'),
         'state': lambda * a: 'draft',
         'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+                self.pool.get('res.company')._company_default_get(cr, uid, 'hr.payroll.advice', context=context),
         'note': "Please make the payroll transfer from above account number to the below mentioned account numbers towards employee salaries:"
     }
 

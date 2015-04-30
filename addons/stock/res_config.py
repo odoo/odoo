@@ -119,10 +119,6 @@ This installs the module product_expiry."""),
             return {'value': {'group_stock_multiple_locations': True}}
         return {}
 
-    def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.company_id.id
-
     def get_default_dp(self, cr, uid, fields, context=None):
         dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
         return {'decimal_precision': dp.digits}
@@ -133,5 +129,5 @@ This installs the module product_expiry."""),
         dp.write({'digits': config.decimal_precision})
 
     _defaults = {
-        'company_id': _default_company,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.config.settings', context=c),
     }

@@ -104,7 +104,7 @@ class sale_order(osv.osv):
         return result.keys()
 
     def _get_default_company(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=context)
         if not company_id:
             raise UserError(_('There is no default company for the current user!'))
         return company_id

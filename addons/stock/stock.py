@@ -3019,7 +3019,7 @@ class stock_warehouse(osv.osv):
                     self.write(cr, uid, [warehouse.id], {'route_ids': [(4, inter_wh_route_id)]}, context=context)
 
     _defaults = {
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse', context=c),
         'reception_steps': 'one_step',
         'delivery_steps': 'ship_only',
     }

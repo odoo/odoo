@@ -40,7 +40,7 @@ class payment_mode(osv.osv):
 
     }
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'payment.mode', context=c)
     }
 
     def suitable_bank_types(self, cr, uid, payment_code=None, context=None):

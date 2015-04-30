@@ -170,8 +170,7 @@ class pos_config(osv.osv):
         return False
 
     def _get_default_company(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        print company_id
+        company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'pos.config', context=context)
         return company_id
 
     def _get_default_nomenclature(self, cr, uid, context=None):
@@ -765,7 +764,7 @@ class pos_order(osv.osv):
         'nb_print': 0,
         'sequence_number': 1,
         'session_id': _default_session,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'pos.order', context=c),
         'pricelist_id': _default_pricelist,
     }
 
@@ -1376,7 +1375,7 @@ class pos_order_line(osv.osv):
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'pos.order.line'),
         'qty': lambda *a: 1,
         'discount': lambda *a: 0.0,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'pos.order.line', context=c),
     }
 
 class ean_wizard(osv.osv_memory):
