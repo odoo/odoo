@@ -2150,6 +2150,10 @@ instance.web.search.ExtendedSearchProposition.Float = instance.web.search.Extend
         {value: "∃", text: _lt("is set")},
         {value: "∄", text: _lt("is not set")}
     ],
+    init: function (parent) {
+        this._super(parent);
+        this.decimal_point = instance.web._t.database.parameters.decimal_point;
+    },
     toString: function () {
         return this.$el.val();
     },
