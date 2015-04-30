@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.addons.base_action_rule.base_action_rule import get_datetime
+from openerp.fields import Datetime
 from openerp.osv import fields, osv
 
 
@@ -43,7 +43,7 @@ class base_action_rule(osv.Model):
             if user.employee_ids and user.employee_ids[0].contract_id \
                     and user.employee_ids[0].contract_id.working_hours:
                 calendar = user.employee_ids[0].contract_id.working_hours
-                start_dt = get_datetime(record_dt)
+                start_dt = Datetime.from_string(record_dt)
                 resource_id = user.employee_ids[0].resource_id.id
                 action_dt = self.pool['resource.calendar'].schedule_days_get_date(
                     cr, uid, calendar.id, action.trg_date_range,
