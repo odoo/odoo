@@ -332,6 +332,11 @@ function assert (bool) {
     }
 }
 
+/* Logical XOR */
+function xor (a, b) {
+    return (a && !b) || (!a && b);
+}
+
 var DropMisordered = Class.extend({
     /**
      * @constructs instance.web.DropMisordered
@@ -393,6 +398,7 @@ return {
     round_decimals: round_decimals,
     float_is_zero: float_is_zero,
     assert: assert,
+    xor: xor,
     DropMisordered: DropMisordered,
 };
 
