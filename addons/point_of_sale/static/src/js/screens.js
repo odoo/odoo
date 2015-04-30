@@ -1516,7 +1516,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
         };
 
         this.pos.bind('change:selectedClient', function() {
-            console.log('Customer changed');
             self.customer_changed();
         }, this);
     },
