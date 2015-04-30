@@ -55,7 +55,7 @@ class report_rappel(report_sxw.rml_parse):
                             ('reconcile_id', '=', False),
                             ('state', '!=', 'draft'),
                             ('company_id', '=', company_id),
-                            ('date_maturity', '<=', fields.date.context_today(self,self.cr,self.uid)),
+                            '|', ('date_maturity', '=', False), ('date_maturity', '<=', fields.date.context_today(self, self.cr, self.uid)),
                         ])
 
         # lines_per_currency = {currency: [line data, ...], ...}
