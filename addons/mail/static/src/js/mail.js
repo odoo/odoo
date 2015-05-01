@@ -4,6 +4,7 @@ odoo.define('mail.mail', function (require) {
 var mail_utils = require('mail.utils');
 var core = require('web.core');
 var data = require('web.data');
+var Model = require('web.Model');
 var form_common = require('web.form_common');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
@@ -232,6 +233,184 @@ var MessageCommon = Widget.extend({
 
 /**
  * ------------------------------------------------------------
+ * Mention widget
+ * ------------------------------------------------------------
+ *
+ * This widget handles @ mention functionality.
+ * Open dropdown when user mention partner with @
+ * Dropdown open with highlight string
+ * Start search if word have minimum length is 3
+ * Wait for at least 1 second without typing any new letter
+ * Maximum 8 partner in dropdown list
+ */
+var Mention = Widget.extend({
+    template: 'mail.mention',
+    init: function(parent) {
+        this._super.apply(this, arguments);
+        this.textarea = parent.$el.find(".field_text");
+        this.start_index = 0;
+        this.mention_ids = {};
+        this.keyup_list = [40, 38, 13, 37, 39, 35, 33, 34, 27];
+        this.cache = [];
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.bind_events();
+        this.jquery_fn();
+    },
+    bind_events: function() {
+        var self = this;
+        this.$el.on('mouseover', 'li', function(e){
+            self.$el.find("li").removeClass("active");
+            self.$el.find(e.currentTarget).addClass("active");
+        });
+        this.textarea.on('keyup', this.proxy('keyup'));
+        this.textarea.on('keydown', this.proxy('keydown'));
+        this.textarea.on('click', function(){ self.$el.empty(); });
+        this.$el.on('click', 'li', function(e) {
+            self.set_text(self.$el.find(e.currentTarget));
+        });
+    },
+    keydown: function(e) {
+        var $active = this.$el.find("li.active");
+        if(!$active.length) return true;
+        switch(e.which) {
+            case 40:
+                $active.next().trigger("mouseover");
+                return false;
+            case 38:
+                $active.prev().trigger("mouseover");
+                return false;
+            case 13:
+                this.set_text($active);
+                return false;
+        }
+        this.$el.empty();
+        return true;
+    },
+    keyup: function(e) {
+        var self = this;
+        clearTimeout(this.timer);
+        if(_.contains(this.keyup_list, e.which)) { return; }
+        var index = this.textarea.getCursorPosition();
+        var left = this.textarea.val().substring(0, index);
+        var last_ind = left.lastIndexOf("@");
+        var left_str = left.substring(last_ind, index);
+        if(left_str.split(" ").length > 1 || // Word not have space
+            left_str.split("\n").length > 1 || // Word not have new line
+            left_str.length < 4 || // Word length must greater than 3
+            left.charCodeAt(last_ind - 1) != 10 && // @ mention start at new line
+            (last_ind != 0 && left.charAt(last_ind - 1) != " ")) return; // @ mention work if there is before space
+        this.search_str = left_str.slice(1);
+        if(this.search_str) {
+            this.timer = setTimeout(function() {
+                self.start_index = index - self.search_str.length - 1;
+                if(self.cache[self.search_str]) {
+                    self.render(self.cache[self.search_str]);
+                    return;
+                }
+                new Model("res.partner").call("search_read", {
+                    domain: ['|', ['name', 'ilike', self.search_str], ['email', 'ilike', self.search_str]],
+                    fields: ['name', 'email'],
+                    limit: 8
+                }).then(function(res) {
+                    if(res.length) {
+                        self.cache[self.search_str] = res;
+                        self.render(res);
+                    }
+                });
+            }, 1000);
+        }
+    },
+    render: function(res) {
+        var $render = $(qweb.render('mail.mention', {'widget': _.extend(this, {"result": res})}));
+        this.$el.html($render.find("ul")).find("li:first").addClass("active");
+    },
+    highlight: function(detail, find) {
+        if(detail)
+            return detail.replace(new RegExp(find, "i"), _.str.sprintf("<b><u>%s</u></b>", detail.match(new RegExp(find, "i"))));
+    },
+    set_text: function(el) {
+        var self = this;
+        var new_index = this.textarea.getCursorPosition();
+        var value = this.textarea.val();
+        var id = parseInt(el.find("span").attr("id"));
+        var name = el.find("span").text();
+        var email = el.find("i").text();
+        var text = el.text().trim();
+
+        // Open popup if selected partner have no email address
+        var deferred = $.Deferred();
+        if(!email) {
+            var pop = new form_common.FormOpenPopup(this);
+            pop.show_element(
+                'res.partner',
+                id,
+                {
+                    'force_email': true,
+                    'ref': "compound_context",
+                    'default_name': name
+                },
+                {
+                    title: _t("Please complete partner's informations"),
+                    write_function: function(id, data, options) {
+                        if(data.name)
+                            name = data.name;
+                        text = name + " (" + data.email + ")";
+                        self.cache = [];
+                        deferred.resolve();
+                        return this._super(id, data, options);
+                    },
+                }
+            );
+            pop.on('closed', self, function() {
+                self.textarea.focus();
+            });
+        } else {
+            deferred.resolve();
+        }
+
+        $.when(deferred).done(function() {
+            if(self.mention_ids.hasOwnProperty(name)) {
+                if(self.mention_ids[name]["id"] != id) {
+                    self.mention_ids[text] = {"id": id, "name": name, "text": text};
+                    name = text;
+                }
+            } else {
+                self.mention_ids[name] = {"id": id, "name": name, "text": text};
+            }
+            self.textarea.val(value.substring(0, self.start_index) + "@" + name + (value.charAt(new_index) == " " ? "" : " ") + value.substring(new_index, value.length));                
+            self.textarea.setCursorPosition(self.start_index + name.length + 2);
+            self.start_index = 0;
+            self.$el.empty();
+        });
+    },
+    jquery_fn: function() {
+        $.fn.getCursorPosition = function() {
+            var el = $(this).get(0);
+            if(!el) return 0;
+            if('selectionStart' in el) {
+                return el.selectionStart;
+            } else if('selection' in document) {
+                var cr = document.selection.createRange();
+                return cr.moveStart('character', -el.focus().value.length).text.length - cr.text.length;
+            }
+            return 0;
+        };
+        $.fn.setCursorPosition = function(pos) {
+          this.each(function(index, elem) {
+            if (elem.setSelectionRange)
+              elem.setSelectionRange(pos, pos);
+            else if (elem.createTextRange)
+              elem.createTextRange().collapse(true).moveEnd('character', pos).moveStart('character', pos).select();
+          });
+          return this;
+        };
+    }
+});
+
+/**
+ * ------------------------------------------------------------
  * ComposeMessage widget
  * ------------------------------------------------------------
  * 
@@ -283,12 +462,17 @@ var ThreadComposeMessage = MessageCommon.extend({
     start: function () {
         this._super.apply(this, arguments);
 
+        var self = this;
         this.ds_attachment = new data.DataSetSearch(this, 'ir.attachment');
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
         $(window).on(this.fileupload_id, this.on_attachment_loaded);
 
         this.display_attachments();
         this.bind_events();
+        // Store result: current user is from employee group ? (For Mention widget)
+        new Model('res.users').call('has_group', ['base.group_user']).done(function(is_employee) {
+            self.is_employee = is_employee;
+        });
     },
 
     /* when a user click on the upload button, send file read on_attachment_loaded
@@ -452,6 +636,12 @@ var ThreadComposeMessage = MessageCommon.extend({
         this.$el.remove();
         this.$el = $render;
 
+        // Initialize mail.Mention widget if current user is from employee group and it's not log
+        if(this.is_employee && !this.is_log) {
+            this.mail_mention = new Mention(this);
+            this.mail_mention.insertAfter(this.$el.find(".field_text"));
+        }
+
         this.display_attachments();
         this.bind_events();
     },
@@ -557,6 +747,20 @@ var ThreadComposeMessage = MessageCommon.extend({
 
     on_message_post: function () {
         var self = this;
+        var textarea = self.$('textarea');
+        this.html_body = mail_utils.get_text2html(textarea.val());
+        var body = this.html_body;
+        var esc_special_char = /[-[\]{}()*+?.,\\^$|#\s]/g;
+        this.mention_ids = this.mail_mention ? this.mail_mention.mention_ids : [];
+        _.each(_.chain(this.mention_ids).keys().sortBy(function(k){ return -k.length; }).value(), function(key) {
+            var dict = self.mention_ids[key], word = _.str.sprintf("@%s ", key);
+            var reg_exp = new RegExp(word.replace(esc_special_char, "\\$&"), 'g');
+            if(body.indexOf(word) == -1) delete self.mention_ids[key];
+            // Add class 'oe_mail_action_author' and attribute data-partner in link to create breadcrumb.
+            // Check on_record_author_clicked method of mail.ThreadMessage widget
+            body = body.replace(reg_exp, _.str.sprintf("<a href='#model=res.partner&id=%s' class='oe_mail_action_author' data-partner='%s'>%s</a> ", dict.id, dict.id, dict.name));
+        });
+        textarea.data("body", body);
         if (self.flag_post) {
             return;
         }
@@ -577,17 +781,18 @@ var ThreadComposeMessage = MessageCommon.extend({
     do_send_message_post: function (partner_ids, log) {
         var self = this;
         var values = {
-            'body': this.$('textarea').val(),
+            'body': this.$('textarea').data("body"),
             'subject': false,
             'parent_id': this.context.default_parent_id,
             'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
-            'partner_ids': partner_ids,
+            'partner_ids': _.uniq(partner_ids.concat(_.pluck(this.mention_ids, "id"))),
             'context': _.extend(this.parent_thread.context, {
                 'mail_post_autofollow': true,
                 'mail_post_autofollow_partner_ids': partner_ids,
+                'mail_body': _.keys(this.mention_ids).length ? this.html_body : false,
             }),
             'type': 'comment',
-            'content_subtype': 'plaintext',
+            'content_subtype': 'html',
         };
         if (log) {
             values.subtype = false;

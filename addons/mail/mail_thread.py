@@ -1646,7 +1646,7 @@ class mail_thread(osv.AbstractModel):
         # automatically subscribe recipients if asked to
         if context.get('mail_post_autofollow') and thread_id and partner_ids:
             partner_to_subscribe = partner_ids
-            if context.get('mail_post_autofollow_partner_ids'):
+            if context.get('mail_post_autofollow_partner_ids') or context.get('mail_body'):
                 partner_to_subscribe = filter(lambda item: item in context.get('mail_post_autofollow_partner_ids'), partner_ids)
             self.message_subscribe(cr, uid, [thread_id], list(partner_to_subscribe), context=context)
 
