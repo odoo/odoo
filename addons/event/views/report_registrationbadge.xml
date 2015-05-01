@@ -9,7 +9,10 @@
                         <div class="col-xs-6 text-center" style="padding-right:7mm; border-right:1px dashed black; height: 147mm; padding-top: 7mm">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <span t-if="o.event_id.organizer_id.company_id.logo_web and o.event_id.organizer_id.is_company">
+                                    <t t-if="o.event_id.event_logo">
+                                        <div t-field="o.event_id.event_logo"/>
+                                    </t>
+                                    <span t-if="not o.event_id.event_logo and o.event_id.organizer_id.company_id.logo_web and o.event_id.organizer_id.is_company">
                                         <img t-att-src="'data:image/png;base64,%s' % o.event_id.organizer_id.company_id.logo_web" style="max-height:1cm; max-width:4cm;"/>
                                     </span>
                                     <h4 t-field="o.event_id.name"/>
@@ -18,17 +21,21 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12 text-center">
-                                    <small><h3 t-if="o.partner_id.is_company == True" t-field="o.partner_id.name"/><h5 t-field="o.name"/></small>
+                                    <small><h3 t-if="o.partner_id" t-field="o.partner_id.name"/><h5 t-field="o.name"/></small>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-12 mt32 text-center" style="background: lightgrey;">
+                                <div class="col-xs-12 mt32 text-center" style="background: lightgrey; height: 65px;">
                                     <h3>FREE TICKET</h3>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div t-field="o.event_id.badge_front"></div>
                             </div>
                         </div>
                         <!-- Inner right -->
                         <div class="col-xs-6 text-center" style="padding-left:7mm; height: 149mm; padding-top: 2mm;">
+                            <div t-field="o.event_id.badge_back"></div>
                         </div>
                     </div>
                 </div>

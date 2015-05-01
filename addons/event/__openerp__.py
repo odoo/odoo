@@ -28,9 +28,9 @@ Key Features
         'event_data.xml',
         'event_tip_data.xml',
         'res_config_view.xml',
-        'email_template.xml',
         'views/event.xml',
         'event_report.xml',
+        'email_template.xml',
         'views/report_registrationbadge.xml',
     ],
     'demo': [

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <report id="action_report_design_registration_badge" model="event.event" 
+        string="Badge" report_type="qweb-html"
+        name="website_event.report_design_registration_badge"
+        file="website_event.report_design_registration_badge"
+        menu="False"/>
+    <record model="ir.actions.report.xml" id="website_event.action_report_design_registration_badge">
+        <field name="paperformat_id" ref="event.paperformat_euro_lowmargin"/>
+    </record>
+
+    </data>
+</openerp>
