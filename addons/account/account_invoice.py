@@ -1536,8 +1536,10 @@ class account_invoice_line(osv.osv):
         result['name'] = res.partner_ref
 
         result['uos_id'] = uom_id or res.uom_id.id
-        if res.description:
-            result['name'] += '\n'+res.description
+        if res.description_sale and type and type.startswith('out_'):
+            result['name'] += '\n'+res.description_sale
+        if res.description_purchase and type and type.startswith('in_'):
+            result['name'] += '\n'+res.description_purchase
 
         domain = {'uos_id':[('category_id','=',res.uom_id.category_id.id)]}
 
