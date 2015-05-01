@@ -169,6 +169,11 @@ class mrp_bom(osv.osv):
     _description = 'Bill of Material'
     _inherit = ['mail.thread']
 
+    def _get_bom_ids(self, cr, uid, ids, context=None):
+        product = self.pool['product.template'].browse(cr, uid, ids, context=context)
+        bom_ids = [bom.id for bom in product.bom_ids]
+        return bom_ids
+
     _columns = {
         'name': fields.char('Name'),
         'code': fields.char('Reference', size=16),
@@ -181,6 +186,11 @@ class mrp_bom(osv.osv):
             domain="['&', ('product_tmpl_id','=',product_tmpl_id), ('type','!=', 'service')]",
             help="If a product variant is defined the BOM is available only for this product."),
         'bom_line_ids': fields.one2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True),
+        'categ_id': fields.related('product_tmpl_id', 'categ_id', type='many2one', relation='product.category', string='Product Category', readonly=True,
+            store = {
+                'mrp.bom': (lambda self, cr, uid, ids, c=None: ids, ['product_tmpl_id'], 10),
+                'product.template': (_get_bom_ids, ['categ_id'], 10)
+            }),
         'product_qty': fields.float('Product Quantity', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control"),
         'date_start': fields.date('Valid From', help="Validity of this BoM. Keep empty if it's always valid."),
@@ -365,6 +375,7 @@ class mrp_bom(osv.osv):
             res['value'] = {
                 'name': prod.name,
                 'product_uom': prod.uom_id.id,
+                'categ_id': prod.categ_id.id,
             }
         return res
 
@@ -535,6 +546,12 @@ class mrp_production(osv.osv):
             res += self.pool.get("mrp.production").search(cr, uid, [('move_lines', 'in', move.id)], context=context)
         return res
 
+    def _get_mo_ids(self, cr, uid, ids, context=None):
+        product_obj = self.pool['product.template'].browse(cr, uid, ids, context=context)
+        product_ids = [product.id for product in product_obj.product_variant_ids]
+        mo_ids = self.pool.get("mrp.production").search(cr, uid , [('product_id', 'in', product_ids)], context=context)
+        return mo_ids
+
     _columns = {
         'name': fields.char('Reference', required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False),
         'origin': fields.char('Source Document', readonly=True, states={'draft': [('readonly', False)]},
@@ -594,6 +611,11 @@ class mrp_production(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'ready_production': fields.function(_moves_assigned, type='boolean', string="Ready for production", store={'stock.move': (_mrp_from_move, ['state'], 10)}),
         'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product'),
+        'categ_id': fields.related('product_tmpl_id', 'categ_id', type='many2one', relation='product.category', string='Product Category', readonly=True,
+            store = {
+                'mrp.production': (lambda self, cr, uid, ids, c=None: ids, ['product_tmpl_id'], 10),
+                'product.template': (_get_mo_ids, ['categ_id'], 10)
+            }),
     }
 
     _defaults = {
@@ -673,7 +695,7 @@ class mrp_production(osv.osv):
             bom_point = bom_obj.browse(cr, uid, bom_id, context=context)
             routing_id = bom_point.routing_id.id or False
         product_uom_id = product.uom_id and product.uom_id.id or False
-        result['value'] = {'product_uos_qty': 0, 'product_uos': False, 'product_uom': product_uom_id, 'bom_id': bom_id, 'routing_id': routing_id, 'product_tmpl_id': product.product_tmpl_id}
+        result['value'] = {'product_uos_qty': 0, 'product_uos': False, 'product_uom': product_uom_id, 'bom_id': bom_id, 'routing_id': routing_id, 'product_tmpl_id': product.product_tmpl_id, 'categ_id': product.categ_id.id}
         if product.uos_id.id:
             result['value']['product_uos_qty'] = product_qty * product.uos_coeff
             result['value']['product_uos'] = product.uos_id.id
