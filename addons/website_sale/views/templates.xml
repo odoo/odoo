@@ -70,7 +70,7 @@
 <!-- Product item used by /shop and /shop/cart -->
 
 <template id="products_item" name="Product item">
-  <form action="/shop/cart/update" method="post">
+  <form action="/shop/cart" method="post">
   <div itemscope="itemscope" itemtype="http://schema.org/Product">
   <div class="ribbon-wrapper">
     <div class="ribbon btn btn-danger">Sale</div>
@@ -338,7 +338,7 @@
                 <h1 itemprop="name" t-field="product.name">Product Name</h1>
                 <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
 
-                <form t-att-action="keep('/shop/cart/update')" class="js_add_cart_variants" method="POST">
+                <form t-att-action="keep('/shop/cart')" class="js_add_cart_variants" method="POST">
 
                   <div class="js_product">
                     <t t-placeholder="select">
@@ -616,6 +616,10 @@
           <h1 class="mb32">Shopping Cart</h1>
           <div class="row">
               <div class="col-md-8 col-sm-9 oe_cart">
+                <div t-if="warning" class="alert alert-warning alert-dismissable" role="alert" id="data_warning">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                    <t t-esc="warning"/>
+                </div>
                   <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="well well-lg">
                       Your cart is empty!
                   </div>
@@ -747,7 +751,7 @@
                        }'/>
                   </td>
                   <td class="text-center">
-                      <form action="/shop/cart/update" method="post">
+                      <form action="/shop/cart" method="post">
                           <input name="product_id" t-att-value="product.id" type="hidden"/>
                           <a class="btn btn-link a-submit"><strong>Add to Cart</strong></a>
                       </form>

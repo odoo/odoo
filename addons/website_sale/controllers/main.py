@@ -272,8 +272,8 @@ class website_sale(http.Controller):
 
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
-            product = template_obj.browse(cr, uid, int(product), context=context)
-
+            # Public user should able to read virtual stock
+            product = template_obj.browse(cr, SUPERUSER_ID, int(product), context=context)
         values = {
             'search': search,
             'category': category,
@@ -312,7 +312,11 @@ class website_sale(http.Controller):
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        order = request.website.sale_get_order()
+        order = request.website.sale_get_order(force_create=1)
+        values = {}
+        product_id = post.get('product_id')
+        if product_id:
+            values = order._cart_update(product_id=int(product_id), add_qty=float(post.get('add_qty',1)), set_qty=float(post.get('set_qty', 0)))
         if order:
             from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
             to_currency = order.pricelist_id.currency_id
@@ -320,11 +324,11 @@ class website_sale(http.Controller):
         else:
             compute_currency = lambda price: price
 
-        values = {
+        values.update({
             'website_sale_order': order,
             'compute_currency': compute_currency,
             'suggested_products': [],
-        }
+        })
         if order:
             _order = order
             if not context.get('pricelist'):

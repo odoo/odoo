@@ -71,6 +71,7 @@ class sale_order(osv.Model):
         values['order_id'] = order_id
         if values.get('tax_id') != None:
             values['tax_id'] = [(6, 0, values['tax_id'])]
+        values['product_uom_qty'] = qty
         return values
 
     def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
@@ -78,6 +79,7 @@ class sale_order(osv.Model):
         sol = self.pool.get('sale.order.line')
 
         quantity = 0
+        res = {}
         for so in self.browse(cr, uid, ids, context=context):
             if line_id != False:
                 line_ids = so._cart_find_product_line(product_id, line_id, context=context, **kwargs)
@@ -101,12 +103,13 @@ class sale_order(osv.Model):
             if quantity <= 0:
                 sol.unlink(cr, SUPERUSER_ID, [line_id], context=context)
             else:
-                # update line
-                values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=quantity, line_id=line_id, context=context)
-                values['product_uom_qty'] = quantity
+                values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=quantity, context=context)
+                if values.get('warning'):
+                    quantity = values['product_uom_qty']
+                    res['warning'] = values.pop('warning')
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
-
-        return {'line_id': line_id, 'quantity': quantity}
+        res.update({'line_id': line_id, 'quantity': quantity})
+        return res
 
     def _cart_accessories(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):
