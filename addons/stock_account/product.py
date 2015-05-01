@@ -31,7 +31,7 @@ class product_template(osv.osv):
     _inherit = 'product.template'
 
     _columns = {
-        'valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),
+        'valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodic (manual)'),
                                         ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
                                         help="If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
