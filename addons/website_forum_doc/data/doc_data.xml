@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!-- JUMP TO DOCUMENTATION AT INSTALL -->
         <record id="action_open_documentation" model="ir.actions.act_url">
             <field name="name">Documentation</field>
             <field name="target">self</field>
             <field name="url" eval="'/forum/how-to'"/>
         </record>
-    </data>
 
     <data noupdate="1">
         <record id="menu_questions" model="website.menu">
@@ -43,6 +41,5 @@
             <field name="name">Publish</field>
             <field name="sequence">4</field>
         </record>
-
     </data>
-</openerp>
+</odoo>
