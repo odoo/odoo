@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<openerp>
-<data>
-    <record model="ir.ui.view" id="certification_certification_tree">
-        <field name="name">view.certification.certification.tree</field>
+<odoo>
+    <record id="certification_certification_tree" model="ir.ui.view">
+        <field name="name">certification.certification.tree</field>
         <field name="model">certification.certification</field>
         <field name="arch" type="xml">
             <tree string="Granted Certifications">
@@ -14,8 +13,8 @@
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="certification_certification_form">
-        <field name="name">view.certification.certification.form</field>
+    <record id="certification_certification_form" model="ir.ui.view">
+        <field name="name">certification.certification.form</field>
         <field name="model">certification.certification</field>
         <field name="arch" type="xml">
             <form string="Granted Certification">
@@ -31,8 +30,8 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="certification_certification_search">
-        <field name="name">view.certification.certification.search</field>
+    <record id="certification_certification_search" model="ir.ui.view">
+        <field name="name">certification.certification.search</field>
         <field name="model">certification.certification</field>
         <field name="arch" type="xml">
             <search string="Search Certification">
@@ -45,14 +44,13 @@
             </search>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="action_certifications_list">
+    <record id="action_certifications_list" model="ir.actions.act_window">
         <field name="name">Certifications</field>
         <field name="res_model">certification.certification</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="certification_certification_search"/>
     </record>
-    <menuitem name="Certifications" id="menu_certifications" parent="base.menu_marketing_config_root" sequence="3" groups="marketing.group_marketing_user" />
-    <menuitem name="Certifications" id="menu_certifications_list" action="action_certifications_list" parent="menu_certifications" sequence="1"/>
-</data>
-</openerp>
+    <menuitem id="menu_certifications" name="Certifications" parent="base.menu_marketing_config_root" sequence="3" groups="marketing.group_marketing_user" />
+    <menuitem id="menu_certifications_list" name="Certifications" action="action_certifications_list" parent="menu_certifications" sequence="1"/>
+</odoo>
