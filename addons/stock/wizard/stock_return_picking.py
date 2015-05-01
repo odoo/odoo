@@ -79,7 +79,7 @@ class stock_return_picking(osv.osv_memory):
                     if not quant.reservation_id or quant.reservation_id.origin_returned_move_id.id != move.id:
                         qty += quant.qty
                 qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, qty, move.product_uom.id)
-                result1.append({'product_id': move.product_id.id, 'quantity': qty, 'move_id': move.id})
+                result1.append((0, 0, {'product_id': move.product_id.id, 'quantity': qty, 'move_id': move.id}))
 
             if len(result1) == 0:
                 raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
