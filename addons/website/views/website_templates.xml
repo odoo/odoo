@@ -373,11 +373,9 @@
 
 <template id="publish_short">
     <t groups="base.group_website_publisher" t-ignore="true">
-        <div t-attf-class="btn-group pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
-            <button t-attf-class="btn btn-sm btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
-                <span class="css_publish">Not Published</span>
-                <span class="css_unpublish">Published</span>
-            </button>
+        <div t-attf-class="pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+            <button class="btn btn-sm btn-danger js_publish_btn">Not Published</button>
+            <button class="btn btn-sm btn-success js_publish_btn">Published</button>
         </div>
     </t>
 </template>

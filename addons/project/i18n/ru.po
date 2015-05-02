@@ -6,21 +6,23 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-04-26 08:13+0000\n"
+"Last-Translator: Rinat Karimov <Unknown>\n"
+"Language-Team: Russian <http://translate.starlight-"
+"biz.com//projects/odoo/project/ru/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:11+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-27 05:40+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
+"Language: ru\n"
 
 #. module: project
 #: field:res.partner,task_count:0
 msgid "# Tasks"
-msgstr ""
+msgstr "# Задачи"
 
 #. module: project
 #: field:report.project.task.user,no_of_days:0
@@ -31,7 +33,7 @@ msgstr "# дней"
 #: field:project.task.history.cumulative,nbr_tasks:0
 #: field:report.project.task.user,nbr:0
 msgid "# of Tasks"
-msgstr ""
+msgstr "# Задач"
 
 #. module: project
 #: code:addons/project/project.py:360
@@ -100,6 +102,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите для добавления этапа в канале задач.\n"
+"              </p><p>\n"
+"                Определите шаги, которые будут использоваться в проекте, от\n"
+"                создания задачи и до закрытия задачи или проблемы.\n"
+"                Вы будете использовать эти этапы, чтобы отслеживать прогресс "
+"в\n"
+"                решении задачи или проблемы.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -115,6 +127,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Управление проектами Odoo дает Вам возможность управлять "
+"списком\n"
+"                    задач с целью более качественного решения различных "
+"вопросов. Вы можете\n"
+"                    отслеживать прогресс, обсуждать задачи, добавлять "
+"документы и т.п.\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -125,16 +146,21 @@ msgid ""
 " * Ready for next stage indicates the task is ready to be pulled to the next "
 "stage"
 msgstr ""
+"Статус канбана задачи указывает на определенные положения, влияющие на нее:\n"
+" * Обычный - положение по умолчанию\n"
+" * Заблокирован - указывает на то, что что-то мешает прогрессу этой задачи\n"
+" * Готова к следующему этапу - указывает на то, что задача готова к "
+"продвижению на следующий этап"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "Принять электронные письма от"
 
 #. module: project
 #: field:project.project,active:0
 msgid "Active"
-msgstr "Активен"
+msgstr "Активный"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -154,7 +180,7 @@ msgstr "Администрирование"
 #. module: project
 #: field:project.project,alias_id:0
 msgid "Alias"
-msgstr "Псевдоним"
+msgstr "Алиас"
 
 #. module: project
 #: field:project.project,alias_model:0
@@ -189,7 +215,7 @@ msgstr "Анализ"
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Счет аналитики"
+msgstr "Счёт аналитики"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -211,13 +237,13 @@ msgstr "Назначить на"
 #. module: project
 #: field:report.project.task.user,date_start:0
 msgid "Assignation Date"
-msgstr ""
+msgstr "Дата назначения"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr ""
+msgstr "Месяц назначения"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -235,7 +261,7 @@ msgstr "Назначено"
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assigned to"
-msgstr "Исполнитель"
+msgstr "Назначено"
 
 #. module: project
 #: code:addons/project/project.py:212
@@ -260,12 +286,12 @@ msgstr "Блокировано"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "Ответственным лицом"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_reviewer
 msgid "By Reviewer"
-msgstr ""
+msgstr "Рецензентом"
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
@@ -302,7 +328,7 @@ msgstr "Отменено"
 #. module: project
 #: model:ir.model,name:project.model_project_category
 msgid "Category of project's task, issue, ..."
-msgstr ""
+msgstr "Категория задачи проекта, проблемы, ..."
 
 #. module: project
 #: code:addons/project/project.py:921
@@ -338,7 +364,7 @@ msgstr "Общие"
 #. module: project
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
-msgstr "Организации"
+msgstr "Компании"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -347,7 +373,7 @@ msgstr "Организации"
 #: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,company_id:0
 msgid "Company"
-msgstr "Организация"
+msgstr "Компания"
 
 #. module: project
 #: help:project.task,delay_hours:0
@@ -405,7 +431,7 @@ msgstr "Дата создания"
 #: field:project.task.type,create_uid:0
 #: field:project.task.work,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Создано"
 
 #. module: project
 #: field:project.category,create_date:0
@@ -415,7 +441,7 @@ msgstr ""
 #: field:project.task.type,create_date:0
 #: field:project.task.work,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Создан"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -434,7 +460,7 @@ msgstr "Совокупный поток"
 #: view:project.project:project.edit_project
 #: field:project.task,partner_id:0
 msgid "Customer"
-msgstr "Заказчик"
+msgstr "Клиент"
 
 #. module: project
 #: field:project.task.history,date:0
@@ -447,23 +473,23 @@ msgstr "Дата"
 #: help:project.project,message_last_post:0
 #: help:project.task,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Дата последнего сообщения размещенного в отчете."
 
 #. module: project
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Assign"
-msgstr ""
+msgstr "Дней до поручения"
 
 #. module: project
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
-msgstr "Дней до закрытия"
+msgstr "Дни до закрытия"
 
 #. module: project
 #: field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
-msgstr "Срок"
+msgstr "Последний срок"
 
 #. module: project
 #: field:project.task.type,case_default:0
@@ -532,7 +558,7 @@ msgstr "Описание"
 #. module: project
 #: model:project.task.type,name:project.project_tt_design
 msgid "Design"
-msgstr "Проектирование"
+msgstr "Разработка"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_development
@@ -569,14 +595,14 @@ msgstr "Эффективных часов"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Email Alias"
-msgstr ""
+msgstr "Псевдоним электронной почты"
 
 #. module: project
 #: view:project.project:project.edit_project
 #: field:project.task.history,end_date:0
 #: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
-msgstr "Дата окончания"
+msgstr "Конечная дата"
 
 #. module: project
 #: field:project.task,date_end:0
@@ -635,12 +661,12 @@ msgstr "Эксперимент"
 #. module: project
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Расширенные фильтры"
 
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Extra Info"
-msgstr "Доп. информация"
+msgstr "Доп. инфо."
 
 #. module: project
 #: model:project.category,name:project.project_category_02
@@ -650,7 +676,7 @@ msgstr "Запрос функционала"
 #. module: project
 #: field:project.task.type,fold:0
 msgid "Folded in Kanban View"
-msgstr ""
+msgstr "Сложено в Kanban View"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -698,7 +724,7 @@ msgstr "Позволяет отображать задания в списке �
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Group By"
-msgstr ""
+msgstr "Группировать по"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -709,7 +735,7 @@ msgstr "Поддержка"
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "Высокий"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -724,6 +750,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Содержит обзор чата (количество сообщений, ...). Это краткое изложение "
+"непосредственно в HTML формате для того, чтобы вставить в виды kanban."
 
 #. module: project
 #: help:project.project,privacy_visibility:0
@@ -740,6 +768,21 @@ msgid ""
 "portal\n"
 "   is activated, portal users see the followed tasks or issues."
 msgstr ""
+"Поддерживает видимость задач или проблем, которые принадлежат текущему "
+"проекту:\n"
+"- Публичный: все видят все; если портал активирован, пользователи портала\n"
+"   видят все задачи или проблемы; если активирован анонимный портал, "
+"посетители\n"
+"   видят все задачи или проблемы\n"
+"- Портал (доступен только если Портал установлен): сотрудники видят все;\n"
+"   если портал активирован, пользователи портала видят задачи или проблемы, "
+"на которые подписаны\n"
+"   они или кто-то их из компании\n"
+"- Только сотрудники: сотрудники видят все задачи или проблемы\n"
+"- Только подписчики: сотрудники видят только задачи или проблемы, на которые "
+"они подписаны;  \n"
+"   если портал активирован, пользователи портала видят задачи или проблемы, "
+"на которые они подписаны."
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -769,7 +812,7 @@ msgstr "ID"
 #: help:project.project,message_unread:0
 #: help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Если отмечено, новые сообщения требуют вашего внимания."
+msgstr "Если проверенные новые сообщения требуют вашего внимания."
 
 #. module: project
 #: help:account.analytic.account,use_tasks:0
@@ -813,12 +856,12 @@ msgstr ""
 #: selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
-msgstr "В работе"
+msgstr "В процессе"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Incoming Emails create"
-msgstr ""
+msgstr "Входящие сообщения электронной почты создают"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -857,12 +900,12 @@ msgstr "Выставлять счета за время работы над во
 #: field:project.project,message_is_follower:0
 #: field:project.task,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Подписан"
+msgstr "Является подписчиком"
 
 #. module: project
 #: view:project.category:project.project_category_search_view
 msgid "Issue Version"
-msgstr "Версия вопроса"
+msgstr "Версия проблемы"
 
 #. module: project
 #: field:project.task,kanban_state:0
@@ -874,24 +917,24 @@ msgstr "Канбан статус"
 #. module: project
 #: view:project.task:project.view_task_search_form
 msgid "Last Message"
-msgstr ""
+msgstr "Последнее сообщение"
 
 #. module: project
 #: field:project.project,message_last_post:0
 #: field:project.task,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Дата последнего сообщения"
 
 #. module: project
 #: field:project.task,write_date:0
 msgid "Last Modification Date"
-msgstr ""
+msgstr "Дата последнего изменения"
 
 #. module: project
 #: field:project.task,date_last_stage_update:0
 #: field:report.project.task.user,date_last_stage_update:0
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Обновление последнего этапа"
 
 #. module: project
 #: field:project.category,write_uid:0
@@ -902,7 +945,7 @@ msgstr ""
 #: field:project.task.type,write_uid:0
 #: field:project.task.work,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: project
 #: field:project.category,write_date:0
@@ -912,7 +955,7 @@ msgstr ""
 #: field:project.task.type,write_date:0
 #: field:project.task.work,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: project
 #: help:project.config.settings,module_pad:0
@@ -954,12 +997,12 @@ msgstr "Управление оценкой времени по задачам"
 #: view:project.project:project.view_project_project_filter
 #: model:res.groups,name:project.group_project_manager
 msgid "Manager"
-msgstr "Руководитель"
+msgstr "Менеджер"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
 msgid "Member"
-msgstr "Мои"
+msgstr "Участник"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
@@ -976,12 +1019,12 @@ msgstr "Сообщения"
 #: help:project.project,message_ids:0
 #: help:project.task,message_ids:0
 msgid "Messages and communication history"
-msgstr "Сообщения и история общения"
+msgstr "Сообщения и журнал обращений"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Miscellaneous"
-msgstr "Разное"
+msgstr "Прочее"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -996,7 +1039,7 @@ msgstr "Мои проекты"
 #. module: project
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "My Task"
-msgstr "Мои задачи"
+msgstr "Моя задача"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -1007,7 +1050,7 @@ msgstr "Мои задания"
 #. module: project
 #: field:project.category,name:0
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: project
 #: selection:project.project,state:0
@@ -1015,13 +1058,13 @@ msgstr "Название"
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "New"
-msgstr "Новые"
+msgstr "Новый"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
 #: view:project.task:project.view_task_search_form
 msgid "New Mail"
-msgstr ""
+msgstr "Новое письмо"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1054,7 +1097,7 @@ msgstr "Новый заголовок порученной задачи"
 #: selection:project.task.history.cumulative,kanban_state:0
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
-msgstr "В норме"
+msgstr "Обычный"
 
 #. module: project
 #: field:project.task,active:0
@@ -1084,7 +1127,7 @@ msgstr "Количество прикрепленных документов"
 #. module: project
 #: view:project.project:project.view_project_project_filter
 msgid "Open"
-msgstr "Открытые"
+msgstr "Открыть"
 
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
@@ -1111,7 +1154,7 @@ msgstr "Просроченные задания"
 #: view:project.project:project.view_project
 #: view:project.project:project.view_project_project_filter
 msgid "Parent"
-msgstr "Материнский"
+msgstr "Родитель"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -1165,7 +1208,7 @@ msgstr "Пожалуйста, сначала удалите проект, ссы
 #: field:project.task,priority:0
 #: field:report.project.task.user,priority:0
 msgid "Priority"
-msgstr "Важность"
+msgstr "Приоритет"
 
 #. module: project
 #: field:project.project,privacy_visibility:0
@@ -1244,7 +1287,7 @@ msgstr "Назначить задание"
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
 msgid "Project Task Work"
-msgstr "Работа по заданию"
+msgstr "Рабочая задача проекта"
 
 #. module: project
 #: view:project.task:project.view_project_task_graph
@@ -1294,6 +1337,8 @@ msgid ""
 "Provides management of issues/bugs in projects.\n"
 "-This installs the module project_issue."
 msgstr ""
+"Обеспечивает управление проблемами/ошибками в проектах.\n"
+"-Здесь устанавливается модуль project_issue."
 
 #. module: project
 #: help:project.config.settings,module_project_issue_sheet:0
@@ -1301,6 +1346,9 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
 msgstr ""
+"Обеспечивает поддержку журнала учета рабочего времени для управления "
+"проблемами/ошибками в проекте.\n"
+"-Здесь устанавливается модуль project_issue_sheet."
 
 #. module: project
 #: code:addons/project/project.py:200
@@ -1339,7 +1387,7 @@ msgstr "Включить описание задания в задание по�
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Remaining"
-msgstr "Осталось"
+msgstr "Оставшиеся"
 
 #. module: project
 #: view:project.task:project.view_task_tree2
@@ -1370,7 +1418,7 @@ msgstr "Ответственный"
 #: field:project.task,reviewer_id:0
 #: field:report.project.task.user,reviewer_id:0
 msgid "Reviewer"
-msgstr ""
+msgstr "Рецензент"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1409,12 +1457,12 @@ msgstr "Затраченные часы"
 #: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,stage_id:0
 msgid "Stage"
-msgstr "Стадия"
+msgstr "Этап"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Стадия изменена"
+msgstr "Этап изменен"
 
 #. module: project
 #: field:project.task.type,name:0
@@ -1424,12 +1472,12 @@ msgstr "Название этапа"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Этап изменен"
+msgstr "Изменение этапа"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 msgid "Stages"
-msgstr "Стадии"
+msgstr "Этапы"
 
 #. module: project
 #: view:project.task.type:project.task_type_search
@@ -1439,7 +1487,7 @@ msgstr "Стадии, общие для всех проектов"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Start Date"
-msgstr "Начальная дата"
+msgstr "Дата начала"
 
 #. module: project
 #: field:project.task,date_start:0
@@ -1482,7 +1530,7 @@ msgstr "Сумма часов всех заданий и дочерних про
 #: field:project.project,message_summary:0
 #: field:project.task,message_summary:0
 msgid "Summary"
-msgstr "Сводка"
+msgstr "Резюме"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -1508,7 +1556,7 @@ msgstr "Теги"
 #: field:project.task.work,task_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Task"
-msgstr "Задание"
+msgstr "Задача"
 
 #. module: project
 #: field:project.project,tasks:0
@@ -1520,7 +1568,7 @@ msgstr "Активность по задаче"
 #: model:mail.message.subtype,name:project.mt_project_task_assigned
 #: model:mail.message.subtype,name:project.mt_task_assigned
 msgid "Task Assigned"
-msgstr ""
+msgstr "Задача определена"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
@@ -1553,7 +1601,7 @@ msgstr ""
 #: model:mail.message.subtype,description:project.mt_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready for Next Stage"
-msgstr ""
+msgstr "Задача готова к переходу на следующий этап"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -1598,7 +1646,7 @@ msgstr "Задача создана"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Task summary..."
-msgstr "Сводка задач"
+msgstr "Сводка задач..."
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1649,7 +1697,7 @@ msgstr "Задачи по пользователю и проекту"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Team"
-msgstr "Группа"
+msgstr "Команда"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1684,6 +1732,11 @@ msgid ""
 "the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
 msgstr ""
+"Это позволяет Вам переносить записи под задачами, поставленными для "
+"управления проектом, в записи строки учета рабочего времени для определенной "
+"даты и пользователя, с целью создания, редактирования и удаления любым "
+"способом.\n"
+"-Здесь устанавливается модуль project_timesheet."
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
@@ -1694,6 +1747,11 @@ msgid ""
 "method 'Manufacture'.\n"
 "-This installs the module sale_service."
 msgstr ""
+"Данная функция автоматически создает задачи проекта из сервисных товаров в "
+"заказах на продажу. Точнее задачи создаются для позиций закупки с товаром "
+"типа 'Услуга', метод закупки 'Изготовление на заказ' и метод поставки "
+"'Производство'.\n"
+"-Здесь устанавливается модуль sale_service."
 
 #. module: project
 #: help:project.task,active:0
@@ -1704,7 +1762,7 @@ msgid ""
 msgstr ""
 "Это поле вычислено автоматически и имеет примерно тоже значение, что и "
 "булевое поле \"Активный\": если задача имеет ссылку на шаблон или не "
-"активированный проект, оно будет скрыто, если не вызвано специально"
+"активированный проект, оно будет скрыто, если не вызвано специально."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -1724,6 +1782,8 @@ msgid ""
 "This stage is folded in the kanban view whenthere are no records in that "
 "stage to display."
 msgstr ""
+"Этот этап складывается в kanban view, когда в этой стадии отсутствуют записи "
+"для отображения."
 
 #. module: project
 #: help:project.config.settings,time_unit:0
@@ -1750,7 +1810,7 @@ msgstr "Оценка времени на задачи"
 #: field:project.project,effective_hours:0
 #: field:project.task.work,hours:0
 msgid "Time Spent"
-msgstr "Затраченное время"
+msgstr "Затрачено времени"
 
 #. module: project
 #: help:project.project,resource_calendar_id:0
@@ -1774,7 +1834,7 @@ msgstr ""
 #. module: project
 #: field:project.task,total_hours:0
 msgid "Total"
-msgstr "Всего"
+msgstr "Итоговая сумма"
 
 #. module: project
 #: field:report.project.task.user,total_hours:0
@@ -1784,7 +1844,7 @@ msgstr "Общее время"
 #. module: project
 #: field:project.project,total_hours:0
 msgid "Total Time"
-msgstr "Всего времени"
+msgstr "Общее время"
 
 #. module: project
 #: help:project.task,remaining_hours:0
@@ -1804,7 +1864,7 @@ msgstr "Отслеживание проблем и ошибок"
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Unassigned"
-msgstr ""
+msgstr "Не назначенный"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1815,7 +1875,7 @@ msgstr "Неназначенные задания"
 #: field:project.project,message_unread:0
 #: field:project.task,message_unread:0
 msgid "Unread Messages"
-msgstr "Непрочитанные"
+msgstr "Непрочитанные сообщения"
 
 #. module: project
 #: model:project.category,name:project.project_category_04
@@ -1840,7 +1900,7 @@ msgstr "Пользователь"
 #. module: project
 #: field:project.task,user_email:0
 msgid "User Email"
-msgstr "Email пользователя"
+msgstr "Электронный адрес пользователя"
 
 #. module: project
 #: help:project.task.delegate,project_id:0
@@ -1889,7 +1949,7 @@ msgstr "Рабочее время"
 #. module: project
 #: field:project.task,progress:0
 msgid "Working Time Progress (%)"
-msgstr ""
+msgstr "Прогресс рабочего времени (%)"
 
 #. module: project
 #: field:project.config.settings,time_unit:0
@@ -1915,7 +1975,7 @@ msgstr ""
 #: code:addons/project/project.py:435
 #, python-format
 msgid "You must assign members on the project '%s'!"
-msgstr ""
+msgstr "Вы должны назначить членов по проекту '%s'!"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -1930,7 +1990,7 @@ msgstr "_Назначить"
 #. module: project
 #: view:project.task:project.view_task_kanban
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -1942,16 +2002,16 @@ msgstr "или"
 #: code:addons/project/project.py:878
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "задачи"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0
 #: field:project.project,task_ids:0
 msgid "unknown"
-msgstr "неизв."
+msgstr "неизвестно"
 
 #~ msgid "# of tasks"
 #~ msgstr "№ задачи"
 
 #~ msgid "Users"
-#~ msgstr "Исполнитель"
+#~ msgstr "Пользователи"

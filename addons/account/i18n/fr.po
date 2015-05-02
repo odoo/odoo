@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-02-09 18:29+0000\n"
-"Last-Translator: Lionel Sausin - Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2015-04-09 12:53+0000\n"
+"Last-Translator: Frederic Clementi - Camptocamp "
+"<frederic.clementi@camptocamp.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-10 07:11+0000\n"
-"X-Generator: Launchpad (build 17331)\n"
+"X-Launchpad-Export-Date: 2015-04-10 05:30+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
 #. module: account
 #: model:email.template,body_html:account.email_template_edi_invoice
@@ -909,6 +910,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Cliquez pour ajouter un nouveau compte analytique\n"
+"              </p><p>\n"
+"                La structure du plan comptable est définie par les exigences "
+"légales du pays.\n"
+"                La structure du plan comptable analytique doit refléter les "
+"besoins de votre propre entreprise.\n"
+"              </p><p>\n"
+"                Ils sont généralement structurés par contrats, projets, "
+"produits ou départements.\n"
+"                La plupart des opérations d'Odoo (factures, feuilles de "
+"temps, dépenses, etc)\n"
+"                génèrent des entrées analytiques dans le compte associé.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -1569,6 +1585,12 @@ msgid ""
 "an interval of 30 days Odoo generates an analysis of creditors for the past "
 "month, past two months, and so on."
 msgstr ""
+"Le balance agée par partenaire est un rapport détaillé par intervalle de vos "
+"créances. Lors de l'ouverture de ce rapport, Odoo demande le nom de la "
+"société, l'exercice et la durée de l'intervalle à analyser (en jours). "
+"Ensuite Odoo calcule les balances de crédit par période. Donc si vous "
+"sélectionnez un intervalle de 30 jours Odoo génère une analyse des "
+"créanciers pour le mois passé, depuis deux mois et ainsi de suite."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
@@ -4403,7 +4425,7 @@ msgstr "Mois d'échéance"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
 msgid "Due Payments"
-msgstr ""
+msgstr "Paiements  dus"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -5011,7 +5033,7 @@ msgstr "Position fiscale"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Fiscal Position Remark:"
-msgstr ""
+msgstr "Remarque de Position Fiscale:"
 
 #. module: account
 #: view:account.fiscal.position.template:account.view_account_position_template_form
@@ -5904,6 +5926,8 @@ msgstr "En litige"
 msgid ""
 "In order to close a fiscalyear, you must first post related journal entries."
 msgstr ""
+"Pour clôturer une année fiscale, vous devez d'abord passer les écritures "
+"comptables qui s'y rapportent."
 
 #. module: account
 #: code:addons/account/wizard/account_period_close.py:52
@@ -8951,7 +8975,7 @@ msgstr "Reference/Description"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Reference:"
-msgstr ""
+msgstr "Référence:"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -11017,6 +11041,9 @@ msgid ""
 "recalls.\n"
 "-This installs the module account_followup."
 msgstr ""
+"Ceci permet d'automatiser le lettres pour les factures impayées, avec des "
+"rappels à plusieurs niveaux.\n"
+"-Ceci installe le module account_followup."
 
 #. module: account
 #: help:account.config.settings,module_account_check_writing:0
@@ -11024,6 +11051,8 @@ msgid ""
 "This allows you to check writing and printing.\n"
 "-This installs the module account_check_writing."
 msgstr ""
+"Ceci vous permet de contrôler l'écriture et l'impression.\n"
+"-Ceci installe le module account_check_writing."
 
 #. module: account
 #: help:account.config.settings,module_account_payment:0
@@ -11034,6 +11063,12 @@ msgid ""
 "* provide a more efficient way to manage invoice payments.\n"
 "-This installs the module account_payment."
 msgstr ""
+"Ceci vous permet de créer et gérer vos ordres de paiement, avec pour but de "
+":\n"
+"* servir de base pour se connecter facilement à divers mécanismes de "
+"paiement automatiques, et \n"
+"* fournir un moyen plus efficace de gérer les paiements de facture.\n"
+"-Ceci installe le module account_payment."
 
 #. module: account
 #: help:account.config.settings,module_account_asset:0
@@ -11045,6 +11080,13 @@ msgid ""
 "will be able to do invoicing & payments, but not accounting (Journal Items, "
 "Chart of Accounts, ...)"
 msgstr ""
+"Ceci vous permet de gérer les actifs possédés par une société ou une "
+"personne.\n"
+"Il garde une trace des dévalorisations survenus sur ces actifs, et crée une "
+"mouvement de compte pour ces lignes de dévalorisations.\n"
+"-Ceci installe le module account_asset. Si vous ne cochez pas cette case, "
+"vous serez capable de faire la facturation et les paiements, mais pas la "
+"comptabilité (Articles de Journal, Plan comptable, ...)"
 
 #. module: account
 #: help:account.chart.template,complete_tax_set:0
@@ -11181,6 +11223,9 @@ msgid ""
 "sales, purchase, expense, contra, etc.\n"
 "-This installs the module account_voucher."
 msgstr ""
+"Ceci inclus tous les prérequis basiques des entrées de bons pour banque, "
+"liquidités, ventes, achats, dépenses, etc.\n"
+"-Ceci installe le module account_voucher."
 
 #. module: account
 #: help:account.move,balance:0
@@ -11254,6 +11299,13 @@ msgid ""
 "because it enables you to preview at any time the tax that you owe at the "
 "start and end of the month or quarter."
 msgstr ""
+"Ce menu affiche une déclaration d'impôts basée sur des factures ou des "
+"paiements. Sélectionnez une ou plusieurs périodes de l'exercice fiscal. Les "
+"informations requises pour une déclaration de taxes sont générées "
+"automatiquement par Odoo à partir des factures (ou des paiements, dans "
+"certains pays). Ces données sont mises à jour en temps réel. Ceci est très "
+"utile car il vous permet de prévisualiser à tout moment l'impôt que vous "
+"devez au début et à la fin du mois ou du trimestre."
 
 #. module: account
 #: help:account.tax,name:0
@@ -11588,7 +11640,7 @@ msgstr "Total des lignes de contrôle de clôture"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Total of opening cash control lines"
-msgstr ""
+msgstr "Total des lignes de contrôle d'ouverture de caisse."
 
 #. module: account
 #: view:website:account.report_analyticcostledger
@@ -11872,6 +11924,9 @@ msgid ""
 "invoice will be created \n"
 "                                    so that you can edit it."
 msgstr ""
+"Utilisez cette option si vous voulez annuler une facture et en créer une "
+"nouvelle. L'avoir sera créée, validé et lettrée avec la facture. Une "
+"nouvelle facture brouillon sera créée que vous pourrez éditer."
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
@@ -11882,6 +11937,9 @@ msgid ""
 "                                    with the invoice. You will not be able "
 "to modify the credit note."
 msgstr ""
+"Utilisez cette option si vous voulez annuler une facture que vous n'auriez "
+"pas dû émettre. L'avoir sera créée, validé et lettrée avec la facture. Vous "
+"ne pourrez pas modifier l'avoir."
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -12119,6 +12177,10 @@ msgid ""
 "For instance when invoicing a training, the training agenda and materials "
 "will automatically be send to your customers."
 msgstr ""
+"Avec ce module, reliez vos produits à un modèle pour envoyer les "
+"informations complètes et les outils à votre client.\n"
+"Par exemple lors de la facturation d'une formation, l'agenda de formation et "
+"le matériel seront automatiquement envoyés à vos clients."
 
 #. module: account
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
@@ -12152,7 +12214,7 @@ msgstr "Montant de l'ajustement"
 #: code:addons/account/wizard/account_reconcile.py:115
 #, python-format
 msgid "Write-off"
-msgstr ""
+msgstr "Ajustement"
 
 #. module: account
 #: code:addons/account/account.py:2304
@@ -12641,7 +12703,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:68
 #, python-format
 msgid "You must balance the reconciliation"
-msgstr ""
+msgstr "Vous devez équilibrer le lettrage."
 
 #. module: account
 #. openerp-web
@@ -12747,6 +12809,9 @@ msgid ""
 "by\n"
 "                                    your supplier/customer."
 msgstr ""
+"Vous pourrez éditer et valider cet avoir directement ou le conserver en "
+"brouillon, en attendant que le document soit émis par le fournisseur ou le "
+"client."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form
@@ -12863,7 +12928,7 @@ msgstr "Réconciliations avec le raccourci CTRL+Entrée"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
 #, python-format
 msgid "remaining)"
-msgstr ""
+msgstr "restant)"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart
