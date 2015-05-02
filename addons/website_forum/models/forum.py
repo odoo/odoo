@@ -106,10 +106,12 @@ class Forum(models.Model):
     karma_answer = fields.Integer(string='Answer questions', default=3)
     karma_edit_own = fields.Integer(string='Edit own posts', default=1)
     karma_edit_all = fields.Integer(string='Edit all posts', default=300)
-    karma_close_own = fields.Integer(string='Close own posts', default=100)
+    karma_edit_retag = fields.Integer(string='Change question tags', default=75, oldname="karma_retag")
+    karma_close_own = fields.Integer(string='Close its own posts', default=100)
     karma_close_all = fields.Integer(string='Close all posts', default=500)
     karma_unlink_own = fields.Integer(string='Delete own posts', default=500)
     karma_unlink_all = fields.Integer(string='Delete all posts', default=1000)
+    karma_tag_create = fields.Integer(string='Create new tags', default=30)
     karma_upvote = fields.Integer(string='Upvote', default=5)
     karma_downvote = fields.Integer(string='Downvote', default=50)
     karma_answer_accept_own = fields.Integer(string='Accept an answer on own questions', default=20)
@@ -120,7 +122,6 @@ class Forum(models.Model):
     karma_comment_convert_all = fields.Integer(string='Convert all answers to answers and vice versa', default=500)
     karma_comment_unlink_own = fields.Integer(string='Unlink own comments', default=50)
     karma_comment_unlink_all = fields.Integer(string='Unlink all comments', default=500)
-    karma_retag = fields.Integer(string='Change question tags', default=75)
     karma_flag = fields.Integer(string='Flag a post as offensive', default=500)
     karma_dofollow = fields.Integer(string='Nofollow links', help='If the author has not enough karma, a nofollow attribute is added to links', default=500)
     karma_editor = fields.Integer(string='Editor Features: image and links',
@@ -147,10 +148,10 @@ class Forum(models.Model):
 
     @api.model
     def _tag_to_write_vals(self, tags=''):
-        User = self.env['res.users']
         Tag = self.env['forum.tag']
         post_tags = []
         existing_keep = []
+        user = self.env.user
         for tag in filter(None, tags.split(',')):
             if tag.startswith('_'):  # it's a new tag
                 # check that not arleady created meanwhile or maybe excluded by the limit on the search
@@ -159,8 +160,7 @@ class Forum(models.Model):
                     existing_keep.append(int(tag_ids[0]))
                 else:
                     # check if user have Karma needed to create need tag
-                    user = User.sudo().browse(self._uid)
-                    if user.exists() and user.karma >= self.karma_retag:
+                    if user.exists() and user.karma >= self.karma_tag_create:
                         post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
             else:
                 existing_keep.append(int(tag))
@@ -380,6 +380,9 @@ class Post(models.Model):
             raise KarmaError('Not enough karma to create a new question')
         elif post.parent_id and not post.can_answer:
             raise KarmaError('Not enough karma to answer to a question')
+
+        post.message_subscribe(post.tag_ids.mapped('message_follower_ids').ids)
+
         # messaging and chatter
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         if post.parent_id:
@@ -435,10 +438,16 @@ class Post(models.Model):
                 if vals['is_correct'] != post.is_correct and post.create_uid.id != self._uid:
                     post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * mult)
                     self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accept * mult)
-        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id'] for key in vals.keys()) and any(not post.can_edit for post in self):
+        if 'tag_ids' in vals:
+            if any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
+                raise KarmaError('Not enough karma to retag.')
+        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id', 'tag_ids'] for key in vals.keys()) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
 
         res = super(Post, self).write(vals)
+        for post in self:
+            post.message_subscribe(post.tag_ids.mapped('message_follower_ids').ids)
+
         # if post content modify, notify followers
         if 'content' in vals or 'name' in vals:
             for post in self:
@@ -709,7 +718,7 @@ class Vote(models.Model):
 class Tags(models.Model):
     _name = "forum.tag"
     _description = "Forum Tag"
-    _inherit = ['website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata']
 
     name = fields.Char('Name', required=True)
     create_uid = fields.Many2one('res.users', string='Created by', readonly=True)
@@ -722,3 +731,10 @@ class Tags(models.Model):
     def _get_posts_count(self):
         for tag in self:
             tag.posts_count = len(tag.post_ids)
+
+    @api.model
+    def create(self, vals):
+        forum = self.env['forum.forum'].browse(vals.get('forum_id'))
+        if self.env.user.karma < forum.karma_tag_create:
+            raise KarmaError(_('Not enough karma to create a new Tag'))
+        return super(Tags, self).create(vals)

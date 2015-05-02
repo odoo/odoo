@@ -19,22 +19,21 @@ class TestForum(TestForumCommon):
                 'forum_id': self.forum.id,
             })
 
-        # Portal user asks a question with tags: not allowed, unsufficient karma
+        # Portal user asks a question without tags: not allowed, unsufficient karma
         with self.assertRaises(KarmaError):
             Post.sudo(self.user_portal).create({
                 'name': " Q_0",
-                'forum_id': self.forum.id,
-                'tag_ids': [(0, 0, {'name': 'Tag0', 'forum_id': self.forum.id})]
+                'forum_id': self.forum.id
             })
 
         # Portal user asks a question with tags: ok if enough karma
-        self.user_portal.karma = KARMA['ask']
+        self.user_portal.karma = KARMA['retag']
         Post.sudo(self.user_portal).create({
             'name': " Q0",
             'forum_id': self.forum.id,
             'tag_ids': [(0, 0, {'name': 'Tag0', 'forum_id': self.forum.id})]
         })
-        self.assertEqual(self.user_portal.karma, KARMA['ask'] + KARMA['gen_que_new'], 'website_forum: wrong karma generation when asking question')
+        self.assertEqual(self.user_portal.karma, KARMA['retag'] + KARMA['gen_que_new'], 'website_forum: wrong karma generation when asking question')
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_answer(self):
