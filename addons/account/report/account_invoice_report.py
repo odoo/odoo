@@ -204,18 +204,23 @@ class account_invoice_report(osv.osv):
         # self._table = account_invoice_report
         tools.drop_view_if_exists(cr, self._table)
         cr.execute("""CREATE or REPLACE VIEW %s as (
+            WITH currency_rate (currency_id, rate, date_start, date_end) AS (
+                SELECT r.currency_id, r.rate, r.name AS date_start,
+                    (SELECT name FROM res_currency_rate r2
+                     WHERE r2.name > r.name AND
+                           r2.currency_id = r.currency_id
+                     ORDER BY r2.name ASC
+                     LIMIT 1) AS date_end
+                FROM res_currency_rate r
+            )
             %s
             FROM (
                 %s %s %s
             ) AS sub
-            JOIN res_currency_rate cr ON (cr.currency_id = sub.currency_id)
-            WHERE
-                cr.id IN (SELECT id
-                          FROM res_currency_rate cr2
-                          WHERE (cr2.currency_id = sub.currency_id)
-                              AND ((sub.date IS NOT NULL AND cr2.name <= sub.date)
-                                    OR (sub.date IS NULL AND cr2.name <= NOW()))
-                          ORDER BY name DESC LIMIT 1)
+            JOIN currency_rate cr ON
+                (cr.currency_id = sub.currency_id AND
+                 cr.date_start <= COALESCE(sub.date, NOW()) AND
+                 (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))
         )""" % (
                     self._table,
                     self._select(), self._sub_select(), self._from(), self._group_by()))
