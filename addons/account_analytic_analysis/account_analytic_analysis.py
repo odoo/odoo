@@ -454,6 +454,15 @@ class account_analytic_account(osv.osv):
             total_toinvoice += account.ca_to_invoice
         return total_toinvoice
 
+    def _get_overdue(self, cr, uid, ids, name, arg, context=None):
+        overdue_invoice = {}
+        today = fields.date.context_today(self, cr, uid, context=context)
+        acc_invoice_line_obj = self.pool.get("account.invoice.line")
+        for account_id in ids:
+            invoice_line_data = acc_invoice_line_obj.read_group(cr, uid, [('account_analytic_id', '=', account_id), ('invoice_id.state', '=', 'open'), ('invoice_id.date_due', '<', today)], fields=["price_subtotal"], groupby=[], context=context)
+            overdue_invoice = {account_id: total['price_subtotal'] for total in invoice_line_data }
+        return overdue_invoice
+            
     def _sum_of_fields(self, cr, uid, ids, name, arg, context=None):
          res = dict([(i, {}) for i in ids])
          for account in self.browse(cr, uid, ids, context=context):
@@ -524,6 +533,7 @@ class account_analytic_account(osv.osv):
         'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
+        'total_overdue': fields.function(_get_overdue, type="float", string="Total Overdue Amount"),
         'recurring_invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id', 'Invoice Lines', copy=True),
         'recurring_invoices' : fields.boolean('Generate recurring invoices automatically'),
         'recurring_rule_type': fields.selection([
@@ -559,6 +569,21 @@ class account_analytic_account(osv.osv):
             'nodestroy': True,
         }
 
+    def open_contract_invoices(self, cr, uid, ids, context=None):
+        today = fields.date.context_today(self, cr, uid, context=context)
+        domain = [('invoice_line.account_analytic_id', '=', ids), ('state', '=', 'open'), ('date_due', '<', today)]
+        invoice_ids = self.pool.get('account.invoice').search(cr, uid, domain)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Overdue Invoices'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'domain': [('id', 'in', invoice_ids)],
+            'context': {'create': False},
+            'res_model': 'account.invoice',
+            'nodestroy': True,
+        }
+        
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         if not template_id:
             return {}
@@ -638,6 +663,24 @@ class account_analytic_account(osv.osv):
             context["data"] = data
             _logger.debug("Sending reminder to uid %s", user_id)
             self.pool.get('mail.template').send_mail(cr, uid, template_id, user_id, force_send=True, context=context)
+
+        return True
+
+    def _cron_set_pending_state(self, cr, uid, context=None):
+        today = fields.date.context_today(self, cr, uid, context=context)
+        overdue_account_ids = []
+        # overdue invoices
+        acc_analytic_ids = self.search(cr, uid, [('state', '=', 'open')], context=context)
+        for account in self.browse(cr, uid, acc_analytic_ids, context=context):
+            overdue_domain = [('invoice_line.account_analytic_id', '=', account.id), ('state', '=', 'open'), ('date_due', '<', today)]
+            invoice_num = self.pool['account.invoice'].search_count(cr, uid, overdue_domain)
+            if invoice_num:
+                overdue_account_ids.append(account.id)
+        # overpassed prepaid units and overpassed end dates
+        overpassed_domain = ['|', ('date', '<', today), ('is_overdue_quantity', '=', 'True')]
+        overpassed_account_ids = self.search(cr, uid, overpassed_domain, context=context)
+        pending_accounts = self.browse(cr, uid, overpassed_account_ids + overdue_account_ids, context=context)
+        pending_accounts.write({'state': 'pending'})
 
         return True
 
