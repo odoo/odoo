@@ -60,6 +60,7 @@
             ev.preventDefault();
             var link = $('.js_language_selector a[data-default-lang]')[0];
             if (link) {
+                link.pathname = $(link).data('lang') + link.pathname
                 link.search += (link.search ? '&' : '?') + 'enable_editor=1';
                 window.location = link.attributes.href.value;
             }
