@@ -1,10 +1,14 @@
 #----------------------------------------------------------
 # ir_http modular http routing
 #----------------------------------------------------------
+import datetime
+import hashlib
 import logging
+import mimetypes
 import re
 import sys
 
+import werkzeug
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.urls
@@ -94,7 +98,49 @@ class ir_http(osv.AbstractModel):
             raise openerp.exceptions.AccessDenied()
         return auth_method
 
+    def _serve_attachment(self):
+        domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
+        attach = self.pool['ir.attachment'].search_read(
+            request.cr, openerp.SUPERUSER_ID, domain,
+            ['__last_update', 'datas', 'datas_fname', 'name'],
+            context=request.context)
+        if attach:
+            wdate = attach[0]['__last_update']
+            datas = attach[0]['datas'] or ''
+            name = attach[0]['name']
+
+            if not datas:
+                if name.startswith(('http://', 'https://', '/')):
+                    return werkzeug.utils.redirect(name, 301)
+                else:
+                    return werkzeug.wrappers.Response(status=204)     # NO CONTENT
+
+            response = werkzeug.wrappers.Response()
+            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            try:
+                response.last_modified = datetime.datetime.strptime(wdate, server_format + '.%f')
+            except ValueError:
+                # just in case we have a timestamp without microseconds
+                response.last_modified = datetime.datetime.strptime(wdate, server_format)
+
+            response.set_etag(hashlib.sha1(datas).hexdigest())
+            response.make_conditional(request.httprequest)
+
+            if response.status_code == 304:
+                return response
+
+            response.mimetype = (mimetypes.guess_type(attach[0]['datas_fname'] or '')[0] or
+                                 'application/octet-stream')
+            response.data = datas.decode('base64')
+            return response
+
     def _handle_exception(self, exception):
+        # This is done first as the attachment path may
+        # not match any HTTP controller.
+        attach = self._serve_attachment()
+        if attach:
+            return attach
+
         # If handle_exception returns something different than None, it will be used as a response
         try:
             return request._handle_exception(exception)

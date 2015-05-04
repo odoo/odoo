@@ -566,6 +566,10 @@
                 <td><t t-esc="perm.xmlid or '/'"/></td>
             </tr>
             <tr>
+                <th>No Update:</th>
+                <td><t t-esc="perm.noupdate"/></td>
+            </tr>
+            <tr>
                 <th>Creation User:</th>
                 <td><t t-esc="format(perm.create_uid, { 'type' : 'many2one' }, '/')"/></td>
             </tr>
@@ -1056,9 +1060,10 @@
     <ul style="list-style: none; padding-left: 2px; display: inline-block;">
         <t t-foreach="widget.priorities" t-as="rec" >
             <li t-att-data-value="rec.click_value" style="display: inline-block;">
-                <a href="#" t-att-title="rec.name">
+                <a t-if="!widget.get('readonly')" href="#" t-att-title="rec.name">
                     <span t-att-class="widget.get('value') gte rec.value and 'oe_e oe_star_on' or 'oe_e oe_star_off'">7</span>
                 </a>
+                <span t-if="widget.get('readonly')" t-att-title="rec.name" t-att-class="widget.get('value') gte rec.value and 'oe_e oe_star_on' or 'oe_e oe_star_off'">7</span>
             </li>
         </t>
     </ul>
@@ -1784,7 +1789,11 @@
     <input type="number" class="field_integer" value = "0" step="1"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input type="number" class="field_float" value = "0.0" step="0.01"/>
+    <input class="field_float"
+        t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
+        t-attf-title="Number using #{widget.decimal_point  || '.' } as decimal separator."
+        t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
+        t-attf-value="0#{widget.decimal_point || '.' }0" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
     <select>

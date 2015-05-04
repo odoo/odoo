@@ -314,7 +314,7 @@ class WebsiteBlog(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
-        nid = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
+        nid = request.registry['blog.post'].copy(cr, uid, int(blog_post_id), {}, context=create_context)
         new_blog_post = request.registry['blog.post'].browse(cr, uid, nid, context=context)
         post = request.registry['blog.post'].browse(cr, uid, nid, context)
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(post.blog_id), slug(new_blog_post)))

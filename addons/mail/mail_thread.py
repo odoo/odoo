@@ -129,22 +129,29 @@ class mail_thread(osv.AbstractModel):
             if alias_ids and len(alias_ids) == 1:
                 alias = alias_obj.browse(cr, uid, alias_ids[0], context=context)
 
-        if alias:
-            alias_email = alias.name_get()[0][1]
-            return _("""<p class='oe_view_nocontent_create'>
-                            Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>
-                        </p>
-                        %(static_help)s"""
-                    ) % {
-                        'document': document_name,
-                        'email': alias_email,
-                        'static_help': help or ''
-                    }
+        add_arrow = not help or help.find("oe_view_nocontent_create") == -1
 
-        if document_name != 'document' and help and help.find("oe_view_nocontent_create") == -1:
-            return _("<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s") % {
-                        'document': document_name,
-                        'static_help': help or '',
+        if alias:
+            email_link = "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': alias.name_get()[0][1]}
+            if add_arrow:
+                return _("""<p class='oe_view_nocontent_create'>
+                                Click here to add new %(document)s or send an email to: %(email)s.
+                            </p>
+                            %(static_help)s"""
+                        ) % {
+                            'document': document_name, 'email': email_link, 'static_help': help or ''
+                        }
+
+            return _("""%(static_help)s
+                        <p>
+                            You could also add a new %(document)s by sending an email to: %(email)s.
+                        </p>""") % {
+                            'document': document_name, 'email': email_link, 'static_help': help or ''
+                        }
+
+        if add_arrow:
+             return _("<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s") % {
+                         'document': document_name, 'static_help': help or ''
                     }
 
         return help
@@ -386,7 +393,7 @@ class mail_thread(osv.AbstractModel):
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
         for key, val in context.iteritems():
-            if key.startswith('default_'):
+            if key.startswith('default_') and key[8:] not in create_values:
                 create_values[key[8:]] = val
         self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
 
@@ -582,6 +589,7 @@ class mail_thread(osv.AbstractModel):
         ir_attachment_obj.unlink(cr, uid, attach_ids, context=context)
         return True
 
+    @api.cr_uid_ids_context
     def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
         """ mail.message check permission rules for related document. This method is
             meant to be inherited in order to implement addons-specific behavior.
@@ -937,6 +945,16 @@ class mail_thread(osv.AbstractModel):
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To')
         thread_references = references or in_reply_to
+
+        # 0. First check if this is a bounce message or not.
+        #    See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
+        #    As all MTA does not respect this RFC (googlemail is one of them),
+        #    we also need to verify if the message come from "mailer-daemon"
+        localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
+        if message.get_content_type() == 'multipart/report' or localpart == 'mailer-daemon':
+            _logger.info("Not routing bounce email from %s to %s with Message-Id %s",
+                         email_from, email_to, message_id)
+            return []
 
         # 1. message is a reply to an existing message (exact match of message_id)
         ref_match = thread_references and tools.reference_re.search(thread_references)
@@ -1821,7 +1839,17 @@ class mail_thread(osv.AbstractModel):
                         ('model', '=', self._name),
                         ('res_id', '=', record_id)], limit=1, context=context)
                 if msg_ids:
-                    self.pool.get('mail.notification')._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
+                    notification_obj = self.pool.get('mail.notification')
+                    notification_obj._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
+                    message = message_obj.browse(cr, uid, msg_ids[0], context=context)
+                    if message.parent_id:
+                        partner_ids_to_parent_notify = set(partner_ids).difference(partner.id for partner in message.parent_id.notified_partner_ids)
+                        for partner_id in partner_ids_to_parent_notify:
+                            notification_obj.create(cr, uid, {
+                                'message_id': message.parent_id.id,
+                                'partner_id': partner_id,
+                                'is_read': True,
+                            }, context=context)
 
     def message_auto_subscribe(self, cr, uid, ids, updated_fields, context=None, values=None):
         """ Handle auto subscription. Two methods for auto subscription exist:
@@ -1902,6 +1930,7 @@ class mail_thread(osv.AbstractModel):
             self.message_subscribe(cr, uid, ids, [pid], subtypes, context=context)
 
         self._message_auto_subscribe_notify(cr, uid, ids, user_pids, context=context)
+
 
         return True
 

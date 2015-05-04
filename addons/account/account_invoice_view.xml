@@ -133,6 +133,7 @@
                     <field name="amount_untaxed" sum="Untaxed Amount"/>
                     <field name="amount_total" sum="Total Amount"/>
                     <field name="state"/>
+                    <field name="type" invisible="context.get('type',True)"/>
                 </tree>
             </field>
         </record>
@@ -182,8 +183,10 @@
                             <field name="date_due"/>
                             <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
                                 name="account_id" groups="account.group_account_user"/>
+                            <field name="internal_number" invisible="1"/>
                             <field name="journal_id" groups="account.group_account_user"
-                                on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
+                                on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"
+                                attrs="{'readonly':[('internal_number','!=',False)]}"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="check_total" groups="account.group_supplier_inv_check_total"/>
                         </group>
@@ -252,7 +255,7 @@
                                 <group>
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
                                     <field name="user_id" string="Responsible" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
-                                    <field name="name" invisible="1"/>
+                                    <field name="name" attrs="{'invisible': [('type', '=', 'in_invoice')]}"/>
                                     <field name="payment_term" options="{'no_create': True}"/>
                                 </group>
                                 <group>
@@ -328,8 +331,10 @@
                         </group>
                         <group>
                             <field name="date_invoice" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
+                            <field name="internal_number" invisible="1"/>
                             <field name="journal_id" groups="account.group_account_user"
-                                on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
+                                on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"
+                                attrs="{'readonly':[('internal_number','!=',False)]}"/>
                             <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"
                                 name="account_id" groups="account.group_account_user"/>
 
@@ -490,6 +495,30 @@
             <field name="view_id" ref="invoice_tree"/>
             <field name="context">{'type':'out_invoice'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
+        </record>
+
+        <record id="action_invoice_refund_out_tree" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_id" ref="invoice_tree"/>
+            <field name="domain">[('type','in', ['out_invoice', 'out_refund']), ('state', 'not in', ['draft', 'cancel'])]</field>
+            <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+        </record>
+
+        <record id="action_invoice_refund_out_tree_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_invoice_refund_out_tree"/>
+        </record>
+
+        <record id="action_invoice_refund_out_tree_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_form"/>
+            <field name="act_window_id" ref="action_invoice_refund_out_tree"/>
         </record>
 
         <record id="action_invoice_tree_pending_invoice" model="ir.actions.act_window">

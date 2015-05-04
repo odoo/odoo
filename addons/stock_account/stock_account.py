@@ -79,13 +79,22 @@ class stock_quant(osv.osv):
         '''
         if context is None:
             context = {}
+        account_period = self.pool['account.period']
         super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
-        ctx = context.copy()
         for quant in self.browse(cr, uid, quant_ids, context=context):
             move = self._get_latest_move(cr, uid, quant, context=context)
-            # this is where we post accounting entries for adjustment
-            ctx['force_valuation_amount'] = newprice - quant.cost
-            self._account_entry_move(cr, uid, [quant], move, context=ctx)
+            valuation_update = newprice - quant.cost
+            # this is where we post accounting entries for adjustment, if needed
+            if not quant.company_id.currency_id.is_zero(valuation_update):
+                # adjustment journal entry needed, cost has been updated
+                period_id = (context.get('force_period') or
+                                 account_period.find(cr, uid, move.date, context=context)[0])
+                period = account_period.browse(cr, uid, period_id, context=context)
+                # If neg quant period already closed (likely with manual valuation), skip update
+                if period.state != 'done':
+                    ctx = dict(context, force_valuation_amount=valuation_update)
+                    self._account_entry_move(cr, uid, [quant], move, context=ctx)
+
             #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
             #1) the product cost's method is 'real'
             #2) we just fixed a negative quant caused by an outgoing shipment
@@ -192,9 +201,9 @@ class stock_quant(osv.osv):
             valuation_amount = context.get('force_valuation_amount')
         else:
             if move.product_id.cost_method == 'average':
-                valuation_amount = move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' and cost or move.product_id.standard_price
+                valuation_amount = cost if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
             else:
-                valuation_amount = move.product_id.cost_method == 'real' and cost or move.product_id.standard_price
+                valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
@@ -236,11 +245,11 @@ class stock_quant(osv.osv):
         move_obj = self.pool.get('account.move')
         for cost, qty in quant_cost_qty.items():
             move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
-            period_id = context.get('force_period', self.pool.get('account.period').find(cr, uid, move.date, context=context)[0])
+            period_id = context.get('force_period', self.pool.get('account.period').find(cr, uid, context=context)[0])
             move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
                                       'period_id': period_id,
-                                      'date': move.date,
+                                      'date': fields.date.context_today(self, cr, uid, context=context),
                                       'ref': move.picking_id.name}, context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):

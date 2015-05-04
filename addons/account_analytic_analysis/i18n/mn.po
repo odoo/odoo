@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-04-25 16:27+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:20+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-26 05:55+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
 
 #. module: account_analytic_analysis
 #: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
@@ -86,6 +86,72 @@ msgid ""
 "\n"
 "            "
 msgstr ""
+"\n"
+"Сайн байна уу ${object.name},\n"
+"\n"
+"% macro account_table(values):\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"    <tr>\n"
+"        <th>Захиалагч</th>\n"
+"        <th>Гэрээ</th>\n"
+"        <th>Огноонууд</th>\n"
+"        <th>Урьдчилсан төлбөрт нэгж</th>\n"
+"        <th>Холбогч</th>\n"
+"    </tr>\n"
+"    % for partner, accounts in values:\n"
+"        % for account in accounts:\n"
+"        <tr>\n"
+"            <td>${partner.name}</td>\n"
+"            <td><a "
+"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
+"ew_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or "
+"'???'}</td>\n"
+"            <td>\n"
+"            % if account.quantity_max != 0.0:\n"
+"                ${account.remaining_hours}/${account.quantity_max} units\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${account.partner_id.phone or ''}, "
+"${account.partner_id.email or ''}</td>\n"
+"        </tr>\n"
+"        % endfor\n"
+"    % endfor\n"
+"</table>\n"
+"% endmacro \n"
+"\n"
+"% if \"new\" in ctx[\"data\"]:\n"
+"    <h2>Дараах гэрээнүүдийн хугацаа сая дууссан: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"old\" in ctx[\"data\"]:\n"
+"    <h2>Дараах хугацаа дууссан гэрээнүүд арга хэмжээ авагдаагүй байна: "
+"</h2>\n"
+"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"future\" in ctx[\"data\"]:\n"
+"    <h2>Дараах гэрээнүүд сараас бага хугацаанд хугацаа дуусна: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"<p>\n"
+"    Бүх шинэчлэх шаардлагатай гэрээг дэрээх менюгээр шалгаж болно:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Борлуулалт / Нэхэмжлэл / Шинэчлэх гэрээнүүд</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Баярлалаа,\n"
+"</p>\n"
+"\n"
+"<pre>\n"
+"-- \n"
+"Odoo автомат эмэйл\n"
+"</pre>\n"
+"\n"
+"            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
@@ -129,6 +195,17 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Шинэ гэрээ үүсгэхдээ дарна уу.\n"
+"                </p><p>\n"
+"                    Даалгавар, асуудал, цагийн хуудас зэрэгийг хөтлөх болон  "
+"\n"
+"                    хийсэн ажил, зарцуулсан зардал, борлуулалтын захиалга "
+"зэрэгийг нэхэмжлэхэд гэрээг ашиглана.\n"
+"                    Odoo нь автоматаар гэрээг шинэчлэх сануулга зэрэгийг зөв "
+"борлуулалтын ажилтанд өгнө.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
@@ -171,6 +248,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ гэрээ үүсгэхдээ дарна уу.\n"
+"              </p><p>\n"
+"                Энд шинэчлэх шаардлагатай гэрээнүүдийг харна. Гэрээний \n"
+"                дуусах хугацаа хэтэрсэн, хийх ажлын хэмжээ хэтэрсэн зэрэг "
+"гэрээнүүд юм.\n"
+"              </p><p>\n"
+"                Odoo нь шинэчлэх гэрээг автоматаар шийд хүлээсэн төлөвт "
+"оруулдаг. Тохиролцол \n"
+"                хийсний дараа борлуулалтын ажилтан гэрээг хаах юмуу "
+"шинэчлэнэ.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -195,7 +285,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Account Analytic Lines"
-msgstr ""
+msgstr "Дансны Шинжилгээний Мөрүүд"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -256,6 +346,8 @@ msgid ""
 "Computed using the formula: Expected on timesheets - Total invoiced on "
 "timesheets"
 msgstr ""
+"Тооцоололд ашиглагдсан томъёо: Цагийн хуудас дахь таамагласан цаг - "
+"Нэхэмжилсэн бүх цаг"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -341,12 +433,12 @@ msgstr "Шинэчлэх Гэрээнүүд"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн огноо"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -366,7 +458,7 @@ msgstr "Эцсийн өртөгийг нэхэмжилсэн огноо"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_next_date:0
 msgid "Date of Next Invoice"
-msgstr ""
+msgstr "Дараагийн нэхэмжлэлийн огноо"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -376,17 +468,17 @@ msgstr "Энэ данс дээр хйигдсэн сүүлийн ажлын ог
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Өдөр(үүд)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Тодорхойлолт"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End Month"
-msgstr ""
+msgstr "Төгсөх Сар"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -402,7 +494,7 @@ msgstr "Дуусах огноо хэтэрсэн буюу урьдчилан т�
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:681
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Алдаа!"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
@@ -443,12 +535,12 @@ msgstr "Тогтмол үнэ"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoices:0
 msgid "Generate recurring invoices automatically"
-msgstr ""
+msgstr "Давтагдах нэхэмжлэлүүдийг автоматаар үүсгэх"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Group By"
-msgstr ""
+msgstr "Бүлэглэх"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -465,7 +557,7 @@ msgstr "Сарын цагийн хураангуй"
 #: field:account_analytic_analysis.summary.month,id:0
 #: field:account_analytic_analysis.summary.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -497,12 +589,12 @@ msgstr "Хийгдэж буй"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoice_line_ids:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Нэхэмжлэлийн мөр"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_rule_type:0
 msgid "Invoice automatically repeat at specified interval"
-msgstr ""
+msgstr "Өгсөн хугацааны давтамжтайгаар давтан нэхэмжлэх"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -532,12 +624,12 @@ msgstr "Сүүлийн нэхэмжлэлийн огноо"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
@@ -558,13 +650,13 @@ msgstr "Сар"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Сар(ууд)"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Захиалагч Тодорхойлогдоогүй!"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -630,7 +722,7 @@ msgstr "Шийд хүлээсэн гэрээнүүд"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:682
 #, python-format
 msgid "Please define a sale journal for the company \"%s\"."
-msgstr ""
+msgstr "\"%s\" компанид борлуулалтын журналыг тодорхойлно уу."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -640,12 +732,12 @@ msgstr "Үнийн жагсаалт"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Бараа"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Тоо хэмжээ"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -660,12 +752,12 @@ msgstr "Бодит бохир ашгийн харьцаа (%)"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_rule_type:0
 msgid "Recurrency"
-msgstr ""
+msgstr "Давталт"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Recurring Invoices"
-msgstr ""
+msgstr "Давтагдсан нэхэмжлэлүүд"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -688,12 +780,12 @@ msgstr "Үлдсэн хугацаа"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Тутамд давтах"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "(Өдөр/Долооног/Сар/Жил) тутам давтах"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -704,7 +796,7 @@ msgstr "Орлого Хугацаагаар (бодит)"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:550
 #, python-format
 msgid "Sales Order Lines to Invoice of %s"
-msgstr ""
+msgstr "%s-н нэхэмжлэх борлуулалтын мөрүүд"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -715,7 +807,7 @@ msgstr "Борлуулалтын захиалгууд"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Start Month"
-msgstr ""
+msgstr "Эхлэх Сар"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -725,7 +817,7 @@ msgstr "Төлөв"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_subtotal:0
 msgid "Sub Total"
-msgstr ""
+msgstr "Дэд дүн"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
@@ -847,12 +939,12 @@ msgstr "Нэхэмжлээгүй Хугацаа"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Нэгж үнэ"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Хэмжих нэгж"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -873,7 +965,7 @@ msgstr "Хэрэглэгч"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Долоо хоног"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -883,17 +975,21 @@ msgid ""
 "                            defined on the product related (e.g timesheet \n"
 "                            products are defined on each employee)."
 msgstr ""
+"Өртөгийг дахин нэхэмжлэхэд Odoo нь гэрээний үнийн хүснэгтийг хэрэглэдэг.\n"
+"                            Энэ нь цаашаа бараанд тодорхойлсон үнийг "
+"хэрэглэдэг. (ж: цагийн хуудсын бараа\n"
+"                            нь ажилтан бүр дээр тодорхойлогддог)."
 
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Жил(үүд)"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
-msgstr ""
+msgstr "%s гэрээнд эхлээд захиалагчийг сонгох ёстой!"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -932,4 +1028,4 @@ msgstr "⇒ Нэхэмжлэл"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "⇒ create invoices"
-msgstr ""
+msgstr "⇒ нэхэмжлэлүүдийг үүсгэх"

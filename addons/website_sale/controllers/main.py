@@ -152,7 +152,6 @@ class website_sale(http.Controller):
                     ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
         if category:
             domain += [('public_categ_ids', 'child_of', int(category))]
-
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
         attrib_set = set([v[1] for v in attrib_values])
@@ -190,6 +189,8 @@ class website_sale(http.Controller):
         if category:
             category = pool['product.public.category'].browse(cr, uid, int(category), context=context)
             url = "/shop/category/%s" % slug(category)
+        if attrib_list:
+            post['attrib'] = attrib_list
         pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
         product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
@@ -931,5 +932,14 @@ class website_sale(http.Controller):
             }
             ret['lines'] = self.order_lines_2_google_api(order.order_line)
         return ret
+
+    @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
+    def get_unit_price(self, product_ids, add_qty, **kw):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        products = pool['product.product'].browse(cr, uid, product_ids, context=context)
+        partner = pool['res.users'].browse(cr, uid, uid, context=context).partner_id
+        pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
+        prices = pool['product.pricelist'].price_rule_get_multi(cr, uid, [], [(product, add_qty, partner) for product in products], context=context)
+        return {product_id: prices[product_id][pricelist_id][0] for product_id in product_ids}
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

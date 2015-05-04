@@ -559,7 +559,7 @@ class JsonRequest(WebRequest):
                 start_time = time.time()
                 _, start_vms = 0, 0
                 if psutil:
-                    _, start_vms = psutil.Process().get_memory_info()
+                    _, start_vms = psutil.Process(os.getpid()).get_memory_info()
                 if rpc_request and rpc_response_flag:
                     rpc_request.debug('%s: %s %s, %s',
                         endpoint, model, method, pprint.pformat(args))
@@ -570,7 +570,7 @@ class JsonRequest(WebRequest):
                 end_time = time.time()
                 _, end_vms = 0, 0
                 if psutil:
-                    _, end_vms = psutil.Process().get_memory_info()
+                    _, end_vms = psutil.Process(os.getpid()).get_memory_info()
                 logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
                     endpoint, model, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
                 if rpc_response_flag:

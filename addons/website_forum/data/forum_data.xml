@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-
+    <data noupdate="1">
         <record id="forum_help" model="forum.forum">
             <field name="name">Help</field>
         </record>
@@ -12,7 +11,8 @@
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">35</field>
         </record>
-
+    </data>
+    <data>
         <function model="ir.config_parameter" name="set_param" eval="('auth_signup.allow_uninvited', True)" />
 
         <!-- JUMP TO FORUM AT INSTALL -->
@@ -21,10 +21,6 @@
             <field name="target">self</field>
             <!-- TODO in master : remove the tutorial or create one tutorial forum -->
             <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))+'/#tutorial.forum=true'"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_open_forum"/>
-            <field name="state">open</field>
         </record>
 
         <!-- Answers subtypes -->
@@ -74,6 +70,11 @@
 
     </data>
     <data noupdate="1">
+
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_forum"/>
+            <field name="state">open</field>
+        </record>
 
         <!-- Reasons for closing Post -->
         <record id="reason_1" model="forum.post.reason">

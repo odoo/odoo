@@ -11,12 +11,12 @@
             <t t-foreach="p['lines']" t-as="l">
                 <tr>
                     <td><span t-field="l.name"/></td>
-                    <td><span t-field="l.quantity"/></td>
-                    <td groups="product.group_uom"><span t-field="l.uos_id"/></td>
+                    <td><span t-field="l.quantity"/>
+                        <span t-field="l.uos_id" groups="product.group_uom"/></td>
                     <td class="text-right">
                         <span t-field="l.price_unit"/>
                     </td>
-                    <td groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
+                    <td class="text-right" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
                     <td class="text-right">
                         <span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_id))"/>
                     </td>

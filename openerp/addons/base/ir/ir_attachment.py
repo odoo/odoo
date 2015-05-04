@@ -71,7 +71,6 @@ class ir_attachment(osv.osv):
     def _storage(self, cr, uid, context=None):
         return self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'ir_attachment.location', 'file')
 
-    @tools.ormcache(skiparg=3)
     def _filestore(self, cr, uid, context=None):
         return tools.config.filestore(cr.dbname)
 
@@ -140,7 +139,9 @@ class ir_attachment(osv.osv):
         return fname
 
     def _file_delete(self, cr, uid, fname):
-        count = self.search_count(cr, 1, [('store_fname','=',fname)])
+        # using SQL to include files hidden through unlink or due to record rules
+        cr.execute("SELECT COUNT(*) FROM ir_attachment WHERE store_fname = %s", (fname,))
+        count = cr.fetchone()[0]
         full_path = self._full_path(cr, uid, fname)
         if not count and os.path.exists(full_path):
             try:
@@ -230,10 +231,11 @@ class ir_attachment(osv.osv):
         if ids:
             if isinstance(ids, (int, long)):
                 ids = [ids]
-            cr.execute('SELECT DISTINCT res_model, res_id FROM ir_attachment WHERE id = ANY (%s)', (ids,))
-            for rmod, rid in cr.fetchall():
+            cr.execute('SELECT DISTINCT res_model, res_id, create_uid FROM ir_attachment WHERE id = ANY (%s)', (ids,))
+            for rmod, rid, create_uid in cr.fetchall():
                 if not (rmod and rid):
-                    require_employee = True
+                    if create_uid != uid:
+                        require_employee = True
                     continue
                 res_ids.setdefault(rmod,set()).add(rid)
         if values:

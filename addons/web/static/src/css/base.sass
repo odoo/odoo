@@ -460,7 +460,7 @@ $sheet-padding: 16px
             font-weight: bold
             &:hover
                 text-decoration: underline
-    .oe_webclient
+    .oe_webclient, .modal-body
         .oe_star_on, .oe_star_off
             color: #cccccc
             text-shadow: 0 0 2px black
@@ -785,7 +785,6 @@ $sheet-padding: 16px
                     height: 100%
                     > div.oe_secondary_menus_container
                         position: absolute
-                        position: static\9
                         top: 0
                         bottom: 0
                         left: 0
@@ -918,7 +917,6 @@ $sheet-padding: 16px
                         height: 100%
                         > .oe_view_manager_body
                             position: absolute
-                            position: static\9
                             top: 0
                             bottom: 0
                             left: 0
@@ -1962,6 +1960,11 @@ $sheet-padding: 16px
         input
             padding-right: 13px
     &.ui-autocomplete
+        // http://bugs.jqueryui.com/ticket/8749
+        // https://github.com/jquery/jquery-ui/commit/d693ce5324f6f3be8479ef083e4eaf3c705ef043
+        // Odoo 8.0 currently uses JQuery 1.9.1, and the above fix, that we need, is in 1.9.2.
+        top: 0
+        left: 0
         li.oe_m2o_dropdown_option a
             font-style: italic
             padding-left: 2em
@@ -2268,6 +2271,8 @@ $sheet-padding: 16px
                         border-width: 0
                 > td.oe_list_field_boolean input
                     @include opacity()
+                > td.oe_list_field_boolean input:-moz-read-only
+                    @include opacity(1.0)
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)

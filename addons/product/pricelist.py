@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from itertools import chain
 import time
 
 from openerp import tools
@@ -224,7 +225,9 @@ class product_pricelist(osv.osv):
         is_product_template = products[0]._name == "product.template"
         if is_product_template:
             prod_tmpl_ids = [tmpl.id for tmpl in products]
-            prod_ids = [product.id for product in tmpl.product_variant_ids for tmpl in products]
+            # all variants of all products
+            prod_ids = [p.id for p in
+                        list(chain.from_iterable([t.product_variant_ids for t in products]))]
         else:
             prod_ids = [product.id for product in products]
             prod_tmpl_ids = [product.product_tmpl_id.id for product in products]
@@ -272,7 +275,9 @@ class product_pricelist(osv.osv):
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
                         continue
-                    if rule.product_id:
+                    if rule.product_id and \
+                            (product.product_variant_count > 1 or product.product_variant_ids[0].id != rule.product_id.id):
+                        # product rule acceptable on template if has only one variant
                         continue
                 else:
                     if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
@@ -293,7 +298,7 @@ class product_pricelist(osv.osv):
                     if rule.base_pricelist_id:
                         price_tmp = self._price_get_multi(cr, uid,
                                 rule.base_pricelist_id, [(product,
-                                qty, False)], context=context)[product.id]
+                                qty, partner)], context=context)[product.id]
                         ptype_src = rule.base_pricelist_id.currency_id.id
                         price_uom_id = qty_uom_id
                         price = currency_obj.compute(cr, uid,
@@ -381,7 +386,7 @@ class product_pricelist_version(osv.osv):
         'active': fields.boolean('Active',
             help="When a version is duplicated it is set to non active, so that the " \
             "dates do not overlaps with original version. You should change the dates " \
-            "and reactivate the pricelist", copy=False),
+            "and reactivate the pricelist"),
         'items_id': fields.one2many('product.pricelist.item',
             'price_version_id', 'Price List Items', required=True, copy=True),
         'date_start': fields.date('Start Date', help="First valid date for the version."),
@@ -420,6 +425,13 @@ class product_pricelist_version(osv.osv):
             ['date_start', 'date_end'])
     ]
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        # set active False to prevent overlapping active pricelist
+        # versions
+        if not default:
+            default = {}
+        default['active'] = False
+        return super(product_pricelist_version, self).copy(cr, uid, id, default, context=context)
 
 class product_pricelist_item(osv.osv):
     def _price_field_get(self, cr, uid, context=None):

@@ -1,21 +1,23 @@
 # Slovenian translation for openobject-addons
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-03-24 16:24+0000\n"
+"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
+"Language-Team: Slovenian <translate@matmoz.si>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:16+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-25 06:09+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
+"Language: sl\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -33,12 +35,24 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Zaženi postopek razpisnega povpraševanja. \n"
+"          </p><p>\n"
+"            Razpis je procedura za ustvarjanje konkurenčnih ponudb "
+"različnih\n"
+"            ponudnikov. Pri razpisu lahko beležimo proizvode, ki jih\n"
+"            kupujemo in ustvarimo povpraševanja po predračunih\n"
+"            dobaviteljem. Ko so prispele ponudbe registrirane, jih lahko "
+"pregledujemo\n"
+"            in primerjamo ter nekatere overimo in prekličemo druge.\n"
+"          </p>\n"
+"        "
 
 #. module: purchase_requisition
 #: field:purchase.requisition,account_analytic_id:0
 #: field:purchase.requisition.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analitični konto"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -48,27 +62,27 @@ msgstr "Odobril dobavitelj"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_bid_line_qty
 msgid "Bid Line Qty"
-msgstr ""
+msgstr "Količina ponudbene postavke"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
 msgid "Bid Lines"
-msgstr ""
+msgstr "Ponudbene postavke"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Bid Selection"
-msgstr ""
+msgstr "Izbira ponudb"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,exclusive:0
 msgid "Bid Selection Type"
-msgstr ""
+msgstr "Tip izbire ponudb"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
 msgid "Bid Submission Deadline"
-msgstr ""
+msgstr "Rok oddaje ponudb"
 
 #. module: purchase_requisition
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
@@ -80,49 +94,50 @@ msgstr ""
 #: field:purchase.requisition.line,requisition_id:0
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Call for Bids"
-msgstr ""
+msgstr "Razpisno povpraševanje"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,name:0
 msgid "Call for Bids Reference"
-msgstr ""
+msgstr "Sklic razpisa"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#| msgid "Call for Bids in negociation"
 msgid "Call for Bids in negotiation"
-msgstr ""
+msgstr "Razpisna pogajanja"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids where bids are closed"
-msgstr ""
+msgstr "Razpisi z zaključenim zbiranjem ponudb"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Call for Bif Reference:"
-msgstr ""
+msgstr "Sklic razpisa:"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Calls for Bids"
-msgstr ""
+msgstr "Razpisi"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
 #: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
 msgid "Cancel"
-msgstr "Prekliči"
+msgstr "Preklic"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel Call"
-msgstr ""
+msgstr "Preklic razpisa"
 
 #. module: purchase_requisition
 #: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
 msgid "Cancel Choice"
-msgstr ""
+msgstr "Preklic izbire"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -140,23 +155,24 @@ msgstr "Preklicano"
 msgid ""
 "Cancelled by the call for bids associated to this request for quotation."
 msgstr ""
+"Preklic s strani razpisa povezanega s tem povpraševanjem po predračunu."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:85
 #, python-format
 msgid "Cancelled by the tender associated to this quotation."
-msgstr ""
+msgstr "Preklicano s strani razpisa povezanega s tem predračunom."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_bid_line_qty
 msgid "Change Bid line quantity"
-msgstr ""
+msgstr "Spremeni količino razpisne postavke"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
 #: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
 msgid "Change Quantity"
-msgstr ""
+msgstr "Spremeni količino"
 
 #. module: purchase_requisition
 #: help:product.template,purchase_requisition:0
@@ -164,43 +180,45 @@ msgid ""
 "Check this box to generate Call for Bids instead of generating requests for "
 "quotation from procurement."
 msgstr ""
+"Označite za ustvarjanje razpisov namesto ustvarjanja povpraševanj po "
+"predračunu iz nabave."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
 msgid "Choose Supplier"
-msgstr ""
+msgstr "Izbira dobavitelja"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Choose product lines"
-msgstr ""
+msgstr "Izbira postavk proizvodov"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Close Call for Bids"
-msgstr ""
+msgstr "Zaključi razpis"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Closed Bids"
-msgstr ""
+msgstr "Zaključeni razpisi"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
 #: field:purchase.requisition.line,company_id:0
 msgid "Company"
-msgstr "Podjetje"
+msgstr "Družba"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm Call"
-msgstr ""
+msgstr "Potrdi razpis"
 
 #. module: purchase_requisition
 #: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
 msgid "Confirm Order"
-msgstr ""
+msgstr "Potrdi nalog"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -211,12 +229,12 @@ msgstr "Potrdi nabavni nalog"
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Potrjeno"
 
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
 msgid "Create Request for Quotation"
-msgstr ""
+msgstr "Ustvari povpraševanje po predračunu"
 
 #. module: purchase_requisition
 #: field:bid.line.qty,create_uid:0
@@ -224,7 +242,7 @@ msgstr ""
 #: field:purchase.requisition.line,create_uid:0
 #: field:purchase.requisition.partner,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: purchase_requisition
 #: field:bid.line.qty,create_date:0
@@ -232,23 +250,23 @@ msgstr ""
 #: field:purchase.requisition.line,create_date:0
 #: field:purchase.requisition.partner,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum zadnjega objavljenega sporočila na zapisu."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
 #, python-format
 msgid "Define product(s) you want to include in the call for bids."
-msgstr ""
+msgstr "Določite proizvode, ki bodo vključeni v razpis."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,description:0
@@ -259,17 +277,17 @@ msgstr "Opis"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Done"
-msgstr ""
+msgstr "Opravljeno"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Osnutek"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "End Month"
-msgstr ""
+msgstr "Končni mesec"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
@@ -285,14 +303,16 @@ msgstr "Sledilci"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
-msgstr ""
+msgstr "Združi po"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Povzetek (število sporočil,..)"
+msgstr ""
+"Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v "
+"html formatu, da se lahko vstavlja v poglede kanban."
 
 #. module: purchase_requisition
 #: field:bid.line.qty,id:0
@@ -300,12 +320,12 @@ msgstr "Povzetek (število sporočil,..)"
 #: field:purchase.requisition.line,id:0
 #: field:purchase.requisition.partner,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Če je izbrano, zahtevajo nova sporočila vašo pozornost."
+msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_is_follower:0
@@ -315,7 +335,7 @@ msgstr "Je sledilec"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum zadnjega sporočila"
 
 #. module: purchase_requisition
 #: field:bid.line.qty,write_uid:0
@@ -323,7 +343,7 @@ msgstr ""
 #: field:purchase.requisition.line,write_uid:0
 #: field:purchase.requisition.partner,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnjič posodobil"
 
 #. module: purchase_requisition
 #: field:bid.line.qty,write_date:0
@@ -331,17 +351,17 @@ msgstr ""
 #: field:purchase.requisition.line,write_date:0
 #: field:purchase.requisition.partner,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: purchase_requisition
 #: field:procurement.order,requisition_id:0
 msgid "Latest Requisition"
-msgstr ""
+msgstr "Zadnje povpraševanje"
 
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
 msgid "Manager"
-msgstr "Vodja"
+msgstr "Upravitelj"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_ids:0
@@ -351,17 +371,17 @@ msgstr "Sporočila"
 #. module: purchase_requisition
 #: help:purchase.requisition,message_ids:0
 msgid "Messages and communication history"
-msgstr "Sporočila in zgodovina sporočil"
+msgstr "Komunikacije in kronologija"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,multiple_rfq_per_supplier:0
 msgid "Multiple RFQ per supplier"
-msgstr ""
+msgstr "Več povpraševanj po predračunu na dobavitelja"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
-msgstr "Večkratna popraševanja"
+msgstr "Večkratna povpraševanja"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -371,69 +391,70 @@ msgstr "Novo"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Bids"
-msgstr ""
+msgstr "Nov razpis"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Order Date"
-msgstr "Datum naročila"
+msgstr "Datum naloga"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#| msgid "Order Date"
 msgid "Ordering Date"
-msgstr ""
+msgstr "Datum naročila"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "PO Created"
-msgstr ""
+msgstr "Nabavni nalog ustvarjen"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,picking_type_id:0
 msgid "Picking Type"
-msgstr ""
+msgstr "Tip zbirnika"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_order
 #: field:purchase.requisition,procurement_id:0
 msgid "Procurement"
-msgstr "Oskrba"
+msgstr "Oskrbovanje"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_id:0
 msgid "Product"
-msgstr "Izdelek"
+msgstr "Proizvod"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Predloga proizvoda"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr "Enota mere izdelka"
+msgstr "EM proizvoda"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Product UoM"
-msgstr "EM izdelka"
+msgstr "EM proizvoda"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Products"
-msgstr "Izdelki"
+msgstr "Proizvodi"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,po_line_ids:0
 msgid "Products by supplier"
-msgstr ""
+msgstr "Proizvodi po dobavitelju"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,line_ids:0
 msgid "Products to Purchase"
-msgstr "Izdelki"
+msgstr "Proizvodi za nabavo"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -444,17 +465,17 @@ msgstr "Nabavni nalog"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Postavka nabavnega naloga"
 
 #. module: purchase_requisition
 #: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "Postavke nabavnega naloga"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
-msgstr ""
+msgstr "Nabavni nalogi"
 
 #. module: purchase_requisition
 #: view:purchase.order:purchase_requisition.purchase_order_search_inherit
@@ -465,28 +486,28 @@ msgstr "Nabavni nalogi s povpraševanjem"
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
 #: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
 msgid "Purchase Requisition"
-msgstr "Povpraševanje"
+msgstr "Nabavno povpraševanje"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr "Postavka povpraševanja"
+msgstr "Postavka nabavnega povpraševanja"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
 msgid "Purchase Requisition Partner"
-msgstr ""
+msgstr "Partner nabavnega povpraševanja"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:416
 #, python-format
 msgid "Purchase Requisition created"
-msgstr ""
+msgstr "Nabavno povpraševanje ustvarjeno"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Purchase Requisitions (exclusive)"
-msgstr ""
+msgstr "Nabavna povpraševanja (ekskluzivna)"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -508,13 +529,13 @@ msgstr "Količina"
 #. module: purchase_requisition
 #: field:purchase.order.line,quantity_bid:0
 msgid "Quantity Bid"
-msgstr ""
+msgstr "Ponudbena količina"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:192
 #, python-format
 msgid "RFQ created"
-msgstr ""
+msgstr "Povpraševanje po predračunu ustvarjeno"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -525,65 +546,65 @@ msgstr "Sklic"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Request a Quotation"
-msgstr "Zahteva za ponudbo"
+msgstr "Zahtevaj predračun"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Requests for Quotation"
-msgstr ""
+msgstr "Povpraševanja po predračunu"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
-msgstr ""
+msgstr "Podrobnosti povpraševanj po predračunu"
 
 #. module: purchase_requisition
 #: view:purchase.order:purchase_requisition.purchase_order_search_inherit
 msgid "Requisition"
-msgstr ""
+msgstr "Povpraševanje"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
-msgstr "Vrni v Osnutek"
+msgstr "Vrni v osnutek"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
-msgstr "Odgovoren"
+msgstr "Odgovorni"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,schedule_date:0
 #: field:purchase.requisition.line,schedule_date:0
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Načrtovani datum"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,ordering_date:0
 msgid "Scheduled Ordering Date"
-msgstr ""
+msgstr "Načrtovani datum naročila"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Scheduled Ordering Date:"
-msgstr ""
+msgstr "Načrtovani datum naročila:"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Call for Bids"
-msgstr ""
+msgstr "Iskanje po razpisih"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Select multiple RFQ"
-msgstr ""
+msgstr "Izbira več povpraševanj po predračunih"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Select only one RFQ (exclusive)"
-msgstr ""
+msgstr "Izberi le eno povpraševanje po predračunu (ekskluzivno)"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
@@ -593,16 +614,20 @@ msgid ""
 "Select multiple RFQ:  It allows to have multiple purchase orders.On "
 "confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"Izberi le eno povpraševanje po predračunu (ekskluzivno): ob potrditvi "
+"nabavnega naloga prekliče preostale nabavne naloge.\n"
+"Izbira več povpraševanj po predračunih: omogoča več nabavnih nalogov. Ob "
+"potrditvi nabavnega naloga ne prekliče preostalih nalogov."
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Selection Type:"
-msgstr ""
+msgstr "Tip izbire:"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Send RFQ by Email"
-msgstr ""
+msgstr "Pošlji e-pošto povpraševanje po predračunu"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -617,7 +642,7 @@ msgstr "Izvorni dokument"
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Source:"
-msgstr ""
+msgstr "Vir:"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -643,6 +668,8 @@ msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the bid"
 msgstr ""
+"Tehnično polje za ohranitev začetnih podatkov o količini predlagani v "
+"ponudbi."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -652,17 +679,17 @@ msgstr "Pravila in pogoji"
 #. module: purchase_requisition
 #: help:purchase.requisition,schedule_date:0
 msgid "The expected and scheduled date where all the products are received"
-msgstr ""
+msgstr "Pričakovani in načrtovani datum, ko bodo vsi proizvodi prejeti"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned"
-msgstr "Nedodeljeno"
+msgstr "Ne dodeljeno"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
-msgstr "Ne dodeljena popraševanja"
+msgstr "Ne dodeljena povpraševanja"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_unread:0
@@ -677,12 +704,12 @@ msgstr "Uporabnik"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "View Products Lines"
-msgstr ""
+msgstr "Prikaz postavk proizvodov"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "View RFQs/Bids"
-msgstr ""
+msgstr "Prikaz povpraševanj/ponudb"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
@@ -700,18 +727,18 @@ msgstr "Opozorilo!"
 #. module: purchase_requisition
 #: field:purchase.requisition,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Sporočila iz spletne strani"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Kronologija komunikacij spletne strani"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:240
 #, python-format
 msgid "You have already generate the purchase order(s)."
-msgstr ""
+msgstr "Nabavni nalog ste že ustvarili."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:189
@@ -720,24 +747,24 @@ msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
 msgstr ""
-"Imate že en %s nabavni nalog za tega partnerja, morate ga preklicati, preden "
-"kreirate novo ponudbo."
+"Za tega partnerja že imate en %s nabavni nalog. Pred ustvarjanjem novega "
+"predračuna ga morate preklicati."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:249
 #, python-format
 msgid "You have no line selected for buying."
-msgstr ""
+msgstr "Ni izbranih postavk za nakup."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. OP0025"
-msgstr ""
+msgstr "npr. OP0025"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
-msgstr "n.pr. PO0025"
+msgstr "npr. PO0025"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty

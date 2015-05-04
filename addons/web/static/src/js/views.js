@@ -381,6 +381,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
         });
         action.menu_id = options.action_menu_id;
+        action.context.params = _.extend({ 'action' : action.id }, action.context.params);
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
             return $.Deferred().reject();
@@ -1272,10 +1273,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 new instance.web.Dialog(this, { title: _t("Warning"), size: 'medium',}, $("<div />").text(_t("You must choose at least one record."))).open();
                 return false;
             }
+            var dataset = self.getParent().dataset;
             var active_ids_context = {
                 active_id: ids[0],
                 active_ids: ids,
-                active_model: self.getParent().dataset.model,
+                active_model: dataset.model,
             };
 
             $.when(domain).done(function (domain) {
@@ -1288,7 +1290,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
 
                 self.rpc("/web/action/load", {
                     action_id: item.action.id,
-                    context: c
+                    context: new instance.web.CompoundContext(
+                    dataset.get_context(), active_ids_context).eval()
                 }).done(function(result) {
                     result.context = new instance.web.CompoundContext(
                         result.context || {}, active_ids_context)
@@ -1655,7 +1658,7 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
         cr = human_readable ? '\n' : '';
 
     if (typeof(node) === 'string') {
-        return sindent + node;
+        return sindent + node.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw new Error(
             _.str.sprintf(_t("Node [%s] is not a JSONified XML node"),

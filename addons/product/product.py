@@ -24,6 +24,7 @@ import re
 import time
 from _common import ceiling
 
+
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import osv, fields, expression
@@ -255,8 +256,25 @@ class product_category(osv.osv):
             context = {}
         if name:
             # Be sure name_search is symetric to name_get
-            name = name.split(' / ')[-1]
-            ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
+            categories = name.split(' / ')
+            parents = list(categories)
+            child = parents.pop()
+            domain = [('name', operator, child)]
+            if parents:
+                names_ids = self.name_search(cr, uid, ' / '.join(parents), args=args, operator='ilike', context=context, limit=limit)
+                category_ids = [name_id[0] for name_id in names_ids]
+                if operator in expression.NEGATIVE_TERM_OPERATORS:
+                    category_ids = self.search(cr, uid, [('id', 'not in', category_ids)])
+                    domain = expression.OR([[('parent_id', 'in', category_ids)], domain])
+                else:
+                    domain = expression.AND([[('parent_id', 'in', category_ids)], domain])
+                for i in range(1, len(categories)):
+                    domain = [[('name', operator, ' / '.join(categories[-1 - i:]))], domain]
+                    if operator in expression.NEGATIVE_TERM_OPERATORS:
+                        domain = expression.AND(domain)
+                    else:
+                        domain = expression.OR(domain)
+            ids = self.search(cr, uid, expression.AND([domain, args]), limit=limit, context=context)
         else:
             ids = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, ids, context)
@@ -659,7 +677,7 @@ class product_template(osv.osv):
                 temp_variants = []
                 for variant in all_variants:
                     for value_id in variant_id.value_ids:
-                        temp_variants.append(variant + [int(value_id)])
+                        temp_variants.append(sorted(variant + [int(value_id)]))
                 if temp_variants:
                     all_variants = temp_variants
 
@@ -677,7 +695,7 @@ class product_template(osv.osv):
             variants_active_ids = []
             variants_inactive = []
             for product_id in tmpl_id.product_variant_ids:
-                variants = map(int,product_id.attribute_value_ids)
+                variants = sorted(map(int,product_id.attribute_value_ids))
                 if variants in all_variants:
                     variants_active_ids.append(product_id.id)
                     all_variants.pop(all_variants.index(variants))
@@ -797,9 +815,25 @@ class product_template(osv.osv):
             pass
         return super(product_template, self).name_get(cr, user, ids, context)
 
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        # Only use the product.product heuristics if there is a search term and the domain
+        # does not specify a match on `product.template` IDs.
+        if not name or any(term[0] == 'id' for term in (args or [])):
+            return super(product_template, self).name_search(
+                cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
 
+        product_product = self.pool['product.product']
+        results = product_product.name_search(
+            cr, user, name, args, operator=operator, context=context, limit=limit)
+        product_ids = [p[0] for p in results]
+        template_ids = [p.product_tmpl_id.id
+                            for p in product_product.browse(
+                                cr, user, product_ids, context=context)]
 
-
+        # re-apply product.template order + name_get
+        return super(product_template, self).name_search(
+            cr, user, '', args=[('id', 'in', template_ids)],
+            operator='ilike', context=context, limit=limit)
 
 class product_product(osv.osv):
     _name = "product.product"
@@ -1075,12 +1109,11 @@ class product_product(osv.osv):
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                ids = set(self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context))
+                ids = self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context)
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(ids)) if limit else False
-                    ids.update(self.search(cr, user, args + [('name', operator, name), ('id', 'not in', list(ids))], limit=limit2, context=context))
-                ids = list(ids)
+                    ids += self.search(cr, user, args + [('name', operator, name), ('id', 'not in', ids)], limit=limit2, context=context)
             elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
                 ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
             if not ids and operator in positive_operators:

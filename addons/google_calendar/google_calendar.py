@@ -502,6 +502,7 @@ class google_calendar(osv.AbstractModel):
             rrule = [rule for rule in single_event_dict["recurrence"] if rule.startswith("RRULE:")][0][6:]
             result['rrule'] = rrule
 
+        context = dict(context or {}, no_mail_to_attendees=True)
         if type == "write":
             res = calendar_event.write(cr, uid, event['id'], result, context=context)
         elif type == "copy":
@@ -536,7 +537,7 @@ class google_calendar(osv.AbstractModel):
         for user_to_sync in ids:
             _logger.info("Calendar Synchro - Starting synchronization for a new user [%s] " % user_to_sync)
             try:
-                resp = self.synchronize_events(cr, uid, [user_to_sync], lastSync=True, context=None)
+                resp = self.synchronize_events(cr, user_to_sync, False, lastSync=True, context=None)
                 if resp.get("status") == "need_reset":
                     _logger.info("[%s] Calendar Synchro - Failed - NEED RESET  !" % user_to_sync)
                 else:
@@ -564,7 +565,7 @@ class google_calendar(osv.AbstractModel):
         user_to_sync = ids and ids[0] or uid
         current_user = self.pool['res.users'].browse(cr, SUPERUSER_ID, user_to_sync, context=context)
 
-        st, current_google, ask_time = self.get_calendar_primary_id(cr, uid, context=context)
+        st, current_google, ask_time = self.get_calendar_primary_id(cr, user_to_sync, context=context)
 
         if current_user.google_calendar_cal_id:
             if current_google != current_user.google_calendar_cal_id:
@@ -577,8 +578,8 @@ class google_calendar(osv.AbstractModel):
                     "url": ''
                 }
 
-            if lastSync and self.get_last_sync_date(cr, uid, context=context) and not self.get_disable_since_synchro(cr, uid, context=context):
-                lastSync = self.get_last_sync_date(cr, uid, context)
+            if lastSync and self.get_last_sync_date(cr, user_to_sync, context=context) and not self.get_disable_since_synchro(cr, user_to_sync, context=context):
+                lastSync = self.get_last_sync_date(cr, user_to_sync, context)
                 _logger.info("[%s] Calendar Synchro - MODE SINCE_MODIFIED : %s !" % (user_to_sync, lastSync.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
             else:
                 lastSync = False
@@ -589,14 +590,14 @@ class google_calendar(osv.AbstractModel):
             _logger.info("[%s] Calendar Synchro - MODE FULL SYNCHRO - NEW CAL ID" % user_to_sync)
 
         new_ids = []
-        new_ids += self.create_new_events(cr, uid, context=context)
-        new_ids += self.bind_recurring_events_to_google(cr, uid, context)
+        new_ids += self.create_new_events(cr, user_to_sync, context=context)
+        new_ids += self.bind_recurring_events_to_google(cr, user_to_sync, context)
 
-        res = self.update_events(cr, uid, lastSync, context)
+        res = self.update_events(cr, user_to_sync, lastSync, context)
 
         current_user.write({'google_calendar_last_sync_date': ask_time})
         return {
-            "status": res and "need_refresh" or "no_new_event_form_google",
+            "status": res and "need_refresh" or "no_new_event_from_google",
             "url": ''
         }
 

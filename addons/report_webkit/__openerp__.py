@@ -58,12 +58,12 @@ For a sample report see also the webkit_report_sample module, and this video:
 
 Requirements and Installation:
 ------------------------------
-This module requires the ``wkthtmltopdf`` library to render HTML documents as
+This module requires the ``wkhtmltopdf`` library to render HTML documents as
 PDF. Version 0.9.9 or later is necessary, and can be found at
 http://code.google.com/p/wkhtmltopdf/ for Linux, Mac OS X (i386) and Windows (32bits).
 
 After installing the library on the OpenERP Server machine, you may need to set
-the path to the ``wkthtmltopdf`` executable file in a system parameter named
+the path to the ``wkhtmltopdf`` executable file in a system parameter named
 ``webkit_path`` in Settings -> Customization -> Parameters -> System Parameters
 
 If you are experiencing missing header/footer problems on Linux, be sure to

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-10-03 12:14+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <nicola.riolini@gmail.com>\n"
+"PO-Revision-Date: 2015-04-07 16:25+0000\n"
+"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:42+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-08 06:05+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_badge_received
@@ -198,6 +198,18 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Fai click per creare una nuova sfida. \n"
+"                </p>\n"
+"                <p>\n"
+"                    Assegna una lista di obiettivi agli utenti per metterli "
+"alla prova.\n"
+"                    Le sfide possono svolgersi su periodi specifici "
+"(settimanali, mensili,..) per la creazione automatica degli obiettivi.\n"
+"                    Gli obiettivi vengono assegnati a utenti specifici o "
+"membri di un gruppo.\n"
+"                </p>\n"
+"            "
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -250,11 +262,13 @@ msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
 msgstr ""
+"Un obiettivo viene considerato completato quando il valore corrente "
+"raggiunge il valore da raggiungere"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "A selected list of users"
-msgstr ""
+msgstr "Una lista di utenti selezionati"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
@@ -284,7 +298,7 @@ msgstr "Indennita di concessione"
 #. module: gamification
 #: help:gamification.challenge,user_domain:0
 msgid "Alternative to a list of users"
-msgstr ""
+msgstr "Alternativamente a una lista di utenti"
 
 #. module: gamification
 #: field:gamification.challenge,category:0
@@ -368,7 +382,7 @@ msgstr "Modalità batch"
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
 msgid "Brilliant"
-msgstr ""
+msgstr "Brillante"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_kanban_view
@@ -380,6 +394,7 @@ msgstr "Non è possibile concederlo"
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr ""
+"Non è possibile modificare la configurazione di un obiettivo già avviato"
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
@@ -473,7 +488,7 @@ msgstr "Completa il tuo profilo"
 #. module: gamification
 #: field:gamification.goal,completeness:0
 msgid "Completeness"
-msgstr ""
+msgstr "Completamento"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_search_view
@@ -606,11 +621,15 @@ msgstr ""
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
 msgstr ""
+"Descrivi la sfida: obiettivi, persone a cui è assegnata, per quale motivo è "
+"importante..."
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
 msgstr ""
+"Descrivi quel che hanno fatto e per quale motivo è importante (sarà visibile "
+"a tutti)"
 
 #. module: gamification
 #: field:gamification.badge,description:0
@@ -684,6 +703,8 @@ msgstr ""
 #: view:gamification.challenge:gamification.view_challenge_wizard
 msgid "Even if the challenge is failed, best challengers will be rewarded"
 msgstr ""
+"Anche se la sfida non è andata a buon fine, i migliori risultati verranno "
+"premiati"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -759,7 +780,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
 msgid "Gamification Tools"
-msgstr ""
+msgstr "Strumenti di Gamification"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
@@ -816,17 +837,17 @@ msgstr ""
 #. module: gamification
 #: field:gamification.goal.definition,description:0
 msgid "Goal Description"
-msgstr ""
+msgstr "Descrizione Obiettivo"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
 msgid "Goal Failed"
-msgstr ""
+msgstr "Obiettivo Fallito"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_list_view
 msgid "Goal List"
-msgstr ""
+msgstr "Lista Obiettivi"
 
 #. module: gamification
 #: field:gamification.goal.definition,condition:0
@@ -852,12 +873,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:gamification.goal_list_action
 #: model:ir.ui.menu,name:gamification.gamification_goal_menu
 msgid "Goals"
-msgstr ""
+msgstr "Obiettivi"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_good_job
 msgid "Good Job"
-msgstr ""
+msgstr "Bel Lavoro"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_kanban_view
@@ -868,23 +889,23 @@ msgstr "Concedi"
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 msgid "Grant Badge"
-msgstr ""
+msgstr "Assegna Badge"
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr ""
+msgstr "Assegna Badge a"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr ""
+msgstr "Assegna questo Badge"
 
 #. module: gamification
 #: view:gamification.badge.user:gamification.badge_user_kanban_view
 msgid "Granted by"
-msgstr ""
+msgstr "Assegnato da"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
@@ -920,6 +941,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Gestisce il sommario (numero di messaggi, ...) del Chatter. Questo sommario "
+"è direttamente in html così da poter essere inserito nelle viste kanban."
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -952,17 +975,17 @@ msgstr "Se un massimo è impostato"
 #: help:gamification.badge,message_unread:0
 #: help:gamification.challenge,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
 
 #. module: gamification
 #: help:gamification.badge.user,challenge_id:0
 msgid "If this badge was rewarded through a challenge"
-msgstr ""
+msgstr "Se questo messaggio è stato guadagnago attraverso una sfida"
 
 #. module: gamification
 #: field:gamification.badge,image:0
 msgid "Image"
-msgstr ""
+msgstr "Immagine"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
@@ -999,7 +1022,7 @@ msgstr "In corso"
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
 msgid "Individual Goals"
-msgstr ""
+msgstr "Obiettivi Individuali"
 
 #. module: gamification
 #: field:gamification.goal.definition,model_inherited_model_ids:0
@@ -1015,7 +1038,7 @@ msgstr ""
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_invite
 msgid "Invite new Users"
-msgstr ""
+msgstr "Invita nuovi Utenti"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
@@ -1044,7 +1067,7 @@ msgstr "Data Ultimo Messaggio"
 #. module: gamification
 #: field:gamification.challenge,last_report_date:0
 msgid "Last Report Date"
-msgstr ""
+msgstr "Data ultimo Report"
 
 #. module: gamification
 #: field:gamification.goal,last_update:0
@@ -1098,12 +1121,12 @@ msgstr "Righe"
 #. module: gamification
 #: help:gamification.challenge,line_ids:0
 msgid "List of goals that will be set"
-msgstr ""
+msgstr "Lista obiettivi assegnati"
 
 #. module: gamification
 #: help:gamification.challenge,user_ids:0
 msgid "List of users participating to the challenge"
-msgstr ""
+msgstr "Lista utenti che partecipano alla sfida"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
@@ -1172,12 +1195,12 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,stat_my_this_month:0
 msgid "My Monthly Total"
-msgstr ""
+msgstr "Il Mio Totale Mensile"
 
 #. module: gamification
 #: field:gamification.badge,stat_my:0
 msgid "My Total"
-msgstr ""
+msgstr "Il mio Totale"
 
 #. module: gamification
 #: field:gamification.challenge.line,name:0
@@ -1213,12 +1236,12 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:766
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr ""
+msgstr "Nessuno ha raggiunto le condizioni per ricevere dei badge speciali."
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
 msgid "Non recurring"
-msgstr ""
+msgstr "Non ricorrente"
 
 #. module: gamification
 #: field:gamification.challenge,remind_update_delay:0
@@ -1233,7 +1256,7 @@ msgstr "Messaggi di Notifica"
 #. module: gamification
 #: field:gamification.badge,stat_count_distinct:0
 msgid "Number of users"
-msgstr ""
+msgstr "Numero di utenti"
 
 #. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
@@ -1268,7 +1291,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "People having some badges"
-msgstr ""
+msgstr "Persone che hanno alcuni badge"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_search_view
@@ -1290,7 +1313,7 @@ msgstr "Periodicità"
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
 msgid "Problem Solver"
-msgstr ""
+msgstr "Problem Solver"
 
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
@@ -1429,12 +1452,12 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal:gamification.goal_search_view
 msgid "Running"
-msgstr ""
+msgstr "In corso"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_search_view
 msgid "Running Challenges"
-msgstr ""
+msgstr "Sfide in corso"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
@@ -1444,7 +1467,7 @@ msgstr "Pianificazione"
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_search_view
 msgid "Search Challenges"
-msgstr ""
+msgstr "Ricerca Sfide"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_search_view
@@ -1454,7 +1477,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal:gamification.goal_search_view
 msgid "Search Goals"
-msgstr ""
+msgstr "Ricerca Obiettivi"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
@@ -1466,12 +1489,12 @@ msgstr ""
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Send Report"
-msgstr ""
+msgstr "Invia Report"
 
 #. module: gamification
 #: field:gamification.challenge,report_message_group_id:0
 msgid "Send a copy to"
-msgstr ""
+msgstr "Invia una copia a"
 
 #. module: gamification
 #: field:gamification.badge.user,sender_id:0
@@ -1486,48 +1509,48 @@ msgstr "Sequenza"
 #. module: gamification
 #: help:gamification.challenge.line,sequence:0
 msgid "Sequence number for ordering"
-msgstr ""
+msgstr "Numero di sequenza per l'ordinamento"
 
 #. module: gamification
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
-msgstr ""
+msgstr "Imposta il valore corrente raggiunto per questo obiettivo"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
-msgstr ""
+msgstr "Imposta i tuoi dati aziendali"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
 msgid "Set your Company Logo"
-msgstr ""
+msgstr "Imposta il tuo logo aziendale"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_timezone
 msgid "Set your Timezone"
-msgstr ""
+msgstr "Imposta la tua timezone"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
 msgid "Setup your Company"
-msgstr ""
+msgstr "Imposta la tua azienda"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Start Challenge"
-msgstr ""
+msgstr "Avvia sfida"
 
 #. module: gamification
 #: field:gamification.challenge,start_date:0
 #: field:gamification.goal,start_date:0
 msgid "Start Date"
-msgstr ""
+msgstr "Data di inizio"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
 msgid "Start goal"
-msgstr ""
+msgstr "Avvia obiettivo"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_search_view
@@ -1535,24 +1558,24 @@ msgstr ""
 #: view:gamification.goal:gamification.goal_search_view
 #: field:gamification.goal,state:0
 msgid "State"
-msgstr ""
+msgstr "Stato"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Statistics"
-msgstr ""
+msgstr "Statistiche"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Subscriptions"
-msgstr ""
+msgstr "Sottoscrizioni"
 
 #. module: gamification
 #: field:gamification.challenge.line,definition_full_suffix:0
 #: field:gamification.goal,definition_suffix:0
 #: field:gamification.goal.definition,suffix:0
 msgid "Suffix"
-msgstr ""
+msgstr "Suffisso"
 
 #. module: gamification
 #: field:gamification.challenge,invited_user_ids:0
@@ -1563,12 +1586,12 @@ msgstr ""
 #: field:gamification.badge,message_summary:0
 #: field:gamification.challenge,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sommario"
 
 #. module: gamification
 #: field:gamification.challenge.line,target_goal:0
 msgid "Target Value to Reach"
-msgstr ""
+msgstr "Valore da raggiungere"
 
 #. module: gamification
 #. openerp-web
@@ -1576,7 +1599,7 @@ msgstr ""
 #: code:addons/gamification/static/src/xml/gamification.xml:54
 #, python-format
 msgid "Target:"
-msgstr ""
+msgstr "Obiettivo:"
 
 #. module: gamification
 #. openerp-web
@@ -1584,12 +1607,12 @@ msgstr ""
 #: code:addons/gamification/static/src/xml/gamification.xml:57
 #, python-format
 msgid "Target: <="
-msgstr ""
+msgstr "Obiettivo: <="
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_kanban_view
 msgid "Target: less than"
-msgstr ""
+msgstr "Obiettivo: minore di"
 
 #. module: gamification
 #: help:gamification.goal.definition,action_id:0
@@ -1600,7 +1623,7 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:750
 #, python-format
 msgid "The challenge %s is finished."
-msgstr ""
+msgstr "La sfida %s è terminata."
 
 #. module: gamification
 #: help:gamification.goal.definition,full_suffix:0
@@ -1650,7 +1673,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
 msgid "The higher the better"
-msgstr ""
+msgstr "Valori piu' alti sono da considerare migliori"
 
 #. module: gamification
 #: help:gamification.badge,owner_ids:0
@@ -1665,7 +1688,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
 msgid "The lower the better"
-msgstr ""
+msgstr "Valori piu' bassi sono da considerare migliori"
 
 #. module: gamification
 #: help:gamification.badge,rule_max_number:0
@@ -1690,11 +1713,12 @@ msgstr ""
 msgid ""
 "The number of time the current user has received this badge this month."
 msgstr ""
+"Il numero di volte che l'utente ha ricevuto questo badge, questo mese."
 
 #. module: gamification
 #: help:gamification.badge,stat_my:0
 msgid "The number of time the current user has received this badge."
-msgstr ""
+msgstr "Il numero di volte che l'utente corrente ha ricevuto questo badge."
 
 #. module: gamification
 #: help:gamification.badge,stat_my_monthly_sending:0
@@ -1709,12 +1733,12 @@ msgstr ""
 #. module: gamification
 #: help:gamification.badge,stat_this_month:0
 msgid "The number of time this badge has been received this month."
-msgstr ""
+msgstr "Il numero di volte che questo badge è stato assegnato questo mese."
 
 #. module: gamification
 #: help:gamification.badge,stat_count:0
 msgid "The number of time this badge has been received."
-msgstr ""
+msgstr "Il numero di volte che questo badge è stato assegnato."
 
 #. module: gamification
 #: help:gamification.goal.definition,monetary:0
@@ -1729,12 +1753,12 @@ msgstr ""
 #. module: gamification
 #: help:gamification.challenge,manager_id:0
 msgid "The user responsible for the challenge."
-msgstr ""
+msgstr "L'utente responsabile della sfida."
 
 #. module: gamification
 #: help:gamification.badge.user,sender_id:0
 msgid "The user who has send the badge"
-msgstr ""
+msgstr "L'utente che ha inviato il badge"
 
 #. module: gamification
 #: help:gamification.badge,goal_definition_ids:0
@@ -1742,6 +1766,8 @@ msgid ""
 "The users that have succeeded theses goals will receive automatically the "
 "badge."
 msgstr ""
+"Agli utenti che hanno completato con successo questi obiettivi, verrà "
+"assegnato automaticamente il badge."
 
 #. module: gamification
 #: help:gamification.goal.definition,batch_user_expression:0
@@ -1754,7 +1780,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
 msgid "There is no reward upon completion of this challenge."
-msgstr ""
+msgstr "Non esistono ricompense al completamento di questa sfida."
 
 #. module: gamification
 #: help:gamification.goal,closed:0
@@ -1765,17 +1791,18 @@ msgstr ""
 #: code:addons/gamification/models/badge.py:238
 #, python-format
 msgid "This badge can not be sent by users."
-msgstr ""
+msgstr "Questo badge non puo' essere inviato da utenti."
 
 #. module: gamification
 #: help:gamification.badge,image:0
 msgid "This field holds the image used for the badge, limited to 256x256"
 msgstr ""
+"Questo campo conserva l'immagine utilizzata per il badge, limitata a 256x256"
 
 #. module: gamification
 #: field:gamification.goal,target_goal:0
 msgid "To Reach"
-msgstr ""
+msgstr "Da raggiungere"
 
 #. module: gamification
 #: field:gamification.goal,to_update:0
@@ -1785,7 +1812,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,stat_count:0
 msgid "Total"
-msgstr ""
+msgstr "Totale"
 
 #. module: gamification
 #: field:gamification.badge,unique_owner_ids:0
@@ -1801,18 +1828,18 @@ msgstr ""
 #: field:gamification.badge,message_unread:0
 #: field:gamification.challenge,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Messaggi non letti"
 
 #. module: gamification
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "Update"
-msgstr ""
+msgstr "Aggiorna"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:491
 #, python-format
 msgid "Update %s"
-msgstr ""
+msgstr "Aggiorna %s"
 
 #. module: gamification
 #: field:gamification.badge.user,user_id:0
@@ -1820,7 +1847,7 @@ msgstr ""
 #: view:gamification.goal:gamification.goal_search_view
 #: field:gamification.goal,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Utente"
 
 #. module: gamification
 #: field:gamification.challenge,user_domain:0
@@ -1831,7 +1858,7 @@ msgstr ""
 #: field:gamification.challenge,user_ids:0
 #: model:ir.model,name:gamification.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Utenti"
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:238
@@ -1841,7 +1868,7 @@ msgstr ""
 #: code:addons/gamification/wizard/grant_badge.py:43
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Attenzione!"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1904,23 +1931,23 @@ msgstr ""
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "badges this month"
-msgstr ""
+msgstr "badge questo mese"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 #: view:gamification.goal:gamification.goal_form_view
 msgid "days"
-msgstr ""
+msgstr "giorni"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "e.g. Monthly Sales Objectives"
-msgstr ""
+msgstr "es. Obiettivi mensili di vendita"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
 msgid "e.g. days"
-msgstr ""
+msgstr "es. giorni"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -1933,7 +1960,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr ""
+msgstr "es. user.partner_id.id"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_kanban_view
@@ -1945,19 +1972,19 @@ msgstr ""
 #: code:addons/gamification/static/src/xml/gamification.xml:108
 #, python-format
 msgid "more details..."
-msgstr ""
+msgstr "più dettagli..."
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 #: view:gamification.challenge:gamification.view_challenge_wizard
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "or"
-msgstr ""
+msgstr "o"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
 msgid "refresh"
-msgstr ""
+msgstr "aggiorna"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard

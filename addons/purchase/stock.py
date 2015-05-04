@@ -31,6 +31,13 @@ class stock_move(osv.osv):
             readonly=True),
     }
 
+    def get_price_unit(self, cr, uid, move, context=None):
+        """ Returns the unit price to store on the quant """
+        if move.purchase_line_id:
+            return move.price_unit
+
+        return super(stock_move, self).get_price_unit(cr, uid, move, context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -69,13 +76,33 @@ class stock_move(osv.osv):
             self.pool.get('purchase.order').write(cr, uid, [purchase_line.order_id.id], {
                 'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
             })
+            purchase_line_obj = self.pool.get('purchase.order.line')
+            purchase_obj = self.pool.get('purchase.order')
+            invoice_line_obj = self.pool.get('account.invoice.line')
+            purchase_id = move.purchase_line_id.order_id.id
+            purchase_line_ids = purchase_line_obj.search(cr, uid, [('order_id', '=', purchase_id), ('invoice_lines', '=', False), '|', ('product_id', '=', False), ('product_id.type', '=', 'service')], context=context)
+            if purchase_line_ids:
+                inv_lines = []
+                for po_line in purchase_line_obj.browse(cr, uid, purchase_line_ids, context=context):
+                    acc_id = purchase_obj._choose_account_from_po_line(cr, uid, po_line, context=context)
+                    inv_line_data = purchase_obj._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
+                    inv_line_id = invoice_line_obj.create(cr, uid, inv_line_data, context=context)
+                    inv_lines.append(inv_line_id)
+                    po_line.write({'invoice_lines': [(4, inv_line_id)]})
+                invoice_line_obj.write(cr, uid, inv_lines, {'invoice_id': invoice_line_vals['invoice_id']}, context=context)
         return invoice_line_id
 
     def _get_master_data(self, cr, uid, move, company, context=None):
         if move.purchase_line_id:
             purchase_order = move.purchase_line_id.order_id
             return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
-        else:
+        elif move.picking_id:
+            # In case of an extra move, it is better to use the data from the original moves
+            for purchase_move in move.picking_id.move_lines:
+                if purchase_move.purchase_line_id:
+                    purchase_order = purchase_move.purchase_line_id.order_id
+                    return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
+
             partner = move.picking_id and move.picking_id.partner_id or False
             code = self.get_code_from_locs(cr, uid, move, context=context)
             if partner and partner.property_product_pricelist_purchase and code == 'incoming':
@@ -92,11 +119,26 @@ class stock_move(osv.osv):
             res['price_unit'] = purchase_line.price_unit
         return res
 
+    def _get_moves_taxes(self, cr, uid, moves, context=None):
+        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, context=context)
+        for move in moves:
+            if move.purchase_line_id:
+                is_extra_move[move.id] = False
+                extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.purchase_line_id.taxes_id])]
+        return (is_extra_move, extra_move_tax)
+
 
     def attribute_price(self, cr, uid, move, context=None):
         """
             Attribute price to move, important in inter-company moves or receipts with only one partner
         """
+        # The method attribute_price of the parent class sets the price to the standard product
+        # price if move.price_unit is zero. We don't want this behavior in the case of a purchase
+        # order since we can purchase goods which are free of charge (e.g. 5 units offered if 100
+        # are purchased).
+        if move.purchase_line_id:
+            return
+
         code = self.get_code_from_locs(cr, uid, move, context=context)
         if not move.purchase_line_id and code == 'incoming' and not move.price_unit:
             partner = move.picking_id and move.picking_id.partner_id or False
@@ -148,18 +190,6 @@ class stock_picking(osv.osv):
         purchase_line_obj = self.pool.get('purchase.order.line')
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
-        if picking.move_lines and picking.move_lines[0].purchase_line_id:
-            purchase_id = picking.move_lines[0].purchase_line_id.order_id.id
-            purchase_line_ids = purchase_line_obj.search(cr, uid, [('order_id', '=', purchase_id), ('product_id.type', '=', 'service'), ('invoiced', '=', False)], context=context)
-            if purchase_line_ids:
-                inv_lines = []
-                for po_line in purchase_line_obj.browse(cr, uid, purchase_line_ids, context=context):
-                    acc_id = purchase_obj._choose_account_from_po_line(cr, uid, po_line, context=context)
-                    inv_line_data = purchase_obj._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
-                    inv_line_id = invoice_line_obj.create(cr, uid, inv_line_data, context=context)
-                    inv_lines.append(inv_line_id)
-                    po_line.write({'invoice_lines': [(4, inv_line_id)]})
-                invoice_line_obj.write(cr, uid, inv_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
 
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):

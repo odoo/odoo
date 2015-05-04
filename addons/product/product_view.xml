@@ -16,7 +16,7 @@
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
                     <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
-                    <field string="Product Variant" name="product_variant_ids" filter_domain="['|', ('product_variant_ids.name','ilike',self), ('product_variant_ids.attribute_value_ids.name','ilike',self)]"/>
+                    <field string="Product Variant" name="product_variant_ids" filter_domain="['|', ('product_variant_ids.name','ilike',self), ('product_variant_ids.attribute_value_ids.attribute_id.name','ilike',self)]"/>
                     <field name="company_id"/>
                     <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group  expand='0' string='Group by...'>
@@ -597,23 +597,20 @@
                             <field name="name"/>
                             <field name="category_id"/>
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
-                            <label for="factor"/>
-                            <div>
-                                <field name="factor"
-                                    digits="[42,5]"
-                                    attrs="{'invisible':[('uom_type','!=','smaller')],
-                                            'readonly':[('uom_type','=','bigger')]}"/>
-                                <field name="factor_inv"
-                                    digits="[42,5]"
-                                    attrs="{'invisible':[('uom_type','!=','bigger')],
-                                            'readonly':[('uom_type','!=','bigger')]}"/>
-                                <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey">
-                                    e.g: 1 * (reference unit) = ratio * (this unit)
-                                </p>
-                                <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey">
-                                    e.g: 1 * (this unit) = ratio * (reference unit)
-                                </p>
-                            </div>
+                            <field name="factor"
+                                digits="[42,5]"
+                                attrs="{'invisible':[('uom_type','!=','smaller')],
+                                        'readonly':[('uom_type','=','bigger')]}"/>
+                            <field name="factor_inv"
+                                digits="[42,5]"
+                                attrs="{'invisible':[('uom_type','!=','bigger')],
+                                        'readonly':[('uom_type','!=','bigger')]}"/>
+                            <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey" colspan="2">
+                                e.g: 1 * (reference unit) = ratio * (this unit)
+                            </p>
+                            <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey" colspan="2">
+                                e.g: 1 * (this unit) = ratio * (reference unit)
+                            </p>
                         </group>
                         <group>
                             <field name="active"/>

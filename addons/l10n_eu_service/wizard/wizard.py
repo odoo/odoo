@@ -151,7 +151,8 @@ class l10n_eu_service(models.TransientModel):
                 'ref_tax_code_id': tx_code.id,
                 'ref_base_sign': -1,
                 'ref_tax_sign': -1,
-                'description': "EU-VAT-%s-S" % country.code
+                'description': "EU-VAT-%s-S" % country.code,
+                'sequence': 1000,
             }
             tax = account_tax.create(data_tax)
             if self.fiscal_position_id:

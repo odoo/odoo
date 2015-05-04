@@ -607,10 +607,7 @@
                                     <field name="date" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="name" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="ref" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="partner_id" domain="[
-                                        '&amp;',
-                                            '|',('parent_id','=',False),('is_company','=',True),
-                                            '|',('customer','=',True),('supplier','=',True)]"
+                                    <field name="partner_id" domain="['|',('parent_id','=',False),('is_company','=',True)]"
                                          context="{'default_supplier': 1}"
                                          attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
@@ -663,7 +660,7 @@
             <field name="act_window_id" ref="action_bank_statement_tree"/>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_form_bank">
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_bank_statement_form"/>
             <field name="act_window_id" ref="action_bank_statement_tree"/>

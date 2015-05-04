@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-10-18 06:24+0000\n"
-"Last-Translator: ERPSystems.ro <Unknown>\n"
+"PO-Revision-Date: 2015-04-11 16:15+0000\n"
+"Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:06+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-12 06:04+0000\n"
+"X-Generator: Launchpad (build 17423)\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -43,6 +43,28 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Clic pentru a crea o aprovizionare.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Comenzile aprovizionare</b> reprezintă o necesitate de o "
+"cantitate dintr-un produs la un anumit moment și într-o locație. \n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Comenzile de vânzare</b> sunt de regulă sursa comenzilor "
+"de aprovizionare (dar pot fi și documente distincte). \n"
+"                <br/>În funcție de parametrii de aprovizionare și "
+"configurația produsului, motorul de aprovizionare va încerca să satisfacă "
+"nevoia de rezervare produse din stoc, comanda produse de la un furnizor, sau "
+"genera o comandă de producție, etc ... \n"
+"              </p>\n"
+"              <p>\n"
+"                 O <b> Excepție de achiziții </b> apare atunci când sistemul "
+"nu poate găsi o modalitate de a îndeplini o aprovizionare. Unele excepții se "
+"vor rezolva în mod automat, dar altele necesită intervenție manuală (acestea "
+"sunt identificate printr-un mesaj de eroare specific în jurnal).\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -67,6 +89,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Clic pentru a crea o aprovizionare.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Comenzile aprovizionare</b> reprezintă o necesitate de o "
+"cantitate dintr-un produs la un anumit moment și într-o locație. Comenzile "
+"de aprovizionare sunt de regulă generate automat din <i>comenzi de vânzare, "
+"reguli logistice de tragere sau reguli de stoc minim.</i>\n"
+"              </p>\n"
+"              <p>\n"
+"În cazul în care comanda de aprovizionare este confirmată, se creează în mod "
+"automat operațiile necesare pentru a îndeplini necesitatea: comandă de "
+"achiziție în ciornă, comandă de fabricație, etc.\n"
+"</p>\n"
+"            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
@@ -96,7 +133,7 @@ msgstr "Anulați Aprovizionarea"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr "Anulat(a)"
+msgstr "Anulat(ă)"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:156
@@ -115,6 +152,9 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but "
 "can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
+"Alege regulă pentru rezoluția de aprovizionare. De obicei, alesă de către "
+"sistem, dar poate fi setată manual de către managerul de aprovizionare "
+"pentru a forța un comportament distinct."
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -125,7 +165,7 @@ msgstr "Compania"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Calculează toate aprovizionările în fundal."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -249,7 +289,7 @@ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
 #. module: procurement
 #: help:procurement.rule,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
+msgstr "Vă permite să ascundeți regula fără a o șterge."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:155
@@ -317,7 +357,7 @@ msgstr "Nume"
 #: code:addons/procurement/procurement.py:212
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Regulă negăsită pentru această aprovizionare"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -428,17 +468,17 @@ msgstr "Opțiuni de propagare"
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Propagare Grup Aprovizionare"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Pull Rule"
-msgstr ""
+msgstr "Regulă de tragere"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_tree
 msgid "Pull Rules"
-msgstr ""
+msgstr "Reguli de tragere"
 
 #. module: procurement
 #: field:procurement.order,product_qty:0
@@ -461,6 +501,8 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
 msgstr ""
+"Referire la documentul care a creat acestă Aprovizionare.\n"
+"Aceasta este completată automat de Odoo."
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
@@ -533,6 +575,7 @@ msgstr "Continut"
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
+"Acest câmp va completa cu originea ridicării și numele de mișcari sale"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view

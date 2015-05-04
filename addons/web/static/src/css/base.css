@@ -492,17 +492,17 @@
 .openerp .oe_button.oe_link span:hover {
   text-decoration: underline;
 }
-.openerp .oe_webclient .oe_star_on, .openerp .oe_webclient .oe_star_off {
+.openerp .oe_webclient .oe_star_on, .openerp .oe_webclient .oe_star_off, .openerp .modal-body .oe_star_on, .openerp .modal-body .oe_star_off {
   color: #cccccc;
   text-shadow: 0 0 2px black;
   vertical-align: top;
   position: relative;
   top: -8px;
 }
-.openerp .oe_webclient .oe_star_on:hover, .openerp .oe_webclient .oe_star_off:hover {
+.openerp .oe_webclient .oe_star_on:hover, .openerp .oe_webclient .oe_star_off:hover, .openerp .modal-body .oe_star_on:hover, .openerp .modal-body .oe_star_off:hover {
   text-decoration: none;
 }
-.openerp .oe_webclient .oe_star_on {
+.openerp .oe_webclient .oe_star_on, .openerp .modal-body .oe_star_on {
   color: gold;
 }
 .openerp p.oe_grey {
@@ -903,7 +903,6 @@
 }
 .openerp .oe_leftbar > div > div > div > div.oe_secondary_menus_container {
   position: absolute;
-  position: static\9;
   top: 0;
   bottom: 0;
   left: 0;
@@ -1064,7 +1063,6 @@
 }
 .openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body {
   position: absolute;
-  position: static\9;
   top: 0;
   bottom: 0;
   left: 0;
@@ -2375,6 +2373,10 @@
 .openerp .oe_form_field_many2one input {
   padding-right: 13px;
 }
+.openerp.ui-autocomplete {
+  top: 0;
+  left: 0;
+}
 .openerp.ui-autocomplete li.oe_m2o_dropdown_option a {
   font-style: italic;
   padding-left: 2em;
@@ -2788,6 +2790,10 @@
 .openerp .oe_list_content > tbody > tr > td.oe_list_field_boolean input {
   filter: alpha(opacity=50);
   opacity: 0.5;
+}
+.openerp .oe_list_content > tbody > tr > td.oe_list_field_boolean input:-moz-read-only {
+  filter: alpha(opacity=100);
+  opacity: 1;
 }
 .openerp .oe_list_content > tbody > tr:nth-child(odd) {
   background-color: #f0f0fa;

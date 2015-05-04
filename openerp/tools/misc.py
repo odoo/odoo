@@ -122,7 +122,8 @@ def exec_pg_command(name, *args):
     prog = find_pg_tool(name)
     env = exec_pg_environ()
     with open(os.devnull) as dn:
-        rc = subprocess.call((prog,) + args, env=env, stdout=dn, stderr=subprocess.STDOUT)
+        args2 = (prog,) + args
+        rc = subprocess.call(args2, env=env, stdout=dn, stderr=subprocess.STDOUT)
         if rc:
             raise Exception('Postgres subprocess %s error %s' % (args2, rc))
 
@@ -535,7 +536,7 @@ ALL_LANGUAGES = {
         'mn_MN': u'Mongolian / монгол',
         'nb_NO': u'Norwegian Bokmål / Norsk bokmål',
         'nl_NL': u'Dutch / Nederlands',
-        'nl_BE': u'Flemish (BE) / Vlaams (BE)',
+        'nl_BE': u'Dutch (BE) / Nederlands (BE)',
         'oc_FR': u'Occitan (FR, post 1500) / Occitan',
         'pl_PL': u'Polish / Język polski',
         'pt_BR': u'Portuguese (BR) / Português (BR)',

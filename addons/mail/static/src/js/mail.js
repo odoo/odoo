@@ -800,7 +800,8 @@ openerp.mail = function (session) {
 
             _.each(messages, function (thread) {
                 if (thread.author_id && !thread.author_id[0] &&
-                    !_.find(self.recipients, function (recipient) {return recipient.email_address == thread.author_id[3];})) {
+                    !_.find(self.recipients, function (recipient) {return recipient.email_address == thread.author_id[3];}) &&
+                    _.some([thread.author_id[1], thread.author_id[2], thread.author_id[3]])) {
                     self.recipients.push({  'full_name': thread.author_id[1],
                                             'name': thread.author_id[2],
                                             'email_address': thread.author_id[3],
