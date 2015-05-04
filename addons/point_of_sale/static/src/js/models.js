@@ -1102,6 +1102,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                currency_rounding = currency_rounding * 0.00001;
             }
             var base = price_unit;
+            var tmp  = 0;
+            var data = null;
             _(taxes).each(function(tax) {
                 if (tax.price_include) {
                     if (tax.type === "percent") {
