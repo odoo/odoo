@@ -242,33 +242,33 @@ class XMLTranslations(object):
 
     """
     def __init__(self, callback):
-        self._callback = callback       # callback function to translate terms
-        self._list = []                 # _list[i] is a todo iff i is even
-        self._todo = []                 # list of todo strings
+        self.callback = callback        # callback function to translate terms
+        self._done = []                 # translated strings
+        self._todo = []                 # todo strings that come after _done
 
     def todo(self, text):
         self._todo.append(text)
 
-    def done(self, text):
-        self._list.append("".join(self._todo).strip())
-        self._list.append(text)
-        self._todo = []
-
     def all_todo(self):
-        return not self._list
+        return not self._done
 
     def get_todo(self):
         return "".join(self._todo).strip()
 
-    def get_result(self):
-        """ Translate the longest sequences of todo strings. """
-        self._list.append("".join(self._todo).strip())
-        result = []
-        for i, text in enumerate(self._list):
-            if i % 2 == 0:
-                text = text and self._callback(text)
-            result.append(text)
-        return "".join(result)
+    def flush(self):
+        if self._todo:
+            todo = "".join(self._todo).strip()
+            self._done.append(todo and self.callback(todo))
+            del self._todo[:]
+
+    def done(self, text):
+        self.flush()
+        self._done.append(text)
+
+    def get_done(self):
+        """ Complete the translations and return the result. """
+        self.flush()
+        return "".join(self._done)
 
     def process(self, node):
         """ Process the given xml `node`: collect `todo` and `done` items. """
@@ -280,7 +280,7 @@ class XMLTranslations(object):
             return
 
         # process children nodes locally in child_trans
-        child_trans = XMLTranslations(self._callback)
+        child_trans = XMLTranslations(self.callback)
         child_trans.todo(escape(node.text or ""))
         for child in node:
             child_trans.process(child)
@@ -294,8 +294,8 @@ class XMLTranslations(object):
             # complete translations and serialize result as done
             for attr in TRANSLATED_ATTRS:
                 if node.get(attr):
-                    node.set(attr, self._callback(node.get(attr)))
-            self.done(serialize(node.tag, node.attrib, child_trans.get_result()))
+                    node.set(attr, self.callback(node.get(attr)))
+            self.done(serialize(node.tag, node.attrib, child_trans.get_done()))
 
         # add node tail as todo
         self.todo(escape(node.tail or ""))
@@ -309,7 +309,7 @@ def xml_translator():
         root = etree.fromstring(encode(value))
         trans = XMLTranslations(callback)
         trans.process(root)
-        return trans.get_result()
+        return trans.get_done()
 
     return translate
 
