@@ -1912,21 +1912,21 @@ class MailThread(models.AbstractModel):
         Example :   my_lead.message_change_thread(my_project_issue)
                     will transfer the context of the thread of my_lead to my_project_issue
         """
-        self.ensuer_one()
-        # get the sbtype id of the comment Message
-        subtype_res_id = self.env.ref('mail.mt_comment')
+        self.ensure_one()
+        # get the subtype of the comment Message
+        subtype_comment = self.env.ref('mail.mt_comment')
 
         # get the ids of the comment and not-comment of the thread
         # TDE check: sudo on mail.message, to be sure all messages are moved ?
         MailMessage = self.env['mail.message']
         msg_comment = MailMessage.search([
             ('model', '=', self._name),
-            ('res_id', '=', id),
-            ('subtype_id', '=', subtype_res_id)])
+            ('res_id', '=', self.id),
+            ('subtype_id', '=', subtype_comment.id)])
         msg_not_comment = MailMessage.search([
             ('model', '=', self._name),
-            ('res_id', '=', id),
-            ('subtype_id', '!=', subtype_res_id)])
+            ('res_id', '=', self.id),
+            ('subtype_id', '!=', subtype_comment.id)])
 
         # update the messages
         msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})
