@@ -41,8 +41,9 @@ class crm_lead_to_project_issue_wizard(osv.TransientModel):
                 "user_id": None
             }
             issue_id = Issue.create(cr, uid, vals, context=None)
+            issue = Issue.browse(cr, uid, issue_id, context=None)
             # move the mail thread
-            Lead.message_change_thread(cr, uid, lead.id, issue_id, "project.issue", context=context)
+            Lead.message_change_thread(cr, uid, [lead.id], issue, context=context)
             # delete the lead
             Lead.unlink(cr, uid, [lead.id], context=None)
         # return the action to go to the form view of the new Issue
