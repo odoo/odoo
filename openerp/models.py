@@ -3470,8 +3470,8 @@ class BaseModel(object):
                     # errors for non-transactional search/read sequences coming from clients
                     return
                 _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
-                raise except_orm(_('Missing document(s)'),
-                                 _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+                raise MissingError(
+                    _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
 
 
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.

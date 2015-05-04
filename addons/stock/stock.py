@@ -2340,7 +2340,7 @@ class stock_move(models.Model):
         if todo:
             ids = self.action_confirm(cr, uid, todo, context=context)
         pickings = set()
-        procurement_ids = []
+        procurement_ids = set()
         #Search operations that are linked to the moves
         operations = set()
         move_qty = {}
@@ -2404,7 +2404,7 @@ class stock_move(models.Model):
                 move_dest_ids.add(move.move_dest_id.id)
 
             if move.procurement_id:
-                procurement_ids.append(move.procurement_id.id)
+                procurement_ids.add(move.procurement_id.id)
 
             #unreserve the quants and make them available for other operations/moves
             quant_obj.quants_unreserve(cr, uid, move, context=context)
@@ -2412,7 +2412,7 @@ class stock_move(models.Model):
         self._check_package_from_moves(cr, uid, ids, context=context)
         #set the move as done
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
-        self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
+        self.pool.get('procurement.order').check(cr, uid, list(procurement_ids), context=context)
         #assign destination moves
         if move_dest_ids:
             self.action_assign(cr, uid, list(move_dest_ids), context=context)
