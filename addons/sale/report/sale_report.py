@@ -44,11 +44,11 @@ class sale_report(osv.osv):
         'categ_id': fields.many2one('product.category','Product Category', readonly=True),
         'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
         'state': fields.selection([
-            ('draft', 'Quotation'),
+            ('draft', 'Draft Quotation'),
             ('sent', 'Quotation Sent'),
             ('waiting_date', 'Waiting Schedule'),
-            ('manual', 'Manual In Progress'),
-            ('progress', 'In Progress'),
+            ('manual', 'Sale to Invoice'),
+            ('progress', 'Sale Order'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
