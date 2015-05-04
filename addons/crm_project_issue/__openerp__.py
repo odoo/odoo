@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name': 'Lead to Issue',
     'version': '1.0',
@@ -5,7 +7,7 @@
     'sequence': '19',
     'category': 'Project Management',
     'complexity': 'easy',
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'description': """
 Lead to Issues
 ==============
@@ -13,7 +15,7 @@ Lead to Issues
 Link module to map leads to issues
         """,
     'data': [
-        'project_issue_view.xml'
+        'views/crm_lead2projectissue_wizard_views.xml'
     ],
     'depends': ['crm', 'project_issue'],
     'installable': True,
