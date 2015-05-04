@@ -1191,6 +1191,7 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').do_unreserve(cr, uid, moves_to_unreserve, context=context)
 
     def recompute_remaining_qty(self, cr, uid, picking, context=None):
+        context = dict(context or {})
         def _create_link_for_index(operation_id, index, product_id, qty_to_assign, quant_id=False):
             move_dict = prod2move_ids[product_id][index]
             qty_on_link = min(move_dict['remaining_qty'], qty_to_assign)
@@ -1256,6 +1257,7 @@ class stock_picking(osv.osv):
             #and deffer the operation if there is some ambiguity on the move to select
             if ops.package_id and not ops.product_id:
                 #entire package
+                context.update({'product_ids': prod2move_ids.keys()})
                 quant_ids = package_obj.get_content(cr, uid, [ops.package_id.id], context=context)
                 for quant in quant_obj.browse(cr, uid, quant_ids, context=context):
                     remaining_qty_on_quant = quant.qty
@@ -3817,7 +3819,10 @@ class stock_package(osv.osv):
 
     def get_content(self, cr, uid, ids, context=None):
         child_package_ids = self.search(cr, uid, [('id', 'child_of', ids)], context=context)
-        return self.pool.get('stock.quant').search(cr, uid, [('package_id', 'in', child_package_ids)], context=context)
+        quant_domain = [('package_id', 'in', child_package_ids)]
+        if context.get('product_ids'):
+            quant_domain.append(('product_id', 'in', context.get('product_ids')))
+        return self.pool.get('stock.quant').search(cr, uid, quant_domain, context=context)
 
     def get_content_package(self, cr, uid, ids, context=None):
         quants_ids = self.get_content(cr, uid, ids, context=context)
