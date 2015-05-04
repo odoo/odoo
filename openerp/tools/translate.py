@@ -285,7 +285,9 @@ class XMLTranslations(object):
         for child in node:
             child_trans.process(child)
 
-        if child_trans.all_todo() and node.tag in TRANSLATED_ELEMENTS:
+        if (child_trans.all_todo() and
+                node.tag in TRANSLATED_ELEMENTS and
+                not any(attr.startswith("t-") for attr in node.attrib)):
             # serialize the node element as todo
             self.todo(serialize(node.tag, node.attrib, child_trans.get_todo()))
         else:

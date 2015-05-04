@@ -93,3 +93,19 @@ class TranslationToolsTestCase(unittest.TestCase):
             """<form string="Form stuff"><b><h1>Blah <i>blah</i> blah</h1></b>Put <em>some <b>more text</b></em> here<field name="foo"/></form>""")
         self.assertItemsEqual(terms,
             ['Form stuff', 'Blah <i>blah</i> blah', 'Put <em>some <b>more text</b></em> here'])
+
+    def test_translate_xml_30(self):
+        """ Test xml_translator() with t-* attributes. """
+        translate = xml_translator()
+        terms = []
+        callback = lambda t: terms.append(t) or t
+
+        result = translate(callback, """<t t-name="stuff">
+                                            stuff before
+                                            <span t-field="o.name"/>
+                                            stuff after
+                                        </t>""")
+        self.assertEquals(result,
+            """<t t-name="stuff">stuff before<span t-field="o.name"/>stuff after</t>""")
+        self.assertItemsEqual(terms,
+            ['stuff before', 'stuff after'])
