@@ -298,7 +298,7 @@ class website_sale(http.Controller):
             request.registry['product.template'].message_post(
                 cr, uid, product_template_id,
                 body=post.get('comment'),
-                type='comment',
+                message_type='comment',
                 subtype='mt_comment',
                 context=dict(context, mail_create_nosubscribe=True))
         return werkzeug.utils.redirect('/shop/product/%s#comments' % product_template_id)

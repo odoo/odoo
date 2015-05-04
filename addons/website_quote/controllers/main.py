@@ -46,7 +46,7 @@ class sale_quote(http.Controller):
             if request.session.get('view_quote',False)!=now:
                 request.session['view_quote'] = now
                 body=_('Quotation viewed by customer')
-                self.__message_post(body, order_id, type='comment')
+                self.__message_post(body, order_id, message_type='comment')
         days = 0
         if order.validity_date:
             days = (datetime.datetime.strptime(order.validity_date, '%Y-%m-%d') - datetime.datetime.now()).days + 1
@@ -74,7 +74,7 @@ class sale_quote(http.Controller):
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
         order_obj.signal_workflow(request.cr, SUPERUSER_ID, [order_id], 'order_confirm', context=request.context)
         message = _('Order signed by %s') % (signer,)
-        self.__message_post(message, order_id, type='comment', subtype='mt_comment', attachments=attachments)
+        self.__message_post(message, order_id, message_type='comment', subtype='mt_comment', attachments=attachments)
         return True
 
     @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", website=True)
@@ -86,7 +86,7 @@ class sale_quote(http.Controller):
         request.registry.get('sale.order').action_cancel(request.cr, SUPERUSER_ID, [order_id])
         message = post.get('decline_message')
         if message:
-            self.__message_post(message, order_id, type='comment', subtype='mt_comment')
+            self.__message_post(message, order_id, message_type='comment', subtype='mt_comment')
         return werkzeug.utils.redirect("/quote/%s/%s?message=2" % (order_id, token))
 
     @http.route(['/quote/<int:order_id>/<token>/post'], type='http', auth="public", website=True)
@@ -98,17 +98,17 @@ class sale_quote(http.Controller):
         if token != order.access_token:
             return request.website.render('website.404')
         if message:
-            self.__message_post(message, order_id, type='comment', subtype='mt_comment')
+            self.__message_post(message, order_id, message_type='comment', subtype='mt_comment')
         return werkzeug.utils.redirect("/quote/%s/%s?message=1" % (order_id, token))
 
-    def __message_post(self, message, order_id, type='comment', subtype=False, attachments=[]):
+    def __message_post(self, message, order_id, message_type='comment', subtype=False, attachments=[]):
         request.session.body =  message
         cr, uid, context = request.cr, request.uid, request.context
         user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
         if 'body' in request.session and request.session.body:
             request.registry.get('sale.order').message_post(cr, SUPERUSER_ID, order_id,
                     body=request.session.body,
-                    type=type,
+                    message_type=message_type,
                     subtype=subtype,
                     author_id=user.partner_id.id,
                     context=context,
