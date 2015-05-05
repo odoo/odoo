@@ -2431,6 +2431,11 @@ class BaseModel(object):
         # has not been added in database yet!
         context = dict(context or {}, prefetch_fields=False)
 
+        # Make sure an environment is available for get_pg_type(). This is
+        # because we access column.digits, which retrieves a cursor from
+        # existing environments.
+        env = api.Environment(cr, SUPERUSER_ID, context)
+
         store_compute = False
         stored_fields = []              # new-style stored fields with compute
         todo_end = []

@@ -246,9 +246,9 @@ class rml_parse(object):
         res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
         if currency_obj:
             if currency_obj.position == 'after':
-                res='%s %s'%(res,currency_obj.symbol)
+                res = u'%s\N{NO-BREAK SPACE}%s' % (res, currency_obj.symbol)
             elif currency_obj and currency_obj.position == 'before':
-                res='%s %s'%(currency_obj.symbol, res)
+                res = u'%s\N{NO-BREAK SPACE}%s' % (currency_obj.symbol, res)
         return res
 
     def display_address(self, address_record, without_company=False):
