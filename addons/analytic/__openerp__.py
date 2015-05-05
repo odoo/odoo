@@ -44,7 +44,6 @@ that have no counterpart in the general financial accounts.
         'wizard/account_analytic_balance_report_view.xml',
         'wizard/account_analytic_cost_ledger_view.xml',
         'wizard/account_analytic_inverted_balance_report.xml',
-        'wizard/account_analytic_journal_report_view.xml',
         'wizard/account_analytic_cost_ledger_for_journal_report_view.xml',
         'wizard/account_analytic_chart_view.xml',
         'views/report_analyticbalance.xml',

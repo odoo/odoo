@@ -34,33 +34,33 @@
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
-                                    <field name="qty" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
-                                    <field name="price_unit" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
-                                    <field name="discount"  on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                    <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)"/>
+                                    <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                    <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
                                     <field name="tax_ids" widget="many2many_tags"/>
-                                    <field name="price_subtotal"/>
-                                    <field name="price_subtotal_incl"/>
+                                    <field name="price_subtotal" widget="monetary"/>
+                                    <field name="price_subtotal_incl" widget="monetary"/>
                                 </tree>
                                 <form string="Order lines">
                                     <group col="4">
                                         <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
-                                        <field name="qty" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
-                                        <field name="discount"  on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
-                                        <field name="price_unit" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
-                                        <field name="price_subtotal" invisible="1"/>
-                                        <field name="price_subtotal_incl" invisible="1"/>
+                                        <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)"/>
+                                        <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                        <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                        <field name="price_subtotal" invisible="1" widget="monetary"/>
+                                        <field name="price_subtotal_incl" invisible="1" widget="monetary"/>
                                         <field name="notice"/>
                                     </group>
                                 </form>
                             </field>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="order_total">
-                                <field name="amount_tax"/>
+                                <field name="amount_tax" widget="monetary"/>
                                 <div class="oe_subtotal_footer_separator oe_inline">
                                     <label for="amount_total" />
                                     <button name="button_dummy"
                                         states="draft" string="(update)" class="oe_edit_only oe_link"/>
                                 </div>
-                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
                             </group>
                             <div class="oe_clear"/>
                         </page>
@@ -129,7 +129,7 @@
                     <field name="date_order"/>
                     <field name="user_id"/>
                     <field name="invoice_id"/>
-                    <field name="amount_total" sum="Amount total"/>
+                    <field name="amount_total" sum="Amount total" widget="monetary"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state"/>
                     <field name="session_id" />
@@ -198,10 +198,10 @@
                 <tree string="POS Order lines">
                     <field name="product_id" readonly="1"/>
                     <field name="qty" readonly="1" sum="Total qty"/>
-                    <field name="discount" readonly="1"/>
-                    <field name="price_unit" readonly="1"/>
-                    <field name="price_subtotal" readonly="1" sum="Sum of subtotals"/>
-                    <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals"/>
+                    <field name="discount" readonly="1" widget="monetary"/>
+                    <field name="price_unit" readonly="1" widget="monetary"/>
+                    <field name="price_subtotal" readonly="1" sum="Sum of subtotals" widget="monetary"/>
+                    <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                     <field name="create_date" readonly="1"/>
                 </tree>
             </field>
@@ -215,8 +215,8 @@
                     <group col="4">
                         <field name="product_id" />
                         <field name="qty" />
-                        <field name="discount" />
-                        <field name="price_unit" />
+                        <field name="discount" widget="monetary"/>
+                        <field name="price_unit" widget="monetary"/>
                         <field name="create_date" />
                     </group>
                 </form>
@@ -619,7 +619,7 @@
                     <field name="create_date" />
                     <field name="product_id" />
                     <field name="qty" />
-                    <field name="price_unit" />
+                    <field name="price_unit" widget="monetary"/>
                 </tree>
             </field>
         </record>
@@ -691,7 +691,6 @@
                                 <field name="code" />
                                 <field name="name" />
                                 <field name="type" />
-                                <field name="cash_control" />
                             </tree>
                         </field>
                         <group string="Features" >
@@ -833,24 +832,6 @@
                                 <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                             </group>
                             <newline/>
-                            <group string="Opening Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
-                                <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', '!=', 'opening_control')]}">
-                                    <tree string="Opening Cashbox Lines" editable="bottom">
-                                        <field name="pieces" readonly="1" />
-                                        <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)" />
-                                        <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            <group string="Closing Cash Control" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
-                                <field name="details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', '=', 'closed')]}">
-                                    <tree string="Cashbox Lines" editable="bottom">
-                                        <field name="pieces" readonly="1" />
-                                        <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing)"/>
-                                        <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
-                                    </tree>
-                                </field>
-                            </group>
 
                             <div attrs="{'invisible' : [('cash_control', '=', False)]}">
                                 <group class="oe_subtotal_footer oe_right">
@@ -889,7 +870,7 @@
                                 <field name="total_entry_encoding" />
                                 <field name="balance_end_real" />
                                 <field name="difference" />
-                                <field name="currency" groups="base.group_multi_currency" />
+                                <field name="currency_id" groups="base.group_multi_currency" />
                                 <field name="state" />
                             </tree>
                         </field>

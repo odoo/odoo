@@ -522,7 +522,7 @@ class product_template(osv.osv):
             help="A precise description of the Product, used only for internal information purposes."),
         'description_purchase': fields.text('Purchase Description',translate=True,
             help="A description of the Product that you want to communicate to your suppliers. "
-                 "This description will be copied to every Purchase Order, Receipt and Supplier Invoice/Refund."),
+                 "This description will be copied to every Purchase Order, Receipt and Supplier Bill/Refund."),
         'description_sale': fields.text('Sale Description',translate=True,
             help="A description of the Product that you want to communicate to your customers. "
                  "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),

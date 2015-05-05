@@ -201,7 +201,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.tax',
-        fields: ['name','amount', 'price_include', 'include_base_amount', 'type', 'child_ids', 'child_depend', 'include_base_amount'],
+        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type'],
         domain: null,
         loaded: function(self, taxes){
             self.taxes = taxes;
@@ -1269,28 +1269,22 @@ exports.Orderline = Backbone.Model.extend({
         var base = price_unit;
         _(taxes).each(function(tax) {
             if (tax.price_include) {
-                if (tax.type === "percent") {
-                    tmp =  round_pr(base - round_pr(base / (1 + tax.amount),currency_rounding),currency_rounding);
-                    data = {amount:tmp, price_include:true, id: tax.id};
-                    res.push(data);
-                } else if (tax.type === "fixed") {
+                if (tax.amount_type === "percent") {
+                    tmp =  base - round_pr(base / (1 + tax.amount/100),currency_rounding); 
+                } else if (tax.amount_type === "fixed") {
                     tmp = round_pr(tax.amount * self.get_quantity(),currency_rounding);
                     data = {amount:tmp, price_include:true, id: tax.id};
                     res.push(data);
                 } else {
-                    throw "This type of tax is not supported by the point of sale: " + tax.type;
+                    throw "This type of tax is not supported by the point of sale: " + tax.amount_type;
                 }
             } else {
-                if (tax.type === "percent") {
-                    tmp = round_pr(tax.amount * base, currency_rounding);
-                    data = {amount:tmp, price_include:false, id: tax.id};
-                    res.push(data);
-                } else if (tax.type === "fixed") {
-                    tmp = round_pr(tax.amount * self.get_quantity(), currency_rounding);
-                    data = {amount:tmp, price_include:false, id: tax.id};
-                    res.push(data);
+                if (tax.amount_type === "percent") {
+                    tmp = tax.amount/100 * base;
+                } else if (tax.amount_type === "fixed") {
+                    tmp = tax.amount * self.get_quantity();
                 } else {
-                    throw "This type of tax is not supported by the point of sale: " + tax.type;
+                    throw "This type of tax is not supported by the point of sale: " + tax.amount_type;
                 }
 
                 var base_amount = data.amount;

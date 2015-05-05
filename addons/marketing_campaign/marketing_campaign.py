@@ -412,8 +412,8 @@ class marketing_campaign_activity(osv.osv):
                                             'activity_to_id',
                                             'Previous Activities'),
         'variable_cost': fields.float('Variable Cost', help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section", digits_compute=dp.get_precision('Product Price')),
-        'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section", digits_compute=dp.get_precision('Account')),
-        'signal': fields.char('Signal',
+        'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section", digits=0),
+        'signal': fields.char('Signal', 
                               help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
         'keep_if_condition_not_met': fields.boolean("Don't Delete Workitems",
                                                     help="By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted.")

@@ -11,6 +11,15 @@
             <field name="body">Log in with Odoo.com</field>
             <field name="enabled" eval="True"/>
         </record>
+        <record id="provider_facebook" model="auth.oauth.provider">
+            <field name="name">Facebook Graph</field>
+            <field name="auth_endpoint">https://www.facebook.com/dialog/oauth</field>
+            <field name="scope"></field>
+            <field name="validation_endpoint">https://graph.facebook.com/me/permissions</field>
+            <field name="data_endpoint"></field>
+            <field name="css_class">fa fa-facebook-square</field>
+            <field name="body">Log in with facebook</field>
+        </record>
         <record id="provider_google" model="auth.oauth.provider">
             <field name="name">Google OAuth2</field>
             <field name="auth_endpoint">https://accounts.google.com/o/oauth2/auth</field>

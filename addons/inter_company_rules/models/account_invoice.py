@@ -46,28 +46,23 @@ class account_invoice(models.Model):
         context = self._context.copy()
         context['force_company'] = company.id
         origin_partner_id = self.company_id.partner_id
-        invoice_line_ids = []
-        for line in self.invoice_line:
-            # get invoice line data from product onchange
-            product_uom_id = line.product_id.uom_id and line.product_id.uom_id.id or False
-            line_data = line.with_context(context).sudo().product_id_change(line.product_id.id,
-                                                product_uom_id,
-                                                qty=line.quantity,
-                                                name='',
-                                                type=inv_type,
-                                                partner_id=origin_partner_id.id,
-                                                fposition_id=origin_partner_id.property_account_position.id,
-                                                company_id=company.id)
-            # create invoice line, as the intercompany user
-            inv_line_data = self.sudo()._prepare_invoice_line_data(line_data, line)
-            inv_line_id = line.with_context(context).sudo(intercompany_uid).create(inv_line_data)
-            invoice_line_ids.append(inv_line_id.id)
         # create invoice, as the intercompany user
-        invoice_vals = self.with_context(context).sudo()._prepare_invoice_data(invoice_line_ids, inv_type, journal_type, company)[0]
-        return self.with_context(context).sudo(intercompany_uid).create(invoice_vals)
+        invoice_vals = self.with_context(context).sudo()._prepare_invoice_data(inv_type, journal_type, company)[0]
+        invoice = self.with_context(context).sudo(intercompany_uid).create(invoice_vals)
+        context['journal_id'] = invoice_vals['journal_id']
+        for line in self.invoice_line_ids:
+            # get invoice line data from product onchange
+            # create invoice line, as the intercompany user
+            inv_line_data = self.sudo()._prepare_invoice_line_data(line)
+            line2 = self.env['account.invoice.line'].new(inv_line_data)
+            line2.invoice_id = invoice.id
+            line2.sudo()._onchange_product_id()
+            line_data = line2._convert_to_write(line2._cache)
+            line.with_context(context).sudo(intercompany_uid).create(line_data)
+        return invoice.id
 
     @api.one
-    def _prepare_invoice_data(self, invoice_line_ids, inv_type, journal_type, company):
+    def _prepare_invoice_data(self, inv_type, journal_type, company):
         """ Generate invoice values
             :param invoice_line_ids : the ids of the invoice lines
             :rtype invoice_line_ids : array of integer
@@ -84,33 +79,26 @@ class account_invoice(models.Model):
         # find periods of supplier company
         context = self._context.copy()
         context['company_id'] = company.id
-        period_ids = self.env['account.period'].with_context(context).find(self.date_invoice)
 
         # find account, payment term, fiscal position, bank.
-        partner_data = self.onchange_partner_id(inv_type, self.company_id.partner_id.id, company_id=company.id)
-        return {
-            'name': self.name,
+        vals = {'name': self.name,
             #TODO : not sure !!
             'origin': self.company_id.name + _(' Invoice: ') + str(self.number),
             'type': inv_type,
             'date_invoice': self.date_invoice,
             'reference': self.reference,
-            'account_id': partner_data['value'].get('account_id', False),
             'partner_id': self.company_id.partner_id.id,
             'journal_id': journal.id,
-            'invoice_line': [(6, 0, invoice_line_ids)],
             'currency_id': self.currency_id and self.currency_id.id,
-            'fiscal_position': partner_data['value'].get('fiscal_position', False),
-            'payment_term': partner_data['value'].get('payment_term', False),
             'company_id': company.id,
-            'period_id': period_ids and period_ids[0].id or False,
-            'partner_bank_id': partner_data['value'].get('partner_bank_id', False),
             'auto_generated': True,
-            'auto_invoice_id': self.id,
-        }
+            'auto_invoice_id': self.id,}
+        inv = self.env['account.invoice'].new(vals)
+        inv._onchange_partner_id()
+        return inv._convert_to_write(inv._cache)
 
     @api.model
-    def _prepare_invoice_line_data(self, line_data, line):
+    def _prepare_invoice_line_data(self, line):
         """ Generate invoice line values
             :param line_data : dict of invoice line data
             :rtype line_data : dict
@@ -125,9 +113,6 @@ class account_invoice(models.Model):
             'product_id': line.product_id.id or False,
             'uos_id': line.uos_id.id or False,
             'sequence': line.sequence,
-            'invoice_line_tax_id': [(6, 0, line_data['value'].get('invoice_line_tax_id', []))],
             'account_analytic_id': line.account_analytic_id.id or False,
         }
-        if line_data['value'].get('account_id'):
-            vals['account_id'] = line_data['value']['account_id']
         return vals

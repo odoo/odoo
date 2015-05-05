@@ -28,13 +28,12 @@
       assert invoice.partner_id.id == purchase_order.partner_id.id, "Supplier is not correspond with purchase order"
       assert invoice.reference == purchase_order.partner_ref or purchase_order.name,"Invoice reference is not correspond with purchase order"
       assert invoice.type == 'in_invoice',"Invoice type is not correspond with purchase order"
-      assert invoice.currency_id.id == purchase_order.pricelist_id.currency_id.id ,"Invoice currency is not correspond with purchase order"
       assert invoice.origin == purchase_order.name,"Invoice origin is not correspond with purchase order"
       assert invoice.company_id.id == purchase_order.company_id.id ,"Invoice company is not correspond with purchase order"
       assert float_compare(invoice.amount_untaxed, purchase_order.amount_untaxed, precision_digits=2) == 0, "Invoice untaxed amount is not correspond with purchase order"
       assert float_compare(invoice.amount_tax, purchase_order.amount_tax, precision_digits=2) == 0, "Invoice tax amount is not correspond with purchase order"
       assert float_compare(invoice.amount_total, purchase_order.amount_total, precision_digits=2) == 0, "Invoice total amount is not correspond with purchase order"
-      assert len(invoice.invoice_line) == len(purchase_order.order_line), "Lines of Invoice and Purchase Order are not correspond"
+      assert len(invoice.invoice_line_ids) == len(purchase_order.order_line), "Lines of Invoice and Purchase Order are not correspond"
 -
   I check that Reception details after confirmed RFQ.
 -

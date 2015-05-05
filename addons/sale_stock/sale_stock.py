@@ -283,7 +283,7 @@ class sale_order_line(osv.osv):
 
     def product_id_change_with_wh(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, warehouse_id=False, context=None):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position_id=False, flag=False, warehouse_id=False, context=None):
         context = context or {}
         product_uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
@@ -292,7 +292,7 @@ class sale_order_line(osv.osv):
         #UoM False due to hack which makes sure uom changes price, ... in product_id_change
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty=qty,
             uom=False, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
-            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position_id=fiscal_position_id, flag=flag, context=context)
 
         if not product:
             res['value'].update({'product_packaging': False})
@@ -398,7 +398,7 @@ class stock_move(osv.osv):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
         if move.procurement_id and move.procurement_id.sale_line_id:
             sale_line = move.procurement_id.sale_line_id
-            res['invoice_line_tax_id'] = [(6, 0, [x.id for x in sale_line.tax_id])]
+            res['invoice_line_tax_ids'] = [(6, 0, [x.id for x in sale_line.tax_id])]
             res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
             res['discount'] = sale_line.discount
             if move.product_id.id != sale_line.product_id.id:
@@ -469,8 +469,8 @@ class stock_picking(osv.osv):
         sale = move.picking_id.sale_id
         if sale:
             inv_vals.update({
-                'fiscal_position': sale.fiscal_position.id,
-                'payment_term': sale.payment_term.id,
+                'fiscal_position_id': sale.fiscal_position_id.id,
+                'payment_term_id': sale.payment_term_id.id,
                 'user_id': sale.user_id.id,
                 'team_id': sale.team_id.id,
                 'name': sale.client_order_ref or '',

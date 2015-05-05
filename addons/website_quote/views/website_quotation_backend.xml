@@ -41,8 +41,8 @@
                         </field>
                     </page>
                 </xpath>
-                <xpath expr="//field[@name='payment_term']" position="after">
-                    <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position)"/>                    
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position_id)"/>                    
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
                     <field name="website_description" invisible="1"/>

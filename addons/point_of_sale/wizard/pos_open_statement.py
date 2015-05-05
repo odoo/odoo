@@ -55,25 +55,21 @@ class pos_open_statement(osv.osv_memory):
             if journal.sequence_id:
                 number = sequence_obj.next_by_id(cr, uid, journal.sequence_id.id, context=context)
             else:
-                number = sequence_obj.next_by_code(cr, uid, 'account.cash.statement', context=context)
+                raise UserError(_("No sequence defined on the journal"))
 
             data.update({
                 'journal_id': journal.id,
                 'user_id': uid,
-                'state': 'draft',
                 'name': number
             })
             statement_id = statement_obj.create(cr, uid, data, context=context)
             st_ids.append(int(statement_id))
 
-            if journal.cash_control:
-                statement_obj.button_open(cr, uid, [statement_id], context)
-
-        tree_res = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_cash_statement_pos_tree')
+        tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_tree')
         tree_id = tree_res and tree_res[1] or False
-        form_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_form2')
+        form_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_form')
         form_id = form_res and form_res[1] or False
-        search_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_bank_statement_filter')
+        search_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_search')
         search_id = search_res and search_res[1] or False
 
         return {

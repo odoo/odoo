@@ -34,19 +34,6 @@
             <field name="website">www.yourcompany.com</field>
         </record>
 
-        <!-- Currencies -->
-        <record id="EUR" model="res.currency">
-            <field name="name">EUR</field>
-            <field name="symbol">€</field>
-            <field name="rounding">0.01</field>
-            <field name="accuracy">4</field>
-        </record>
-        <record id="rateEUR" model="res.currency.rate">
-            <field name="rate">1.0</field>
-            <field name="currency_id" ref="EUR"/>
-            <field name="name">2010-01-01</field>
-        </record>
-
         <!-- Basic Company  -->
         <record id="main_company" model="res.company">
             <field name="name">Your Company</field>

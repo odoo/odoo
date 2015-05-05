@@ -80,4 +80,9 @@
         product_qty: 5
       - product_id: product.product_product_34
         product_qty: 15
-
+-
+  !python {model: purchase.order} : |
+      account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_expenses'))])
+      if account_id:
+          self.signal_workflow(cr, uid, [ref('purchase_order_2')], 'purchase_confirm')
+          self.signal_workflow(cr, uid, [ref('purchase_order_6')], 'purchase_confirm')

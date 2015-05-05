@@ -15,7 +15,7 @@ class account_invoice(osv.Model):
             # subscribe the partner to the invoice
             if invoice.partner_id not in invoice.message_follower_ids:
                 self.message_subscribe(cr, uid, [invoice.id], [invoice.partner_id.id], context=context)
-            for line in invoice.invoice_line:
+            for line in invoice.invoice_line_ids:
                 if line.product_id.email_template_id:
                     # CLEANME: should define and use a clean API: message_post with a template
                     composer_id = Composer.create(cr, uid, {

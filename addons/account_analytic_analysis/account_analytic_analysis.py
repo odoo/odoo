@@ -51,7 +51,7 @@ class account_analytic_invoice_line(osv.osv):
         'quantity': fields.float('Quantity', required=True),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure',required=True),
         'price_unit': fields.float('Unit Price', required=True),
-        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float",digits_compute= dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float",digits=0),
     }
     _defaults = {
         'quantity' : 1,
@@ -471,16 +471,16 @@ class account_analytic_account(osv.osv):
                                                 }),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
         'total_cost': fields.function(_total_cost_calc, type='float', string='Total Costs',
             help="Total of costs for this account. It includes real costs (from invoices) and indirect costs, like time spent on timesheets.",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
         'ca_to_invoice': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Uninvoiced Amount',
             help="If invoice from analytic account, the remaining amount you can invoice to the customer based on the total costs.",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
         'ca_theorical': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Theoretical Revenue',
             help="Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist.",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
         'hours_quantity': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Total Worked Time',
             help="Number of time you spent on the analytic account (from timesheet). It computes quantities on all journal of type 'general'."),
         'last_invoice_date': fields.function(_analysis_all, multi='analytic_analysis', type='date', string='Last Invoice Date',
@@ -503,19 +503,19 @@ class account_analytic_account(osv.osv):
             help="Sum of timesheet lines invoiced for this contract."),
         'remaining_ca': fields.function(_remaining_ca_calc, type='float', string='Remaining Revenue',
             help="Computed using the formula: Max Invoice Price - Invoiced Amount.",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
         'revenue_per_hour': fields.function(_revenue_per_hour_calc, type='float', string='Revenue per Time (real)',
             help="Computed using the formula: Invoiced Amount / Total Time",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
         'real_margin': fields.function(_real_margin_calc, type='float', string='Real Margin',
             help="Computed using the formula: Invoiced Amount - Total Costs.",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
         'theorical_margin': fields.function(_theorical_margin_calc, type='float', string='Theoretical Margin',
             help="Computed using the formula: Theoretical Revenue - Total Costs",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
         'real_margin_rate': fields.function(_real_margin_rate_calc, type='float', string='Real Margin Rate (%)',
             help="Computes using the formula: (Real Margin / Total Costs) * 100.",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
         'fix_price_invoices' : fields.boolean('Fixed Price'),
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
@@ -696,8 +696,8 @@ class account_analytic_account(osv.osv):
            'journal_id': len(journal_ids) and journal_ids[0] or False,
            'date_invoice': contract.recurring_next_date,
            'origin': contract.code,
-           'fiscal_position': fpos and fpos.id,
-           'payment_term': partner_payment_term,
+           'fiscal_position_id': fpos and fpos.id,
+           'payment_term_id': partner_payment_term,
            'company_id': contract.company_id.id or False,
         }
         return invoice
@@ -727,13 +727,13 @@ class account_analytic_account(osv.osv):
                 'quantity': line.quantity,
                 'uos_id': line.uom_id.id or False,
                 'product_id': line.product_id.id or False,
-                'invoice_line_tax_id': [(6, 0, tax_id)],
+                'invoice_line_tax_ids': [(6, 0, tax_id)],
             }))
         return invoice_lines
 
     def _prepare_invoice(self, cr, uid, contract, context=None):
         invoice = self._prepare_invoice_data(cr, uid, contract, context=context)
-        invoice['invoice_line'] = self._prepare_invoice_lines(cr, uid, contract, invoice['fiscal_position'], context=context)
+        invoice['invoice_line_ids'] = self._prepare_invoice_lines(cr, uid, contract, invoice['fiscal_position_id'], context=context)
         return invoice
 
     def recurring_create_invoice(self, cr, uid, ids, context=None):

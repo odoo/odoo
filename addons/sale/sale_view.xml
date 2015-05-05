@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <calendar string="Sales Orders" color="state" date_start="date_order">
                     <field name="partner_id"/>
-                    <field name="amount_total"/>
+                    <field name="amount_total" widget="monetary"/>
                 </calendar>
             </field>
         </record>
@@ -60,7 +60,7 @@
                     <field name="date_order"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -77,7 +77,7 @@
                     <field name="date_order"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -126,7 +126,7 @@
                         <group>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}"/>
-                            <field name="partner_shipping_id" on_change="onchange_delivery_id(company_id, partner_id, partner_shipping_id, fiscal_position)" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
+                            <field name="partner_shipping_id" on_change="onchange_delivery_id(company_id, partner_id, partner_shipping_id, fiscal_position_id)" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
                             <field name="project_id" context="{'partner_id':partner_invoice_id, 'manager_id': user_id, 'default_pricelist_id':pricelist_id, 'default_name':name, 'default_type': 'contract'}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
                         </group>
                         <group>
@@ -134,7 +134,7 @@
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="validity_date"/>
-                            <field name="payment_term" options="{'no_create': True}"/>
+                            <field name="payment_term_id" options="{'no_create': True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -150,15 +150,14 @@
                                             <field name="product_id"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
                                                 groups="base.group_user"
-                                                on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, False, product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
+                                                on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, False, product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position_id, False, context)"/>
                                             <label for="product_uom_qty"/>
                                             <div>
                                                 <field
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
                                                     name="product_uom_qty" class="oe_inline"
-                                                    on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
+                                                    on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position_id, True, context)"/>
                                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
-
                                                     on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
                                             </div>
                                             <label for="product_uos_qty" groups="product.group_uos"/>
@@ -173,7 +172,7 @@
                                             </div>
                                         </group>
                                         <group>
-                                            <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                                             <field name="th_weight"/>
                                             <!-- we should put a config wizard for these two fields -->
                                             <field name="address_allotment_id"/>
@@ -193,20 +192,20 @@
                                     <field name="product_id"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
                                         groups="base.group_user"
-                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, False, product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
+                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, False, product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position_id, False, context)"/>
                                     <field name="name"/>
                                     <field name="product_uom_qty"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
-                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
+                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position_id, True, context)"/>
                                     <field name="product_uom"
                                         on_change="product_uom_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, context)"
                                         groups="product.group_uom" options='{"no_open": True}'/>
                                     <field name="product_uos_qty" groups="product.group_uos" invisible="1"/>
                                     <field name="product_uos" string="UoS" groups="product.group_uos" invisible="1"/>
                                     <field name="price_unit"/>
-                                    <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                    <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
@@ -231,8 +230,8 @@
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 </group>
                                 <group name="sale_pay" string="Invoicing">
-                                    <field name="fiscal_position" options="{'no_create': True}"
-                                        on_change="onchange_fiscal_position(fiscal_position, order_line, context)"/>
+                                    <field name="fiscal_position_id" options="{'no_create': True}"
+                                        on_change="onchange_fiscal_position(fiscal_position_id, order_line, context)"/>
                                 </group>
                                 <group string="Reporting" name="technical" groups="base.group_no_one">
                                     <field groups="base.group_no_one" name="origin"/>
@@ -388,7 +387,7 @@
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="salesman_id"/>
-                    <field name="price_subtotal" sum="Total"/>
+                    <field name="price_subtotal" sum="Total" widget="monetary"/>
                     <field name="state"/>
                     <field name="invoiced"/>
                 </tree>
@@ -422,7 +421,7 @@
                         <group>
                             <field name="price_unit"/>
                             <field name="discount" groups="sale.group_discount_per_so_line"/>
-                            <field name="price_subtotal"/>
+                            <field name="price_subtotal" widget="monetary"/>
                             <field name="invoiced"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>

@@ -19,7 +19,7 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='invoice_line']/tree/field[@name='quantity']" position="before">
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position="before">
                     <field name="asset_category_id"/>
                 </xpath>
             </field>

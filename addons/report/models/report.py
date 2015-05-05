@@ -360,7 +360,7 @@ class Report(osv.Model):
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
-    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None):
+    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment={}):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -440,7 +440,6 @@ class Report(osv.Model):
             try:
                 wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + local_command_args
                 wkhtmltopdf += [content_file_path] + [pdfreport_path]
-
                 process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 out, err = process.communicate()
 

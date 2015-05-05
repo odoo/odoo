@@ -1006,7 +1006,12 @@ var py = {};
             return t;
         }
     });
-    py.list = py.tuple;
+    py.list = py.type('list', null, {
+        __nonzero__: function () {
+            return this.__len__ > 0 ? py.True : py.False;
+        },
+    });
+    _.defaults(py.list, py.tuple) // Copy attributes not redefined in type list
     py.dict = py.type('dict', null, {
         __init__: function () {
             this._store = {};

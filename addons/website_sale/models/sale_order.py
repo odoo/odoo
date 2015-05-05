@@ -53,7 +53,7 @@ class sale_order(osv.Model):
             pricelist=so.pricelist_id.id,
             product=product_id,
             partner_id=so.partner_id.id,
-            fiscal_position=so.fiscal_position.id,
+            fiscal_position_id=so.fiscal_position_id.id,
             qty=qty,
             context=context
         )['value']
@@ -172,18 +172,18 @@ class website(orm.Model):
                 flag_pricelist = False
                 if pricelist_id != sale_order.pricelist_id.id:
                     flag_pricelist = True
-                fiscal_position = sale_order.fiscal_position and sale_order.fiscal_position.id or False
+                fiscal_position = sale_order.fiscal_position_id and sale_order.fiscal_position_id.id or False
 
                 values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], partner.id, context=context)['value']
-                if values.get('fiscal_position'):
+                if values.get('fiscal_position_id'):
                     order_lines = map(int,sale_order.order_line)
                     values.update(sale_order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [],
-                        values['fiscal_position'], [[6, 0, order_lines]], context=context)['value'])
+                        values['fiscal_position_id'], [[6, 0, order_lines]], context=context)['value'])
 
                 values['partner_id'] = partner.id
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
 
-                if flag_pricelist or values.get('fiscal_position') != fiscal_position:
+                if flag_pricelist or values.get('fiscal_position_id') != fiscal_position:
                     update_pricelist = True
 
             # update the pricelist

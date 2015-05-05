@@ -108,22 +108,26 @@
                         <field name="footer" invisible="context.get('footer_hide', True)"/>
                     </group>
                     <group>
-                        <group name="owner" string="Bank Account Owner">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                            <label for="street" string="Address"/>
+                        <group name="owner" string="Account Owner">
+                            <label for="partner_id"/>
                             <div>
-                                <field name="owner_name" placeholder="Name"/>
-                                <field name="street" placeholder="Street"/>
                                 <div>
-                                    <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                    <field name="city" class="oe_inline" placeholder="City"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                 </div>
-                                <field name="state_id" placeholder="State" options='{"no_open": True}'/>
-                                <field name="country_id" placeholder="Country" options='{"no_open": True, "no_create": True}'/>
+                                <div>
+                                    <field name="street" placeholder="Street"/>
+                                    <div>
+                                        <field name="zip" class="oe_inline" placeholder="ZIP"/>
+                                        <field name="city" class="oe_inline" placeholder="City"/>
+                                    </div>
+                                    <div>
+                                        <field name="state_id" placeholder="State" options='{"no_open": True}'/>
+                                        <field name="country_id" placeholder="Country" options='{"no_open": True, "no_create": True}'/>
+                                    </div>
+                                </div>
                             </div>
                         </group>
-                        <group name="bank" string="Information About the Bank">
-                            <field name="bank" on_change="onchange_bank_id(bank)"/>
+                        <group name="bank" string="Bank Information">
                             <field name="bank_name" attrs="{'required': [('company_id','&lt;&gt;',False)]}"/>
                             <field name="bank_bic" placeholder="e.g. GEBABEBB" />
                         </group>

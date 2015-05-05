@@ -11,7 +11,6 @@ Tour.register({
     name: _t("Reconcile the demo bank statement"),
     path: '/web',
     mode: 'test',
-    // TODO : identify menu by data-menu attr or text node ?
     steps: [
         // Go to the first statement reconciliation
         {
@@ -31,7 +30,7 @@ Tour.register({
             element:   '.oe_form_container header button:contains("Reconcile")',
         },
 
-        
+
         // Check mutual exclusion of move lines
         {
             title:      "set second reconciliation in match mode",

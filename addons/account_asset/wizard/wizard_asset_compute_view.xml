@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Compute Asset">
                     <group>
-                        <field name="period_id"/>
+                        <field name="date"/>
                     </group>
                     <footer>
                         <button string="Compute" name="asset_compute" type="object" class="oe_highlight"/>
@@ -19,7 +19,7 @@
         </record>
 
         <record id="action_asset_depreciation_confirmation_wizard" model="ir.actions.act_window">
-            <field name="name">Compute Assets</field>
+            <field name="name">Generate Depreciation Entries</field>
             <field name="res_model">asset.depreciation.confirmation.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -27,9 +27,14 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem action="action_asset_depreciation_confirmation_wizard"
-            id="menu_asset_depreciation_confirmation_wizard"
-            parent="account.periodical_processing_journal_entries_validation" />
+        <record model="ir.values" id="action_asset_depreciation_confirmation_wizard_multi">
+            <field name="model_id" ref="account_asset.model_account_asset_asset" />
+            <field name="name">Generate Depreciation Entries</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('action_asset_depreciation_confirmation_wizard'))" />
+            <field name="key">action</field>
+            <field name="model">account.asset.asset</field>
+        </record>
 
     </data>
 </openerp>

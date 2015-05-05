@@ -26,7 +26,7 @@
                 </p><p>
                     The request for quotation is the first step of the purchases flow. Once
                     converted into a purchase order, you will be able to control the receipt
-                    of the products and the supplier invoice.
+                    of the products and the supplier bill.
                 </p>
             </field>
         </record>
@@ -51,7 +51,7 @@
         </record>
         
     <record id="act_res_partner_2_supplier_invoices" model="ir.actions.act_window">
-            <field name="name">Supplier Invoices</field>
+            <field name="name">Supplier Bills</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
@@ -59,10 +59,10 @@
             <field name="context">{'search_default_partner_id': active_id, 'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click here to record a supplier invoice.
+                    Click here to record a supplier bill.
                 </p><p>
-                    Supplier invoices can be pre-generated based on purchase
-                    orders or receipts. This allows you to control invoices
+                    Supplier bills can be pre-generated based on purchase
+                    orders or receipts. This allows you to control bills
                     you receive from your supplier according to the draft
                     document in Odoo.
                 </p>
@@ -94,7 +94,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button class="oe_inline oe_stat_button" name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
-                        attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Supplier Invoices">
+                        attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Supplier Bills">
                         <field string="Supplier Inv." name="supplier_invoice_count" widget="statinfo"/>
                     </button>
                 </xpath>

@@ -68,7 +68,7 @@ class AccountInvoice(osv.Model):
         :Parameters:
             -'invoice_id' (int): specify the concerned invoice.
         """
-        ordered_lines = self.browse(cr, uid, invoice_id, context=context).invoice_line
+        ordered_lines = self.browse(cr, uid, invoice_id, context=context).invoice_line_ids
         # We chose to group first by category model and, if not present, by invoice name
         sortkey = lambda x: x.sale_layout_cat_id if x.sale_layout_cat_id else ''
 

@@ -116,7 +116,7 @@ class stock_move(osv.osv):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
         if move.purchase_line_id:
             purchase_line = move.purchase_line_id
-            res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
+            res['invoice_line_tax_ids'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
         return res
 
@@ -198,8 +198,8 @@ class stock_picking(osv.osv):
         if move.purchase_line_id and move.purchase_line_id.order_id:
             purchase = move.purchase_line_id.order_id
             inv_vals.update({
-                'fiscal_position': purchase.fiscal_position.id,
-                'payment_term': purchase.payment_term_id.id,
+                'fiscal_position_id': purchase.fiscal_position_id.id,
+                'payment_term_id': purchase.payment_term_id.id,
                 })
         return inv_vals
 

@@ -60,9 +60,9 @@
                             </td><td>
                                 <field class="oe_inline" name="amount_max" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <field class="oe_inline" name="ca_invoiced" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_inline" name="ca_invoiced" attrs="{'invisible': [('fix_price_invoices','=',False)]}" widget="monetary"/>
                             </td><td>
-                                <field class="oe_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}" widget="monetary"/>
                             </td><td>
                                 <field class="oe_inline" name="fix_price_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td attrs="{'invisible': [('fix_price_invoices','=',False)]}" class="oe_timesheet_action">
@@ -172,7 +172,7 @@
                                 <field name="quantity"/>
                                 <field name="uom_id"/>
                                 <field name="price_unit"/>
-                                <field name="price_subtotal"/>
+                                <field name="price_subtotal" widget="monetary"/>
                             </tree>
                         </field>
                     </div>
@@ -303,7 +303,7 @@
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('invoice_line.account_analytic_id', '=', active_id)]</field>
+            <field name="domain">[('invoice_line_ids.account_analytic_id', '=', active_id)]</field>
             <field name="context">{'create':False}</field>
             <field name="help" type="html">
               <p>

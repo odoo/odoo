@@ -60,6 +60,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
     ],
     'demo': ['hr_expense_demo.xml'],
     'test': [
+        '../account/test/account_minimal_test.xml',
         'test/expense_demo.yml',
         'test/expense_process.yml',
     ],
