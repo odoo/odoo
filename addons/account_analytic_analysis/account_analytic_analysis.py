@@ -702,6 +702,7 @@ class account_analytic_account(osv.osv):
            'fiscal_position': fpos and fpos.id,
            'payment_term': partner_payment_term,
            'company_id': contract.company_id.id or False,
+           'user_id': contract.manager_id.id or uid,
         }
         return invoice
 
