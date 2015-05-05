@@ -114,8 +114,8 @@ class ir_http(orm.AbstractModel):
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
             if first_pass:
-                url_lang = not func and path[1]
-                nearest_lang = url_lang and self.get_nearest_lang(path[1])
+                nearest_lang = not func and self.get_nearest_lang(path[1])
+                url_lang = nearest_lang and path[1]
                 preferred_lang = ((cook_lang if cook_lang in langs else False)
                                   or self.get_nearest_lang(request.lang)
                                   or request.website.default_lang_code)
