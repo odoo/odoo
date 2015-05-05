@@ -109,3 +109,29 @@ class TranslationToolsTestCase(unittest.TestCase):
             """<t t-name="stuff">stuff before<span t-field="o.name"/>stuff after</t>""")
         self.assertItemsEqual(terms,
             ['stuff before', 'stuff after'])
+
+    def test_translate_xml_40(self):
+        """ Test xml_translator() with <a> elements. """
+        translate = xml_translator()
+        terms = []
+        callback = lambda t: terms.append(t) or t
+
+        source = """<t t-name="stuff">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="/web#menu_id=42&amp;action=54" class="oe_menu_leaf">
+                                    <span class="oe_menu_text">Blah</span>
+                                </a>
+                            </li>
+                            <li id="menu_more_container" class="dropdown" style="display: none;">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"/></a>
+                                <ul id="menu_more" class="dropdown-menu"/>
+                            </li>
+                        </ul>
+                    </t>"""
+        result = translate(callback, source)
+
+        self.assertEquals(result,
+            """<t t-name="stuff"><ul class="nav navbar-nav"><li><a href="/web#menu_id=42&amp;action=54" class="oe_menu_leaf"><span class="oe_menu_text">Blah</span></a></li><li id="menu_more_container" class="dropdown" style="display: none;"><a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"/></a><ul id="menu_more" class="dropdown-menu"/></li></ul></t>""")
+        self.assertItemsEqual(terms,
+            ['<span class="oe_menu_text">Blah</span>', 'More <b class="caret"/>'])

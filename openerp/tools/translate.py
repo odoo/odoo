@@ -157,7 +157,7 @@ def encode(s):
     return s
 
 TRANSLATED_ELEMENTS = {
-    'a',
+    # 'a',
     'abbr',
     'audio',
     'b',
