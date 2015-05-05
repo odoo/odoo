@@ -46,14 +46,11 @@ class hr_recruitment_source(osv.osv):
         result = {}
         imd = self.pool['ir.model.data']
         for source in self.browse(cr, uid, ids, context=context):
-            if not source.alias_id.id:
-                result[source.id] = ''
-            else:
-                result[source.id] = werkzeug.url_encode({
-                    'utm_campaign': imd.xmlid_to_object(cr, SUPERUSER_ID, 'hr_recruitment.utm_campaign_job').name,
-                    'utm_medium': imd.xmlid_to_object(cr, SUPERUSER_ID, 'utm.utm_medium_website').name,
-                    'utm_source': source.source_id.name
-                })
+            result[source.id] = werkzeug.url_encode({
+                'utm_campaign': imd.xmlid_to_object(cr, SUPERUSER_ID, 'hr_recruitment.utm_campaign_job').name,
+                'utm_medium': imd.xmlid_to_object(cr, SUPERUSER_ID, 'utm.utm_medium_website').name,
+                'utm_source': source.source_id.name
+            })
         return result
 
     def create_alias(self, cr, uid, ids, context=None):
