@@ -14,6 +14,8 @@
         <field name="amount">1</field>
         <field name="child_depend">1</field>
         <field name="type">percent</field>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <record id="gstpst_sale_bc_gst_fr" model="account.tax.template">
@@ -32,6 +34,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_receivable_gst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_gst_fr"/>
         <field name="parent_id" ref="gstpst_bc_sale_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <record id="pst_bc_sale_fr" model="account.tax.template">
@@ -49,6 +53,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_receivable_pst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_pst_fr"/>
         <field name="parent_id" ref="gstpst_bc_sale_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <!-- Manitoba PST -->
@@ -61,6 +67,8 @@
         <field name="amount">1</field>
         <field name="type">percent</field>
         <field name="child_depend" eval="True"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <record id="gstpst_sale_mb_gst_fr" model="account.tax.template">
@@ -79,6 +87,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_receivable_gst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_gst_fr"/>
         <field name="parent_id" ref="gstpst_mb_sale_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <record id="pst_mb_sale_fr" model="account.tax.template">
@@ -96,6 +106,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_receivable_pst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_pst_fr"/>
         <field name="parent_id" ref="gstpst_mb_sale_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <!-- Quebec PST -->
@@ -108,6 +120,8 @@
         <field name="amount">1</field>
         <field name="type">percent</field>
         <field name="child_depend" eval="True"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <record id="gstqst_sale_gst_fr" model="account.tax.template">
@@ -125,6 +139,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_receivable_gst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_gst_fr"/>
         <field name="parent_id" ref="gstqst_sale_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <record id="tvq_sale_fr" model="account.tax.template">
@@ -142,6 +158,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_receivable_pst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_pst_fr"/>
         <field name="parent_id" ref="gstqst_sale_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <!-- Saskatchewan PST -->
@@ -154,6 +172,8 @@
         <field name="amount">1</field>
         <field name="type">percent</field>
         <field name="child_depend" eval="True"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <record id="gstpst_sale_sk_gst_fr" model="account.tax.template">
@@ -172,6 +192,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_receivable_gst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_gst_fr"/>
         <field name="parent_id" ref="gstpst_sk_sale_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <record id="pst_sk_sale_fr" model="account.tax.template">
@@ -189,6 +211,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_receivable_pst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_pst_fr"/>
         <field name="parent_id" ref="gstpst_sk_sale_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <!-- HST -->
@@ -206,6 +230,8 @@
         <field name="tax_code_id" ref="vat_code_payable_hst13_fr"/>
         <field name="ref_base_code_id" ref="vat_code_base_receivable_hst13_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_hst13_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <record id="hst14_sale_fr" model="account.tax.template">
@@ -221,6 +247,8 @@
         <field name="tax_code_id" ref="vat_code_payable_hst14_fr"/>
         <field name="ref_base_code_id" ref="vat_code_base_receivable_hst14_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_hst14_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <record id="hst15_sale_fr" model="account.tax.template">
@@ -236,6 +264,8 @@
         <field name="tax_code_id" ref="vat_code_payable_hst15_fr"/>
         <field name="ref_base_code_id" ref="vat_code_base_receivable_hst15_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_hst15_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
     <!-- GST -->
@@ -253,6 +283,8 @@
         <field name="tax_code_id" ref="vat_code_payable_gst_fr"/>
         <field name="ref_base_code_id" ref="vat_code_base_receivable_gst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_gst_fr"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign" eval="-1"/>
     </record>
 
 
@@ -268,6 +300,8 @@
         <field name="amount">1</field>
         <field name="type">percent</field>
         <field name="child_depend">1</field>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <record id="gstpst_purc_bc_gst_fr" model="account.tax.template">
@@ -286,6 +320,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_payable_gst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_gst_fr"/>
         <field name="parent_id" ref="gstpst_bc_purc_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <record id="pst_bc_purc_fr" model="account.tax.template">
@@ -303,6 +339,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_payable_pst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_pst_fr"/>
         <field name="parent_id" ref="gstpst_bc_purc_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <!-- Manitoba PST -->
@@ -315,6 +353,8 @@
         <field name="amount">1</field>
         <field name="type">percent</field>
         <field name="child_depend" eval="True"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <record id="gstpst_purc_mb_gst_fr" model="account.tax.template">
@@ -333,6 +373,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_payable_gst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_gst_fr"/>
         <field name="parent_id" ref="gstpst_mb_purc_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <record id="pst_mb_purc_fr" model="account.tax.template">
@@ -350,6 +392,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_payable_pst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_pst_fr"/>
         <field name="parent_id" ref="gstpst_mb_purc_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <!-- Quebec PST -->
@@ -362,6 +406,8 @@
         <field name="amount">1</field>
         <field name="type">percent</field>
         <field name="child_depend" eval="True"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <record id="gstqst_purc_gst_fr" model="account.tax.template">
@@ -379,6 +425,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_payable_gst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_gst_fr"/>
         <field name="parent_id" ref="gstqst_purc_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <record id="tvq_purc_fr" model="account.tax.template">
@@ -396,6 +444,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_payable_pst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_pst_fr"/>
         <field name="parent_id" ref="gstqst_purc_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <!-- Saskatchewan PST -->
@@ -408,6 +458,8 @@
         <field name="amount">1</field>
         <field name="type">percent</field>
         <field name="child_depend" eval="True"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <record id="gstpst_purc_sk_gst_fr" model="account.tax.template">
@@ -426,6 +478,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_payable_gst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_gst_fr"/>
         <field name="parent_id" ref="gstpst_sk_purc_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <record id="pst_sk_purc_fr" model="account.tax.template">
@@ -443,6 +497,8 @@
         <field name="ref_base_code_id" ref="vat_code_base_payable_pst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_pst_fr"/>
         <field name="parent_id" ref="gstpst_sk_purc_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <!-- HST -->
@@ -460,6 +516,8 @@
         <field name="tax_code_id" ref="vat_code_receivable_hst13_fr"/>
         <field name="ref_base_code_id" ref="vat_code_base_payable_hst13_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_hst13_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <record id="hst14_purc_fr" model="account.tax.template">
@@ -475,6 +533,8 @@
         <field name="tax_code_id" ref="vat_code_receivable_hst14_fr"/>
         <field name="ref_base_code_id" ref="vat_code_base_payable_hst14_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_hst14_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <record id="hst15_purc_fr" model="account.tax.template">
@@ -490,6 +550,8 @@
         <field name="tax_code_id" ref="vat_code_receivable_hst15_fr"/>
         <field name="ref_base_code_id" ref="vat_code_base_payable_hst15_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_hst15_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     <!-- GST -->
@@ -507,6 +569,8 @@
         <field name="tax_code_id" ref="vat_code_receivable_gst_fr"/>
         <field name="ref_base_code_id" ref="vat_code_base_payable_gst_fr"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_gst_fr"/>
+        <field name="base_sign" eval="-1"/>
+        <field name="tax_sign" eval="-1"/>
     </record>
 
     </data>

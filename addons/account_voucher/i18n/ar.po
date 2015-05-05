@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-03-20 19:25+0000\n"
+"Last-Translator: yosra yasser <y.yasser@diamondvision.me>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:26+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-21 05:46+0000\n"
+"X-Generator: Launchpad (build 17405)\n"
 
 #. module: account_voucher
 #: help:account.voucher,state:0
@@ -29,6 +29,13 @@ msgid ""
 "\n"
 "* The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * تُستخدم حالة 'المسودة' عندما يقوم المستخدم بترميز القسيمة الجديدة و الغير "
+"مُصدق عليها .\n"
+"* 'الصورية' عندما تكون القسيمة فى الحالة الصورية , فأن القسيمة حينها لا "
+"تمتلك رقم لها .\n"
+"*تستخدم حالة 'النشر' عندما يقوم المستخدم بإنشاء قسيمة , رقم القسيمة يولد و "
+"مدخلات القسيمة يتم إنشاءها فى الحساب .\n"
+"*تستخدم حالة 'الإلغاء' عندما يقوم المستخدم بإلغاء القسيمة ."
 
 #. module: account_voucher
 #: field:sale.receipt.report,nbr:0
@@ -70,6 +77,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p فئة=\"oe_عرض_لا تحتوى_إنشاء\">\n"
+"أنقر لإنشاء إيصال بيع .\n"
+"</p><p>\n"
+"عندما تتم المصادقة على إيصال البيع، يمكنك تسجيل مدفوعات العملاء \n"
+"المتعلقة ب إيصال المبيعات.\n"
+"</p>\n"
+"            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -98,6 +112,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p فئة=\"oe_عرض_لا تحتوى_إنشاء\">\n"
+"انقر لتسجيل إيصال الشراء.\n"
+"</p><p>\n"
+"عندما تتم المصادقة على إيصال الشراء، يمكنك تسجيل \n"
+"مدفوعات المورد المتعلقة ب إيصال الشراء .\n"
+"</p>\n"
+"            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
@@ -111,6 +132,13 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"من هذا التقرير، هل يمكن أن يكون نظرة عامة على مبلغ الفاتورة \n"
+"إلى العميل وكذلك تأخير المدفوعات . ويمكن أيضا من خلال أداة البحث ا\n"
+"ستخدامها لتخصيص تقارير الفواتير الخاصة بك وبذلك، يطابق \n"
+"هذا التحليل للاحتياجات الخاصة بك .\n"
+"</p>\n"
+"        "
 
 #. module: account_voucher
 #: field:account.voucher,account_id:0
@@ -161,7 +189,7 @@ msgstr "هل أنت متأكد من إلغاء هذا الايصال؟"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Are you sure you want to unreconcile this record?"
-msgstr ""
+msgstr "هل انت متأكد أنك لا تريد عمل ربط لهذا السجل ؟"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:276
@@ -170,6 +198,8 @@ msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
 msgstr ""
+"في تاريخ العملية، كان سعر الصرف\n"
+"%s = %s"
 
 #. module: account_voucher
 #: field:sale.receipt.report,delay_to_pay:0
@@ -206,14 +236,14 @@ msgstr "إلغاء"
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Cancel Receipt"
-msgstr ""
+msgstr "إلغاء الإيصال"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Cancel Voucher"
-msgstr ""
+msgstr "ألغاء القسيمة"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -225,7 +255,7 @@ msgstr "ملغي"
 #: code:addons/account_voucher/account_voucher.py:959
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr ""
+msgstr "لا يمكن حذف قسيمة (s) التي تم فتحها بالفعل أو المدفوعة."
 
 #. module: account_voucher
 #: help:account.voucher,audit:0
@@ -250,6 +280,8 @@ msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
 msgstr ""
+"تحسب على أساس الفرق بين المبلغ المذكور في القسيمة ومجموع المخصصات على خطوط "
+"القسيمة."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1057
@@ -260,12 +292,12 @@ msgstr "خطأ في الإعدادات!"
 #. module: account_voucher
 #: field:account.voucher,writeoff_acc_id:0
 msgid "Counterpart Account"
-msgstr ""
+msgstr "حساب المناظرة"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Counterpart Comment"
-msgstr ""
+msgstr "تعليق المناظرة"
 
 #. module: account_voucher
 #: field:account.voucher,create_uid:0
@@ -319,7 +351,7 @@ msgstr "عميل"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "مدفوعات العملاء"
 
 #. module: account_voucher
 #: field:account.voucher,date:0
@@ -383,7 +415,7 @@ msgstr "مسودة"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Draft Vouchers"
-msgstr ""
+msgstr "القسائم الإفتراضية"
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -430,6 +462,7 @@ msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
 msgstr ""
+"الغرض من الحقول الداخليه هو فقط معرفه اذا كانت القسيمه متعدده العمله ام لا ‎"
 
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
@@ -439,7 +472,7 @@ msgstr "المتابعون"
 #. module: account_voucher
 #: field:account.voucher.line,reconcile:0
 msgid "Full Reconcile"
-msgstr ""
+msgstr "ربط تام"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1098
@@ -461,7 +494,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,currency_help_label:0
 msgid "Helping Sentence"
-msgstr ""
+msgstr "جملة للمساعدة"
 
 #. module: account_voucher
 #: help:account.voucher,message_summary:0
@@ -586,7 +619,7 @@ msgstr "الرسائل وسجل التواصل"
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr ""
+msgstr "العملات متعددة القسائم"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
@@ -607,7 +640,7 @@ msgstr "عدد"
 #. module: account_voucher
 #: help:account.voucher,tax_id:0
 msgid "Only for tax excluded from price"
-msgstr ""
+msgstr "السعر لا يشمل الضريبة"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
@@ -730,7 +763,7 @@ msgstr "خيارات الدفع"
 #. module: account_voucher
 #: field:account.voucher,payment_rate_currency_id:0
 msgid "Payment Rate Currency"
-msgstr ""
+msgstr "مدفوعات أسعار العملات"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -754,7 +787,7 @@ msgstr "فترة"
 #: code:addons/account_voucher/account_voucher.py:1058
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
+msgstr "الرجاء تفعيل التسلسل لليومية المختارة!"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1064
@@ -766,7 +799,7 @@ msgstr "الرجاء تعريف تسلسل لليومية"
 #: code:addons/account_voucher/account_voucher.py:518
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
-msgstr ""
+msgstr "من فضلك حدد الحسابات الدائنة/المدينة فى اليومية \"%s\"."
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
@@ -792,7 +825,7 @@ msgstr "مرحَلة"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 msgid "Posted Vouchers"
-msgstr ""
+msgstr "نشر القسيمة"
 
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
@@ -809,7 +842,7 @@ msgstr "كمسألة شكلية"
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Pro-forma Vouchers"
-msgstr ""
+msgstr "القسائم الصورية"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -826,12 +859,12 @@ msgstr "ايصال الشراء"
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "إيصالات الشراء"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "قسائم الشراء"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
@@ -843,7 +876,7 @@ msgstr "استلام"
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
-msgstr ""
+msgstr "تسوية رصيد المدفوعات"
 
 #. module: account_voucher
 #: field:account.voucher,reference:0
@@ -886,7 +919,7 @@ msgstr "إحصائيات استلام المبيعات"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "إيصالات المبيعات"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
@@ -894,7 +927,7 @@ msgstr ""
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_graph
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "تحليل إيصالات المبيعات"
 
 #. module: account_voucher
 #: field:sale.receipt.report,user_id:0
@@ -938,7 +971,7 @@ msgstr "تغيير الحالة"
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr ""
+msgstr "الحالة تغيرت"
 
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
@@ -965,7 +998,7 @@ msgstr "الفواتير المزودة و المعاملات المعلقة"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payments"
-msgstr ""
+msgstr "مدفوعات الموردين"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -987,13 +1020,13 @@ msgstr "قيمة الضريبة"
 #. module: account_voucher
 #: help:account.voucher,paid:0
 msgid "The Voucher has been totally paid."
-msgstr ""
+msgstr "لقد تم دفع القسيمة بالكامل"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1202
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
-msgstr ""
+msgstr "الفاتورة التى كانت على استعداد للدفع غير صالحة بعد الآن."
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
@@ -1001,6 +1034,8 @@ msgid ""
 "The specific rate that will be used, in this voucher, between the selected "
 "currency (in 'Payment Rate Currency' field)  and the voucher currency."
 msgstr ""
+"المعدل المحدد الذي سيتم استخدامه، في هذه القسيمة، بين العملة المحددة (في حقل "
+"\" معدل دفع العملات ') و قسيمة العملة ."
 
 #. module: account_voucher
 #: help:account.voucher,payment_option:0
@@ -1010,6 +1045,9 @@ msgid ""
 "either choose to keep open this difference on the partner's account, or "
 "reconcile it with the payment(s)"
 msgstr ""
+"يساعدك هذا المجال علىاختيار ما تريد القيام به مع الفرق في نهاية المطاف بين "
+"المبلغ المدفوع ومجموع المبالغ المخصصة. يمكنك أن تختار إما أن يبقي هذا "
+"الاختلاف مفتوح على حساب الشريك، أو التسوية بين ذلك مع الدفوع (المدفوعات)."
 
 #. module: account_voucher
 #: help:account.voucher,currency_help_label:0
@@ -1017,6 +1055,8 @@ msgid ""
 "This sentence helps you to know how to specify the payment rate by giving "
 "you the direct effect it has"
 msgstr ""
+"هذه الجملة تساعدك على معرفة كيفية تحديد معدل الدفع عن طريق إعطائك تأثير "
+"مباشر لها"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1036,7 +1076,7 @@ msgstr "الإجمالي"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Total Allocation"
-msgstr ""
+msgstr "إجمالي المخصصات"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
@@ -1093,12 +1133,12 @@ msgstr "تحقق"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Validate Payment"
-msgstr ""
+msgstr "المدفوعات المُصدق عليها"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Validated Vouchers"
-msgstr ""
+msgstr "المُصادقة على القسائم"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1140,7 +1180,7 @@ msgstr "خطوط القسيمة"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 msgid "Voucher Payment"
-msgstr ""
+msgstr "دفع القسيمة"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.account_cash_statement_graph
@@ -1150,7 +1190,7 @@ msgstr "احصائيات القسيمة"
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr ""
+msgstr "حالة القسيمة"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
@@ -1182,7 +1222,7 @@ msgstr "حساب تحليلي للديون المعدومة"
 #: code:addons/account_voucher/account_voucher.py:1202
 #, python-format
 msgid "Wrong voucher line"
-msgstr ""
+msgstr "خط قسيمة خاطئ"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
@@ -1222,14 +1262,14 @@ msgstr "تغيير"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "e.g. 003/10"
-msgstr ""
+msgstr "على سبيل المثال ٠٠٣/١٠"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "e.g. Invoice SAJ/0042"
-msgstr ""
+msgstr "على سبيل المثال الفاتورة SAJ/0042"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form

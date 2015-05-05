@@ -6,16 +6,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-04-26 03:03+0000\n"
+"Last-Translator: user3 <Unknown>\n"
+"Language-Team: Russian <http://translate.starlight-"
+"biz.com//projects/odoo/hr_timesheet/ru/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:50+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-27 05:38+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
+"Language: ru\n"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -43,6 +45,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите чтобы записать действия.\n"
+"              </p><p>\n"
+"                Вы можете зарегистрироваться и отслеживать ваши наработанные "
+"часы по проекту каждый день. Каждый час, проведенный в работе над проектом "
+"войдет в стоимость в \n"
+"                 аналитическая учете/договоре и может быть повторно "
+"выставлен счет \n"
+"                 клиенту при необходимости.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -69,12 +82,32 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"              По данному договору пока нет активности.\n"
+"              </p><p>\n"
+"                В Odoo, контракты и проекты реализуются с помощью \n"
+"                 аналитического счета. Так, вы можете легко отслеживать "
+"расходы и доходы для    анализа.\n"
+"              </p><p>\n"
+"                Затраты будут созданы автоматически при регистрации "
+"поставщика \n"
+"                 счета-фактуры, расходов или расписания.\n"
+"              </p><p>\n"
+"               Доходы будут созданы автоматически при создании счета \n"
+"                 клиента. Счета клиентов могут быть созданы на основе "
+"заказов \n"
+"                 (фиксированная счета цена), расписаний (на основе "
+"проделанной работы) или \n"
+"                 расходов (например повторная выписка счета на путевые "
+"расходы).\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0
 #: selection:hr.sign.out.project,state:0
 msgid "Absent"
-msgstr ""
+msgstr "Отсутствует"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -85,22 +118,22 @@ msgstr "Учёт"
 #: field:hr.timesheet.report,account_id:0
 #: model:ir.model,name:hr_timesheet.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Счет аналитики"
+msgstr "Счёт аналитики"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
 msgid "Analytic Journal"
-msgstr "Книга аналитики"
+msgstr "Журнал аналитики"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr ""
+msgstr "Позиция аналитики"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Analytic account"
-msgstr ""
+msgstr "Аналитический счет"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -125,7 +158,7 @@ msgstr ""
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
+msgstr "Пролверьте это поле, если проект контролируется табелями"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -136,17 +169,17 @@ msgstr "Дата закрытия"
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: field:hr.timesheet.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Компания"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Стоимость"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
 msgid "Cost/Revenue"
-msgstr ""
+msgstr "Стоимость / Выручка"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
@@ -158,14 +191,14 @@ msgstr "Расходы и доходы"
 #: field:hr.sign.in.project,create_uid:0
 #: field:hr.sign.out.project,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Создано"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,create_date:0
 #: field:hr.sign.in.project,create_date:0
 #: field:hr.sign.out.project,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Создан"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -177,7 +210,7 @@ msgstr "Текущая дата"
 #: field:hr.sign.in.project,state:0
 #: field:hr.sign.out.project,state:0
 msgid "Current Status"
-msgstr ""
+msgstr "Текущий статус"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,date:0
@@ -187,18 +220,18 @@ msgstr "Дата"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr ""
+msgstr "Определите свою аналитическую структуру"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,name:0
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
 msgid "Duration"
-msgstr "Продолжительность"
+msgstr "Длительность"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee
@@ -218,12 +251,14 @@ msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
 msgstr ""
+"Сотрудник не создан для этого пользователя. Пожалуйста создайте его с "
+"помощью панели настроек."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "Имя сотрудника"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
@@ -254,12 +289,12 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Расширенные фильтры..."
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,general_account_id:0
 msgid "General Account"
-msgstr ""
+msgstr "Общий счет"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
@@ -270,18 +305,18 @@ msgstr "Общая информация"
 #: code:addons/hr_timesheet/hr_timesheet.py:153
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Найдите панель конфигурации"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Группировать по"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group by month of date"
-msgstr ""
+msgstr "Группа по месяцам даты"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,id:0
@@ -289,7 +324,7 @@ msgstr ""
 #: field:hr.sign.out.project,id:0
 #: field:hr.timesheet.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -297,30 +332,32 @@ msgid ""
 "If you want to reinvoice working time of employees, link this employee to a "
 "service to determinate the cost price of the job."
 msgstr ""
+"Если вы хотите, чтобы повторно выставить счет на рабочее время сотрудников, "
+"привяжите этого сотрудника к службе чтобы определить себестоимость работы."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
 msgid "Information"
-msgstr "Информация"
+msgstr "Сведения"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Журнал"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_uid:0
 #: field:hr.sign.in.project,write_uid:0
 #: field:hr.sign.out.project,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_date:0
 #: field:hr.sign.in.project,write_date:0
 #: field:hr.sign.out.project,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -339,6 +376,9 @@ msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
 msgstr ""
+"\"Аналитический Журнал\" для сотрудника не определен %s↵ \n"
+"Определите сотрудника для выбранного пользователя и назначьте "
+"\"Аналитический Журнал\"!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:191
@@ -347,6 +387,8 @@ msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
 msgstr ""
+"Аналитический счет для проекта не определен.\n"
+"Пожалуйста выберите один или мы не сможем автоматически заполнить табель."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:158
@@ -355,17 +397,19 @@ msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
 msgstr ""
+"Аналитический журнал не определен для  '%s'.\n"
+"Вы должны назначить аналитический журнал в форме сотрудника."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Партнер"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "Please define cost unit for this employee."
-msgstr ""
+msgstr "Пожалуйста определите единицу стоимости для данного сотрудника."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
@@ -377,7 +421,7 @@ msgstr "Пожалуйста, определите сотрудника для �
 #: selection:hr.sign.in.project,state:0
 #: selection:hr.sign.out.project,state:0
 msgid "Present"
-msgstr ""
+msgstr "Присутствующий"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -385,12 +429,12 @@ msgstr ""
 #: field:hr.employee,product_id:0
 #: field:hr.timesheet.report,product_id:0
 msgid "Product"
-msgstr "Продукция"
+msgstr "Товар"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Проект/Аналитический счет"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
@@ -412,7 +456,7 @@ msgstr "Выход от проекта"
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 msgid "Sign in"
-msgstr "Вход"
+msgstr "Войти"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:145
@@ -425,7 +469,7 @@ msgstr "Регистрация / выход"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by Project"
-msgstr ""
+msgstr "Вход/Выход по проекту"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -446,12 +490,12 @@ msgstr "Прекращение работ"
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "This Month"
-msgstr ""
+msgstr "Данный месяц"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,quantity:0
 msgid "Time"
-msgstr ""
+msgstr "Время"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
@@ -466,7 +510,7 @@ msgstr "Табель учёта рабочего времени"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr ""
+msgstr "Табельные счета"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -474,13 +518,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Действия в табеле"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr ""
+msgstr "Анализ табеля"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
@@ -490,18 +534,18 @@ msgstr "Строка табеля"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr ""
+msgstr "Месяц табеля"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr ""
+msgstr "Табель помесячно"
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
 #: view:hr.employee:hr_timesheet.hr_timesheet_employee_extd_form
 msgid "Timesheets"
-msgstr "Табели учёта"
+msgstr "Табели"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
@@ -516,7 +560,7 @@ msgstr "Суммарное время"
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Единица измерения"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
@@ -548,7 +592,7 @@ msgstr "Пользователи"
 #: code:addons/hr_timesheet/hr_timesheet.py:191
 #, python-format
 msgid "Warning!"
-msgstr "Предупреждение!"
+msgstr "Внимание!"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,info:0
@@ -567,11 +611,14 @@ msgid ""
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
+"Вы должны создать аналитическую структуру счетов в зависимости от ваших "
+"потребностей для анализа затрат и доходов. В Odoo, аналитические счета также "
+"используются для отслеживания договоров клиентов."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "month"
-msgstr ""
+msgstr "месяц"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in

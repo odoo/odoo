@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-10-16 19:29+0000\n"
+"PO-Revision-Date: 2015-04-21 13:48+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:08+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-22 06:14+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
 
 #. module: product
 #: field:product.template,product_variant_count:0
@@ -92,7 +92,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
 msgid "32 GB"
-msgstr ""
+msgstr "32 GB"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -113,6 +113,10 @@ msgid ""
 "lead\n"
 "                            to the loss of their possible customizations."
 msgstr ""
+": adăugarea sau ștergerea de atribute\n"
+"                            va șterge și recrea variantele existente și duce "
+"\n"
+"                            la pierderea setărilor specifice lor."
 
 #. module: product
 #: model:product.template,website_description:product.product_product_9_product_template
@@ -159,6 +163,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click pentru a adăuga o unitate logistică\n"
+"              </p><p>\n"
+"                Unitatea logistică defineşte recipientul folosit pentru "
+"pachet.  \n"
+"                Are un tip (de ex. palet, cutie) şi se pot specifica "
+"mărimile acestuia.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -1028,6 +1041,8 @@ msgid ""
 "This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
+"O descriere a produsului, accesibilă clienţilor. Această descriere va fi "
+"copiată în fiecare comandă de vânzare sau factură emisă"
 
 #. module: product
 #: help:product.template,description_purchase:0
@@ -1036,13 +1051,15 @@ msgid ""
 "This description will be copied to every Purchase Order, Receipt and "
 "Supplier Invoice/Refund."
 msgstr ""
+"O descriere a produsului, accesibilă furnizorilor. Această descriere va fi "
+"copiată în fiecare comandă de achiziţie sau factură primită"
 
 #. module: product
 #: help:product.template,description:0
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr ""
+msgstr "O descriere a produsului, folosită doar pentru scopuri interne"
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1057,7 +1074,7 @@ msgstr "Accesorii"
 #: field:product.template,active:0
 #: field:product.uom,active:0
 msgid "Active"
-msgstr "Activ(a)"
+msgstr "Activ"
 
 #. module: product
 #: model:product.category,name:product.product_category_all
@@ -1111,8 +1128,8 @@ msgid ""
 "At least one pricelist has no active version !\n"
 "Please create or activate one."
 msgstr ""
-"Cel putin o lista de preturi nu are nici o versiune activa !\n"
-"Va rugam sa creati sau sa activati una."
+"Cel putin o listă de prețuri nu are nici o versiune activă !\n"
+"Vă rugăm să creați sau să activați una."
 
 #. module: product
 #: field:product.attribute.line,attribute_id:0
@@ -1123,7 +1140,7 @@ msgstr "Atribute"
 #. module: product
 #: field:product.attribute.value,price_extra:0
 msgid "Attribute Price Extra"
-msgstr ""
+msgstr "Prețul extra al atributului"
 
 #. module: product
 #: field:product.attribute.value,price_ids:0
@@ -1146,7 +1163,7 @@ msgstr "Atribute"
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
 msgid "Base Price"
-msgstr "Pretul de baza"
+msgstr "Prețul de bază"
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -1158,8 +1175,8 @@ msgstr "Pretul de baza pentru calcul."
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog price."
 msgstr ""
-"Pretul de baza pentru calcularea pretului clientului. Uneori este numit "
-"pretul de catalog."
+"Prețul de bază pentru calcularea prețului clientului. Uneori este numit "
+"prețul de catalog."
 
 #. module: product
 #: field:product.pricelist.item,base:0
@@ -1227,8 +1244,8 @@ msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
 msgstr ""
-"Daca nu bifati campul activ, puteti dezactiva o unitate de masura fara a o "
-"stergeti."
+"Dacă nu bifați câmpul activ, puteți dezactiva o unitate de măsura fără să o "
+"ștergeți."
 
 #. module: product
 #: view:product.price_list:product.view_product_price_list
@@ -1397,7 +1414,7 @@ msgstr ""
 #: model:product.price.type,name:product.standard_price
 #: field:product.template,standard_price:0
 msgid "Cost Price"
-msgstr "Pretul de cost"
+msgstr "Preț de cost"
 
 #. module: product
 #: help:product.template,standard_price:0
@@ -1406,6 +1423,9 @@ msgid ""
 "accounting and used as a base price on purchase orders. Expressed in the "
 "default unit of measure of the product."
 msgstr ""
+"Preţul de cost al produsului, folosit la evaluarea standard a stocului în "
+"contabilitate şi ca preţ de bază în comenzile de achiziţie. Exprimat pe "
+"unitatea de masură implicită a produsului"
 
 #. module: product
 #: field:pricelist.partnerinfo,create_uid:0
@@ -1547,7 +1567,7 @@ msgstr "Descriere pentru Furnizori"
 #. module: product
 #: help:product.attribute.value,sequence:0
 msgid "Determine the display order"
-msgstr ""
+msgstr "Determină ordinea de afişare"
 
 #. module: product
 #: model:product.public.category,name:product.devices
@@ -1685,6 +1705,8 @@ msgid ""
 "the minimum quantity specified in this field.\n"
 "Expressed in the default UoM of the product."
 msgstr ""
+"Ca regula să fie aplicată, cantitatea achiziţionată/vândută trebuie sa fie "
+"mai mare sau egală cu cantitatea minimă specificată în acest câmp"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
@@ -1932,20 +1954,22 @@ msgid ""
 "It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
+"Imaginea variantei de produs (mare). Va fi redimensionată automat la "
+"1024x1024px, păstrându-se aspectul"
 
 #. module: product
 #: help:product.product,image_medium:0
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Imaginea variantei de produs (medie)"
 
 #. module: product
 #: help:product.product,image_small:0
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Imaginea variantei de produs (mică)"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1988,7 +2012,7 @@ msgstr "Categorie internă"
 #: field:product.product,default_code:0
 #: field:product.template,default_code:0
 msgid "Internal Reference"
-msgstr "Referinta Interna"
+msgstr "Referință internă"
 
 #. module: product
 #: help:product.product,ean13:0
@@ -2021,12 +2045,12 @@ msgstr "Este o Urmare"
 #: field:product.product,is_product_variant:0
 #: field:product.template,is_product_variant:0
 msgid "Is product variant"
-msgstr ""
+msgstr "Este variantă de produs"
 
 #. module: product
 #: view:product.pricelist.version:product.product_pricelist_version_form_view
 msgid "Item List"
-msgstr ""
+msgstr "Listă elemente"
 
 #. module: product
 #: field:product.pricelist.type,key:0
@@ -2124,6 +2148,9 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"Timpul, în zile, dintre confirmarea comenzii de achiziţie şi recepţia "
+"produselor in magazie. Folosită de scheduler pentru calculul automat al "
+"comenzii de achiziţie"
 
 #. module: product
 #: field:product.category,parent_left:0
@@ -2182,7 +2209,7 @@ msgstr ""
 #. module: product
 #: model:res.groups,name:product.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr "Gestonați Unități de Masură Multiple"
+msgstr "Gestionați Unități de Masură Multiple"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -2207,7 +2234,7 @@ msgstr "Marja Max."
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
 msgid "Max. Price Margin"
-msgstr "Marja Pret Maxim"
+msgstr "Marjă Preț Maxim"
 
 #. module: product
 #: field:product.template,mes_type:0
@@ -2258,7 +2285,7 @@ msgstr "Marja Min."
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
 msgid "Min. Price Margin"
-msgstr "Marja Pret Minim"
+msgstr "Marjă Preț Minim"
 
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
@@ -2335,7 +2362,7 @@ msgstr "Rețea"
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
 msgid "New Price ="
-msgstr "Pretul nou ="
+msgstr "Prețul nou ="
 
 #. module: product
 #: code:addons/product/product.py:737
@@ -2346,10 +2373,10 @@ msgid ""
 "you may deactivate this product from the 'Procurements' tab and create a new "
 "one."
 msgstr ""
-"Noua Unitate de Masura '%s' trebuie sa apartina aceleiasi categorii a "
-"Unitatii de Masura '%s' ca si vechea Unitate de Masura '%s'. Daca trebuie sa "
-"modificati unitatea de masura, puteti sa dezactivati acest produs din tabul "
-"'Aprovizionari' si sa creati una noua."
+"Noua Unitate de Masura '%s' trebuie să aparțină aceleiași categorii a "
+"Unității de Măsură '%s' ca și vechea Unitate de Masura '%s'. Dacă trebuie să "
+"modificați unitatea de măsură, puteți sa dezactivați acest produs din tabul "
+"'Aprovizionare' și să creați unul nou."
 
 #. module: product
 #: selection:product.category,type:0
@@ -2407,7 +2434,7 @@ msgstr "Alte informații"
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
-msgstr "O alta lista de preturi"
+msgstr "O altă listă de prețuri"
 
 #. module: product
 #: model:product.category,name:product.product_category_3
@@ -2499,17 +2526,17 @@ msgstr "Mecanism de antrenare a penitei, SP-4"
 #: field:product.product,price:0
 #: field:product.template,price:0
 msgid "Price"
-msgstr "Pret"
+msgstr "Preț"
 
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
 msgid "Price Computation"
-msgstr "Calcul pret"
+msgstr "Calcul preț"
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
-msgstr "Reduceri de pret"
+msgstr "Reduceri de preț"
 
 #. module: product
 #: field:product.attribute.price,price_extra:0
@@ -2522,6 +2549,8 @@ msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
 msgstr ""
+"Preţ extra: preţul suplimentar pentru varianta de produs cu acest atribut, "
+"de ex. 200 preţ extra, 1000 + 200 = 1200"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -2530,54 +2559,54 @@ msgstr ""
 #: field:product.pricelist.version,pricelist_id:0
 #: view:website:product.report_pricelist
 msgid "Price List"
-msgstr "Lista de preturi"
+msgstr "Lista de prețuri"
 
 #. module: product
 #: field:product.pricelist.version,items_id:0
 msgid "Price List Items"
-msgstr "Elemente ale Listei de Preturi"
+msgstr "Elemente ale Listei de Prețuri"
 
 #. module: product
 #: view:website:product.report_pricelist
 msgid "Price List Name"
-msgstr "Numele Listei de preturi"
+msgstr "Numele Listei de prețuri"
 
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
-msgstr "Versiune a listei de preturi"
+msgstr "Versiune a listei de prețuri"
 
 #. module: product
 #: field:product.price.type,name:0
 msgid "Price Name"
-msgstr "Nume pret"
+msgstr "Nume preț"
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
 msgid "Price Rounding"
-msgstr "Rotunjure pret"
+msgstr "Rotunjure preț"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
-msgstr "Suprataxare pret"
+msgstr "Suprataxare preț"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_type
 msgid "Price Type"
-msgstr "Tipul de pret"
+msgstr "Tipul de preț"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 #: model:ir.ui.menu,name:product.menu_product_price_type
 msgid "Price Types"
-msgstr "Tipuri de preturi"
+msgstr "Tipuri de prețuri"
 
 #. module: product
 #: view:product.product:product.product_kanban_view
 #: view:product.template:product.product_template_kanban_view
 msgid "Price:"
-msgstr "Pret:"
+msgstr "Preț:"
 
 #. module: product
 #: field:product.price_list,price_list:0
@@ -2590,18 +2619,18 @@ msgstr "Lista de prețuri"
 #: view:product.supplierinfo:product.product_supplierinfo_form_view
 #: field:product.template,pricelist_id:0
 msgid "Pricelist"
-msgstr "Lista de preturi"
+msgstr "Lista de prețuri"
 
 #. module: product
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
-msgstr "Numele Listei de preturi"
+msgstr "Numele Listei de prețuri"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
 msgid "Pricelist Type"
-msgstr "Tipul Listei de preturi"
+msgstr "Tipul Listei de prețuri"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -2609,14 +2638,14 @@ msgstr "Tipul Listei de preturi"
 #: view:product.pricelist.version:product.product_pricelist_version_form_view
 #: view:product.pricelist.version:product.product_pricelist_version_tree_view
 msgid "Pricelist Version"
-msgstr "Versiune a Listei de preturi"
+msgstr "Versiune a Listei de prețuri"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action
 #: field:product.pricelist,version_id:0
 msgid "Pricelist Versions"
-msgstr "Versiuni ale Listei de preturi"
+msgstr "Versiuni ale Listei de prețuri"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2629,12 +2658,12 @@ msgstr "Element al Listei de preturi"
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_main
 msgid "Pricelists"
-msgstr "Liste de preturi"
+msgstr "Liste de prețuri"
 
 #. module: product
 #: view:res.partner:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "Listele de prețuri sunt gestionate în"
 
 #. module: product
 #: view:product.price_list:product.view_product_price_list
@@ -2644,7 +2673,7 @@ msgstr "Tipariti"
 #. module: product
 #: view:website:product.report_pricelist
 msgid "Print date"
-msgstr ""
+msgstr "Printează data"
 
 #. module: product
 #: model:product.public.category,name:product.printer
@@ -2801,18 +2830,18 @@ msgstr "Etichete Produse"
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
 #: view:product.pricelist.item:product.product_pricelist_item_tree_view
 msgid "Products Listprices Items"
-msgstr "Elemente ale Listei de preturi a produselor"
+msgstr "Elemente ale Listei de prețuri a produselor"
 
 #. module: product
 #: view:product.pricelist:product.product_pricelist_view_search
 msgid "Products Price"
-msgstr "Pretul Produselor"
+msgstr "Prețul Produselor"
 
 #. module: product
 #: view:product.pricelist:product.product_pricelist_view
 #: view:product.pricelist:product.product_pricelist_view_tree
 msgid "Products Price List"
-msgstr "Lista de preturi Produse"
+msgstr "Listă prețuri Produse"
 
 #. module: product
 #: view:product.pricelist:product.product_pricelist_view_search
@@ -2822,7 +2851,7 @@ msgstr "Căutați Prețul Produselor"
 #. module: product
 #: view:product.price.type:product.product_price_type_view
 msgid "Products Price Type"
-msgstr "Tipul de pret al produselor"
+msgstr "Tipul de preț al produselor"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action
@@ -2846,7 +2875,7 @@ msgstr "Prețul public"
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
-msgstr "Lista de preturi publica"
+msgstr "Lista de prețuri publică"
 
 #. module: product
 #: view:product.template:product.product_template_form_view
@@ -3116,6 +3145,9 @@ msgid ""
 "Specify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
 msgstr ""
+"Specificaţi o unitate de masură aici daca factura este facută în altă "
+"unitate de masură decat cea de stoc. Lăsaţi gol pentru unitatea de masură "
+"implicită"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -3185,13 +3217,13 @@ msgstr "Timpul total de aprovizionare"
 #. module: product
 #: field:product.supplierinfo,pricelist_ids:0
 msgid "Supplier Pricelist"
-msgstr "Lista de preturi Furnizor"
+msgstr "Listă de prețuri Furnizor"
 
 #. module: product
 #: code:addons/product/pricelist.py:433
 #, python-format
 msgid "Supplier Prices on the product form"
-msgstr ""
+msgstr "Prețul de achiziție din datele de bază ale produsului"
 
 #. module: product
 #: field:product.supplierinfo,product_code:0
@@ -3254,6 +3286,7 @@ msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
 msgstr ""
+"Preţul calculat exprimat pe unitatea de masură implicită a produsului"
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -3334,6 +3367,9 @@ msgid ""
 "You trying to delete an attribute value with a reference on a product "
 "variant."
 msgstr ""
+"Operatia nu poate fi efectuată.\n"
+"Incercaţi să ştergeti o valoare a atributului cu o referinţă către o "
+"variantă de produs"
 
 #. module: product
 #: view:product.supplierinfo:product.product_supplierinfo_form_view
@@ -3341,6 +3377,8 @@ msgid ""
 "The prices below will only be taken into account when your pricelist is set "
 "as based on supplier prices."
 msgstr ""
+"Prețurile de mai jos vor fi luate în considerare doar când lista de prețuri "
+"este bazată pe prețurile de achiziţie"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_9_product_template
@@ -3372,7 +3410,7 @@ msgstr "Latimea coletului"
 #. module: product
 #: sql_constraint:product.attribute.value:0
 msgid "This attribute value already exists !"
-msgstr ""
+msgstr "Această valoare a atributului există deja!"
 
 #. module: product
 #: help:product.supplierinfo,product_uom:0
@@ -3385,6 +3423,8 @@ msgid ""
 "This field holds the image used as image for the product variant, limited to "
 "1024x1024px."
 msgstr ""
+"Acest câmp conţine imaginea folosită pentru varianta de produs (limitată la "
+"1024x1024px)"
 
 #. module: product
 #: help:product.template,image:0
@@ -3392,7 +3432,7 @@ msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
 msgstr ""
-"Acest camp contine imaginea folosita drept imagine a produsului, limitata la "
+"Acest câmp conţine imaginea folosită drept imagine a produsului, limitată la "
 "1024x1024px."
 
 #. module: product
@@ -3406,7 +3446,7 @@ msgstr ""
 #: help:product.template,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr ""
-"Aceasta este cantitatea minima de achizitionat de la Furnizorul principal."
+"Aceasta este cantitatea minimă de achiziționat de la Furnizorul principal."
 
 #. module: product
 #: help:product.template,seller_delay:0
@@ -3415,11 +3455,14 @@ msgid ""
 "and the receipts for this product and for the default supplier. It is used "
 "by the scheduler to order requests based on reordering delays."
 msgstr ""
+"Timpul de intârziere mediu, în zile, dintre confirmarea unei comenzi de "
+"achiziţie şi recepţia propriu-zisă a produselor de la furnizorul implicit. "
+"Este folosit de scheduler pentru a ordona solicitările."
 
 #. module: product
 #: help:product.product,price_extra:0
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "Suma prețurilor extra pentru toate atributele"
 
 #. module: product
 #: view:product.template:product.product_template_form_view
@@ -3516,7 +3559,7 @@ msgstr "Unitate"
 #. module: product
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
-msgstr "Pret unitar"
+msgstr "Preț unitar"
 
 #. module: product
 #: view:product.template:product.product_template_form_view
@@ -3584,12 +3627,12 @@ msgstr ""
 #. module: product
 #: field:product.attribute.value,name:0
 msgid "Value"
-msgstr ""
+msgstr "Valoare"
 
 #. module: product
 #: field:product.attribute,value_ids:0
 msgid "Values"
-msgstr ""
+msgstr "Valori"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -3599,17 +3642,17 @@ msgstr "Variabil(a)"
 #. module: product
 #: field:product.product,price_extra:0
 msgid "Variant Extra Price"
-msgstr ""
+msgstr "Preț extra al variantei de produs"
 
 #. module: product
 #: field:product.product,image_variant:0
 msgid "Variant Image"
-msgstr ""
+msgstr "Imaginea variantei de produs"
 
 #. module: product
 #: view:product.template:product.product_template_only_form_view
 msgid "Variant Prices"
-msgstr ""
+msgstr "Prețuri variante"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_template_action
@@ -3617,7 +3660,7 @@ msgstr ""
 #: view:product.attribute.value:product.variants_template_tree_view
 #: view:product.attribute.value:product.variants_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "Valori ale variantei de produs"
 
 #. module: product
 #: field:product.attribute.value,product_ids:0
@@ -3629,7 +3672,7 @@ msgstr "Variante"
 #. module: product
 #: model:product.public.category,name:product.video_acquisition
 msgid "Video Acquisition"
-msgstr ""
+msgstr "Captură video"
 
 #. module: product
 #: selection:product.category,type:0
@@ -3657,7 +3700,7 @@ msgstr "Avertisment!"
 #. module: product
 #: field:product.template,warranty:0
 msgid "Warranty"
-msgstr "Garantie"
+msgstr "Garanție"
 
 #. module: product
 #: model:product.template,name:product.product_product_34_product_template
@@ -3672,7 +3715,7 @@ msgstr "Greutate"
 #. module: product
 #: view:product.template:product.product_template_form_view
 msgid "Weights"
-msgstr "Greutati"
+msgstr "Dimensiuni"
 
 #. module: product
 #: help:product.pricelist.version,active:0
@@ -3688,12 +3731,12 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
-msgstr ""
+msgstr "Alb"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_3
 msgid "Wi-Fi"
-msgstr ""
+msgstr "Wi-Fi"
 
 #. module: product
 #: field:product.ul,width:0
@@ -3718,7 +3761,7 @@ msgstr "Program de lucru"
 #. module: product
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Nu puteti avea doua liste de preturi care se suprapun"
+msgstr "Nu puteţi avea două liste de preţuri care se suprapun"
 
 #. module: product
 #: constraint:product.product:0
@@ -3726,8 +3769,8 @@ msgid ""
 "You provided an invalid \"EAN13 Barcode\" reference. You may use the "
 "\"Internal Reference\" field instead."
 msgstr ""
-"Ati furnizat o referinta nevalida \"Cod de bare EAN13\". Puteti folosi "
-"campul \"Referinta Interna\" in locul ei."
+"Ați furnizat o referință nevalidă în \"Cod de bare EAN13\". Puteți folosi "
+"câmpul \"Referință Interna\" în locul ei."
 
 #. module: product
 #: model:product.template,name:product.product_product_43_product_template
@@ -3757,17 +3800,17 @@ msgstr "de exemplu 1 * (aceasta unitate) = raport * (unitatea de referinta)"
 #. module: product
 #: model:product.uom,name:product.product_uom_floz
 msgid "fl oz"
-msgstr ""
+msgstr "fl oz"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_foot
 msgid "foot(ft)"
-msgstr ""
+msgstr "foot(ft)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gal
 msgid "gal(s)"
-msgstr ""
+msgstr "gal(s)"
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -3777,7 +3820,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_6_product_template
 msgid "iPad Mini"
-msgstr ""
+msgstr "iPad Mini"
 
 #. module: product
 #: model:product.template,name:product.product_product_4_product_template
@@ -3785,13 +3828,13 @@ msgstr ""
 #: model:product.template,name:product.product_product_4c_product_template
 #: model:product.template,name:product.product_product_4d_product_template
 msgid "iPad Retina Display"
-msgstr ""
+msgstr "iPad Retina Display"
 
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
 #: model:product.template,name:product.product_product_11b_product_template
 msgid "iPod"
-msgstr ""
+msgstr "iPod"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_inch
@@ -3821,7 +3864,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_mile
 msgid "mile(s)"
-msgstr ""
+msgstr "mile(s)"
 
 #. module: product
 #: view:product.template:product.product_template_form_view
@@ -3841,7 +3884,7 @@ msgstr "sau"
 #. module: product
 #: model:product.uom,name:product.product_uom_oz
 msgid "oz(s)"
-msgstr ""
+msgstr "oz(s)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
@@ -3851,7 +3894,7 @@ msgstr ""
 #. module: product
 #: view:res.partner:product.view_partner_property_form
 msgid "the parent company"
-msgstr ""
+msgstr "compania părinte"
 
 #. module: product
 #: field:product.price.history,company_id:0

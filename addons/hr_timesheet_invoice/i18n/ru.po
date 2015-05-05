@@ -6,16 +6,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-04-26 03:03+0000\n"
+"Last-Translator: user3 <Unknown>\n"
+"Language-Team: Russian <http://translate.starlight-"
+"biz.com//projects/odoo/hr_timesheet_invoice/ru/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:51+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-27 05:38+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
+"Language: ru\n"
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
@@ -43,11 +45,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите, чтобы добавить новый тип счета.\n"
+"              </p><p>\n"
+"                Odoo позволяет создавать типы  выставления счетов-фактур по "
+"умолчанию. Вы могли   бы быть вынуждены регулярно выставлять счета по "
+"конкретному \n"
+"                 договору или соглашению с клиентом. Из этого меню, вы "
+"можете \n"
+"                 создать дополнительные виды счетов, чтобы ускорить \n"
+"                 выставление счетов.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 msgid "Account"
-msgstr "Учётная запись"
+msgstr "Счет"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,amount:0
@@ -66,12 +80,12 @@ msgstr "Счёт аналитики"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:179
 #, python-format
 msgid "Analytic Account Incomplete!"
-msgstr ""
+msgstr "Аналитический счет не завершен!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Позиция аналитики"
 
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_filter
@@ -91,7 +105,7 @@ msgstr "Позиции аналитики к выставлению счетов
 #: field:report.account.analytic.line.to.invoice,account_id:0
 #: field:report.analytic.account.close,name:0
 msgid "Analytic account"
-msgstr "Счет аналитики"
+msgstr "Аналитический счет"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
@@ -146,13 +160,13 @@ msgstr "Отменить договор"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "Close Contract"
-msgstr ""
+msgstr "Закрыть договор"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:253
 #, python-format
 msgid "Configuration Error!"
-msgstr "Ошибка конфигурации!"
+msgstr "Ошибка настроек!"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:180
@@ -160,6 +174,7 @@ msgstr "Ошибка конфигурации!"
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
 msgstr ""
+"Контракт не заполнен. Пожалуйста заполните поля Покупатель и Прайс-лист."
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,price:0
@@ -193,12 +208,12 @@ msgstr "Создать счета"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
 msgid "Create invoice from timesheet"
-msgstr ""
+msgstr "Создать счет-фактуру из табеля"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
 msgid "Create invoice from timesheet final"
-msgstr ""
+msgstr "Создать счет из окончательного табеля"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,create_uid:0
@@ -206,7 +221,7 @@ msgstr ""
 #: field:hr.timesheet.invoice.create.final,create_uid:0
 #: field:hr_timesheet_invoice.factor,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Создано"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,create_date:0
@@ -214,12 +229,12 @@ msgstr ""
 #: field:hr.timesheet.invoice.create.final,create_date:0
 #: field:hr_timesheet_invoice.factor,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Создан"
 
 #. module: hr_timesheet_invoice
 #: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Currency:"
-msgstr ""
+msgstr "Валюта:"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
@@ -256,7 +271,7 @@ msgstr "День"
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,date_deadline:0
 msgid "Deadline"
-msgstr "Срок"
+msgstr "Последний срок"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -285,7 +300,7 @@ msgstr "Скидка в процентах"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,price:0
 msgid "Display cost of the item you reinvoice"
-msgstr ""
+msgstr "Показать стоимость объекта, на который повторно выписан счет"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,date:0
@@ -295,7 +310,7 @@ msgstr "Показывать дату в истории работ"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,name:0
 msgid "Display detail of work in the invoice line."
-msgstr ""
+msgstr "Показать детали работы в строке счета."
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,time:0
@@ -305,7 +320,7 @@ msgstr "Показывать время в истории работ"
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
 msgid "Do you want to show details of each activity to your customer?"
-msgstr ""
+msgstr "Хотите ли вы показать детали каждого действия вашему клиенту?"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
@@ -315,7 +330,7 @@ msgstr "Вы хотите указать подробности работы в 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
 msgid "Duration"
-msgstr "Продолжительность"
+msgstr "Длительность"
 
 #. module: hr_timesheet_invoice
 #: view:website:hr_timesheet_invoice.report_analyticprofit
@@ -356,21 +371,24 @@ msgid ""
 "Fill this field only if you want to force to use a specific product. Keep "
 "empty to use the real product that comes from the cost."
 msgstr ""
+"Заполните это поле, только если вы хотите использовать конкретный продукт. "
+"Оставьте пустым для использования реального продукт, который исходит из "
+"стоимости."
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
 msgid "Force Product"
-msgstr ""
+msgstr "Установить продукт"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
 msgid "Force to use a special product"
-msgstr ""
+msgstr "Установить использование особого продукта"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
 msgid "Force to use a specific product"
-msgstr ""
+msgstr "Установить использование особого продукта"
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
@@ -385,12 +403,12 @@ msgstr "От"
 #. module: hr_timesheet_invoice
 #: field:report.timesheet.line,general_account_id:0
 msgid "General Account"
-msgstr "Базовый счет"
+msgstr "Общий счет"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 msgid "Group By"
-msgstr ""
+msgstr "Группировать по"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,id:0
@@ -406,7 +424,7 @@ msgstr ""
 #: field:report_timesheet.invoice,id:0
 #: field:report_timesheet.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_timesheet_invoice
 #: view:website:hr_timesheet_invoice.report_analyticprofit
@@ -429,38 +447,38 @@ msgstr "Внутреннее название"
 #: model:ir.model,name:hr_timesheet_invoice.model_account_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 msgid "Invoice"
-msgstr "Счёт"
+msgstr "Инвойс"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
 msgid "Invoice Rate"
-msgstr ""
+msgstr "Ставка счета"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
 msgid "Invoice contract"
-msgstr ""
+msgstr "Договор счета"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
 #, python-format
 msgid "Invoice is already linked to some of the analytic line(s)!"
-msgstr ""
+msgstr "Счет уже закреплен за некоторыми аналитическими позициями!"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "Invoice on Timesheets Options"
-msgstr ""
+msgstr "Счет по функциям табелей"
 
 #. module: hr_timesheet_invoice
 #: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Invoice rate by user"
-msgstr ""
+msgstr "Ставка счета пользователя"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
 msgid "Invoiceable"
-msgstr ""
+msgstr "Способный к выставлению счета"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.line:hr_timesheet_invoice.view_account_analytic_line_search_inherit
@@ -484,7 +502,7 @@ msgstr "Счета"
 #. module: hr_timesheet_invoice
 #: view:hr.analytic.timesheet:hr_timesheet_invoice.hr_timesheet_line_form
 msgid "Invoicing"
-msgstr "Выставление счетов"
+msgstr "Выставление счета"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -492,6 +510,8 @@ msgid ""
 "It allows to set the discount while making invoice, keep empty if the "
 "activities should not be invoiced."
 msgstr ""
+"Это позволяет установить скидку, делая счет, оставьте пустым, если "
+"деятельность не должна выставляться."
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -510,7 +530,7 @@ msgstr "Журнал"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Товары из журналы"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -534,11 +554,12 @@ msgstr "Июнь"
 #: help:account.analytic.account,amount_max:0
 msgid "Keep empty if this contract is not limited to a total fixed price."
 msgstr ""
+"Оставьте пустым если этот договор не ограничен общей фиксированной ценой."
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
 msgid "Label for the customer"
-msgstr ""
+msgstr "Метка для клиента"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,write_uid:0
@@ -546,7 +567,7 @@ msgstr ""
 #: field:hr.timesheet.invoice.create.final,write_uid:0
 #: field:hr_timesheet_invoice.factor,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,write_date:0
@@ -554,12 +575,12 @@ msgstr ""
 #: field:hr.timesheet.invoice.create.final,write_date:0
 #: field:hr_timesheet_invoice.factor,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,name:0
 msgid "Log of Activity"
-msgstr ""
+msgstr "Вход активности"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,manager_id:0
@@ -578,7 +599,7 @@ msgstr "Март"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_max:0
 msgid "Max. Invoice Price"
-msgstr ""
+msgstr "Макс. цена счета"
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,quantity_max:0
@@ -607,7 +628,7 @@ msgstr "Месяц"
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,customer_name:0
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:59
@@ -618,7 +639,7 @@ msgstr "Отсутствуют записи для данного отчёта."
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 msgid "Non Assigned timesheets to users"
-msgstr ""
+msgstr "Табели не назначенные для пользователей"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -646,33 +667,33 @@ msgstr "Партнер"
 #. module: hr_timesheet_invoice
 #: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Period from startdate:"
-msgstr ""
+msgstr "Период с начальной даты:"
 
 #. module: hr_timesheet_invoice
 #: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Period to enddate:"
-msgstr ""
+msgstr "Период до конечной даты:"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:253
 #, python-format
 msgid "Please define income account for product '%s'."
-msgstr ""
+msgstr "Пожалуйста определите входящий счет для продукции '%s'."
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
 msgid "Pricelist"
-msgstr "Прайс-лист"
+msgstr "Прайслист"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
 msgid "Print"
-msgstr "Распечатать"
+msgstr "Печать"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
 msgid "Print Timesheet Profit"
-msgstr ""
+msgstr "Распечатать прибыль табеля"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,product:0
@@ -680,7 +701,7 @@ msgstr ""
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 #: field:report.timesheet.line,product_id:0
 msgid "Product"
-msgstr "Продукция"
+msgstr "Товар"
 
 #. module: hr_timesheet_invoice
 #: view:website:hr_timesheet_invoice.report_analyticprofit
@@ -715,12 +736,12 @@ msgstr "Сентябрь"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "Set In Progress"
-msgstr ""
+msgstr "Установка выполняется"
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,state:0
 msgid "Status"
-msgstr "Состояние"
+msgstr "Статус"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,price:0
@@ -728,16 +749,20 @@ msgid ""
 "The cost of each work done will be displayed on the invoice. You probably "
 "don't want to check this"
 msgstr ""
+"Стоимость каждой проделанной работы будет отображена в счете. Вы возможно не "
+"хотите проверить это"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
 msgid "The detail of each work done will be displayed on the invoice"
-msgstr ""
+msgstr "Детали каждой выполненной работы отображены в счете"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
 msgstr ""
+"Продукт, который будет использоваться для выставления счета на оставшуюся "
+"сумму"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,pricelist_id:0
@@ -745,16 +770,18 @@ msgid ""
 "The product to invoice is defined on the employee form, the price will be "
 "deducted by this pricelist on the product."
 msgstr ""
+"Продукт в счете-фактуре определяется в форме сотрудников, цена на продукт "
+"будет определена этим прейскурантом."
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,date:0
 msgid "The real date of each work will be displayed on the invoice"
-msgstr ""
+msgstr "Реальная дата каждой работы будет отображена в счете"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,time:0
 msgid "The time of each work done will be displayed on the invoice"
-msgstr ""
+msgstr "Время каждой выполненной работы будет отображено в счете"
 
 #. module: hr_timesheet_invoice
 #: view:website:hr_timesheet_invoice.report_analyticprofit
@@ -783,7 +810,7 @@ msgstr "Затраченное время"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
 msgid "Timesheet Invoicing Ratio"
-msgstr ""
+msgstr "Соотношение выставления счетов по табелю"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
@@ -800,7 +827,7 @@ msgstr "Строка табеля"
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.action_report_analytic_profit
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_timesheet_analytic_profit
 msgid "Timesheet Profit"
-msgstr ""
+msgstr "Прибыль табеля"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_stat_all
@@ -882,12 +909,12 @@ msgstr "Кому"
 #: view:hr.analytic.timesheet:hr_timesheet_invoice.view_hr_timesheet_line_search_to_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
 msgid "To Invoice"
-msgstr "В счёт"
+msgstr "Выписать счет"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "To Renew"
-msgstr ""
+msgstr "Обновить"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,amount_invoice:0
@@ -952,7 +979,7 @@ msgstr "Пользователь или Название журнала"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
 #, python-format
 msgid "Warning!"
-msgstr "Предупреждение!"
+msgstr "Внимание!"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
@@ -962,6 +989,11 @@ msgid ""
 "You can use the following field to enforce the use of a single product for "
 "all the chosen lines in the future invoices."
 msgstr ""
+"При повторном выставлении счетов на затраты, сумма в строках счетов "
+"определяется ценой продажи соответствующего товара (если таковые имеются, и, "
+"если его продажная цена не равна 0). Вы можете использовать следующее поле, "
+"чтобы обеспечить использование одного продукта для всех выбранных линий в "
+"будущих счетах."
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,name:0
@@ -982,7 +1014,7 @@ msgstr "Да (100%)"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
-msgstr ""
+msgstr "Вы не можете изменить выставленный счет аналитической позиции!"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0
@@ -992,6 +1024,11 @@ msgid ""
 "20% advance invoice (fixed price, based on a sales order), you should "
 "invoice the rest on timesheet with a 80% ratio."
 msgstr ""
+"Как правило, счета-фактуры выставляются на 100% табелей. Но если смешать "
+"фиксированную цену и  выставление счетов табелей, можно использовать другое "
+"соотношение. Например, если вы делаете 20% авансовых счет-фактур "
+"(фиксированная цена, на основе заказа клиента), вы должны выставить "
+"остальные счета табелей в соотношении 80%."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit

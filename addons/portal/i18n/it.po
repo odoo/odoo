@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-04-08 14:58+0000\n"
+"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:04+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-09 05:46+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_inbox_feeds_portal
@@ -54,6 +54,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Nessun todo.</b>\n"
+"                </p><p>\n"
+"                    Quando si processanno messaggi nella propria Posta in "
+"arrivo, è possibile marcarne\n"
+"                    alcuni come <i>todo</i>. Da questo menù, è possibile "
+"processare i propri todo.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
@@ -67,12 +76,22 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Nessun messaggio trovato e nessun messaggio ancora "
+"inviato.\n"
+"                </p><p>\n"
+"                    Fai click sull'icona in alto a destra per comporre un "
+"messaggio.\n"
+"                    Questo messaggio verrà inviato via email se destinato a "
+"un contatto interno.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: code:addons/portal/mail_message.py:59
 #, python-format
 msgid "Access Denied"
-msgstr ""
+msgstr "Accesso Negato"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -93,12 +112,12 @@ msgstr "Salva"
 #: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
 msgid "Archives"
-msgstr ""
+msgstr "Archivi"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_orders
 msgid "Billing"
-msgstr ""
+msgstr "Fatturazione"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
@@ -119,19 +138,19 @@ msgstr "Contatti"
 #: code:addons/portal/wizard/portal_wizard.py:163
 #, python-format
 msgid "Contacts Error"
-msgstr ""
+msgstr "Errore Contatti"
 
 #. module: portal
 #: field:portal.wizard,create_uid:0
 #: field:portal.wizard.user,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: portal
 #: field:portal.wizard,create_date:0
 #: field:portal.wizard.user,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:34
@@ -155,6 +174,23 @@ msgid ""
 "Odoo - Open Source Business Applications\n"
 "http://www.openerp.com\n"
 msgstr ""
+"Gentile %(name)s,\n"
+"\n"
+"E' stato abilitato il tuo accesso a: %(company)s %(portal)s\n"
+"\n"
+"I tuoi dati di login sono:\n"
+"  Username: %(login)s\n"
+"  Portael: %(portal_url)s\n"
+"  Database: %(db)s \n"
+"\n"
+"Puoi impostare(o modificare) la tua password al seguente url:\n"
+"   %(signup_url)s\n"
+"\n"
+"%(welcome_message)s\n"
+"\n"
+"--\n"
+"Odoo - Open Source Business Applications\n"
+"http://www.openerp.com\n"
 
 #. module: portal
 #: view:share.wizard:portal.share_step2_form_portal
@@ -170,12 +206,12 @@ msgstr "Email"
 #: code:addons/portal/wizard/portal_wizard.py:225
 #, python-format
 msgid "Email Required"
-msgstr ""
+msgstr "Email Obbligatoria"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Thread Email"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:39
@@ -193,13 +229,13 @@ msgstr "Gruppi esistenti"
 #: view:share.wizard:portal.share_step1_form_portal
 #: field:share.wizard,user_ids:0
 msgid "Existing users"
-msgstr ""
+msgstr "Utenti esistenti"
 
 #. module: portal
 #: field:portal.wizard,id:0
 #: field:portal.wizard.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: portal
 #: help:res.groups,is_portal:0
@@ -226,18 +262,18 @@ msgstr "Messaggio di invito"
 #: field:portal.wizard,write_uid:0
 #: field:portal.wizard.user,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima modifica di"
 
 #. module: portal
 #: field:portal.wizard,write_date:0
 #: field:portal.wizard.user,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima modifica il"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Messaggio"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_messages
@@ -304,29 +340,37 @@ msgid ""
 "                        If necessary, you can fix any contact's email "
 "address directly in the list."
 msgstr ""
+"Seleziona quali contatti dovrebbero poter accedere al portale dalla lista "
+"sottostante.\n"
+"                        L'indirizo email di ogni contatto selezionato deve "
+"essere univoco e valido.\n"
+"                        Se necessario, puoi modificare l'indirizzo email di "
+"un contatto direttamente all'interno della lista."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:149
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Diversi contatti hanno la stessa email: "
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
 msgid "Share Wizard"
-msgstr ""
+msgstr "Wizard condivisione"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:146
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Alcuni contatti non hanno un indirizzo email valido: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:152
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
+"Alcuni contatti hanno lo stesso indirizzo email di un utente già esistente "
+"del portale:"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -342,11 +386,16 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
+"L'operazione richiesta non può essere completata per questioni di sicurezza. "
+"Si prega di contattare l'amministratore di sistema.\n"
+"\n"
+"(TIpo documento: %s, Operazione: %s)"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Questo testo viene incluso nell'email inviata ai nuovi utenti del portale."
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
@@ -362,12 +411,15 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"Per risolvere questo errore, puoi: \n"
+"- Correggere l'email dei contatti relativi\n"
+"- Concedere l'accesso solamente ai contatti con indirizzi email univoci"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_mail_starfeeds
 msgid "To-do"
-msgstr ""
+msgstr "To-do"
 
 #. module: portal
 #: field:portal.wizard,user_ids:0
@@ -398,13 +450,13 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:33
 #, python-format
 msgid "Your Odoo account at %(company)s"
-msgstr ""
+msgstr "Il tuo account Odoo di %(company)s"
 
 #. module: portal
 #: code:addons/portal/mail_mail.py:46
 #, python-format
 msgid "access directly to"
-msgstr ""
+msgstr "accedi direttamente a"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
@@ -415,4 +467,4 @@ msgstr "o"
 #: code:addons/portal/mail_mail.py:48
 #, python-format
 msgid "your messages "
-msgstr ""
+msgstr "i tuoi messaggi "
