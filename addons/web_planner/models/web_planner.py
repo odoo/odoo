@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from urllib import urlencode
+
 from openerp import api, models, fields
 
 
@@ -35,6 +37,7 @@ class Planner(models.Model):
         # prepare the planner data as per the planner application
         values = {
             'prepare_backend_url': self.prepare_backend_url,
+            'is_module_installed': self.is_module_installed,
         }
         planner_find_method_name = '_prepare_%s_data' % planner_app
         if hasattr(self, planner_find_method_name):
@@ -44,12 +47,27 @@ class Planner(models.Model):
     @api.model
     def prepare_backend_url(self, action_xml_id, view_type='list', module_name=None):
         """ prepare the backend url to the given action, or to the given module view.
-            :returns dict : the value used to render the planer template
+            :param action_xml_id : the xml id of the action to redirect to
+            :param view_type : the view type to display when redirecting (form, kanban, list, ...)
+            :param module_name : the name of the module to display (if action_xml_id is 'open_module_tree'), or
+                                 to redirect to if the action is not found.
+            :returns url : the url to the correct page
         """
+        params = dict(view_type=view_type)
+        # setting the action
         action = self.env.ref(action_xml_id, False)
-        url = "/web#view_type=%s&action=%s" % (view_type, action and action.id or '')
+        if action:
+            params['action'] = action.id
+        else:
+            params['model'] = 'ir.module.module'
+        # setting the module
         if module_name:
             module = self.env['ir.module.module'].search([('name', '=', module_name)], limit=1)
             if module:
-                url += "&id=%s" % (module.id,)
-        return url
+                params['id'] = module.id
+        return "/web#%s" % (urlencode(params),)
+
+    @api.model
+    def is_module_installed(self, module_name=None):
+        count = self.env['ir.module.module'].search_count([('state', '=', 'installed'), ('name', '=', module_name)])
+        return bool(count)
