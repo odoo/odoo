@@ -536,9 +536,9 @@ class product_template(osv.osv):
                                           help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
                                                "Expressed in the default unit of measure of the product.",
                                           string="Cost Price"),
-        'volume': fields.float('Volume', help="The volume in m3."),
-        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
-        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
+        'volume': fields.float('Volume', help="Volume is the amount of space that an item you are measuring takes up."),
+        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The total weight, including contents, packaging, etc."),
+        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents, not including any packaging, etc."),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
