@@ -38,7 +38,7 @@ $('.oe_website_sale').each(function () {
     });
 
     $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
-        product_ids = [];
+        var product_ids = [];
         var product_dom = $("ul.js_add_cart_variants[data-attribute_value_ids]").first();
         product_dom.data("attribute_value_ids").forEach(function(entry) {
             product_ids.push(entry[0]);});
@@ -72,21 +72,29 @@ $('.oe_website_sale').each(function () {
             product_ids.push($(this).find('span[data-oe-model="product.product"]').data('oe-id'));
         });
         if (isNaN(value)) value = 0;
-        ajax.jsonRpc("/shop/get_unit_price", 'call', {
-            'product_ids': product_ids,
-            'add_qty': value})
-        .then(function (res) {
-            //basic case
-            $dom.find('span.oe_currency_value').last().text(res[product_id].toFixed(2));
-            $dom.find('.text-danger').toggle(res[product_id]<default_price && (default_price-res[product_id] > default_price/100));
-            //optional case
-            $dom_optional.each(function(){
-                var id = $(this).find('span[data-oe-model="product.product"]').data('oe-id');
-                var price = parseFloat($(this).find(".text-danger > span.oe_currency_value").text());
-                $(this).find("span.oe_currency_value").last().text(res[id].toFixed(2));
-                $(this).find('.text-danger').toggle(res[id]<price && (price-res[id]>price/100));
+
+        if ($(this).hasClass('js_no_gup')) { // if get_unit_price (gup) not needed
+            var gup = $.when();
+        }
+        else {
+            var gup = ajax.jsonRpc("/shop/get_unit_price", 'call', {
+                'product_ids': product_ids,
+                'add_qty': value})
+            .then(function (res) {
+                //basic case
+                $dom.find('span.oe_currency_value').last().text(res[product_id].toFixed(2));
+                $dom.find('.text-danger').toggle(res[product_id]<default_price && (default_price-res[product_id] > default_price/100));
+                //optional case
+                $dom_optional.each(function(){
+                    var id = $(this).find('span[data-oe-model="product.product"]').data('oe-id');
+                    var price = parseFloat($(this).find(".text-danger > span.oe_currency_value").text());
+                    $(this).find("span.oe_currency_value").last().text(res[id].toFixed(2));
+                    $(this).find('.text-danger').toggle(res[id]<price && (price-res[id]>price/100));
+                });
             });
-          ajax.jsonRpc("/shop/cart/update_json", 'call', {
+        }
+        gup.then(function(res) {
+            ajax.jsonRpc("/shop/cart/update_json", 'call', {
             'line_id': line_id,
             'product_id': parseInt($input.data('product-id'),10),
             'set_qty': value})
