@@ -491,6 +491,7 @@
                         Tell us how you sell and we will tell you what
                         configuration will best fit your quotation process.
                     </p>
+                    <t t-if="not is_module_installed('sale')"><span class="text-muted">Note: To use those features, you need to install the <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'sale')">Sales Management module.</a></span></t>
                     <h4>What <strong>kind of proposals</strong> do you usually send to your customers ?</h4>
                     <section>
                         <div class="row">
@@ -509,24 +510,21 @@
                                             'base_setup.action_sale_config')">Sales Settings</a></li>
                                         <li>Create your templates of offers</li>
                                     </span>
-                                    <p>
-                                        <strong>Note:</strong>
-                                    </p>
                                 </div>
                             </div>
                             <div class="col-xs-6">
                                 <h4 class="text-center"><b>Contracts</b></h4>
                                 <div class="well well-sm">
+                                    <t t-if="not is_module_installed('account_analytic_analysis')"><span class="text-muted">To activate the Contracts, check 'Use contracts management' <a t-att-href="prepare_backend_url(
+                                            'base_setup.action_sale_config')">in the Sales Settings.</a> </span></t>
                                     <h4><b>Fixed price</b> <span class="small">(ex: monthly subscription)</span></h4>
                                     <span>
-                                        <li>Activate contracts: <a t-att-href="prepare_backend_url(
-                                            'base_setup.action_sale_config')">in the Sales Settings</a></li>
                                         <li>Create contracts template</li>
                                     </span>
                                     <br/>
                                     <h4><b>Time &amp; material</b> <span class="small">(ex: consulting mission)</span></h4>
                                     <span>
-                                        <li><a t-att-href="prepare_backend_url('account_analytic_analysis.action_account_analytic_overdue_all')">Create your contracts</a> and configure your prices</li>
+                                        <li><a t-att-href="prepare_backend_url('account_analytic_analysis.action_account_analytic_overdue_all', 'list', 'sale')">Create your contracts</a> and configure your prices</li>
                                     </span>
                                 </div>
                             </div>
@@ -545,8 +543,8 @@
 
                 <div id="planner_page7" class="planner-page">
                     <h1>Import Products</h1>
+                    <t t-if="not is_module_installed('product')"><span class="text-muted">Note: To use those features, you need to install the <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'sale')">Sales Management.</a></span></t>
                     <p>How do you want to <strong>import your products?</strong></p>
-                    <br/>
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-4 col-xs-12">
@@ -561,7 +559,7 @@
                                     <div class="panel-body">
                                         <span>Each product, one by one<br/>
                                             <a t-att-href="prepare_backend_url(
-                                                'product.product_template_action', 'form')">Create a product</a>
+                                                'product.product_template_action', 'from', 'sale')">Create a product</a>
                                         </span>
                                     </div>
                                 </div>
@@ -578,7 +576,7 @@
                                     <div class="panel-body">
                                         <p>
                                             <a t-att-href="prepare_backend_url(
-                                                'product.product_template_action')">Create 3 products</a> manually
+                                                'product.product_template_action', 'list', 'sale')">Create 3 products</a> manually
                                         </p>
                                         <p>Export these 3 products by selecting them and chosing 'Export' from the 'More' menu</p>
                                         <p>Add your existing products to this CSV file</p>
@@ -719,7 +717,7 @@
                                             </li>
                                             <li>
                                                 <a t-att-href="prepare_backend_url(
-                                                    'account.action_account_invoice_report_all', 'graph')">Invoice Analysis</a>
+                                                    'account.action_account_invoice_report_all', 'graph', 'account')">Invoice Analysis</a>
                                             </li>
                                         </p>
                                         <p>
