@@ -32,7 +32,7 @@
             <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='waiting']" position="after">
-                    <filter name="to_be_invoiced" string="To Be Invoiced" domain="[('invoice_state','=', '2binvoiced')]" help="To Be Invoiced Moves"/>
+                    <filter name="to_be_invoiced" string="To Be Invoiced" domain="[('invoice_state','=', '2binvoiced'), ('state', '=', 'done')]" help="To Be Invoiced Moves"/>
                 </xpath>
             </field>
         </record>

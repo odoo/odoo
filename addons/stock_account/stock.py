@@ -356,7 +356,7 @@ class stock_picking_type(osv.Model):
     def _compute_count_picking_invoiced(self, cr, uid, ids, field_name, arg, context=None):
         result = dict.fromkeys(ids, 0)
         picking_data = self.pool['stock.picking'].read_group(
-            cr, uid, [('picking_type_id', 'in', ids), ('invoice_state', '=', '2binvoiced')],
+            cr, uid, [('picking_type_id', 'in', ids), ('invoice_state', '=', '2binvoiced'), ('state', '=', 'done')],
             ['picking_type_id'], ['picking_type_id'], context=context)
         for data in picking_data:
             result[data['picking_type_id'][0]] = data['picking_type_id_count']
