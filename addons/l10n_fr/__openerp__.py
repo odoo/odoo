@@ -53,7 +53,7 @@ configuration of their taxes and fiscal positions manually.
 
 **Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.
 """,
-    'depends': ['base_iban', 'account', 'account_chart', 'base_vat'],
+    'depends': ['base_iban', 'account', 'base_vat'],
     'data': [
         'views/report_l10nfrbilan.xml',
         'views/report_l10nfrresultat.xml',
@@ -72,5 +72,5 @@ configuration of their taxes and fiscal positions manually.
     'test': ['test/l10n_fr_report.yml'],
     'demo': [],
     'auto_install': False,
-    'installable': True,
+    'installable': False,
 }

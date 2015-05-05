@@ -51,7 +51,6 @@ Spanish charts of accounts (PGCE 2008).
         "account_account_full.xml",
         "account_account_pymes.xml",
         "account_account_assoc.xml",
-        "tax_codes_common.xml",
         "taxes_common.xml",
         "fiscal_templates_common.xml",
         "account_chart_template_post.xml",
@@ -59,6 +58,6 @@ Spanish charts of accounts (PGCE 2008).
     ],
     "demo" : [],
     'auto_install': False,
-    "installable": True,
+    "installable": False,
     'images': ['images/config_chart_l10n_es.png', 'images/l10n_es_chart.png'],
 }

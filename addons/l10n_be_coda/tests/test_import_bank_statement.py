@@ -2,6 +2,7 @@ from openerp.tests.common import TransactionCase
 from openerp.modules.module import get_module_resource
 from openerp.tools import float_compare
 
+
 class TestCodaFile(TransactionCase):
     """Tests for import bank statement coda file format (account.bank.statement.import)
     """
@@ -17,7 +18,7 @@ class TestCodaFile(TransactionCase):
             'journal_id': self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'bank_journal')[1]
         }
         self.bank_statement_id = self.statement_import_model.create(cr, uid, dict(
-            data_file = self.coda_file,
+            data_file=self.coda_file,
         ))
 
     def test_coda_file_import(self):
@@ -38,8 +39,8 @@ class TestCodaFile(TransactionCase):
         """ The demo account used by the CODA file is linked to the demo bank_journal """
         cr, uid = self.cr, self.uid
         bank_statement_id = self.statement_import_model.create(cr, uid, dict(
-            data_file = self.coda_file,
+            data_file=self.coda_file,
         ))
-        self.context['journal_id'] = self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'check_journal')[1]
+        self.context['journal_id'] = self.registry('ir.model.data').get_object_reference(cr, uid, 'l10n_be', 'miscellaneous_journal')[1]
         with self.assertRaises(Exception):
             self.statement_import_model.import_file(cr, uid, [bank_statement_id], context=self.context)

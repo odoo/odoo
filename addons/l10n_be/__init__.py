@@ -20,3 +20,5 @@
 ##############################################################################
 
 import wizard
+import xml_export
+import partner_vat_listing

@@ -38,16 +38,15 @@ This module consists :
     'author': 'InnOpen Group Kft',
     'website': 'http://www.innopen.eu',
     'license': 'AGPL-3',
-    'depends': ['account','account_chart'],
+    'depends': ['account'],
     'data': [
         'data/account.account.template.csv',
-        'data/account.tax.code.template.csv',
         'data/account.chart.template.csv',
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         'data/res.bank.csv',
     ],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

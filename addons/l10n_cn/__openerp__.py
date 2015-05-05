@@ -39,7 +39,6 @@
     'depends': ['base','account'],
     'demo': [],
     'data': [
-        'account_tax.xml',
         'account_chart_type.xml',
         'account_chart_template.xml',
         'account_chart_small_business_template.xml',
@@ -48,5 +47,5 @@
     ],
     'license': 'GPL-3',
     'auto_install': False,
-    'installable': True,
+    'installable': False,
 }

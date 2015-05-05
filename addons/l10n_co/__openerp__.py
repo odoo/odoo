@@ -33,16 +33,14 @@
     'depends': [
         'account',
         'base_vat',
-        'account_chart',
     ],
     'data': [
         'data/account.account.type.csv',
         'data/account.account.template.csv',
-        'data/account.tax.code.template.csv',
         'data/account_chart_template.xml',
         'data/account.tax.template.csv',
         'wizard/account_wizard.xml',
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }

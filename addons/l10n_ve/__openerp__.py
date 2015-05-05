@@ -52,23 +52,22 @@ This module give you.
 - Have basic data to run tests with community localization.
 - Start a company from 0 if your needs are basic from an accounting PoV.
 
-We recomend install account_anglo_saxon if you want valued your 
+We recomend use of account_anglo_saxon if you want valued your 
 stocks as Venezuela does with out invoices.
 
 If you install this module, and select Custom chart a basic chart will be proposed, 
 but you will need set manually account defaults for taxes.
 """,
     'depends': ['account',
-                'base_vat', 
-                'account_chart'
+                'base_vat',
     ],
     'demo': [],
-    'data': ['data/account_tax_code.xml',
+    'data': [
              'data/account_user_types.xml',
              'data/account_chart.xml',
              'data/account_tax.xml',
              'data/l10n_chart_ve_wizard.xml'
     ],
     'auto_install': False,
-    'installable': True,
+    'installable': False,
 }
