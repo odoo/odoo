@@ -85,15 +85,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
-        'module_sale_analytic_plans': fields.boolean('Use multiple analytic accounts on sales',
-            help="""This allows install module sale_analytic_plans."""),
         'group_analytic_account_for_sales': fields.boolean('Analytic accounting for sales',
             implied_group='sale.group_analytic_accounting',
             help="Allows you to specify an analytic account on sales orders."),
     }
-
-    def onchange_sale_analytic_plans(self, cr, uid, ids, module_sale_analytic_plans, context=None):
-        """ change group_analytic_account_for_sales following module_sale_analytic_plans """
-        if not module_sale_analytic_plans:
-            return {}
-        return {'value': {'group_analytic_account_for_sales': module_sale_analytic_plans}}
