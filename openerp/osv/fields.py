@@ -388,8 +388,10 @@ class float(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with registry().cursor() as cr:
-                return self._digits_compute(cr)
+            # retrieve a cursor from any environment
+            from openerp.api import Environment
+            cr = next(iter(Environment.envs)).cr
+            return self._digits_compute(cr)
         else:
             return self._digits
 
@@ -1309,8 +1311,10 @@ class function(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with registry().cursor() as cr:
-                return self._digits_compute(cr)
+            # retrieve a cursor from any environment
+            from openerp.api import Environment
+            cr = next(iter(Environment.envs)).cr
+            return self._digits_compute(cr)
         else:
             return self._digits
 

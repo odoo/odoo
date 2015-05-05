@@ -68,7 +68,7 @@ from pprint import pformat
 from weakref import WeakSet
 from werkzeug.local import Local, release_local
 
-from openerp.tools import frozendict
+from openerp.tools import frozendict, classproperty
 
 _logger = logging.getLogger(__name__)
 
@@ -674,6 +674,10 @@ class Environment(object):
     """
     _local = Local()
 
+    @classproperty
+    def envs(cls):
+        return cls._local.environments
+
     @classmethod
     @contextmanager
     def manage(cls):
@@ -699,7 +703,7 @@ class Environment(object):
         args = (cr, uid, context)
 
         # if env already exists, return it
-        env, envs = None, cls._local.environments
+        env, envs = None, cls.envs
         for env in envs:
             if env.args == args:
                 return env
