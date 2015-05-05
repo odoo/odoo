@@ -1,0 +1,111 @@
+<odoo>
+    <template id="quotations" inherit_id="website_portal.quotations">
+        <xpath expr="//t[@t-foreach='quotations']" position="replace">
+            <t t-foreach="quotations" t-as="quotation">
+                <tr t-att-class="'hidden to_hide' if quotation_index &gt; 4 else ''">
+                    <td>
+                        <a t-att-href="'/quote/'+str(quotation.id)"><t t-esc="quotation.name"/></a>
+                    </td>
+                    <td><span t-field="quotation.validity_date"/></td>
+                        <td>
+                          <t t-if="quotation.state == 'cancel'">
+                            <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
+                          </t>
+                          <t t-if="quotation.validity_date and quotation.validity_date &lt; date">
+                            <span class="label label-default"><i class="fa fa-fw fa-clock-o"/> Expired</span>
+                          </t>
+                        </td>
+                        <td><span t-esc="quotation.amount_total" t-esc-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                        </td>
+                </tr>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="so_quotation" inherit_id="website_quote.so_quotation">
+        <xpath expr="//div[@class='row mt16']" position="before">
+            <div t-if="breadcrumb" class="row">
+                <div class="col-sm-4">
+                    <ol class="breadcrumb mt8">
+                        <li><a href="/account">My Account</a></li>
+                        <li>
+                            Quotation <t t-esc="quotation.name"/>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='modalaccept']" position="before">
+            <div class="alert alert-info alert-dismissable" t-if="quotation.project_id and quotation.project_id.contract_type=='subscription'">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                <t t-set="contract" t-value="quotation.project_id"/>
+                A contract has been created from this quotation: <a t-attf-href="/account/contract/#{contract.id}/#{contract.uuid}" t-esc="contract.name"/>.
+            </div>
+        </xpath>
+    </template>
+
+    <template id="contract_pricing" name="Contract Price" inherit_id="website_quote.pricing">
+      <xpath expr="//tr[@t-foreach='quotation.order_line']" position="replace">
+        <t t-set="recurring_products" t-value="[line.recurring_product for line in quotation.order_line]"/>
+        <tr t-if="True in recurring_products and False in recurring_products" class="active">
+            <td colspan="7">Subscription</td>
+        </tr>
+        <tr t-foreach="quotation.order_line" t-as="line">
+            <t t-if="line.recurring_product">
+                <t t-call="website_quote_contract.order_line_row"/>
+            </t>
+        </tr>
+        <tr t-if="True in recurring_products and False in recurring_products" class="active">
+            <td colspan="7">One-time Fees <small>- These products will not be part of your subscription</small></td>
+        </tr>
+        <tr t-foreach="quotation.order_line" t-as="line">
+            <t t-if="not line.recurring_product">
+                <t t-call="website_quote_contract.order_line_row"/>
+            </t>
+        </tr>
+    </xpath>
+    </template>
+
+    <template id="order_line_row">
+        <td>
+            <span t-field="line.name"/>
+        </td>
+        <td>
+            <div id="quote_qty">
+                <span t-field="line.product_uom_qty"/>
+                <span t-field="line.product_uom"/>
+            </div>
+        </td>
+        <td>
+            <div t-foreach="line.tax_id" t-as="tax">
+                <t t-esc="tax.name"/>
+            </div>
+        </td>
+        <td>
+            <strong t-if="line.discount" class="text-info">
+                <t t-esc="((line.discount % 1) and '%s' or '%d') % line.discount"/>% discount
+            </strong>
+        </td>
+        <td>
+              <div t-field="line.price_unit"
+                  t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                  t-att-style="line.discount and 'text-decoration: line-through' or ''"
+                  t-att-class="(line.discount and 'text-danger' or '') + 'text-right'"/>
+              <!-- TODO: apply monetary widget formating -->
+              <div t-if="line.discount">
+                  <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
+              </div>
+        </td>
+        <td>
+            <div class="text-right"
+                t-field="line.price_subtotal"
+                t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+        </td>
+        <td class="text-center">
+            <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id">
+                <span class="fa fa-trash-o"></span>
+            </a>
+        </td>
+    </template>
+
+</odoo>

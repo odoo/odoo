@@ -26,6 +26,7 @@ import datetime
 
 import openerp.addons.decimal_precision as dp
 
+
 class sale_quote_template(osv.osv):
     _name = "sale.quote.template"
     _description = "Sale Quotation Template"
@@ -36,6 +37,7 @@ class sale_quote_template(osv.osv):
         'note': fields.text('Terms and conditions'),
         'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True),
         'number_of_days': fields.integer('Quotation Duration', help='Number of days for the validity date computation of the quotation'),
+        'require_payment': fields.boolean('Immediate Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
     }
     def open_template(self, cr, uid, quote_id, context=None):
         return {
@@ -43,6 +45,7 @@ class sale_quote_template(osv.osv):
             'target': 'self',
             'url': '/quote/template/%d' % quote_id[0]
         }
+
 
 class sale_quote_line(osv.osv):
     _name = "sale.quote.line"
@@ -64,7 +67,8 @@ class sale_quote_line(osv.osv):
         'discount': 0.0,
         'sequence': 10,
     }
-    def on_change_product_id(self, cr, uid, ids, product, context=None):
+
+    def on_change_product_id(self, cr, uid, ids, product, uom_id, name='', context=None):
         vals = {}
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
         name = product_obj.name
@@ -74,9 +78,17 @@ class sale_quote_line(osv.osv):
             'price_unit': product_obj.lst_price,
             'product_uom_id': product_obj.uom_id.id,
             'website_description': product_obj and (product_obj.quote_description or product_obj.website_description) or '',
-            'name': name,
+            'name': name or product_obj.name_template,
+            'product_uom_id': uom_id or product_obj.uom_id.id,
         })
-        return {'value': vals}
+        uom_obj = self.pool.get('product.uom')
+        if vals['product_uom_id'] != product_obj.uom_id.id:
+            selected_uom = uom_obj.browse(cr, uid, vals['product_uom_id'], context=context)
+            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id, vals['price_unit'], vals['product_uom_id'])
+            vals['price_unit'] = new_price
+        if not uom_id:
+            domain = {'product_uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
+        return {'value': vals, 'domain': domain}
 
     def _inject_quote_description(self, cr, uid, values, context=None):
         values = dict(values or {})
@@ -96,6 +108,12 @@ class sale_quote_line(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         values = self._inject_quote_description(cr, uid, values, context)
         return super(sale_quote_line, self).write(cr, uid, ids, values, context=context)
+
+    def product_uom_change(self, cr, uid, ids, product, uom_id, name='', context=None):
+        context = context or {}
+        if not uom_id:
+            return {'value': {'price_unit': 0.0, 'uom_id': uom_id or False}}
+        return self.on_change_product_id(cr, uid, ids, product, uom_id=uom_id, name=name, context=context)
 
 
 class sale_order_line(osv.osv):
@@ -145,7 +163,8 @@ class sale_order(osv.osv):
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float",
             digits_compute=dp.get_precision('Account')),
-        'quote_viewed': fields.boolean('Quotation Viewed')
+        'quote_viewed': fields.boolean('Quotation Viewed'),
+        'require_payment': fields.boolean('Immediate Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
     }
 
     def _get_template_id(self, cr, uid, context=None):
@@ -166,7 +185,7 @@ class sale_order(osv.osv):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/quote/%s' % (quote.id)
+            'url': '/quote/%s/%s' % (quote.id, quote.access_token)
         }
 
     def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position=False, context=None):
@@ -212,7 +231,14 @@ class sale_order(osv.osv):
         date = False
         if quote_template.number_of_days > 0:
             date = (datetime.datetime.now() + datetime.timedelta(quote_template.number_of_days)).strftime("%Y-%m-%d")
-        data = {'order_line': lines, 'website_description': quote_template.website_description, 'note': quote_template.note, 'options': options, 'validity_date': date}
+        data = {
+            'order_line': lines,
+            'website_description': quote_template.website_description,
+            'note': quote_template.note,
+            'options': options,
+            'validity_date': date,
+            'require_payment': quote_template.require_payment
+        }
         return {'value': data}
 
     def recommended_products(self, cr, uid, ids, context=None):
@@ -270,16 +296,30 @@ class sale_quote_option(osv.osv):
     _defaults = {
         'quantity': 1,
     }
-    def on_change_product_id(self, cr, uid, ids, product, context=None):
-        vals = {}
+
+    def on_change_product_id(self, cr, uid, ids, product, uom_id, context=None):
+        vals, domain = {}, {}
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
         vals.update({
             'price_unit': product_obj.list_price,
             'website_description': product_obj.product_tmpl_id.quote_description,
             'name': product_obj.name,
-            'uom_id': product_obj.product_tmpl_id.uom_id.id,
+            'uom_id': uom_id or product_obj.uom_id.id,
         })
-        return {'value': vals}
+        uom_obj = self.pool.get('product.uom')
+        if vals['uom_id'] != product_obj.uom_id.id:
+            selected_uom = uom_obj.browse(cr, uid, vals['uom_id'], context=context)
+            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id, vals['price_unit'], vals['uom_id'])
+            vals['price_unit'] = new_price
+        if not uom_id:
+            domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
+        return {'value': vals, 'domain': domain}
+
+    def product_uom_change(self, cr, uid, ids, product, uom_id, context=None):
+        context = context or {}
+        if not uom_id:
+            return {'value': {'price_unit': 0.0, 'uom_id': uom_id or False}}
+        return self.on_change_product_id(cr, uid, ids, product, uom_id=uom_id, context=context)
 
 class sale_order_option(osv.osv):
     _name = "sale.order.option"
@@ -300,7 +340,8 @@ class sale_order_option(osv.osv):
     _defaults = {
         'quantity': 1,
     }
-    def on_change_product_id(self, cr, uid, ids, product, context=None):
+
+    def on_change_product_id(self, cr, uid, ids, product, uom_id, context=None):
         vals = {}
         if not product:
             return vals
@@ -309,9 +350,23 @@ class sale_order_option(osv.osv):
             'price_unit': product_obj.list_price,
             'website_description': product_obj and (product_obj.quote_description or product_obj.website_description),
             'name': product_obj.name,
-            'uom_id': product_obj.product_tmpl_id.uom_id.id,
+            'uom_id': uom_id or product_obj.product_tmpl_id.uom_id.id,
         })
-        return {'value': vals}
+        uom_obj = self.pool.get('product.uom')
+        if vals['uom_id'] != product_obj.uom_id.id:
+            selected_uom = uom_obj.browse(cr, uid, vals['uom_id'], context=context)
+            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id, vals['price_unit'], vals['uom_id'])
+            vals['price_unit'] = new_price
+        domain = {}
+        if not uom_id:
+            domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
+        return {'value': vals, 'domain': domain}
+
+    def product_uom_change(self, cr, uid, ids, product, uom_id, context=None):
+        context = context or {}
+        if not uom_id:
+            return {'value': {'price_unit': 0.0, 'uom_id': uom_id or False}}
+        return self.on_change_product_id(cr, uid, ids, product, uom_id=uom_id, context=context)
 
 class product_template(osv.Model):
     _inherit = "product.template"
