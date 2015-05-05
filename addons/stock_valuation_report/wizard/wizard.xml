@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_wizard_valuation_report" model="ir.ui.view">
+            <field name="name">Stock Valuation Report</field>
+            <field name="model">wizard.valuation.report</field>
+            <field name="arch" type="xml">
+                <form string="Valuation report">
+                    <group col="4" string="Dates">
+                        <field name="date"/>
+                        <field name="product_category_id"/>
+                    </group>
+                    <footer>
+                        <button name="print_report" type="object" string="Print Report" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_wizard_stock_valuation_report" model="ir.actions.act_window">
+            <field name="name">Stock Valuation Report</field>
+            <field name="res_model">wizard.valuation.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wizard_valuation_report"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="menu_action_wizard_valuation_report" action="action_wizard_stock_valuation_report" parent="stock.next_id_61" sequence="1"/>
+
+    </data>
+</openerp>
