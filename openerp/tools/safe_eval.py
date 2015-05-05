@@ -299,6 +299,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
             'cmp': cmp,
             'divmod': divmod,
             'isinstance': isinstance,
+            'hasattr': hasattr,
             'range': range,
             'xrange': xrange,
             'zip': zip,
