@@ -240,7 +240,7 @@ class hr_applicant(osv.Model):
         'salary_expected_extra': fields.char('Expected Salary Extra', help="Salary Expected by Applicant, extra advantages"),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
         'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
-        'availability': fields.integer('Availability', help="The number of days in which the applicant will be available to start working"),
+        'availability': fields.date('Availability', help="The date in which the applicant will be available to start working. \n\nAdditional information like 'Not before the first 15 days of March' or 'Depends on the notice negociation' can be written in the application summary field."),
         'partner_name': fields.char("Applicant's Name"),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
