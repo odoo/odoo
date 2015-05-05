@@ -127,7 +127,7 @@ class stock_history(osv.osv):
                     product_product ON product_product.id = stock_move.product_id
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
-                WHERE stock_move.state = 'done' AND dest_location.usage in ('internal', 'transit') AND stock_quant_move_rel.quant_id = quant.id
+                WHERE quant.qty>0 AND stock_move.state = 'done' AND dest_location.usage in ('internal', 'transit') AND stock_quant_move_rel.quant_id = quant.id
                 AND stock_quant_move_rel.move_id = stock_move.id AND ((source_location.company_id is null and dest_location.company_id is not null) or
                 (source_location.company_id is not null and dest_location.company_id is null) or source_location.company_id != dest_location.company_id)
                 ) UNION
@@ -153,7 +153,7 @@ class stock_history(osv.osv):
                     product_product ON product_product.id = stock_move.product_id
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
-                WHERE stock_move.state = 'done' AND source_location.usage in ('internal', 'transit') AND stock_quant_move_rel.quant_id = quant.id
+                WHERE quant.qty>0 AND stock_move.state = 'done' AND source_location.usage in ('internal', 'transit') AND stock_quant_move_rel.quant_id = quant.id
                 AND stock_quant_move_rel.move_id = stock_move.id AND ((dest_location.company_id is null and source_location.company_id is not null) or
                 (dest_location.company_id is not null and source_location.company_id is null) or dest_location.company_id != source_location.company_id)
                 ))

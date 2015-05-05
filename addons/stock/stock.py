@@ -953,6 +953,12 @@ class stock_picking(osv.osv):
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('move_lines') and not vals.get('pack_operation_ids'):
+            # pack operations are directly dependant of move lines, it needs to be recomputed
+            pack_operation_obj = self.pool['stock.pack.operation']
+            existing_package_ids = pack_operation_obj.search(cr, uid, [('picking_id', 'in', ids)], context=context)
+            if existing_package_ids:
+                pack_operation_obj.unlink(cr, uid, existing_package_ids, context)
         res = super(stock_picking, self).write(cr, uid, ids, vals, context=context)
         #if we changed the move lines or the pack operations, we need to recompute the remaining quantities of both
         if 'move_lines' in vals or 'pack_operation_ids' in vals:
@@ -2353,7 +2359,7 @@ class stock_move(models.Model):
         if todo:
             ids = self.action_confirm(cr, uid, todo, context=context)
         pickings = set()
-        procurement_ids = []
+        procurement_ids = set()
         #Search operations that are linked to the moves
         operations = set()
         move_qty = {}
@@ -2417,7 +2423,7 @@ class stock_move(models.Model):
                 move_dest_ids.add(move.move_dest_id.id)
 
             if move.procurement_id:
-                procurement_ids.append(move.procurement_id.id)
+                procurement_ids.add(move.procurement_id.id)
 
             #unreserve the quants and make them available for other operations/moves
             quant_obj.quants_unreserve(cr, uid, move, context=context)
@@ -2425,7 +2431,7 @@ class stock_move(models.Model):
         self._check_package_from_moves(cr, uid, ids, context=context)
         #set the move as done
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
-        self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
+        self.pool.get('procurement.order').check(cr, uid, list(procurement_ids), context=context)
         #assign destination moves
         if move_dest_ids:
             self.action_assign(cr, uid, list(move_dest_ids), context=context)

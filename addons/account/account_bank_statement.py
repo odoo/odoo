@@ -551,8 +551,8 @@ class account_bank_statement_line(osv.osv):
         # Look for structured communication
         if st_line.name:
             domain = self._domain_reconciliation_proposition(cr, uid, st_line, excluded_ids=excluded_ids, context=context)
-            match_id = mv_line_pool.search(cr, uid, domain, offset=0, limit=1, context=context)
-            if match_id:
+            match_id = mv_line_pool.search(cr, uid, domain, offset=0, limit=2, context=context)
+            if match_id and len(match_id) == 1:
                 mv_line_br = mv_line_pool.browse(cr, uid, match_id, context=context)
                 target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
                 mv_line = mv_line_pool.prepare_move_lines_for_reconciliation_widget(cr, uid, mv_line_br, target_currency=target_currency, target_date=st_line.date, context=context)[0]
@@ -583,8 +583,8 @@ class account_bank_statement_line(osv.osv):
         # Look for a matching amount
         exact_match_amount_field = amount_field in ('debit', 'credit') and 'amount_residual' or 'amount_residual_currency'
         domain_exact_amount = domain + [(exact_match_amount_field, '=', float_round(amount, precision_digits=precision_digits))]
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=domain_exact_amount)
-        if match_id:
+        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=2, additional_domain=domain_exact_amount)
+        if match_id and len(match_id) == 1:
             return match_id
 
         if not st_line.partner_id.id:

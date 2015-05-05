@@ -102,6 +102,7 @@ class crm_make_sale(osv.osv_memory):
                     'date_order': fields.datetime.now(),
                     'fiscal_position': fpos,
                     'payment_term':payment_term,
+                    'note': sale_obj.get_salenote(cr, uid, [case.id], partner.id, context=context),
                     'opportunity_id': case.id,
                     'campaign_id': case.campaign_id and case.campaign_id.id or False,
                     'medium_id': case.medium_id and case.medium_id.id or False,
