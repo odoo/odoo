@@ -2744,6 +2744,18 @@ class stock_inventory(osv.osv):
             vals.append(product_line)
         return vals
 
+    def _check_filter_product(self, cr, uid, ids, context=None):
+        for inventory in self.browse(cr, uid, ids, context=context):
+            if inventory.filter not in ('product', 'product_owner') and inventory.product_id:
+                return False
+        return True
+
+    def onchange_filter(self, cr, uid, ids, filter):
+        return {'value': {'product_id': False} if filter not in ('product', 'product_owner') else {}}
+
+    _constraints = [
+        (_check_filter_product, 'A specific product is chosen while the filter "One product only" is not selected', ['product_id', 'filter']),
+    ]
 
 class stock_inventory_line(osv.osv):
     _name = "stock.inventory.line"
