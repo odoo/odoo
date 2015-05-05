@@ -16,7 +16,7 @@ on a supplier purchase order into several accounts and analytic plans.
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/purchase',
     'depends': ['purchase', 'account_analytic_plans'],
-    'data': ['purchase_analytic_plans_view.xml'],
+    'data': ['purchase_analytic_plans_view.xml', 'res_config.xml'],
     'demo': [],
     'installable': True,
     'auto_install': False,
