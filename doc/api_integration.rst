@@ -1266,7 +1266,7 @@ the workflow instance associated with the record.
             'account.invoice', 'create', [{
                 'partner_id': client['id'],
                 'account_id': client['property_account_receivable'][0],
-                'invoice_line': [(0, False, {'name': "AAA"})]
+                'invoice_line_ids': [(0, False, {'name': "AAA"})]
             }])
 
         models.exec_workflow(
@@ -1290,7 +1290,7 @@ the workflow instance associated with the record.
             'account.invoice', 'create', array(array(
                 'partner_id' => $client['id'],
                 'account_id' => $client['property_account_receivable'][0],
-                'invoice_line' => array(array(0, false, array('name' => "AAA")))
+                'invoice_line_ids' => array(array(0, false, array('name' => "AAA")))
             )));
 
         $models->exec_workflow(
@@ -1311,7 +1311,7 @@ the workflow instance associated with the record.
             'account.invoice', 'create', [{
                 partner_id: client['id'],
                 account_id: client['property_account_receivable'][0],
-                invoice_line: [[0, false, {name: "AAA"}]]
+                invoice_line_ids: [[0, false, {name: "AAA"}]]
             }])
 
         models.exec_workflow(
@@ -1343,7 +1343,7 @@ the workflow instance associated with the record.
                 asList(new HashMap<String, Object>() {{
                     put("partner_id", c.get("id"));
                     put("account_id", ((Object[])c.get("property_account_receivable"))[0]);
-                    put("invoice_line", asList(
+                    put("invoice_line_ids", asList(
                         asList(0, false, new HashMap<String, Object>() {{
                             put("name", "AAA");
                         }})

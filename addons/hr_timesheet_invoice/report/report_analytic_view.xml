@@ -70,7 +70,7 @@
                         <field name="product_id"/>
                         <field name="product_uom_id"/>
                         <newline/>
-                        <field colspan="1" name="amount"/>
+                        <field colspan="1" name="amount" widget="monetary"/>
                         <field colspan="1" name="unit_amount"/>
                     </group>
                 </form>
@@ -86,7 +86,7 @@
                     <field name="month"/>
                     <field name="product_id"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="amount"/>
+                    <field name="amount" widget="monetary"/>
                     <field name="sale_price"/>
                     <field name="unit_amount"/>
                     <field name="product_uom_id"/>

@@ -50,13 +50,13 @@
     employee_id: hr_employee_john
     struct_id: hr_payroll_structure_softwaredeveloper
     working_hours: resource.timesheet_group1
-    journal_id: account.expenses_journal
+    journal_id: expenses_journal
 -
   I create a Payslip.
 -
   !record {model: hr.payslip, id: hr_payslip_0}:
     employee_id: hr_employee_john
-    journal_id: account.expenses_journal
+    journal_id: expenses_journal
 
 -
   The selection of an employee fills the contract, structure, worked days and input data fields.

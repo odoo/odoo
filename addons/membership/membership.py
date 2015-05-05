@@ -61,8 +61,8 @@ class membership_line(osv.osv):
         list_membership_line = []
         member_line_obj = self.pool.get('membership.membership_line')
         for invoice in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
-            if invoice.invoice_line:
-                list_membership_line += member_line_obj.search(cr, uid, [('account_invoice_line', 'in', [ l.id for l in invoice.invoice_line])], context=context)
+            if invoice.invoice_line_ids:
+                list_membership_line += member_line_obj.search(cr, uid, [('account_invoice_line', 'in', [ l.id for l in invoice.invoice_line_ids])], context=context)
         return list_membership_line
 
     def _check_membership_date(self, cr, uid, ids, context=None):
@@ -130,7 +130,7 @@ class membership_line(osv.osv):
                 state = 'paid'
                 inv = inv_obj.browse(cr, uid, fetched[1], context=context)
                 for payment in inv.payment_ids:
-                    if payment.invoice and payment.invoice.type == 'out_refund':
+                    if payment.invoice_ids and any(inv.type == 'out_refund' for inv in payment.invoice_ids):
                         state = 'canceled'
             elif istate == 'cancel':
                 state = 'canceled'
@@ -234,7 +234,7 @@ class Partner(osv.osv):
                                 s = 0
                                 inv = mline.account_invoice_line.invoice_id
                                 for payment in inv.payment_ids:
-                                    if payment.invoice.type == 'out_refund':
+                                    if payment.invoice_ids and any(inv.type == 'out_refund' for inv in payment.invoice_ids):
                                         s = 2
                                 break
                             elif mstate == 'open' and s!=0:
@@ -404,31 +404,23 @@ class Partner(osv.osv):
             if not addr.get('invoice', False):
                 raise UserError(_("Partner doesn't have an address to make the invoice."))
             quantity = 1
-            line_value =  {
-                'product_id': product_id,
-            }
-
-            line_dict = invoice_line_obj.product_id_change(cr, uid, {},
-                            product_id, False, quantity, '', 'out_invoice', partner.id, fpos_id, price_unit=amount, context=context)
-            line_value.update(line_dict['value'])
-            line_value['price_unit'] = amount
-            if line_value.get('invoice_line_tax_id', False):
-                tax_tab = [(6, 0, line_value['invoice_line_tax_id'])]
-                line_value['invoice_line_tax_id'] = tax_tab
-
             invoice_id = invoice_obj.create(cr, uid, {
                 'partner_id': partner.id,
                 'account_id': account_id,
-                'fiscal_position': fpos_id or False
+                'fiscal_position_id': fpos_id or False
                 }, context=context)
-            line_value['invoice_id'] = invoice_id
-            invoice_line_id = invoice_line_obj.create(cr, uid, line_value, context=context)
-            invoice_obj.write(cr, uid, invoice_id, {'invoice_line': [(6, 0, [invoice_line_id])]}, context=context)
+            line_value =  {
+                'product_id': product_id,
+                'price_unit': amount,
+                'invoice_id': invoice_id,
+            }
+            invoice_line = invoice_line_obj.new(cr, uid, line_value, context=context)
+            invoice_line._onchange_product_id()
+            # We convert a new id object back to a dictionary to write to bridge between old and new api
+            line_value = invoice_line._convert_to_write(invoice_line._cache)
+            invoice_line_obj.create(cr, uid, line_value, context=context)
             invoice_list.append(invoice_id)
-            if line_value['invoice_line_tax_id']:
-                tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()
-                for tax in tax_value:
-                       invoice_tax_obj.create(cr, uid, tax, context=context)
+            invoice_obj.compute_taxes(cr, uid, [invoice_id])
         #recompute the membership_state of those partners
         self.pool.get('res.partner').write(cr, uid, ids, {})
         return invoice_list
@@ -479,7 +471,7 @@ class Invoice(osv.osv):
         for invoice in self.browse(cr, uid, ids, context=context):
             mlines = member_line_obj.search(cr, uid,
                     [('account_invoice_line', 'in',
-                        [l.id for l in invoice.invoice_line])])
+                        [l.id for l in invoice.invoice_line_ids])])
             member_line_obj.write(cr, uid, mlines, {'date_cancel': today})
         return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 

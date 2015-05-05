@@ -132,7 +132,6 @@ class account_analytic_line(osv.osv):
             invoice_name = partner.name
         else:
             invoice_name = analytic_lines[0].account_id.name
-
         date_due = False
         if partner.property_payment_term:
             pterm_list = account_payment_term_obj.compute(cr, uid,
@@ -141,16 +140,16 @@ class account_analytic_line(osv.osv):
             if pterm_list:
                 pterm_list = [line[0] for line in pterm_list]
                 pterm_list.sort()
-                date_due = pterm_list[-1]
+                date_due = pterm_list[-1][0]
         return {
             'name': "%s - %s" % (time.strftime('%d/%m/%Y'), invoice_name),
             'partner_id': partner.id,
             'company_id': company_id,
-            'payment_term': partner.property_payment_term.id or False,
+            'payment_term_id': partner.property_payment_term.id or False,
             'account_id': partner.property_account_receivable.id,
             'currency_id': currency_id,
             'date_due': date_due,
-            'fiscal_position': partner.property_account_position.id
+            'fiscal_position_id': partner.property_account_position.id
         }
 
     def _prepare_cost_invoice_line(self, cr, uid, invoice_id, product_id, uom, user_id,
@@ -201,9 +200,8 @@ class account_analytic_line(osv.osv):
                 taxes = product.taxes_id or general_account.tax_ids
                 tax = self.pool['account.fiscal.position'].map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 curr_invoice_line.update({
-                    'invoice_line_tax_id': [(6, 0, tax)],
+                    'invoice_line_tax_ids': [(6, 0, tax)],
                     'name': factor_name,
-                    'invoice_line_tax_id': [(6, 0, tax)],
                     'account_id': general_account.id,
                 })
 
@@ -305,7 +303,7 @@ class account_analytic_line(osv.osv):
 
                 invoice_line_obj.create(cr, uid, curr_invoice_line, context=context)
             self.write(cr, uid, [l.id for l in analytic_lines], {'invoice_id': last_invoice}, context=context)
-            invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
+            invoice_obj.compute_taxes(cr, uid, [last_invoice], context)
         return invoices
 
     def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, is_timesheet=False, context=None):

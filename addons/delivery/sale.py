@@ -77,7 +77,7 @@ class sale_order(osv.Model):
             grid = grid_obj.browse(cr, uid, grid_id, context=context)
 
             taxes = grid.carrier_id.product_id.taxes_id
-            fpos = order.fiscal_position or False
+            fpos = order.fiscal_position_id or False
             taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
             #create the sale order line
             line_obj.create(cr, uid, {

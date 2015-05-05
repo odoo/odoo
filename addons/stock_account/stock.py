@@ -72,10 +72,6 @@ class procurement_order(osv.osv):
         res.update({'invoice_state': procurement.rule_id.invoice_state or procurement.invoice_state or 'none'})
         return res
 
-    _defaults = {
-        'invoice_state': ''
-        }
-
 
 #----------------------------------------------------------
 # Move
@@ -160,6 +156,7 @@ class stock_move(osv.osv):
             'price_unit': self._get_price_unit_invoice(cr, uid, move, inv_type),
             'discount': 0.0,
             'account_analytic_id': False,
+            'move_id': move.id,
         }
 
     def _get_moves_taxes(self, cr, uid, moves, context=None):
@@ -246,7 +243,10 @@ class stock_picking(osv.osv):
         """
         context = context or {}
         todo = {}
+        anglo_saxon_accounting = False
         for picking in self.browse(cr, uid, ids, context=context):
+            if picking.company_id.anglo_saxon_accounting:
+                anglo_saxon_accounting = True
             partner = self._get_partner_to_invoice(cr, uid, picking, context)
             #grouping is based on the invoiced partner
             if group:
@@ -261,6 +261,20 @@ class stock_picking(osv.osv):
         invoices = []
         for moves in todo.values():
             invoices += self._invoice_create_line(cr, uid, moves, journal_id, type, context=context)
+        
+        #For anglo-saxon accounting
+        if anglo_saxon_accounting:
+            if type in ('in_invoice', 'in_refund'):
+                for inv in self.pool.get('account.invoice').browse(cr, uid, invoices, context=context):
+                    for ol in inv.invoice_line_ids:
+                        if ol.product_id.type != 'service':
+                            oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
+                            if not oa:
+                                oa = ol.product_id.categ_id.property_stock_account_input_categ and ol.product_id.categ_id.property_stock_account_input_categ.id        
+                            if oa:
+                                fpos = ol.invoice_id.fiscal_position_id or False
+                                a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
+                                self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
         return invoices
 
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
@@ -279,9 +293,9 @@ class stock_picking(osv.osv):
             'user_id': user_id,
             'partner_id': partner.id,
             'account_id': account_id,
-            'payment_term': payment_term,
+            'payment_term_id': payment_term,
             'type': inv_type,
-            'fiscal_position': partner.property_account_position.id,
+            'fiscal_position_id': partner.property_account_position.id,
             'company_id': company_id,
             'currency_id': currency_id,
             'journal_id': journal_id,
@@ -323,7 +337,6 @@ class stock_picking(osv.osv):
             move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
             move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
 
-        invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoices.values()
 
     def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):

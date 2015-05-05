@@ -6,7 +6,7 @@
   !record {model: account.analytic.line, id: account_analytic_line_developyamlforhrmodule1 }:
     account_id: analytic.analytic_agrolait
     amount: -1.0
-    general_account_id: account.a_expense
+    general_account_id: a_expense
     journal_id: hr_timesheet.analytic_journal
     name: develop yaml for hr module
     product_id: product.product_product_consultant
@@ -31,31 +31,22 @@
   !python {model: account.analytic.line}: |
     self.on_change_account_id(cr, uid, [ref('account_analytic_line_developyamlforhrmodule1')], ref('analytic.analytic_agrolait'))
 -
-  I create a Tax Code
--
-  !record {model: account.tax.code, id: tax_case}:
-    name: Tax_case
-    company_id: base.main_company
-    sign: 1
--
   I create a Tax
 -
   !record {model: account.tax, id: tax8}:
     name: Tax 8.0
     amount: 8.0
-    type: fixed
+    amount_type: fixed
     sequence: 1
     company_id: base.main_company
-    type_tax_use: all
-    tax_code_id: tax_case
+    type_tax_use: sale
 -
   I create an Account with the tax
 -
   !record {model: account.account, id: account_income_i000}:
     name: "income account"
     code: "I000"
-    type: 'other'
-    user_type: "account.data_account_type_income"
+    user_type: "account.data_account_type_revenue"
     tax_ids: [tax8]
 -
   I set the account as property_account_income on the product and I set no tax on the product (so default tax from the account will be used)
@@ -103,7 +94,7 @@
     
     invoice_id = invoice_obj.browse(cr, uid, invoice_ids)[0]
 
-    for invoice in invoice_id.invoice_line:
+    for invoice in invoice_id.invoice_line_ids:
       product = invoice.product_id.id
 
     product_exp = data['product'][0]

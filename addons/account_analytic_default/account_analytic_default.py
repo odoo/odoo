@@ -76,15 +76,15 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
     _description = "Invoice Line"
 
-    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, company_id=None, date_invoice=None, context=None):
-        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id=currency_id, company_id=company_id, date_invoice=date_invoice, context=context)
-        rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), company_id=company_id, context=context)
+    def product_id_change(self):
+        res = super(account_invoice_line, self).product_id_change()
+        rec = self.env['account.analytic.default'].account_get(self.product_id.id, self.invoice_id.partner_id.id, self._uid,
+                                                               time.strftime('%Y-%m-%d'), company_id=self.company_id.id, context=self._context)
         if rec:
-            res_prod['value'].update({'account_analytic_id': rec.analytic_id.id})
+            self.account_analytic_id = rec.analytic_id.id
         else:
-            res_prod['value'].update({'account_analytic_id': False})
-        return res_prod
-
+            self.account_analytic_id = False
+        return res
 
 
 class stock_picking(osv.osv):
@@ -118,6 +118,8 @@ class sale_order_line(osv.osv):
             if rec:
                 inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id': rec.analytic_id.id}, context=context)
         return create_ids
+
+
 class product_product(osv.Model):
     _inherit = 'product.product'
     def _rules_count(self, cr, uid, ids, field_name, arg, context=None):
@@ -129,6 +131,7 @@ class product_product(osv.Model):
     _columns = {
         'rules_count': fields.function(_rules_count, string='# Analytic Rules', type='integer'),
     }
+
 
 class product_template(osv.Model):
     _inherit = 'product.template'

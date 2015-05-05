@@ -46,9 +46,9 @@
                     <strong>Salesperson:</strong>
                     <p t-field="doc.user_id.name"/>
                 </div>
-                <div name="payment_term" t-if="doc.payment_term" class="col-xs-3">
+                <div name="payment_term" t-if="doc.payment_term_id" class="col-xs-3">
                     <strong>Payment Term:</strong>
-                    <p t-field="doc.payment_term.name"/>
+                    <p t-field="doc.payment_term_id.name"/>
                 </div>
             </div>
 
@@ -121,15 +121,15 @@
             </div>
 
             <p t-field="doc.note" />
-            <p t-if="doc.payment_term.note">
-                <span t-field="doc.payment_term.note"/>
+            <p t-if="doc.payment_term_id.note">
+                <span t-field="doc.payment_term_id.note"/>
             </p>
-            <p t-if="not doc.payment_term and doc.partner_id.property_payment_term">
+            <p t-if="not doc.payment_term_id and doc.partner_id.property_payment_term">
                 <span t-field="doc.partner_id.property_payment_term.note"/>
             </p>
-            <p id="fiscal_position_remark" t-if="doc.fiscal_position and doc.fiscal_position.note">
+            <p id="fiscal_position_remark" t-if="doc.fiscal_position_id and doc.fiscal_position_id.note">
                 <strong>Fiscal Position Remark:</strong>
-                <span t-field="doc.fiscal_position.note"/>
+                <span t-field="doc.fiscal_position_id.note"/>
             </p>
             <div class="oe_structure"/>
         </div>

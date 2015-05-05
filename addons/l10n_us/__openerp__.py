@@ -28,15 +28,15 @@ United States - Chart of accounts.
 ==================================
     """,
     'website': 'http://www.openerp.com',
-    'depends': ['account_chart', 'account_anglo_saxon'],
+    'depends': ['l10n_generic_coa'],
     'data': [
-        'l10n_us_account_type.xml',
-        'account_chart_template.xml',
-        'account.account.template.csv',
-        'account_tax_code_template.xml',
-        'account_tax_template.xml',
-        'account_chart_template_after.xml',
-        'l10n_us_wizard.xml'
+        #'l10n_us_account_type.xml',
+        #'account_chart_template.xml',
+        #'account.account.template.csv',
+        #'account_tax_template.xml',
+        #'account_chart_template_after.xml',
+        #'l10n_us_wizard.xml',
+        #'account_chart_template.yml',
     ],
     'demo': [],
     'test': [],

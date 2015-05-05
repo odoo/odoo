@@ -28,6 +28,7 @@ from lxml import etree
 from lxml.builder import E
 
 import openerp
+from openerp import api
 from openerp import SUPERUSER_ID, models
 from openerp import tools
 import openerp.exceptions

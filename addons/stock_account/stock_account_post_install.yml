@@ -1,0 +1,21 @@
+-
+  Setting journal and property field (if needed)
+-
+  !python {model: account.journal} : |
+      #if we already have a coa installed, create journal and set property field
+      company_id = ref('base.main_company')
+      if self.pool.get('res.company').browse(cr, uid, company_id).chart_template_id:
+          from openerp.tools.translate import _
+          journal_id = self.create(cr, uid, {'name': _('Stock Journal'), 'type': 'general', 'code': 'STJ', 'show_on_dashboard': False,})
+          #update property
+          PropertyObj = self.pool.get('ir.property')
+          properties = PropertyObj.search(cr, uid, [('name', '=', 'property_stock_journal'), ('company_id', '=', company_id)])
+          vals = {'name': 'property_stock_journal', 
+            'fields_id': self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', 'property_stock_journal'), ('model', '=', 'product.category'), ('relation', '=', 'account.journal')], limit=1)[0], 
+            'company_id': company_id,
+            'value': 'account.journal,' + str(journal_id)}
+          if properties:
+              PropertyObj.write(cr, uid, properties, vals)
+          else:
+              #create the property
+              PropertyObj.create(cr, uid, vals)

@@ -199,16 +199,11 @@ class rml_parse(object):
         return d
 
     def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False, currency_obj=False):
-        """
-            Assuming 'Account' decimal.precision=3:
-                formatLang(value) -> digits=2 (default)
-                formatLang(value, digits=4) -> digits=4
-                formatLang(value, dp='Account') -> digits=3
-                formatLang(value, digits=5, dp='Account') -> digits=5
-        """
         if digits is None:
             if dp:
                 digits = self.get_digits(dp=dp)
+            elif currency_obj:
+                digits = currency_obj.decimal_places
             else:
                 digits = self.get_digits(value)
 

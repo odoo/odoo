@@ -1,5 +1,5 @@
 -
-  In order to check Inter-Company Rule of creating Supplier invoice from Customer invoice
+  In order to check Inter-Company Rule of creating Supplier bill from Customer invoice
   make 'Create Invoices/Refunds when encoding invoices/refunds made' true.
 -
   !record {model: res.company, id: company_a}:
@@ -26,8 +26,7 @@
   !record {model: account.account, id: account_expense_company_a}:
     name: Expenses
     code: X1000
-    type: other
-    user_type: account.data_account_type_expense
+    user_type: account.data_account_type_expenses
     company_id: company_a
 -
   Create an invoice for the partner of company B with amount 450.0
@@ -36,11 +35,12 @@
     company_id: company_a
     partner_id: partner_company_b
     currency_id: base.EUR
-    invoice_line:
+    invoice_line_ids:
       - product_id: product_consultant
         price_unit: 450.0
         account_id: account_expense_company_a
         quantity: 1.0
+        name: ''
 -
   I check that the customer invoice is in draft state.
 -
@@ -60,17 +60,17 @@
   !context
     uid: 'res_users_company_b'
 -
-  I check that the supplier invoice is created with proper data.
+  I check that the supplier bill is created with proper data.
 -
   !python {model: account.invoice}: |
     supplier_invoices = self.search(cr, uid, [('type','=','in_invoice')], context=context)
     supplier_invoice = self.browse(cr, uid, supplier_invoices[0], context=context)
-    
+
     #check invoice line is created with proper data
-    assert supplier_invoice.invoice_line[0].quantity == 1, "Quantity in invoice line is incorrect."
-    assert supplier_invoice.invoice_line[0].product_id.id == ref("product_consultant"), "Product in line is incorrect."
-    assert supplier_invoice.invoice_line[0].price_unit == 450, "Unit Price in invoice line is incorrect."
-    assert supplier_invoice.invoice_line[0].account_id.company_id.id == ref("company_b"), "Applied account in created invoice line is not relevant to company."
+    assert supplier_invoice.invoice_line_ids[0].quantity == 1, "Quantity in invoice line is incorrect."
+    assert supplier_invoice.invoice_line_ids[0].product_id.id == ref("product_consultant"), "Product in line is incorrect."
+    assert supplier_invoice.invoice_line_ids[0].price_unit == 450, "Unit Price in invoice line is incorrect."
+    assert supplier_invoice.invoice_line_ids[0].account_id.company_id.id == ref("company_b"), "Applied account in created invoice line is not relevant to company."
     
     assert supplier_invoice.state == "draft", "invoice should be in draft state."
     assert supplier_invoice.amount_total == 450.0, "Total amount is incorrect."

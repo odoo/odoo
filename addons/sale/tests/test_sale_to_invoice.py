@@ -30,16 +30,33 @@ class TestSale(TestMail):
         super(TestSale, self).setUp()
 
     def test_sale_to_invoice(self):
-        """ Testing for invoice create,validate and pay with invoicing and payment user."""
+        """ Testing for invoice create,validate and pay with invoicing and payment user.""" 
+        import time
         # Usefull models
         IrModelData = self.env['ir.model.data']
+        partner_obj = self.env['res.partner']
+        journal_obj = self.env['account.journal']
+        account_obj = self.env['account.account']
         # Usefull record id
         group_id = IrModelData.xmlid_to_res_id('account.group_account_invoice') or False
         product_id = IrModelData.xmlid_to_res_id('product.product_category_3') or False
-        account_id = IrModelData.xmlid_to_res_id('account.cash') or False
         company_id = IrModelData.xmlid_to_res_id('base.main_company') or False
-        journal_id = IrModelData.xmlid_to_res_id('account.bank_journal') or False
-        period_id = IrModelData.xmlid_to_res_id('account.period_8') or False
+        journal_id = self.env['res.company'].browse(company_id)._create_bank_account_and_journal('BNK')
+        account_id = journal_obj.browse(journal_id).default_credit_account_id.id
+        date = time.strftime("%Y/%m/%d")
+
+        # Usefull accounts
+        user_type_id = IrModelData.xmlid_to_res_id('account.data_account_type_revenue')
+        account_rev_id = account_obj.create({'code': 'X2020', 'name': 'Sales - Test Sales Account', 'user_type': user_type_id})
+        user_type_id = IrModelData.xmlid_to_res_id('account.data_account_type_receivable')
+        account_recv_id = account_obj.create({'code': 'X1012', 'name': 'Sales - Test Reicv Account', 'user_type': user_type_id})
+
+        # Add account to product
+        product_template_id = self.env.ref('sale.advance_product_0').product_tmpl_id
+        product_template_id.write({'property_account_income': account_rev_id})
+
+        # Create Sale Journal
+        journal_obj.create({'name': 'Sale Journal - Test', 'code': 'STSJ', 'type': 'sale', 'company_id': company_id})
 
         # In order to test, I create new user and applied Invoicing & Payments group.
         user = self.env['res.users'].create({
@@ -49,9 +66,12 @@ class TestSale(TestMail):
             'groups_id': [(6, 0, [group_id])]})
         assert user, "User will not created."
         # I create partner for sale order.
-        partner = self.env['res.partner'].create({
+        partner = partner_obj.create({
             'name': 'Test Customer',
-            'email': 'testcustomer@test.com'})
+            'email': 'testcustomer@test.com',
+            'property_account_receivable': account_recv_id,
+        })
+        
         # In order to test I create sale order and confirmed it.
         order = self.env['sale.order'].create({
             'partner_id': partner.id,
@@ -69,15 +89,3 @@ class TestSale(TestMail):
         # Now I validate pay invoice wihth Test User(invoicing and payment).
         for invoice in order.invoice_ids:
             invoice.with_context(context).invoice_validate()
-        # Now I create and post an account voucher of amount 75.0 for the partner Test Customer.
-        voucher = self.env['account.voucher'].create({
-            'account_id': account_id,
-            'amount': 75.0,
-            'company_id': company_id,
-            'journal_id': journal_id,
-            'partner_id': partner.id,
-            'period_id': period_id,
-            'type': 'receipt',
-        })
-        assert voucher, "Voucher will not created."
-        voucher.signal_workflow('proforma_voucher')

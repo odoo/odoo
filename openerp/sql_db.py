@@ -214,7 +214,7 @@ class Cursor(object):
                 msg += "Cursor was created at %s:%s" % self.__caller
             else:
                 msg += "Please enable sql debugging to trace the caller."
-            _logger.info(msg)
+            _logger.warning(msg)
             self._close(True)
 
     @check

@@ -6,76 +6,54 @@
     
         <record model="account.account.type" id="account_type_receivable" >
           <field name="name">Forderungen/Debitoren</field>
-          <field name="code">receivable</field>
           <field name="report_type">asset</field>
-          <field name="close_method">unreconciled</field>
         </record>
 
         <record model="account.account.type" id="account_type_payable" >
           <field name="name">Verbindlichkeiten/Kreditoren</field>
-          <field name="code">payable</field>
           <field name="report_type">liability</field>
-          <field name="close_method">unreconciled</field>
         </record>
 
         <record model="account.account.type" id="account_type_view">
           <field name="name">Ansicht</field>
-          <field name="code">view</field>
-          <field name="close_method">none</field>
         </record>
 
         <record model="account.account.type" id="account_type_income" >
           <field name="name">Ertrag</field>
-          <field name="code">income</field>
           <field name="report_type">income</field>
-          <field name="close_method">none</field>
         </record>
 
         <record model="account.account.type" id="account_type_expense">
           <field name="name">Aufwand</field>
-          <field name="code">expense</field>
           <field name="report_type">expense</field>
-          <field name="close_method">none</field>
         </record>
 
         <record model="account.account.type" id="account_type_tax">
           <field name="name">Steuer</field>
-          <field name="code">tax</field>
-          <field name="close_method">unreconciled</field>
         </record>
 
         <record model="account.account.type" id="account_type_cash">
           <field name="name">Kasse/Bank</field>
-          <field name="code">cash</field>
           <field name="report_type">liability</field>
-          <field name="close_method">balance</field>
         </record>
 
         <record model="account.account.type" id="account_type_asset">
           <field name="name">Vermögen</field>
-          <field name="code">asset</field>
           <field name="report_type">asset</field>
-          <field name="close_method">balance</field>
         </record>
 
         <record model="account.account.type" id="account_type_equity">
           <field name="name">Eigenkapital</field>
-          <field name="code">equity</field>
           <field name="report_type">liability</field>
-          <field name="close_method">balance</field>
         </record>
             
         <record model="account.account.type" id="account_type_liability">
           <field name="name">Verbindlichkeiten</field>
-          <field name="code">liability</field>
           <field name="report_type">liability</field>
-          <field name="close_method">balance</field>
         </record>
 
         <record model="account.account.type" id="account_type_other">
           <field name="name">Sonstige</field>
-          <field name="code">other</field>
-          <field name="close_method">balance</field>
         </record>
     
         
@@ -84,7 +62,6 @@
         <record id="chart0" model="account.account.template">
             <field name="code">0</field>
             <field name="name">Account Chart - Austria EKR2010</field>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>    
         </record>
     
@@ -94,8 +71,6 @@
         <record id="chart0999" model="account.account.template">
             <field name="code">00000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart0"/>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="name">Summe Kontoklasse 0 Anlagevermögen</field>
         </record>
@@ -103,8 +78,6 @@
         <record id="chart0010" model="account.account.template">
             <field name="code">0010</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Aufwendungen füs das Ingangssetzen u. Erweitern eines Betriebes</field>
         </record>
@@ -112,8 +85,6 @@
         <record id="chart0090" model="account.account.template">
             <field name="code">0090</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Kumulierte Abschreibungen</field>
         </record>
@@ -121,8 +92,6 @@
         <record id="chart0100" model="account.account.template">
             <field name="code">0100</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Konzessionen</field>
         </record>
@@ -130,8 +99,6 @@
         <record id="chart0110" model="account.account.template">
             <field name="code">0110</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Patentrechte und Lizenzen</field>
         </record>
@@ -139,8 +106,6 @@
         <record id="chart0120" model="account.account.template">
             <field name="code">0120</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Datenverarbeitungsprogramme</field>
         </record>
@@ -148,8 +113,6 @@
         <record id="chart0130" model="account.account.template">
             <field name="code">0130</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Marken, Warenzeichen und Musterschutzrechte</field>
         </record>
@@ -157,8 +120,6 @@
         <record id="chart0140" model="account.account.template">
             <field name="code">0140</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Pacht- und Mietrechte</field>
         </record>
@@ -166,8 +127,6 @@
         <record id="chart0150" model="account.account.template">
             <field name="code">0150</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Geschäfts(Firmen)wert</field>
         </record>
@@ -175,8 +134,6 @@
         <record id="chart0180" model="account.account.template">
             <field name="code">0180</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Geleistete Anzahlungen</field>
         </record>
@@ -184,8 +141,6 @@
         <record id="chart0190" model="account.account.template">
             <field name="code">0190</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Kumulierte Abschreibungen</field>
         </record> 
@@ -193,8 +148,6 @@
         <record id="chart0200" model="account.account.template">
             <field name="code">0200</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Unbebaute Grundstücke</field>
         </record>         
@@ -202,8 +155,6 @@
         <record id="chart0210" model="account.account.template">
             <field name="code">0210</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Bebaute Grundstücke (Grundwert)</field>
         </record>         
@@ -211,8 +162,6 @@
         <record id="chart0220" model="account.account.template">
             <field name="code">0220</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Grundstücksgleiche Rechte</field>
         </record> 
@@ -220,8 +169,6 @@
         <record id="chart0300" model="account.account.template">
             <field name="code">0300</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Betriebs- und Geschäftsgebäude auf eigenem Grund</field>
         </record>         
@@ -229,8 +176,6 @@
         <record id="chart0310" model="account.account.template">
             <field name="code">0310</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Wohn- und Sozialgebäude auf eigenem Grund</field>
         </record>         
@@ -238,8 +183,6 @@
             <record id="chart0320" model="account.account.template">
             <field name="code">0320</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Betriebs- und Geschäftsgebäude auf fremdem Grund</field>
         </record>         
@@ -247,8 +190,6 @@
         <record id="chart0330" model="account.account.template">
             <field name="code">0330</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Wohn- und Sozialgebäude auf fremdem Grund</field>
         </record>         
@@ -256,8 +197,6 @@
         <record id="chart0340" model="account.account.template">
             <field name="code">0340</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Grundstückseinrichtunten auf eigenem Grund</field>
         </record> 
@@ -265,8 +204,6 @@
         <record id="chart0350" model="account.account.template">
             <field name="code">0350</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Grundstückseinrichtunten auf fremdem Grund</field>
         </record>
@@ -274,8 +211,6 @@
         <record id="chart0360" model="account.account.template">
             <field name="code">0360</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Bauliche Investitionen in fremden (gepachteten) Betriebs- und Geschäftsgebäuden</field>
         </record>
@@ -284,8 +219,6 @@
         <record id="chart0370" model="account.account.template">
             <field name="code">0370</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Bauliche Investitionen in fremden (gepachteten) Wohn- und Sozialgebäuden</field>
         </record>
@@ -293,8 +226,6 @@
         <record id="chart0390" model="account.account.template">
             <field name="code">0390</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Kumulierte Abschreibungen</field>
         </record>
@@ -302,8 +233,6 @@
         <record id="chart0400" model="account.account.template">
             <field name="code">0400</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Fertigungsmaschinen</field>
         </record>         
@@ -311,8 +240,6 @@
         <record id="chart0410" model="account.account.template">
             <field name="code">0410</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Antriebsmaschinen</field>
         </record>         
@@ -320,8 +247,6 @@
         <record id="chart0420" model="account.account.template">
             <field name="code">0420</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Energieversorgungsanlagen</field>
         </record>         
@@ -329,8 +254,6 @@
         <record id="chart0430" model="account.account.template">
             <field name="code">0430</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Transportanlagen</field>
         </record>         
@@ -338,8 +261,6 @@
         <record id="chart0440" model="account.account.template">
             <field name="code">0440</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">44 bis 49 Sonstige Maschinen und maschinelle Anlagen</field>
         </record> 
@@ -347,8 +268,6 @@
         <record id="chart0500" model="account.account.template">
             <field name="code">0500</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Maschinenwerkzeuge</field>
         </record>
@@ -356,8 +275,6 @@
         <record id="chart0510" model="account.account.template">
             <field name="code">0510</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Allgemeine Werkzeuge und Handwerkzeuge</field>
         </record>
@@ -365,8 +282,6 @@
         <record id="chart0520" model="account.account.template">
             <field name="code">0520</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Vorrichtungen, Formen und Modelle</field>
         </record>
@@ -374,8 +289,6 @@
         <record id="chart0530" model="account.account.template">
             <field name="code">0530</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Andere Erzeugungshilfsmittel</field>
         </record>    
@@ -383,8 +296,6 @@
         <record id="chart0540" model="account.account.template">
             <field name="code">0540</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Hebezeuge und Montageanlagen</field>
         </record>
@@ -392,8 +303,6 @@
         <record id="chart0550" model="account.account.template">
             <field name="code">0550</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Geringwertige Vermögensgegenstände, soweit im Erzeugerprozess verwendet</field>
         </record>    
@@ -401,8 +310,6 @@
         <record id="chart0600" model="account.account.template">
             <field name="code">0600</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Beheizungs- und Beleuchtungsanlagen</field>
         </record>
@@ -410,8 +317,6 @@
         <record id="chart0610" model="account.account.template">
             <field name="code">0610</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Nachrichten- und Kontrollanlagen</field>
         </record>
@@ -419,8 +324,6 @@
         <record id="chart0620" model="account.account.template">
             <field name="code">0620</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Büromaschinen, EDV - Anlagen</field>
         </record>
@@ -428,8 +331,6 @@
         <record id="chart0630" model="account.account.template">
             <field name="code">0630</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">PKW</field>
         </record>    
@@ -437,8 +338,6 @@
         <record id="chart0640" model="account.account.template">
             <field name="code">0640</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">LKW</field>
         </record>
@@ -446,8 +345,6 @@
         <record id="chart0650" model="account.account.template">
             <field name="code">0650</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Andere Beförderungsmittel</field>
         </record>    
@@ -455,8 +352,6 @@
         <record id="chart0660" model="account.account.template">
             <field name="code">0660</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Andere Betriebs- und Geschäftsausstattung</field>
         </record>
@@ -464,8 +359,6 @@
         <record id="chart0670" model="account.account.template">
             <field name="code">0670</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Gebinde</field>
         </record>    
@@ -473,8 +366,6 @@
         <record id="chart0680" model="account.account.template">
             <field name="code">0680</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Geringwertige Vermögensgegenstände, soweit nicht im Erzeugungsprozess verwendet</field>
         </record>    
@@ -482,8 +373,6 @@
         <record id="chart0690" model="account.account.template">
             <field name="code">0690</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Kumulierte Abschreibungen</field>
         </record>    
@@ -491,8 +380,6 @@
         <record id="chart0700" model="account.account.template">
             <field name="code">0700</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Geleistete Anzahlungen</field>
         </record>
@@ -500,8 +387,6 @@
         <record id="chart0710" model="account.account.template">
             <field name="code">0710</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Anlagen im Bau</field>
         </record>
@@ -509,8 +394,6 @@
         <record id="chart0790" model="account.account.template">
             <field name="code">0790</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Kumulierte Abschreibungen</field>
         </record>    
@@ -518,8 +401,6 @@
         <record id="chart0800" model="account.account.template">
             <field name="code">0800</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Anteile an verbundenen Unternehmen</field>
         </record>
@@ -527,8 +408,6 @@
         <record id="chart0810" model="account.account.template">
             <field name="code">0810</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Beteiligungen an Gemeinschaftunternehmen</field>
         </record>
@@ -536,8 +415,6 @@
         <record id="chart0820" model="account.account.template">
             <field name="code">0820</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Beteiligungen an angeschlossenen (assoziierten) Unternehmen</field>
         </record>
@@ -545,8 +422,6 @@
         <record id="chart0830" model="account.account.template">
             <field name="code">0830</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Sonstige Beteiligungen</field>
         </record>    
@@ -554,8 +429,6 @@
         <record id="chart0840" model="account.account.template">
             <field name="code">0840</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Ausleihungen an  verbundene Unternehmen</field>
         </record>
@@ -563,8 +436,6 @@
         <record id="chart0850" model="account.account.template">
             <field name="code">0850</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Ausleihungen an  verbundene Unternehmen, mit denen ein Beteiligungsverhälnis besteht</field>
         </record>    
@@ -572,8 +443,6 @@
         <record id="chart0860" model="account.account.template">
             <field name="code">0860</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Sonstige Ausleihungen</field>
         </record>
@@ -581,8 +450,6 @@
         <record id="chart0870" model="account.account.template">
             <field name="code">0870</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Anteile an Kapitalgesellschaften ohne Beteiligungscharakter</field>
         </record>    
@@ -590,8 +457,6 @@
         <record id="chart0880" model="account.account.template">
             <field name="code">0880</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Anteile an Personengesellschaften ohne Beteiligungscharakter</field>
         </record>    
@@ -599,8 +464,6 @@
         <record id="chart0900" model="account.account.template">
             <field name="code">0900</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Genossenschaften ohne Beteiligungscharakter</field>
         </record>    
@@ -608,8 +471,6 @@
         <record id="chart0910" model="account.account.template">
             <field name="code">0910</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Anteile an Investmentfonds</field>
         </record>
@@ -617,8 +478,6 @@
         <record id="chart0920" model="account.account.template">
             <field name="code">0920</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">920 bis 930 Festverzinsliche Wertpapiere des Anlagevermögens</field>
         </record>
@@ -626,8 +485,6 @@
         <record id="chart0940" model="account.account.template">
             <field name="code">0940</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">940 bis 970 Sonstige Finanzanlagen, Wertrechte</field>
         </record>    
@@ -635,8 +492,6 @@
         <record id="chart0980" model="account.account.template">
             <field name="code">0980</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Geleistete Anzahlungen</field>
         </record>    
@@ -644,8 +499,6 @@
         <record id="chart0990" model="account.account.template">
             <field name="code">0990</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart0999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Kumulierte Abschreibungen</field>
         </record>
@@ -658,8 +511,6 @@
         <record id="chart1999" model="account.account.template">
             <field name="code">10000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart0"/>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="name">Summe Vorräte</field>
         </record>
@@ -667,8 +518,6 @@
         <record id="chart1000" model="account.account.template">
             <field name="code">1000</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">1000 bis 1090 Bezugsverrechnung</field>
         </record>
@@ -676,8 +525,6 @@
         <record id="chart1100" model="account.account.template">
             <field name="code">1100</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">1100 bis 1190 Rohstoffe</field>
         </record>
@@ -685,8 +532,6 @@
         <record id="chart1200" model="account.account.template">
             <field name="code">1200</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">1200 bis 1290 Bezogene Teile</field>
         </record>
@@ -694,8 +539,6 @@
         <record id="chart1300" model="account.account.template">
             <field name="code">1300</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">1300 bis 1340 Hilfsstoffe</field>
         </record>
@@ -703,8 +546,6 @@
         <record id="chart1350" model="account.account.template">
             <field name="code">1350</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">1350 bis 1390 Betriebsstoffe</field>
         </record>    
@@ -712,8 +553,6 @@
         <record id="chart1400" model="account.account.template">
             <field name="code">1400</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">1400 bis 1490 Unfertige Erzeugniss</field>
         </record>
@@ -721,8 +560,6 @@
         <record id="chart1500" model="account.account.template">
             <field name="code">1500</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">1500 bis 1590 Fertige Erzeugniss</field>
         </record>
@@ -730,8 +567,6 @@
         <record id="chart1600" model="account.account.template">
             <field name="code">1600</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">1600 bis 1690 Waren</field>
         </record>
@@ -739,8 +574,6 @@
         <record id="chart1700" model="account.account.template">
             <field name="code">1700</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">1700 bis 1790 Noch nicht abgerechenbare Leistungen</field>
         </record>
@@ -748,8 +581,6 @@
         <record id="chart1800" model="account.account.template">
             <field name="code">1800</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">geleistete Anzahlungen</field>
         </record>
@@ -757,8 +588,6 @@
         <record id="chart1900" model="account.account.template">
             <field name="code">1900</field>
             <field name="reconcile" eval="False"/>
-            <field ref="chart1999" name="parent_id"/>
-            <field name="type">other</field>    
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">1900 bis 1990 Wertberichtigungen</field>
         </record>
@@ -771,8 +600,6 @@
         <record id="chart2999" model="account.account.template">
             <field name="code">20000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart0"/>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="name">Summe Umlaufvermögen</field>
         </record>
@@ -780,8 +607,6 @@
         <record id="chart2000" model="account.account.template">
             <field name="code">2000</field>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">receivable</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">2000 bis 2007 Forderungen aus Lief. und Leist. Inland</field>
         </record>
@@ -789,8 +614,6 @@
         <record id="chart2080" model="account.account.template">
             <field name="code">2080</field>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Einzelwertberichtigungen zu Forderungen aus Lief. und Leist. Inland </field>
         </record>
@@ -798,8 +621,6 @@
         <record id="chart2090" model="account.account.template">
             <field name="code">2090</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Pauschalwertberichtigungen zu Forderungen aus Lief. und Leist. Inland </field>
         </record>
@@ -807,8 +628,6 @@
         <record id="chart2100" model="account.account.template">
             <field name="code">2100</field>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">receivable</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">2100 bis 2120 Forderungen aus Lief. und Leist. EU</field>
         </record>
@@ -816,8 +635,6 @@
         <record id="chart2130" model="account.account.template">
             <field name="code">2130</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Einzelwertberichtigungen zu Forderungen aus Lief. und Leist. EU</field>
         </record>
@@ -825,8 +642,6 @@
         <record id="chart2140" model="account.account.template">
             <field name="code">2140</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Pauschalwertberichtigungen zu Forderungen aus Lief. und Leist. EU</field>
         </record>
@@ -834,8 +649,6 @@
         <record id="chart2150" model="account.account.template">
             <field name="code">2150</field>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">receivable</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">2150 bis 2170 Forderungen aus Lief. und Leist. Ausland</field>
         </record>
@@ -843,8 +656,6 @@
         <record id="chart2180" model="account.account.template">
             <field name="code">2180</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Einzelwertberichtigungen zu Forderungen aus Lief. und Leist. Ausland</field>
         </record>
@@ -852,8 +663,6 @@
         <record id="chart2190" model="account.account.template">
             <field name="code">2190</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Pauschalwertberichtigungen zu Forderungen aus Lief. und Leist. Ausland</field>
         </record>
@@ -861,8 +670,6 @@
         <record id="chart2200" model="account.account.template">
             <field name="code">2200</field>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">receivable</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">2200 bis 2220 Forderungen gegenüber verbundenen Unternehmen</field>
         </record>
@@ -870,8 +677,6 @@
         <record id="chart2230" model="account.account.template">
             <field name="code">2230</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Einzelwertberichtigungen zu Forderungen gegenüber verbundenen Unternehmen</field>
         </record>
@@ -879,8 +684,6 @@
         <record id="chart2240" model="account.account.template">
             <field name="code">2240</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Pauschalwertberichtigungen zu Forderungen gegenüber verbundenen Unternehmen</field>
         </record>
@@ -888,8 +691,6 @@
         <record id="chart2250" model="account.account.template">
             <field name="code">2250</field>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">receivable</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">2250 bis 2270 Forderungen gegenüber Unternehmen, mit denen ein Beteiligungsverhältnis besteht</field>
         </record>
@@ -897,8 +698,6 @@
         <record id="chart2280" model="account.account.template">
             <field name="code">2280</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Einzelwertberichtigungen zu Forderungen gegenüber Unternehmen mit denen ein Beteiligungsverhältnis besteht</field>
         </record>
@@ -906,8 +705,6 @@
         <record id="chart2290" model="account.account.template">
             <field name="code">2290</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Pauschalwertberichtigungen zu Forderungen gegenüber Unternehmen mit denen ein Beteiligungsverhältnis besteht</field>
         </record>
@@ -915,8 +712,6 @@
         <record id="chart2300" model="account.account.template">
             <field name="code">2300</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">2300 bis 2460 Sonstige Forderungen und Vermögensgegenstände</field>
         </record>
@@ -924,8 +719,6 @@
         <record id="chart2470" model="account.account.template">
             <field name="code">2470</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Eingeforderte aber noch nicht eingezahlte Einlagen</field>
         </record>
@@ -933,8 +726,6 @@
         <record id="chart2480" model="account.account.template">
             <field name="code">2480</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Einzelwertberichtigungen zu sonstigen Forderungen und Vermögensgegenständen</field>
         </record>
@@ -942,8 +733,6 @@
         <record id="chart2490" model="account.account.template">
             <field name="code">2490</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Pauschalwertberichtigungen zu sonstigen Forderungen und Vermögensgegenständen</field>
         </record>
@@ -951,8 +740,6 @@
         <record id="chart2490" model="account.account.template">
             <field name="code">2490</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Pauschalwertberichtigungen zu sonstigen Forderungen und Vermögensgegenständen</field>
         </record>
@@ -960,8 +747,6 @@
         <record id="chart2500" model="account.account.template">
             <field name="code">2500</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Vorsteuer</field>
         </record>
@@ -969,8 +754,6 @@
         <record id="chart2501" model="account.account.template">
             <field name="code">2501</field>
             <field name="reconcile" eval="False"/>    
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">Vorsteuer aus ig. Erwerb 20%</field>    
         </record>
@@ -978,8 +761,6 @@
         <record id="chart2502" model="account.account.template">
             <field name="code">2502</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">Vorsteuer §19/Art 19 ( reverse charge ) </field>    
         </record>
@@ -987,8 +768,6 @@
         <record id="chart2503" model="account.account.template">
             <field name="code">2503</field>
             <field name="reconcile" eval="False"/>    
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">Vorsteuer aus ig. Erwerb 10%</field>    
         </record>
@@ -996,8 +775,6 @@
         <record id="chart2510" model="account.account.template">
             <field name="code">2510</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_asset"/>
             <field name="name">Einfuhrumsatzsteuer (bezahlt)</field>
         </record>
@@ -1005,8 +782,6 @@
         <record id="chart2600" model="account.account.template">
             <field name="code">2600</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Eigene Anteile (Wertpapiere)</field>
         </record>
@@ -1014,8 +789,6 @@
         <record id="chart2610" model="account.account.template">
             <field name="code">2610</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Anteile an verbundenen Unternehmen</field>
         </record>
@@ -1023,8 +796,6 @@
         <record id="chart2620" model="account.account.template">
             <field name="code">2620</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Sonstige Anteile</field>
         </record>
@@ -1032,8 +803,6 @@
         <record id="chart2630" model="account.account.template">
             <field name="code">2630</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">2630 bis 2670 Sonstige Wertpapiere</field>
         </record>
@@ -1041,8 +810,6 @@
         <record id="chart2680" model="account.account.template">
             <field name="code">2680</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Besitzwechsel ...</field>
         </record>
@@ -1050,8 +817,6 @@
         <record id="chart2690" model="account.account.template">
             <field name="code">2690</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Wertberichtigungen</field>
         </record>
@@ -1059,8 +824,6 @@
         <record id="chart2700" model="account.account.template">
             <field name="code">2700</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">liquidity</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Kassenbestand</field>
         </record>
@@ -1068,8 +831,6 @@
         <record id="chart2730" model="account.account.template">
             <field name="code">2730</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Postwertzeichen</field>
         </record>
@@ -1077,8 +838,6 @@
         <record id="chart2740" model="account.account.template">
             <field name="code">2740</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Stempelmarken</field>
         </record>
@@ -1086,8 +845,6 @@
         <record id="chart2750" model="account.account.template">
             <field name="code">2750</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">2750 bis 2770 Kassenbestände in Fremdwährung</field>
         </record>
@@ -1095,8 +852,6 @@
         <record id="chart2780" model="account.account.template">
             <field name="code">2780</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Schecks in Inlandswährung</field>
         </record>
@@ -1104,8 +859,6 @@
         <record id="chart2800" model="account.account.template">
             <field name="code">2800</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">liquidity</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Bank / Guthaben bei Kreditinstituten</field>
         </record>
@@ -1113,8 +866,6 @@
         <record id="chart2890" model="account.account.template">
             <field name="code">2890</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Wertberichtigungen</field>
         </record>
@@ -1122,8 +873,6 @@
         <record id="chart2900" model="account.account.template">
             <field name="code">2900</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Aktive Rechnungsabrenzungsposten</field>
         </record>
@@ -1131,8 +880,6 @@
         <record id="chart2950" model="account.account.template">
             <field name="code">2950</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Disagio</field>
         </record>
@@ -1140,8 +887,6 @@
         <record id="chart2960" model="account.account.template">
             <field name="code">2960</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Unterschiedsbetrag zur gebotenen Pensionsrückstellung</field>
         </record>
@@ -1149,8 +894,6 @@
         <record id="chart2970" model="account.account.template">
             <field name="code">2970</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Unterschiedsbetrag gem. Abschnitt XII Pensionskassengesetz</field>
         </record>
@@ -1158,8 +901,6 @@
         <record id="chart2980" model="account.account.template">
             <field name="code">2980</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart2999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="name">Steuerabgrenzung</field>
         </record>
@@ -1170,8 +911,6 @@
         <record id="chart3999" model="account.account.template">
             <field name="code">30000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart0"/>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="name">Summe Fremdkapital</field>
         </record>
@@ -1179,8 +918,6 @@
         <record id="chart3000" model="account.account.template">
             <field name="code">3000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">Rückstellungen für Abfertigung</field>
         </record>  
@@ -1188,8 +925,6 @@
         <record id="chart3010" model="account.account.template">
             <field name="code">3010</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">Rückstellungen für Pensionen</field>
         </record>  
@@ -1197,8 +932,6 @@
         <record id="chart3020" model="account.account.template">
             <field name="code">3020</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">3020 bis 3030 Steuerrückstellungen</field>
         </record>  
@@ -1206,8 +939,6 @@
         <record id="chart3040" model="account.account.template">
             <field name="code">3040</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">3040 bis 3090 Sonstige Rückstellungen</field>
         </record>  
@@ -1215,8 +946,6 @@
         <record id="chart3100" model="account.account.template">
             <field name="code">3100</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">Anleihen (einschließlich konvertibler)</field>
         </record>  
@@ -1224,8 +953,6 @@
         <record id="chart3110" model="account.account.template">
             <field name="code">3110</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">3110 bis 3170 Verbindlichkeiten gegenüber Kredidinstituten</field>
         </record>  
@@ -1233,8 +960,6 @@
         <record id="chart3180" model="account.account.template">
             <field name="code">3180</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">3180 bis 3190 Verbindlichkeiten gegenüber Finanzinstituten</field>
         </record>  
@@ -1242,8 +967,6 @@
         <record id="chart3200" model="account.account.template">
             <field name="code">3200</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">Erhaltene Anzahlungenauf Bestellungen</field>
         </record>  
@@ -1251,8 +974,6 @@
         <record id="chart3210" model="account.account.template">
             <field name="code">3210</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">Umsatzsteuer-Evidenzkonto für erhaltene Anzahlungen auf Bestellungen</field>
         </record>  
@@ -1260,8 +981,6 @@
         <record id="chart3300" model="account.account.template">
             <field name="code">3300</field>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">payable</field>
             <field name="user_type" ref="account_type_payable"/>
             <field name="name">Verbindlichkeiten aus Lieferungen u. Leistungen Inland</field>
         </record>  
@@ -1269,8 +988,6 @@
         <record id="chart3360" model="account.account.template">
             <field name="code">3360</field>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">payable</field>
             <field name="user_type" ref="account_type_payable"/>
             <field name="name">Verbindlichkeiten aus Lieferungen u. Leistungen EU</field>
         </record>  
@@ -1278,8 +995,6 @@
         <record id="chart3370" model="account.account.template">
             <field name="code">3370</field>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">payable</field>
             <field name="user_type" ref="account_type_payable"/>
             <field name="name">Verbindlichkeiten aus Lieferungen u. Leistungen sonst. Ausland</field>
         </record>  
@@ -1287,8 +1002,6 @@
         <record id="chart3380" model="account.account.template">
             <field name="code">3380</field>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_payable"/>
             <field name="name">3380 bis 3390 Verbindlichkeiten aus der Annahme gezogener Wechsel u. d. Ausstellungen eigener Wechsel</field>
         </record>  
@@ -1296,8 +1009,6 @@
         <record id="chart3400" model="account.account.template">
             <field name="code">3400</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">3400 bis 3470 Verbindlichkeiten gegenü. verb. Untern., Verbindl. gegenü. Untern., mit denen eine Beteiligungsverhälnis besteht</field>
         </record>  
@@ -1305,8 +1016,6 @@
         <record id="chart3480" model="account.account.template">
             <field name="code">3480</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">Verbindlichkeiten gegenüber Gesellschaften</field>
         </record>  
@@ -1314,16 +1023,12 @@
         <record id="chart3500" model="account.account.template">
             <field name="code">3500</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">Umsatzsteuer</field>
         </record>  
         <record id="chart3501" model="account.account.template">
             <field name="code">3501</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">Umsatzsteuer aus i.g. Erwerb 20%</field>
         </record>
@@ -1331,8 +1036,6 @@
         <record id="chart3502" model="account.account.template">
             <field name="code">3502</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">USt. §19 /art (reverse charge)</field>
         </record>
@@ -1340,8 +1043,6 @@
         <record id="chart3503" model="account.account.template">
             <field name="code">3503</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">Umsatzsteuer aus i.g. Erwerb 10%</field>
         </record>    
@@ -1349,8 +1050,6 @@
         <record id="chart3510" model="account.account.template">
             <field name="code">3510</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">Umsatzsteuer aus i.g. Lieferungen 20%</field>
         </record>
@@ -1358,8 +1057,6 @@
         <record id="chart3511" model="account.account.template">
             <field name="code">3511</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">Umsatzsteuer aus i.g. Lieferungen 10%</field>
         </record>
@@ -1367,8 +1064,6 @@
         <record id="chart3520" model="account.account.template">
             <field name="code">3520</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">Umsatzsteuer Zahllast</field>
         </record>
@@ -1376,8 +1071,6 @@
         <record id="chart3530" model="account.account.template">
             <field name="code">3530</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">Verrechnung Finanzamt</field>
         </record>   
@@ -1385,8 +1078,6 @@
         <record id="chart3600" model="account.account.template">
             <field name="code">3600</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">3600 bis 3690 Verbindlichkeiten im Rahmen der sozialen Sicherheit</field>
         </record>  
@@ -1394,8 +1085,6 @@
         <record id="chart3700" model="account.account.template">
             <field name="code">3700</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">3700 bis 3890 Übrige sonstige Verbindlichkeiten</field>
         </record>  
@@ -1403,8 +1092,6 @@
         <record id="chart3900" model="account.account.template">
             <field name="code">3900</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart3999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
             <field name="name">3900 bis 3990 Passive Rechnungsabgrenzungsposten</field>
         </record>  
@@ -1418,8 +1105,6 @@
         <record id="chart4999" model="account.account.template">
             <field name="code">40000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart0"/>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="name">Summe Betriebliche Erträge</field>
         </record>
@@ -1427,8 +1112,6 @@
         <record id="chart4000" model="account.account.template">
             <field name="code">4000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erlöse 20 %</field>
         </record>
@@ -1436,8 +1119,6 @@
         <record id="chart4010" model="account.account.template">
             <field name="code">4010</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erlöse 10 %</field>
         </record>
@@ -1446,8 +1127,6 @@
         <record id="chart4020" model="account.account.template">
             <field name="code">4020</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erlöse aus im Inland stpfl. EG Lieferungen 10 % USt</field>
         </record>
@@ -1455,8 +1134,6 @@
         <record id="chart4021" model="account.account.template">
             <field name="code">4021</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erlöse aus im Inland stpfl. EG Lieferungen 20 % USt</field>
         </record>
@@ -1464,8 +1141,6 @@
         <record id="chart4050" model="account.account.template">
             <field name="code">4050</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erlöse 0 % Ausfuhrlieferungen/Drittländer</field>
         </record>
@@ -1473,8 +1148,6 @@
         <record id="chart4100" model="account.account.template">
             <field name="code">4100</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erlöse i.g. Lieferungen (stfr)</field>    
         </record>    
@@ -1482,8 +1155,6 @@
         <record id="chart4400" model="account.account.template">
             <field name="code">4400</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">4400 bis 4490 Erlösschmälerungen</field>
         </record>
@@ -1491,8 +1162,6 @@
         <record id="chart4500" model="account.account.template">
             <field name="code">4500</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">4500 bis 4570 Veränderungen des Bestandes an fertigen und unfertigen Erzeugn. sowie an noch nicht abrechenbaren Leistungen</field>
         </record>
@@ -1500,8 +1169,6 @@
         <record id="chart4580" model="account.account.template">
             <field name="code">4580</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">4580 bis 4590 andere aktivierte Eigenleistungen</field>
         </record>
@@ -1509,8 +1176,6 @@
         <record id="chart4600" model="account.account.template">
             <field name="code">4600</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">4600 bis 4620 Erlöse aus dem Abgang vom Anlagevermögen, ausgen. Finanzanlagen</field>
         </record>
@@ -1518,8 +1183,6 @@
         <record id="chart4630" model="account.account.template">
             <field name="code">4630</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">4630 bis 4650 Erträge aus dem Abgang vom Anlagevermögen, ausgen. Finanzanlagen</field>
         </record>
@@ -1527,8 +1190,6 @@
         <record id="chart4660" model="account.account.template">
             <field name="code">4660</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">4660 bis 4670 Erträge aus der Zuschreibung zum Anlagevermögen, ausgen. Finanzanlagen</field>
         </record>
@@ -1536,8 +1197,6 @@
         <record id="chart4700" model="account.account.template">
             <field name="code">4700</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">4700 bis 4790 Erträge aus der Auflösung von Rückstellungen</field>
         </record>
@@ -1545,8 +1204,6 @@
         <record id="chart4800" model="account.account.template">
             <field name="code">4800</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart4999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">4800 bis 4990 Übrige betriebliche Erträge</field>
         </record>
@@ -1559,8 +1216,6 @@
         <record id="chart5999" model="account.account.template">
             <field name="code">50000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart0"/>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="name">Summe Wareneinsatz</field>
         </record>
@@ -1568,8 +1223,6 @@
         <record id="chart5000" model="account.account.template">
             <field name="code">5000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Wareneinkauf 20 %</field>
         </record>
@@ -1577,8 +1230,6 @@
         <record id="chart5001" model="account.account.template">
             <field name="code">5001</field>
             <field name="reconcile" eval="False"/>        
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Wareneinkauf 10 %</field>        
         </record>
@@ -1586,8 +1237,6 @@
         <record id="chart5010" model="account.account.template">
             <field name="code">5010</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Wareneinkauf igErwerb 10 % VSt/10 % USt</field>
         </record>
@@ -1595,8 +1244,6 @@
         <record id="chart5011" model="account.account.template">
             <field name="code">5011</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Wareneinkauf igErwerb 20 % VSt/20 % USt</field>
         </record>
@@ -1604,8 +1251,6 @@
         <record id="chart5020" model="account.account.template">
             <field name="code">5020</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Wareneinkauf igErwerb ohne Vorsteuerabzug und 10 % USt</field>
         </record>
@@ -1613,8 +1258,6 @@
         <record id="chart5021" model="account.account.template">
             <field name="code">5021</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Wareneinkauf igErwerb ohne Vorsteuerabzug und 20 % USt</field>
         </record>
@@ -1622,8 +1265,6 @@
         <record id="chart5100" model="account.account.template">
             <field name="code">5100</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">5100 bis 5190 Verbrauch an Rohstoffen</field>
         </record>
@@ -1631,8 +1272,6 @@
         <record id="chart5200" model="account.account.template">
             <field name="code">5200</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">5200 bis 5290 Verbrauch von bezogenen Fertig- und Einzelteilen</field>
         </record>
@@ -1640,8 +1279,6 @@
         <record id="chart5300" model="account.account.template">
             <field name="code">5300</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">5300 bis 5390 Verbrauch von Hilfsstoffen</field>
         </record>
@@ -1649,8 +1286,6 @@
         <record id="chart5400" model="account.account.template">
             <field name="code">5400</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">5400 bis 5490 Verbrauch von Betriebsstoffen</field>
         </record>    
@@ -1658,8 +1293,6 @@
         <record id="chart5500" model="account.account.template">
             <field name="code">5500</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">5500 bis 5590 Verbrauch von Werkzeugen und anderen Erzeugungshilfsmittel</field>
         </record>    
@@ -1667,8 +1300,6 @@
         <record id="chart5600" model="account.account.template">
             <field name="code">5600</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">5600 bis 5690 Verbrauch von Brenn- und Treibstoffen, Energie und Wasser</field>
         </record>        
@@ -1676,8 +1307,6 @@
         <record id="chart5700" model="account.account.template">
             <field name="code">5700</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">5700 bis 5790 Sonstige bezogene Herstellungsleistungen</field>
         </record>            
@@ -1685,8 +1314,6 @@
         <record id="chart5800" model="account.account.template">
             <field name="code">5800</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Skontoerträge auf Materialaufwand</field>
         </record>                    
@@ -1694,8 +1321,6 @@
         <record id="chart5810" model="account.account.template">
             <field name="code">5810</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Skontoerträge auf sonstige bezogene Herstellungsleistungen</field>
         </record>                
@@ -1703,8 +1328,6 @@
         <record id="chart5900" model="account.account.template">
             <field name="code">5900</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart5999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Aufwandsstellenrechnung</field>
         </record>                
@@ -1716,8 +1339,6 @@
         <record id="chart6999" model="account.account.template">
             <field name="code">60000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart0"/>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="name">Summe Personalaufwand</field>
         </record>
@@ -1725,8 +1346,6 @@
         <record id="chart6000" model="account.account.template">
             <field name="code">6000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart6999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">6000 bis 6190 Löhne</field>
         </record>
@@ -1734,8 +1353,6 @@
         <record id="chart6200" model="account.account.template">
             <field name="code">6200</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart6999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">6200 bis 6390 Gehälter</field>
         </record>
@@ -1743,8 +1360,6 @@
         <record id="chart6400" model="account.account.template">
             <field name="code">6400</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart6999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">6400 bis 6440 Aufwendungen für Abfertigungen</field>
         </record>
@@ -1752,8 +1367,6 @@
         <record id="chart6450" model="account.account.template">
             <field name="code">6450</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart6999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">6450 bis 6490 Aufwendungen für Altersversorgung</field>
         </record>
@@ -1761,8 +1374,6 @@
         <record id="chart6500" model="account.account.template">
             <field name="code">6500</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart6999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">6500 bis 6550 Gesetzlicher Sozialaufwand Arbeiter</field>
         </record>
@@ -1770,8 +1381,6 @@
         <record id="chart6560" model="account.account.template">
             <field name="code">6560</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart6999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">6560 bis 6590 Gesetzlicher Sozialaufwand Angestellte</field>
         </record>
@@ -1779,8 +1388,6 @@
         <record id="chart6600" model="account.account.template">
             <field name="code">6600</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart6999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">6600 bis 6650 Lohnabhängige Abgaben und Pflichtbeiträgte</field>
         </record>
@@ -1788,8 +1395,6 @@
         <record id="chart6660" model="account.account.template">
             <field name="code">6660</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart6999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">6660 bis 6690 Gehaltsabhängige Abgaben und Pflichtbeiträgte</field>
         </record>
@@ -1797,8 +1402,6 @@
         <record id="chart6700" model="account.account.template">
             <field name="code">6700</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart6999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">6700 bis 6890 Sonstige Sozialaufwendungen</field>
         </record>
@@ -1806,8 +1409,6 @@
         <record id="chart6900" model="account.account.template">
             <field name="code">6900</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart6999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Aufwandsstellenrechnung</field>
         </record>
@@ -1819,8 +1420,6 @@
         <record id="chart7999" model="account.account.template">
             <field name="code">70000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart0"/>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="name">Summe Abschreibungen und Aufwendungen</field>
         </record>
@@ -1828,8 +1427,6 @@
         <record id="chart7000" model="account.account.template">
             <field name="code">7000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Abschreibungen auf aktivierte Aufwendungen für das Ingangs. u. Erweitern des Betriebes</field>
         </record>
@@ -1837,8 +1434,6 @@
         <record id="chart7010" model="account.account.template">
             <field name="code">7010</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7010 bis 7080 Abschreibungen auf das Anlagevermögen (ausgenommen Finanzanlagen)</field>
         </record>
@@ -1846,8 +1441,6 @@
         <record id="chart7090" model="account.account.template">
             <field name="code">7090</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Abschreibungen vom Umlaufvermögen, soweit diese die im Unternehmen üblichen Abschreibungen übersteigen</field>
         </record>
@@ -1855,8 +1448,6 @@
         <record id="chart7100" model="account.account.template">
             <field name="code">7100</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">7100 bis 7190 Sonstige Steuern</field>
         </record>
@@ -1864,8 +1455,6 @@
         <record id="chart7200" model="account.account.template">
             <field name="code">7200</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7200 bis 7290 Instandhaltung u. Reinigung durh Dritte, Entsorgung, Beleuchtung</field>
         </record>
@@ -1873,8 +1462,6 @@
         <record id="chart7300" model="account.account.template">
             <field name="code">7300</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7300 bis 7310 Transporte durch Dritte</field>
         </record>
@@ -1882,8 +1469,6 @@
         <record id="chart7320" model="account.account.template">
             <field name="code">7320</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7320 bis 7330 Kfz - Aufwand</field>
         </record>
@@ -1891,8 +1476,6 @@
         <record id="chart7340" model="account.account.template">
             <field name="code">7340</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7340 bis 7350 Reise- und Fahraufwand</field>
         </record>
@@ -1900,8 +1483,6 @@
         <record id="chart7360" model="account.account.template">
             <field name="code">7360</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7360 bis 7370 Tag- und Nächtigungsgelder</field>
         </record>
@@ -1909,8 +1490,6 @@
         <record id="chart7380" model="account.account.template">
             <field name="code">7380</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7380 bis 7390 Nachrichtenaufwand</field>
         </record>
@@ -1918,8 +1497,6 @@
         <record id="chart7400" model="account.account.template">
             <field name="code">7400</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7400 bis 7430 Miet- und Pachtaufwand</field>
         </record>
@@ -1927,8 +1504,6 @@
         <record id="chart7440" model="account.account.template">
             <field name="code">7440</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7440 bis 7470 Leasingaufwand</field>
         </record>
@@ -1936,8 +1511,6 @@
         <record id="chart7480" model="account.account.template">
             <field name="code">7480</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7480 bis 7490 Lizenzaufwand</field>
         </record>
@@ -1945,8 +1518,6 @@
         <record id="chart7500" model="account.account.template">
             <field name="code">7500</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7500 bis 7530 Aufwand für beigestelltes Personal</field>
         </record>
@@ -1954,8 +1525,6 @@
         <record id="chart7540" model="account.account.template">
             <field name="code">7540</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7540 bis 7570 Provisionen an Dritte</field>
         </record>
@@ -1963,8 +1532,6 @@
         <record id="chart7580" model="account.account.template">
             <field name="code">7580</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7580 bis 7590 Aufsichtsratsvergütungen</field>
         </record>
@@ -1972,8 +1539,6 @@
         <record id="chart7600" model="account.account.template">
             <field name="code">7600</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Büromaterial und Drucksorten</field>
         </record>
@@ -1981,8 +1546,6 @@
         <record id="chart7610" model="account.account.template">
             <field name="code">7610</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7610 bis 7620 Druckerzeugnisse und Vervielfältigungen</field>
         </record>
@@ -1990,8 +1553,6 @@
         <record id="chart7630" model="account.account.template">
             <field name="code">7630</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Fachliteratur und Zeitungen </field>
         </record>
@@ -1999,8 +1560,6 @@
         <record id="chart7650" model="account.account.template">
             <field name="code">7650</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7650 bis 7680 Werbung und Repräsentationen</field>
         </record>
@@ -2008,8 +1567,6 @@
         <record id="chart7690" model="account.account.template">
             <field name="code">7690</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Spenden und Trinkgelder</field>
         </record>
@@ -2017,8 +1574,6 @@
         <record id="chart7700" model="account.account.template">
             <field name="code">7700</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7700 bis 7740 Versicherungen</field>
         </record>
@@ -2026,8 +1581,6 @@
         <record id="chart7750" model="account.account.template">
             <field name="code">7750</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7750 bis 7760 Beratungs- und Prüfungsaufwand</field>
         </record>
@@ -2035,8 +1588,6 @@
         <record id="chart7770" model="account.account.template">
             <field name="code">7770</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Aus- und Fortbildung</field>
         </record>
@@ -2044,8 +1595,6 @@
         <record id="chart7780" model="account.account.template">
             <field name="code">7780</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Mitgliedsbeiträge</field>
         </record>
@@ -2053,8 +1602,6 @@
         <record id="chart7790" model="account.account.template">
             <field name="code">7790</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Spesen des Geldverkehrs</field>
         </record>
@@ -2062,8 +1609,6 @@
         <record id="chart7800" model="account.account.template">
             <field name="code">7800</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7800 bis 7810 Schadensfälle</field>
         </record>
@@ -2071,8 +1616,6 @@
         <record id="chart7820" model="account.account.template">
             <field name="code">7820</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Buchwert abgegangener Anlagen, ausgenommen Finanzanlagen</field>
         </record>
@@ -2080,8 +1623,6 @@
         <record id="chart7830" model="account.account.template">
             <field name="code">7830</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Verluste aus dem Abgang vom Anlagevermögen, ausgenommen Finanzanlagen</field>
         </record>
@@ -2089,8 +1630,6 @@
         <record id="chart7840" model="account.account.template">
             <field name="code">7840</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7840 bis 7880 Verschiedene betriebliche Aufwendungen</field>
         </record>
@@ -2098,8 +1637,6 @@
         <record id="chart7890" model="account.account.template">
             <field name="code">7890</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Skontoerträge auf sonstige betriebliche Aufwendungen</field>
         </record>
@@ -2107,8 +1644,6 @@
         <record id="chart7900" model="account.account.template">
             <field name="code">7900</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Aufwandsstellenrechnung</field>
         </record>
@@ -2116,8 +1651,6 @@
         <record id="chart7910" model="account.account.template">
             <field name="code">7910</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">7910 bis 7950 Aufwandsstellenrechung der Hersteller</field>
         </record>
@@ -2125,8 +1658,6 @@
         <record id="chart7960" model="account.account.template">
             <field name="code">7960</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Herstellungskosten der zur Erzielung der Umsatzerlöse erbrachten Leistungen</field>
         </record>
@@ -2134,8 +1665,6 @@
         <record id="chart7970" model="account.account.template">
             <field name="code">7970</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Vertriebskosten</field>
         </record>
@@ -2143,8 +1672,6 @@
         <record id="chart7980" model="account.account.template">
             <field name="code">7980</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Verwaltungskosten</field>
         </record>
@@ -2152,8 +1679,6 @@
         <record id="chart7990" model="account.account.template">
             <field name="code">7990</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart7999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">Sonstige betrieblichen Aufwendungen</field>
         </record>    
@@ -2165,8 +1690,6 @@
         <record id="chart8999" model="account.account.template">
             <field name="code">80000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart0"/>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="name">Summe Finanzerträge und Aufwendungen</field>
         </record>
@@ -2174,8 +1697,6 @@
         <record id="chart8000" model="account.account.template">
             <field name="code">8000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">8000 bis 8040 Erträge aus Beteiligungen</field>
         </record>
@@ -2183,8 +1704,6 @@
         <record id="chart8050" model="account.account.template">
             <field name="code">8050</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">8050 bis 8090 Erträge aus anderen Wertpapieren und Ausleihungen des Finanzanlagevermögens</field>
         </record>
@@ -2192,8 +1711,6 @@
         <record id="chart8100" model="account.account.template">
             <field name="code">8100</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">8100 bis 8130 Sonstige Zinsen und ähnliche Erträge</field>
         </record>
@@ -2201,8 +1718,6 @@
         <record id="chart8140" model="account.account.template">
             <field name="code">8140</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erlöse aus dem Abgang von Beteiligungen</field>
         </record>
@@ -2210,8 +1725,6 @@
         <record id="chart8150" model="account.account.template">
             <field name="code">8150</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erlöse aus dem Abgang von sonstigen Finanzanlagen</field>
         </record>
@@ -2219,8 +1732,6 @@
         <record id="chart8160" model="account.account.template">
             <field name="code">8160</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erlöse aus dem Abgang von Wertpapieren des Umlaufvermögens</field>
         </record>
@@ -2228,8 +1739,6 @@
         <record id="chart8170" model="account.account.template">
             <field name="code">8170</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Buchwert abgegangener Beteiligungen</field>
         </record>
@@ -2237,8 +1746,6 @@
         <record id="chart8180" model="account.account.template">
             <field name="code">8180</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Buchwert abgegangener sonstiger Finanzanlagen</field>
         </record>
@@ -2246,8 +1753,6 @@
         <record id="chart8190" model="account.account.template">
             <field name="code">8190</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Buchwert abgegangener Wertpapiere des Umlaufvermögens</field>
         </record>
@@ -2255,8 +1760,6 @@
         <record id="chart8200" model="account.account.template">
             <field name="code">8200</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erträge aus dem Abgang von und der Zuschreibung zu Finanzanlagen</field>
         </record>
@@ -2264,8 +1767,6 @@
         <record id="chart8210" model="account.account.template">
             <field name="code">8210</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">Erträge aus dem Abgang von und der Zuschreibung zu Wertpapieren des Umlaufvermögens</field>
         </record>
@@ -2273,8 +1774,6 @@
         <record id="chart8220" model="account.account.template">
             <field name="code">8220</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">8220 bis 8250 Aufwendungen aus Beteiligungen</field>
         </record>
@@ -2282,8 +1781,6 @@
         <record id="chart8260" model="account.account.template">
             <field name="code">8260</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">8260 bis 8270 Aufwendungen aus sonst. Fiananzanlagen und aus Wertpapieren des Umlaufvermögens</field>
         </record>
@@ -2291,8 +1788,6 @@
         <record id="chart8280" model="account.account.template">
             <field name="code">8280</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">8280 bis 8340 Zinsen und ähnliche Aufwendungem</field>
         </record>
@@ -2300,8 +1795,6 @@
         <record id="chart8350" model="account.account.template">
             <field name="code">8350</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">nicht ausgenutzte Lieferantenskonti</field>
         </record>
@@ -2309,8 +1802,6 @@
         <record id="chart8400" model="account.account.template">
             <field name="code">8400</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
             <field name="name">8400 bis 8440 Außerordentliche Erträge</field>
         </record>
@@ -2318,8 +1809,6 @@
         <record id="chart8450" model="account.account.template">
             <field name="code">8450</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
             <field name="name">8450 bis 8490 Außerordentliche Aufwendungen</field>
         </record>
@@ -2327,8 +1816,6 @@
         <record id="chart8500" model="account.account.template">
             <field name="code">8500</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_tax"/>
             <field name="name">8500 bis 8590 Steuern vom Einkommen und vom Ertrag</field>
         </record>
@@ -2336,8 +1823,6 @@
         <record id="chart8600" model="account.account.template">
             <field name="code">8600</field> 
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">8600 bis 8690 Auflösung unversteuerten Rücklagen</field>
         </record>
@@ -2345,8 +1830,6 @@
         <record id="chart8700" model="account.account.template">
             <field name="code">8700</field> 
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">8700 bis 8740 Auflösung von Kapitalrücklagen</field>
         </record>
@@ -2354,8 +1837,6 @@
         <record id="chart8750" model="account.account.template">
             <field name="code">8750</field> 
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">8750 bis 8790 Auflösung von Gewinnrücklagen</field>
         </record>
@@ -2363,8 +1844,6 @@
         <record id="chart8800" model="account.account.template">
             <field name="code">8800</field> 
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">8800 bis 8890 Zuweisung von unversteuerten Rücklagen</field>
         </record>
@@ -2372,8 +1851,6 @@
         <record id="chart8990" model="account.account.template">
             <field name="code">8990</field> 
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart8999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">Gewinabfuhr bzw. Verlustüberrechnung aus Ergebnisabführungsverträgen</field>
         </record>
@@ -2386,8 +1863,6 @@
         <record id="chart9999" model="account.account.template">
             <field name="code">90000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart0"/>
-            <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="name">Summe Eigenkapital Rücklagen Abschlusskonten</field>
         </record>
@@ -2395,8 +1870,6 @@
         <record id="chart9000" model="account.account.template">
             <field name="code">9000</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_equity"/>
             <field name="name">9000 bis 9180 Gezeichnetes bzw. gewidmetes Kapital</field>
         </record>
@@ -2404,8 +1877,6 @@
         <record id="chart9190" model="account.account.template">
             <field name="code">9190</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_equity"/>
             <field name="name">nicht eingeforderte ausstehende Einlagen</field>
         </record>
@@ -2413,8 +1884,6 @@
         <record id="chart9200" model="account.account.template">
             <field name="code">9200</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_equity"/>
             <field name="name">9200 bis 9290 Kapitalrücklagen</field>
         </record>
@@ -2422,8 +1891,6 @@
         <record id="chart9300" model="account.account.template">
             <field name="code">9300</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_equity"/>
             <field name="name">9300 bis 9380 Gewinnrücklagen</field>
         </record>
@@ -2431,8 +1898,6 @@
         <record id="chart9390" model="account.account.template">
             <field name="code">9390</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_equity"/>
             <field name="name">Bilanzgewinn (-verlust )</field>
         </record>
@@ -2440,8 +1905,6 @@
         <record id="chart9400" model="account.account.template">
             <field name="code">9400</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_equity"/>
             <field name="name">9400 bis 9590 Bewertungsreserven uns sonst. unversteuerte Rücklagen</field>
         </record>
@@ -2449,8 +1912,6 @@
         <record id="chart9600" model="account.account.template">
             <field name="code">9600</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">9600 bis 9690 Privat und Verrechnungskonten bei Einzelunternehmen und Personengesellschaften</field>
         </record>
@@ -2458,8 +1919,6 @@
         <record id="chart9700" model="account.account.template">
             <field name="code">9700</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">9700 bis 9790 Einlagen stiller Gesellschafter </field>
         </record>
@@ -2467,8 +1926,6 @@
         <record id="chart9800" model="account.account.template">
             <field name="code">9800</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">Eröffnungsbilanz</field>
         </record>
@@ -2476,8 +1933,6 @@
         <record id="chart9850" model="account.account.template">
             <field name="code">9850</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">Schlussbilanz</field>
         </record>
@@ -2485,8 +1940,6 @@
         <record id="chart9890" model="account.account.template">
             <field name="code">9890</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">Gewinn- und Verlustrechnung</field>
         </record>
@@ -2494,8 +1947,6 @@
         <record id="chart9900" model="account.account.template">
             <field name="code">9900</field>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart9999"/>
-            <field name="type">other</field>
             <field name="user_type" ref="account_type_other"/>
             <field name="name">9900 bis 9999 Evidenzkonten</field>
         </record>
@@ -2510,7 +1961,6 @@
         <record id="austria_chart_template" model="account.chart.template">
             <field name="name">Austria - Chart of Accounts</field>
             <field name="account_root_id" ref="chart0"/>
-            <field name="tax_code_root_id" ref="vat_code_tax"/>
             <field name="bank_account_view_id" ref="chart2800"/>
             <field name="property_account_receivable" ref="chart2000"/>
             <field name="property_account_payable" ref="chart3300"/>

@@ -161,11 +161,13 @@ class pos_details(report_sxw.rml_parse):
         company_id = self.pool['res.users'].browse(self.cr, self.uid, self.uid).company_id.id
         pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids), ('company_id', '=', company_id)])
         for order in pos_order_obj.browse(self.cr, self.uid, pos_ids):
+            currency = order.session_id.currency_id
             for line in order.lines:
-                line_taxes = account_tax_obj.compute_all(self.cr, self.uid, line.product_id.taxes_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
-                for tax in line_taxes['taxes']:
-                    taxes.setdefault(tax['id'], {'name': tax['name'], 'amount':0.0})
-                    taxes[tax['id']]['amount'] += tax['amount']
+                if line.product_id.taxes_id:
+                    line_taxes = line.product_id.taxes_id.compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+                    for tax in line_taxes['taxes']:
+                        taxes.setdefault(tax['id'], {'name': tax['name'], 'amount':0.0})
+                        taxes[tax['id']]['amount'] += tax['amount']
         return taxes.values()
 
     def _get_user_names(self, user_ids):

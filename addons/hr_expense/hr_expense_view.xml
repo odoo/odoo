@@ -16,7 +16,7 @@
                     <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                     <field name="unit_amount"/>
                     <field name="unit_quantity"/>
-                    <field name="total_amount" sum="Total"/>
+                    <field name="total_amount" sum="Total" widget="monetary"/>
                 </tree>
             </field>
         </record>
@@ -32,7 +32,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="name" string="Expense Sheet"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="amount" sum="Total Amount"/>
+                    <field name="amount" sum="Total Amount" widget="monetary"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
                 </tree>
@@ -48,7 +48,7 @@
                     <field name="date"/>
                     <field name="department_id" groups="hr.group_multi_departments"/>
                     <field name="name" string="Expense Sheet"/>
-                    <field name="amount"/>
+                    <field name="amount" widget="monetary"/>
                     <field name="state"/>
                     <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
                     <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
@@ -86,7 +86,7 @@
                         </group>
                         <group>
                             <field name="journal_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('type', '=', 'purchase')]" string="Journal" groups="account.group_account_user"/>
-                            <field name="employee_payable_account_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('type', '=', 'payable')]" groups="account.group_account_user"/>
+                            <field name="employee_payable_account_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('internal_type', '=', 'payable')]" groups="account.group_account_user"/>
                         </group>
                         <group>
                             <label class="oe_grey" groups="account.group_account_user" string="If this field is empty, entries will be generated in the purchase journal."/>
@@ -124,7 +124,7 @@
                                     <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)"/>
                                     <field name="unit_amount"/>
                                     <field name="unit_quantity"/>
-                                    <field name="total_amount" sum="Total"/>
+                                    <field name="total_amount" sum="Total" widget="monetary"/>
                                 </tree>
                             </field>
                             <group>
@@ -224,7 +224,7 @@
         </record>
 
         <record id="action_approved_expense" model="ir.actions.act_window">
-            <field name="name">Expenses</field>
+            <field name="name">Expense</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -252,7 +252,7 @@
         </record>
 
         <menuitem id="menu_expense_approved" parent="account.menu_finance_payables" 
-            action="action_approved_expense" sequence="8"/>
+            action="action_approved_expense" sequence="15"/>
         <menuitem id="menu_hr_expense_configuration" name="Expenses" parent="base.menu_config"
             sequence="20"/>
         <menuitem id="menu_hr_product" name="Expense Products" parent="menu_hr_expense_configuration" 

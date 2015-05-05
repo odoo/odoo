@@ -32,14 +32,12 @@ Accounting chart and localization for Ecuador.
         'account',
         'base_vat',
         'base_iban',
-        'account_chart',
     ],
     'data': [
-        'account_tax_code.xml',
         'account_chart.xml',
         'account_tax.xml',
         'l10n_chart_ec_wizard.xml',
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }

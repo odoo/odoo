@@ -1,0 +1,5 @@
+-
+  !python {model: account.financial.report}: |
+    reports = self.browse(cr, uid, self.search(cr, uid, [('menuitem_created', '=', False)]))
+    for report in reports:
+      report.create_action_and_menu()

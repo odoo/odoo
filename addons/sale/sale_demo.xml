@@ -6,7 +6,7 @@
             <field name="invoiced_forecast">52700</field>
             <field name="invoiced_target">60000</field>
         </record>
-        
+
         <record model="crm.team" id="sales_team.crm_team_1">
             <field name="invoiced_forecast">36000</field>
             <field name="invoiced_target">40000</field>
@@ -322,7 +322,7 @@ Could you confirm, please?</field>
             <field name="model">sale.order</field>
             <field name="res_id" ref="sale_order_2"/>
             <field name="parent_id" ref="message_sale_1"/>
-            <field name="body">Hello, 
+            <field name="body">Hello,
 Unfortunately that was a temporary discount that is not available anymore.
 Do you still plan to confirm the order based on the quoted prices?
 Thanks!</field>
@@ -356,91 +356,6 @@ Thanks!</field>
         <record id="base.user_demo" model="res.users">
             <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
         </record>
-
-        <!-- coming from sale_crm -->
-        <record id="test_crm_sale_invoice_1" model="account.invoice">
-            <field name="currency_id" ref="base.EUR"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="journal_id" ref="account.sales_journal"/>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="state">draft</field>
-            <field name="type">out_invoice</field>
-            <field name="account_id" ref="account.a_recv"/>
-            <field name="name">Test invoice 1</field>
-        </record>
-        <record id="test_crm_sale_invoice_1_line_1" model="account.invoice.line">
-            <field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
-            <field name="product_id" ref="product.product_product_57"/>
-            <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
-            <field name="price_unit">250</field>
-            <field name="quantity">1</field>
-            <field name="account_id" ref="account.a_sale"/>
-        </record>
-        <record id="test_crm_sale_invoice_1_line_2" model="account.invoice.line">
-            <field name="name">Little server with raid 1 and 512ECC ram</field>
-            <field name="product_id" ref="product.product_product_58"/>
-            <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
-            <field name="price_unit">800</field>
-            <field name="quantity">2</field>
-            <field name="account_id" ref="account.a_sale"/>
-        </record>
-        <record id="test_crm_sale_invoice_1_line_2" model="account.invoice.line">
-            <field name="name">Server with raid 10 and 2048ECC ram</field>
-            <field name="product_id" ref="product.product_product_59"/>
-            <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
-            <field name="price_unit">4800</field>
-            <field name="quantity">4</field>
-            <field name="account_id" ref="account.a_sale"/>
-        </record>
-        <workflow action="invoice_open" model="account.invoice" ref="test_crm_sale_invoice_1"/>
-        <function model="account.invoice" name="pay_and_reconcile">
-            <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_1')]"/>
-            <!-- pay_amount = -->            <value eval="1850"/>
-            <!-- pay_account_id = -->        <value eval="ref('account.cash')"/>
-            <!-- period_id = -->            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
-            <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
-            <!-- writeoff_acc_id = -->        <value eval="ref('account.cash')"/>
-            <!-- writeoff_period_id = -->    <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
-            <!-- writeoff_journal_id = -->    <value eval="ref('account.bank_journal')"/>
-            <!-- context = -->              <value eval="{}"/>
-            <!-- name = -->                 <value eval="str('Payment from ASUStek')"/>
-        </function>
-
-        <!-- Invoice for Indirect Marketing -->
-
-        <record id="test_crm_sale_invoice_2" model="account.invoice">
-            <field name="currency_id" ref="base.EUR"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="journal_id" ref="account.sales_journal"/>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field name="state">draft</field>
-            <field name="type">out_invoice</field>
-            <field name="account_id" ref="account.a_recv"/>
-            <field name="name">Test invoice 1</field>
-        </record>
-        <record id="test_crm_sale_invoice_2_line_1" model="account.invoice.line">
-            <field name="name">TypeMatrix Dvorak Keyboard</field>
-            <field name="product_id" ref="product.product_product_53"/>
-            <field name="invoice_id" ref="test_crm_sale_invoice_2"/>
-            <field name="price_unit">500</field>
-            <field name="quantity">1</field>
-            <field name="account_id" ref="account.a_sale"/>
-        </record>
-        <workflow action="invoice_open" model="account.invoice" ref="test_crm_sale_invoice_2"/>
-        <function model="account.invoice" name="pay_and_reconcile">
-            <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_2')]"/>
-            <!-- pay_amount = -->            <value eval="500"/>
-            <!-- pay_account_id = -->        <value eval="ref('account.cash')"/>
-            <!-- period_id = -->            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
-            <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
-            <!-- writeoff_acc_id = -->        <value eval="ref('account.cash')"/>
-            <!-- writeoff_period_id = -->    <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
-            <!-- writeoff_journal_id = -->    <value eval="ref('account.bank_journal')"/>
-            <!-- context = -->              <value eval="{}"/>
-            <!-- name = -->                 <value eval="str('Payment from ASUStek')"/>
-        </function>
 
     </data>
 </openerp>

@@ -112,13 +112,13 @@
 
         </record>
 
-        <!-- Supplier Invoice Form -->
+        <!-- Supplier Bill Form -->
         <record id="l10n_be_intrastat_xml_decl_supp_invoice_view" model="ir.ui.view">
             <field name="name">l10n_be_intrastat_xml.suppinvoice_form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='payment_term']" position="after">
+                <xpath expr="//field[@name='payment_term_id']" position="after">
                     <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
                 </xpath>
                 <xpath expr="//field[@name='period_id']" position="after">

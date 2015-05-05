@@ -48,8 +48,13 @@ up a management by affair.
         'hr_timesheet_installer.xml',
         'hr_timesheet_data.xml'
     ],
-    'demo': ['hr_timesheet_demo.xml'],
+    'demo': [
+        'hr_timesheet_demo.xml',
+        'hr_timesheet_demo.yml',
+    ],
     'test': [
+        '../account/test/account_minimal_test.xml',
+        'test/hr_timesheet_data.xml',
         'test/hr_timesheet_users.yml',
     ],
     'installable': True,

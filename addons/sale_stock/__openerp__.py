@@ -58,6 +58,7 @@ You can choose flexible invoicing methods:
     ],
     'demo': ['sale_stock_demo.xml'],
     'test': [
+        '../account/test/account_minimal_test.xml',
         'test/sale_stock_users.yml',
         'test/cancel_order_sale_stock.yml',
         'test/picking_order_policy.yml',

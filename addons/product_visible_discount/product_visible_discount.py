@@ -40,7 +40,7 @@ class sale_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False,
-            fiscal_position=False, flag=False, context=None):
+            fiscal_position_id=False, flag=False, context=None):
 
         def get_real_price(res_dict, product_id, qty, uom, pricelist):
             """Retrieve the price before applying the pricelist"""
@@ -66,7 +66,7 @@ class sale_order_line(osv.osv):
 
         res=super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
-            lang, update_tax, date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+            lang, update_tax, date_order, packaging=packaging, fiscal_position_id=fiscal_position_id, flag=flag, context=context)
 
         context = {'lang': lang, 'partner_id': partner_id}
         result=res['value']

@@ -18,6 +18,6 @@ class crm_lead(models.Model):
         self.sale_amount_total = total
         self.sale_number = nbr
 
-    sale_amount_total= fields.Float(compute='_get_sale_amount_total', string="Sum of Orders", readonly=True, digits_compute=dp.get_precision('Account'))
+    sale_amount_total= fields.Float(compute='_get_sale_amount_total', string="Sum of Orders", readonly=True, digits=0)
     sale_number = fields.Integer(compute='_get_sale_amount_total', string="Number of Quotations", readonly=True)
     order_ids = fields.One2many('sale.order', 'opportunity_id', string='Orders')

@@ -43,6 +43,8 @@ internal transfer document is needed.
     'depends': ['purchase', 'sale_stock'],
     'data': ['stock_dropshipping.xml'],
     'test': [
+        '../account/test/account_minimal_test.xml',
+        '../stock_account/test/stock_valuation_account.xml',
         'test/cancellation_propagated.yml',
         'test/crossdock.yml',
         'test/dropship.yml',

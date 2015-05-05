@@ -37,12 +37,10 @@ This is the latest Ethiopian OpenERP localization and consists of:
     'website':'http://miketelahun.wordpress.com',
     'depends': [
         'base_vat',
-        'account_chart',
     ],
     'init_xml': [
         'data/account.account.type.csv',
         'data/account.account.template.csv',
-        'data/account.tax.code.template.csv',
         'data/account.chart.template.csv',
         'data/account.tax.template.csv',
         'data/res.country.state.csv',
@@ -54,6 +52,6 @@ This is the latest Ethiopian OpenERP localization and consists of:
     ],
     'demo': [
     ],
-    'installable': True,
+    'installable': False,
     'active': False,
 }

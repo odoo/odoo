@@ -40,7 +40,7 @@ European Union.""",
         'views/report_intrastatinvoice.xml'
     ],
     'demo': [],
-    'test': ['test/report_intrastat_report.yml'],
+    'test': ['../account/test/account_minimal_test.xml', 'test/report_intrastat_report.yml'],
     'installable': True,
     'auto_install': False,
 }

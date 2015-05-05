@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id='report_followup_all' inherit_id='account_reports.report_followup_all'>
+    <xpath expr="//div[@id='oe-account-final-summary']" position='after'>
+        <t t-foreach='action_contexts' t-as='c'>
+            <div class="alert alert-info" role="alert">
+                <p><strong><t t-esc='c.partner_id.name' /></strong></p>
+                <p><t t-esc="c.level.manual_action_responsible_id.name and c.level.manual_action_responsible_id.name + ':' or ''" /> <t t-esc='c.level.manual_action_note' /></p>
+            </div>
+        </t>
+    </xpath>
+</template>
+<template id='report_followup' inherit_id='account_reports.report_followup'>
+    <xpath expr="//div[@class='alert alert-warning oe-account-followup-no-action']" position='attributes'>
+        <attribute name='t-if'>context and context.partner_id.id not in context.env['res.partner'].get_partners_in_need_of_action_and_update().keys()</attribute>
+    </xpath>
+    <xpath expr="//script[@id='oe-account-inline-script']" position='replace'>
+        <script type="text/javascript" src="/account_reports_followup/static/src/js/account_report_widgets.js"></script>
+        <script type="text/javascript" id='oe-account-inline-script'>
+            odoo.define('account_followup.FollowupReport', function (require) {
+                'use strict';
+                
+                var FollowupReportWidget = require('account_followup.FollowupReportWidget');
+                
+                $(document).ready(function() {
+                    var followup_report_widget = new FollowupReportWidget();
+                    followup_report_widget.setElement($('.oe_account_report_widgets'));
+                    followup_report_widget.start();
+                });
+            });
+        </script>
+    </xpath>
+</template>
+<template id='report_followup_body' inherit_id='account_reports.report_followup_body'>
+    <xpath expr="//h2/span/a" position='before'>
+        <span t-if="not context.env.context.get('public')" class="dropdown" t-att-data-partner='context.partner_id.id'>
+            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id='trustDropdown'>
+                <i t-if="context.partner_id.trust == 'good'" class="fa fa-circle oe-account_followup-trust" style="color: green; font-size: 0.8em;"></i>
+                <i t-if="context.partner_id.trust == 'normal'" class="fa fa-circle oe-account_followup-trust" style="color: grey; font-size: 0.8em;"></i>
+                <i t-if="context.partner_id.trust == 'bad'" class="fa fa-circle oe-account_followup-trust" style="color: red; font-size: 0.8em;"></i>
+            </span>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="trustDropdown">
+                <li role='presentation'><a role='menuitem' class='changeTrust' data-new-trust='good'><i class="fa fa-circle" style="color: green;"></i>Good Debtor</a></li>
+                <li role='presentation'><a role='menuitem' class='changeTrust' data-new-trust='normal'><i class="fa fa-circle" style="color: grey;"></i>Normal Debtor</a></li>
+                <li role='presentation'><a role='menuitem' class='changeTrust' data-new-trust='bad'><i class="fa fa-circle" style="color: red;"></i>Bad Debtor</a></li>
+            </ul>
+        </span>
+    </xpath>
+    <xpath expr="//span[@id='action-buttons']" position='replace'>
+        <span id='action-buttons' t-if="mode != 'print'" class='oe-account-followup-not-clicked'>
+            <a type="button" class="btn btn-primary followup-done" t-att-data-partner="str(context.partner_id.id)">Done</a>
+            <a type="button" class="btn btn-default followup-skip" t-att-data-partner="str(context.partner_id.id)">Skip</a>
+            <a t-if='context.level.send_letter' data-primary='1' type="button" class="btn btn-primary followup-letter" t-att-data-context="str(context.id)" t-att-data-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'">Print Letter</a>
+            <a t-if='not context.level.send_letter' data-primary='0' type="button" class="btn btn-default followup-letter" t-att-data-context="str(context.id)" t-att-data-target="'/account/followup_report/' + str(context.partner_id.id) + '/?pdf'">Print Letter</a>
+            <a t-if='context.level.send_email' data-primary='1' type="button" class="btn btn-primary followup-email" t-att-data-context="str(context.id)">Send by email</a>
+            <a t-if='not context.level.send_email' data-primary='0' type="button" class="btn btn-default followup-email" t-att-data-context="str(context.id)">Send by email</a>
+            <a t-if='context.level.manual_action' data-primary='1' type="button" class="btn btn-primary followup-action" t-att-data-context="str(context.id)"><t t-esc='context.level.manual_action_note'/></a>
+            <a type="button" data-time='none' class="btn btn-default oe-account-followup-set-next-action" t-att-data-partner="str(context.partner_id.id)">Log A Note</a>
+        </span>
+    </xpath>
+</template>
+</data>
+</openerp>

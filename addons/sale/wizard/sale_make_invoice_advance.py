@@ -37,7 +37,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         'product_id': fields.many2one('product.product', 'Advance Product',
             domain=[('type', '=', 'service')],
             help="Select a product of type service which is called 'Advance Product'.\nYou may have to create it and set it as a default value on this field."),
-        'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Account'),
+        'amount': fields.float('Advance Amount', digits=0,
             help="The amount to be invoiced in advance. \nTaxes are not taken into account for advance invoices."),
     }
 
@@ -73,21 +73,30 @@ class sale_advance_payment_inv(osv.osv_memory):
         ir_property_obj = self.pool.get('ir.property')
         fiscal_obj = self.pool.get('account.fiscal.position')
         inv_line_obj = self.pool.get('account.invoice.line')
+        invoice_obj = self.pool.get('account.invoice')
         wizard = self.browse(cr, uid, ids[0], context)
         sale_ids = context.get('active_ids', [])
 
         result = []
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
-            val = inv_line_obj.product_id_change(cr, uid, [], wizard.product_id.id,
-                    False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
-            res = val['value']
+            new_invoice = invoice_obj.new(cr, uid, {
+                                'invoice_line_ids':[(0, 0, {'product_id': wizard.product_id.id})],
+                                'partner_id': sale.partner_id.id,
+                                'fiscal_position_id': sale.fiscal_position_id.id,
+                                'type': 'out_invoice',
+                            })
+            inv_line = new_invoice.invoice_line_ids[0]
+            inv_line.invoice_id = new_invoice #Little hack to in order to old <-> new api
+            inv_line._onchange_product_id()
+
+            res = inv_line._convert_to_write(inv_line._cache)
 
             # determine and check income account
             if not wizard.product_id.id :
                 prop = ir_property_obj.get(cr, uid,
                             'property_account_income_categ', 'product.category', context=context)
                 prop_id = prop and prop.id or False
-                account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position or False, prop_id)
+                account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position_id or False, prop_id)
                 if not account_id:
                     raise UserError(
                             _('There is no income account defined as global property.'))
@@ -115,12 +124,6 @@ class sale_advance_payment_inv(osv.osv_memory):
                         symbol_order = (symbol, inv_amount)
                     res['name'] = self._translate_advance(cr, uid, context=dict(context, lang=sale.partner_id.lang)) % symbol_order
 
-            # determine taxes
-            if res.get('invoice_line_tax_id'):
-                res['invoice_line_tax_id'] = [(6, 0, res.get('invoice_line_tax_id'))]
-            else:
-                res['invoice_line_tax_id'] = False
-
             # create the invoice
             inv_line_values = {
                 'name': res.get('name'),
@@ -131,7 +134,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'discount': False,
                 'uos_id': res.get('uos_id', False),
                 'product_id': wizard.product_id.id,
-                'invoice_line_tax_id': res.get('invoice_line_tax_id'),
+                'invoice_line_tax_ids': res.get('invoice_line_tax_ids'),
                 'account_analytic_id': sale.project_id.id or False,
             }
             inv_values = {
@@ -141,11 +144,11 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'reference': False,
                 'account_id': sale.partner_id.property_account_receivable.id,
                 'partner_id': sale.partner_invoice_id.id,
-                'invoice_line': [(0, 0, inv_line_values)],
+                'invoice_line_ids': [(0, 0, inv_line_values)],
                 'currency_id': sale.pricelist_id.currency_id.id,
                 'comment': '',
-                'payment_term': sale.payment_term.id,
-                'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id,
+                'payment_term_id': sale.payment_term_id.id,
+                'fiscal_position_id': sale.fiscal_position_id.id or sale.partner_id.property_account_position.id,
                 'team_id': sale.team_id.id,
             }
             result.append((sale.id, inv_values))
@@ -155,7 +158,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         inv_obj = self.pool.get('account.invoice')
         sale_obj = self.pool.get('sale.order')
         inv_id = inv_obj.create(cr, uid, inv_values, context=context)
-        inv_obj.button_reset_taxes(cr, uid, [inv_id], context=context)
+        inv_obj.compute_taxes(cr, uid, [inv_id], context=context)
         # add the invoice to the sales order's invoices
         sale_obj.write(cr, uid, sale_id, {'invoice_ids': [(4, inv_id)]}, context=context)
         return inv_id

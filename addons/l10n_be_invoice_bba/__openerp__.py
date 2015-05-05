@@ -55,4 +55,5 @@ generated if no algorithm is specified on the Partner record.
         'account_invoice_view.xml',        
     ],
     'auto_install': False,
-    'installable': True,}
+    'installable': True,
+}

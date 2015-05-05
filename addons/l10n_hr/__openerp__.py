@@ -61,11 +61,9 @@ Izvori podataka:
 
     'depends': [
                 'account',
-                'account_chart',
                 ],
     'data': [
                 'data/account.account.type.csv',
-                'data/account.tax.code.template.csv',
                 'data/account.account.template.csv',
                 'l10n_hr_chart_template.xml',
                 'l10n_hr_wizard.xml',
@@ -75,5 +73,5 @@ Izvori podataka:
     "demo": [],
     'test': [],
     "active": False,
-    "installable": True,
+    "installable": False,
 }

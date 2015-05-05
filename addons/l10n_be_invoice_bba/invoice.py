@@ -66,26 +66,22 @@ class account_invoice(osv.osv):
                 return self.check_bbacomm(inv.reference)
         return True
 
-    def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-                            date_invoice=False, payment_term=False,
-                            partner_bank_id=False, company_id=False,
-                            context=None):
-        result = super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
-            date_invoice, payment_term, partner_bank_id, company_id, context)
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        result = super(account_invoice, self)._onchange_partner_id()
 #        reference_type = self.default_get(cr, uid, ['reference_type'])['reference_type']
 #        _logger.warning('partner_id %s' % partner_id)
         reference = False
         reference_type = 'none'
-        if partner_id:
-            if (type == 'out_invoice'):
-                reference_type = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context).out_inv_comm_type
+        if self.partner_id:
+            if (self.type == 'out_invoice'):
+                reference_type = self.partner_id.out_inv_comm_type
                 if reference_type:
-                    reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, partner_id, '', context=context)['value']['reference']
-        res_update = {
-            'reference_type': reference_type or 'none',
-            'reference': reference,
-        }
-        result['value'].update(res_update)
+                    reference = self.generate_bbacomm(self.type, reference_type, self.partner_id.id, '')['value']['reference']
+        self.reference_type = reference_type or 'none'
+        self.reference = reference
+
         return result
 
     def generate_bbacomm(self, cr, uid, ids, type, reference_type, partner_id, reference, context=None):
@@ -216,7 +212,6 @@ class account_invoice(osv.osv):
         return super(account_invoice, self).copy(cr, uid, id, default, context=context)
 
     _columns = {
-        'reference': fields.char('Communication', help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Communication Type',
             required=True),
     }

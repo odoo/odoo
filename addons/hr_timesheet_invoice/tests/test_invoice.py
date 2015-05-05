@@ -1,6 +1,6 @@
-from openerp.tests.common import TransactionCase
+from openerp.addons.account.tests.account_test_classes import AccountingTestCase
 
-class TestInvoice(TransactionCase):
+class TestInvoice(AccountingTestCase):
     """Tests to generate invoices from analytic lines
     """
 
@@ -15,9 +15,9 @@ class TestInvoice(TransactionCase):
 
         self.think_big_id = self.registry("ir.model.data").get_object_reference(cr, uid, "base", "res_partner_18")[1]
         self.timesheet_journal_id = self.registry("ir.model.data").get_object_reference(cr, uid, "hr_timesheet", "analytic_journal")[1]
-        self.expense_journal_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "exp")[1]
-        self.expense_account_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "a_expense")[1]
-        self.expense_account_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "a_expense")[1]
+        self.expense_journal_id = self.registry("ir.model.data").get_object_reference(cr, uid, 'account', 'exp')[1]
+        user_type_id = self.ref('account.data_account_type_expenses')
+        self.expense_account_id = self.env['account.account'].create({'code': 'X2120', 'name': 'Test Expense Account', 'user_type': user_type_id}).id
         self.factor_100_id = self.registry("ir.model.data").get_object_reference(cr, uid, "hr_timesheet_invoice", "timesheet_invoice_factor1")[1]
 
         self.potato_account_id = self.account_analytic_account.create(cr, uid, {
@@ -41,7 +41,7 @@ class TestInvoice(TransactionCase):
             'list_price': 3,
         })
 
-    def test_signle_invoice(self):
+    def test_single_invoice(self):
         cr, uid = self.cr, self.uid
         first_line = {
             'name': 'One potato',
@@ -72,14 +72,14 @@ class TestInvoice(TransactionCase):
         invoice_ids = self.account_analytic_line.invoice_cost_create(cr, uid, [first_line_id, second_line_id], data)
         self.assertEquals(len(invoice_ids), 2)
         for invoice in self.account_invoice.browse(cr, uid, invoice_ids[0]):
-            self.assertEquals(len(invoice.invoice_line), 1)
-            line = invoice.invoice_line[0]
+            self.assertEquals(len(invoice.invoice_line_ids), 1)
+            line = invoice.invoice_line_ids[0]
             if line.product_id.id == self.potato_id:
                 self.assertEquals(line.account_analytic_id.id, self.potato_account_id)
                 self.assertEquals(line.price_unit, -2)
                 self.assertEquals(line.quantity, 1)
             else:
-                self.assertEquals(line.product_id, self.carrot_id)
+                self.assertEquals(line.product_id.id, self.carrot_id)
                 self.assertEquals(line.account_analytic_id.id, self.carrot_account_id)
                 self.assertEquals(line.price_unit, -3)
                 self.assertEquals(line.quantity, 2)
@@ -90,8 +90,8 @@ class TestInvoice(TransactionCase):
         invoice_ids = self.account_analytic_line.invoice_cost_create(cr, uid, [first_line_id, second_line_id], data)
         self.assertEquals(len(invoice_ids), 1)
         invoice = self.account_invoice.browse(cr, uid, invoice_ids[0])
-        self.assertEquals(len(invoice.invoice_line), 2)
-        for line in invoice.invoice_line:
+        self.assertEquals(len(invoice.invoice_line_ids), 2)
+        for line in invoice.invoice_line_ids:
             if line.product_id.id == self.potato_id:
                 self.assertEquals(line.account_analytic_id.id, self.potato_account_id)
                 self.assertEquals(line.price_unit, -2)

@@ -132,7 +132,6 @@ class res_company(osv.osv):
             'res.partner': (_get_companies_from_partner, ['image'], 10),
         }),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-        'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
         'account_no':fields.char('Account No.'),
         'street': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street", multi='address'),
@@ -245,7 +244,7 @@ class res_company(osv.osv):
     def _get_company_children(self, cr, uid=None, company=None):
         if not company:
             return []
-        ids =  self.search(cr, uid, [('parent_id','child_of',[company])])
+        ids = self.search(cr, uid, [('parent_id','child_of',[company])])
         return ids
 
     def _get_partner_hierarchy(self, cr, uid, company_id, context=None):

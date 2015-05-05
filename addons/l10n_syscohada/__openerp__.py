@@ -43,5 +43,5 @@ Countries that use OHADA are the following:
     'demo' : [],
     'data' : ['l10n_syscohada_data.xml','l10n_syscohada_wizard.xml'],
     'auto_install': False,
-    'installable': True
+    'installable': False
 }

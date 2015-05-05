@@ -1,29 +1,25 @@
 from openerp.tests.common import TransactionCase
 from openerp.modules.module import get_module_resource
 
+
 class TestQifFile(TransactionCase):
     """Tests for import bank statement qif file format (account.bank.statement.import)
     """
 
     def setUp(self):
         super(TestQifFile, self).setUp()
-        self.statement_import_model = self.registry('account.bank.statement.import')
-        self.bank_statement_model = self.registry('account.bank.statement')
-        self.bank_statement_line_model = self.registry('account.bank.statement.line')
+        self.BankStatementImport = self.env['account.bank.statement.import']
+        self.BankStatement = self.env['account.bank.statement']
+        self.BankStatementLine = self.env['account.bank.statement.line']
 
     def test_qif_file_import(self):
         from openerp.tools import float_compare
-        cr, uid = self.cr, self.uid
         qif_file_path = get_module_resource('account_bank_statement_import_qif', 'test_qif_file', 'test_qif.qif')
         qif_file = open(qif_file_path, 'rb').read().encode('base64')
-        bank_statement_id = self.statement_import_model.create(cr, uid, dict(
+        bank_statement_id = self.BankStatementImport.create(dict(
             data_file=qif_file,
         ))
-        context = {
-            'journal_id': self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'bank_journal')[1]
-        }
-        self.statement_import_model.import_file(cr, uid, [bank_statement_id], context=context)
-        line_id = self.bank_statement_line_model.search(cr, uid, [('name', '=', 'YOUR LOCAL SUPERMARKET')])[0]
-        statement_id = self.bank_statement_line_model.browse(cr, uid, line_id).statement_id.id
-        bank_st_record = self.bank_statement_model.browse(cr, uid, statement_id)
-        assert float_compare(bank_st_record.balance_end_real, -1896.09, 2) == 0
+        journal = self.env.user.company_id._create_bank_account_and_journal('Bank Account (test import qif)')
+        bank_statement_id.with_context(journal_id=journal).import_file()
+        line = self.BankStatementLine.search([('name', '=', 'YOUR LOCAL SUPERMARKET')], limit=1)
+        assert float_compare(line.statement_id.balance_end_real, -1896.09, 2) == 0

@@ -19,12 +19,11 @@
             <field name="arch" type="xml">
                 <tree string="Currencies">
                     <field name="name"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
                      <field name="rate_ids" invisible="1"/>
                     <field name="date"/>
-                    <field name="rate_silent"/>
+                    <field name="rate"/>
                     <field name="rounding"/>
-                    <field name="accuracy"/>
+                    <field name="decimal_places"/>
                     <field name="position"/>
                     <field name="active"/>
                 </tree>
@@ -37,31 +36,27 @@
                 <form string="Currency">
                     <group col="4">
                         <field name="name"/>
-                        <field name="rate_silent"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="rate"/>
+                        <field name="active"/>
                     </group>
 
                     <group>
                         <group string="Price Accuracy">
                             <field name="rounding"/>
-                            <field name="accuracy"/>
+                            <field name="decimal_places"/>
                         </group>
 
                         <group string="Display">
                             <field name="symbol"/>
                             <field name="position"/>
                         </group>
-
-                        <group string="Miscellaneous">
-                            <field name="base"/>
-                            <field name="active"/>
-                        </group>
                     </group>
 
-                    <field mode="tree" name="rate_ids" attrs="{'readonly':[('base','=',True)]}">
+                    <field mode="tree" name="rate_ids">
                         <tree string="Rates" editable="bottom">
                             <field name="name"/>
                             <field name="rate"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </tree>
                     </field>
                 </form>

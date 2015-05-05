@@ -9,7 +9,7 @@ class hr_timesheet_report(models.Model):
     _auto = False
 
     date = fields.Date('Date', readonly=True)
-    name = fields.Char('Description', size=64, readonly=True)
+    name = fields.Char('Description', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     journal_id = fields.Many2one('account.analytic.journal', 'Journal', readonly=True)
     general_account_id = fields.Many2one('account.account', 'General Account', readonly=True)

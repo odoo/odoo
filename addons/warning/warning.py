@@ -55,7 +55,7 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
-            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'payment_term' : False}}
+            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'payment_term_id' : False}}
         warning = {}
         title = False
         message = False
@@ -121,7 +121,7 @@ class account_invoice(osv.osv):
         if not partner_id:
             return {'value': {
             'account_id': False,
-            'payment_term': False,
+            'payment_term_id': False,
             }
         }
         warning = {}
@@ -198,7 +198,7 @@ class sale_order_line(osv.osv):
     def product_id_change_with_wh(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False,
-            fiscal_position=False, flag=False, warehouse_id=False, context=None):
+            fiscal_position_id=False, flag=False, warehouse_id=False, context=None):
         warning = {}
         if not product:
             return {'value': {'th_weight' : 0, 'product_packaging': False,
@@ -219,7 +219,7 @@ class sale_order_line(osv.osv):
 
         result =  super(sale_order_line, self).product_id_change_with_wh( cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
-            lang, update_tax, date_order, packaging, fiscal_position, flag, warehouse_id=warehouse_id, context=context)
+            lang, update_tax, date_order, packaging, fiscal_position_id, flag, warehouse_id=warehouse_id, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
