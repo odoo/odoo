@@ -557,6 +557,11 @@ form: module.record_id""" % (xml_id,)
                 except:
                     values['icon'] = default_icon
 
+            if rec.get('web_icon'):
+                values['web_icon'] = rec.get('web_icon')
+            if rec.get('web_icon_hover'):
+                values['web_icon_hover'] = rec.get('web_icon_hover')
+
         pid = self.pool['ir.model.data']._update(cr, self.uid, 'ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
 
         if rec_id and pid:
