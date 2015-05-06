@@ -363,20 +363,24 @@
     <template id="details">
         <t t-call="website.layout">
             <t t-set="additional_title">Contact Details</t>
-            <div id="wrap">
+            <div id="wrap" class="mb32">
                 <div class="container">
                   <div class="row">
                         <div class="col-sm-6">
                             <ol class="breadcrumb mt8">
                                 <li><a href="/account">My Account</a></li>
-                                <li>Details</li>
+                                <li t-if="not is_child and not is_new">Details</li>
+                                <li t-if="is_child or is_new"><a href="/account/details">Details</a></li>
+                                <li t-if="is_child"><span t-esc="partner.name"/></li>
+                                <li t-if="is_new">New</li>
                             </ol>
                         </div>
                     </div>
-                    <h1>Contact Details</h1>
-                    <form action="/account/details" method="post">
-                        <div class="row oe_website_portal">
+                    <div class="row">
+                      <form method="post" id="wp-contact-form" >
+                        <div class="oe_website_portal">
                             <div class="col-md-8">
+                              <h3 class="page-header">Contact Details</h3>
                                 <div class="row">
                                     <div class="col-md-12">
                                       <div t-if="error_message" class="alert alert-danger">
@@ -441,19 +445,77 @@
                                             </t>
                                         </select>
                                     </div>
+                                    <input type='hidden' name="is_new" t-att-value="is_new"/>
                                 </div>
-                                <div class="clearfix">
-                                    <button type="submit" class="btn btn-default btn-primary pull-right mb32 ">
-                                        Confirm
+                                <div class="clearfix" id="wp-contact-confirm">
+                                    <button id="wp-contact-submit" type="submit" class="btn btn-default btn-primary pull-right mb32 ">
+                                        <span id="wp-contact-confirm">Confirm</span>
                                         <span class="fa fa-long-arrow-right" />
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </form>
+                    <div t-if="contacts and not is_new" class='col-md-8'>
+                      <h3 class="page-header">Linked Contacts</h3>
+                      <div class="row">
+                        <t t-foreach="contacts" t-as="contact">
+                          <div class="col-md-4 mb16 clearfix">
+                            <t t-call="website_portal.contact_widget"/>
+                            <div class="pull-right">
+                              <a class="btn btn-xs btn-default" t-attf-href="/account/details/#{contact.id}">Edit</a>
+                            </div>
+                          </div>
+                        </t>
+                      </div>
+                    </div>
+                    <div t-if="not is_new and not is_child" class='col-md-8'>
+                      <h3 class="page-header">Shipping Adresses<a class="btn btn-default btn-sm pull-right" href="/account/details/new">Add New <i class="fa fa-plus"></i></a></h3>
+                      <p t-if="not addresses">There are no other shipping addresses.</p>
+                      <div class="row">
+                        <div class="col-md-4 mb16 clearfix" t-if="addresses">
+                            <t t-set="contact" t-value="partner"/>
+                            <t t-call="website_portal.contact_widget"/>
+                            <div class="pull-right">
+                              <a class='btn btn-default btn-xs mt4 mr4' t-if="contact == partner.default_shipping_id" disabled="disabled"><i class="fa fa-check"></i> Default</a>
+                              <a class='btn btn-default btn-xs mt4 mr4 wp-address-select' t-if="contact != partner.default_shipping_id" t-attf-href="/account/details/shipping/#{contact.id}">Set as Default</a>
+                              <a class="btn btn-xs btn-default mt4 mr4" t-attf-href="/account/details/#{contact.id}/remove">Remove</a>
+                              <a class="btn btn-xs btn-default mt4 mr4" t-attf-href="/account/details/#{contact.id}">Edit</a>
+                            </div>
+                          </div>
+                        <t t-foreach="addresses" t-as="contact">
+                          <div class="col-md-4 mb16 clearfix">
+                            <t t-call="website_portal.contact_widget"/>
+                            <div class="pull-right">
+                              <a class='btn btn-default btn-xs mt4 mr4' t-if="contact == partner.default_shipping_id" disabled="disabled"><i class="fa fa-check"></i> Default</a>
+                              <a class='btn btn-default btn-xs mt4 mr4 wp-address-select' t-if="contact != partner.default_shipping_id" t-attf-href="/account/details/shipping/#{contact.id}">Set as Default</a>
+                              <a class="btn btn-xs btn-default mt4 mr4" t-attf-href="/account/details/#{contact.id}/remove">Remove</a>
+                              <a class="btn btn-xs btn-default mt4 mr4" t-attf-href="/account/details/#{contact.id}">Edit</a>
+                            </div>
+                            <form class="hidden" method="post" action="/account/details/defaults" id="wp-address-form">
+                              <select name="child_id">
+                                <option value="0">default</option>
+                                <t t-foreach="partner.child_ids" t-as="contact">
+                                  <option t-att-value="contact.id" t-esc="contact.name"></option>
+                                </t>
+                              </select>
+                            </form>
+                          </div>
+                        </t>
+                      </div>
+                    </div>
+                  </div>
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="contact_widget">
+        <div class="wp-contact-name"><strong t-esc="contact.name"/></div>
+        <div class="wp-contact-street" t-esc="contact.street"/>
+        <div class="wp-contact-street2" t-esc="contact.street2"/>
+        <div><span class="wp-contact-zip" t-esc="contact.zip"/>&amp;nbsp;<span class="wp-contact-city" t-esc="contact.city"/></div>
+        <div class="wp-contact-country" t-esc="contact.country_id.name"/>
     </template>
 
     <template id="my_account_link" name="Link to frontend portal" inherit_id="website.layout">

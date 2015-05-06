@@ -14,6 +14,8 @@ Allows your customers to manage their account from a beautiful web interface.
     ],
     'data': [
         'views/templates.xml',
+        'views/res_config_view.xml',
+        'views/usps_view.xml',
     ],
     'qweb': [
     ],

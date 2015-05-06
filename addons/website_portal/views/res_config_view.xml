@@ -1,0 +1,35 @@
+<odoo>
+    <record model="ir.ui.view" id="res_config_view">
+        <field name="name">usps_settings</field>
+        <field name="model">base.config.settings</field>
+        <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+        <field name="arch" type="xml">
+            <group name="google_analytics" position="after">
+                <group name="usps_validation">
+                    <label for="id" string="Address Validation"/>
+                    <div name="address_validation">
+                        <field name="address_validation" class="oe_inline"/>
+                        <label for="address_validation">Validate addresses using USPS (US Only)</label>
+                        <div attrs="{'invisible': [('address_validation','=',False)]}">
+                            <p>You can obtain your login and password by e-mail by subscribing here: <a href="https://www.usps.com/business/web-tools-apis/web-tools-registration.htm">USPS Web Tools Registration</a></p>
+                            <div>
+                                <field name="mandatory_validation" class="oe_inline"/>
+                                <label for="mandatory_validation">Mandatory address validation</label>
+                                <p>Warning: If a customer's address is not validated, he will not be able to check out his order in e-commerce.</p>
+                            </div>
+                            <div>
+                                <label for="usps_username">USPS API Username</label>
+                                <field name="usps_username" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="usps_password">USPS API Passwrod</label>
+                                <field name="usps_password" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,25 @@
+<odoo>
+    <template id="usps_details" inherit_id="website_portal.details">
+        <xpath expr="//button[@id='wp-contact-submit']" position="replace">
+            <button id="wp-contact-submit" type="submit" class="btn btn-default btn-primary pull-right mb32" t-att-disabled="'disabled' if mandatory_validation else ''">
+                <span id="wp-contact-confirm">Confirm</span>
+                <span class="fa fa-long-arrow-right" />
+            </button>
+            <a id="wp-contact-validate" role="button" tabindex="0" class="btn btn-default btn-primary pull-right mb32 mr8 hidden" data-toggle="popover" data-trigger="focus">
+                Validate
+            </a>
+        </xpath>
+        <xpath expr="//form[@id='wp-contact-form']" position="attributes">
+            <attribute name='t-att-data-validate'>validate</attribute>
+            <attribute name='t-att-data-mandatory-validation'>mandatory_validation</attribute>
+            <attribute name="data-validate-action">/account/details/validate</attribute>
+        </xpath>
+        <xpath expr="//option[@t-att-value='country.id']" position="attributes">
+            <attribute name='t-att-data-validate'>True if country.id == us_id else False</attribute>
+        </xpath>
+        <xpath expr="//option[@t-att-value='state.id']" position="attributes">
+            <attribute name='t-att-data-state-code'>state.code</attribute>
+        </xpath>
+    </template>
+
+</odoo>

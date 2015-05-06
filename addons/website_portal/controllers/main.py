@@ -5,6 +5,7 @@ from openerp import http
 from openerp.http import request
 from openerp import tools
 from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval
 
 
 class website_account(http.Controller):
@@ -68,31 +69,54 @@ class website_account(http.Controller):
             'order_invoice_lines': order_invoice_lines,
         })
 
-    @http.route(['/account/details'], type='http', auth='user', website=True)
-    def details(self, **post):
-        partner = request.env['res.users'].browse(request.uid).partner_id
+    @http.route(['/account/details', '/account/details/<int:partner_id>', '/account/details/new'], type='http', auth='user', website=True)
+    def details(self, partner_id=None, **post):
+        user = request.env['res.users'].browse(request.uid)
+        if partner_id:
+            partner = request.env['res.partner'].browse(partner_id)
+            if partner.parent_id != user.partner_id:
+                return request.render("website.404")
+        else:
+            partner = user.partner_id
         values = {
             'error': {},
             'error_message': []
         }
+        params = request.env['ir.config_parameter']
 
         if post:
             error, error_message = self.details_form_validate(post)
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
-                post.update({'zip': post.pop('zipcode', '')})
-                partner.sudo().write(post)
-                return request.redirect('/account')
+                if bool(post.get('is_new')):
+                    post.update({
+                        'parent_id': partner.id,
+                        'zip': post.pop('zipcode', ''),
+                        'type': 'delivery',
+                    })
+                    request.env['res.partner'].sudo().create(post)
+                else:
+                    post.update({'zip': post.pop('zipcode', '')})
+                    partner.sudo().write(post)
+                return request.redirect('/account/details')
 
         countries = request.env['res.country'].sudo().search([])
+        us_id = request.env['res.country'].sudo().search([('name', '=', 'United States')]).id
         states = request.env['res.country.state'].sudo().search([])
-
+        
         values.update({
             'partner': partner,
             'countries': countries,
+            'is_child': partner != user.partner_id,
+            'is_new': 'new' in request.httprequest.path,
+            'contacts': partner.child_ids.filtered(lambda p: p.type == 'contact'),
+            'addresses': partner.child_ids.filtered(lambda p: p.type == 'delivery'),
             'states': states,
             'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
+            'validate': safe_eval(params.sudo().get_param('website_portal.address_validation', default="False")),
+            'mandatory_validation': safe_eval(params.sudo().get_param('website_portal.mandatory_validation', default="False")),
+            'us_id': us_id,
         })
 
         return request.website.render("website_portal.details", values)
@@ -130,3 +154,40 @@ class website_account(http.Controller):
             error_message.append(_('Some required fields are empty.'))
 
         return error, error_message
+
+    @http.route(['/account/details/shipping/<int:shipping_id>'], type='http', auth='user', website=True)
+    def shipping(self, shipping_id, **post):
+        user = request.env['res.users'].browse(request.uid)
+        partner = user.partner_id
+
+        shipping = request.env['res.partner'].browse(shipping_id)
+
+        partner.sudo().default_shipping_id = shipping
+
+        return request.redirect('/account/details')
+
+    @http.route(['/account/details/<int:partner_id>/remove'], type='http', auth='user', website=True)
+    def remove(self, partner_id, **post):
+        user = request.env['res.users'].browse(request.uid)
+        partner = request.env['res.partner'].browse(partner_id)
+
+        if partner.parent_id == user.partner_id and partner.type == 'delivery':
+            partner.sudo().write({'active': False})
+            if user.partner_id.default_shipping_id == partner:
+                user.partner_id.sudo().default_shipping_id = False
+
+        return request.redirect('/account/details')
+
+    @http.route(['/account/details/validate'], type='json', auth='user', method=['POST'], website=True)
+    def validate(self, **post):
+        params = post.get('params')
+        state_id = params.get('state_id')
+        if state_id:
+            state = request.env['res.country.state'].browse(int(state_id))
+        address = {
+            'street': params.get('street2'),  # magical street/company implementation in website_sale
+            'city': params.get('city'),
+            'zip': params.get('zipcode'),
+            'state': state.code if state_id else 'XX',
+        }
+        return request.env['res.partner'].sudo().validate_address(address) 
