@@ -803,6 +803,24 @@ class account_bank_statement_line(osv.osv):
                     if credit_at_old_rate - credit_at_current_rate:
                         currency_diff = credit_at_current_rate - credit_at_old_rate
                         to_create.append(self.get_currency_rate_line(cr, uid, st_line, currency_diff, move_id, context=context))
+
+                    # Check rounding in the original account move line. If a difference is found between
+                    # amount_currency and the debit/credit, we post 2 movements: 1 movement on the
+                    # profit & loss account (_pl), 1 movement to balance the invoice (_inv)
+                    rounding_diff = 0.0
+                    if mv_line.debit and mv_line.amount_currency:
+                        rounding_diff = mv_line.amount_currency - currency_obj.compute(cr, uid, company_currency.id, st_line_currency.id, mv_line.debit, context=ctx)
+                    elif mv_line.credit and mv_line.amount_currency:
+                        rounding_diff = mv_line.amount_currency + currency_obj.compute(cr, uid, company_currency.id, st_line_currency.id, mv_line.credit, context=ctx)
+                    if not company_currency.is_zero(rounding_diff):
+                        diff_aml_pl = self.get_currency_rate_line(cr, uid, st_line, rounding_diff, move_id, context=context)
+                        diff_aml_pl['name'] = _('change') + ': ' + (mv_line.name or '/')
+                        diff_aml_inv = self.get_currency_rate_line(cr, uid, st_line, -1.0 * rounding_diff, move_id, context=context)
+                        diff_aml_inv['name'] = _('change') + ': ' + (mv_line.name or '/')
+                        diff_aml_inv['account_id'] = mv_line.account_id.id
+                        diff_aml_inv['counterpart_move_line_id'] = mv_line_dict['counterpart_move_line_id']
+                        to_create.extend((diff_aml_pl, diff_aml_inv))
+
                 else:
                     mv_line_dict['debit'] = debit_at_current_rate
                     mv_line_dict['credit'] = credit_at_current_rate
