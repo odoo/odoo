@@ -56,7 +56,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 partner = False
                 if partner_id:
                     partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-                res['assignation_lines'].append(self._convert_to_assignation_line(cr, uid, lead, partner))
+                res['assignation_lines'].append((0, 0, self._convert_to_assignation_line(cr, uid, lead, partner)))
         return res
 
     def action_forward(self, cr, uid, ids, context=None):
