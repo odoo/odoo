@@ -528,14 +528,6 @@
         <menuitem action="product_pos_category_action" id="menu_product_pos_category" parent="menu_point_config_product" sequence="20" />
         <!-- END -->
 
-        <record id="action_edit_ean" model="ir.actions.act_window">
-            <field name="name">Edit Ean</field>
-            <field name="res_model">pos.ean_wizard</field>
-            <field name="target">new</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-        </record>
-
         <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.form.inherit</field>
             <field name="model">product.template</field>
@@ -550,28 +542,6 @@
                 </group>
             </field>
         </record>
-        <record id="product_template_form_view_inherit_ean" model="ir.ui.view">
-            <field name="name">product.template.only.form.inherit.ean</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_only_form_view"/>
-            <field name="arch" type="xml">
-                <field name="barcode" position="after">
-                    <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN"
-                            attrs="{'invisible': [('product_variant_count', '>', 1)]}" class="oe_link oe_edit_only"/>
-                </field>
-            </field>
-        </record>
-        <record id="product_normal_form_view_inherit_ean" model="ir.ui.view">
-            <field name="name">product.form.inherit.ean</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <field name="barcode" position="after">
-                    <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
-                </field>
-            </field>
-        </record>
-
         <record id="product_template_tree_view" model="ir.ui.view">
             <field name="name">product.template.tree.inherit</field>
             <field name="model">product.template</field>
@@ -976,27 +946,6 @@
         <menuitem action="action_pos_session_opening"
             parent="menu_point_root" name="Dashboard"
             id="menu_pos_dashboard" sequence="1"/>
-
-        <record model="ir.ui.view" id="pos_ean13_generator">
-            <field name="name">pos.ean_wizard</field>
-            <field name="model">pos.ean_wizard</field>
-            <field name="arch" type="xml">
-                <form string="Ean13 Generator">  
-                    <p class="oe_grey">
-                        Enter a reference, it will be converted
-                        automatically to a valid EAN number.
-                    </p>
-                    <group>
-                        <field name="ean13_pattern" class="oe_inline"/>
-                    </group>
-                    <footer>
-                        <button name="sanitize_ean13" type="object" string="Apply" class="oe_highlight"/> or 
-                         <button icon="gtk-stop" special="cancel"
-                            string="Cancel" class="oe_link"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
 
         <!-- Barcode Nomenclatures -->
         <menuitem parent="menu_point_config_product" action="barcodes.action_barcode_nomenclature_form" id="menu_pos_barcode_nomenclature_all"

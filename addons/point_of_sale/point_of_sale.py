@@ -1356,19 +1356,6 @@ class pos_order_line(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
-class ean_wizard(osv.osv_memory):
-    _name = 'pos.ean_wizard'
-    _columns = {
-        'ean13_pattern': fields.char('Reference', size=13, required=True, translate=True),
-    }
-    def sanitize_ean13(self, cr, uid, ids, context):
-        for r in self.browse(cr,uid,ids):
-            ean13 = openerp.addons.product.product.sanitize_ean13(r.ean13_pattern)
-            m = context.get('active_model')
-            m_id =  context.get('active_id')
-            self.pool[m].write(cr,uid,[m_id],{'barcode':ean13})
-        return { 'type' : 'ir.actions.act_window_close' }
-
 class pos_category(osv.osv):
     _name = "pos.category"
     _description = "Public Category"
