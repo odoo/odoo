@@ -250,7 +250,7 @@ class AccountMoveLine(models.Model):
         currency = False
         context = self._context or {}
         if context.get('default_journal_id', False):
-            currency = self.env['account.journal'].browse(context['default_journal_id']).currency
+            currency = self.env['account.journal'].browse(context['default_journal_id']).currency_id
         return currency
 
     @api.model
