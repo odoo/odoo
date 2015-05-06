@@ -382,9 +382,22 @@
         },
         keydown: function(e) {
             if(e && e.which == 27) {
-                if(this.$el.prev().find('.oe_im_chatview_input').length > 0){
+                var prevChatWin = this.$el.prev('.oe_im_chatview').height();
+                var nextChatWin = false
+
+                if(prevChatWin){
+                    if(prevChatWin <= 26){
+                        this.$el.prev().find('.oe_im_chatview_header').trigger('click');
+                    }
                     this.$el.prev().find('.oe_im_chatview_input').focus();
                 }else{
+                    nextChatWin = this.$el.next('.oe_im_chatview').height();
+                }
+
+                if(nextChatWin){
+                    if(nextChatWin <= 26){
+                        this.$el.next().find('.oe_im_chatview_header').trigger('click')
+                    }
                     this.$el.next().find('.oe_im_chatview_input').focus();
                 }
                 e.stopPropagation();
