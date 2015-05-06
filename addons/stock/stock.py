@@ -24,7 +24,6 @@ from dateutil import relativedelta
 import json
 import time
 
-from openerp import models, fields as new_fields, api
 from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare, float_round
 from openerp.tools.translate import _
@@ -1597,7 +1596,7 @@ class stock_production_lot(osv.osv):
 # Move
 # ----------------------------------------------------
 
-class stock_move(models.Model):
+class stock_move(osv.osv):
     _name = "stock.move"
     _description = "Stock Move"
     _order = 'date_expected desc, id'
@@ -1618,11 +1617,12 @@ class stock_move(models.Model):
             res.append((line.id, name))
         return res
 
-    @api.depends('product_id', 'product_uom_qty', 'product_uom', 'product_id.uom_id')
-    def _quantity_normalize(self):
+    def _quantity_normalize(self, cr, uid, ids, name, args, context=None):
         uom_obj = self.pool.get('product.uom')
-        for m in self:
-            m.product_qty = uom_obj._compute_qty_obj(self.env.cr, self.env.uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, context=self.env.context)
+        res = {}
+        for m in self.browse(cr, uid, ids, context=context):
+            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, context=context)
+        return res
 
     def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
         uom_obj = self.pool.get('product.uom')
@@ -1706,6 +1706,11 @@ class stock_move(models.Model):
             res += [x.id for x in picking.move_lines]
         return res
 
+    def _get_moves_from_prod(self, cr, uid, ids, context=None):
+        if ids:
+            return self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', ids)], context=context)
+        return []
+
     def _set_product_qty(self, cr, uid, id, field, value, arg, context=None):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
             in the default product UoM. This code has been added to raise an error if a write is made given a value
@@ -1714,9 +1719,6 @@ class stock_move(models.Model):
         """
         raise osv.except_osv(_('Programming Error!'), _('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
-    product_qty = new_fields.Float(compute='_quantity_normalize', inverse='_set_product_qty', digits=0, store=True, string='Quantity',
-                                   help='Quantity in the default UoM of the product')
-
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection(procurement.PROCUREMENT_PRIORITIES, 'Priority'),
@@ -1724,6 +1726,8 @@ class stock_move(models.Model):
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
+        'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, type='float', digits=0, store=True, string='Quantity',
+            help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
             required=True, states={'done': [('readonly', True)]},
             help="This is the quantity of products from an inventory "
