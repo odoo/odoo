@@ -5667,7 +5667,11 @@ class BaseModel(object):
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
-            names = [f.name for f in field.computed_fields if f.store]
+            names = [
+                f.name
+                for f in field.computed_fields
+                if f.store and self.env.field_todo(f)
+            ]
             for rec in recs:
                 try:
                     values = rec._convert_to_write({
