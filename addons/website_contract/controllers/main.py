@@ -104,23 +104,21 @@ class website_contract(http.Controller):
         else:
             account = account_res.browse(account_id)
 
-        if post.get('pay_meth'):
-            # no change
-            if int(post.get('pay_meth'), 0) > 0:
-                account.payment_method_id = int(post['pay_meth'])
+        # no change
+        if int(post.get('pay_meth'), 0) > 0:
+            account.payment_method_id = int(post['pay_meth'])
 
-        if post.get('pay_now'):
-            # we can't call _recurring_invoice because we'd miss 3DS, redoing the whole payment here
-            payment_method = account.payment_method_id
-            if payment_method:
-                invoice_values = account_res.sudo()._prepare_invoice(account)
-                new_invoice = invoice_res.sudo().create(invoice_values)
-                new_invoice.check_tax_lines(request.env['account.invoice.tax'].compute(new_invoice))
-                tx = account.sudo()._do_payment(payment_method, new_invoice)
-                if tx.html_3ds:
-                    return tx.html_3ds
-                account.sudo().reconcile_pending_transaction(tx, new_invoice)
-                get_param = self.payment_succes_msg if tx.state == 'done' else self.payment_fail_msg
+        # we can't call _recurring_invoice because we'd miss 3DS, redoing the whole payment here
+        payment_method = account.payment_method_id
+        if payment_method:
+            invoice_values = account_res.sudo()._prepare_invoice(account)
+            new_invoice = invoice_res.sudo().create(invoice_values)
+            new_invoice.check_tax_lines(request.env['account.invoice.tax'].compute(new_invoice))
+            tx = account.sudo()._do_payment(payment_method, new_invoice)[0]
+            if tx.html_3ds:
+                return tx.html_3ds
+            account.sudo().reconcile_pending_transaction(tx, new_invoice)
+            get_param = self.payment_succes_msg if tx.state == 'done' else self.payment_fail_msg
 
         return request.redirect('/account/contract/%s/%s?%s' % (account.id, account.uuid, get_param))
 

@@ -72,7 +72,8 @@ class sale_order(models.Model):
                 account.write(analytic_values)
 
             self.project_id = account
-        return account
+            return account
+        return True
 
     @api.one
     def action_button_confirm(self):

@@ -39,14 +39,43 @@
                                 </small>
                                 <a class="btn btn-info btn-sm css_editable_mode_hidden hidden-print" t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (account._name, account.id, action)" groups="base.group_website_publisher" t-ignore="true">View Contract</a>
                             </h3>
-                            <div t-if="account.state=='pending'" class="alert alert-warning" role="alert">
-                                <p>Your contract is pending.
-                                    <span t-if="not active_plan.payment_mandatory and not account.manager_id">Contact us.</span>
-                                    <span t-if="not active_plan.payment_mandatory and account.manager_id"><a href="#wc-your-contact">Contact</a> your sales representative.</span>
-                                    <span t-if="active_plan.payment_mandatory">
-                                        <a href="#wc-auto-payment">Pay now</a>
-                                        <span t-if="account.manager_id"> or <a href="#wc-your-contact">contact</a> your sales representative</span>.</span>
-                                </p>
+                            <div t-if="account.state in ['pending','close']" t-attf-class="alert alert-#{'warning' if account.state=='pending' else 'danger'}" role="alert">
+                                <p>Your contract is waiting for payment.</p>
+                                <div t-if="active_plan.payment_mandatory and allow_reopen and account.state!='open'">
+                                    <p t-if="allow_reopen and account.state == 'close'">Your account is closed. If you wish to reopen it, you can pay your invoice for the current invoicing period.</p>
+                                    <form method="post" class="mt16 clearfix" id="wc-payment-form" t-attf-action="/account/contract/payment/#{account.id}/#{account.uuid}">
+                                        <div class="form-group">
+                                            <select class="form-control" name="pay_meth">
+                                                <option value="-2">Current: <span t-esc="account.payment_method_id.name"/></option>
+                                                <option value="-1" t-att-selected="'selected' if not account.payment_method_id else ''">New</option>
+                                                <optgroup label="All Payment Methods">
+                                                    <t t-foreach="part_pms" t-as="pm">
+                                                        <option  t-att-value="pm.id" t-esc="pm.name"/>
+                                                    </t>
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <button t-attf-class="mt8 btn btn-primary btn-sm pull-right #{'hidden' if not account.payment_method_id else ''}">Pay Now</button>
+                                    </form>
+                                    <div id="new_payment_method" t-if="account.state == 'pending'" t-attf-class="#{'hidden' if account.payment_method_id else ''} clearfix">
+                                        <div t-if="error_message" class="alert alert-danger">
+                                          <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
+                                        </div>
+                                        <div t-if='len(acquirers)>1'>
+                                            <label class="control-label" for="pm_acquirer_id">Acquirer</label>
+                                            <select name="pm_acquirer_id" class="form-control">
+                                                <t t-foreach="acquirers" t-as="acquirer">
+                                                    <option t-att-value="acquirer.id" t-esc="acquirer.name"/>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <t t-foreach="acquirers" t-as="acquirer">
+                                            <div t-raw="acquirer.form" t-att-data-acquirer-id="acquirer.id" t-attf-class="acquirer #{'hidden' if acquirer!=acquirers[0] else ''}"/>
+                                        </t>
+                                    </div>
+                                    
+                                </div>
                             </div>
                             <div t-if="message" t-att-class="'alert ' + message_class" role="alert">
                                 <p t-esc="message"/>
@@ -58,43 +87,7 @@
                                     "address",
                                     "phone",
                                     "email"]}'/>
-                            <div t-if="active_plan.payment_mandatory and allow_reopen and account.state!='open'">
-                                <a name="wc-auto-payment"/>
-                                <h3 class="page-header">Payment</h3>
-                                <p t-if="allow_reopen and account.state == 'close'">Your account is closed. If you wish to reopen it, you can pay your invoice for the current invoicing period.</p>
-                                <form method="post" class="mt16 clearfix" id="wc-payment-form" t-attf-action="/account/contract/payment/#{account.id}/#{account.uuid}">
-                                    <div class="form-group">
-                                        <select class="form-control" name="pay_meth">
-                                            <option value="-2">Current: <span t-esc="account.payment_method_id.name"/></option>
-                                            <option value="-1">New</option>
-                                            <optgroup label="All Payment Methods">
-                                                <t t-foreach="part_pms" t-as="pm">
-                                                    <option  t-att-value="pm.id" t-esc="pm.name"/>
-                                                </t>
-                                            </optgroup>
-                                        </select>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                    <button class="mt8 btn btn-primary btn-sm pull-right">Pay Now</button>
-                                </form>
-                                <div id="new_payment_method" t-if="account.state == 'pending'" class="hidden">
-                                    <div t-if="error_message" class="alert alert-danger">
-                                      <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
-                                    </div>
-                                    <div t-if='len(acquirers)>1'>
-                                        <label class="control-label" for="pm_acquirer_id">Acquirer</label>
-                                        <select name="pm_acquirer_id" class="form-control">
-                                            <t t-foreach="acquirers" t-as="acquirer">
-                                                <option t-att-value="acquirer.id" t-esc="acquirer.name"/>
-                                            </t>
-                                        </select>
-                                    </div>
-                                    <t t-foreach="acquirers" t-as="acquirer">
-                                        <div t-raw="acquirer.form" t-att-data-acquirer-id="acquirer.id" t-attf-class="acquirer #{'hidden' if acquirer!=acquirers[0] else ''}"/>
-                                    </t>
-                                </div>
-                                
-                            </div>
+                            
                             <div class="oe_structure"/>
                             <table class="table mt32" id="wc-account-table">
                                 <thead>
