@@ -107,16 +107,19 @@
             <field name="view_id"></field>  <!-- force empty -->
         </record>
 
-        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="5" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+        <menuitem id="timesheet_menu_root" name="Timesheets" sequence="10" icon="fa-user" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="timesheet_menu_root" sequence="5" />
 
-        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="10" groups="base.group_hr_attendance"/>
+        <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="29" groups="base.group_hr_attendance"/>
 
-        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" sequence="20" groups="base.group_hr_attendance"/>
+        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance_root" sequence="20" groups="base.group_hr_attendance"/>
 
+        <menuitem name="Reports" parent="menu_hr_attendance_root" sequence="99"
+            id="menu_hr_attendance_report"/>
         <menuitem
             action="action_hr_attendance_graph"
             id="menu_hr_attendance_graph"
-            parent="hr.menu_hr_reporting"
+            parent="menu_hr_attendance_report"
             sequence="3"
         />
 
@@ -153,7 +156,9 @@
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
 
-        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_hr_configuration_timesheets_attendances" groups="base.group_hr_attendance" sequence="1"/>
+        <menuitem name="Attendance" parent="base.menu_config" id="menu_hr_attendance_config" sequence="29"/>
+        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" 
+            parent="menu_hr_attendance_config" groups="base.group_hr_attendance" sequence="1"/>
 
         <record id="hr_attendance_employee" model="ir.ui.view">
             <field name="name">hr.employee.form1</field>

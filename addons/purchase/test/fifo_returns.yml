@@ -11,8 +11,8 @@
     uom_po_id: product.product_uom_kgm
     cost_method: real
     valuation: real_time
-    property_stock_account_input: account.o_expense
-    property_stock_account_output: account.o_income
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
     description: FIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
   I create a draft Purchase Order for first in move for 10 kg at 50 euro
@@ -20,7 +20,7 @@
   !record {model: purchase.order, id: purchase_order_fiforet1}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_stock
-    pricelist_id: 1
+    pricelist_id: purchase.list0
     order_line:
       - product_id: product_fiforet_icecream
         product_qty: 10.0
@@ -33,7 +33,7 @@
   !record {model: purchase.order, id: purchase_order_fiforet2}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_stock
-    pricelist_id: 1
+    pricelist_id: purchase.list0
     order_line:
       - product_id: product_fiforet_icecream
         product_qty: 30.0

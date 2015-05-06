@@ -11,6 +11,18 @@ class TestPurchase(common.TransactionCase):
         product_id = self.ref('product.product_category_3')
         company_id = self.ref('base.main_company')
         location_id = self.ref('stock.stock_location_3')
+
+        # Useful accounts
+        user_type_id = self.ref('account.data_account_type_expenses')
+        account_exp_id = self.env['account.account'].create({'code': 'X2020', 'name': 'Purchase - Test Expense Account', 'user_type': user_type_id})
+        user_type_id = self.ref('account.data_account_type_payable')
+        account_pay_id = self.env['account.account'].create({'code': 'X1012', 'name': 'Purchase - Test Payable Account', 'user_type': user_type_id})
+
+        self.env['product.product'].browse(product_id).product_tmpl_id.write({'property_account_expense': account_exp_id})
+
+        # Create Purchase Journal
+        self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'PTPJ', 'type': 'purchase', 'company_id': company_id})
+
         # In order to test, I create new user and applied Invoicing & Payments group.
         user = self.env['res.users'].with_context({'no_reset_password': True}).create({
             'name': 'Test User',
@@ -21,7 +33,10 @@ class TestPurchase(common.TransactionCase):
         # I create partner for purchase order.
         partner = self.env['res.partner'].create({
             'name': 'Test Customer',
-            'email': 'testcustomer@test.com'})
+            'email': 'testcustomer@test.com',
+            'property_account_payable': account_pay_id,
+        })
+        
         # In order to test I create purchase order and confirmed it.
         order = self.env['purchase.order'].create({
             'partner_id': partner.id,

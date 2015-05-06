@@ -1,9 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-
-        <menuitem name="Budgets" id="menu_action_account_budget_post_tree" parent="account.menu_finance_generic_reporting" sequence="6"/>
-
         <!--
     Budgets
     -->
@@ -37,9 +34,7 @@
             <field name="view_id" ref="view_budget_post_tree"/>
             <field name="search_view_id" ref="view_budget_post_search"/>
         </record>
-        <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance" sequence="8"/>
-        <menuitem id="next_id_pos" name="Budgets" parent="account.menu_finance_configuration" sequence="8"/>
-        <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="next_id_pos" sequence="20"/>
+        <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="account.account_management_menu" sequence="1"/>
 
 
         <record model="ir.ui.view" id="view_budget_post_form">
@@ -105,9 +100,9 @@
                                         <field name="date_from"/>
                                         <field name="date_to"/>
                                         <field name="paid_date"/>
-                                        <field name="planned_amount" sum="Planned Amount"/>
-                                        <field name="practical_amount" sum="Practical Amount"/>
-                                        <field name="theoritical_amount" sum="Theoretical Amount"/>
+                                        <field name="planned_amount" sum="Planned Amount" widget="monetary"/>
+                                        <field name="practical_amount" sum="Practical Amount" widget="monetary"/>
+                                        <field name="theoritical_amount" sum="Theoretical Amount" widget="monetary"/>
                                         <field name="percentage"/>
                                     </tree>
                                     <form string="Budget Lines">
@@ -115,7 +110,7 @@
                                             <group>
                                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                                 <field name="general_budget_id"/>
-                                                <field name="planned_amount"/>
+                                                <field name="planned_amount" widget="monetary"/>
                                             </group>
                                             <group>
                                                 <label for="date_from" string="Duration"/>
@@ -191,9 +186,11 @@
               </p>
             </field>
         </record>
-        <menuitem parent="next_id_31"
+        <menuitem parent="account.menu_finance_entries"
             id="menu_act_crossovered_budget_view"
-            action="act_crossovered_budget_view" sequence="1" />
+            name="Budgets"
+            action="act_crossovered_budget_view" sequence="60" 
+            groups="account.group_account_user"/>
         
        <record id="view_crossovered_budget_line_search" model="ir.ui.view">
             <field name="name">account.budget.line.search</field>
@@ -216,9 +213,9 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="paid_date"/>
-                    <field name="planned_amount"/>
-                    <field name="practical_amount"/>
-                    <field name="theoritical_amount"/>
+                    <field name="planned_amount" widget="monetary"/>
+                    <field name="practical_amount" widget="monetary"/>
+                    <field name="theoritical_amount" widget="monetary"/>
                     <field name="percentage"/>
                 </tree>
             </field>
@@ -236,9 +233,9 @@
                             <field name="date_from"/>
                             <field name="date_to"/>
                             <field name="paid_date"/>
-                            <field name="planned_amount"/>
-                            <field name="practical_amount"/>
-                            <field name="theoritical_amount"/>
+                            <field name="planned_amount" widget="monetary"/>
+                            <field name="practical_amount" widget="monetary"/>
+                            <field name="theoritical_amount" widget="monetary"/>
                             <field name="percentage"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
@@ -248,19 +245,19 @@
         </record>
 
         <record model="ir.actions.act_window" id="act_crossovered_budget_lines_view">
-            <field name="name">Budget Lines</field>
+            <field name="name">Budget Items</field>
             <field name="res_model">crossovered.budget.lines</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_crossovered_budget_line_tree"/>
         </record>
 
-        <menuitem parent="menu_action_account_budget_post_tree"
+        <menuitem parent="account.menu_finance_reports"
             id="menu_act_crossovered_budget_lines_view"
             action="act_crossovered_budget_lines_view" />
 
         <!--  Shortcuts -->
-        <act_window name="Budget Lines"
+        <act_window name="Budget Items"
             context="{'search_default_analytic_account_id': [active_id], 'default_analytic_account_id': active_id}"
             res_model="crossovered.budget.lines"
             src_model="account.analytic.account"
@@ -273,26 +270,26 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Budget Lines" groups="account.group_account_user">
+                    <page string="Budget Items" groups="account.group_account_user">
                             <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
-                                <tree string="Budget Lines" editable="top">
+                                <tree string="Budget Items" editable="top">
                                     <field name="crossovered_budget_id"/>
                                     <field name="general_budget_id"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
-                                    <field name="planned_amount"/>
-                                    <field name="practical_amount" sum="Practical Amount"/>
-                                    <field name="theoritical_amount" sum="Theoritical Amount"/>
+                                    <field name="planned_amount" widget="monetary"/>
+                                    <field name="practical_amount" sum="Practical Amount" widget="monetary"/>
+                                    <field name="theoritical_amount" sum="Theoritical Amount" widget="monetary"/>
                                     <field name="percentage"/>
                                 </tree>
-                                <form string="Budget Lines">
+                                <form string="Budget Items">
                                     <field name="crossovered_budget_id"/>
                                     <field name="general_budget_id"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
-                                    <field name="planned_amount"/>
+                                    <field name="planned_amount" widget="monetary"/>
                                 </form>
                             </field>
                     </page>

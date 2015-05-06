@@ -1,5 +1,5 @@
 -
-  Set a product as using average price. 
+  Set a product as using average price.
 -
   !record {model: product.product, id: product_average_icecream}:
     default_code: AVG
@@ -10,8 +10,8 @@
     uom_po_id: product.product_uom_kgm
     valuation: real_time
     cost_method: average
-    property_stock_account_input: account.o_expense
-    property_stock_account_output: account.o_income
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
     description: Average Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
   I create a draft Purchase Order for first incoming shipment for 10 pieces at 60€
@@ -19,7 +19,7 @@
   !record {model: purchase.order, id: purchase_order_average1}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_stock
-    pricelist_id: 1
+    pricelist_id: purchase.list0
     order_line:
       - product_id: product_average_icecream
         product_qty: 10.0
@@ -42,7 +42,7 @@
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average1")).picking_ids
     self.do_transfer(cr, uid, [pick_ids[0].id])
 - 
-  Check the standard price of the product (average icecream). 
+  Check the standard price of the product (average icecream).
 - 
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref("product_average_icecream"))
@@ -54,7 +54,7 @@
   !record {model: purchase.order, id: purchase_order_average2}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_stock
-    pricelist_id: 1
+    pricelist_id: purchase.list0
     order_line:
       - product_id: product_average_icecream
         product_qty: 30.0
@@ -109,7 +109,7 @@
   !record {model: purchase.order, id: purchase_order_average3}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_stock
-    pricelist_id: 1
+    pricelist_id: purchase.list0
     order_line:
       - product_id: product_average_icecream
         product_qty: 500.0
@@ -130,6 +130,6 @@
   Check price is (75.0*20 + 200*0.5) / 20.5 = 78.04878
 - 
   !python {model: product.product}: |
-    product = self.browse(cr, uid, ref("product_average_icecream")) 
+    product = self.browse(cr, uid, ref("product_average_icecream"))
     assert product.qty_available == 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock'
     assert round(self.browse(cr, uid, ref("product_average_icecream")).standard_price, 2) == 78.05, 'Standard price as average price of third reception with other UoM incorrect! Got %s instead of 78.05' % (round(self.browse(cr, uid, ref("product_average_icecream")).standard_price, 2),)

@@ -583,8 +583,13 @@ td {
 .pos .control-button.highlight,
 .pos .button.highlight {
     background: #6EC89B !important;
-    /* border: solid 1px #6EC89B !important; */
     border: solid 1px #64AF8A !important; 
+    color: white !important;
+}
+.pos .control-button.altlight,
+.pos .button.altlight {
+    background: #7F82AC !important;
+    border: solid 1px #756A99 !important;
     color: white !important;
 }
 .pos .control-button.disabled,
@@ -617,6 +622,7 @@ td {
     border-bottom-left-radius: 4px;
 }
 .pos .actionpad .button {
+    position: relative;
     display: block;
     height: 54px;
     width: 100%;
@@ -664,6 +670,26 @@ td {
     position: relative;
     top: -1px;
     left: 3px;
+}
+
+.pos .actionpad .button.set-customer{
+    padding-left: 40px;
+    padding-right: 40px;
+}
+.pos .actionpad .button.set-customer.decentered {
+    padding-left: 40px;
+    padding-right: 5px;
+}
+.pos .actionpad .button .fa-user {
+    position: absolute;
+    left: 13px;
+    top: 13px;
+    margin-right: 8px;
+    font-size: 18px;
+    background: rgba(255, 255, 255, 0.5);
+    line-height: 30px;
+    width: 30px;
+    border-radius: 100%;
 }
 
 /*  ********* The Numpad ********* */
@@ -718,6 +744,11 @@ td {
 .pos .mode-button.selected-mode {
     color: white;
     background: #6EC89B;
+    border-color: transparent;
+}
+.pos .mode-button.selected-mode:hover {
+    background: #6EC89B;
+    color: white;
     border-color: transparent;
 }
 
@@ -796,6 +827,14 @@ td {
     font-size: 14px;
     cursor: pointer;
 }
+.pos .breadcrumb-button.breadcrumb-home {
+    line-height: 50px;
+    padding: 0;
+    width: 50px;
+    font-size: 25px;
+    text-align: center;
+}
+
 .pos .breadcrumb-arrow{
     width: 28px;
 }
@@ -819,7 +858,7 @@ td {
     background: url("../img/search.png") no-repeat 15px;
     background-color: white;
     border-radius: 20px;
-    font-family: Lato;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
     font-size: 13px;
 }
 .pos .searchbox input:focus {
@@ -2047,14 +2086,10 @@ td {
 }
 .pos .modal-dialog .popup{
     position: absolute;
-    left:50%;
-    top:50%;
+    top: 0; left: 0; right: 0; bottom: 0;
+    margin: auto;
     width:500px;
     height:400px;
-    margin-left: -250px;
-    margin-top: -200px;
-    padding:10px;
-    padding-top:20px;
     text-align:center;
     font-size:20px;
     font-weight:bold;
@@ -2062,16 +2097,27 @@ td {
     border-radius: 3px;
     box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
     z-index:1200;
+    font-family: 'Lato';
+    font-family: Lato;
+}
+.pos .popup .title {
+    background: rgba(255,255,255,0.5);
+    margin: 0;
+    padding: 20px;
+    border-radius: 3px 3px 0px 0px;
+    border-bottom: solid 1px rgba(60,60,60,0.1);
 }
 .pos .popup .body {
     font-weight: normal;
     font-size: 18px;
-    margin: 0px 16px 16px 16px;
+    margin: 16px;
+    margin-top: 20px;
 }
 .pos .popup .body.traceback {
-    height: 264px;
+    height: 238px;
     overflow: auto;
     font-size: 14px;
+    white-space: pre-wrap;
     text-align: left;
     font-family: 'Inconsolata';
     -webkit-user-select: text;
@@ -2084,7 +2130,7 @@ td {
     left:0;
     width:100%;
     height:60px;
-    border-top: 1px solid #E0DDDD;
+    border-top: solid 1px rgba(60,60,60,0.1);
 }
 .pos .popup .button{
     float:right;
@@ -2093,7 +2139,6 @@ td {
     line-height:40px;
     text-align:center;
     border-radius: 2px;
-    margin:3px;
     margin-top:10px;
     margin-right:10px;
 
@@ -2102,9 +2147,13 @@ td {
 
     cursor: pointer;
 
-    border: 1px solid #cacaca;
+    border: solid 1px rgba(60,60,60,0.1);
 
-    background: #e2e2e2;
+    background: rgba(0,0,0,0.05);
+}
+.pos .popup .button.icon {
+    width: 40px;
+    font-size: 20px;
 }
 .pos .popup .button:active{
     color: white;
@@ -2115,6 +2164,7 @@ td {
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: ease-out;
 }
+
 
 .pos .popup .button.big-left{
     position:absolute;
@@ -2158,17 +2208,24 @@ td {
     outline: none;
     box-shadow: 0px 0px 0px 3px #6EC89B;
 }
-.pos .popup.popup-selection .title {
-    margin-top: 0;
+.pos .popup.popup-error {
+    background-color: #F3BBBB;
+    color: rgb(168, 89, 89);
+    box-shadow: 0px 10px 20px rgba(92,51,51,0.4);
+}
+.pos .popup.popup-error .title {
+    color: white;
+    background: rgba(255, 76, 76, 0.5);
 }
 .pos .popup.popup-selection .selection {
     overflow-y: auto;
-    max-height: 305px;
+    max-height: 273px;
     font-size: 16px;
-    margin: 0 -10px;
     width: auto;
     line-height: 50px;
-    border-top: dashed 1px rgb(215,215,215);
+    margin-top: -1px;
+    border-top: solid 3px #6EC89B;
+    
 }
 .pos .popup.popup-selection .selection-item {
     width: auto;
@@ -2182,22 +2239,26 @@ td {
 }
 .pos .popup.popup-number {
     width: 300px;
-    margin-left: -150px;
+    height: 450px;
 }
-.pos .popup-number .footer{
+.pos .footer.centered {
     text-align: center;
 }
-.pos .popup-number .footer .button{
+.pos .footer.centered .button {
     float: none;
     display: inline-block;
+    margin-left: 3px;
+    margin-right: 3px;
 }
 .pos .popup-numpad {
     margin: 12px auto;
-    text-align: left;
+    text-align: center;
     width: 254px;
 }
-.pos .popup-number .title {
-    margin-top: 0;
+.pos .popup-number .title,
+.pos .popup-textinput .title
+{
+    margin-bottom: 20px;
 }
 .pos .popup-numpad .input-button,
 .pos .popup-numpad .mode-button {
@@ -2218,8 +2279,7 @@ td {
 }
 
 .pos .popup.popup-password {
-    width: 250px;
-    margin-left: -125;
+    width: 254px;
 }
 .pos .popup-password .mode-button.add,
 .pos .popup-password .input-button.dot {
@@ -2227,18 +2287,29 @@ td {
 }
 .pos .popup-password .popup-numpad {
     width: 190px;
+    text-align: left;
 }
 .pos .popup-password .popup-input {
     width: 70%;
     -webkit-text-security: disc;
  }
-.pos .popup-password .footer{
-    text-align: center;
+
+.pos .popup .body ul,
+.pos .popup ul.body {
+    text-align: left;
+    margin-left: 1em;
 }
-.pos .popup-password .footer .button{
-    float: none;
-    display: inline-block;
+.pos .popup .body li {
+    text-indent: 1em;
 }
+.pos .popup .body li:before {
+    content: '—';
+    position: relative;
+    font-size: 0.6em;
+    left: -1em;
+    bottom: 0.2em;
+}
+
 
 /*  ********* The Webkit Scrollbar  ********* */
 

@@ -9,8 +9,8 @@
     valuation: real_time
     weight: 10
     volume: 1 
-    property_stock_account_input: account.o_expense
-    property_stock_account_output: account.o_income
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
 -
   !record {model: product.product, id: product_landed_cost_2}:
     name: "LC product 2"
@@ -18,8 +18,8 @@
     valuation: real_time
     weight: 20
     volume: 1.5
-    property_stock_account_input: account.o_expense
-    property_stock_account_output: account.o_income
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
 -
   I create 2 picking moving those products
 -
@@ -53,7 +53,7 @@
 -
   !record {model: stock.landed.cost, id: stock_landed_cost_1}:
     picking_ids: [picking_landed_cost_1, picking_landed_cost_2]
-    account_journal_id: account.expenses_journal
+    account_journal_id: expenses_journal
     cost_lines:
       - name: 'equal split' 
         split_method: 'equal'
@@ -79,7 +79,7 @@
     self.compute_landed_cost(cr, uid, [ref("stock_landed_cost_1")])
 
 -
-  I check the valuation adjustment lines 
+  I check the valuation adjustment lines
 -
   !python {model: stock.landed.cost}: |
     landed_cost = self.browse(cr, uid, ref("stock_landed_cost_1"))
@@ -111,4 +111,4 @@
   !assert {model: stock.landed.cost, id: stock_landed_cost_1}:
     - state == 'done'
     - account_move_id
-    - len(account_move_id.line_id) == 16
+    - len(account_move_id.line_ids) == 16

@@ -56,6 +56,9 @@ $.extend($.expr[':'],{
     propValue: function(element, index, matches) {
         return $(element).prop("value") === matches[3];
     },
+    propValueContains: function(element, index, matches) {
+        return $(element).prop("value") && $(element).prop("value").indexOf(matches[3]) !== -1;
+    },
 });
 $.ajaxSetup({
     beforeSend:function(){
@@ -655,6 +658,9 @@ var Tour = {
                 click_event("mousedown");
                 click_event("mouseup");
                 click_event("click");
+                if ($element.is("input, textarea, select") && !$element.is(":focus")) {
+                    $element.focus();
+                }
 
                 // trigger after for step like: mouseenter, next step click on button display with mouseenter
                 setTimeout(function () {
@@ -663,7 +669,6 @@ var Tour = {
                 }, self.defaultDelay<<1);
             }
             if (step.sampleText) {
-            
                 $element.trigger($.Event("keydown", { srcElement: $element[0] }));
                 if ($element.is("input") || $element.is('textarea')) {
                     $element.val(step.sampleText);

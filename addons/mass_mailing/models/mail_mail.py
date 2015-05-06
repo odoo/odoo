@@ -70,9 +70,11 @@ class MailMail(osv.Model):
         )
         return url
 
-    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+    def send_get_mail_body(self, cr, uid, ids, partner=None, context=None):
         """ Override to add the tracking URL to the body. """
-        body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+        # TDE: temporary addition (mail was parameter) due to semi-new-API
+        body = super(MailMail, self).send_get_mail_body(cr, uid, ids, partner=partner, context=context)
+        mail = self.browse(cr, uid, ids[0], context=context)
 
         # prepend <base> tag for images using absolute urls
         domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
@@ -86,8 +88,10 @@ class MailMail(osv.Model):
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
         return body
 
-    def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
-        res = super(MailMail, self).send_get_email_dict(cr, uid, mail, partner, context=context)
+    def send_get_email_dict(self, cr, uid, ids, partner=None, context=None):
+        # TDE: temporary addition (mail was parameter) due to semi-new-API
+        res = super(MailMail, self).send_get_email_dict(cr, uid, ids, partner, context=context)
+        mail = self.browse(cr, uid, ids[0], context=context)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         if mail.mailing_id and res.get('body') and res.get('email_to'):
             emails = tools.email_split(res.get('email_to')[0])

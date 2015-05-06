@@ -29,7 +29,7 @@ class MailThread(osv.AbstractModel):
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
-                '&', ('model', '=', self._name), ('type', '=', 'comment')
+                '&', ('model', '=', self._name), ('message_type', '=', 'comment')
             ],
             string='Website Messages',
             help="Website communication history",

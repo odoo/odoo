@@ -36,8 +36,12 @@ of the depreciation lines.
     'website': 'https://www.odoo.com/page/accounting',
     'category': 'Accounting & Finance',
     'sequence': 32,
-    'demo': [ 'account_asset_demo.xml'],
+    'demo': [
+        'account_asset_demo.yml',
+    ],
     'test': [
+        '../account/test/account_minimal_test.xml',
+        'test/account_asset_demo_test.xml',
         'test/account_asset_demo.yml',
         'test/account_asset.yml',
         'test/account_asset_wizard.yml',

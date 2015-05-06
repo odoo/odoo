@@ -39,10 +39,11 @@
         'views/res_config_view.xml',
     ],
     'test': [
-        'test/test_intercompany_data.yml',
-        'test/inter_company_so_to_po.yml',
-        'test/inter_company_po_to_so.yml',
-        'test/inter_company_invoice.yml'
+    #TODO: need to move these tests in python test suite (Accounting test case)
+        # 'test/test_intercompany_data.yml',
+        # 'test/inter_company_so_to_po.yml',
+        # 'test/inter_company_po_to_so.yml',
+        # 'test/inter_company_invoice.yml'
     ],
     'demo': [],
     'installable': True,

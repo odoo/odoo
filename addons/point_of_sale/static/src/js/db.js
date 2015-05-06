@@ -399,6 +399,25 @@ var PosDB = core.Class.extend({
         }
         return results;
     },
+    /* from a product id, and a list of category ids, returns
+     * true if the product belongs to one of the provided category
+     * or one of its child categories.
+     */
+    is_product_in_category: function(category_ids, product_id) {
+        if (!(category_ids instanceof Array)) {
+            category_ids = [category_ids];
+        }
+        var cat = this.get_product_by_id(product_id).pos_categ_id[0];
+        while (cat) {
+            for (var i = 0; i < category_ids.length; i++) {
+                if (cat == category_ids[i]) {   // The == is important, ids may be strings
+                    return true;
+                }
+            }
+            cat = this.get_category_parent_id(cat);
+        }
+        return false;
+    },
 
     /* paid orders */
     add_order: function(order){

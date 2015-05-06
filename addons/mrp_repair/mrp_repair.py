@@ -69,13 +69,13 @@ class mrp_repair(osv.osv):
             cur = repair.pricelist_id.currency_id
             for line in repair.operations:
                 #manage prices with tax included use compute_all instead of compute
-                if line.to_invoice:
-                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, line.product_id, repair.partner_id)
+                if line.to_invoice and line.tax_id:
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, cur, line.product_uom_qty, line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             for line in repair.fees_lines:
-                if line.to_invoice:
-                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, line.product_id, repair.partner_id)
+                if line.to_invoice and line.tax_id:
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, cur, line.product_uom_qty, line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             res[repair.id] = cur_obj.round(cr, uid, cur, val)
@@ -347,7 +347,7 @@ class mrp_repair(osv.osv):
                         'partner_id': repair.partner_invoice_id.id or repair.partner_id.id,
                         'currency_id': repair.pricelist_id.currency_id.id,
                         'comment': repair.quotation_notes,
-                        'fiscal_position': repair.partner_id.property_account_position.id
+                        'fiscal_position_id': repair.partner_id.property_account_position.id
                     }
                     inv_id = inv_obj.create(cr, uid, inv)
                     invoices_group[repair.partner_invoice_id.id] = inv_id
@@ -373,7 +373,7 @@ class mrp_repair(osv.osv):
                             'origin': repair.name,
                             'account_id': account_id,
                             'quantity': operation.product_uom_qty,
-                            'invoice_line_tax_id': [(6, 0, [x.id for x in operation.tax_id])],
+                            'invoice_line_tax_ids': [(6, 0, [x.id for x in operation.tax_id])],
                             'uos_id': operation.product_uom.id,
                             'price_unit': operation.price_unit,
                             'price_subtotal': operation.product_uom_qty * operation.price_unit,
@@ -402,7 +402,7 @@ class mrp_repair(osv.osv):
                             'origin': repair.name,
                             'account_id': account_id,
                             'quantity': fee.product_uom_qty,
-                            'invoice_line_tax_id': [(6, 0, [x.id for x in fee.tax_id])],
+                            'invoice_line_tax_ids': [(6, 0, [x.id for x in fee.tax_id])],
                             'uos_id': fee.product_uom.id,
                             'product_id': fee.product_id and fee.product_id.id or False,
                             'price_unit': fee.price_unit,
@@ -574,7 +574,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),
         'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits=0),
         'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
@@ -664,7 +664,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'price_unit': fields.float('Unit Price', required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits=0),
         'tax_id': fields.many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes'),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True, copy=False),
         'to_invoice': fields.boolean('To Invoice'),

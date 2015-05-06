@@ -76,7 +76,8 @@
         <field name="help">This report performs analysis on Payslip</field>
     </record>
 
-    <menuitem action="action_payslip_report_all" id="menu_reporting_payslip" parent="hr.menu_hr_reporting" sequence="5" groups="base.group_hr_manager"/>
+    <menuitem name="Reports" id="menu_l10n_in_hr_payroll_report" parent="hr_payroll.menu_hr_payroll_root" sequence="99" groups="base.group_hr_manager"/>
+    <menuitem action="action_payslip_report_all" id="menu_reporting_payslip" parent="menu_l10n_in_hr_payroll_report" sequence="5" groups="base.group_hr_manager"/>
 
 </data>
 </openerp>

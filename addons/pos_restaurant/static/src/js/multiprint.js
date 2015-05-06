@@ -49,13 +49,21 @@ models.load_models({
         }
 
         self.printers = [];
+        self.printers_categories = {}; // list of product categories that belong to
+                                       // one or more order printer
+
         for(var i = 0; i < printers.length; i++){
             if(active_printers[printers[i].id]){
                 var printer = new Printer(self,{url:'http://'+printers[i].proxy_ip+':8069'});
                 printer.config = printers[i];
                 self.printers.push(printer);
+
+                for (var j = 0; j < printer.config.product_categories_ids.length; j++) {
+                    self.printers_categories[printer.config.product_categories_ids[j]] = true;
+                }
             }
         }
+        self.printers_categories = _.keys(self.printers_categories);
         self.config.iface_printers = !!self.printers.length;
     },
 });
@@ -71,13 +79,20 @@ models.Orderline = models.Orderline.extend({
         if (typeof this.mp_dirty === 'undefined') {
             // mp dirty is true if this orderline has changed
             // since the last kitchen print
-            this.mp_dirty = true;
+            // it's left undefined if the orderline does not
+            // need to be printed to a printer. 
+
+            this.mp_dirty = this.printable() || undefined;
         } 
         if (!this.mp_skip) {
             // mp_skip is true if the cashier want this orderline
             // not to be sent to the kitchen
             this.mp_skip  = false;
         }
+    },
+    // can this orderline be potentially printed ? 
+    printable: function() {
+        return this.pos.db.is_product_in_category(this.pos.printers_categories, this.get_product().id);
     },
     init_from_JSON: function(json) {
         _super_orderline.init_from_JSON.apply(this,arguments);
@@ -91,7 +106,7 @@ models.Orderline = models.Orderline.extend({
         return json;
     },
     set_quantity: function(quantity) {
-        if (this.pos.config.iface_printers && quantity !== this.quantity) {
+        if (this.pos.config.iface_printers && quantity !== this.quantity && this.printable()) {
             this.mp_dirty = true;
         }
         _super_orderline.set_quantity.apply(this,arguments);
@@ -237,31 +252,19 @@ models.Order = models.Order.extend({
             // products that belong to one of the categories supplied as a parameter
 
             var self = this;
-            function product_in_category(product_id){
-                var cat = self.pos.db.get_product_by_id(product_id).pos_categ_id[0];
-                while(cat){
-                    for(var i = 0; i < categories.length; i++){
-                        if(cat === categories[i]){
-                            return true;
-                        }
-                    }
-                    cat = self.pos.db.get_category_parent_id(cat);
-                }
-                return false;
-            }
 
             var _add = [];
             var _rem = [];
             
             for(var i = 0; i < add.length; i++){
-                if(product_in_category(add[i].id)){
+                if(self.pos.db.is_product_in_category(categories,add[i].id)){
                     _add.push(add[i]);
                 }
             }
             add = _add;
 
             for(var i = 0; i < rem.length; i++){
-                if(product_in_category(rem[i].id)){
+                if(self.pos.db.is_product_in_category(categories,rem[i].id)){
                     _rem.push(rem[i]);
                 }
             }
@@ -307,6 +310,15 @@ models.Order = models.Order.extend({
         }
         return false;
     },
+    hasSkippedChanges: function() {
+        var orderlines = this.get_orderlines();
+        for (var i = 0; i < orderlines.length; i++) {
+            if (orderlines[i].mp_skip) {
+                return true;
+            }
+        }
+        return false;
+    },
     export_as_JSON: function(){
         var json = _super_order.export_as_JSON.apply(this,arguments);
         json.multiprint_resume = this.saved_resume;
@@ -341,9 +353,12 @@ screens.OrderWidget.include({
     update_summary: function(){
         this._super();
         var changes = this.pos.get_order().hasChangesToPrint();
-        if (this.getParent().action_buttons && 
-            this.getParent().action_buttons.submit_order) {
-            this.getParent().action_buttons.submit_order.highlight(changes);
+        var skipped = changes ? false : this.pos.get_order().hasSkippedChanges();
+        var buttons = this.getParent().action_buttons;
+
+        if (buttons && buttons.submit_order) {
+            buttons.submit_order.highlight(changes);
+            buttons.submit_order.altlight(skipped);
         }
     },
 });

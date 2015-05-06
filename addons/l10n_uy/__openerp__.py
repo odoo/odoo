@@ -38,12 +38,11 @@ Provide Templates for Chart of Accounts, Taxes for Uruguay.
     'depends': ['account'],
     'data': [
         'account_types.xml',
-        'taxes_code_template.xml',
         'account_chart_template.xml',
         'taxes_template.xml',
         'l10n_uy_wizard.xml',
     ],
     'demo': [],
     'auto_install': False,
-    'installable': True,
+    'installable': False,
 }

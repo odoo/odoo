@@ -611,7 +611,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 });
 
                 var args = _.toArray(arguments);
-                return $.when.apply(null, [mutex.def, self.onchanges_mutex.def]).then(function() {
+                return mutex.def.then(function () { return self.onchanges_mutex.def; }).then(function() {
                     var save_obj = self.save_list.pop();
                     if (save_obj) {
                         return self._process_save(save_obj).then(function() {

@@ -298,7 +298,7 @@ class website_sale(http.Controller):
             request.registry['product.template'].message_post(
                 cr, uid, product_template_id,
                 body=post.get('comment'),
-                type='comment',
+                message_type='comment',
                 subtype='mt_comment',
                 context=dict(context, mail_create_nosubscribe=True))
         return werkzeug.utils.redirect('/shop/product/%s#comments' % product_template_id)
@@ -613,8 +613,8 @@ class website_sale(http.Controller):
         address_change = order_obj.onchange_delivery_id(cr, SUPERUSER_ID, [], order.company_id.id, partner_id,
                                                         checkout.get('shipping_id'), None, context=context)['value']
         order_info.update(address_change)
-        if address_change.get('fiscal_position'):
-            fiscal_update = order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [], address_change['fiscal_position'],
+        if address_change.get('fiscal_position_id'):
+            fiscal_update = order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [], address_change['fiscal_position_id'],
                                                                [(4, l.id) for l in order.order_line], context=None)['value']
             order_info.update(fiscal_update)
 

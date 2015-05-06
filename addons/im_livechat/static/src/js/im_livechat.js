@@ -259,10 +259,10 @@ var Feedback = Widget.extend({
     _send_feedback: function(close){
         var self = this;
         var uuid = this.conversation.get('session').uuid;
-        return user_session.rpc("/rating/livechat/feedback", {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
+        return user_session.rpc('/rating/livechat/feedback', {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
             if(close){
                 self.trigger("feedback_sent"); // will close the conversation
-                    self.conversation.send_message(_.str.sprintf(_t("I rated you with :rating_%d"), self.rating), "message");
+                    self.conversation.message_send(_.str.sprintf(_t("I rated you with :rating_%d"), self.rating), "message");
             }
         });
     }

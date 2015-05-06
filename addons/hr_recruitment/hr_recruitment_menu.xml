@@ -51,15 +51,17 @@
 
         <menuitem
             name="Recruitment"
-            id="base.menu_crm_case_job_req_main"
-            parent="hr.menu_hr_root"
-            sequence="1"/>
+            id="menu_hr_recruitment_root"
+            sequence="19"/>
 
      <!-- ALL JOBS REQUESTS -->
-        <menuitem parent="base.menu_crm_case_job_req_main" id="hr.menu_hr_job_position" action="action_hr_job" sequence="1"/>
+        <menuitem parent="menu_hr_recruitment_root" id="hr.menu_hr_job_position" action="action_hr_job" sequence="1"/>
         <menuitem
             name="Applications"
-            parent="base.menu_crm_case_job_req_main"
+            parent="menu_hr_recruitment_root"
             id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job" sequence="2"/>
+        <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root" 
+        sequence="99"/>
+
     </data>
 </openerp>

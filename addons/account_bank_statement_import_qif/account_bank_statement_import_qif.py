@@ -3,42 +3,34 @@
 import dateutil.parser
 import StringIO
 
-from openerp.tools.translate import _
-from openerp.osv import osv, fields
+from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 
-class account_bank_statement_import(osv.TransientModel):
+
+class AccountBankStatementImport(models.TransientModel):
     _inherit = "account.bank.statement.import"
 
-    _columns = {
-        'journal_id': fields.many2one('account.journal', string='Journal', help='Accounting journal related to the bank statement you\'re importing. It has be be manually chosen for statement formats which doesn\'t allow automatic journal detection (QIF for example).'),
-        'hide_journal_field': fields.boolean('Hide the journal field in the view'),
-    }
+    def _get_hide_journal_field(self):
+        return self._context and 'journal_id' in self._context or False
 
-    def _get_hide_journal_field(self, cr, uid, context=None):
-        return context and 'journal_id' in context or False
+    journal_id = fields.Many2one('account.journal', string='Journal', help='Accounting journal related to the bank statement you\'re importing. It has be be manually chosen for statement formats which doesn\'t allow automatic journal detection (QIF for example).')
+    hide_journal_field = fields.Boolean(string='Hide the journal field in the view', default=_get_hide_journal_field)
 
-    _defaults = {
-        'hide_journal_field': _get_hide_journal_field,
-    }
-
-    def _get_journal(self, cr, uid, currency_id, bank_account_id, account_number, context=None):
+    def _get_journal(self, currency_id, bank_account_id, account_number):
         """ As .QIF format does not allow us to detect the journal, we need to let the user choose it.
             We set it in context before to call super so it's the same as calling the widget from a journal """
-        if context is None:
-            context = {}
-        if context.get('active_id'):
-            record = self.browse(cr, uid, context.get('active_id'), context=context)
+        if self._context.get('active_id'):
+            record = self.browse(self._context.get('active_id'))
             if record.journal_id:
-                context['journal_id'] = record.journal_id.id
-        return super(account_bank_statement_import, self)._get_journal(cr, uid, currency_id, bank_account_id, account_number, context=context)
+                return super(AccountBankStatementImport, self).with_context(journal_id=record.journal_id.id)._get_journal(currency_id, bank_account_id, account_number)
+        return super(AccountBankStatementImport, self)._get_journal(currency_id, bank_account_id, account_number)
 
-    def _check_qif(self, cr, uid, data_file, context=None):
+    def _check_qif(self, data_file):
         return data_file.strip().startswith('!Type:')
 
-    def _parse_file(self, cr, uid, data_file, context=None):
-        if not self._check_qif(cr, uid, data_file, context=context):
-            return super(account_bank_statement_import, self)._parse_file(cr, uid, data_file, context=context)
+    def _parse_file(self, data_file):
+        if not self._check_qif(data_file):
+            return super(AccountBankStatementImport, self)._parse_file(data_file)
 
         try:
             file_data = ""
@@ -72,10 +64,10 @@ class account_bank_statement_import(osv.TransientModel):
                     vals_line['name'] = 'name' in vals_line and line[1:] + ': ' + vals_line['name'] or line[1:]
                     # Since QIF doesn't provide account numbers, we'll have to find res.partner and res.partner.bank here
                     # (normal behavious is to provide 'account_number', which the generic module uses to find partner/bank)
-                    ids = self.pool.get('res.partner.bank').search(cr, uid, [('owner_name', '=', line[1:])], context=context)
-                    if ids:
-                        vals_line['bank_account_id'] = bank_account_id = ids[0]
-                        vals_line['partner_id'] = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
+                    partner_bank = self.env['res.partner.bank'].search([('owner_name', '=', line[1:])], limit=1)
+                    if partner_bank:
+                        vals_line['bank_account_id'] = partner_bank.id
+                        vals_line['partner_id'] = partner_bank.partner_id.id
                 elif line[0] == 'M':  # Memo
                     vals_line['name'] = 'name' in vals_line and vals_line['name'] + ': ' + line[1:] or line[1:]
                 elif line[0] == '^':  # end of item
@@ -87,10 +79,9 @@ class account_bank_statement_import(osv.TransientModel):
                     pass
         else:
             raise UserError(_('This file is either not a bank statement or is not correctly formed.'))
-        
+
         vals_bank_statement.update({
             'balance_end_real': total,
             'transactions': transactions
         })
         return None, None, [vals_bank_statement]
-

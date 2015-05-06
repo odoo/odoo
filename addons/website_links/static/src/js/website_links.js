@@ -237,7 +237,7 @@ website.if_dom_contains('div.o_website_links_create_tracked_url', function() {
 
     website.ready().done(function() {
 
-        ZeroClipboard.config({swfPath: location.origin + "/website_links/static/lib/zeroclipboard/ZeroClipboard.swf" });
+        ZeroClipboard.config({swfPath: location.origin + "/web/static/lib/zeroclipboard/ZeroClipboard.swf" });
 
         // UTMS selects widgets
         var campaign_select = new SelectBox('utm.campaign');

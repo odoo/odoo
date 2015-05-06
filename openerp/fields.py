@@ -33,6 +33,7 @@ import xmlrpclib
 from openerp.tools import float_round, frozendict, html_sanitize, ustr
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
+from openerp.exceptions import UserError
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -494,12 +495,10 @@ class Field(object):
 
         # determine the chain of fields, and make sure they are all set up
         recs = env[self.model_name]
-        fields = []
         for name in self.related:
             field = recs._fields[name]
             field.setup(env)
             recs = recs[name]
-            fields.append(field)
 
         self.related_field = field
 
@@ -528,10 +527,6 @@ class Field(object):
         # special case for states: copy it only for inherited fields
         if not self.states and self.inherited:
             self.states = field.states
-
-        # special case for required: check if all fields are required
-        if not self.store and not self.required:
-            self.required = all(field.required for field in fields)
 
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """

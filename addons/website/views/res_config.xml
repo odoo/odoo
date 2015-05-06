@@ -109,8 +109,9 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_website_configuration" parent="base.menu_config"
-            sequence="90" action="action_website_configuration"/>
+        <menuitem id="menu_website_configuration" sequence="90" parent="base.menu_config" name="Website"/>
+        <menuitem id="menu_website_global_configuration" parent="menu_website_configuration"
+            sequence="0" action="action_website_configuration" name="Settings"/>
 
     </data>
 </openerp>

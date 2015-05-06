@@ -207,7 +207,7 @@ class website_slides(http.Controller):
 
         contextual_slide.message_post(
             body=post['comment'],
-            type='comment',
+            message_type='comment',
             subtype='mt_comment',
             **post_kwargs
         )

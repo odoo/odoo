@@ -111,7 +111,7 @@ class account_analytic_account(osv.osv):
         'est_expenses': fields.float('Estimation of Expenses to Invoice'),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
     }
 
     def on_change_template(self, cr, uid, id, template_id, date_start=False, context=None):

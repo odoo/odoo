@@ -288,7 +288,6 @@ class YamlInterpreter(object):
     def process_record(self, node):
         record, fields = node.items()[0]
         model = self.get_model(record.model)
-
         view_id = record.view
         if view_id and (view_id is not True) and isinstance(view_id, basestring):
             module = self.module

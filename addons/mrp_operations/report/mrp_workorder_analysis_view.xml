@@ -84,7 +84,8 @@
             <field name="context">{'search_default_Workcenter': 1}</field>
         </record>
 
-        <menuitem name="Work Order Analysis" action="action_report_mrp_workorder" id="menu_report_mrp_workorders_tree" parent="mrp.next_id_77"/>
+        <menuitem name="Reports" id="menu_mrp_report" parent="base.menu_mrp_root" sequence="99"/>
+        <menuitem name="Work Order Analysis" action="action_report_mrp_workorder" id="menu_report_mrp_workorders_tree" parent="menu_mrp_report"/>
 
   </data>
 </openerp>

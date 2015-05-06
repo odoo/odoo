@@ -224,10 +224,10 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Website" id="website_menu" sequence="10" parent="base.marketing_menu" groups="marketing.group_marketing_user"/>
-        <menuitem action="action_website_view" id="menu_website_view" parent="website_menu"/>
-        <menuitem action="action_version" id="menu_action_version" parent="website_menu" groups="base.group_no_one"/>
-        <menuitem action="action_experiment" id="menu_action_experiment" parent="website_menu"/>
+        <menuitem name="Versionning" id="menu_website_version_root" sequence="32" groups="marketing.group_marketing_user"/>
+        <menuitem action="action_website_view" id="menu_website_view" parent="menu_website_version_root"/>
+        <menuitem action="action_version" id="menu_action_version" parent="menu_website_version_root" groups="base.group_no_one"/>
+        <menuitem action="action_experiment" id="menu_action_experiment" parent="menu_website_version_root"/>
 
         <record id="google_analytics_configuration" model="ir.actions.act_window">
             <field name="name">Google Analytics Configuration</field>

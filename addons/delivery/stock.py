@@ -84,7 +84,7 @@ class stock_picking(osv.osv):
         grid_obj = self.pool.get('delivery.grid')
         if not picking.carrier_id or \
             any(inv_line.product_id.id == picking.carrier_id.product_id.id
-                for inv_line in invoice.invoice_line):
+                for inv_line in invoice.invoice_line_ids):
             return None
         grid_id = carrier_obj.grid_get(cr, uid, [picking.carrier_id.id],
                 picking.partner_id.id, context=context)
@@ -115,11 +115,10 @@ class stock_picking(osv.osv):
             'account_id': account_id,
             'price_unit': price,
             'quantity': 1,
-            'invoice_line_tax_id': [(6, 0, taxes_ids)],
+            'invoice_line_tax_ids': [(6, 0, taxes_ids)],
         }
 
     def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
-        invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoice_ids = super(stock_picking, self)._invoice_create_line(cr, uid, moves, journal_id, inv_type=inv_type, context=context)
         delivey_invoices = {}
@@ -132,7 +131,6 @@ class stock_picking(osv.osv):
                 invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
                 if invoice_line:
                     invoice_line_obj.create(cr, uid, invoice_line)
-                    invoice_obj.button_compute(cr, uid, [invoice.id], context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoice_ids
 
     def _get_default_uom(self, cr, uid, context=None):

@@ -8,9 +8,11 @@ odoo.define('point_of_sale.popups', function (require) {
 
 var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
+var _t  = require('web.core')._t;
 
 
 var PopupWidget = PosBaseWidget.extend({
+    template: 'PopupWidget',
     init: function(parent, args) {
         this._super(parent, args);
         this.options = {};
@@ -84,6 +86,7 @@ var PopupWidget = PosBaseWidget.extend({
     click_item: function(){},
     click_numad: function(){},
 });
+gui.define_popup({name:'alert', widget: PopupWidget});
 
 var ErrorPopupWidget = PopupWidget.extend({
     template:'ErrorPopupWidget',
@@ -97,6 +100,20 @@ gui.define_popup({name:'error', widget: ErrorPopupWidget});
 
 var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
     template:'ErrorTracebackPopupWidget',
+    show: function(opts) {
+        var self = this;
+        this._super(opts);
+
+        this.$('.download').off('click').click(function(){
+            self.gui.download_file(self.options.body,'traceback.txt');
+        });
+
+        this.$('.email').off('click').click(function(){
+            self.gui.send_email( self.pos.company.email,
+                _t('IMPORTANT: Bug Report From Odoo Point Of Sale'),
+                self.options.body);
+        });
+    }
 });
 gui.define_popup({name:'error-traceback', widget: ErrorTracebackPopupWidget});
 
@@ -221,14 +238,9 @@ var PasswordPopupWidget = NumberPopupWidget.extend({
 });
 gui.define_popup({name:'password', widget: PasswordPopupWidget});
 
-var UnsentOrdersPopupWidget = ConfirmPopupWidget.extend({
-    template: 'UnsentOrdersPopupWidget',
+var OrderImportPopupWidget = PopupWidget.extend({
+    template: 'OrderImportPopupWidget',
 });
-gui.define_popup({name:'unsent-orders', widget: UnsentOrdersPopupWidget});
-
-var UnpaidOrdersPopupWidget = ConfirmPopupWidget.extend({
-    template: 'UnpaidOrdersPopupWidget',
-});
-gui.define_popup({name:'unpaid-orders', widget: UnpaidOrdersPopupWidget});
+gui.define_popup({name:'orderimport', widget: OrderImportPopupWidget});
 
 });

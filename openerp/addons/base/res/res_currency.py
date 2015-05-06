@@ -27,37 +27,38 @@ from openerp import api, fields as fields2
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools import float_round, float_is_zero, float_compare
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
 class res_currency(osv.osv):
-    def _current_rate(self, cr, uid, ids, name, arg, context=None):
-        return self._get_current_rate(cr, uid, ids, context=context)
 
-    def _current_rate_silent(self, cr, uid, ids, name, arg, context=None):
-        return self._get_current_rate(cr, uid, ids, raise_on_no_rate=False, context=context)
-
-    def _get_current_rate(self, cr, uid, ids, raise_on_no_rate=True, context=None):
+    def _get_current_rate(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
         res = {}
 
         date = context.get('date') or time.strftime('%Y-%m-%d')
+        company_id = context.get('company_id') or self.pool['res.users']._get_company(cr, uid, context=context)
         for id in ids:
-            cr.execute('SELECT rate FROM res_currency_rate '
-                       'WHERE currency_id = %s '
-                         'AND name <= %s '
-                       'ORDER BY name desc LIMIT 1',
-                       (id, date))
+            cr.execute("""SELECT rate FROM res_currency_rate 
+                           WHERE currency_id = %s
+                             AND name <= %s
+                             AND (company_id is null
+                                 OR company_id = %s)
+                        ORDER BY company_id, name desc LIMIT 1""",
+                       (id, date, company_id))
             if cr.rowcount:
                 res[id] = cr.fetchone()[0]
-            elif not raise_on_no_rate:
-                res[id] = 0
             else:
-                currency = self.browse(cr, uid, id, context=context)
-                raise UserError(_("No currency rate associated for currency '%s' for the given period: %s") % (currency.name, date))
+                res[id] = 1
+        return res
+
+    def _decimal_places(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for id in ids:
+            rounding = self.browse(cr, uid, id, context=context).rounding
+            rounding = (0 < rounding < 1) and rounding or 1
+            res[id] = int(math.ceil(math.log10(1 / rounding)))
         return res
 
     def _decimal_places(self, cr, uid, ids, name, arg, context=None):
@@ -75,48 +76,23 @@ class res_currency(osv.osv):
         # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
         'name': fields.char('Currency', size=3, required=True, help="Currency Code (ISO 4217)"),
         'symbol': fields.char('Symbol', size=4, help="Currency sign, to be used when printing amounts."),
-        'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
+        'rate': fields.function(_get_current_rate, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1.'),
-
-        # Do not use for computation ! Same as rate field with silent failing
-        'rate_silent': fields.function(_current_rate_silent, string='Current Rate', digits=(12,6),
-            help='The rate of the currency to the currency of rate 1 (0 if no rate defined).'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
-        'accuracy': fields.integer('Computational Accuracy'),
         'rounding': fields.float('Rounding Factor', digits=(12,6)),
         'decimal_places': fields.function(_decimal_places, string='Decimal Places', type='integer'),
         'active': fields.boolean('Active'),
-        'company_id':fields.many2one('res.company', 'Company'),
-        'base': fields.boolean('Base'),
         'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
         'active': 1,
         'position' : 'after',
         'rounding': 0.01,
-        'accuracy': 4,
-        'company_id': False,
     }
     _sql_constraints = [
-        # this constraint does not cover all cases due to SQL NULL handling for company_id,
-        # so it is complemented with a unique index (see below). The constraint and index
-        # share the same prefix so that IntegrityError triggered by the index will be caught
-        # and reported to the user with the constraint's error message.
-        ('unique_name_company_id', 'unique (name, company_id)', 'The currency code must be unique per company!'),
+        ('unique_name', 'unique (name)', 'The currency code must be unique!'),
     ]
     _order = "name"
-
-    def init(self, cr):
-        # CONSTRAINT/UNIQUE INDEX on (name,company_id) 
-        # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
-        # only support field names in constraint definitions, and we need a function here:
-        # we need to special-case company_id to treat all NULL company_id as equal, otherwise
-        # we would allow duplicate "global" currencies (all having company_id == NULL) 
-        cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_currency_unique_name_company_id_idx'""")
-        if not cr.fetchone():
-            cr.execute("""CREATE UNIQUE INDEX res_currency_unique_name_company_id_idx
-                          ON res_currency
-                          (name, (COALESCE(company_id,-1)))""")
 
     date = fields2.Date(compute='compute_date')
 
@@ -231,16 +207,6 @@ class res_currency(osv.osv):
         ctx = context.copy()
         from_currency = self.browse(cr, uid, from_currency.id, context=ctx)
         to_currency = self.browse(cr, uid, to_currency.id, context=ctx)
-
-        if from_currency.rate == 0 or to_currency.rate == 0:
-            date = context.get('date', time.strftime('%Y-%m-%d'))
-            if from_currency.rate == 0:
-                currency_symbol = from_currency.symbol
-            else:
-                currency_symbol = to_currency.symbol
-            raise UserError(_('No rate found \n' \
-                    'for the currency: %s \n' \
-                    'at the date: %s') % (currency_symbol, date))
         return to_currency.rate/from_currency.rate
 
     def _compute(self, cr, uid, from_currency, to_currency, from_amount, round=True, context=None):
@@ -282,20 +248,25 @@ class res_currency(osv.osv):
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
+    @api.v7
     def get_format_currencies_js_function(self, cr, uid, context=None):
         """ Returns a string that can be used to instanciate a javascript function that formats numbers as currencies.
-            That function expects the number as first parameter and the currency id as second parameter. In case of failure it returns undefined."""
+            That function expects the number as first parameter and the currency id as second parameter.
+            If the currency id parameter is false or undefined, the company currency is used.
+        """
+        company_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
         function = ""
-        for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'rounding', 'position'], context=context):
-            digits = int(math.ceil(math.log10(1 / row['rounding'])))
+        for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'decimal_places', 'position'], context=context):
             symbol = row['symbol'] or row['name']
-
-            format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(digits) + "]}, 0.00)"
+            format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(row['decimal_places']) + "]}, 0.00)"
             if row['position'] == 'after':
                 return_str = "return " + format_number_str + " + '\\xA0" + symbol + "';"
             else:
                 return_str = "return '" + symbol + "\\xA0' + " + format_number_str + ";"
             function += "if (arguments[1] === " + str(row['id']) + ") { " + return_str + " }"
+            if (row['id'] == company_currency_id):
+                company_currency_format = return_str
+        function = "if (arguments[1] === false || arguments[1] === undefined) {" + company_currency_format + " }" + function
         return function
 
 class res_currency_rate(osv.osv):
@@ -306,6 +277,7 @@ class res_currency_rate(osv.osv):
         'name': fields.datetime('Date', required=True, select=True),
         'rate': fields.float('Rate', digits=(12, 6), help='The rate of the currency to the currency of rate 1'),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company')
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d 00:00:00'),

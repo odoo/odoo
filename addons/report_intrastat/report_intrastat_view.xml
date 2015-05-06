@@ -82,7 +82,7 @@
                     <field name="ref"/>
                     <field name="intrastat_id"/>
                     <field name="weight"/>
-                    <field name="value"/>
+                    <field name="value" widget="monetary"/>
                     <field name="supply_units"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="type"/>
@@ -113,6 +113,6 @@
         </record>
 
         <menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" 
-                parent="stock.next_id_61" sequence="6"/>
+                parent="stock.menu_warehouse_report" sequence="6"/>
     </data>
 </openerp>

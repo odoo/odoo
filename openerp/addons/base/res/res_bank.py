@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -130,7 +130,7 @@ class res_partner_bank(osv.osv):
         'company_id': fields.many2one('res.company', 'Company',
             ondelete='cascade', help="Only if this bank account belong to your company"),
         'partner_id': fields.many2one('res.partner', 'Account Holder', ondelete='cascade', select=True, domain=['|',('is_company','=',True),('parent_id','=',False)]),
-        'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
+        'state': fields.selection(_bank_type_get, 'Bank Account Type',
             change_default=True),
         'sequence': fields.integer('Sequence'),
         'footer': fields.boolean("Display on Reports", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
@@ -149,7 +149,10 @@ class res_partner_bank(osv.osv):
             cursor, user, 'country_id', context=context),
         'state_id': lambda obj, cursor, user, context: obj._default_value(
             cursor, user, 'state_id', context=context),
-        'name': '/'
+        'name': '/',
+        'company_id': lambda obj, cursor, user, context: obj.pool.get('res.company')._company_default_get(
+            cursor, user, 'res.partner.bank', context=context),
+        'partner_id': lambda obj, cr, uid, context: obj.pool.get('res.users').browse(cr, uid, uid, context).company_id.partner_id
     }
 
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, attributes=None):

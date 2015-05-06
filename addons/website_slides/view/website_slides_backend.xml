@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem name="Marketing" id="base.marketing_menu" sequence="85" groups="base.group_user"/>
-        <menuitem id="menu_slides" parent="base.marketing_menu" name="Slides" groups="marketing.group_marketing_user"/>
+        <menuitem name="Slides" id="menu_website_slides_root" sequence="32" groups="base.group_no_one"/>
 
         <!-- SLIDE.TAG -->
         <record id="view_slide_tag_form" model="ir.ui.view">
@@ -32,7 +31,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_slide_tag" id="menu_slide_tag" parent="menu_slides" sequence="10" groups="base.group_no_one"/>
+        <menuitem action="action_slide_tag" id="menu_slide_tag" parent="menu_website_slides_root" sequence="10" groups="base.group_no_one"/>
 
         <!-- SLIDE.SLIDE -->
         <record id="view_slide_slide_form" model="ir.ui.view">
@@ -150,7 +149,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
         </record>
-        <menuitem action="action_slides_slides" id="submenu_action_slides_slides" parent="menu_slides" sequence="3"/>
+        <menuitem action="action_slides_slides" id="submenu_action_slides_slides" parent="menu_website_slides_root" sequence="3"/>
 
         <!-- SLIDE.CATEGORY -->
         <record model="ir.ui.view" id="view_slides_category_form">
@@ -186,7 +185,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_ir_slide_category" id="menu_action_ir_slide_category" parent="menu_slides" sequence="2"/>
+        <menuitem action="action_ir_slide_category" id="menu_action_ir_slide_category" parent="menu_website_slides_root" sequence="2"/>
 
         <!-- SLIDE.CHANNEL VIEWS -->
         <record model="ir.ui.view" id="view_slide_channel_form">
@@ -267,7 +266,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_slide_channels" id="menu_action_slide_channels" parent="menu_slides" sequence="1"/>
+        <menuitem action="action_slide_channels" id="menu_action_slide_channels" 
+            parent="menu_website_slides_root" sequence="1"/>
 
     </data>
 </openerp>

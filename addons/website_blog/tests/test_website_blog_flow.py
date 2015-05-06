@@ -50,7 +50,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         # Armand posts a message -> becomes follower
         test_blog_post.sudo().message_post(
             body='Armande BlogUser Commented',
-            type='comment',
+            message_type='comment',
             author_id=self.user_employee.partner_id.id,
             subtype='mt_comment',
         )

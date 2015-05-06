@@ -1,63 +1,46 @@
 -
+  TODO: improve this test and add the use of cashbox lines to set the ending balance and use of the confirmation wizard
+-
   In order to test Cash statement I create a Cash statement and confirm it and check its move created
 -
- !record {model: account.bank.statement, id: account_bank_statement_1}:
+ !record {model: account.cash.statement, id: account_cash_statement_1, view: False}:
     date: !eval time.strftime('%Y-%m-%d')
-    journal_id: account.cash_journal
     name: /
-    period_id: account.period_10
     user_id: base.user_root
-    starting_details_ids:
-      -  pieces: 10.0
-         number: 2
-         subtotal: 20.0
-      -  pieces: 100.0
-         number: 1
-         subtotal: 100.0
     balance_start: 120.0
     balance_end: 120.0
 -
-  I check that Initially bank statement is in the "Draft" state
+  I check that Initially cash statement is in the "Draft" state
 -
-  !assert {model: account.bank.statement, id: account_bank_statement_1}:
+  !assert {model: account.cash.statement, id: account_cash_statement_1}:
     - state == 'draft'
 
 -
   I clicked on Open CashBox button to open the cashbox
 -
- !python {model: account.bank.statement}: |
-    self.button_open(cr, uid, [ref("account_bank_statement_1")], {"lang": "en_US", "tz": False, "active_model": "account.bank.statement", "active_ids": [ref("account_bank_statement_1")], "active_id": ref("account_bank_statement_1"), })
-
+ !python {model: account.cash.statement, id: account_cash_statement_1}: |
+   context = {"lang": "en_US", "tz": False,
+            "active_model": "account.cash.statement",
+            "active_ids": [ref("account_cash_statement_1")],
+            "active_id": ref("account_cash_statement_1"), }
+   self.with_context(context).button_open()
 -
-  I check that now bank statement is in the "Open" state
+  I check that now cash statement is in the "Open" state
 -
-  !assert {model: account.bank.statement, id: account_bank_statement_1}:
+  !assert {model: account.cash.statement, id: account_cash_statement_1}:
     - state == 'open'
-
 -
   I enter values in Closing balance before close the cashbox
 -
-  !record {model: account.bank.statement, id: account_bank_statement_1}:
+  !record {model: account.cash.statement, id: account_cash_statement_1, view: False}:
     line_ids:
-      - account_id: account.a_recv
-        amount: 1000.0
+      - amount: 1000.0
         date: !eval time.strftime('%Y-%m-%d')
         name: test
         partner_id: base.res_partner_4
         sequence: 0.0
-        type: general
+        account_id: account.credit_account
     balance_end: 1120.0
-    ending_details_ids:
-      -  pieces: 10.0
-         number: 2
-         subtotal: 20.0
-      -  pieces: 100.0
-         number: 1
-         subtotal: 100.0
-      -  pieces: 500.0
-         number: 2
-         subtotal: 1000.0
-
 -
   I clicked on Close CashBox button to close the cashbox
 -
@@ -71,11 +54,10 @@
     - state == 'confirm'
 
 -
-  I check that move lines created for bank statement and move state is Posted
+  I check that move lines created for cash statement and move state is Posted
 -
-  !python {model: account.bank.statement}: |
-    move_line_obj = self.pool.get('account.move.line')
-    bank_data = self.browse(cr, uid, ref("account_bank_statement_1"))
-    assert bank_data.move_line_ids, "Move lines not created for bank statement"
-    for line in bank_data.move_line_ids:
+  !python {model: account.cash.statement, id: account_cash_statement_1}: |
+    move_line_obj = self.env['account.move.line']
+    assert self.move_line_ids, "Move lines not created for cash statement"
+    for line in self.move_line_ids:
       assert line.move_id.state == 'posted', "Move state is not posted"

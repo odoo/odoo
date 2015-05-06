@@ -26,6 +26,7 @@ var Gui = core.Class.extend({
         this.current_screen = null; 
 
         this.chrome.ready.then(function(){
+            self.close_other_tabs();
             var order = self.pos.get_order();
             if (order) {
                 self.show_saved_screen(order);
@@ -174,6 +175,36 @@ var Gui = core.Class.extend({
         return !!this.current_popup;
     },
 
+    /* ---- Gui: INTER TAB COMM ---- */
+
+    // This sets up automatic pos exit when open in
+    // another tab.
+    close_other_tabs: function() {
+        var self = this;
+
+        localStorage['message'] = '';
+        localStorage['message'] = JSON.stringify({
+            'message':'close_tabs',
+            'session': this.pos.pos_session.id,
+        });
+
+        window.addEventListener("storage", function(event) {
+            var msg = event.data;
+
+            if ( event.key === 'message' && event.newValue) {
+
+                var msg = JSON.parse(event.newValue);
+                if ( msg.message  === 'close_tabs' &&
+                     msg.session  ==  self.pos.pos_session.id ) {
+
+                    console.info('POS / Session opened in another window. EXITING POS')
+                    self._close();
+                }
+            }
+
+        }, false);
+    },
+
     /* ---- Gui: ACCESS CONTROL ---- */
 
     // A Generic UI that allow to select a user from a list.
@@ -266,6 +297,38 @@ var Gui = core.Class.extend({
 
     close: function() {
         var self = this;
+        var pending = this.pos.db.get_orders().length;
+
+        if (!pending) {
+            this._close();
+        } else {
+            this.pos.push_order().always(function() {
+                var pending = self.pos.db.get_orders().length;
+                if (!pending) {
+                    self._close();
+                } else {
+                    var reason = self.pos.get('failed') ? 
+                                 'configuration errors' : 
+                                 'internet connection issues';  
+
+                    self.show_popup('confirm', {
+                        'title': _t('Offline Orders'),
+                        'body':  _t(['Some orders could not be submitted to',
+                                     'the server due to ' + reason + '.',
+                                     'You can exit the Point of Sale, but do',
+                                     'not close the session before the issue',
+                                     'has been resolved.'].join(' ')),
+                        'confirm': function() {
+                            self._close();
+                        },
+                    });
+                }
+            });
+        }
+    },
+
+    _close: function() {
+        var self = this;
         this.chrome.loading_show();
         this.chrome.loading_message(_t('Closing ...'));
 
@@ -297,6 +360,43 @@ var Gui = core.Class.extend({
             return;
         }
         $('body').append('<audio src="'+src+'" autoplay="true"></audio>');
+    },
+
+    /* ---- Gui: FILE I/O ---- */
+
+    // This will make the browser download 'contents' as a 
+    // file named 'name'
+    // if 'contents' is not a string, it is converted into
+    // a JSON representation of the contents. 
+
+    download_file: function(contents, name) {
+        var URL = window.URL || window.webkitURL;
+        
+        if (typeof contents !== 'string') {
+            contents = JSON.stringify(contents,null,2);
+        }
+
+        var blob = new Blob([contents]);
+
+        var evt  = document.createEvent("HTMLEvents");
+            evt.initEvent("click");
+
+        $("<a>",{
+            download: name || 'document.txt',
+            href: URL.createObjectURL(blob),
+        }).get(0).dispatchEvent(evt);
+    },
+
+    /* ---- Gui: EMAILS ---- */
+
+    // This will launch the user's email software
+    // with a new email with the address, subject and body
+    // prefilled.
+
+    send_email: function(address, subject, body) {
+        window.open("mailto:" + address + 
+                          "?subject=" + (subject ? window.encodeURIComponent(subject) : '') +
+                          "&body=" + (body ? window.encodeURIComponent(body) : ''));
     },
 
     /* ---- Gui: KEYBOARD INPUT ---- */

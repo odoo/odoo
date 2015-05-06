@@ -30,11 +30,11 @@ United Arab Emirates accounting chart and localization.
 =======================================================
 
     """,
-    'depends': ['base', 'account', 'account_chart'],
+    'depends': ['base', 'account'],
     'demo': [ ],
     'data': [
              'l10n_ae_chart.xml',
              'l10n_ae_wizard.xml',
     ],
-    'installable': True,
+    'installable': False,
 }

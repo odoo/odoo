@@ -18,8 +18,8 @@
     uom_po_id: product.product_uom_kgm
     valuation: real_time
     cost_method: real
-    property_stock_account_input: account.o_expense
-    property_stock_account_output: account.o_income
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
     description: LIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
   I create a draft Purchase Order for first in move for 10 pieces at 60 euro
@@ -99,7 +99,7 @@
     product_uom_qty: 20.0
     picking_type_id: stock.picking_type_out
 - 
-  I assign this outgoing shipment 
+  I assign this outgoing shipment
 - 
   !python {model: stock.picking}: |
     self.action_assign(cr, uid, [ref("outgoing_lifo_shipment")])

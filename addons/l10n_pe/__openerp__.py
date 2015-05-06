@@ -32,14 +32,13 @@ SUNAT 2011 (PCGE 2010).
     'author': ['Cubic ERP'],
     'website': 'http://cubicERP.com',
     'category': 'Localization/Account Charts',
-    'depends': ['account_chart'],
+    'depends': [],
     'data':[
-        'account_tax_code.xml',
         'l10n_pe_chart.xml',
         'account_tax.xml',
         'l10n_pe_wizard.xml',
     ],
     'demo': [],
     'active': False,
-    'installable': True,
+    'installable': False,
 }

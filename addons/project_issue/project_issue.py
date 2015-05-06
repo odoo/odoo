@@ -1,4 +1,4 @@
- #-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -33,17 +33,6 @@ from openerp.tools import html2plaintext
 from openerp.tools.translate import _
 from openerp.exceptions import UserError, AccessError
 
-
-class project_issue_version(osv.Model):
-    _name = "project.issue.version"
-    _order = "name desc"
-    _columns = {
-        'name': fields.char('Version Number', required=True),
-        'active': fields.boolean('Active', required=False),
-    }
-    _defaults = {
-        'active': 1,
-    }
 
 class project_issue(osv.Model):
     _name = "project.issue"
@@ -169,16 +158,6 @@ class project_issue(osv.Model):
 
         return res
 
-    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-        task_pool = self.pool.get('project.task')
-        res = {}
-        for issue in self.browse(cr, uid, ids, context=context):
-            progress = 0.0
-            if issue.task_id:
-                progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
-            res[issue.id] = {'progress' : progress}
-        return res
-
     def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
@@ -193,21 +172,6 @@ class project_issue(osv.Model):
             if project and project.partner_id:
                 return {'value': {'partner_id': project.partner_id.id}}
         return {}
-
-    def _get_issue_task(self, cr, uid, ids, context=None):
-        issues = []
-        issue_pool = self.pool.get('project.issue')
-        for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
-            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])
-        return issues
-
-    def _get_issue_work(self, cr, uid, ids, context=None):
-        issues = []
-        issue_pool = self.pool.get('project.issue')
-        for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
-            if work.task_id:
-                issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
-        return issues
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -241,7 +205,6 @@ class project_issue(osv.Model):
         'channel': fields.char('Channel', help="Communication channel."),
         'categ_ids': fields.many2many('project.category', string='Tags'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
-        'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
                         track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]", copy=False),
@@ -269,12 +232,6 @@ class project_issue(osv.Model):
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
-        'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
-            store = {
-                'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
-                'project.task': (_get_issue_task, ['work_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
-                'project.task.work': (_get_issue_work, ['hours'], 10),
-            }),
     }
 
     _defaults = {
@@ -423,6 +380,7 @@ class project_issue(osv.Model):
             return 'project_issue.mt_issue_stage'
         return super(project_issue, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
         issues = self.browse(cr, SUPERUSER_ID, ids, context=context)
@@ -462,13 +420,13 @@ class project_issue(osv.Model):
         return res_id
 
     @api.cr_uid_ids_context
-    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
+    def message_post(self, cr, uid, thread_id, subtype=None, context=None, **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
             a new message is posted on the issue.
         """
         if context is None:
             context = {}
-        res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
+        res = super(project_issue, self).message_post(cr, uid, thread_id, subtype=subtype, context=context, **kwargs)
         if thread_id and subtype:
             self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': fields.datetime.now()}, context=context)
         return res

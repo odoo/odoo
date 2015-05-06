@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="wkf" model="workflow">
+            <field name="name">account.invoice.basic</field>
+            <field name="osv">account.invoice</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+        </record>
+        <record id="act_proforma2" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">proforma2</field>
+            <field name="action">write({'state':'proforma2'})</field>
+            <field name="kind">function</field>
+        </record>
+        <record id="act_open" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">open</field>
+            <field name="action">action_date_assign()
+action_move_create()
+invoice_validate()</field>
+            <field name="kind">function</field>
+        </record>
+        <record model="workflow.activity" id="act_open_test">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">re-open</field>
+            <field name="action">write({'state':'open'})</field>
+            <field name="kind">function</field>
+        </record>
+        <record id="act_paid" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">paid</field>
+            <!--<field name="flow_stop">True</field>-->
+            <field name="action">confirm_paid()</field>
+            <field name="kind">function</field>
+            <field name="signal_send">subflow.paid</field>
+        </record>
+        <record id="act_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">cancel</field>
+            <field name="flow_stop">True</field>
+            <field name="action">action_cancel()
+write({'state':'cancel'})</field>
+            <field name="kind">function</field>
+        </record>
+
+        <record id="t4" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_open"/>
+            <field name="signal">invoice_open</field>
+        </record>
+        <record id="t8" model="workflow.transition">
+            <field name="act_from" ref="act_open"/>
+            <field name="act_to" ref="act_paid"/>
+            <field name="trigger_model"/>
+            <field name="trigger_expr_id"/>
+            <field name="condition">reconciled</field>
+        </record>
+        <record id="t9" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">invoice_cancel</field>
+        </record>
+        <record id="t12" model="workflow.transition">
+            <field name="act_from" ref="act_open"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">invoice_cancel</field>
+        </record>
+        <record id="t13" model="workflow.transition">
+            <field name="act_from" ref="act_paid"/>
+            <field name="act_to" ref="act_open_test"/>
+            <field name="signal"/>
+            <field name="condition">not reconciled</field>
+        </record>
+        <record id="t14" model="workflow.transition">
+            <field name="act_from" ref="act_open_test"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">invoice_cancel</field>
+        </record>
+
+        <record id="open_test_to_paid" model="workflow.transition">
+            <field name="act_from" ref="act_open_test"/>
+            <field name="act_to" ref="act_paid"/>
+            <field name="trigger_model"/>
+            <field name="trigger_expr_id"/>
+            <field name="condition">reconciled</field>
+        </record>
+
+        <record id="draft_to_pro2" model="workflow.transition">
+            <field name="act_from" ref="account.act_draft"/>
+            <field name="act_to" ref="act_proforma2"/>
+            <field name="signal">invoice_proforma2</field>
+        </record>
+
+        <record id="pro2_to_open" model="workflow.transition">
+            <field name="act_from" ref="act_proforma2"/>
+            <field name="act_to" ref="account.act_open"/>
+            <field name="signal">invoice_open</field>
+        </record>
+
+        <record id="pro2_to_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_proforma2"/>
+            <field name="act_to" ref="account.act_cancel"/>
+            <field name="signal">invoice_cancel</field>
+        </record>
+    </data>
+</openerp>

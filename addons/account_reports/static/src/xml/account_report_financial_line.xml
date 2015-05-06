@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="emailSent">
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&amp;times;</span></button>
+            The followup report was successfully emailed !
+        </div>
+    </t>
+    <t t-name="emailNotSent">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&amp;times;</span></button>
+            Email not sent because of email address of partner not filled in.
+        </div>
+    </t>
+    <t t-name="footNoteTextarea">
+        <div class="mt32 mb32">
+            <label t-att-for="'footnote' + footNoteSeqNum"><t t-esc="footNoteSeqNum"/></label>
+            <textarea t-att-name="'footnote' + footNoteSeqNum" rows='4' class="form-control" placeholder="Insert foot note here"></textarea>
+            <button class="btn btn-primary saveFootNote">Save</button>
+        </div>
+    </t>
+    <t t-name="supFootNoteSeqNum">
+         <sup><b class='oe-account-footnote-sup'><a t-att-href="'#footnote'+footNoteSeqNum"><t t-esc="footNoteSeqNum"/></a></b></sup>
+    </t>
+    <t t-name="savedFootNote">
+        <p class="footnote" t-att-id="'footnote'+num">
+            <span class='text'><t t-raw="num+'. '+note"/></span>
+            <span class='footnoteIcons'><i class="fa fa-fw fa-pencil-square"></i><i class="fa fa-fw fa-trash-o"></i> </span>
+        </p>
+    </t>
+    <t t-name="nextActionDate">
+        <span data-toggle='tooltip' data-placement='bottom' t-att-title='note'><t t-esc='date'></t></span><i class="fa fa-fw fa-pencil-square"></i>
+    </t>
+    <t t-name="foldable">
+        <span t-att-class="'oe-account-foldable ' + lineId + ' oe-account-caret-icon'"><i class="fa fa-fw fa-caret-down"></i></span>
+    </t>
+    <t t-name="unfoldable">
+        <span t-att-class="'oe-account-unfoldable ' + lineId + ' oe-account-caret-icon'"><i class="fa fa-fw fa-caret-right"></i></span>
+    </t>
+    <t t-name="pencilIcon">
+        <span class="pencilIcon"><i class="fa fa-fw fa-pencil-square"></i></span>
+    </t>
+    <t t-name="trashAndPencilIcon">
+        <span style="position: absolute; margin-left: 3px;"><i class="fa fa-fw fa-pencil-square"></i><i class="fa fa-fw fa-trash-o"></i> </span>
+    </t>
+    <t t-name="addSummary">
+        <div class="addSummary" role="alert">
+            <span><input type='text' class="form-control" name='summary' placeholder='Click to add a summary' /></span>
+        </div>
+    </t>
+    <t t-name="editSummary">
+        <textarea name="summary" rows='4' class="form-control"><t t-esc="summary" /></textarea>
+        <button class="btn btn-primary saveSummary">Save</button>
+    </t>
+    <t t-name="savedSummary">
+        <i style="font-size: 16px; margin-left: -19px; position: absolute;" class="fa fa-fw fa-pencil"></i>
+        <div class="oe-account-saved-summary" role="alert" style='padding-left: 5px;'>
+            <span><t t-raw="summary" /></span>
+        </div>
+    </t>
+    <t t-name="fiscalYearAlert">
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
+            <strong>Warning!</strong> No fiscal year was found. Using the current civil year.
+        </div>
+    </t>
+    <t t-name="editContent"><t t-if="num > 0"><t t-esc="num" />. </t><textarea t-att-name="edit" rows='4' class="form-control"><t t-esc="text" /></textarea><button class="btn btn-primary saveContent">Save</button></t>
+    <t t-name="report_financial_line">
+        <t t-set="column" t-value="0" />
+        <t t-set="domainClass" t-value="'oe-account-domain-line-2'"/>
+        <t t-if="!(_.isUndefined(l.level))">
+            <t t-if="l.level == 1">
+                <t t-set="domainClass" t-value="'oe-account-domain-line-1'"/>
+            </t>
+            <t t-if="l.level == 3">
+                <t t-set="domainClass" t-value="'oe-account-domain-line-3'"/>
+            </t>
+        </t>
+        <tr t-att-class="l.type" t-att-data-type="l.type" t-att-data-id="l.id">
+            <td t-att-colspan="l.colspan != undefined ? l.colspan : 1">
+                <t t-if="l.type != 'account_id' &amp; l.type != 'move_line_id' &amp; l.type != 'too_many'"><span t-att-data-id="l.id" t-att-class="l.type + ' ' + domainClass">
+                    <span style="color: black;"><i class="fa fa-pencil-square"></i></span><t t-esc="l.name"/></span>
+                    <t t-if="l.footnotes[column] != undefined">
+                        <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />
+                        <t t-call="supFootNoteSeqNum" />
+                    </t>
+                </t>
+                <a t-if="l.type == 'too_many'">
+                    <span t-att-data-active-id="l.id" data-action-name="account.action_move_line_select" t-att-class="'oe-account-web-action ' + domainClass"><t t-esc="l.name"/></span>
+                </a>
+                <div class="dropdown" t-if="l.type == 'account_id' || l.type =='move_line_id'">
+                    <a data-toggle="dropdown">
+                        <span t-att-data-id="l.id" t-att-class="l.type + ' ' + domainClass"><t t-esc="l.name"></t></span><span class="caret"></span>
+                    </a>
+                    <t t-if="l.footnotes[column] != undefined">
+                        <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />
+                        <t t-call="supFootNoteSeqNum" />
+                    </t>
+                    <ul class="dropdown-menu oe-account-domain-dropdown" role="menu" aria-labelledby="dLabel">
+                        <li role="presentation" t-if="l.type == 'account_id'"><a role="menuitem" tabindex="-1" t-att-data-active-id="l.id" data-action-name="account_reports.action_account_general_ledger_force_account" data-force-context='true' class="oe-account-web-action">General Ledger</a></li>
+                        <li role="presentation" t-if="l.type == 'account_id' and l.account_type == 'receivable'"><a role="menuitem" tabindex="-1" class='oe-account-web-action' data-action-name='account_reports.action_account_report_ar' data-force-context='true'>Aged Receivable</a></li>
+                        <li role="presentation" t-if="l.type == 'account_id' and l.account_type == 'payable'"><a role="menuitem" tabindex="-1" class='oe-account-web-action' data-action-name='account_reports.action_account_report_ap' data-force-context='true'>Aged Payable</a></li>
+                        <li role="presentation" t-if="l.type == 'move_line_id'"><a role="menuitem" tabindex="-1" t-att-data-active-id="l.action[1]" t-att-data-res-model="l.action[0]" class="oe-account-web-action"><t t-esc="l.action[2]" /></a></li>           
+                        <li role="presentation" t-if="l.type == 'move_line_id' and l.action[0] != 'account.move'"><a role="menuitem" tabindex="-1" t-att-data-active-id="l.move_id" data-res-model="account.move" class="oe-account-web-action">View Journal Entry</a></li>  
+                        <li role="presentation"><a role="menuitem" tabindex="-1" class="oe-account-add-footnote">Annotate</a></li>
+                    </ul>
+                </div>
+            </td>
+            <t t-foreach="l.columns" t-as="c">
+                <t t-set="column" t-value="column + 1" />
+                <td t-att-class="types[column - 1] == 'number' and  'text-right' or types[column - 1] == 'text' and  'text-left' or 'text-center'" style="white-space: nowrap;">
+                    <t t-if="typeof c == 'string' || typeof c == 'number'"><span style="font-style: italic;">
+                        <span style="color: black;"><i class="fa fa-pencil-square"></i></span>
+                        <t t-raw="c"/>
+                        <t t-if="l.footnotes[column] != undefined">
+                            <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />
+                            <t t-call="supFootNoteSeqNum" />
+                        </t>
+                    </span></t>
+                    <t t-if="typeof c != 'string' &amp; typeof c != 'number'"><span t-att-style="c[1] + 'font-style: italic;'">
+                        <span style="color: black;"><i class="fa fa-pencil-square"></i></span>
+                        <t t-raw="c[0]"/>
+                        <t t-if="l.footnotes[column] != undefined">
+                            <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />
+                            <t t-call="supFootNoteSeqNum" />
+                        </t>
+                    </span></t>
+                </td>
+            </t>
+        </tr>
+    </t>
+</templates>

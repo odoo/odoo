@@ -57,22 +57,19 @@ position.
         'account',
         'base_iban',
         'base_vat',
-        'account_chart',
-        'account_anglo_saxon'
+        'stock',
     ],
     'data': [
         'account_chart_en.xml',
-        'account_tax_code_en.xml',
         'account_chart_template_en.xml',
         'account_tax_en.xml',
         'fiscal_templates_en.xml',
         'account_chart_fr.xml',
-        'account_tax_code_fr.xml',
         'account_chart_template_fr.xml',
         'account_tax_fr.xml',
         'fiscal_templates_fr.xml',
         'l10n_ca_wizard.xml'
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }

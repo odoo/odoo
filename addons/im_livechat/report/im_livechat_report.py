@@ -1,28 +1,29 @@
-from openerp.osv import fields,osv
-from openerp import tools
+# -*- coding: utf-8 -*-
+from openerp import api, fields, models, tools
 
 
-class im_livechat_report(osv.Model):
+class im_livechat_report(models.Model):
     """ Livechat Support Report """
+
     _name = "im_livechat.report"
-    _auto = False
     _description = "Livechat Support Report"
-    _columns = {
-        'session_name': fields.char('Session Name', readonly=True),
-        'uuid': fields.char('UUID', readonly=True),
-        'start_date': fields.datetime('Start Date of session', readonly=True, help="Start date of the conversation"),
-        'start_date_hour': fields.char('Hour of start Date of session', readonly=True),
-        'duration': fields.float('Average duration', digits=(16,2), readonly=True, group_operator="avg", help="Duration of the conversation (in seconds)"),
-        'time_in_session': fields.float('Time in session', digits=(16,2), readonly=True, group_operator="avg", help="Average time the user spend in the conversation"),
-        'time_to_answer': fields.float('Time to answer', digits=(16,2), readonly=True, group_operator="avg", help="Average time to give the first answer to the visitor"),
-        'nbr_messages': fields.integer('Average message', readonly=True, group_operator="avg", help="Number of message in the conversation"),
-        'nbr_user_messages': fields.integer('Average of messages/user', readonly=True, group_operator="avg", help="Average number of message per user"),
-        'nbr_speakers': fields.integer('# of speakers', readonly=True, group_operator="avg", help="Number of different speakers"),
-        'user_id': fields.many2one('res.users', 'User', readonly=True),
-        'session_id': fields.many2one('im_chat.session', 'Session', readonly=True),
-        'channel_id': fields.many2one('im_livechat.channel', 'Channel', readonly=True),
-    }
     _order = 'start_date, session_name'
+    _auto = False
+
+    session_name = fields.Char('Session Name', readonly=True)
+    uuid = fields.Char('UUID', readonly=True)
+    start_date = fields.Datetime('Start Date of session', readonly=True, help="Start date of the conversation")
+    start_date_hour = fields.Char('Hour of start Date of session', readonly=True)
+    duration = fields.Float('Average duration', digits=(16, 2), readonly=True, group_operator="avg", help="Duration of the conversation (in seconds)")
+    time_in_session = fields.Float('Time in session', digits=(16, 2), readonly=True, group_operator="avg", help="Average time the user spend in the conversation")
+    time_to_answer = fields.Float('Time to answer', digits=(16, 2), readonly=True, group_operator="avg", help="Average time to give the first answer to the visitor")
+    nbr_messages = fields.Integer('Average message', readonly=True, group_operator="avg", help="Number of message in the conversation")
+    nbr_user_messages = fields.Integer('Average of messages/user', readonly=True, group_operator="avg", help="Average number of message per user")
+    nbr_speakers = fields.Integer('# of speakers', readonly=True, group_operator="avg", help="Number of different speakers")
+    user_id = fields.Many2one('res.users', 'User', readonly=True)
+    session_id = fields.Many2one('im_chat.session', 'Session', readonly=True)
+    channel_id = fields.Many2one('im_livechat.channel', 'Channel', readonly=True)
+
 
     def init(self, cr):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !

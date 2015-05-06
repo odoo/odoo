@@ -36,7 +36,7 @@ wizard if the delivery is to be invoiced.
     'depends': ['delivery', 'stock'],
     'data': [],
     'demo': [],
-    'test': ['test/stock_invoice_directly.yml'],
+    'test': ['../account/test/account_minimal_test.xml', 'test/stock_invoice_directly.yml'],
     'installable': True,
     'auto_install': False,
 }

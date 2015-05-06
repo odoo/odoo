@@ -3,8 +3,8 @@
 from openerp.osv import fields, osv
 
 class event_config_settings(osv.TransientModel):
-    _name='marketing.config.settings'
-    _inherit='marketing.config.settings'
+    _name='event.config.settings'
+    _inherit='res.config.settings'
     _columns = {
         'module_event_sale': fields.boolean(
             'Sell events tickets',
@@ -13,8 +13,7 @@ class event_config_settings(osv.TransientModel):
             'Organize few days event with track, full agenda, own menu in website'),
         'module_website_event_questions': fields.boolean(
             'Ask questions to online subscribers',
-            help='Install the website_event_questions module',
-            implied_group='event.group_website_event_questions'),
+            help='Install the website_event_questions module'),
         'auto_confirmation': fields.boolean(
             'Automate events and subscription confirmation', help='Unselect this option to manually manage draft event and draft subscription'),
         'group_email_scheduling': fields.boolean(

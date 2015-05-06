@@ -7,7 +7,7 @@ from openerp.tools.misc import mute_logger
 class test_portal(TestMail):
 
     def test_mail_compose_access_rights(self):
-        port_msg_id = self.group_portal.message_post(body='Message')
+        port_msg = self.group_portal.message_post(body='Message')
 
         # Do: Chell comments Pigs, ok because can write on it (public group)
         self.group_portal.sudo(self.user_portal).message_post(body='I love Pigs')
@@ -25,7 +25,7 @@ class test_portal(TestMail):
         # Do: Chell replies to a Pigs message using the composer
         compose = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
-            'default_parent_id': port_msg_id
+            'default_parent_id': port_msg.id
         }).sudo(self.user_portal).create({
             'subject': 'Subject',
             'body': 'Body text'})
@@ -69,15 +69,15 @@ class test_portal(TestMail):
         # Mail data
         mail = self.env['mail.mail'].create({'state': 'exception'})
         # Test: link for nobody -> None
-        url = self.env['mail.mail']._get_partner_access_link(mail)
+        url = mail._get_partner_access_link()
         self.assertEqual(url, None,
                          'notification email: mails not send to a specific partner should not have any URL')
         # Test: link for partner -> signup URL
-        url = self.env['mail.mail']._get_partner_access_link(mail, partner=self.partner_1)
+        url = mail._get_partner_access_link(partner=self.partner_1)
         self.assertIn(self.partner_1.signup_token, url,
                       'notification email: mails send to a not-user partner should contain the signup token')
         # Test: link for user -> signin
-        url = self.env['mail.mail']._get_partner_access_link(mail, partner=self.user_employee.partner_id)
+        url = mail._get_partner_access_link(partner=self.user_employee.partner_id)
         self.assertIn('action=mail.action_mail_redirect', url,
                       'notification email: link should contain the redirect action')
         self.assertIn('login=%s' % self.user_employee.login, url,
@@ -88,9 +88,9 @@ class test_portal(TestMail):
         group_pigs = self.group_pigs
         port_act_id = self.ref('portal.action_mail_inbox_feeds_portal')
         # Data: post a message on pigs
-        msg_id = group_pigs.message_post(body='My body', partner_ids=[self.user_employee.partner_id.id, self.user_portal.partner_id.id], type='comment', subtype='mail.mt_comment')
+        msg = group_pigs.message_post(body='My body', partner_ids=[self.user_employee.partner_id.id, self.user_portal.partner_id.id], type='comment', subtype='mail.mt_comment')
         # Chell has no read access to pigs -> should redirect to Portal Inbox
-        action = self.env['mail.thread'].with_context({'params': {'message_id': msg_id}}).sudo(self.user_portal).message_redirect_action()
+        action = self.env['mail.thread'].with_context({'params': {'message_id': msg.id}}).sudo(self.user_portal).message_redirect_action()
         self.assertEqual(action.get('type'), 'ir.actions.client',
                         'URL redirection: action without parameters should redirect to client action Inbox')
         self.assertEqual(action.get('id'), port_act_id,

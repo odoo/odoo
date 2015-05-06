@@ -31,7 +31,7 @@ This is the base module to manage the accounting chart for Greece.
 
 Greek accounting chart and localization.
     """,
-    'depends': ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
+    'depends': ['base', 'account', 'base_iban', 'base_vat'],
     'demo': [],
     'data': [ 'account_types.xml',
                'account_chart.xml',
@@ -40,5 +40,5 @@ Greek accounting chart and localization.
                'account_tax_vat.xml',
                'l10n_gr_wizard.xml'
     ],
-    'installable': True,
+    'installable': False,
 }

@@ -42,8 +42,8 @@ Adds menu to show relevant information to each manager.You can also view the rep
         'views/account_analytic_analysis.xml',
         'product_template_view.xml',
     ],
-    'demo': ['analytic_account_demo.xml'],
-    'test': ['test/account_analytic_analysis.yml'],
+    'demo': ['analytic_account_demo.xml', 'analytic_account_demo.yml'],
+    'test': ['../account/test/account_minimal_test.xml', 'test/account_analytic_analysis.yml'],
     'installable': True,
     'auto_install': False,
 }

@@ -1,23 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 import time
 import datetime
@@ -26,380 +7,276 @@ from dateutil.relativedelta import relativedelta
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from openerp.tools.translate import _
-from openerp.osv import fields, osv
+from openerp import api, fields, models, _
+from openerp.exceptions import UserError
 
-class account_config_settings(osv.osv_memory):
+
+class AccountConfigSettings(models.TransientModel):
     _name = 'account.config.settings'
     _inherit = 'res.config.settings'
 
-    _columns = {
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'has_default_company': fields.boolean('Has default company', readonly=True),
-        'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
-            string='This company has its own chart of accounts',
-            help="""Check this box if this company is a legal entity."""),
-        'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
-            string='Default company currency', help="Main currency of the company."),
-        'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
-            string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal."),
-        'company_footer': fields.related('company_id', 'rml_footer', type='text', readonly=True,
-            string='Bank accounts footer preview', help="Bank accounts as printed in the footer of each printed document"),
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
+    has_default_company = fields.Boolean(readonly=True,
+        default=lambda self: self._default_has_default_company())
+    expects_chart_of_accounts = fields.Boolean(related='company_id.expects_chart_of_accounts',
+        string='This company has its own chart of accounts',
+        help='Check this box if this company is a legal entity.')
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', required=True,
+        string='Default company currency', help="Main currency of the company.")
+    paypal_account = fields.Char(related='company_id.paypal_account', size=128, string='Paypal account',
+        help="""Paypal account (email) for receiving online payments (credit card, etc.)
+             If you set a paypal account, the customer  will be able to pay your invoices or quotations
+             with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal.""")
+    company_footer = fields.Text(related='company_id.rml_footer', string='Bank accounts footer preview',
+        readonly=True, help="Bank accounts as printed in the footer of each printed document")
 
-        'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
-        'chart_template_id': fields.many2one('account.chart.template', 'Template', domain="[('visible','=', True)]"),
-        'code_digits': fields.integer('# of Digits', help="No. of digits to use for account code"),
-        'tax_calculation_rounding_method': fields.related('company_id',
-            'tax_calculation_rounding_method', type='selection', selection=[
-            ('round_per_line', 'Round calculation of taxes per line'),
-            ('round_globally', 'Round globally calculation of taxes '),
-            ], string='Tax calculation rounding method',
-            help="If you select 'Round per line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."),
-        'sale_tax': fields.many2one("account.tax.template", "Default sale tax"),
-        'purchase_tax': fields.many2one("account.tax.template", "Default purchase tax"),
-        'sale_tax_rate': fields.float('Sales tax (%)'),
-        'purchase_tax_rate': fields.float('Purchase tax (%)'),
-        'complete_tax_set': fields.boolean('Complete set of taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
+    has_chart_of_accounts = fields.Boolean(string='Company has a chart of accounts')
+    chart_template_id = fields.Many2one('account.chart.template', string='Template',
+        domain="[('visible','=', True)]")
+    use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='company_id.anglo_saxon_accounting')
+    code_digits = fields.Integer(string='# of Digits', related='company_id.accounts_code_digits', help="No. of digits to use for account code")
+    tax_calculation_rounding_method = fields.Selection(
+        [
+        ('round_per_line', 'Round calculation of taxes per line'),
+        ('round_globally', 'Round globally calculation of taxes '),
+        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method',
+        help="""If you select 'Round per line' : for each tax, the tax amount will first be
+             computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed,
+             leading to the total amount for that tax. If you select 'Round globally': for each tax,
+             the tax amount will be computed for each PO/SO/invoice line, then these amounts will be
+             summed and eventually this total tax amount will be rounded. If you sell with tax included,
+             you should choose 'Round per line' because you certainly want the sum of your tax-included line
+             subtotals to be equal to the total amount with taxes.""")
+    sale_tax = fields.Many2one('account.tax.template', string='Default sale tax')
+    purchase_tax = fields.Many2one('account.tax.template', string='Default purchase tax')
+    sale_tax_rate = fields.Float(string='Sales tax (%)')
+    purchase_tax_rate = fields.Float(string='Purchase tax (%)')
+    bank_account_code_char = fields.Char(string='Bank Accounts Code', related='company_id.bank_account_code_char', help='Define the code for the bank account')
+    transfer_account_id = fields.Many2one('account.account',
+        related='company_id.transfer_account_id',
+        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
+        help="Intermediary account used when moving money from a liquidity account to another")
+    complete_tax_set = fields.Boolean(string='Complete set of taxes',
+        help='''This boolean helps you to choose if you want to propose to the user to encode
+             the sales and purchase rates or use the usual m2o fields. This last choice assumes that
+             the set of tax defined for the chosen template is complete''')
 
-        'has_fiscal_year': fields.boolean('Company has a fiscal year'),
-        'date_start': fields.date('Start date', required=True),
-        'date_stop': fields.date('End date', required=True),
-        'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
+    fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day', default=31)
+    fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], related='company_id.fiscalyear_last_month', default=12)
+    period_lock_date = fields.Date(related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
+    fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
+    sale_journal_id = fields.Many2one('account.journal', string='Sale journal')
+    sale_sequence_prefix = fields.Char(related='sale_journal_id.sequence_id.prefix', string='Invoice sequence')
+    sale_sequence_next = fields.Integer(related='sale_journal_id.sequence_id.number_next',
+        string='Next invoice number')
+    purchase_journal_id = fields.Many2one('account.journal', string='Purchase journal')
+    purchase_sequence_prefix = fields.Char(related='purchase_journal_id.sequence_id.prefix',
+        string='Supplier bill sequence')
+    purchase_sequence_next = fields.Integer(related='purchase_journal_id.sequence_id.number_next',
+        string='Next supplier bill number')
 
-        'sale_journal_id': fields.many2one('account.journal', 'Sale journal'),
-        'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice sequence'),
-        'sale_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', string='Next invoice number'),
-        'sale_refund_journal_id': fields.many2one('account.journal', 'Sale refund journal'),
-        'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Credit note sequence'),
-        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next credit note number'),
-        'purchase_journal_id': fields.many2one('account.journal', 'Purchase journal'),
-        'purchase_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier invoice sequence'),
-        'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier invoice number'),
-        'purchase_refund_journal_id': fields.many2one('account.journal', 'Purchase refund journal'),
-        'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier credit note sequence'),
-        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier credit note number'),
+    module_account_check_writing = fields.Boolean(string='Pay your suppliers by check',
+        help='This allows you to check writing and printing.\n'
+             '-This installs the module account_check_writing.')
+    module_account_accountant = fields.Boolean(string='Full accounting features: journals, legal statements, chart of accounts, etc.',
+        help="""If you do not check this box, you will be able to do invoicing & payments,
+             but not accounting (Journal Items, Chart of  Accounts, ...)""")
+    module_account_asset = fields.Boolean(string='Assets management',
+        help='This allows you to manage the assets owned by a company or a person.\n'
+             'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n'
+             '-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, '
+             'but not accounting (Journal Items, Chart of Accounts, ...)')
+    module_account_budget = fields.Boolean(string='Budget management',
+        help='This allows accountants to manage analytic and crossovered budgets. '
+             'Once the master budgets and the budgets are defined, '
+             'the project managers can set the planned amount on each analytic account.\n'
+             '-This installs the module account_budget.')
+    module_account_voucher = fields.Boolean(string='Manage customer payments',
+        help='This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.\n'
+             '-This installs the module account_voucher.')
+    module_account_followup = fields.Boolean(string='Manage customer payment follow-ups',
+        help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
+             '-This installs the module account_followup.')
+    module_product_email_template = fields.Boolean(string='Send products tools and information at the invoice confirmation',
+        help='With this module, link your products to a template to send complete information and tools to your customer.\n'
+             'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.')
+    module_account_bank_statement_import_ofx = fields.Boolean(string='Import of Bank Statements in .OFX Format',
+        help='Get your bank statements from you bank and import them in Odoo in .OFX format.\n'
+            '-that installs the module account_bank_statement_import.')
+    module_account_bank_statement_import_qif = fields.Boolean(string='Import of Bank Statements in .QIF Format.',
+        help='Get your bank statements from you bank and import them in Odoo in .QIF format.\n'
+            '-that installs the module account_bank_statement_import_qif.')
+    group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
+        implied_group='account.group_proforma_invoices',
+        help="Allows you to put invoices in pro-forma state.")
+    default_sale_tax = fields.Many2one('account.tax', help="This sale tax will be assigned by default on new products.")
+    default_purchase_tax = fields.Many2one('account.tax', help="This purchase tax will be assigned by default on new products.")
+    group_multi_currency = fields.Boolean(string='Allow multi currencies',
+        implied_group='base.group_multi_currency',
+        help="Allows you multi currency environment")
+    group_analytic_accounting = fields.Boolean(string='Analytic accounting',
+        implied_group='analytic.group_analytic_accounting',
+        help="Allows you to use the analytic accounting.")
+    group_check_supplier_invoice_total = fields.Boolean(string='Check the total of supplier bills',
+        implied_group="account.group_supplier_inv_check_total")
+    currency_exchange_journal_id = fields.Many2one('account.journal',
+        related='company_id.currency_exchange_journal_id',
+        string="Rate Difference Journal",)
+    income_currency_exchange_account_id = fields.Many2one('account.account',
+        related='company_id.income_currency_exchange_account_id',
+        string="Gain Exchange Rate Account",
+        domain=lambda self: [('internal_type', '=', 'other'), ('company_id', '=', self.company_id.id), ('deprecated', '=', False)])
+    expense_currency_exchange_account_id = fields.Many2one('account.account',
+        related='company_id.expense_currency_exchange_account_id',
+        string="Loss Exchange Rate Account",
+        domain=lambda self: [('internal_type', '=', 'other'), ('company_id', '=', self.company_id.id), ('deprecated', '=', False)])
 
-        'module_account_check_writing': fields.boolean('Pay your suppliers by check',
-            help='This allows you to check writing and printing.\n'
-                 '-This installs the module account_check_writing.'),
-        'module_account_accountant': fields.boolean('Full accounting features: journals, legal statements, chart of accounts, etc.',
-            help="""If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of  Accounts, ...)"""),
-        'module_account_asset': fields.boolean('Assets management',
-            help='This allows you to manage the assets owned by a company or a person.\n'
-                 'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n'
-                 '-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, '
-                 'but not accounting (Journal Items, Chart of Accounts, ...)'),
-        'module_account_budget': fields.boolean('Budget management',
-            help='This allows accountants to manage analytic and crossovered budgets. '
-                 'Once the master budgets and the budgets are defined, '
-                 'the project managers can set the planned amount on each analytic account.\n'
-                 '-This installs the module account_budget.'),
-        'module_account_payment': fields.boolean('Manage payment orders',
-            help='This allows you to create and manage your payment orders, with purposes to \n'
-                 '* serve as base for an easy plug-in of various automated payment mechanisms, and \n'
-                 '* provide a more efficient way to manage invoice payments.\n'
-                 '-This installs the module account_payment.' ),
-        'module_account_voucher': fields.boolean('Manage customer payments',
-            help='This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.\n'
-                 '-This installs the module account_voucher.'),
-        'module_account_followup': fields.boolean('Manage customer payment follow-ups',
-            help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
-                 '-This installs the module account_followup.'),
-        'module_product_email_template': fields.boolean('Send products tools and information at the invoice confirmation',
-            help='With this module, link your products to a template to send complete information and tools to your customer.\n'
-                 'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.'),
-        'module_account_bank_statement_import_ofx': fields.boolean('Import of Bank Statements in .OFX Format',
-            help='Get your bank statements from you bank and import them in Odoo in .OFX format.\n'
-                '-that installs the module account_bank_statement_import.'),
-        'module_account_bank_statement_import_qif': fields.boolean('Import of Bank Statements in .QIF Format.',
-            help='Get your bank statements from you bank and import them in Odoo in .QIF format.\n'
-                '-that installs the module account_bank_statement_import_qif.'),
-        'group_proforma_invoices': fields.boolean('Allow pro-forma invoices',
-            implied_group='account.group_proforma_invoices',
-            help="Allows you to put invoices in pro-forma state."),
-        'default_sale_tax': fields.many2one('account.tax', 'Default sale tax',
-            help="This sale tax will be assigned by default on new products."),
-        'default_purchase_tax': fields.many2one('account.tax', 'Default purchase tax',
-            help="This purchase tax will be assigned by default on new products."),
-        'decimal_precision': fields.integer('Decimal precision on journal entries',
-            help="""As an example, a decimal precision of 2 will allow journal entries  like: 9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like: 0.0231 EUR."""),
-        'group_multi_currency': fields.boolean('Allow multi currencies',
-            implied_group='base.group_multi_currency',
-            help="Allows you multi currency environment"),
-        'group_analytic_accounting': fields.boolean('Analytic accounting',
-            implied_group='analytic.group_analytic_accounting',
-            help="Allows you to use the analytic accounting."),
-        'group_check_supplier_invoice_total': fields.boolean('Check the total of supplier invoices', 
-            implied_group="account.group_supplier_inv_check_total"),
-        'income_currency_exchange_account_id': fields.related(
-            'company_id', 'income_currency_exchange_account_id',
-            type='many2one',
-            relation='account.account',
-            string="Gain Exchange Rate Account",
-            domain="[('type', '=', 'other'), ('company_id', '=', company_id)]]"),
-        'expense_currency_exchange_account_id': fields.related(
-            'company_id', 'expense_currency_exchange_account_id',
-            type="many2one",
-            relation='account.account',
-            string="Loss Exchange Rate Account",
-            domain="[('type', '=', 'other'), ('company_id', '=', company_id)]]"),
-    }
-
-    def _check_account_gain(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.income_currency_exchange_account_id.company_id and obj.company_id != obj.income_currency_exchange_account_id.company_id:
+    @api.multi
+    @api.constrains('income_currency_exchange_account_id', 'expense_currency_exchange_account_id')
+    def _check_account_gain_loss(self):
+        for element in self:
+            if element.income_currency_exchange_account_id.company_id and element.company_id != element.income_currency_exchange_account_id.company_id:
+                return False
+            if element.expense_currency_exchange_account_id.company_id and element.company_id != element.expense_currency_exchange_account_id.company_id:
                 return False
         return True
 
-    def _check_account_loss(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.expense_currency_exchange_account_id.company_id and obj.company_id != obj.expense_currency_exchange_account_id.company_id:
-                return False
-        return True
-
-    _constraints = [
-        (_check_account_gain, 'The company of the gain exchange rate account must be the same than the company selected.', ['income_currency_exchange_account_id']),
-        (_check_account_loss, 'The company of the loss exchange rate account must be the same than the company selected.', ['expense_currency_exchange_account_id']),
-    ]
-
-    def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.company_id.id
-
-    def _default_has_default_company(self, cr, uid, context=None):
-        count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
+    @api.model
+    def _default_has_default_company(self):
+        count = self.env['res.company'].search_count([])
         return bool(count == 1)
 
-    def _get_default_fiscalyear_data(self, cr, uid, company_id, context=None):
-        """Compute default period, starting and ending date for fiscalyear
-        - if in a fiscal year, use its period, starting and ending date
-        - if past fiscal year, use its period, and new dates [ending date of the latest +1 day ; ending date of the latest +1 year]
-        - if no fiscal year, use monthly, 1st jan, 31th dec of this year
-        :return: (date_start, date_stop, period) at format DEFAULT_SERVER_DATETIME_FORMAT
-        """
-        fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
-                [('date_start', '<=', time.strftime(DF)), ('date_stop', '>=', time.strftime(DF)),
-                 ('company_id', '=', company_id)])
-        if fiscalyear_ids:
-            # is in a current fiscal year, use this one
-            fiscalyear = self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_ids[0], context=context)
-            if len(fiscalyear.period_ids) == 5:  # 4 periods of 3 months + opening period
-                period = '3months'
-            else:
-                period = 'month'
-            return (fiscalyear.date_start, fiscalyear.date_stop, period)
-        else:
-            past_fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
-                [('date_stop', '<=', time.strftime(DF)), ('company_id', '=', company_id)])
-            if past_fiscalyear_ids:
-                # use the latest fiscal, sorted by (start_date, id)
-                latest_year = self.pool.get('account.fiscalyear').browse(cr, uid, past_fiscalyear_ids[-1], context=context)
-                latest_stop = datetime.datetime.strptime(latest_year.date_stop, DF)
-                if len(latest_year.period_ids) == 5:
-                    period = '3months'
-                else:
-                    period = 'month'
-                return ((latest_stop+datetime.timedelta(days=1)).strftime(DF), latest_stop.replace(year=latest_stop.year+1).strftime(DF), period)
-            else:
-                return (time.strftime('%Y-01-01'), time.strftime('%Y-12-31'), 'month')
 
-    _defaults = {
-        'company_id': _default_company,
-        'has_default_company': _default_has_default_company,
-    }
-
-    def create(self, cr, uid, values, context=None):
-        id = super(account_config_settings, self).create(cr, uid, values, context)
-        # Hack: to avoid some nasty bug, related fields are not written upon record creation.
-        # Hence we write on those fields here.
-        vals = {}
-        for fname, field in self._columns.iteritems():
-            if isinstance(field, fields.related) and fname in values:
-                vals[fname] = values[fname]
-        self.write(cr, uid, [id], vals, context)
-        return id
-
-    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+    @api.onchange('company_id')
+    def onchange_company_id(self):
         # update related fields
-        values = {}
-        values['currency_id'] = False
-        if company_id:
-            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
-            has_chart_of_accounts = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
-            fiscalyear_count = self.pool.get('account.fiscalyear').search_count(cr, uid,
-                [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
-                 ('company_id', '=', company_id)])
-            date_start, date_stop, period = self._get_default_fiscalyear_data(cr, uid, company_id, context=context)
-            values = {
-                'expects_chart_of_accounts': company.expects_chart_of_accounts,
-                'currency_id': company.currency_id.id,
-                'paypal_account': company.paypal_account,
-                'company_footer': company.rml_footer,
-                'has_chart_of_accounts': has_chart_of_accounts,
-                'has_fiscal_year': bool(fiscalyear_count),
-                'chart_template_id': False,
-                'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
-                'date_start': date_start,
-                'date_stop': date_stop,
-                'period': period,
-            }
+        self.currency_id = False
+        if self.company_id:
+            company = self.company_id
+            self.chart_template_id = company.chart_template_id
+            self.has_chart_of_accounts = len(company.chart_template_id) > 0 or False
+            self.expects_chart_of_accounts = company.expects_chart_of_accounts
+            self.currency_id = company.currency_id
+            self.transfer_account_id = company.transfer_account_id
+            self.paypal_account = company.paypal_account
+            self.company_footer = company.rml_footer
+            self.tax_calculation_rounding_method = company.tax_calculation_rounding_method
+            self.bank_account_code_char = company.bank_account_code_char
+            self.code_digits = company.accounts_code_digits
+
             # update journals and sequences
-            for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
-                for suffix in ('_journal_id', '_sequence_prefix', '_sequence_next'):
-                    values[journal_type + suffix] = False
-            journal_obj = self.pool.get('account.journal')
-            journal_ids = journal_obj.search(cr, uid, [('company_id', '=', company_id)])
-            for journal in journal_obj.browse(cr, uid, journal_ids):
-                if journal.type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
-                    values.update({
-                        journal.type + '_journal_id': journal.id,
-                        journal.type + '_sequence_prefix': journal.sequence_id.prefix,
-                        journal.type + '_sequence_next': journal.sequence_id.number_next,
-                    })
+            self.purchase_journal_id = self.purchase_sequence_prefix = self.purchase_sequence_next = False
+            self.sale_journal_id = self.sale_sequence_prefix = self.sale_sequence_next = False
+            journals = self.env['account.journal'].search([('company_id', '=', self.company_id.id)])
+            for journal in journals:
+                if journal.type == 'purchase':
+                    self.purchase_journal_id = journal
+                    self.purchase_sequence_prefix = journal.sequence_id.prefix
+                    self.purchase_sequence_next = journal.sequence_id.number_next
+                elif journal.type == 'sale':
+                    self.sale_journal_id = journal
+                    self.sale_sequence_prefix = journal.sequence_id.prefix
+                    self.sale_sequence_next = journal.sequence_id.number_next
             # update taxes
-            ir_values = self.pool.get('ir.values')
-            taxes_id = ir_values.get_default(cr, uid, 'product.template', 'taxes_id', company_id=company_id)
-            supplier_taxes_id = ir_values.get_default(cr, uid, 'product.template', 'supplier_taxes_id', company_id=company_id)
-            values.update({
-                'default_sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
-                'default_purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
-            })
+            ir_values = self.env['ir.values']
+            taxes_id = ir_values.get_default('product.template', 'taxes_id', company_id = self.company_id.id)
+            supplier_taxes_id = ir_values.get_default('product.template', 'supplier_taxes_id', company_id = self.company_id.id)
+            self.default_sale_tax = isinstance(taxes_id, list) and taxes_id[0] or taxes_id
+            self.default_purchase_tax = isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id
+
             # update gain/loss exchange rate accounts
-            values.update({
-                'income_currency_exchange_account_id': company.income_currency_exchange_account_id and company.income_currency_exchange_account_id.id or False,
-                'expense_currency_exchange_account_id': company.expense_currency_exchange_account_id and company.expense_currency_exchange_account_id.id or False
-            })
-
-        return {'value': values}
-
-    def onchange_chart_template_id(self, cr, uid, ids, chart_template_id, context=None):
-        tax_templ_obj = self.pool.get('account.tax.template')
-        res = {'value': {
-            'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False,
-            'sale_tax_rate': 15, 'purchase_tax_rate': 15,
-        }}
-        if chart_template_id:
-            # update complete_tax_set, sale_tax and purchase_tax
-            chart_template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
-            res['value'].update({'complete_tax_set': chart_template.complete_tax_set})
-            if chart_template.complete_tax_set:
-                # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
-                sale_tax_ids = tax_templ_obj.search(cr, uid,
-                    [("chart_template_id", "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))],
-                    order="sequence, id desc")
-                purchase_tax_ids = tax_templ_obj.search(cr, uid,
-                    [("chart_template_id", "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))],
-                    order="sequence, id desc")
-                res['value']['sale_tax'] = sale_tax_ids and sale_tax_ids[0] or False
-                res['value']['purchase_tax'] = purchase_tax_ids and purchase_tax_ids[0] or False
-            if chart_template.code_digits:
-                res['value']['code_digits'] = chart_template.code_digits
-        return res
-
-    def onchange_tax_rate(self, cr, uid, ids, rate, context=None):
-        return {'value': {'purchase_tax_rate': rate or False}}
-
-    def onchange_multi_currency(self, cr, uid, ids, group_multi_currency, context=None):
-        res = {}
-        if not group_multi_currency:
-            res['value'] = {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}
-        return res
-        
-    def set_group_multi_currency(self, cr, uid, ids, context=None):
-        ir_model = self.pool['ir.model.data']
-        group_user = ir_model.get_object(cr, uid, 'base', 'group_user', context)
-        group_product = ir_model.get_object(cr, uid, 'product', 'group_sale_pricelist', context)
-        for config_obj in self.browse(cr, uid, ids, context=context):
-            if config_obj.group_multi_currency:
-                group_user.write({'implied_ids': [(4, group_product.id)]})
-        return True
-    
-    def onchange_start_date(self, cr, uid, id, start_date):
-        if start_date:
-            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-            end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
-            return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
+            self.income_currency_exchange_account_id = company.income_currency_exchange_account_id
+            self.expense_currency_exchange_account_id = company.expense_currency_exchange_account_id
         return {}
 
-    def open_company_form(self, cr, uid, ids, context=None):
-        config = self.browse(cr, uid, ids[0], context)
+    @api.onchange('chart_template_id')
+    def onchange_chart_template_id(self):
+        tax_templ_obj = self.env['account.tax.template']
+        self.complete_tax_set = self.sale_tax = self.purchase_tax = False
+        self.sale_tax_rate = self.purchase_tax_rate = 15
+        if self.chart_template_id and not self.has_chart_of_accounts:
+            # update complete_tax_set, sale_tax and purchase_tax
+            self.complete_tax_set = self.chart_template_id.complete_tax_set
+            if self.chart_template_id.complete_tax_set:
+                ir_values_obj = self.env['ir.values']
+                # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
+                sale_tax = tax_templ_obj.search(
+                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', '=', 'sale')], limit=1,
+                    order="sequence, id desc")
+                purchase_tax = tax_templ_obj.search(
+                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', '=', 'purchase')], limit=1,
+                    order="sequence, id desc")
+                self.sale_tax = sale_tax
+                self.purchase_tax = purchase_tax
+            if self.chart_template_id.code_digits:
+                self.code_digits = self.chart_template_id.code_digits
+            if self.chart_template_id.transfer_account_id:
+                self.transfer_account_id = self.chart_template_id.transfer_account_id.id
+            if self.chart_template_id.bank_account_code_char:
+                self.bank_account_code_char = self.chart_template_id.bank_account_code_char
+        return {}
+
+    @api.onchange('sale_tax_rate')
+    def onchange_tax_rate(self):
+        self.purchase_tax_rate = self.sale_tax_rate or False
+
+    @api.onchange('group_multi_currency')
+    def onchange_multi_currency(self):
+        if not self.group_multi_currency:
+            self.income_currency_exchange_account_id = False
+            self.expense_currency_exchange_account_id = False
+
+    @api.multi
+    def set_group_multi_currency(self):
+        ir_model = self.env['ir.model.data']
+        group_user = ir_model.get_object('base', 'group_user')
+        group_product = ir_model.get_object('product', 'group_sale_pricelist')
+        if self.group_multi_currency:
+            group_user.write({'implied_ids': [(4, group_product.id)]})
+        return True
+
+    @api.multi
+    def open_company_form(self):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Configure your Company',
             'res_model': 'res.company',
-            'res_id': config.company_id.id,
+            'res_id': self.company_id.id,
             'view_mode': 'form',
         }
 
-    def set_default_taxes(self, cr, uid, ids, context=None):
-        """ set default sale and purchase taxes for products """
-        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
-            raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
-        ir_values = self.pool.get('ir.values')
-        config = self.browse(cr, uid, ids[0], context)
-        ir_values.set_default(cr, SUPERUSER_ID, 'product.template', 'taxes_id',
-            config.default_sale_tax and [config.default_sale_tax.id] or False, company_id=config.company_id.id)
-        ir_values.set_default(cr, SUPERUSER_ID, 'product.template', 'supplier_taxes_id',
-            config.default_purchase_tax and [config.default_purchase_tax.id] or False, company_id=config.company_id.id)
+    @api.multi
+    def set_product_taxes(self):
+        """ Set the product taxes if they have changed """
+        ir_values_obj = self.env['ir.values']
+        if self.default_sale_tax:
+            ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax.id], for_all_users=True, company_id=self.company_id.id)
+        if self.default_purchase_tax:
+            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax.id], for_all_users=True, company_id=self.company_id.id)
 
-    def set_chart_of_accounts(self, cr, uid, ids, context=None):
+    @api.multi
+    def set_chart_of_accounts(self):
         """ install a chart of accounts for the given company (if required) """
-        config = self.browse(cr, uid, ids[0], context)
-        if config.chart_template_id:
-            assert config.expects_chart_of_accounts and not config.has_chart_of_accounts
-            wizard = self.pool.get('wizard.multi.charts.accounts')
-            wizard_id = wizard.create(cr, uid, {
-                'company_id': config.company_id.id,
-                'chart_template_id': config.chart_template_id.id,
-                'code_digits': config.code_digits or 6,
-                'sale_tax': config.sale_tax.id,
-                'purchase_tax': config.purchase_tax.id,
-                'sale_tax_rate': config.sale_tax_rate,
-                'purchase_tax_rate': config.purchase_tax_rate,
-                'complete_tax_set': config.complete_tax_set,
-                'currency_id': config.currency_id.id,
-            }, context)
-            wizard.execute(cr, uid, [wizard_id], context)
+        if self.chart_template_id and not self.has_chart_of_accounts and self.expects_chart_of_accounts:
+            if self.company_id.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
+                raise UserError(_('You can not change a company chart of account once it has been installed'))
+            wizard = self.env['wizard.multi.charts.accounts'].create({
+                'company_id': self.company_id.id,
+                'chart_template_id': self.chart_template_id.id,
+                'transfer_account_id': self.transfer_account_id.id,
+                'code_digits': self.code_digits or 6,
+                'sale_tax': self.sale_tax.id,
+                'purchase_tax': self.purchase_tax.id,
+                'sale_tax_rate': self.sale_tax_rate,
+                'purchase_tax_rate': self.purchase_tax_rate,
+                'complete_tax_set': self.complete_tax_set,
+                'currency_id': self.currency_id.id,
+                'bank_account_code_char': self.bank_account_code_char,
+            })
+            wizard.execute()
 
-    def set_fiscalyear(self, cr, uid, ids, context=None):
-        """ create a fiscal year for the given company (if necessary) """
-        config = self.browse(cr, uid, ids[0], context)
-        if config.has_chart_of_accounts or config.chart_template_id:
-            fiscalyear = self.pool.get('account.fiscalyear')
-            fiscalyear_count = fiscalyear.search_count(cr, uid,
-                [('date_start', '<=', config.date_start), ('date_stop', '>=', config.date_stop),
-                 ('company_id', '=', config.company_id.id)],
-                context=context)
-            if not fiscalyear_count:
-                name = code = config.date_start[:4]
-                if int(name) != int(config.date_stop[:4]):
-                    name = config.date_start[:4] +'-'+ config.date_stop[:4]
-                    code = config.date_start[2:4] +'-'+ config.date_stop[2:4]
-                vals = {
-                    'name': name,
-                    'code': code,
-                    'date_start': config.date_start,
-                    'date_stop': config.date_stop,
-                    'company_id': config.company_id.id,
-                }
-                fiscalyear_id = fiscalyear.create(cr, uid, vals, context=context)
-                if config.period == 'month':
-                    fiscalyear.create_period(cr, uid, [fiscalyear_id])
-                elif config.period == '3months':
-                    fiscalyear.create_period3(cr, uid, [fiscalyear_id])
-
-    def get_default_dp(self, cr, uid, fields, context=None):
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
-        return {'decimal_precision': dp.digits}
-
-    def set_default_dp(self, cr, uid, ids, context=None):
-        config = self.browse(cr, uid, ids[0], context)
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
-        dp.write({'digits': config.decimal_precision})
-
-    def onchange_analytic_accounting(self, cr, uid, ids, analytic_accounting, context=None):
-        if analytic_accounting:
-            return {'value': {
-                'module_account_accountant': True,
-                }}
-        return {}
+    @api.onchange('group_analytic_accounting')
+    def onchange_analytic_accounting(self):
+        if self.group_analytic_accounting:
+            self.module_account_accountant = True

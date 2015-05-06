@@ -40,7 +40,7 @@
   !python {model: account.invoice}: |
     from openerp.tools import float_compare
     aid = ref('account_analytic_analysis.contract_main')
-    ids = self.search(cr, uid, [('invoice_line.account_analytic_id','=',aid)], context=context)
+    ids = self.search(cr, uid, [('invoice_line_ids.account_analytic_id','=',aid)], context=context)
     assert len(ids)>=1, 'No invoice created for the contract'
     for invoice in self.browse(cr, uid, ids,context=context):
         assert float_compare(invoice.amount_untaxed, 150.0, precision_digits=2) == 0, "The invoice total is different than 150!"

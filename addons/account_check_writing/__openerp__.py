@@ -32,7 +32,6 @@ Module for the Check Writing and Check Printing.
     'data': [
         'wizard/account_check_batch_printing_view.xml',
         'account_view.xml',
-        'account_voucher_view.xml',
         'account_check_writing_data.xml',
         'data/report_paperformat.xml',
         'views/report_check.xml',
@@ -40,6 +39,6 @@ Module for the Check Writing and Check Printing.
     ],
     'demo': ['account_demo.xml'],
     'test': [],
-    'installable': True,
+    'installable': False,
     'active': False,
 }

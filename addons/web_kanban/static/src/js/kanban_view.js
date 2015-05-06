@@ -97,7 +97,13 @@ var KanbanView = View.extend({
      * or into a div of its template
      */
     render_buttons: function($node) {
-        this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
+        var display = false;
+        if (this.options.action_buttons !== false) {
+            display = this.is_action_enabled('create');
+        } else if (!this.view_id && !this.options.read_only_mode) {
+            display = this.is_action_enabled('write') || this.is_action_enabled('create');
+        }
+        this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this, display: display}));
         this.$buttons
             .on('click', 'button.oe_kanban_button_new', this.do_add_record)
             .on('click', '.oe_kanban_add_column', this.do_add_group);

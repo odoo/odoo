@@ -38,11 +38,9 @@ Sheet, now only Vertical format has been permitted Which is Supported By OpenERP
     'category': 'Localization/Account Charts',
     'depends': [
         'account',
-        'account_chart'
     ],
     'demo': [],
     'data': [
-        'l10n_in_tax_code_template.xml',
         'l10n_in_standard_chart.xml',
         'l10n_in_standard_tax_template.xml',
         'l10n_in_schedule6_chart.xml',
@@ -50,5 +48,5 @@ Sheet, now only Vertical format has been permitted Which is Supported By OpenERP
         'l10n_in_wizard.xml',
     ],
     'auto_install': False,
-    'installable': True,
+    'installable': False,
 }

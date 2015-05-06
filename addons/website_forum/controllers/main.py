@@ -338,7 +338,7 @@ class WebsiteForum(http.Controller):
             # TDE FIXME: check that post_id is the question or one of its answers
             post.with_context(mail_create_nosubscribe=True).message_post(
                 body=kwargs.get('comment'),
-                type='comment',
+                message_type='comment',
                 subtype='mt_comment')
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 

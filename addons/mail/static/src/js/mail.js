@@ -1001,7 +1001,7 @@ var ThreadMessage = MessageCommon.extend({
         var domain = mail_utils.expand_domain( this.options.root_thread.domain )
             .concat([["id", "in", message_ids ]]);
 
-        return this.parent_thread.ds_message.call('message_read', [undefined, domain, [], !!this.parent_thread.options.display_indented_thread, this.context, this.parent_thread.id])
+        return this.parent_thread.ds_message.call('message_read_wrapper', [undefined, domain, [], !!this.parent_thread.options.display_indented_thread, this.context, this.parent_thread.id])
             .then( function (records) {
                 // remove message not loaded
                 _.map(messages, function (msg) {
@@ -1366,7 +1366,7 @@ var Thread = Widget.extend({
      * @param {Array} ids read (if the are some ids, the method don't use the domain)
      */
     message_fetch: function (replace_domain, replace_context, ids, callback) {
-        return this.ds_message.call('message_read', [
+        return this.ds_message.call('message_read_wrapper', [
                 // ids force to read
                 ids === false ? undefined : ids && ids.slice(0, this.options.fetch_limit),
                 // domain + additional
@@ -1970,6 +1970,13 @@ var ComposeMessageTopButton = Widget.extend({
     },
     on_compose_message: function (ev) {
         ev.preventDefault();
+        var ctx = {}
+        if ($('a.oe_compose_post') && $('a.oe_compose_post').is(":visible") == true && (this.getParent()).getParent().action_manager.inner_widget.active_view.type == 'form'){
+            ctx = {
+                'default_res_id': (this.getParent()).getParent().action_manager.inner_widget.active_view.controller.datarecord.id,
+                'default_model': (this.getParent()).getParent().action_manager.inner_widget.active_view.controller.model,
+                }
+        }
         var action = {
             type: 'ir.actions.act_window',
             res_model: 'mail.compose.message',
@@ -1977,7 +1984,7 @@ var ComposeMessageTopButton = Widget.extend({
             view_type: 'form',
             views: [[false, 'form']],
             target: 'new',
-            context: {},
+            context: ctx,
         };
         web_client.action_manager.do_action(action);
     },

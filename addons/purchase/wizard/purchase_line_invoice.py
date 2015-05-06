@@ -81,11 +81,11 @@ class purchase_line_invoice(osv.osv_memory):
                     'reference' : partner.ref,
                     'account_id': a,
                     'partner_id': partner.id,
-                    'invoice_line': [(6,0,lines_ids)],
+                    'invoice_line_ids': [(6, 0, lines_ids)],
                     'currency_id' : orders[0].currency_id.id,
                     'comment': multiple_order_invoice_notes(orders),
-                    'payment_term': orders[0].payment_term_id.id,
-                    'fiscal_position': partner.property_account_position.id
+                    'payment_term_id': orders[0].payment_term_id.id,
+                    'fiscal_position_id': partner.property_account_position.id
                 }
                 inv_id = invoice_obj.create(cr, uid, inv)
                 for order in orders:
@@ -112,7 +112,7 @@ class purchase_line_invoice(osv.osv_memory):
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,res))+"])]",
-            'name': _('Supplier Invoices'),
+            'name': _('Supplier Bills'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',

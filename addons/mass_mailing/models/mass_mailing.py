@@ -864,20 +864,19 @@ class MassMailing(osv.Model):
 class MailMail(models.Model):
     _inherit = ['mail.mail']
 
-    @api.model
-    def send_get_mail_body(self, mail, partner=None):
+    @api.multi
+    def send_get_mail_body(self, partner=None):
         """Override to add Statistic_id in shorted urls """
-
         links_blacklist = ['/unsubscribe_from_list']
 
-        if mail.mailing_id and mail.body_html and mail.statistics_ids:
-            for match in re.findall(URL_REGEX, mail.body_html):
+        if self.mailing_id and self.body_html and self.statistics_ids:
+            for match in re.findall(URL_REGEX, self.body_html):
 
                 href = match[0]
                 url = match[1]
-                
-                if not [s for s in links_blacklist if s in href]:
-                    new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
-                    mail.body_html = mail.body_html.replace(href, new_href)
 
-        return super(MailMail, self).send_get_mail_body(mail, partner=partner)
+                if not [s for s in links_blacklist if s in href]:
+                    new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
+                    self.body_html = self.body_html.replace(href, new_href)
+
+        return super(MailMail, self).send_get_mail_body(partner=partner)

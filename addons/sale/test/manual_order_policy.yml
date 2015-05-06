@@ -52,12 +52,9 @@
     sale_order = self.pool.get('sale.order')
     order = sale_order.browse(cr, uid, ref("sale_order_2"))
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
+    import time
     for invoice in order.invoice_ids:
-        invoice.pay_and_reconcile(
-            invoice.amount_total, ref('account.cash'), ref('account.period_8'),
-            journal_ids[0], ref('account.cash'),
-            ref('account.period_8'), journal_ids[0],
-            name='test')
+        self.pay_and_reconcile(cr, uid, [invoice.id], journal_ids[0])
 -
   I check Invoice after do manual.
 -
