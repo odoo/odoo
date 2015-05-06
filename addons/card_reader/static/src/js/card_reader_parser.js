@@ -19,23 +19,30 @@ var PopupWidget = require('point_of_sale.popups');
 var ScreenWidget = screens.ScreenWidget;
 var PaymentScreenWidget = screens.PaymentScreenWidget;
 
+var onlinePaymentJournal = [];
 
+var allowOnlinePayment = function (pos) {
+    if (onlinePaymentJournal.length) {
+        return true;
+    }
+    $.each(pos.journals, function (i, val) {
+        if (val.card_reader_config_id) {
+            onlinePaymentJournal.push({label:val.display_name, item:val.id});
+        }
+    });
+    return onlinePaymentJournal.length;
+};
+
+// Popup declaration to ask for confirmation before an electronic payment
 var PaymentConfirmPopupWidget = PopupWidget.extend({
     template: 'PaymentConfirmPopupWidget',
     show: function (options) {
         this._super(options);
     }
 });
-/*
-var  = Model.Order.extend({
-    add_orderline: function (line) {
-        Model.Order.add_orderline(line);
-        if (line.paid) {
 
-        }
-    }
-});
-*/
+// Extends the payment line object with the "paid" property used to 
+// know if the payment line is already paid
 
 var _paylineproto = pos_model.Paymentline.prototype;
 
@@ -45,13 +52,15 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
         this.paid = false;
     },
     init_from_JSON: function (json) {
-        _paylineproto.init_from_JSON.apply(this, arguments);
         this.paid = json.paid;
+        _paylineproto.init_from_JSON.apply(this, arguments);
     },
     export_as_JSON: function () {
         return _.extend(_paylineproto.export_as_JSON.apply(this, arguments), {paid: this.paid});
     }
 });
+
+// Lookup table to store status and error messages
 
 var lookUpCodeTransaction = {
     'Approved': {
@@ -138,13 +147,15 @@ var lookUpCodeTransaction = {
     },
 };
 
+// Popup to show all transaction state for the payment. 
+
 var PaymentTransactionPopupWidget = PopupWidget.extend({
     template: 'PaymentTransactionPopupWidget',
     show: function (options) {
         var self = this;
         this._super(options);
         options.transaction.then(function (data) {
-
+            // if the status and error code are known, use our custom message from the lookup table
             if (!(!lookUpCodeTransaction[data.status] || !lookUpCodeTransaction[data.status][data.error])) {
                 data.message = lookUpCodeTransaction[data.status][data.error];
             }
@@ -152,10 +163,12 @@ var PaymentTransactionPopupWidget = PopupWidget.extend({
             data.error = (data.error != '000000') ? ' '+data.error : '';
             self.$el.find('p.body').html(data.status+' '+data.error+'<br /><br />'+data.message);
 
+            // If an error occure, allow user to close the popup
             if(data.status != 'Approved') {
                 self.close();
                 self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
             }
+            // Else autoclose the popup
             else {
                 setTimeout(function () {
                     self.close();
@@ -174,18 +187,11 @@ gui.define_popup({name:'payment-confirm', widget: PaymentConfirmPopupWidget});
 gui.define_popup({name:'payment-transaction', widget: PaymentTransactionPopupWidget});
 
 BarcodeParser.include({
-
-    split_data_regex: function () {
-        return (/[;%|=\/\^\? ]/);
-    },
-
-    // returns true if the barcode string is encoded with the provided encoding.
+    // returns true if the magnetic code string is encoded with the provided encoding.
     check_encoding: function(barcode, encoding) {
         if(!this._super(barcode, encoding)) {
             if(encoding === 'magnetic_credit') {
-                return (barcode[0] == '%'); // need some testing 
-            } else if(encoding === 'magnetic_gift') {
-                return (barcode[0] == ';'); // need some testing
+                return (barcode[0] == '%'); // need a better test to avoid errors
             } else {
                 return false;
             }
@@ -195,6 +201,8 @@ BarcodeParser.include({
     }
 });
 
+// On all screens, if a card is swipped, return a popup error.
+
 ScreenWidget.include({
     credit_error_action: function () {
         this.gui.show_popup('error-barcode','Go to payment screen to use cards');
@@ -202,14 +210,20 @@ ScreenWidget.include({
 
     show: function () {
         this._super();
+        if(!allowOnlinePayment(this.pos)) {
+            return;
+        }
         this.pos.barcode_reader.set_action_callback('Credit', _.bind(this.credit_error_action, this));
     }
 });
 
+// On Payment screen, allow electronic payments
 PaymentScreenWidget.include({
+    // Regular expression to identify and extract data from the track 1 & 2 of the magnetic code
     _track1:/%B?([0-9]*)\^([A-Z\/ -_]*)\^([0-9]{4})(.{3})([^?]+)\?/,
     _track2:/\;([0-9]+)=([0-9]{4})(.{3})([^?]+)\?/,
-    _encrypted_data : /\|([0-9]+)\|([A-Z0-9]+)\|([A-Z0-9]+)\|\|([0-9]+)\|([A-Z0-9]+)\|([A-Z0-9]+)\|([A-Z0-9]+)\|([A-Z0-9]+)\|([A-Z0-9]+)\|\|([0-9]+)/,
+   
+    // Extract data from a track list to a track dictionnary
     _decode_track: function(track_list) {
 
         if(track_list < 6) return {};
@@ -224,6 +238,7 @@ PaymentScreenWidget.include({
         };
 
     },
+    // Extract data from crypted track list to a track dictionnary
     _decode_encrypted_data: function (code_list) {
         if(code_list < 13) return {};
         var encrypted_data = {
@@ -250,14 +265,22 @@ PaymentScreenWidget.include({
         return encrypted_data;
     },
 
+    // Handler to manage the card reader string
     credit_code_transaction: function (parsed_result) {
+        if(!allowOnlinePayment(this.pos)) {
+            return;
+        }
+
         var def = new $.Deferred();
         var self = this;
 
+        // show the transaction popup.
+        // the transaction deferred is used to update transaction status
         this.gui.show_popup('payment-transaction', {
             transaction: def
         });
 
+        // Construct a dictionnary to store all data from the magnetic card
         var transaction = {
             track1: this._decode_track(parsed_result.code.match(this._track1)),
             track2: this._decode_track(parsed_result.code.match(this._track2)),
@@ -265,12 +288,15 @@ PaymentScreenWidget.include({
             encrypted_data: this._decode_encrypted_data(parsed_result.code.split('|')),
         };
 
+        // Extends the dictionnary with needed client side data to complete the request transaction
+
         _.extend(transaction, {
             'transaction_type'  : 'Credit',
             'transaction_code'  : 'Sale',
             'invoice_no'        : 'SLK423K',
             'amount'            : parsed_result.total,
-            'action'            : 'CreditTransaction'
+            'action'            : 'CreditTransaction',
+            'journal_id'        : parsed_result.journal_id,
         });
 
         def.notify({
@@ -281,15 +307,19 @@ PaymentScreenWidget.include({
 
         session.rpc("/pos/send_payement_transaction", transaction)
             .done(function (data) {
-
+                console.log(data);
+                // Decode the response of the payment server
                 var status  = data.match(/&lt;CmdStatus&gt;(.*)&lt;\/CmdStatus&gt;/)[1];
                 var error   = data.match(/&lt;DSIXReturnCode&gt;(.*)&lt;\/DSIXReturnCode&gt;/)[1];
                 var message = data.match(/&lt;TextResponse&gt;(.*)&lt;\/TextResponse&gt;/)[1];
+                var amount  = data.match(/&lt;Authorize&gt;(.*)&lt;\/Authorize&gt;/)[1];
 
                 if (status === 'Approved') {
+                    // If the payment is approved, add a payment line and try to close the order
                     var order = self.pos.get_order();
                     order.add_paymentline(self.pos.cashregisters[2]);
                     order.selected_paymentline.paid = true;
+                    order.selected_paymentline.amount = amount;
                     self.reset_input();
                     self.render_paymentlines();
                     setTimeout(_.bind(self.validate_order, self), 3000);
@@ -319,8 +349,14 @@ PaymentScreenWidget.include({
         parsed_result.total = this.pos.get_order().get_due().toFixed(2);
 
         if (parsed_result.total) {
-            this.gui.show_popup('payment-confirm',{
-                confirm: function () {self.credit_code_transaction(parsed_result);},
+
+            this.gui.show_popup('selection',{
+                title:   'Pay '+parsed_result.total+' With : ',
+                list:    onlinePaymentJournal,
+                confirm: function (item) {
+                    parsed_result.journal_id = item;
+                    self.credit_code_transaction(parsed_result);
+                },
                 cancel:  self.credit_code_cancel,
                 total:   parsed_result.total,
             });
@@ -332,6 +368,9 @@ PaymentScreenWidget.include({
 
     show: function () {
         this._super();
+        if (!allowOnlinePayment(this.pos)) {
+            return;
+        }
         this.pos.barcode_reader.set_action_callback('Credit', _.bind(this.credit_code_action, this));
     }
 });

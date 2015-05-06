@@ -10,6 +10,9 @@
             <TranType><t t-esc='transaction_type' /></TranType>
             <TranCode><t t-esc='transaction_code' /></TranCode>
             <InvoiceNo><t t-esc='invoice_no' /></InvoiceNo>
+            <LaneID><t t-esc='config_id' /></LaneID>
+            <TerminalID><t t-esc='config_id' /></TerminalID>
+            <PartialAuth>Allow</PartialAuth>
             <Memo><t t-esc='memo' /></Memo>
             <Account>
                 <AccountSource>Swiped</AccountSource>

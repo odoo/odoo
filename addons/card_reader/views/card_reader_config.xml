@@ -3,7 +3,7 @@
     <data>
         <!--     BARCODE NOMENCLATURES     -->
         <record model="ir.ui.view" id="view_card_reader_configuration_form">
-            <field name="name">Card Reader</field>
+            <field name="name">Card Readers</field>
             <field name="model">card_reader.configuration</field>
             <field name="arch" type="xml">
                 <form string="Card Reader">
@@ -25,7 +25,7 @@
         </record>
 
         <record model="ir.ui.view" id="view_card_reader_configuration_tree">
-            <field name="name">Card Reader</field>
+            <field name="name">Card Readers</field>
             <field name="model">card_reader.configuration</field>
             <field name="arch" type="xml">
                 <tree string="Barcode Nomenclatures">
@@ -36,7 +36,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_configuration_form">
-            <field name="name">Card Reader</field>
+            <field name="name">Card Readers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">card_reader.configuration</field>
             <field name="view_type">form</field>
@@ -48,18 +48,25 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_pos_config_form">
-            <field name="name">pos.config.form.view.inherit</field>
-            <field name="model">pos.config</field>
-            <field name="inherit_id" ref="point_of_sale.view_pos_config_form"></field>
+        <record model="ir.ui.view" id="view_account_journal_pos_user_form">
+            <field name="name">POS Journal</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"></field>
             <field name="arch" type="xml">
-                <sheet position='inside'>
-                    <group string="Card Reader Configuration" >
-                        <field name="card_reader" />
-                        <field name="operator_id" />
-                        <field name="card_reader_config_id" />
-                    </group>
-                </sheet>
+                <xpath expr="//field[@name='amount_authorized_diff']" position="after">
+                    <field name="card_reader_config_id" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_users_form_view" model="ir.ui.view">
+            <field name="name">res.users.form.view</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="point_of_sale.res_users_form_view" />
+            <field name="arch" type="xml">
+            <xpath expr="//field[@name='pos_config']" position="after">
+                <field name="operator_id" />
+            </xpath>
             </field>
         </record>
 
