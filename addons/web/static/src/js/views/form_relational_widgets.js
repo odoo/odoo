@@ -513,9 +513,7 @@ var AbstractManyField = common.AbstractField.extend({
         this.set('value', []);
         this.starting_ids = [];
         this.has_not_committed_changes = false;
-        this.view.on("load_record", this, function () {
-            self.starting_ids = self.get('value').slice();
-        });
+        this.view.on("load_record", this, this._on_load_record);
         this.dataset.on('dataset_changed', this, function() {
             self.has_not_committed_changes = true;
             // the editable lists change the dataset without call AbstractManyField methods
@@ -527,6 +525,10 @@ var AbstractManyField = common.AbstractField.extend({
             self.has_not_committed_changes = false;
             self.set({'value': self.dataset.ids.slice()});
         });
+    },
+
+    _on_load_record: function (record) {
+        this.starting_ids =  record.id ? record[this.name].slice() : [];
     },
 
     set_value: function(ids) {
@@ -723,6 +725,11 @@ var AbstractManyField = common.AbstractField.extend({
     is_false: function() {
         return _(this.get('value')).isEmpty();
     },
+
+    destroy: function () {
+        this.view.off("load_record", this, this._on_load_record);
+        this._super();
+    }
 });
 
 
