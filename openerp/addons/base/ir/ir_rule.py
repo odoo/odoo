@@ -103,7 +103,7 @@ class ir_rule(osv.osv):
         (_check_model_name, 'Rules can not be applied on the Record Rules model.', ['model_id']),
     ]
 
-    @tools.ormcache()
+    @tools.ormcache('uid', 'model_name', 'mode')
     def _compute_domain(self, cr, uid, model_name, mode="read"):
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))

@@ -81,7 +81,7 @@ class ir_config_parameter(osv.osv):
             return default
         return result
 
-    @ormcache(skiparg=2) # cache on (uid, key)
+    @ormcache('uid', 'key')
     def _get_param(self, cr, uid, key):
         params = self.search_read(cr, uid, [('key', '=', key)], fields=['value'], limit=1)
         if not params:

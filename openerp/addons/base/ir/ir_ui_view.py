@@ -921,11 +921,11 @@ class view(osv.osv):
     #------------------------------------------------------
     # QWeb template views
     #------------------------------------------------------
-    _read_template_cache = dict(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
-    if config['dev_mode']:
-        _read_template_cache['size'] = 0
 
-    @tools.conditional(not tools.config['dev_mode'], tools.ormcache_context(**_read_template_cache))
+    # apply ormcache_context decorator unless in dev mode...
+    @tools.conditional(not config['dev_mode'],
+        tools.ormcache_context('uid', 'view_id',
+            keys=('lang', 'inherit_branding', 'editable', 'translatable')))
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
@@ -1067,7 +1067,7 @@ class view(osv.osv):
         self._translate_qweb(cr, uid, arch, translate_func, context=context)
         return arch
 
-    @openerp.tools.ormcache()
+    @openerp.tools.ormcache('uid', 'id')
     def get_view_xmlid(self, cr, uid, id):
         imd = self.pool['ir.model.data']
         domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', id)]
