@@ -2,8 +2,13 @@
 <openerp>
 <data>
     
-    <menuitem id="mail.mail_feeds_main" name="Chat" icon="fa-envelope"
-              groups="base.group_user" sequence="1"/>
+    <menuitem 
+      id="mail.mail_feeds_main"
+      name="Chat"
+      icon="fa-envelope"
+      groups="base.group_user"
+      sequence="1"
+      web_icon="mail,static/description/icon.png"/>
 
     <record model="ir.actions.act_window" id="action_mail_inbox_feeds">
         <field name="name">Inbox</field>

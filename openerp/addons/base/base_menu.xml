@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
       <!-- Top menu item -->
-          <menuitem id="menu_board_root" name="Dashboards" sequence="305"/>
+          <menuitem id="menu_board_root" name="Dashboards" sequence="305" web_icon="base,static/description/board.png"/>
           <menuitem id="menu_reporting_dashboard" name="Dashboards" parent="menu_board_root" sequence="0"/>
           <menuitem id="menu_reporting_config" name="Configuration" parent="menu_board_root" sequence="100" groups="base.group_configuration"/>
 
@@ -9,8 +9,9 @@
       <menuitem name="Settings"
           id="menu_administration"
           icon="fa-cog"
+          web_icon="base,static/description/settings.png"
           sequence="500"/>
-          <menuitem id="menu_management" name="Modules" sequence="310"/>
+          <menuitem id="menu_management" name="Modules" sequence="310" web_icon="base,static/description/modules.png"/>
           <menuitem id="menu_config" name="Configuration" parent="menu_administration" sequence="1"/>
           <menuitem id="menu_administration_shortcut" parent="menu_administration" name="Custom Shortcuts" sequence="50"/>
           <menuitem id="menu_users" name="Users" parent="menu_administration" sequence="0"/>
