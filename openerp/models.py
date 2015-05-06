@@ -73,6 +73,7 @@ from .tools.translate import _
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
+_unlink = logging.getLogger(__name__ + '.unlink')
 
 regex_order = re.compile('^( *([a-z0-9:_]+|"[a-z0-9:_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -3658,6 +3659,9 @@ class BaseModel(object):
 
         # recompute new-style fields
         recs.recompute()
+
+        # auditing: deletions are infrequent and leave no trace in the database
+        _unlink.info('User #%s deleted %s records with IDs: %r', uid, self._name, ids)
 
         return True
 
