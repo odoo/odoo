@@ -254,7 +254,7 @@ class payment_line(osv.osv):
         for line in self.browse(cursor, user, ids, context=context):
             ctx = context.copy()
             ctx['date'] = line.order_id.date_done or fields.date.context_today(
-                self, cr, uid, context=context)
+                self, cursor, user, context=context)
             res[line.id] = currency_obj.compute(cursor, user, line.currency.id,
                     line.company_currency.id,
                     line.amount_currency, context=ctx)
