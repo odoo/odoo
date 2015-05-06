@@ -13,7 +13,7 @@ class sale_order(osv.Model):
         res = dict()
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
-                'cart_quantity': int(sum(l.product_uom_qty for l in (order.website_order_line or []))),
+                'cart_quantity': int(sum(l.product_uom_qty for l in (order.website_order_line or []) if l.product_id.name !='Reward')),
                 'only_services': all(l.product_id and l.product_id.type == 'service' for l in order.website_order_line)
             }
         return res
@@ -76,7 +76,6 @@ class sale_order(osv.Model):
     def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         sol = self.pool.get('sale.order.line')
-
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
             if line_id != False:
