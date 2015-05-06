@@ -240,7 +240,7 @@ class AccountBankStatementImport(models.TransientModel):
                 'details': {
                     'name': _('Already imported items'),
                     'model': 'account.bank.statement.line',
-                    'ids': BankStatementLine.search([('unique_import_id', 'in', ignored_statement_lines_import_ids)].ids)
+                    'ids': BankStatementLine.search([('unique_import_id', 'in', ignored_statement_lines_import_ids)]).ids
                 }
             }]
         return statement_ids, notifications

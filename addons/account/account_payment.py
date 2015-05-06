@@ -44,8 +44,8 @@ class account_abstract_payment(models.AbstractModel):
     journal_id = fields.Many2one('account.journal', string='Bank Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
-    manual_payment_method_selected = fields.Boolean(compute='_compute_manual_payment_method_selected')
-    hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method', help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
+    hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
+        help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
 
     @api.one
     @api.constrains('amount')
@@ -64,11 +64,6 @@ class account_abstract_payment(models.AbstractModel):
                     raise ValidationError(_t("The communication cannot contain any special character"))
         """
         pass
-
-    @api.one
-    @api.depends('payment_method')
-    def _compute_manual_payment_method_selected(self):
-        self.manual_payment_method_selected = self.payment_method.code == 'manual'
 
     @api.one
     @api.depends('payment_type', 'journal_id')
