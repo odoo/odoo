@@ -345,7 +345,7 @@ class res_users(osv.osv):
             for id in ids:
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
-        self._context_get.clear_cache(self)
+        self.context_get.clear_cache(self)
         self.has_group.clear_cache(self)
         return res
 
