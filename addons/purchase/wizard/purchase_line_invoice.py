@@ -61,9 +61,9 @@ class purchase_line_invoice(osv.osv_memory):
             'payment_term': orders[0].payment_term_id.id,
             'fiscal_position': partner.property_account_position.id
         }
-        inv_id = invoice_obj.create(cr, uid, inv)
+        inv_id = invoice_obj.create(cr, uid, inv, context=context)
         for order in orders:
-            order.write({'invoice_ids': [(4, inv_id)]})
+            order.write({'invoice_ids': [(4, inv_id)]}, context=context)
         return inv_id
 
     def makeInvoices(self, cr, uid, ids, context=None):
@@ -104,7 +104,7 @@ class purchase_line_invoice(osv.osv_memory):
                 il = map(lambda x: x[1], result)
                 orders = list(set(map(lambda x : x[0].order_id, result)))
 
-                res.append(self._make_invoice_by_partner(cr, uid, orders[0].partner_id, orders, il))
+                res.append(self._make_invoice_by_partner(cr, uid, orders[0].partner_id, orders, il, context=context))
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,res))+"])]",
