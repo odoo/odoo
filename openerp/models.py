@@ -2170,9 +2170,9 @@ class BaseModel(object):
         :param parent_model_name: name of the parent model for which the clauses should be added
         :param query: query object on which the JOIN should be added
         """
-        inherits_field = current_model._inherits[parent_model_name]
+        inherits_field = current_model[0]._inherits[parent_model_name]
         parent_model = self.pool[parent_model_name]
-        parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
+        parent_alias, parent_alias_statement = query.add_join((current_model[1], parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
         return parent_alias
 
     def _inherits_join_calc(self, field, query):
@@ -2185,11 +2185,11 @@ class BaseModel(object):
         :return: qualified name of field, to be used in SELECT clause
         """
         current_table = self
-        parent_alias = '"%s"' % current_table._table
+        parent_alias = '%s' % current_table._table
         while field in current_table._inherit_fields and not field in current_table._columns:
             parent_model_name = current_table._inherit_fields[field][0]
             parent_table = self.pool[parent_model_name]
-            parent_alias = self._inherits_join_add(current_table, parent_model_name, query)
+            parent_alias = self._inherits_join_add([current_table,parent_alias], parent_model_name, query)
             current_table = parent_table
         return '%s."%s"' % (parent_alias, field)
 
@@ -4480,7 +4480,7 @@ class BaseModel(object):
                 if parent_model:
                     # as inherited rules are being applied, we need to add the missing JOIN
                     # to reach the parent table (if it was not JOINed yet in the query)
-                    parent_alias = self._inherits_join_add(self, parent_model, query)
+                    parent_alias = self._inherits_join_add([self,self._table], parent_model, query)
                     # inherited rules are applied on the external table -> need to get the alias and replace
                     parent_table = self.pool[parent_model]._table
                     added_clause = [clause.replace('"%s"' % parent_table, '"%s"' % parent_alias) for clause in added_clause]
