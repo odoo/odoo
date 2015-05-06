@@ -44,6 +44,7 @@ var PaymentConfirmPopupWidget = PopupWidget.extend({
 // Extends the payment line object with the "paid" property used to 
 // know if the payment line is already paid
 
+// the paid parameter is not saved with export as JSON
 var _paylineproto = pos_model.Paymentline.prototype;
 
 pos_model.Paymentline = pos_model.Paymentline.extend({

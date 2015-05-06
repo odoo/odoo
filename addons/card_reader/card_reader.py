@@ -35,10 +35,6 @@ class card_reader_payement_data(models.Model):
     url_base_action = fields.Char(string='Base Action URL', required=True, help='the URL of the SOAP action')
 
 
-class pos_config(models.Model):
-    _inherit = 'pos.config'
-
-
 class res_users(models.Model):
     _inherit = 'res.users'
 
