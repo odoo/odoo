@@ -15,6 +15,7 @@ OpenERP E-Commerce
         'data/data.xml',
         'views/views.xml',
         'views/templates.xml',
+        'views/usps.xml',
         'views/payment.xml',
         'views/sale_order.xml',
         'views/snippets.xml',

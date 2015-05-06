@@ -238,5 +238,80 @@ $('.oe_website_sale').each(function () {
         $select.parent().toggle(nb>1);
     });
     $(oe_website_sale).find("select[name='shipping_country_id']").change();
+
+    // USPS Address Validation
+    var $form = $("form[action='/shop/confirm_order']");
+    var validate = $form.data('validate') == 'True';
+    var mandatory_validation = $form.data('mandatory-validation') == 'True';
+    
+    $("[data-toggle=popover]").popover({html: true, placement: 'top',});
+
+    $(oe_website_sale).on('change', "select[name='shipping_country_id'],select[name='country_id']", function () {
+        if (validate && $(this).children(':selected').data('validate')=='True') {
+            $('#wp-checkout-validate').removeClass('hidden');
+            $('#ws-checkout-confirm').addClass('disabled');
+        } else {
+            $('#wp-checkout-validate').addClass('hidden');
+            $('#ws-checkout-confirm').removeClass('disabled');
+        }
+    });
+
+    $form.find('input[name="street2"],input[name="city"],input[name="zip"],select[name="state_id"]').on('change', function(ev) {
+        if (mandatory_validation) {
+            $('#ws-checkout-confirm').attr('disabled','disabled');
+        }
+    })
+    $('#wp-checkout-validate').on('click', function(ev) {
+        var need_validation = $form.find("select[name='country_id']").children(':selected').data('validate')=='True';
+        
+
+        if (validate && need_validation) {
+            validate_address(ev);
+        }
+    });
+
+    function validate_address(ev){
+        var popover = $('#wp-checkout-validate').data('bs.popover');
+        popover.options.content = "<i class='fa fa-refresh fa-spin'></i> Checking";
+        ev.preventDefault();
+        popover.show();
+        debugger;
+        var action = $form.data('validate-action');
+        var object= {"jsonrpc": "2.0",
+                     "method": "call",
+                      "params": getFormData($form),
+                      "id": null};
+        openerp.jsonRpc(action, 'call', object).then(function (data) {
+            if (!data.Error) {
+                popover.options.content = "<i class='fa fa-check'></i> Address is Valid";
+                $form.find('input[name="city"]').val(data.city);
+                $form.find('input[name="street2"]').val(data.street);
+                $form.find('input[name="zip"]').val(data.zip);
+                $form.find('option[data-state-code="'+data.state+'"]').attr('selected','selected');
+                if (mandatory_validation) {
+                    $('#ws-checkout-confirm').removeClass('disabled');
+                }
+            } else {
+                popover.options.content = "<i class='fa fa-exclamation'></i> "+data.Error;
+                if (mandatory_validation) {
+                    $('#ws-checkout-confirm').addClass('disabled');
+                }
+            }
+            popover.show();
+
+        });
+    }
+
+    function getFormData($form){
+        var unindexed_array = $form.serializeArray();
+        var indexed_array = {};
+
+        $.map(unindexed_array, function(n, i){
+            indexed_array[n['name']] = n['value'];
+        });
+
+        return indexed_array;
+    };
+    $(oe_website_sale).find("select[name='shipping_country_id']").change();
 });
 });

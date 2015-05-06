@@ -1,0 +1,35 @@
+<odoo>
+    <template id="usps_checkout" inherit_id="website_sale.checkout">
+        <xpath expr="//a[@id='ws-checkout-confirm']" position="replace">
+            <a id="ws-checkout-confirm" class="btn btn-default btn-primary pull-right mb32 a-submit disabled" >Confirm <span class="fa fa-long-arrow-right"/></a>
+            <a id="wp-checkout-validate" role="button" tabindex="0" class="btn btn-default btn-primary pull-right mb32 mr8 hidden" data-toggle="popover" data-trigger="focus">
+                Validate
+            </a>
+        </xpath>
+        <xpath expr="//form[@action='/shop/confirm_order']" position="attributes">
+            <attribute name='t-att-data-validate'>validate</attribute>
+            <attribute name='t-att-data-mandatory-validation'>mandatory_validation</attribute>
+            <attribute name="data-validate-action">/account/details/validate</attribute>
+        </xpath>
+        <xpath expr="//select[@name='country_id']" position="replace">
+            <select name="country_id" class="form-control">
+                <option value="">Country...</option>
+                <t t-foreach="countries or []" t-as="country">
+                    <option t-att-value="country.id" t-att-data-validate="country.id == us_id or False" t-att-selected="country.id == checkout.get('country_id')"><t t-esc="country.name"/></option>
+                </t>
+            </select>
+        </xpath>
+        <xpath expr="//select[@name='shipping_country_id']" position="replace">
+            <select name="shipping_country_id" class="form-control" t-att-disabled="  'disabled' if shipping_id &gt;= 0 else ''">
+                <option value="">Country...</option>
+                <t t-foreach="countries or []" t-as="country">
+                    <option t-att-value="country.id" t-att-data-validate="country.id == us_id or False" t-att-selected="country.id == checkout.get('shipping_country_id')"><t t-esc="country.name"/></option>
+                </t>
+            </select>
+        </xpath>
+        <xpath expr="//option[@t-att-value='state.id']" position="attributes">
+            <attribute name='t-att-data-state-code'>state.code</attribute>
+        </xpath>
+    </template>
+
+</odoo>

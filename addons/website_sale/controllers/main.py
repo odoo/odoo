@@ -5,6 +5,7 @@ from openerp import SUPERUSER_ID
 from openerp import http
 from openerp import tools
 from openerp.http import request
+from openerp.tools.safe_eval import safe_eval
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
 from openerp.addons.web.controllers.main import login_redirect
@@ -375,7 +376,7 @@ class website_sale(http.Controller):
 
         order = None
 
-        shipping_id = data and data.get('shipping_id') or None
+        shipping_id = data and data.get('shipping_id') or partner.default_shipping_id and partner.default_shipping_id.id or 0
         shipping_ids = []
         checkout = {}
         if not data:
@@ -397,12 +398,6 @@ class website_sale(http.Controller):
                 pass
             if shipping_id == -1:
                 checkout.update(self.checkout_parse('shipping', data))
-
-        if shipping_id is None:
-            if not order:
-                order = request.website.sale_get_order(context=context)
-            if order and order.partner_shipping_id:
-                shipping_id = order.partner_shipping_id.id
 
         shipping_ids = list(set(shipping_ids) - set([partner.id]))
 
@@ -431,6 +426,8 @@ class website_sale(http.Controller):
                 if country_ids:
                     checkout['country_id'] = country_ids[0]
 
+        params = request.registry['ir.config_parameter']
+        us_id = request.registry['res.country'].search(cr, uid, [('name', '=', 'United States')], context=context)[0]
         values = {
             'countries': countries,
             'states': states,
@@ -439,7 +436,10 @@ class website_sale(http.Controller):
             'shippings': shippings,
             'error': {},
             'has_check_vat': hasattr(registry['res.partner'], 'check_vat'),
-            'only_services': order and order.only_services or False
+            'only_services': order and order.only_services or False,
+            'validate': safe_eval(params.get_param(cr, SUPERUSER_ID, 'website_portal.address_validation', default="False")),
+            'mandatory_validation': safe_eval(params.get_param(cr, SUPERUSER_ID, 'website_portal.mandatory_validation', default="False")),
+            'us_id': us_id,
         }
 
         return values
