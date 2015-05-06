@@ -2,8 +2,8 @@
 
 <templates id="template">
     <t t-name="PlannerLauncher">
-       <li class="oe_topbar_item oe_planner_systray">
-            <div class="oe_planner_progress">
+       <li class="oe_topbar_item o_planner_systray">
+            <div class="o_planner_progress">
                 <span class="fa fa-question-circle pull-left" style="color:white;"/>
                 <div class="progress">
                     <div class="progress-bar" t-attf-style="width:0%;">
@@ -14,7 +14,7 @@
     </t>
 
     <t t-name="PlannerFooter">
-        <div class="planner_footer col-sm-8 col-md-9 col-xs-12 hidden-print">
+        <div class="o_planner_footer col-sm-8 col-md-9 col-xs-12 hidden-print">
             <span class="shadow" />
 
             <div class="col-xs-6 text-left mark-block">
@@ -40,18 +40,18 @@
     <t t-name="PlannerDialog">
         <div>
             <div class="modal fade odoo_colors" id="PlannerModal" tabindex="-1" role="dialog" aria-labelledby="PlannerModalLabel" aria-hidden="true">
-                <div class="modal-dialog planner-dialog">
+                <div class="modal-dialog o_planner_dialog">
                     <div class="modal-content">
                         <div class="modal-body">
                             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i></button>
                             <div>
-                                <div class="col-sm-12 col-xs-7 progress_container">
-                                    <div class="col-sm-4 col-md-3 col-xs-12 progress_col">
+                                <div class="col-sm-12 col-xs-7 o_planner_progress_container">
+                                    <div class="col-sm-4 col-md-3 col-xs-12 o_planner_progress_col">
                                         <i class="fa fa-question-circle col-xs-1"></i>
                                         <div class="progress col-xs-9">
                                             <div class="progress-bar" t-attf-style="width:0%;"></div>
                                         </div>
-                                        <span class="counter col-xs-1"></span>
+                                        <span class="o_planner_progress_counter col-xs-1"></span>
                                     </div>
                                 </div>
                                 <div class="content_page"/>
