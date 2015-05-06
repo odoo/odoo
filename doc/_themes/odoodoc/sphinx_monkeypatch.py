@@ -50,7 +50,7 @@ def navbarify(node, navbar=None):
             #                     reference
             # no bullet_list.list_item -> don't dropdownify
             if not list_item.children[1].children:
-                return
+                continue
 
             list_item['classes'].append('dropdown')
             # list_item.compact_paragraph.reference

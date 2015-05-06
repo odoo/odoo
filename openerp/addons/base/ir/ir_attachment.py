@@ -71,8 +71,7 @@ class ir_attachment(osv.osv):
     def _storage(self, cr, uid, context=None):
         return self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'ir_attachment.location', 'file')
 
-    @tools.ormcache(skiparg=3)
-    def _filestore(self, cr, uid):
+    def _filestore(self, cr, uid, context=None):
         return tools.config.filestore(cr.dbname)
 
     def force_storage(self, cr, uid, context=None):
@@ -232,10 +231,11 @@ class ir_attachment(osv.osv):
         if ids:
             if isinstance(ids, (int, long)):
                 ids = [ids]
-            cr.execute('SELECT DISTINCT res_model, res_id FROM ir_attachment WHERE id = ANY (%s)', (ids,))
-            for rmod, rid in cr.fetchall():
+            cr.execute('SELECT DISTINCT res_model, res_id, create_uid FROM ir_attachment WHERE id = ANY (%s)', (ids,))
+            for rmod, rid, create_uid in cr.fetchall():
                 if not (rmod and rid):
-                    require_employee = True
+                    if create_uid != uid:
+                        require_employee = True
                     continue
                 res_ids.setdefault(rmod,set()).add(rid)
         if values:

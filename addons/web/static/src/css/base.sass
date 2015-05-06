@@ -460,7 +460,7 @@ $sheet-padding: 16px
             font-weight: bold
             &:hover
                 text-decoration: underline
-    .oe_webclient
+    .oe_webclient, .modal-body
         .oe_star_on, .oe_star_off
             color: #cccccc
             text-shadow: 0 0 2px black
@@ -785,7 +785,6 @@ $sheet-padding: 16px
                     height: 100%
                     > div.oe_secondary_menus_container
                         position: absolute
-                        position: static\9
                         top: 0
                         bottom: 0
                         left: 0
@@ -918,7 +917,6 @@ $sheet-padding: 16px
                         height: 100%
                         > .oe_view_manager_body
                             position: absolute
-                            position: static\9
                             top: 0
                             bottom: 0
                             left: 0
@@ -2273,6 +2271,8 @@ $sheet-padding: 16px
                         border-width: 0
                 > td.oe_list_field_boolean input
                     @include opacity()
+                > td.oe_list_field_boolean input:-moz-read-only
+                    @include opacity(1.0)
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)

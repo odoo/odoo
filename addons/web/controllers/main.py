@@ -534,14 +534,15 @@ class Home(http.Controller):
     @http.route([
         '/web/css/<xmlid>',
         '/web/css/<xmlid>/<version>',
+        '/web/css.<int:page>/<xmlid>/<version>',
     ], type='http', auth='public')
-    def css_bundle(self, xmlid, version=None, **kw):
+    def css_bundle(self, xmlid, version=None, page=None, **kw):
         try:
             bundle = AssetsBundle(xmlid)
         except QWebTemplateNotFound:
             return request.not_found()
 
-        response = request.make_response(bundle.css(), [('Content-Type', 'text/css')])
+        response = request.make_response(bundle.css(page), [('Content-Type', 'text/css')])
         return make_conditional(response, bundle.last_modified, max_age=BUNDLE_MAXAGE)
 
 class WebClient(http.Controller):
@@ -1423,6 +1424,9 @@ class ExportFormat(object):
         Model = request.session.model(model)
         context = dict(request.context or {}, **params.get('context', {}))
         ids = ids or Model.search(domain, 0, False, False, context)
+
+        if not request.env[model]._is_an_ordinary_table():
+            fields = [field for field in fields if field['name'] != 'id']
 
         field_names = map(operator.itemgetter('name'), fields)
         import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas',[])

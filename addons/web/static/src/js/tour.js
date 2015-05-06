@@ -59,6 +59,7 @@ var localStorage = window.localStorage;
 var Tour = {
     tours: {},
     defaultDelay: 50,
+    autoRunning: true,
     retryRunningDelay: 1000,
     errorDelay: 5000,
     state: null,
@@ -339,6 +340,7 @@ var Tour = {
     },
     error: function (step, message) {
         var state = Tour.getState();
+        console.log(state.tour.steps.slice());
         message += '\n tour: ' + state.id
             + (step ? '\n step: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
             + '\n href: ' + window.location.href
@@ -568,6 +570,10 @@ openerp.Tour = Tour;
 
 /////////////////////////////////////////////////
 
-$(document).ready(Tour.running);
+$(document).ready(function () {
+    if (Tour.autoRunning) {
+        Tour.running();
+    };
+});
 
 }());

@@ -73,6 +73,7 @@ class Registry(Mapping):
         self.base_registry_signaling_sequence = None
         self.base_cache_signaling_sequence = None
 
+        self.cache = LRU(8192)
         # Flag indicating if at least one model cache has been cleared.
         # Useful only in a multi-process context.
         self._any_cache_cleared = False
@@ -103,10 +104,6 @@ class Registry(Mapping):
     def __call__(self, model_name):
         """ Same as ``self[model_name]``. """
         return self.models[model_name]
-
-    @lazy_property
-    def cache(self):
-        return RegistryManager.cache
 
     @lazy_property
     def pure_function_fields(self):
@@ -176,6 +173,8 @@ class Registry(Mapping):
 
             :param partial: ``True`` if all models have not been loaded yet.
         """
+        lazy_property.reset_all(self)
+
         # load custom models
         ir_model = self['ir.model']
         cr.execute('select model from ir_model where state=%s', ('manual',))
@@ -291,7 +290,6 @@ class RegistryManager(object):
 
     """
     _registries = None
-    _cache = None
     _lock = threading.RLock()
     _saved_lock = None
 
@@ -312,18 +310,6 @@ class RegistryManager(object):
 
             cls._registries = LRU(size)
         return cls._registries
-
-    @classproperty
-    def cache(cls):
-        """ Return the global LRU ormcache. Its keys are tuples with the
-        following structure: (db_name, model_name, method, args...).
-        """
-        with cls.lock():
-            if cls._cache is None:
-                # we allocate 8192 cache entries per registry
-                size = 8192 * cls.registries.count
-                cls._cache = LRU(size)
-            return cls._cache
 
     @classmethod
     def lock(cls):

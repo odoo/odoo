@@ -350,6 +350,30 @@
                 });
         });
 
+        if (!$('.js_change_lang').length) {
+            // in case template is not up to date...
+            var links = $('ul.js_language_selector li a:not([data-oe-id])');
+            var m = $(_.min(links, function(l) { return $(l).attr('href').length; })).attr('href');
+            links.each(function() {
+                var t = $(this).attr('href');
+                var l = (t === m) ? "default" : t.split('/')[1];
+                $(this).data('lang', l).addClass('js_change_lang');
+            });
+        }
+
+        $(document).on('click', '.js_change_lang', function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+            // retrieve the hash before the redirect
+            var redirect = {
+                lang: self.data('lang'),
+                url: self.attr('href'),
+                hash: location.hash
+            };
+            location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
+        });
+
         /* ----- KANBAN WEBSITE ---- */
         $('.js_kanban').each(function () {
             website.init_kanban(this);
@@ -368,6 +392,11 @@
         $('#oe_applications').before($collapse);
         $collapse.wrap('<div class="visible-xs"/>');
         $('[data-target="#oe_applications"]').attr("data-target", "#oe_applications_collapse");
+    });
+
+    openerp.Tour.autoRunning = false;
+    website.ready().then(function () {
+        setTimeout(openerp.Tour.running,0);
     });
 
     return website;

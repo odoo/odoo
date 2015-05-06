@@ -397,11 +397,16 @@ class purchase_order(osv.osv):
                 'fiscal_position': False,
                 'payment_term_id': False,
                 }}
+
+        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        if not company_id:
+            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+        fp = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, context=context)
         supplier_address = partner.address_get(cr, uid, [partner_id], ['default'], context=context)
         supplier = partner.browse(cr, uid, partner_id, context=context)
         return {'value': {
             'pricelist_id': supplier.property_product_pricelist_purchase.id,
-            'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
+            'fiscal_position': fp or supplier.property_account_position and supplier.property_account_position.id,
             'payment_term_id': supplier.property_supplier_payment_term.id or False,
             }}
 
@@ -842,7 +847,7 @@ class purchase_order(osv.osv):
             picking_vals = {
                 'picking_type_id': order.picking_type_id.id,
                 'partner_id': order.partner_id.id,
-                'date': max([l.date_planned for l in order.order_line]),
+                'date': order.date_order,
                 'origin': order.name
             }
             picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
@@ -868,7 +873,7 @@ class purchase_order(osv.osv):
         Orders will only be merged if:
         * Purchase Orders are in draft
         * Purchase Orders belong to the same partner
-        * Purchase Orders are have same stock location, same pricelist
+        * Purchase Orders are have same stock location, same pricelist, same currency
         Lines will only be merged if:
         * Order lines are exactly the same except for the quantity and unit
 
@@ -904,12 +909,13 @@ class purchase_order(osv.osv):
         # Compute what the new orders should contain
         new_orders = {}
 
-        order_lines_to_move = []
+        order_lines_to_move = {}
         for porder in [order for order in self.browse(cr, uid, ids, context=context) if order.state == 'draft']:
-            order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id'))
+            order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id', 'currency_id'))
             new_order = new_orders.setdefault(order_key, ({}, []))
             new_order[1].append(porder.id)
             order_infos = new_order[0]
+            order_lines_to_move.setdefault(order_key, [])
 
             if not order_infos:
                 order_infos.update({
@@ -920,6 +926,7 @@ class purchase_order(osv.osv):
                     'picking_type_id': porder.picking_type_id.id,
                     'location_id': porder.location_id.id,
                     'pricelist_id': porder.pricelist_id.id,
+                    'currency_id': porder.currency_id.id,
                     'state': 'draft',
                     'order_line': {},
                     'notes': '%s' % (porder.notes or '',),
@@ -933,8 +940,7 @@ class purchase_order(osv.osv):
                 if porder.origin:
                     order_infos['origin'] = (order_infos['origin'] or '') + ' ' + porder.origin
 
-            for order_line in porder.order_line:
-                order_lines_to_move += [order_line.id]
+            order_lines_to_move[order_key] += [order_line.id for order_line in porder.order_line]
 
         allorders = []
         orders_info = {}
@@ -948,7 +954,7 @@ class purchase_order(osv.osv):
             for key, value in order_data['order_line'].iteritems():
                 del value['uom_factor']
                 value.update(dict(key))
-            order_data['order_line'] = [(6, 0, order_lines_to_move)]
+            order_data['order_line'] = [(6, 0, order_lines_to_move[order_key])]
 
             # create the new order
             context.update({'mail_create_nolog': True})
@@ -1504,10 +1510,16 @@ class account_invoice(osv.Model):
         for order in purchase_order_obj.browse(cr, uid, po_ids, context=context):
             purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
             invoiced = []
+            shipped = True
+            # for invoice method manual or order, don't care about shipping state
+            # for invoices based on incoming shippment, beware of partial deliveries
+            if (order.invoice_method == 'picking' and
+                    not all(picking.invoice_state in ['invoiced'] for picking in order.picking_ids)):
+                shipped = False
             for po_line in order.order_line:
-                if any(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
+                if all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
                     invoiced.append(po_line.id)
-            if invoiced:
+            if invoiced and shipped:
                 self.pool['purchase.order.line'].write(cr, uid, invoiced, {'invoiced': True})
             workflow.trg_write(uid, 'purchase.order', order.id, cr)
         return res

@@ -180,7 +180,6 @@ openerp.account = function (instance) {
             deferred_promises.push(self.model_bank_statement_line
                 .query(['id'])
                 .filter(lines_filter)
-                .order_by('statement_id, id')
                 .all().then(function (data) {
                     self.st_lines = _(data).map(function(o){ return o.id });
                 })
@@ -289,7 +288,7 @@ openerp.account = function (instance) {
         keyboardShortcutsHandler: function(e) {
             var self = this;
             if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
-                self.persistReconciliations(_.filter(self.getChildren(), function(o) { return o.is_valid; }));
+                self.persistReconciliations(_.filter(self.getChildren(), function(o) { return o.get("balance").toFixed(3) === "0.000"; }));
             }
         },
 
@@ -519,7 +518,7 @@ openerp.account = function (instance) {
     
             var time_taken;
             if (sec_taken/60 >= 1) time_taken = Math.floor(sec_taken/60) +"' "+ sec_taken%60 +"''";
-            else time_taken = sec_taken%60 +" seconds";
+            else time_taken = sec_taken%60 +_t(" seconds");
     
             var title;
             if (sec_per_item < 5) title = _t("Whew, that was fast !") + " <i class='fa fa-trophy congrats_icon'></i>";
@@ -1277,7 +1276,7 @@ openerp.account = function (instance) {
             self.is_valid = false;
             self.$(".tip_reconciliation_not_balanced").show();
             self.$(".tbody_open_balance").empty();
-            self.$(".button_ok").text("OK").removeClass("oe_highlight").attr("disabled", "disabled");
+            self.$(".button_ok").text(_t("OK")).removeClass("oe_highlight").attr("disabled", "disabled");
 
             // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
             var balance_type = undefined;
@@ -1289,13 +1288,13 @@ openerp.account = function (instance) {
             if (balance_type === "equal") {
                 displayValidState(true);
             } else if (balance_type === "greater") {
-                createOpenBalance("Create Write-off");
+                createOpenBalance(_t("Create Write-off"));
             } else if (balance_type === "lower") {
                 if (self.st_line.has_no_partner) {
-                    createOpenBalance("Choose counterpart");
+                    createOpenBalance(_t("Choose counterpart"));
                 } else {
-                    displayValidState(false, "Keep open");
-                    createOpenBalance("Open balance");
+                    displayValidState(false, _t("Keep open"));
+                    createOpenBalance(_t("Open balance"));
                 }
             }
 
@@ -1755,7 +1754,7 @@ openerp.account = function (instance) {
             this.last_group_by = group_by;
             this.old_search = _.bind(this._super, this);
             var mod = new instance.web.Model("account.move.line", context, domain);
-            return mod.call("list_partners_to_reconcile", []).then(function(result) {
+            return mod.call("list_partners_to_reconcile", [context, domain]).then(function(result) {
                 var current = self.current_partner !== null ? self.partners[self.current_partner][0] : null;
                 self.partners = result;
                 var index = _.find(_.range(self.partners.length), function(el) {

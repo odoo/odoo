@@ -156,9 +156,9 @@
 
   <template id="quotation_toolbar">
       <div class="text-center hidden-print" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-          <a class="btn btn-success fa fa-check" data-toggle="modal" data-target="#modelaccept"
-            t-if="days_valid">
-              Accept
+          <a class="btn btn-success" data-toggle="modal" data-target="#modelaccept"
+            t-if="days_valid &gt;= 0">
+              <i class="fa fa-check"></i> Accept
           </a>
           <a class="btn btn-info fa fa-comment" type="submit" href="#discussion">
               Feedback
