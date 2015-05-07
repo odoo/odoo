@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
+import openerp
 
 from openerp import SUPERUSER_ID, tools
 from openerp.osv import osv, orm, fields
@@ -213,6 +214,10 @@ class website(orm.Model):
     def sale_product_domain(self, cr, uid, ids, context=None):
         return [("sale_ok", "=", True)]
 
+    @openerp.tools.ormcache()
+    def get_partner(self, cr, uid):
+        return self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id
+
     def sale_get_order(self, cr, uid, ids, force_create=False, code=None, update_pricelist=False, force_pricelist=False, context=None):
         """ Return the current sale order after mofications specified by params.
 
@@ -224,8 +229,9 @@ class website(orm.Model):
 
         :returns: browse record for the current sale order
         """
+        partner = self.get_partner(cr, uid)
         sale_order_obj = self.pool['sale.order']
-        sale_order_id = request.session.get('sale_order_id')
+        sale_order_id = request.session.get('sale_order_id') or partner.last_website_so_id.id
         sale_order = None
         pricelist_id = request.session.get('website_sale_current_pl')
 
@@ -238,7 +244,6 @@ class website(orm.Model):
         if not sale_order_id and (force_create or code):
             # TODO cache partner_id session
             user_obj = self.pool['res.users']
-            partner = user_obj.browse(cr, SUPERUSER_ID, uid, context=context).partner_id
             affiliate_id = request.session.get('affiliate_id')
             salesperson_id = affiliate_id if user_obj.exists(cr, SUPERUSER_ID, affiliate_id, context=context) else request.website.salesperson_id.id
             for w in self.browse(cr, uid, ids):
@@ -254,10 +259,9 @@ class website(orm.Model):
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
                 request.session['sale_order_id'] = sale_order_id
 
+                if request.website.partner_id.id != partner.id:
+                    partner.write({'last_website_so_id': sale_order_id})
         if sale_order_id:
-            # TODO cache partner_id session
-            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
-
             sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
             if not sale_order.exists():
                 request.session['sale_order_id'] = None
@@ -384,3 +388,9 @@ class CountryGroup(osv.Model):
         'website_pricelist_ids': fields.many2many('website_pricelist', 'res_country_group_website_pricelist_rel',
                                                   'res_country_group_id', 'website_pricelist_id', string='Website Price Lists'),
     }
+
+
+class res_partner(openerp.models.Model):
+    _inherit = 'res.partner'
+
+    last_website_so_id = openerp.fields.Many2one('sale.order', 'Last Online Sale Order')
