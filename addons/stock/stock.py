@@ -2746,15 +2746,33 @@ class stock_inventory(osv.osv):
 
     def _check_filter_product(self, cr, uid, ids, context=None):
         for inventory in self.browse(cr, uid, ids, context=context):
+            if inventory.filter == 'none' and inventory.product_id and inventory.location_id and inventory.lot_id:
+                return True
             if inventory.filter not in ('product', 'product_owner') and inventory.product_id:
+                return False
+            if inventory.filter != 'lot' and inventory.lot_id:
+                return False
+            if inventory.filter not in ('owner', 'product_owner') and inventory.partner_id:
+                return False
+            if inventory.filter != 'pack' and inventory.package_id:
                 return False
         return True
 
-    def onchange_filter(self, cr, uid, ids, filter):
-        return {'value': {'product_id': False} if filter not in ('product', 'product_owner') else {}}
+    def onchange_filter(self, cr, uid, ids, filter, context=None):
+        to_clean = { 'value': {} }
+        if filter not in ('product', 'product_owner'):
+            to_clean['value']['product_id'] = False
+        if filter != 'lot':
+            to_clean['value']['lot_id'] = False
+        if filter not in ('owner', 'product_owner'):
+            to_clean['value']['partner_id'] = False
+        if filter != 'pack':
+            to_clean['value']['package_id'] = False
+        return to_clean
 
     _constraints = [
-        (_check_filter_product, 'A specific product is chosen while the filter "One product only" is not selected', ['product_id', 'filter']),
+        (_check_filter_product, 'The selected inventory options are not coherent.',
+            ['filter', 'product_id', 'lot_id', 'partner_id', 'package_id']),
     ]
 
 class stock_inventory_line(osv.osv):
