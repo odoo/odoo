@@ -138,6 +138,7 @@ class AccountInvoice(models.Model):
                 self.has_outstanding = True
 
     @api.one
+    @api.depends('payment_move_line_ids.amount_residual')
     def _get_payment_info_JSON(self):
         self.payments_widget = json.dumps(False)
         if self.payment_move_line_ids:
@@ -175,7 +176,7 @@ class AccountInvoice(models.Model):
         for line in self.move_id.line_ids:
             payment_lines.extend([rp.credit_move_id.id for rp in line.matched_credit_ids])
             payment_lines.extend([rp.debit_move_id.id for rp in line.matched_debit_ids])
-        self.payment_move_line_ids = self.env['account.move.line'].browse(payment_lines).sorted()
+        self.payment_move_line_ids = self.env['account.move.line'].browse(list(set(payment_lines)))
 
     name = fields.Char(string='Reference/Description', index=True,
         readonly=True, states={'draft': [('readonly', False)]}, copy=False, help='The name that will be used on account move lines')
@@ -288,7 +289,7 @@ class AccountInvoice(models.Model):
     residual_signed = fields.Monetary(string='Amount Due', currency_field='company_currency_id',
         compute='_compute_residual', store=True, help="Remaining amount due in the currency of the company.")
     payment_ids = fields.Many2many('account.payment', 'account_invoice_payment_rel', 'invoice_id', 'payment_id', string="Payments", copy=False, readonly=True)
-    payment_move_line_ids = fields.Many2many('account.move.line', string='Payments', compute='_compute_payments')
+    payment_move_line_ids = fields.Many2many('account.move.line', string='Payments', compute='_compute_payments', store=True)
     user_id = fields.Many2one('res.users', string='Salesperson', track_visibility='onchange',
         readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env.user)
