@@ -765,7 +765,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     var parent_img = _.detect(self.one_object['parent_child_id'],function(element){
                         return _.include(element.value, self.one_object.clicked_tr_id);
                     });
-                    if(parent_img.value.length == 1){
+                    if(parent_img && parent_img.value.length == 1){
                         self.edit_xml_dialog.$el.
                             find("tr[id='viewedit-"+parent_img.key+"']").
                             find("img[id^='parentimg-']").remove();
