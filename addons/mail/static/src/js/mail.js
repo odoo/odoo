@@ -586,7 +586,7 @@ var ThreadComposeMessage = MessageCommon.extend({
                 'mail_post_autofollow': true,
                 'mail_post_autofollow_partner_ids': partner_ids,
             }),
-            'type': 'comment',
+            'message_type': 'comment',
             'content_subtype': 'plaintext',
         };
         if (log) {
