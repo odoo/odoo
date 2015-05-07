@@ -41,7 +41,7 @@ var PaymentConfirmPopupWidget = PopupWidget.extend({
     }
 });
 
-// Extends the payment line object with the "paid" property used to 
+// Extends the payment line object with the "paid" property used to
 // know if the payment line is already paid
 
 // the paid parameter is not saved with export as JSON
@@ -148,7 +148,7 @@ var lookUpCodeTransaction = {
     },
 };
 
-// Popup to show all transaction state for the payment. 
+// Popup to show all transaction state for the payment.
 
 var PaymentTransactionPopupWidget = PopupWidget.extend({
     template: 'PaymentTransactionPopupWidget',
@@ -203,7 +203,6 @@ BarcodeParser.include({
 });
 
 // On all screens, if a card is swipped, return a popup error.
-
 ScreenWidget.include({
     credit_error_action: function () {
         this.gui.show_popup('error-barcode','Go to payment screen to use cards');
@@ -211,10 +210,9 @@ ScreenWidget.include({
 
     show: function () {
         this._super();
-        if(!allowOnlinePayment(this.pos)) {
-            return;
+        if(allowOnlinePayment(this.pos)) {
+            this.pos.barcode_reader.set_action_callback('Credit', _.bind(this.credit_error_action, this));
         }
-        this.pos.barcode_reader.set_action_callback('Credit', _.bind(this.credit_error_action, this));
     }
 });
 
@@ -223,7 +221,7 @@ PaymentScreenWidget.include({
     // Regular expression to identify and extract data from the track 1 & 2 of the magnetic code
     _track1:/%B?([0-9]*)\^([A-Z\/ -_]*)\^([0-9]{4})(.{3})([^?]+)\?/,
     _track2:/\;([0-9]+)=([0-9]{4})(.{3})([^?]+)\?/,
-   
+
     // Extract data from a track list to a track dictionnary
     _decode_track: function(track_list) {
 
@@ -306,7 +304,7 @@ PaymentScreenWidget.include({
             message: 'Sending transaction to payment support ...',
         });
 
-        session.rpc("/pos/send_payement_transaction", transaction)
+        session.rpc("/pos/send_payment_transaction", transaction)
             .done(function (data) {
                 console.log(data);
                 // Decode the response of the payment server
@@ -352,7 +350,7 @@ PaymentScreenWidget.include({
         if (parsed_result.total) {
 
             this.gui.show_popup('selection',{
-                title:   'Pay '+parsed_result.total+' With : ',
+                title:   'Pay ' + parsed_result.total + ' with : ',
                 list:    onlinePaymentJournal,
                 confirm: function (item) {
                     parsed_result.journal_id = item;
@@ -369,10 +367,9 @@ PaymentScreenWidget.include({
 
     show: function () {
         this._super();
-        if (!allowOnlinePayment(this.pos)) {
-            return;
+        if (allowOnlinePayment(this.pos)) {
+            this.pos.barcode_reader.set_action_callback('Credit', _.bind(this.credit_code_action, this));
         }
-        this.pos.barcode_reader.set_action_callback('Credit', _.bind(this.credit_code_action, this));
     }
 });
 

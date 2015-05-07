@@ -12,9 +12,8 @@ soap_footer = '</mer:tran><mer:pw>xyz</mer:pw></mer:CreditTransaction></soapenv:
 
 
 class CardReader(http.Controller):
-
-    @http.route('/pos/send_payement_transaction', type='json', auth='user')
-    def a(self, **k):
+    @http.route('/pos/send_payment_transaction', type='json', auth='user')
+    def handler(self, **k):
         session = request.session
 
         # if user not logged in exit fail
@@ -46,12 +45,12 @@ class CardReader(http.Controller):
 
         headers = {
             'Content-Type': 'text/xml',
-            'SOAPAction':   k['url_base_action']+'/'+k['action'],
+            'SOAPAction': k['url_base_action'] + '/' + k['action'],
         }
 
         xml_transaction = xml_transaction.replace("<", "&lt;")
         xml_transaction = xml_transaction.replace(">", "&gt;")
-        xml_transaction = soap_header+xml_transaction+soap_footer
+        xml_transaction = soap_header + xml_transaction + soap_footer
 
         response = ''
 

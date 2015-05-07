@@ -24,7 +24,7 @@ class barcode_rule(models.Model):
         return list(types)
 
 
-class card_reader_payement_data(models.Model):
+class card_reader_payment_data(models.Model):
     _name = 'card_reader.configuration'
 
     # FIELDS #
