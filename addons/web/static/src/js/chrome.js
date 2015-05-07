@@ -1078,7 +1078,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 instance.web.redirect('https://accounts.odoo.com/oauth2/auth?'+$.param(params));
             }).fail(function(result, ev){
                 ev.preventDefault();
-                instance.web.redirect('https://accounts.odoo.com/web');
+                instance.web.redirect('https://accounts.odoo.com/account');
             });
         }
     },

@@ -1093,6 +1093,13 @@ class BaseModel(object):
             ids = False
         return {'ids': ids, 'messages': messages}
 
+    def _add_fake_fields(self, cr, uid, fields, context=None):
+        from openerp.fields import Char, Integer
+        fields[None] = Char('rec_name')
+        fields['id'] = Char('External ID')
+        fields['.id'] = Integer('Database ID')
+        return fields
+
     def _extract_records(self, cr, uid, fields_, data,
                          context=None, log=lambda a: None):
         """ Generates record dicts from the data sequence.
@@ -1108,13 +1115,9 @@ class BaseModel(object):
         * "id" is the External ID for the record
         * ".id" is the Database ID for the record
         """
-        from openerp.fields import Char, Integer
         fields = dict(self._fields)
         # Fake fields to avoid special cases in extractor
-        fields[None] = Char('rec_name')
-        fields['id'] = Char('External ID')
-        fields['.id'] = Integer('Database ID')
-
+        fields = self._add_fake_fields(cr, uid, fields, context=context)
         # m2o fields can't be on multiple lines so exclude them from the
         # is_relational field rows filter, but special-case it later on to
         # be handled with relational fields (as it can have subfields)
@@ -2428,6 +2431,11 @@ class BaseModel(object):
         # has not been added in database yet!
         context = dict(context or {}, prefetch_fields=False)
 
+        # Make sure an environment is available for get_pg_type(). This is
+        # because we access column.digits, which retrieves a cursor from
+        # existing environments.
+        env = api.Environment(cr, SUPERUSER_ID, context)
+
         store_compute = False
         stored_fields = []              # new-style stored fields with compute
         todo_end = []
@@ -3467,8 +3475,8 @@ class BaseModel(object):
                     # errors for non-transactional search/read sequences coming from clients
                     return
                 _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
-                raise except_orm(_('Missing document(s)'),
-                                 _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+                raise MissingError(
+                    _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
 
 
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
@@ -3986,10 +3994,10 @@ class BaseModel(object):
                     recs.invalidate_cache(['parent_left', 'parent_right'])
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
-        result.sort()
 
         done = {}
-        for order, model_name, ids_to_update, fields_to_recompute in result:
+        recs.env.recompute_old.extend(result)
+        for order, model_name, ids_to_update, fields_to_recompute in sorted(recs.env.recompute_old):
             key = (model_name, tuple(fields_to_recompute))
             done.setdefault(key, {})
             # avoid to do several times the same computation
@@ -4000,6 +4008,7 @@ class BaseModel(object):
                     if id not in deleted_related[model_name]:
                         todo.append(id)
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
+        recs.env.clear_recompute_old()
 
         # recompute new-style fields
         if recs.env.recompute and context.get('recompute', True):
@@ -4249,16 +4258,18 @@ class BaseModel(object):
         # check Python constraints
         recs._validate_fields(vals)
 
-        if recs.env.recompute and context.get('recompute', True):
-            result += self._store_get_values(cr, user, [id_new],
+        result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
-            result.sort()
+        recs.env.recompute_old.extend(result)
+
+        if recs.env.recompute and context.get('recompute', True):
             done = []
-            for order, model_name, ids, fields2 in result:
+            for order, model_name, ids, fields2 in sorted(recs.env.recompute_old):
                 if not (model_name, ids, fields2) in done:
                     self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
                     done.append((model_name, ids, fields2))
+            recs.env.clear_recompute_old()
             # recompute new-style fields
             recs.recompute()
 
@@ -5659,7 +5670,11 @@ class BaseModel(object):
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
-            names = [f.name for f in field.computed_fields if f.store]
+            names = [
+                f.name
+                for f in field.computed_fields
+                if f.store and self.env.field_todo(f)
+            ]
             for rec in recs:
                 try:
                     values = rec._convert_to_write({

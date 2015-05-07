@@ -825,12 +825,17 @@ class account_move_line(osv.osv):
                 total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)
                 ret_line['credit_currency'] = actual_credit
                 ret_line['debit_currency'] = actual_debit
-                ctx = context.copy()
-                if target_date:
-                    ctx.update({'date': target_date})
-                total_amount = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, total_amount, context=ctx)
-                actual_debit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_debit, context=ctx)
-                actual_credit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_credit, context=ctx)
+                if target_currency == company_currency:
+                    actual_debit = debit
+                    actual_credit = credit
+                    total_amount = debit or credit
+                else:
+                    ctx = context.copy()
+                    if target_date:
+                        ctx.update({'date': target_date})
+                    total_amount = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, total_amount, context=ctx)
+                    actual_debit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_debit, context=ctx)
+                    actual_credit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_credit, context=ctx)
             amount_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=target_currency)
             total_amount_str = rml_parser.formatLang(total_amount, currency_obj=target_currency)
 
@@ -843,7 +848,12 @@ class account_move_line(osv.osv):
             ret.append(ret_line)
         return ret
 
-    def list_partners_to_reconcile(self, cr, uid, context=None):
+
+    def list_partners_to_reconcile(self, cr, uid, context=None, filter_domain=False):
+        line_ids = []
+        if filter_domain:
+            line_ids = self.search(cr, uid, filter_domain, context=context)
+        where_clause = filter_domain and "AND l.id = ANY(%s)" or ""
         cr.execute(
              """SELECT partner_id FROM (
                 SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
@@ -853,10 +863,12 @@ class account_move_line(osv.osv):
                     WHERE a.reconcile IS TRUE
                     AND l.reconcile_id IS NULL
                     AND l.state <> 'draft'
+                    %s
                     GROUP BY l.partner_id, p.last_reconciliation_date
                 ) AS s
                 WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
-                ORDER BY last_reconciliation_date""")
+                ORDER BY last_reconciliation_date"""
+            % where_clause, (line_ids,))
         ids = [x[0] for x in cr.fetchall()]
         if not ids:
             return []

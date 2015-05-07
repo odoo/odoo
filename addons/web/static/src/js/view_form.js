@@ -636,7 +636,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             // If field is not defined in the view, just ignore it
             if (field) {
                 var value_ = values[f];
-                if (field.get_value() != value_) {
+                if (field.get_value() !== value_) {
                     field._inhibit_on_change_flag = true;
                     field.set_value(value_);
                     field._inhibit_on_change_flag = false;
@@ -2601,13 +2601,17 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         var self = this;
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
         this.pop = new instance.web.form.SelectCreatePopup(this);
+        var domain = [];
+        if(this.get('effective_readonly')) {
+            domain = instance.web.pyeval.eval('domain', self.get_value());
+        }
         this.pop.select_element(
             model, {
                 title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
                 readonly: this.get('effective_readonly'),
                 disable_multiple_selection: this.get('effective_readonly'),
                 no_create: this.get('effective_readonly'),
-            }, [], this.build_context());
+            }, domain, this.build_context());
         this.pop.on("elements_selected", self, function(element_ids) {
             if (this.pop.$('input.oe_list_record_selector').prop('checked')) {
                 var search_data = this.pop.searchview.build_search_data();
@@ -5670,9 +5674,11 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
     set_filename: function(value) {
         var filename = this.node.attrs.filename;
         if (filename) {
-            var tmp = {};
-            tmp[filename] = value;
-            this.field_manager.set_values(tmp);
+            var field = this.field_manager.fields[filename];
+            if (field) {
+                field.set_value(value);
+                field._dirty_flag = true;
+            }
         }
     },
     on_clear: function() {
@@ -5719,10 +5725,10 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.binary_value = true;
+        this.set_filename(name);
         this.internal_set_value(file_base64);
         var show_value = name + " (" + instance.web.human_size(size) + ")";
         this.$el.find('input').eq(0).val(show_value);
-        this.set_filename(name);
     },
     on_clear: function() {
         this._super.apply(this, arguments);
