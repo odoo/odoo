@@ -1054,10 +1054,7 @@ class Float(Field):
     @property
     def digits(self):
         if callable(self._digits):
-            # retrieve a cursor from any environment
-            from openerp.api import Environment
-            cr = next(iter(Environment.envs)).cr
-            return self._digits(cr)
+            return self._digits(fields.get_cursor())
         else:
             return self._digits
 

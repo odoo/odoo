@@ -52,6 +52,14 @@ from openerp.tools import float_repr, float_round, frozendict, html_sanitize
 import simplejson
 from openerp import SUPERUSER_ID, registry
 
+def get_cursor():
+    # retrieve a valid cursor from any environment
+    from openerp.api import Environment
+    for env in Environment.envs:
+        if not env.cr.closed:
+            return env.cr
+    raise RuntimeError("No valid cursor found")
+
 EMPTY_DICT = frozendict()
 
 _logger = logging.getLogger(__name__)
@@ -388,10 +396,7 @@ class float(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            # retrieve a cursor from any environment
-            from openerp.api import Environment
-            cr = next(iter(Environment.envs)).cr
-            return self._digits_compute(cr)
+            return self._digits_compute(get_cursor())
         else:
             return self._digits
 
@@ -1311,10 +1316,7 @@ class function(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            # retrieve a cursor from any environment
-            from openerp.api import Environment
-            cr = next(iter(Environment.envs)).cr
-            return self._digits_compute(cr)
+            return self._digits_compute(get_cursor())
         else:
             return self._digits
 
