@@ -416,9 +416,9 @@ class hr_applicant(osv.Model):
         recipients = super(hr_applicant, self).message_get_suggested_recipients(cr, uid, ids, context=context)
         for applicant in self.browse(cr, uid, ids, context=context):
             if applicant.partner_id:
-                self._message_add_suggested_recipient(cr, uid, recipients, applicant, partner=applicant.partner_id, reason=_('Contact'))
+                applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id, reason=_('Contact'))
             elif applicant.email_from:
-                self._message_add_suggested_recipient(cr, uid, recipients, applicant, email=applicant.email_from, reason=_('Contact Email'))
+                applicant._message_add_suggested_recipient(recipients, email=applicant.email_from, reason=_('Contact Email'))
         return recipients
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):

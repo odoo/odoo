@@ -267,14 +267,6 @@ class project(osv.osv):
         'privacy_visibility': 'employees',
     }
 
-    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
-        recipients = super(project, self).message_get_suggested_recipients(cr, uid, ids, context=context)
-        for data in self.browse(cr, uid, ids, context=context):
-            if data.partner_id:
-                reason = _('Customer Email') if data.partner_id.email else _('Customer')
-                self._message_add_suggested_recipient(cr, uid, recipients, data, partner=data.partner_id, reason= '%s' % reason)
-        return recipients
-
     # TODO: Why not using a SQL contraints ?
     def _check_dates(self, cr, uid, ids, context=None):
         for leave in self.read(cr, uid, ids, ['date_start', 'date'], context=context):
@@ -1103,6 +1095,15 @@ class task(osv.osv):
                     except (ValueError, TypeError):
                         pass
         return super(task, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        recipients = super(task, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+        for data in self.browse(cr, uid, ids, context=context):
+            if data.partner_id:
+                reason = _('Customer Email') if data.partner_id.email else _('Customer')
+                data._message_add_suggested_recipient(recipients, partner=data.partner_id, reason=reason)
+        return recipients
+
 
 class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'

@@ -393,9 +393,9 @@ class project_issue(osv.Model):
         try:
             for issue in self.browse(cr, uid, ids, context=context):
                 if issue.partner_id:
-                    self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
+                    issue._message_add_suggested_recipient(recipients, partner=issue.partner_id, reason=_('Customer'))
                 elif issue.email_from:
-                    self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
+                    issue._message_add_suggested_recipient(recipients, email=issue.email_from, reason=_('Customer Email'))
         except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
