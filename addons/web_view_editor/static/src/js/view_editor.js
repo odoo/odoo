@@ -178,7 +178,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     do_delete_view: function() {
         var self = this;
         if (confirm(_t("Do you really want to remove this view?"))) {
-            var controller = this.action_manager.inner_widget.views[this.action_manager.inner_widget.active_view].controller;
+            var controller = this.action_manager.inner_widget.views[this.action_manager.inner_widget.active_view.type].controller;
             this.dataset.unlink([this.main_view_id]).done(function() {
                 controller.reload_content();
                 self.main_view_id = self.parent.fields_view.view_id;
