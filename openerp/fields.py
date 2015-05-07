@@ -885,7 +885,7 @@ class Field(object):
         """ Determine the value of `self` for `record`. """
         env = record.env
 
-        if self.column and not (self.depends and env.in_draft):
+        if self.column and not (self.depends and env.in_onchange):
             # this is a stored field or an old-style function field
             if self.depends:
                 # this is a stored computed field, check for recomputation
@@ -911,7 +911,7 @@ class Field(object):
 
         elif self.compute:
             # this is either a non-stored computed field, or a stored computed
-            # field in draft mode
+            # field in onchange mode
             if self.recursive:
                 self.compute_value(record)
             else:
