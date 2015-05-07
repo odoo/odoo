@@ -1090,9 +1090,9 @@ class crm_lead(format_address, osv.osv):
             return {'value':{'country_id':country_id}}
         return {}
 
-    def message_partner_info_from_emails(self, cr, uid, id, emails, link_mail=False, context=None):
-        res = super(crm_lead, self).message_partner_info_from_emails(cr, uid, id, emails, link_mail=link_mail, context=context)
-        lead = self.browse(cr, uid, id, context=context)
+    def message_partner_info_from_emails(self, cr, uid, ids, emails, link_mail=False, context=None):
+        res = super(crm_lead, self).message_partner_info_from_emails(cr, uid, ids, emails, link_mail=link_mail, context=context)
+        lead = self.browse(cr, uid, ids[0], context=context)
         for partner_info in res:
             if not partner_info.get('partner_id') and (lead.partner_name or lead.contact_name):
                 emails = email_re.findall(partner_info['full_name'] or '')
