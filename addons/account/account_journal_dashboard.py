@@ -35,9 +35,27 @@ class account_journal(models.Model):
         data = []
         today = datetime.today()
         last_month = today + timedelta(days=-30)
-        bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '>', last_month.strftime(DEFAULT_SERVER_DATE_FORMAT)),('date', '<=', today.strftime(DEFAULT_SERVER_DATE_FORMAT))], order="date asc, id asc")
+        bank_stmt = []
+        # Query to optimize loading of data for bank statement graphs
+        # Return a list containing the latest bank statement balance per day for the
+        # last 30 days for current journal
+        SQL_query = """SELECT a.date, a.balance_end 
+                        FROM account_bank_statement AS a, 
+                            (SELECT c.date, max(c.id) AS stmt_id 
+                                FROM account_bank_statement AS c 
+                                WHERE c.journal_id = %s 
+                                    AND c.date > '%s' 
+                                    AND c.date <= '%s' 
+                                    GROUP BY date, id 
+                                    ORDER BY date, id) AS b 
+                        WHERE a.id = b.stmt_id;""" % (self.id, last_month.strftime(DEFAULT_SERVER_DATE_FORMAT), today.strftime(DEFAULT_SERVER_DATE_FORMAT))
+
+        self.env.cr.execute(SQL_query)
+        bank_stmt = self.env.cr.dictfetchall()
+
         last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '<=', last_month.strftime(DEFAULT_SERVER_DATE_FORMAT))], order="date desc, id desc", limit=1)
         start_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
+
         locale = self._context.get('lang', 'en_US')
         show_date = last_month
         #get date in locale format
@@ -47,7 +65,7 @@ class account_journal(models.Model):
 
         for stmt in bank_stmt:
             #fill the gap between last data and the new one
-            number_day_to_add = (datetime.strptime(stmt.date, DEFAULT_SERVER_DATE_FORMAT) - show_date).days
+            number_day_to_add = (datetime.strptime(stmt.get('date'), DEFAULT_SERVER_DATE_FORMAT) - show_date).days
             last_balance = data[len(data) - 1]['y']
             for day in range(0,number_day_to_add + 1):
                 show_date = show_date + timedelta(days=1)
@@ -56,7 +74,7 @@ class account_journal(models.Model):
                 short_name = format_date(show_date, 'd MMM', locale=locale)
                 data.append({'x': short_name, 'y':last_balance, 'name': name})
             #add new stmt value
-            data[len(data) - 1]['y'] = stmt.balance_end
+            data[len(data) - 1]['y'] = stmt.get('balance_end')
 
         #continue the graph if the last statement isn't today
         if show_date != today:
@@ -94,23 +112,29 @@ class account_journal(models.Model):
                 else:
                     label = format_date(start_week, 'd MMM', locale=self._context.get('lang', 'en_US'))+'-'+format_date(end_week, 'd MMM', locale=self._context.get('lang', 'en_US'))
             data.append({'label':label,'value':0.0, 'color': '#ff0000' if i<0 else '#ff7f0e'})
-        for invoice in self.env['account.invoice'].search([('journal_id','=',self.id),('state', '=', 'open')]):
-            if invoice.date_due < (first_day_of_week + timedelta(days=-7)).strftime(DEFAULT_SERVER_DATE_FORMAT):
-                data[0]['value'] += invoice.residual_signed
-            elif invoice.date_due < first_day_of_week.strftime(DEFAULT_SERVER_DATE_FORMAT):
-                data[1]['value'] += invoice.residual_signed
-            elif invoice.date_due >= (first_day_of_week + timedelta(days=21)).strftime(DEFAULT_SERVER_DATE_FORMAT):
-                data[5]['value'] += invoice.residual_signed
-            elif invoice.date_due >= (first_day_of_week + timedelta(days=14)).strftime(DEFAULT_SERVER_DATE_FORMAT):
-                data[4]['value'] += invoice.residual_signed
-            elif invoice.date_due >= (first_day_of_week + timedelta(days=7)).strftime(DEFAULT_SERVER_DATE_FORMAT):
-                data[3]['value'] += invoice.residual_signed
+
+        # Build SQL query to find amount aggregated by week
+        select_sql_clause = """SELECT sum(residual_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %s and state = 'open'""" % (self.id)
+        SQL_query = ''
+        start_date = (first_day_of_week + timedelta(days=-7))
+        for i in range(0,6):
+            if i == 0:
+                SQL_query += "("+select_sql_clause+" and date < '"+start_date.strftime(DEFAULT_SERVER_DATE_FORMAT)+"')"
+            elif i == 6:
+                SQL_query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DEFAULT_SERVER_DATE_FORMAT)+"')"
             else:
-                data[2]['value'] += invoice.residual_signed
-        #postprocess to set graph color
-        for bar in data:
-            if bar['value'] == 0.0:
-                bar['color'] = '#ffffff'
+                next_date = start_date + timedelta(days=7)
+                SQL_query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DEFAULT_SERVER_DATE_FORMAT)+"' and date < '"+next_date.strftime(DEFAULT_SERVER_DATE_FORMAT)+"')"
+                start_date = next_date
+
+        self.env.cr.execute(SQL_query)
+        query_results = self.env.cr.dictfetchall()
+        for index in range(0, len(query_results)):
+            if query_results[index].get('aggr_date') != None:
+                data[index]['value'] = query_results[index].get('total')
+            else:
+                data[index]['color'] = '#ffffff'
+
         return [{'values': data, 'title': title}]
 
     @api.multi
@@ -126,22 +150,32 @@ class account_journal(models.Model):
                 for line in ac_bnk.line_ids:
                     if not line.journal_entry_ids:
                         number_to_reconcile += 1
-            account = [self.default_debit_account_id.id, self.default_credit_account_id.id]
-            acm_lines = self.env['account.move.line'].search([('account_id', 'in', account)])
-            account_sum = sum([line.balance for line in acm_lines]) or 0
+            # optimization to read sum of balance from account_move_line
+            SQL_query = """SELECT sum(balance) FROM account_move_line WHERE account_id in (%s, %s);""" % (self.default_debit_account_id.id, self.default_credit_account_id.id)
+            self.env.cr.execute(SQL_query)
+            query_results = self.env.cr.dictfetchall()
+            if query_results and query_results[0].get('sum') != None:
+                account_sum = query_results[0].get('sum')
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
-            invoices = self.env['account.invoice'].search([('journal_id', 'in', self.ids), ('state', 'not in', ('paid', 'cancel'))])
-            for invoice in invoices:
-                if invoice.state in ['draft', 'proforma', 'proforma2']:
-                    number_draft += 1
-                    sum_draft += invoice.amount_total
-                else:
-                    number_waiting += 1
-                    sum_waiting += invoice.residual
-                    if invoice.date_due < fields.Date.today():
-                        number_late += 1
-                        sum_late += invoice.residual
+            # optimization to find total and sum of invoice that are in draft, open state
+            SQL_query = """SELECT state, count(id) AS count, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel') GROUP BY state;""" % (self.id)
+            self.env.cr.execute(SQL_query)
+            query_results = self.env.cr.dictfetchall()
+            today = datetime.today()
+            SQL_query = """SELECT count(id) AS count_late, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND date < '%s' AND state = 'open';""" % (self.id, today.strftime(DEFAULT_SERVER_DATE_FORMAT))
+            self.env.cr.execute(SQL_query)
+            late_query_results = self.env.cr.dictfetchall()
+            for result in query_results:
+                if result.get('state') in ['draft', 'proforma', 'proforma2']:
+                    number_draft = result.get('count')
+                    sum_draft = result.get('total')
+                elif result.get('state') == 'open':
+                    number_waiting = result.get('count')
+                    sum_waiting = result.get('total')
+            if late_query_results and late_query_results[0].get('count_late') != None:
+                number_late = late_query_results[0].get('count_late')
+                sum_late = late_query_results[0].get('total')
 
         return {
             'number_to_reconcile': number_to_reconcile,
