@@ -110,7 +110,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             ]
         }).open();
         var view_widget = [{'name': 'view_name', 'string':'View Name', 'type': 'char', 'required': true, 'value' : this.model + '.custom_' + Math.round(Math.random() * 1000)},
-                           {'name': 'view_type', 'string': 'View Type', 'type': 'selection', 'required': true, 'value': 'Form', 'selection': [['',''],['tree', 'Tree'],['form', 'Form'],['graph', 'Graph'],['calendar', 'Calender']]},
+                           {'name': 'view_type', 'string': 'View Type', 'type': 'selection', 'required': true, 'value': 'form', 'selection': [['',''],['tree', 'Tree'],['form', 'Form'],['graph', 'Graph'],['calendar', 'Calender']]},
                            {'name': 'proirity', 'string': 'Priority', 'type': 'float', 'required': true, 'value':'16'}];
         this.create_view_dialog.$el.append('<table id="create_view"  style="width:400px" class="oe_form"></table>');
         this.create_view_widget = [];
