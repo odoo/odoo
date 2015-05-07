@@ -41,6 +41,19 @@ var PaymentConfirmPopupWidget = PopupWidget.extend({
     }
 });
 
+function getCashRegisterByJournalID (cashRegisters, journal_id) {
+    var cashRegisterReturn;
+
+    $.each(cashRegisters, function (index, cashRegister) {
+	if (cashRegister.journal_id[0] == journal_id) {
+	    cashRegisterReturn = cashRegister;
+	}
+    });
+
+    return cashRegisterReturn;
+}
+
+
 // Extends the payment line object with the "paid" property used to
 // know if the payment line is already paid
 
@@ -316,7 +329,7 @@ PaymentScreenWidget.include({
                 if (status === 'Approved') {
                     // If the payment is approved, add a payment line and try to close the order
                     var order = self.pos.get_order();
-                    order.add_paymentline(self.pos.cashregisters[2]);
+                    order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
                     order.selected_paymentline.paid = true;
                     order.selected_paymentline.amount = amount;
                     self.reset_input();
