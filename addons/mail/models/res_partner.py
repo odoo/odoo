@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import _, fields, models
+from openerp import _, api, fields, models
 
 
 class Partner(models.Model):
@@ -23,10 +23,11 @@ class Partner(models.Model):
         'Opt-Out', help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                         "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing.")
 
+    @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(Partner, self).message_get_suggested_recipients()
         for partner in self:
-            self._message_add_suggested_recipient(recipients, partner, partner=partner, reason=_('Partner Profile'))
+            partner._message_add_suggested_recipient(recipients, partner=partner, reason=_('Partner Profile'))
         return recipients
 
     def message_get_default_recipients(self):
