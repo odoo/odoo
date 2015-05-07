@@ -130,9 +130,16 @@ class OAuthLogin(Home):
 
 class OAuthController(http.Controller):
 
+    def escape_json(data):
+        '''
+        interface use to verify json data, some oauth provider reutrn inculde some special char, eg '+'
+        '''
+        return data
+
     @http.route('/auth_oauth/signin', type='http', auth='none')
     @fragment_to_query_string
     def signin(self, **kw):
+        kw = escape_json(kw)
         state = simplejson.loads(kw['state'])
         dbname = state['d']
         provider = state['p']
