@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-03-02 15:34+0000\n"
+"Last-Translator: ChangJoon Lee <lee@serialimage.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:58+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-03 05:54+0000\n"
+"X-Generator: Launchpad (build 17361)\n"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "줄의 수"
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,state:0
@@ -72,7 +72,7 @@ msgstr ""
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Actual Production Date"
-msgstr ""
+msgstr "실제 생산일"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation:mrp_operations.operation_calendar_view
@@ -87,7 +87,7 @@ msgstr "취소"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Cancel Order"
-msgstr ""
+msgstr "주문 취소"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -99,7 +99,7 @@ msgstr "취소됨"
 #: selection:mrp.workorder,state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Cancelled"
-msgstr ""
+msgstr "취소됨"
 
 #. module: mrp_operations
 #: help:mrp.production,allow_reorder:0
@@ -128,28 +128,28 @@ msgstr "확정된 작업 주문"
 #: field:mrp_operations.operation,create_uid:0
 #: field:mrp_operations.operation.code,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "작성자:"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,create_date:0
 #: field:mrp_operations.operation.code,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "작성일:"
 
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Current"
-msgstr ""
+msgstr "현재"
 
 #. module: mrp_operations
 #: model:ir.filters,name:mrp_operations.filter_mrp_workorder_current_production
 msgid "Current Production"
-msgstr ""
+msgstr "현재 생산"
 
 #. module: mrp_operations
 #: field:mrp.workorder,date:0
 msgid "Date"
-msgstr ""
+msgstr "날짜"
 
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
@@ -174,7 +174,7 @@ msgstr "초안"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Duration"
-msgstr ""
+msgstr "기간"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -196,7 +196,7 @@ msgstr "에러!"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Finish Order"
-msgstr ""
+msgstr "주문 완료"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -221,24 +221,24 @@ msgstr "향후 작업 주문"
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Group By"
-msgstr ""
+msgstr "분류 기준"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.graph_in_hrs_workcenter
 msgid "Hours by Work Center"
-msgstr ""
+msgstr "작업 센터별 시간"
 
 #. module: mrp_operations
 #: field:mrp.workorder,id:0
 #: field:mrp_operations.operation,id:0
 #: field:mrp_operations.operation.code,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "In Production"
-msgstr ""
+msgstr "생산중"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -252,69 +252,69 @@ msgstr "진행 중"
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr ""
+msgstr "작업을 완료하려면 시작이나 재개 상태여야 핣니다!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:445
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr ""
+msgstr "작업을 일시정지하려면 시작이나 재개 상태여야 합니다!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:449
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr ""
+msgstr "작업을 재개하려면 일시정지 상태여야 합니다!"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Information"
-msgstr ""
+msgstr "정보"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,write_uid:0
 #: field:mrp_operations.operation.code,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "최근 업데이트한 사람:"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,write_date:0
 #: field:mrp_operations.operation.code,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "최근 업데이트 날짜:"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Late"
-msgstr ""
+msgstr "최신"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "생산주문"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:122
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
-msgstr ""
+msgstr "생산주문은  \"%s\" 상태에서 시작할 수 없습니다!"
 
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Month Planned"
-msgstr ""
+msgstr "월 계획됨"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:461
 #, python-format
 msgid "No operation to cancel."
-msgstr ""
+msgstr "취소할 작업이 없습니다."
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
 msgid "Operation Codes"
-msgstr ""
+msgstr "작업 코드"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,name:0
@@ -327,25 +327,25 @@ msgstr "오퍼레이션 이름"
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
-msgstr ""
+msgstr "작업이 이미 시작되었습니다. 작업을 일시정지/완료/취소할 수 있습니다."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:457
 #, python-format
 msgid "Operation is Already Cancelled!"
-msgstr ""
+msgstr "작업이 이미 취소되었습니다."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:464
 #, python-format
 msgid "Operation is already finished!"
-msgstr ""
+msgstr "작업이 이미 완료되었습니다."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:434
 #, python-format
 msgid "Operation is not started yet!"
-msgstr ""
+msgstr "작업이 아직 시작되지 않았습니다!"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
@@ -368,7 +368,7 @@ msgstr "일시정지"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Pause Work Order"
-msgstr ""
+msgstr "작업 주문 일시정지"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -377,17 +377,17 @@ msgstr ""
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
-msgstr ""
+msgstr "보류중"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Planned Date"
-msgstr ""
+msgstr "계획일"
 
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Planned Month"
-msgstr ""
+msgstr "계획한 달"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,product:0
@@ -399,12 +399,12 @@ msgstr "상품"
 #. module: mrp_operations
 #: field:mrp.workorder,product_qty:0
 msgid "Product Qty"
-msgstr ""
+msgstr "상품 수량"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Product to Produce"
-msgstr ""
+msgstr "생산할 제품"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -428,17 +428,17 @@ msgstr "생산 오퍼레이션 코드"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production Status"
-msgstr ""
+msgstr "생산 상태"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Production Workcenter"
-msgstr ""
+msgstr "생산 작업센터"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Production started late"
-msgstr ""
+msgstr "생산 시작 직연"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
@@ -448,12 +448,12 @@ msgstr "수량"
 #. module: mrp_operations
 #: model:ir.filters,name:mrp_operations.filter_mrp_workorder_quantity_produced
 msgid "Quantity Produced"
-msgstr ""
+msgstr "생산된 양"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Ready to Produce"
-msgstr ""
+msgstr "생산 준비 완료"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -466,32 +466,32 @@ msgstr "재개"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Resume Work Order"
-msgstr ""
+msgstr "작업 주문 재개"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "예정일"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "월별 예정일"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "예정달"
 
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Search"
-msgstr ""
+msgstr "검색"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Search Work Orders"
-msgstr ""
+msgstr "작업 주문 검색"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -503,7 +503,7 @@ msgstr "초안으로 설정"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Set to Draft"
-msgstr ""
+msgstr "초안으로 설정"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:434
@@ -531,7 +531,7 @@ msgstr "시작 날짜"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Start Working"
-msgstr ""
+msgstr "작업 시작"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
@@ -541,7 +541,7 @@ msgstr "시작/중단 바코드"
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Started"
-msgstr ""
+msgstr "시작됨"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -555,32 +555,32 @@ msgstr "상태"
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "재고 이동"
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
-msgstr ""
+msgstr "이 작업 센터의 작업 시작과 중단의 경과 시간"
 
 #. module: mrp_operations
 #: field:mrp.workorder,total_cycles:0
 msgid "Total Cycles"
-msgstr ""
+msgstr "전체 공정"
 
 #. module: mrp_operations
 #: field:mrp.workorder,total_hours:0
 msgid "Total Hours"
-msgstr ""
+msgstr "총 시간"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "측정 단위"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Waiting Goods"
-msgstr ""
+msgstr "자재 대기중"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -593,28 +593,28 @@ msgstr "워크센터"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
 msgid "Work Centers"
-msgstr ""
+msgstr "작업센터"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
-msgstr ""
+msgstr "작업센터 바코드"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
 #: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
 msgid "Work Order"
-msgstr ""
+msgstr "작업 주문"
 
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
 msgid "Work Order Analysis"
-msgstr ""
+msgstr "작업 주문 분석"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_workorder
 msgid "Work Order Report"
-msgstr ""
+msgstr "작업 주문 보고서"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -629,22 +629,22 @@ msgstr "작업 주문"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 msgid "Work Orders By Resource"
-msgstr ""
+msgstr "참조별 작업 주문"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
 msgid "Work Orders Planning"
-msgstr ""
+msgstr "작업 주문 계획"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
 msgid "Working Hours"
-msgstr ""
+msgstr "근무시간"
 
 #. module: mrp_operations
 #: model:ir.filters,name:mrp_operations.filter_mrp_workorder_workload
 msgid "Workload"
-msgstr ""
+msgstr "작업량"
 
 #~ msgid "Date Planned"
 #~ msgstr "계획된 날짜"

@@ -151,6 +151,8 @@ class _column(object):
 
     def __getattr__(self, name):
         """ Access a non-slot attribute. """
+        if name == '_args':
+            raise AttributeError(name)
         try:
             return self._args[name]
         except KeyError:
@@ -386,8 +388,10 @@ class float(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with registry().cursor() as cr:
-                return self._digits_compute(cr)
+            # retrieve a cursor from any environment
+            from openerp.api import Environment
+            cr = next(iter(Environment.envs)).cr
+            return self._digits_compute(cr)
         else:
             return self._digits
 
@@ -1307,8 +1311,10 @@ class function(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with registry().cursor() as cr:
-                return self._digits_compute(cr)
+            # retrieve a cursor from any environment
+            from openerp.api import Environment
+            cr = next(iter(Environment.envs)).cr
+            return self._digits_compute(cr)
         else:
             return self._digits
 

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-21 16:45+0000\n"
+"PO-Revision-Date: 2015-02-17 09:44+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Language-Team: Hungarian <openerp-hungarian-team@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:02+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-02-19 05:41+0000\n"
+"X-Generator: Launchpad (build 17341)\n"
 
 #. module: point_of_sale
 #: field:report.pos.order,nbr:0
@@ -162,7 +162,7 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Kattintson egy fizetési mód hozzáadásához.\n"
 "              </p><p>\n"
-"                Fizetési módokat határoznak meg a bejelölt  <i>ÉpK Fizetési "
+"                Fizetési módokat határoznak meg a bejelölt  <i>PoS Fizetési "
 "Mód</i> \n"
 "                könyvelési napló mezők. Az érintőképernyős interfészen "
 "történő\n"
@@ -267,12 +267,12 @@ msgstr "= Elméleti záró egyenleg"
 #: code:addons/point_of_sale/static/src/js/screens.js:739
 #, python-format
 msgid "A Customer Name Is Required"
-msgstr "Egy vásárlói név szükséges"
+msgstr "A vásárló neve szükséges."
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "A custom receipt footer message"
-msgstr ""
+msgstr "Egy egyedi nyugta lábléc üzenet"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
@@ -286,7 +286,7 @@ msgid ""
 "session"
 msgstr ""
 "Egy sorszám, melyet mindig eggyel növel, ha a felhasználó visszatér az "
-"értékesítési pont szakaszába"
+"értékesítési pont értékesítési folyamatába"
 
 #. module: point_of_sale
 #: help:pos.session,sequence_number:0
@@ -296,7 +296,7 @@ msgstr "Egy sorszám, melyet megnövel minden vásárlói megrendeléskor"
 #. module: point_of_sale
 #: help:pos.order,sequence_number:0
 msgid "A session-unique sequence number for the order"
-msgstr "Egy egyedi-értékesítési szakasz sorszám a vásárlói megrendeléshez"
+msgstr "Egy egyedi-értékesítési folyamat sorszám a vásárlói megrendeléshez"
 
 #. module: point_of_sale
 #: help:pos.config,receipt_footer:0
@@ -362,7 +362,7 @@ msgstr "Admin jelvény"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_all
 msgid "All Sessions"
-msgstr "Összes értékesítési szakasz"
+msgstr "Összes értékesítési folyamat"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -433,7 +433,7 @@ msgstr "Elérhető fizetési módok"
 #. module: point_of_sale
 #: field:product.template,available_in_pos:0
 msgid "Available in the Point of Sale"
-msgstr "Elérhetó az értékesítési pont kasszánál"
+msgstr "Elérhető az értékesítési pontban"
 
 #. module: point_of_sale
 #: field:report.pos.order,average_price:0
@@ -457,12 +457,12 @@ msgstr "Bankszámlakivonat"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Bankkivonat tételsor"
+msgstr "Bankszámlakivonat tételsor"
 
 #. module: point_of_sale
 #: help:res.users,ean13:0
 msgid "BarCode"
-msgstr "VanalKód"
+msgstr "Vonalkód"
 
 #. module: point_of_sale
 #. openerp-web
@@ -480,8 +480,9 @@ msgid ""
 "                                Barcode Patterns only work with EAN13 "
 "barcodes."
 msgstr ""
-"Vonalkód minta lehetővé teszi műveletek vagy beágyazott információk , mint "
-"ár és mennyiség, vonalkódjai vonalkódokban lévő összekapcsolását.\n"
+"A Vonalkód minta lehetővé teszi, hogy összepárosítsa a vonalkódokat a "
+"műveletekkel vagy beágyazott információkkal, mint pl. ár és mennyiség a "
+"vonalkódban.\n"
 "                                Vonalkód minták csak EAN13 vonalkódokkal "
 "működnek."
 
@@ -495,7 +496,7 @@ msgstr "Vonalkód leolvasó"
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "Barcode Types"
-msgstr "Vnonalkód típusok"
+msgstr "Vonalkód típusok"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beers
@@ -542,7 +543,7 @@ msgstr "Böngésző nyomtatás átugrása és hardwer proxy-n keresztül nyomtat
 #: code:addons/point_of_sale/static/src/xml/pos.xml:616
 #, python-format
 msgid "CHANGE"
-msgstr "VISSZAJÁRÓ"
+msgstr "Módosítás"
 
 #. module: point_of_sale
 #. openerp-web
@@ -562,14 +563,14 @@ msgstr "Mégsem"
 #: selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "Cancelled"
-msgstr "Megszakítva"
+msgstr "Törölt"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1289
 #, python-format
 msgid "Cannot return change without a cash payment method"
-msgstr "Nem tud visszaadni készpénz használata nélkül"
+msgstr "Nem tud visszaadni készpénz fizetési mód nélkül"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.carotte_product_template
@@ -581,7 +582,7 @@ msgstr "Répák"
 #: code:addons/point_of_sale/static/src/js/screens.js:1091
 #, python-format
 msgid "Cash"
-msgstr "Készpénz pénztár"
+msgstr "Készpénz"
 
 #. module: point_of_sale
 #: field:pos.session,details_ids:0
@@ -608,7 +609,7 @@ msgstr "Készpénz pénztár"
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Cash Registers"
-msgstr "Készpénz pénztár"
+msgstr "Készpénz pénztárak"
 
 #. module: point_of_sale
 #: view:account.bank.statement:point_of_sale.view_pos_confirm_cash_statement_filter
@@ -619,7 +620,7 @@ msgstr "Készpénz kimutatás"
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Cashbox Lines"
-msgstr "Készpénz tároló tétel sorok"
+msgstr "Pénzkazetta tételek"
 
 #. module: point_of_sale
 #: field:pos.config,iface_cashdrawer:0
@@ -636,7 +637,7 @@ msgstr "Pénztárosi vonalkódok"
 #: code:addons/point_of_sale/static/src/js/screens.js:683
 #, python-format
 msgid "Change Customer"
-msgstr ""
+msgstr "Vásárló változtatása"
 
 #. module: point_of_sale
 #. openerp-web
@@ -644,7 +645,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1008
 #, python-format
 msgid "Change:"
-msgstr "Visszajáró:"
+msgstr "Változtatás:"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_1,5l_product_template
@@ -687,7 +688,7 @@ msgstr ""
 #: help:product.template,available_in_pos:0
 msgid "Check if you want this product to appear in the Point of Sale"
 msgstr ""
-"Jelölje be, ha a ezt a terméket látni szeretné az Értékesítési pont kasszánál"
+"Jelölje be, ha a ezt a terméket látni szeretné az Értékesítési Pontban"
 
 #. module: point_of_sale
 #: help:product.template,income_pdt:0
@@ -695,6 +696,8 @@ msgid ""
 "Check if, this is a product you can use to put cash into a statement for the "
 "point of sale backend."
 msgstr ""
+"Jelölje ha, ezt a terméket készpénz betételéhez használja a kivonatban az "
+"értékesítési pont háttér szolgáltatóján."
 
 #. module: point_of_sale
 #: help:product.template,expense_pdt:0
@@ -702,6 +705,9 @@ msgid ""
 "Check if, this is a product you can use to take cash from a statement for "
 "the point of sale backend, example: money lost, transfer to bank, etc."
 msgstr ""
+"Jelölje be ha, ez egy termék melyet arra használ, hogy pénzt vegyen ki a "
+"kivantról az értékesítési pont háttér szolgáltatón, például: elvesztett "
+"pénz, átvitel a bankba, stb."
 
 #. module: point_of_sale
 #: help:account.journal,journal_user:0
@@ -710,7 +716,7 @@ msgid ""
 "point of sales."
 msgstr ""
 "Jelölje be ezt a négyzetet, ha ez a napló meghatároz egy olyan fizetési "
-"módot, melyet az Értékesítési ponti eladásoknál."
+"módot, melyet lehet használni az értékesítési pontban."
 
 #. module: point_of_sale
 #: help:pos.config,iface_self_checkout:0
@@ -718,6 +724,9 @@ msgid ""
 "Check this if this point of sale should open by default in a self checkout "
 "mode. If unchecked, Odoo uses the normal cashier mode by default."
 msgstr ""
+"Jelölje be ezt, ha ezt az értékesítési pontot alapértelmezés szerint a saját "
+"pénztár módba kell megnyitni. Ha nincs bejelölve, az Odoo normál pénztáros "
+"módban működik alapértelmezésben."
 
 #. module: point_of_sale
 #: help:pos.config,group_by:0
@@ -725,6 +734,8 @@ msgid ""
 "Check this if you want to group the Journal Items by Product while closing a "
 "Session"
 msgstr ""
+"Jelölje be ezt, hogy ha termékenként kívánja csoportosítani a napló "
+"tételeket, míg be nem zár egy értékesítési folyamatot."
 
 #. module: point_of_sale
 #. openerp-web
@@ -789,7 +800,7 @@ msgstr "Ügyfél jelvény"
 #: code:addons/point_of_sale/static/src/js/widgets.js:1129
 #, python-format
 msgid "Close"
-msgstr "Lezár"
+msgstr "Bezárás"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
@@ -800,7 +811,7 @@ msgstr "Értékesítési folyamat bezárása"
 #: view:account.bank.statement:point_of_sale.view_pos_confirm_cash_statement_filter
 #: selection:report.pos.order,state:0
 msgid "Closed"
-msgstr "Lezárt"
+msgstr "Zárva"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:136
@@ -821,14 +832,14 @@ msgstr "Készpénz pénztár lezárása"
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closing Control"
-msgstr "Zárási ellenőrzés"
+msgstr "A zárás ellenőrzése"
 
 #. module: point_of_sale
 #: field:pos.session,stop_at:0
 #: view:website:point_of_sale.report_sessionsummary
 #: view:website:point_of_sale.report_statement
 msgid "Closing Date"
-msgstr "Zárás időpontja"
+msgstr "Zárás dátuma"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -913,17 +924,17 @@ msgstr "Coca-Cola Zero 33cl"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_50cl_product_template
 msgid "Coca-Cola Zero 50cl"
-msgstr ""
+msgstr "Coca-Cola Light 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_decaf_33cl_product_template
 msgid "Coca-Cola Zero Decaf 33cl"
-msgstr ""
+msgstr "Coca-Cola Light 33cl Decaf"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.coke
 msgid "Coke"
-msgstr ""
+msgstr "Coke"
 
 #. module: point_of_sale
 #: field:pos.config,company_id:0
@@ -941,12 +952,12 @@ msgstr "Vállalat"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.computers
 msgid "Computers"
-msgstr ""
+msgstr "Számítógépek"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poire_conference_product_template
 msgid "Conference pears"
-msgstr ""
+msgstr "Konferencia belépő"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -957,7 +968,7 @@ msgstr "Beállítások"
 #: code:addons/point_of_sale/point_of_sale.py:874
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Beállítási hiba!"
 
 #. module: point_of_sale
 #. openerp-web
@@ -965,40 +976,40 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:709
 #, python-format
 msgid "Confirm"
-msgstr "Jóváhagyás"
+msgstr "Megerősítés"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:98
 #, python-format
 msgid "Connecting to the PosBox"
-msgstr ""
+msgstr "Csatlakozás a PosBox-hoz"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Continue Selling"
-msgstr ""
+msgstr "Értékesítés folytatása"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:829
 #, python-format
 msgid "Could Not Read Image"
-msgstr ""
+msgstr "Nem olvasható a kép"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/widgets.js:1239
 #, python-format
 msgid "Could not close the point of sale."
-msgstr ""
+msgstr "Nem sikerült bezárni az értékesítési pontot."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:328
 #, python-format
 msgid "Country"
-msgstr ""
+msgstr "Ország"
 
 #. module: point_of_sale
 #: field:pos.category,create_uid:0
@@ -1014,7 +1025,7 @@ msgstr ""
 #: field:pos.session,create_uid:0
 #: field:pos.session.opening,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Készítette"
 
 #. module: point_of_sale
 #: field:pos.category,create_date:0
@@ -1029,7 +1040,7 @@ msgstr ""
 #: field:pos.session,create_date:0
 #: field:pos.session.opening,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Létrehozás dátuma"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
@@ -1039,52 +1050,52 @@ msgstr "Létrehozás dátuma"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_bolognaise_250g_product_template
 msgid "Croky Bolognese 250g"
-msgstr ""
+msgstr "Croky Bolognese 250g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_naturel_45g_product_template
 msgid "Croky Natural 45g"
-msgstr ""
+msgstr "Croky Natural 45g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_paprika_45g_product_template
 msgid "Croky Paprika 45g"
-msgstr ""
+msgstr "Croky Paprika 45g"
 
 #. module: point_of_sale
 #: field:pos.config,currency_id:0
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Currency"
-msgstr ""
+msgstr "Pénznem"
 
 #. module: point_of_sale
 #: field:pos.session,currency_id:0
 msgid "Currnecy"
-msgstr ""
+msgstr "Pénznem"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:839
 #, python-format
 msgid "Custom Ean13"
-msgstr ""
+msgstr "Egyedi Ean13"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_order_filter
 #: field:pos.order,partner_id:0
 msgid "Customer"
-msgstr "Vevő"
+msgstr "Vásárló"
 
 #. module: point_of_sale
 #: field:pos.config,barcode_customer:0
 msgid "Customer Barcodes"
-msgstr ""
+msgstr "Vásárlói vonalkódok"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1002
 #, python-format
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Vásárlói számla"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
@@ -1116,7 +1127,7 @@ msgstr "Kezdő dátum"
 #. module: point_of_sale
 #: view:website:point_of_sale.report_receipt
 msgid "Date:"
-msgstr ""
+msgstr "Dátum:"
 
 #. module: point_of_sale
 #: view:pos.details:point_of_sale.view_pos_details
@@ -1128,36 +1139,36 @@ msgstr "Dátumok"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:826
 #, python-format
 msgid "Debug Window"
-msgstr ""
+msgstr "Hibakereső Ablak"
 
 #. module: point_of_sale
 #: field:res.users,pos_config:0
 msgid "Default Point of Sale"
-msgstr ""
+msgstr "Alapértelmezett Értékesítési Pont"
 
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
 msgid "Delay Validation"
-msgstr ""
+msgstr "Késleltetett érvényesítés"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:853
 #, python-format
 msgid "Delete All Unsent Orders"
-msgstr ""
+msgstr "Törli az összes el nem küldött rendelést"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/widgets.js:812
 #, python-format
 msgid "Delete Unsent Orders ?"
-msgstr ""
+msgstr "Törli az el nem küldött rendeléseket?"
 
 #. module: point_of_sale
 #: selection:pos.config,state:0
 msgid "Deprecated"
-msgstr ""
+msgstr "Elavult"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_receipt
@@ -1171,14 +1182,14 @@ msgstr "Leírás"
 #: code:addons/point_of_sale/static/src/js/screens.js:686
 #, python-format
 msgid "Deselect Customer"
-msgstr ""
+msgstr "Vásárló kiválasztásának megszüntetése"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/widgets.js:984
 #, python-format
 msgid "Destroy Current Order ?"
-msgstr ""
+msgstr "A jelenlegi rendelés törlése?"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
@@ -1190,7 +1201,7 @@ msgstr "Értékesítés részletei"
 #: field:pos.session,cash_register_difference:0
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Difference"
-msgstr ""
+msgstr "Eltérés"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_difference:0
@@ -1198,13 +1209,14 @@ msgid ""
 "Difference between the theoretical closing balance and the real closing "
 "balance."
 msgstr ""
+"Az elméleti záró egyenleg és a tényleges záró egyenleg közti különbség."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:162
 #, python-format
 msgid "Disc"
-msgstr ""
+msgstr "Eng."
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
@@ -1235,12 +1247,12 @@ msgstr "Engedmény (%)"
 #. module: point_of_sale
 #: field:pos.config,barcode_discount:0
 msgid "Discount Barcodes"
-msgstr ""
+msgstr "Engedmény vonalkódok"
 
 #. module: point_of_sale
 #: field:pos.order.line,notice:0
 msgid "Discount Notice"
-msgstr "Engedmény megjegyzések"
+msgstr "Engedmény megjegyzés"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1248,19 +1260,19 @@ msgstr "Engedmény megjegyzések"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:983
 #, python-format
 msgid "Discount:"
-msgstr ""
+msgstr "Árengedmény:"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:625
 #, python-format
 msgid "Discounts"
-msgstr ""
+msgstr "Árengedmények"
 
 #. module: point_of_sale
 #: view:pos.open.statement:point_of_sale.view_pos_open_statement
 msgid "Do you want to open cash registers?"
-msgstr ""
+msgstr "Ki akarja nyitni a pénztárgépet?"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_order_filter
@@ -1270,67 +1282,67 @@ msgstr "Kész"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_margherita_product_template
 msgid "Dr. Oetker La Margherita"
-msgstr ""
+msgstr "Dr. Oetker La Margherita"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_bolognese_product_template
 msgid "Dr. Oetker Ristorante Bolognese"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Bolognese"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_funghi_product_template
 msgid "Dr. Oetker Ristorante Funghi"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Funghi"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_hawaii_product_template
 msgid "Dr. Oetker Ristorante Hawaii"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Hawaii"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_mozzarella_product_template
 msgid "Dr. Oetker Ristorante Mozzarella"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Mozzarella"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_pollo_product_template
 msgid "Dr. Oetker Ristorante Pollo"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Pollo"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_prosciutto_product_template
 msgid "Dr. Oetker Ristorante Prosciutto"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Prosciutto"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_4formaggi_product_template
 msgid "Dr. Oetker Ristorante Quattro Formaggi"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Quattro Formaggi"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_speciale_product_template
 msgid "Dr. Oetker Ristorante Speciale"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Speciale"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_spinaci_product_template
 msgid "Dr. Oetker Ristorante Spinaci"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Spinaci"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_tonno_product_template
 msgid "Dr. Oetker Ristorante Tonno"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Tonno"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_vegetale_product_template
 msgid "Dr. Oetker Ristorante Vegetable"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Vegetable"
 
 #. module: point_of_sale
 #: field:res.users,ean13:0
 msgid "EAN13"
-msgstr ""
+msgstr "EAN13"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
@@ -1357,16 +1369,37 @@ msgid ""
 "matches no pattern it will not be found in\n"
 "                                the POS."
 msgstr ""
+"Minden vonalkódra érvényesül a minták vesszővel elválasztott listája.  Egy "
+"beolvasott \n"
+"                                 vonalkód része lesz egy típusnak, ha "
+"ezekből a mintákból egyel megeggyezik. \n"
+"                                 Az EAN13 vonalkódok mintáinak formája. A "
+"számoknak a mintában meg kell egyeznie \n"
+"                                 a beolvasott vonalkódban lévő számmal. Egy "
+"'x', vagy egy '*' a mintában megeggyezik \n"
+"                                 bármely számmal. Ha a minták rövidebbek "
+"mint az EAN13 vonalkódok, azok lényege \n"
+"                                 az elején van és az egyezés is az elején. "
+"Súly, ár és kedvezmények mintái \n"
+"                                 megmondják, hogy a súly, ár vagy kedvezmény "
+"van-e kódolva a vonalkódba. 'N' jelzi a \n"
+"                                 pozíciókat, ahol az egész rész kódolt, és a "
+"'D',  ahol a tizedesek vannak kódolva. \n"
+"                                 Ha több minta is egyezik egy vonalkódban, a "
+"leghosszabb mintát a legkevesebb 'x' vagy '*'-el \n"
+"                                 tartjuk az egyező egynek. Ha a vonalkód nem "
+"illeszkedik mintára nem lesz megtalálva \n"
+"                                 az ÉP-ban."
 
 #. module: point_of_sale
 #: view:pos.ean_wizard:point_of_sale.pos_ean13_generator
 msgid "Ean13 Generator"
-msgstr ""
+msgstr "Ean13 generátor"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_edit_ean
 msgid "Edit Ean"
-msgstr ""
+msgstr "Ean szerkesztése"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1374,7 +1407,7 @@ msgstr ""
 #: field:pos.config,iface_electronic_scale:0
 #, python-format
 msgid "Electronic Scale"
-msgstr ""
+msgstr "Elektronikus mérleg"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1382,39 +1415,41 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:376
 #, python-format
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1260
 #, python-format
 msgid "Empty Order"
-msgstr ""
+msgstr "Üres rendelés"
 
 #. module: point_of_sale
 #: help:pos.config,iface_scan_via_proxy:0
 msgid "Enable barcode scanning with a remotely connected barcode scanner"
 msgstr ""
+"Engedélyezi a vonalkód leolvasást egy távolról csatlakoztatott vonalkód "
+"leolvasóval"
 
 #. module: point_of_sale
 #: help:pos.config,iface_electronic_scale:0
 msgid "Enables Electronic Scale integration"
-msgstr ""
+msgstr "Engedélyezi az elektronikus mérleg integrációt"
 
 #. module: point_of_sale
 #: help:pos.config,iface_payment_terminal:0
 msgid "Enables Payment Terminal integration"
-msgstr ""
+msgstr "Engedélyezi a fizetési terminál integrációt"
 
 #. module: point_of_sale
 #: help:pos.config,iface_vkeyboard:0
 msgid "Enables an integrated Virtual Keyboard"
-msgstr ""
+msgstr "Engedélyez egy integrált virtuális billentyűzetet"
 
 #. module: point_of_sale
 #: help:pos.config,iface_invoicing:0
 msgid "Enables invoice generation from the Point of Sale"
-msgstr ""
+msgstr "Engedélyezi számla generálását az Értékesítési Pontból"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
@@ -1424,7 +1459,7 @@ msgstr "Záró időszak"
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "End of Session"
-msgstr ""
+msgstr "Értékesítési folyamat vége"
 
 #. module: point_of_sale
 #: field:pos.session,cash_register_balance_end_real:0
@@ -1436,7 +1471,7 @@ msgstr "Záró egyenleg"
 #. module: point_of_sale
 #: view:website:point_of_sale.report_usersproduct
 msgid "Ending Date"
-msgstr "Befejező dátum"
+msgstr "Befejezési dátum"
 
 #. module: point_of_sale
 #: view:pos.ean_wizard:point_of_sale.pos_ean13_generator
@@ -1444,6 +1479,8 @@ msgid ""
 "Enter a reference, it will be converted\n"
 "                        automatically to a valid EAN number."
 msgstr ""
+"Adjon meg egy hivatkozást, melyet át fogunk alakítani\n"
+"                        automatikusan egy valós EAN számmá."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1455,7 +1492,7 @@ msgstr "Hiba"
 #. module: point_of_sale
 #: constraint:pos.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Hiba! Nem tud ismétlődő kategóriákat létrehozni."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:383
@@ -1483,13 +1520,13 @@ msgstr "Hiba!"
 #: code:addons/point_of_sale/static/src/js/screens.js:757
 #, python-format
 msgid "Error: Could not Save Changes"
-msgstr ""
+msgstr "Hiba: Nem sikerült a változtatások mentése"
 
 #. module: point_of_sale
 #: constraint:res.partner:0
 #: constraint:res.users:0
 msgid "Error: Invalid ean code"
-msgstr "Hiba: Érvénytelen vonalkód"
+msgstr "Hiba: Érvénytelen ean kód"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1501,21 +1538,26 @@ msgid ""
 "administrator in a multi-company setup, with the administrator account set "
 "to the wrong company."
 msgstr ""
+"Hiba: Az Értékesítési Pont felhasználójának ugyanahhoz a céghez  kell "
+"tartoznia, mint az Értékesítési Pontnak. Valószínűleg adminisztrátoként "
+"próbálja betölteni az értékesítési pontot, egy több-vállalkozásos "
+"beállításnál, ahol a adminisztrátori fiók rossz vállalkozáshoz van "
+"hozzárendelve."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_1l_product_template
 msgid "Evian 1L"
-msgstr ""
+msgstr "Evian 1L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_50cl_product_template
 msgid "Evian 50cl"
-msgstr ""
+msgstr "Evian 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chicon_flandria_extra_product_template
 msgid "Extra Flandria chicory"
-msgstr ""
+msgstr "Elvárt extra jövedelem"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
@@ -1525,82 +1567,82 @@ msgstr "Extra információ"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_25cl_product_template
 msgid "Fanta Orange 25cl"
-msgstr ""
+msgstr "Fanta Narancs 25cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_2l_product_template
 msgid "Fanta Orange 2L"
-msgstr ""
+msgstr "Fanta Narancs 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_33cl_product_template
 msgid "Fanta Orange 33cl"
-msgstr ""
+msgstr "Fanta Narancs 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_50cl_product_template
 msgid "Fanta Orange 50cl"
-msgstr ""
+msgstr "Fanta Narancs 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_1,5l_product_template
 msgid "Fanta Orange Zero 1.5L"
-msgstr ""
+msgstr "Fanta Narancs Zéró 1.5L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_33cl_product_template
 msgid "Fanta Zero Orange 33cl"
-msgstr ""
+msgstr "Fanta Zéró Narancs 33cl"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "Features"
-msgstr ""
+msgstr "Jellemzők"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fenouil_fenouil_product_template
 msgid "Fennel"
-msgstr ""
+msgstr "Édeskömény"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.food
 msgid "Food"
-msgstr ""
+msgstr "Étel"
 
 #. module: point_of_sale
 #: help:pos.config,iface_big_scrollbars:0
 msgid "For imprecise industrial touchscreens"
-msgstr ""
+msgstr "Pontatlan ipari érintőképernyőkhöz"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits
 msgid "Fresh Fruits"
-msgstr ""
+msgstr "Friss gyümölcsök"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.legumes
 msgid "Fresh vegetables"
-msgstr ""
+msgstr "Friss zöldségek"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruity_beers
 msgid "Fruity Beers"
-msgstr ""
+msgstr "Gyümölcsös sörök"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
 msgid "General Information"
-msgstr ""
+msgstr "Általános információ"
 
 #. module: point_of_sale
 #: view:pos.confirm:point_of_sale.view_pos_confirm
 msgid "Generate Entries"
-msgstr ""
+msgstr "Tételek generálása"
 
 #. module: point_of_sale
 #: view:pos.confirm:point_of_sale.view_pos_confirm
 msgid "Generate Journal Entries"
-msgstr ""
+msgstr "Naplótételek generálása"
 
 #. module: point_of_sale
 #: view:pos.confirm:point_of_sale.view_pos_confirm
@@ -1608,44 +1650,48 @@ msgid ""
 "Generate all sale journal entries for non invoiced orders linked to a closed "
 "cash register or statement."
 msgstr ""
+"Az összes értékesítési naplóbejegyzés generálása, a nem számlázott "
+"megrendelésekről, a lezárt pénztárgépre vagy kivonatra hivatkozva."
 
 #. module: point_of_sale
 #: help:pos.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
 msgstr ""
+"Megadja a rendezési sorrendet, amikor a termékkategóriák listáját "
+"megjelenítjük."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_golden_perlim_product_template
 msgid "Golden Apples Perlim"
-msgstr ""
+msgstr "Golden alma Perlim"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:96
 #, python-format
 msgid "Google Chrome"
-msgstr ""
+msgstr "Google Chrome"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_granny_smith_product_template
 msgid "Granny Smith apples"
-msgstr ""
+msgstr "Granny Smith alma"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.raisins
 msgid "Grapes"
-msgstr ""
+msgstr "Fekete szőlők"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_verts_product_template
 msgid "Green Peppers"
-msgstr ""
+msgstr "Zöldpaprika"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.grisette_cerise_25cl_product_template
 msgid "Grisette Cherry 25cl"
-msgstr ""
+msgstr "Grisette Cseresznye 25cl"
 
 #. module: point_of_sale
 #: view:account.bank.statement:point_of_sale.view_pos_confirm_cash_statement_filter
@@ -1654,36 +1700,36 @@ msgstr ""
 #: view:pos.session:point_of_sale.view_pos_session_search
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 msgid "Group By"
-msgstr ""
+msgstr "Csoportosít"
 
 #. module: point_of_sale
 #: field:pos.config,group_by:0
 msgid "Group Journal Items"
-msgstr ""
+msgstr "Napló tételek csoportosítása"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:860
 #, python-format
 msgid "Hardware Events"
-msgstr ""
+msgstr "Hardver események"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "Hardware Proxy"
-msgstr ""
+msgstr "Hardver proxy"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:856
 #, python-format
 msgid "Hardware Status"
-msgstr ""
+msgstr "Hardver állapot"
 
 #. module: point_of_sale
 #: field:pos.session,cash_control:0
 msgid "Has Cash Control"
-msgstr ""
+msgstr "Van készpénz ellenőrzés"
 
 #. module: point_of_sale
 #: field:pos.category,id:0
@@ -1710,52 +1756,52 @@ msgstr ""
 #: field:report.sales.by.user.pos.month,id:0
 #: field:report.transaction.pos,id:0
 msgid "ID"
-msgstr ""
+msgstr "Azonosító ID"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_dame_blanche_2,5l_product_template
 msgid "IJsboerke 2.5L White Lady"
-msgstr ""
+msgstr "IJsboerke 2.5L White Lady"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_chocolat_2,5l_product_template
 msgid "IJsboerke Chocolat 2.5L"
-msgstr ""
+msgstr "IJsboerke Csokoládé 2.5L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_moka_2,5l_product_template
 msgid "IJsboerke Mocha 2.5L"
-msgstr ""
+msgstr "IJsboerke Mocha 2.5L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_stracciatella_2,5l_product_template
 msgid "IJsboerke Stracciatella 2.5L"
-msgstr ""
+msgstr "IJsboerke Stracciatella 2.5L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_vanille_2,5l_product_template
 msgid "IJsboerke Vanilla 2.5L"
-msgstr ""
+msgstr "IJsboerke Stracciatella 2.5L"
 
 #. module: point_of_sale
 #: field:pos.config,proxy_ip:0
 msgid "IP Address"
-msgstr ""
+msgstr "IP cím"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.ice_cream
 msgid "Ice Cream"
-msgstr ""
+msgstr "Fagylalt"
 
 #. module: point_of_sale
 #: field:pos.category,image:0
 msgid "Image"
-msgstr ""
+msgstr "Kép"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.tomate_en_grappe_product_template
 msgid "In Cluster Tomatoes"
-msgstr ""
+msgstr "Fürtös paradicsom"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:134
@@ -1763,19 +1809,21 @@ msgstr ""
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "In Progress"
-msgstr ""
+msgstr "Folyamatban"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:653
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr ""
+"Annak érdekében, hogy törölje az eladást, újnak vagy visszavontnak kell "
+"lennie."
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_search
 #: selection:pos.config,state:0
 msgid "Inactive"
-msgstr ""
+msgstr "Inaktív"
 
 #. module: point_of_sale
 #: field:pos.order,note:0
@@ -1787,7 +1835,7 @@ msgstr "Belső jegyzetek"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:846
 #, python-format
 msgid "Invalid Ean"
-msgstr ""
+msgstr "Érvénytelen Ean"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
@@ -1818,12 +1866,12 @@ msgstr "Számlák"
 #. module: point_of_sale
 #: field:pos.config,iface_invoicing:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Számlázás"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_jonagold_product_template
 msgid "Jonagold apples"
-msgstr ""
+msgstr "Jonagold alma"
 
 #. module: point_of_sale
 #: view:account.bank.statement:point_of_sale.view_pos_confirm_cash_statement_filter
@@ -1838,27 +1886,27 @@ msgstr "Napló"
 #. module: point_of_sale
 #: field:pos.order,account_move:0
 msgid "Journal Entry"
-msgstr "Könyvelési tétel"
+msgstr "Naplóbejegyzés"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "Journals"
-msgstr ""
+msgstr "Naplók"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_33cl_product_template
 msgid "Jupiler 33cl"
-msgstr ""
+msgstr "Jupiler 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_50cl_product_template
 msgid "Jupiler 50cl"
-msgstr ""
+msgstr "Jupiler 50cl"
 
 #. module: point_of_sale
 #: field:pos.config,iface_big_scrollbars:0
 msgid "Large Scrollbars"
-msgstr ""
+msgstr "Nagy gördítősávok"
 
 #. module: point_of_sale
 #: field:pos.category,write_uid:0
@@ -1874,7 +1922,7 @@ msgstr ""
 #: field:pos.session,write_uid:0
 #: field:pos.session.opening,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Utoljára frissítette"
 
 #. module: point_of_sale
 #: field:pos.category,write_date:0
@@ -1890,100 +1938,100 @@ msgstr ""
 #: field:pos.session,write_date:0
 #: field:pos.session.opening,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Utoljára frissítve"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_ketchup_250g_product_template
 msgid "Lays Ketchup 250g"
-msgstr ""
+msgstr "Lays Ketchup 250g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_light_paprika_170g_product_template
 #: model:product.template,name:point_of_sale.lays_paprika_170g_product_template
 msgid "Lays Light Paprika 170g"
-msgstr ""
+msgstr "Lays Light Paprika 170g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_45g_product_template
 msgid "Lays Natural 45g"
-msgstr ""
+msgstr "Lays Natural 45g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_light_naturel_170g_product_template
 #: model:product.template,name:point_of_sale.lays_naturel_170g_product_template
 msgid "Lays Natural Light 170g"
-msgstr ""
+msgstr "Lays Natúr Light 170g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_300g_product_template
 msgid "Lays Natural XXL 300g"
-msgstr ""
+msgstr "Lays Natúr Light 300g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_45g_product_template
 msgid "Lays Paprika 45g"
-msgstr ""
+msgstr "Lays Paprika 45g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_300g_product_template
 msgid "Lays Paprika XXL 300g"
-msgstr ""
+msgstr "Lays Paprika XXL 300g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_poivre_sel_oven_150g_product_template
 msgid "Lays Salt and Pepper Oven Baked 150g"
-msgstr ""
+msgstr "Lays Salt and Pepper Oven Baked 150g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poireaux_poireaux_product_template
 msgid "Leeks"
-msgstr ""
+msgstr "Póréhagyma"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_blonde_33cl_product_template
 msgid "Leffe Blonde 33cl"
-msgstr ""
+msgstr "Leffe Blonde 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_9_33cl_product_template
 msgid "Leffe Brune \"9\" 33cl"
-msgstr ""
+msgstr "Leffe Brune \"9\" 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_brune_33cl_product_template
 msgid "Leffe Brune 33cl"
-msgstr ""
+msgstr "Leffe Brune 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.citron_product_template
 msgid "Lemon"
-msgstr ""
+msgstr "Citrom"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_kriek_37,5cl_product_template
 msgid "Lindemans Kriek 37.5cl"
-msgstr ""
+msgstr "Lindemans Kriek 37.5cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_pecheresse_37,,5cl_product_template
 msgid "Lindemans sinful 37.5cl"
-msgstr ""
+msgstr "Lindemans sinful 37.5cl"
 
 #. module: point_of_sale
 #: field:pos.order.line,name:0
 msgid "Line No"
-msgstr ""
+msgstr "Sorszám"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Lines of Point of Sale"
-msgstr ""
+msgstr "Értékesítési pont sorai"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:80
 #, python-format
 msgid "List of Cash Registers"
-msgstr ""
+msgstr "Pénztárgépek listája"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1992,43 +2040,43 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:79
 #, python-format
 msgid "Loading"
-msgstr ""
+msgstr "Betöltés"
 
 #. module: point_of_sale
 #: field:pos.order,location_id:0
 #: field:report.pos.order,location_id:0
 msgid "Location"
-msgstr ""
+msgstr "Hely"
 
 #. module: point_of_sale
 #: field:pos.session,login_number:0
 msgid "Login Sequence Number"
-msgstr ""
+msgstr "Bejelentkezési sorszám"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_33cl_product_template
 msgid "Maes 33cl"
-msgstr ""
+msgstr "Maes 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_50cl_product_template
 msgid "Maes 50cl"
-msgstr ""
+msgstr "Maes 50cl"
 
 #. module: point_of_sale
 #: view:pos.make.payment:point_of_sale.view_pos_payment
 msgid "Make Payment"
-msgstr "Átutalás végrehajtása"
+msgstr "Kifizetés"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Manager"
-msgstr ""
+msgstr "Menedzser"
 
 #. module: point_of_sale
 #: field:pos.category,image_medium:0
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Közepes méretű kép"
 
 #. module: point_of_sale
 #: help:pos.category,image_medium:0
@@ -2037,6 +2085,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"A kategória közepes méretű képe. Automatikusan át lesz méretezve 128x128px-"
+"es képpé, az arányok megtartásával. Használja ezt a mezőt az űrlap nézetben "
+"és egyes kanban nézetekben."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:799
@@ -2045,28 +2096,30 @@ msgid ""
 "Missing source or destination location for picking type %s. Please configure "
 "those fields and try again."
 msgstr ""
+"Hiányzó forrás vagy cél hely a %s kiszedési típushoz. Kérjük, állítsa be "
+"ezeket a mezőket, és próbálja újra."
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Money In"
-msgstr ""
+msgstr "Készpénz befizetése"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Money Out"
-msgstr ""
+msgstr "Készpénz kifizetése"
 
 #. module: point_of_sale
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 msgid "Month of order date"
-msgstr ""
+msgstr "A megrendelés hónapja"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:95
 #, python-format
 msgid "Mozilla Firefox"
-msgstr ""
+msgstr "Mozilla Firefox"
 
 #. module: point_of_sale
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
@@ -2080,7 +2133,7 @@ msgstr "Értékesítéseim"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:405
 #, python-format
 msgid "N/A"
-msgstr ""
+msgstr "Nincs adat"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2096,50 +2149,50 @@ msgstr "Név"
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_id:0
 msgid "Nbr Invoice"
-msgstr "Szamla száma"
+msgstr "Számla száma"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1270
 #, python-format
 msgid "Negative Bank Payment"
-msgstr ""
+msgstr "Negatív banki fizetés"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_payment
 msgid "Net Total"
-msgstr ""
+msgstr "Nettó összesen"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "New"
-msgstr ""
+msgstr "Új"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
 msgid "New Session"
-msgstr ""
+msgstr "Új értékesítési folyamat"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:942
 #, python-format
 msgid "Next Order"
-msgstr ""
+msgstr "Következő rendelés"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
 #, python-format
 msgid "No Cash Register Defined!"
-msgstr ""
+msgstr "Nincs pénztárgép meghatározva!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1288
 #, python-format
 msgid "No Pricelist!"
-msgstr ""
+msgstr "Nincs árlista!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:594
@@ -2147,12 +2200,14 @@ msgstr ""
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
 msgstr ""
+"Nem található pénz kivonat ebben a  értékesítési folyamatban. Nem lehet "
+"rögzíteni a pénzvisszatérítést."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/report/pos_invoice.py:46
 #, python-format
 msgid "No link to an invoice for %s., "
-msgstr ""
+msgstr "Nem hivatkozik egy számlra %s., "
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_saleslines
@@ -2164,12 +2219,12 @@ msgstr "Cikkek száma"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:330
 #, python-format
 msgid "None"
-msgstr ""
+msgstr "Nincs"
 
 #. module: point_of_sale
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Nem számlázott"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
@@ -2189,14 +2244,14 @@ msgstr "Tranzakció száma"
 #. module: point_of_sale
 #: view:website:point_of_sale.index
 msgid "Odoo POS"
-msgstr ""
+msgstr "Odoo értékesítési pont"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/widgets.js:899
 #, python-format
 msgid "Offline"
-msgstr ""
+msgstr "Nem elérhető"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2206,17 +2261,17 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:735
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "Rendben"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.Onions_product_template
 msgid "Onions"
-msgstr ""
+msgstr "Hagyma"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.oignons_ail_echalotes
 msgid "Onions / Garlic / Shallots"
-msgstr ""
+msgstr "Hagyma / fokhagyma / mogyoróhagyma"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2224,6 +2279,7 @@ msgstr ""
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
 msgstr ""
+"Csak web-kompatibilis képformátumok, mint a png vagy a .jpeg támogatott"
 
 #. module: point_of_sale
 #: view:account.bank.statement:point_of_sale.view_pos_confirm_cash_statement_filter
@@ -2242,22 +2298,22 @@ msgstr "Pénztár nyitása"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:862
 #, python-format
 msgid "Open Cashbox"
-msgstr ""
+msgstr "Pénzkazetta nyitása"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Open POS Menu"
-msgstr ""
+msgstr "ÉP menü megnyitás"
 
 #. module: point_of_sale
 #: view:pos.open.statement:point_of_sale.view_pos_open_statement
 msgid "Open Registers"
-msgstr ""
+msgstr "Pénztár nyitása"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
 msgid "Open Session"
-msgstr ""
+msgstr "Értékesítési folyamat megnyitása"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_open_statement
@@ -2275,12 +2331,12 @@ msgstr "Nyitó egyenleg"
 #: view:pos.session:point_of_sale.view_pos_session_form
 #: field:pos.session,opening_details_ids:0
 msgid "Opening Cash Control"
-msgstr ""
+msgstr "Nyitó készpénzállomány"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Opening Cashbox Lines"
-msgstr ""
+msgstr "Pénzkazetta nyitó tételek"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:133
@@ -2288,7 +2344,7 @@ msgstr ""
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Opening Control"
-msgstr ""
+msgstr "Nyitó készpénzállomány"
 
 #. module: point_of_sale
 #: field:pos.session,start_at:0
@@ -2300,32 +2356,32 @@ msgstr "Nyitó dátum"
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Opening Subtotal"
-msgstr ""
+msgstr "Nyitás összesen"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda_orange
 msgid "Orange"
-msgstr ""
+msgstr "Narancs"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.papillon_orange_product_template
 msgid "Orange Butterfly"
-msgstr ""
+msgstr "Narancs pillangó"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.oranges
 msgid "Oranges"
-msgstr ""
+msgstr "Narancs"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_1,5l_product_template
 msgid "Orangina 1.5L"
-msgstr ""
+msgstr "Orangina 1.5L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_33cl_product_template
 msgid "Orangina 33cl"
-msgstr ""
+msgstr "Orangina 33cl"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2333,14 +2389,14 @@ msgstr ""
 #: view:website:point_of_sale.report_detailsofsales
 #, python-format
 msgid "Order"
-msgstr ""
+msgstr "Megrendelés"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:983
 #, python-format
 msgid "Order "
-msgstr ""
+msgstr "Megrendelés "
 
 #. module: point_of_sale
 #: field:pos.order,date_order:0
@@ -2352,7 +2408,7 @@ msgstr "Rendelés időpontja"
 #. module: point_of_sale
 #: field:pos.config,sequence_id:0
 msgid "Order IDs Sequence"
-msgstr ""
+msgstr "Rendelési azonosítók sorszáma"
 
 #. module: point_of_sale
 #: field:pos.order,lines:0
@@ -2363,7 +2419,7 @@ msgstr "Megrendelés sorok"
 #: view:pos.order:point_of_sale.view_pos_order_filter
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 msgid "Order Month"
-msgstr ""
+msgstr "A megrendelés hónapja"
 
 #. module: point_of_sale
 #: field:pos.order,name:0
@@ -2374,7 +2430,7 @@ msgstr "Rendelési hiv."
 #. module: point_of_sale
 #: field:pos.session,sequence_number:0
 msgid "Order Sequence Number"
-msgstr ""
+msgstr "Rendelés sorszáma"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
@@ -2387,38 +2443,38 @@ msgstr "Rendelési tételek"
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
 #: field:pos.session,order_ids:0
 msgid "Orders"
-msgstr ""
+msgstr "Megrendelések"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
 #: model:ir.ui.menu,name:point_of_sale.menu_report_pos_order_all
 msgid "Orders Analysis"
-msgstr ""
+msgstr "A megrendelések elemzése"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orval_33cl_product_template
 msgid "Orval 33cl"
-msgstr ""
+msgstr "Orval 33cl"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.autres_agrumes
 msgid "Other Citrus"
-msgstr ""
+msgstr "Egyéb citrusfélék"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.autres_legumes_frais
 msgid "Other fresh vegetables"
-msgstr ""
+msgstr "Egyéb friss zöldségek"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_oven_150g_product_template
 msgid "Oven Baked Lays Natural 150g"
-msgstr ""
+msgstr "Oven Baked Lays Natural 150g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_oven_150g_product_template
 msgid "Oven Baked Lays Paprika 150g"
-msgstr ""
+msgstr "Oven Baked Lays Paprika 150g"
 
 #. module: point_of_sale
 #: view:report.sales.by.user.pos:point_of_sale.view_report_sales_by_user_pos_form
@@ -2433,12 +2489,12 @@ msgstr "Értékesítési pont"
 #. module: point_of_sale
 #: view:pos.details:point_of_sale.view_pos_details
 msgid "POS Details"
-msgstr ""
+msgstr "Értékesítési pont részletek"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_saleslines
 msgid "POS Lines"
-msgstr ""
+msgstr "Értékesítési pont sorok"
 
 #. module: point_of_sale
 #: view:pos.order.line:point_of_sale.view_pos_order_line_form
@@ -2471,7 +2527,7 @@ msgstr "Értékesítési pont jelentése"
 #. module: point_of_sale
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 msgid "POS ordered created during current year"
-msgstr ""
+msgstr "POS megrendelések során keletkezett tárgyévi"
 
 #. module: point_of_sale
 #: field:pos.order,amount_paid:0
@@ -2484,12 +2540,12 @@ msgstr "Fizetve"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:475
 #, python-format
 msgid "Paid:"
-msgstr ""
+msgstr "A kifizetések:"
 
 #. module: point_of_sale
 #: field:pos.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Szülő kategória"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
@@ -2502,7 +2558,7 @@ msgstr "Partner"
 #. module: point_of_sale
 #: view:pos.make.payment:point_of_sale.view_pos_payment
 msgid "Pay Order"
-msgstr ""
+msgstr "Rendelés kifizetése"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_payment.py:75
@@ -2511,7 +2567,7 @@ msgstr ""
 #: view:website:point_of_sale.report_detailsofsales
 #, python-format
 msgid "Payment"
-msgstr "Átutalás"
+msgstr "Fizetés"
 
 #. module: point_of_sale
 #: field:pos.make.payment,payment_date:0
@@ -2522,23 +2578,23 @@ msgstr "Kifizetés dátuma"
 #: model:ir.actions.act_window,name:point_of_sale.action_account_journal_form
 #: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
 msgid "Payment Methods"
-msgstr ""
+msgstr "Elérhető fizetési módok"
 
 #. module: point_of_sale
 #: field:pos.make.payment,journal_id:0
 #: view:website:point_of_sale.report_receipt
 msgid "Payment Mode"
-msgstr ""
+msgstr "Fizetési mód"
 
 #. module: point_of_sale
 #: field:pos.make.payment,payment_name:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Átutalási hivatkozás"
 
 #. module: point_of_sale
 #: field:pos.config,iface_payment_terminal:0
 msgid "Payment Terminal"
-msgstr ""
+msgstr "Terminál emulátorok"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
@@ -2549,17 +2605,17 @@ msgstr "Kifizetések"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.nectarine_product_template
 msgid "Peach"
-msgstr ""
+msgstr "Őszibarack"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.peche_product_template
 msgid "Peaches"
-msgstr ""
+msgstr "Őszibarack"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.poire
 msgid "Pears"
-msgstr ""
+msgstr "Körte"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2569,36 +2625,38 @@ msgid ""
 "Pending orders will be lost.\n"
 "Are you sure you want to leave this session?"
 msgstr ""
+"A függőben lévő megrendelések elfognak veszni. \n"
+"Biztos benne, hogy el szeretné hagyni ezt az értékesítési folyamatot?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_2l_product_template
 msgid "Pepsi 2L"
-msgstr ""
+msgstr "Pepsi 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_33cl_product_template
 msgid "Pepsi 33cl"
-msgstr ""
+msgstr "Pepsi 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_2l_product_template
 msgid "Pepsi Max 2L"
-msgstr ""
+msgstr "Pepsi Max 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_33cl_product_template
 msgid "Pepsi Max 33cl"
-msgstr ""
+msgstr "Pepsi Max 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_50cl_product_template
 msgid "Pepsi Max 50cl"
-msgstr ""
+msgstr "Pepsi Max 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_lemon_33cl_product_template
 msgid "Pepsi Max Cool Lemon 33cl"
-msgstr ""
+msgstr "Pepsi Max Cool Lemon 33cl"
 
 #. module: point_of_sale
 #: view:account.bank.statement:point_of_sale.view_pos_confirm_cash_statement_filter
@@ -2609,7 +2667,7 @@ msgstr "Időszak"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.perrier_1l_product_template
 msgid "Perrier 1L"
-msgstr ""
+msgstr "Perrier 1L"
 
 #. module: point_of_sale
 #: help:pos.order,user_id:0
@@ -2617,6 +2675,8 @@ msgid ""
 "Person who uses the the cash register. It can be a reliever, a student or an "
 "interim employee."
 msgstr ""
+"A személy, aki használja a pénztárgépet. Ez lehet egy rohamoldó, egy diák, "
+"vagy egy ideiglenes alkalmazottja."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2625,14 +2685,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:451
 #, python-format
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:932
 #, python-format
 msgid "Phone:"
-msgstr ""
+msgstr "Telefon:"
 
 #. module: point_of_sale
 #: field:pos.order,picking_id:0
@@ -2643,34 +2703,35 @@ msgstr "Kiszedés"
 #: field:pos.config,picking_type_id:0
 #: field:pos.order,picking_type_id:0
 msgid "Picking Type"
-msgstr ""
+msgstr "A kiválogatás típusa"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pils
 msgid "Pils"
-msgstr ""
+msgstr "Pils"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pizza
 msgid "Pizza"
-msgstr ""
+msgstr "Pizza"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.plain_water
 msgid "Plain Water"
-msgstr ""
+msgstr "Tiszta víz"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1148
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
+"Kérem, határozzon meg bevételi számlát ehhez a termékhez: \"%s\" (id:%d)."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:954
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr ""
+msgstr "Adjon meg egy partnert az értékesítéshez."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2680,26 +2741,28 @@ msgid ""
 "Please select a client for this order. This can be done by clicking the "
 "order tab"
 msgstr ""
+"Kérjük, válasszon egy ügyfelet ehhez a megrendeléshez. Ezt a  a megrendelés "
+"fülre kattintva lehet megtenni"
 
 #. module: point_of_sale
 #: model:stock.picking.type,name:point_of_sale.picking_type_posout
 msgid "PoS Orders"
-msgstr ""
+msgstr "Értékesítési pont rendelései"
 
 #. module: point_of_sale
 #: field:account.journal,journal_user:0
 msgid "PoS Payment Method"
-msgstr ""
+msgstr "Értékesítési pont fizetési mód"
 
 #. module: point_of_sale
 #: field:pos.session.opening,pos_session_id:0
 msgid "PoS Session"
-msgstr ""
+msgstr "ÉP értékesítési folyamat"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
 msgid "PoS Session Opening"
-msgstr ""
+msgstr "ÉP értékesítési folyamat megnyitása"
 
 #. module: point_of_sale
 #: view:account.journal:point_of_sale.view_account_journal_pos_user_form
@@ -2724,102 +2787,102 @@ msgstr "Értékesítési pont elemzése"
 #. module: point_of_sale
 #: field:product.template,income_pdt:0
 msgid "Point of Sale Cash In"
-msgstr ""
+msgstr "Értékesítési pont készpénz be"
 
 #. module: point_of_sale
 #: field:product.template,expense_pdt:0
 msgid "Point of Sale Cash Out"
-msgstr ""
+msgstr "Értékesítési pont készpénz ki"
 
 #. module: point_of_sale
 #: field:product.template,pos_categ_id:0
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "Értékesítési pont kategória"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_search
 msgid "Point of Sale Config"
-msgstr ""
+msgstr "Értékesítési pont beállítás"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 #: view:pos.config:point_of_sale.view_pos_config_tree
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Értékesítési pont beállítása"
 
 #. module: point_of_sale
 #: field:pos.config,name:0
 msgid "Point of Sale Name"
-msgstr ""
+msgstr "Értékesítési pont neve"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "Értékesítési pont rendelések"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr ""
+msgstr "Értékesítési pont rendelések statisztikája"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Értékesítési pont fizetés"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 #: view:pos.session:point_of_sale.view_pos_session_search
 #: view:pos.session:point_of_sale.view_pos_session_tree
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "Értékesítési Pont Értékesítési folyamat"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos
 #: view:pos.session:point_of_sale.view_pos_session_search
 msgid "Point of Sales"
-msgstr ""
+msgstr "Értékesítési pont"
 
 #. module: point_of_sale
 #: view:pos.category:point_of_sale.product_pos_category_form_view
 msgid "Pos Categories"
-msgstr ""
+msgstr "Értékesítési pont  kategóriák"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_product_pos_category
 msgid "Pos Product Categories"
-msgstr ""
+msgstr "Értékesítési pont termék kategóriák"
 
 #. module: point_of_sale
 #: view:pos.confirm:point_of_sale.view_pos_confirm
 msgid "Post All Orders"
-msgstr ""
+msgstr "Minaden megrendelés küldése"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr ""
+msgstr "Értékesítési pont napló tételeinek küldése"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:324
 #, python-format
 msgid "Postcode"
-msgstr ""
+msgstr "Irányítószám"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0
 msgid "Posted"
-msgstr ""
+msgstr "Elküldve"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pommes_de_terre
 #: model:product.template,name:point_of_sale.pomme_de_terre_product_template
 msgid "Potatoes"
-msgstr ""
+msgstr "Burgonya"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2834,7 +2897,7 @@ msgstr "Ár"
 #. module: point_of_sale
 #: field:pos.config,barcode_price:0
 msgid "Price Barcodes"
-msgstr ""
+msgstr "Ár vonalkódok"
 
 #. module: point_of_sale
 #: field:pos.config,pricelist_id:0
@@ -2847,7 +2910,7 @@ msgstr "Árlista"
 #: code:addons/point_of_sale/static/src/js/screens.js:936
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "Nyomtatás"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
@@ -2871,26 +2934,26 @@ msgstr "Jelentés kinyomtatása"
 #: view:website:point_of_sale.report_payment
 #: view:website:point_of_sale.report_saleslines
 msgid "Print date"
-msgstr ""
+msgstr "A nyomtatás időpontja"
 
 #. module: point_of_sale
 #: field:pos.config,iface_print_via_proxy:0
 msgid "Print via Proxy"
-msgstr ""
+msgstr "Nyomtatás proxy-n keresztül"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/widgets.js:888
 #, python-format
 msgid "Printer"
-msgstr ""
+msgstr "Nyomtató"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/devices.js:419
 #, python-format
 msgid "Printing Error: "
-msgstr ""
+msgstr "Nyomtatási hiba: "
 
 #. module: point_of_sale
 #: field:pos.order.line,product_id:0
@@ -2905,13 +2968,13 @@ msgstr "Termék"
 #. module: point_of_sale
 #: field:pos.config,barcode_product:0
 msgid "Product Barcodes"
-msgstr ""
+msgstr "Termék vonalkódok"
 
 #. module: point_of_sale
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 #: field:report.pos.order,product_categ_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Termék kategória"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -2921,17 +2984,17 @@ msgstr "Termék száma"
 #. module: point_of_sale
 #: view:pos.category:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
-msgstr ""
+msgstr "Termék termékkategóriái"
 
 #. module: point_of_sale
 #: field:report.pos.order,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "Termék mennyiség"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Terméksablon"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action
@@ -2944,17 +3007,17 @@ msgstr "Termékek"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
 msgid "Public Category"
-msgstr ""
+msgstr "Nyilvános kategória"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Put"
-msgstr ""
+msgstr "Tesz"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_in
 msgid "Put Money In"
-msgstr ""
+msgstr "Készpénz befizetése"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2983,50 +3046,50 @@ msgstr "Mennyiség"
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
 msgid "Re-Print"
-msgstr ""
+msgstr "Újra-nyomtatás"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:864
 #, python-format
 msgid "Read Weighting Scale"
-msgstr ""
+msgstr "Mérleg olvasása"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Real Closing Balance"
-msgstr ""
+msgstr "Tényleges záró egyenleg"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.action_report_pos_receipt
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "Receipt"
-msgstr "Bevétel"
+msgstr "Nyugta"
 
 #. module: point_of_sale
 #: field:pos.config,receipt_footer:0
 msgid "Receipt Footer"
-msgstr ""
+msgstr "Nyugta lábléc"
 
 #. module: point_of_sale
 #: field:pos.config,receipt_header:0
 msgid "Receipt Header"
-msgstr ""
+msgstr "Nyugta fejléc"
 
 #. module: point_of_sale
 #: field:pos.order,pos_reference:0
 msgid "Receipt Ref"
-msgstr ""
+msgstr "Nyugta hiv."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_rouges_product_template
 msgid "Red Pepper"
-msgstr ""
+msgstr "Piros paprika"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
 msgid "Red grapefruit"
-msgstr ""
+msgstr "Piros grapefruit"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3035,55 +3098,55 @@ msgstr ""
 #: view:website:point_of_sale.report_sessionsummary
 #, python-format
 msgid "Reference"
-msgstr ""
+msgstr "Hivatkozás"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:481
 #, python-format
 msgid "Remaining:"
-msgstr ""
+msgstr "Visszamaradt:"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
 msgid "Reprint"
-msgstr ""
+msgstr "Újra nyomtat"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:833
 #, python-format
 msgid "Reset"
-msgstr ""
+msgstr "Visszaállítás"
 
 #. module: point_of_sale
 #: view:account.bank.statement:point_of_sale.view_cash_statement_pos_tree
 #: field:pos.session,user_id:0
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Responsible"
-msgstr ""
+msgstr "Felelős"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
 msgid "Resume Session"
-msgstr ""
+msgstr "Értékesítési folyamat folytatása"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:926
 #: view:pos.order:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
-msgstr ""
+msgstr "Visszáruzás"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.rochefort_8_33cl_product_template
 msgid "Rochefort \"8\" 33cl"
-msgstr ""
+msgstr "Rochefort \"8\" 33cl"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.legumes_racine
 msgid "Root vegetables"
-msgstr ""
+msgstr "Gyökérzöldségek"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -3095,7 +3158,7 @@ msgstr "Értékesítés részletei"
 #: field:pos.config,journal_id:0
 #: field:pos.order,sale_journal:0
 msgid "Sale Journal"
-msgstr ""
+msgstr "Értékesítési napló"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -3112,12 +3175,12 @@ msgstr "Értékesítés részletei"
 #. module: point_of_sale
 #: field:report.transaction.pos,journal_id:0
 msgid "Sales Journal"
-msgstr "Kimenő számla napló"
+msgstr "Értékesítési napló"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
 msgid "Sales Lines"
-msgstr "Értékesítés sorok"
+msgstr "Értékesítési sorok"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_today
@@ -3129,7 +3192,7 @@ msgstr "Értékesítés felhasználók szerint"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
 msgid "Sales by User Monthly"
-msgstr ""
+msgstr "Havi értékesítés felhasználók szerint"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
@@ -3150,7 +3213,7 @@ msgstr "Értékesítések felhasználók szerint"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
 msgid "Sales by user monthly"
-msgstr ""
+msgstr "A felhasználó havi értékesítési célja"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
@@ -3166,37 +3229,37 @@ msgstr "Értékesítő"
 #. module: point_of_sale
 #: field:pos.details,user_ids:0
 msgid "Salespeople"
-msgstr ""
+msgstr "Értékesítők"
 
 #. module: point_of_sale
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 #: field:report.pos.order,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Értékesítő"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.san_pellegrino_1l_product_template
 msgid "San Pellegrino 1L"
-msgstr ""
+msgstr "San Pellegrino 1L"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/widgets.js:896
 #, python-format
 msgid "Scale"
-msgstr ""
+msgstr "Felbontás"
 
 #. module: point_of_sale
 #: field:pos.config,iface_scan_via_proxy:0
 msgid "Scan via Proxy"
-msgstr ""
+msgstr "Szkennelés proxy-n keresztül"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/widgets.js:879
 #, python-format
 msgid "Scanner"
-msgstr ""
+msgstr "Leolvasó"
 
 #. module: point_of_sale
 #: view:account.bank.statement:point_of_sale.view_pos_confirm_cash_statement_filter
@@ -3209,64 +3272,65 @@ msgstr "Kivonatok keresése"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:422
 #, python-format
 msgid "Search Customers"
-msgstr ""
+msgstr "Vásárlók keresése"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:215
 #, python-format
 msgid "Search Products"
-msgstr ""
+msgstr "Termékek keresése"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
-msgstr "Vevői megrendelés keresése"
+msgstr "Vásárlói megrendelés keresése"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:430
 #, python-format
 msgid "Select Customer"
-msgstr ""
+msgstr "Vásárló választása"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
 msgid "Select your Point of Sale"
-msgstr ""
+msgstr "Értékesítési pontjának kiválasztása"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1033
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr ""
+"A kiválasztott rendelések nem azonos értékesítési folyamathoz tartoznak!"
 
 #. module: point_of_sale
 #: field:pos.config,iface_self_checkout:0
 msgid "Self Checkout Mode"
-msgstr ""
+msgstr "Saját ellenőrzési mód"
 
 #. module: point_of_sale
 #: field:account.journal,self_checkout_payment_method:0
 msgid "Self Checkout Payment Method"
-msgstr ""
+msgstr "Saját Pénztár Fizetési Mód"
 
 #. module: point_of_sale
 #: field:pos.category,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sorrend"
 
 #. module: point_of_sale
 #: field:pos.order,sequence_number:0
 msgid "Sequence Number"
-msgstr ""
+msgstr "Sorszám"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:540
 #, python-format
 msgid "Served by"
-msgstr ""
+msgstr "Kiszolgálta"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_session_opening.py:64
@@ -3274,52 +3338,52 @@ msgstr ""
 #: field:pos.order,session_id:0
 #, python-format
 msgid "Session"
-msgstr ""
+msgstr "Értékesítési folyamat"
 
 #. module: point_of_sale
 #: field:pos.session,name:0
 msgid "Session ID"
-msgstr ""
+msgstr "Értékesítési folyamat azonosító"
 
 #. module: point_of_sale
 #: field:pos.session.opening,pos_state:0
 msgid "Session Status"
-msgstr ""
+msgstr "Értékesítési folyamat állapot"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.action_report_pos_session_summary
 msgid "Session Summary"
-msgstr ""
+msgstr "Értékesítési folyamat összegzés"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Session Summary:"
-msgstr ""
+msgstr "Értékesítési folyamat összegzés:"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Session:"
-msgstr ""
+msgstr "Értékesítési folyamat:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_config_sessions
 #: field:pos.config,session_ids:0
 msgid "Sessions"
-msgstr ""
+msgstr "Értékesítési folyamatok"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:681
 #, python-format
 msgid "Set Customer"
-msgstr ""
+msgstr "Vásárló beállítása"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:832
 #, python-format
 msgid "Set Weight"
-msgstr ""
+msgstr "Súly beállítása"
 
 #. module: point_of_sale
 #: view:product.product:point_of_sale.product_normal_form_view_inherit_ean
@@ -3327,53 +3391,53 @@ msgstr ""
 #: view:res.partner:point_of_sale.view_partner_property_form
 #: view:res.users:point_of_sale.res_users_form_view
 msgid "Set a Custom EAN"
-msgstr ""
+msgstr "Egy egyéni EAN beállítása"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "Set to Active"
-msgstr ""
+msgstr "Beállítás aktívnak"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "Set to Deprecated"
-msgstr ""
+msgstr "Beállítás elavultnak"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "Set to Inactive"
-msgstr ""
+msgstr "Beállítás inaktívnak"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:934
 #, python-format
 msgid "Shop:"
-msgstr ""
+msgstr "Bolt:"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:852
 #, python-format
 msgid "Show All Unsent Orders"
-msgstr ""
+msgstr "Mutas minden beállítattlan rendelést"
 
 #. module: point_of_sale
 #: field:pos.session.opening,show_config:0
 msgid "Show Config"
-msgstr ""
+msgstr "Beállítás mutatása"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:83
 #, python-format
 msgid "Skip"
-msgstr ""
+msgstr "Kihagy"
 
 #. module: point_of_sale
 #: field:pos.category,image_small:0
 msgid "Smal-sized image"
-msgstr ""
+msgstr "Kis méretű kép"
 
 #. module: point_of_sale
 #: help:pos.category,image_small:0
@@ -3382,68 +3446,71 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Ennek a kategóriának a kisméretű képe. Automatikusan át lesz méretezve "
+"64x64px-es képpé, megtartva a képarányt. Használja ezt a mezőt bárhol, ahol "
+"kis képre van szükség."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda
 msgid "Soda"
-msgstr ""
+msgstr "Szóda"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:842
 #, python-format
 msgid "Soda 33cl"
-msgstr ""
+msgstr "Szóda 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_1,5l_product_template
 msgid "Spa Barisart 1.5l"
-msgstr ""
+msgstr "Spa Barisart 1.5l"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_33cl_product_template
 msgid "Spa Barisart 33cl"
-msgstr ""
+msgstr "Spa Barisart 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_50cl_product_template
 msgid "Spa Barisart 50cl"
-msgstr ""
+msgstr "Spa Barisart 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_et_fruit_50cl_product_template
 msgid "Spa Fruit and Orange 50cl"
-msgstr ""
+msgstr "Spa Fruit and Orange 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_1l_product_template
 msgid "Spa Reine 1L"
-msgstr ""
+msgstr "Spa Reine 1L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_2l_product_template
 msgid "Spa Reine 2L"
-msgstr ""
+msgstr "Spa Reine 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_33cl_product_template
 msgid "Spa Reine 33cl"
-msgstr ""
+msgstr "Spa Reine 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_50cl_product_template
 msgid "Spa Reine 50cl"
-msgstr ""
+msgstr "Spa Reine 50cl"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.sparkling_water
 msgid "Sparkling Water"
-msgstr ""
+msgstr "Szénsavas víz"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.special_beers
 msgid "Special Beers"
-msgstr ""
+msgstr "Különleges sörök"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
@@ -3453,7 +3520,7 @@ msgstr "Kezdő időszak"
 #. module: point_of_sale
 #: model:ir.actions.act_url,name:point_of_sale.action_pos_pos
 msgid "Start Point of Sale"
-msgstr ""
+msgstr "Értékesítési pont indítása"
 
 #. module: point_of_sale
 #: field:pos.session,cash_register_balance_start:0
@@ -3465,7 +3532,7 @@ msgstr "Nyitó egyenleg"
 #. module: point_of_sale
 #: view:website:point_of_sale.report_usersproduct
 msgid "Starting Date"
-msgstr "Indulás dátuma"
+msgstr "Kezdési dátum"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.action_report_account_statement
@@ -3476,7 +3543,7 @@ msgstr "Kivonat"
 #. module: point_of_sale
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Statement Details:"
-msgstr ""
+msgstr "Kivonat részletei:"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_statement
@@ -3486,7 +3553,7 @@ msgstr "Kivonat neve"
 #. module: point_of_sale
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Statement Summary"
-msgstr ""
+msgstr "Kivonat összegzés"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
@@ -3496,7 +3563,7 @@ msgstr "Kivonat sorok"
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Statements"
-msgstr ""
+msgstr "Kivonatok"
 
 #. module: point_of_sale
 #: view:account.bank.statement:point_of_sale.view_pos_confirm_cash_statement_filter
@@ -3509,22 +3576,22 @@ msgstr ""
 #: field:report.pos.order,state:0
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Status"
-msgstr ""
+msgstr "Állapot"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_33cl_product_template
 msgid "Stella Artois 33cl"
-msgstr ""
+msgstr "Stella Artois 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_50cl_product_template
 msgid "Stella Artois 50cl"
-msgstr ""
+msgstr "Stella Artois 50cl"
 
 #. module: point_of_sale
 #: field:pos.config,stock_location_id:0
 msgid "Stock Location"
-msgstr ""
+msgstr "Raktárhely"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3532,12 +3599,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:317
 #, python-format
 msgid "Street"
-msgstr ""
+msgstr "Utca"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.limon_product_template
 msgid "Stringers"
-msgstr ""
+msgstr "Hossztartók"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3557,12 +3624,12 @@ msgstr "Részösszesen ÁFA nélkül"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:969
 #, python-format
 msgid "Subtotal:"
-msgstr ""
+msgstr "Részösszeg:"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_end:0
 msgid "Sum of opening balance and transactions."
-msgstr ""
+msgstr "A nyitó egyenleg és tranzakciók összege."
 
 #. module: point_of_sale
 #: view:pos.order.line:point_of_sale.view_pos_order_line
@@ -3577,29 +3644,29 @@ msgstr "Összegzés"
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Summary by Payment Methods"
-msgstr ""
+msgstr "Összegzés fizetési módok szerint"
 
 #. module: point_of_sale
 #: selection:report.pos.order,state:0
 msgid "Synchronized"
-msgstr ""
+msgstr "Szinkornizálva"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:600
 #, python-format
 msgid "TOTAL"
-msgstr ""
+msgstr "ÖSSZESEN"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Take"
-msgstr ""
+msgstr "csináld"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_out
 msgid "Take Money Out"
-msgstr ""
+msgstr "Készpénz kifizetése"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1184
@@ -3615,7 +3682,7 @@ msgstr "Adó"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:400
 #, python-format
 msgid "Tax ID"
-msgstr ""
+msgstr "Adó azonosító"
 
 #. module: point_of_sale
 #: field:pos.order,amount_tax:0
@@ -3637,13 +3704,14 @@ msgstr "Adók:"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:524
 #, python-format
 msgid "Tel:"
-msgstr ""
+msgstr "Tel:"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1121
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr ""
+"A POS rendelésnek sorokat kell tartalmaznia mikor meghívja ezt a metódust"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3653,6 +3721,9 @@ msgid ""
 "The Point of Sale could not find any product, client, employee\n"
 "                    or action associated with the scanned barcode."
 msgstr ""
+"Az Értékesítési Pont nem talált egyetlen terméket, ügyfelet, munkavállalót \n"
+"                     vagy végrehajtandó tevékenységet sem a beolvasott "
+"vonalkódhoz."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3663,24 +3734,27 @@ msgid ""
 "use\n"
 "                        a modern browser like"
 msgstr ""
+"A Értékesítési Pont nem támogatja a Microsoft Internet Explorer-t. "
+"Használjon\n"
+"                         egy modern böngészőt, mint pl. a"
 
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid ""
 "The company of a payment method is different than the one of point of sale"
-msgstr ""
+msgstr "Az egyik értékesítési pontnál eltérő a cég fizetési módja"
 
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid ""
 "The company of the sale journal is different than the one of point of sale"
-msgstr ""
+msgstr "A cég értékesítési naplója eltér az egyik értékesítési pontnál"
 
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid ""
 "The company of the stock location is different than the one of point of sale"
-msgstr ""
+msgstr "Az egyik értékesítési pontnál eltérő a cég raktár helye"
 
 #. module: point_of_sale
 #: help:pos.config,proxy_ip:0
@@ -3688,65 +3762,68 @@ msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty"
 msgstr ""
+"A hardver proxy-s gép neve, vagy ip címe, Automatikus felismerés lesz, ha "
+"üresen hagyja"
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
 msgid "The name of this POS Session must be unique !"
-msgstr ""
+msgstr "Ennek a  POS értékesítési folyamat nevének egyedinek kell lennie!"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1315
 #, python-format
 msgid "The order could not be sent"
-msgstr ""
+msgstr "A rendelés nem küldhető el"
 
 #. module: point_of_sale
 #: help:pos.config,barcode_discount:0
 msgid "The pattern that identifies a product with a barcode encoded discount"
-msgstr ""
+msgstr "A minta, amely azonosítja a terméket, vonalkódba kódolt kedvezmény"
 
 #. module: point_of_sale
 #: help:pos.config,barcode_price:0
 msgid "The pattern that identifies a product with a barcode encoded price"
-msgstr ""
+msgstr "A minta, amely azonosítja a terméket, vonalkódba kódolt ár"
 
 #. module: point_of_sale
 #: help:pos.config,barcode_weight:0
 msgid "The pattern that identifies a product with a barcode encoded weight"
-msgstr ""
+msgstr "A minta, amely azonosítja a terméket, vonalkódba kódolt súly"
 
 #. module: point_of_sale
 #: help:pos.config,barcode_cashier:0
 msgid "The pattern that identifies cashier login barcodes"
-msgstr ""
+msgstr "A minta, amely azonosítja a pénztáros azonosító vonalkódokat"
 
 #. module: point_of_sale
 #: help:pos.config,barcode_customer:0
 msgid "The pattern that identifies customer's client card barcodes"
 msgstr ""
+"A minta, amely azonosítja az ügyfelek törzsvásárlói kártya vonalkódjait"
 
 #. module: point_of_sale
 #: help:pos.config,barcode_product:0
 msgid "The pattern that identifies product barcodes"
-msgstr ""
+msgstr "A minta, amely azonosítja a termék vonalkódokat"
 
 #. module: point_of_sale
 #: help:pos.session,config_id:0
 msgid "The physical point of sale you will use."
-msgstr ""
+msgstr "A fizikai értékesítési pont, melyet használni fog."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:830
 #, python-format
 msgid "The provided file could not be read due to an unknown error"
-msgstr ""
+msgstr "Ismeretlen hiba miatt a megadott fájlt nem lehet olvasni"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
 msgid "The session"
-msgstr ""
+msgstr "Az értékesítési folyamat"
 
 #. module: point_of_sale
 #: view:pos.open.statement:point_of_sale.view_pos_open_statement
@@ -3755,6 +3832,9 @@ msgid ""
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
 msgstr ""
+"A rendszer minden pénztárgépet ki fog nyitni, így el tuják kezdeni "
+"kifizetéseket. Azt javasoljuk, hogy ellenőrizzék a nyitó állományt minden "
+"regiszterben, a Kassza fül segítségével."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:500
@@ -3762,18 +3842,20 @@ msgstr ""
 msgid ""
 "The type of the journal for your payment method should be bank or cash "
 msgstr ""
+"A fizetési módjaihoz tartozó napló típusának, bankinak vagy készpénzesnek "
+"kell lennie "
 
 #. module: point_of_sale
 #: field:pos.session,cash_register_balance_end:0
 msgid "Theoretical Closing Balance"
-msgstr ""
+msgstr "Elméleti záró egyenleg"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:725
 #, python-format
 msgid "There are no unsent orders"
-msgstr ""
+msgstr "Nincsenek beállítattlan rendelések"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3783,6 +3865,8 @@ msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
 msgstr ""
+"Folyamatban lévő műveleteket vannak, melyek nincsenek elmentve az "
+"adatbázisba, biztos, hogy ki akar lépni?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3795,12 +3879,17 @@ msgid ""
 " Please pay the exact amount or add a cash payment method in the point of "
 "sale configuration"
 msgstr ""
+"A változtatás kezeléséhez nem áll rendelkezésre készpénzes fizetési mód, "
+"ebben az értékesítési pontban.\n"
+"\n"
+" Kérjük, a pontos összeget fizesse, vagy adja hozzá a készpénzes fizetési "
+"módot az értékesítési pont beállításaihoz"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box.py:23
 #, python-format
 msgid "There is no cash register for this PoS Session"
-msgstr ""
+msgstr "Nincs pénztárgép ehhez a PoS értékesítési folyamathoz"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:873
@@ -3809,12 +3898,14 @@ msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
 msgstr ""
+"Ennek a partnernek nincs követelési számlája meghatározva a fizetéshez: "
+"\"%s\" (id:%d)."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:871
 #, python-format
 msgid "There is no receivable account defined to make payment."
-msgstr ""
+msgstr "Nincs követelési számla meghatározva a fizetéshez."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3823,6 +3914,8 @@ msgstr ""
 msgid ""
 "There must be at least one product in your order before it can be validated"
 msgstr ""
+"Legalább egy termék kell, hogy legyen a rendelésen mielőtt érvényesíteni "
+"lehetne azt"
 
 #. module: point_of_sale
 #: help:account.journal,amount_authorized_diff:0
@@ -3832,6 +3925,11 @@ msgid ""
 "maximum is reached, the user will have an error message at the closing of "
 "his session saying that he needs to contact his manager."
 msgstr ""
+"Amikor lezárjuk az értékesítési folyamatot, a nem ÉP menedszerek számára ez "
+"a mező mutatja a legnagyobb megengedett különbséget a záró egyenleg és az "
+"elméleti készpénz között. Ha ez eléri a maximumot, a felhasználó egy "
+"hibaüzenetet kap a értékesítési folyamat zárásakor azzal, hogy fel kell "
+"vennie a kapcsolatot a menedzserrel."
 
 #. module: point_of_sale
 #: help:pos.category,image:0
@@ -3839,6 +3937,8 @@ msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
 msgstr ""
+"Ez a mező megtartja a képet, melyet a kategória használ, limitálva "
+"1024x1024px képpontra."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3848,6 +3948,9 @@ msgid ""
 "This operation will permanently destroy all unsent orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
 msgstr ""
+"Ez a művelet véglegesen megsemmisíti az összes el nem küldött megrendelést a "
+"helyi tárolóban.  El fogja veszíteni az összes adatot. Ez a művelet nem "
+"vonható vissza."
 
 #. module: point_of_sale
 #: help:pos.config,sequence_id:0
@@ -3855,32 +3958,35 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
+"Ez a sorrend automatikusan lett létrehozzva az Odoo által, de meg lehet "
+"változtatni a megrendelések hivatkozási számainak  testreszabásával."
 
 #. module: point_of_sale
 #: help:product.template,pos_categ_id:0
 msgid ""
 "Those categories are used to group similar products for point of sale."
 msgstr ""
+"A hasonló termékek kategóriák szerint csoportosítsa az értékesítési pontban."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_faro_37,5cl_product_template
 msgid "Timmermans Faro 37.5cl"
-msgstr ""
+msgstr "Timmermans Faro 37.5cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_geuze_37,5cl_product_template
 msgid "Timmermans Geuze 37.5cl"
-msgstr ""
+msgstr "Timmermans Geuze 37.5cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_kriek_37,5cl_product_template
 msgid "Timmermans Kriek 37.5cl"
-msgstr ""
+msgstr "Timmermans Kriek 37.5cl"
 
 #. module: point_of_sale
 #: field:product.template,to_weight:0
 msgid "To Weigh With Scale"
-msgstr ""
+msgstr "Súlyhoz mérleggel"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:910
@@ -3889,6 +3995,8 @@ msgid ""
 "To return product(s), you need to open a session that will be used to "
 "register the refund."
 msgstr ""
+"A termék (ek) visszavételéhez, meg kell nyitni egy értékesítési folyamatot, "
+"amelyet használni fog a visszatérítés regisztrálásához."
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_search
@@ -3898,17 +4006,17 @@ msgstr "Ma"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report
 msgid "Today's Payment"
-msgstr ""
+msgstr "Mai kifizetés"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_payment
 msgid "Today's Payments"
-msgstr ""
+msgstr "Mai kifizetések"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.tomates
 msgid "Tomatos"
-msgstr ""
+msgstr "Paradicsom"
 
 #. module: point_of_sale
 #: field:pos.order,amount_total:0
@@ -3926,7 +4034,7 @@ msgstr "Összesen"
 #. module: point_of_sale
 #: field:pos.session,cash_register_total_entry_encoding:0
 msgid "Total Cash Transaction"
-msgstr ""
+msgstr "Összesen a készpénzes tétel sorok."
 
 #. module: point_of_sale
 #: field:report.pos.order,total_discount:0
@@ -3946,12 +4054,12 @@ msgstr "Összes tranzakció"
 #. module: point_of_sale
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Total Transactions"
-msgstr ""
+msgstr "Összes forgalom"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_saleslines
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Összesen áfa nélkül"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
@@ -3966,27 +4074,27 @@ msgstr "Számlázott összesen"
 #. module: point_of_sale
 #: help:pos.session,cash_register_total_entry_encoding:0
 msgid "Total of all paid sale orders"
-msgstr ""
+msgstr "Minden fizetett eladási megbízás összessen"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_end_real:0
 msgid "Total of closing cash control lines."
-msgstr ""
+msgstr "Lezárt készpénzes ellenőrző sorok összege."
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_start:0
 msgid "Total of opening cash control lines."
-msgstr ""
+msgstr "Nyitott készpénzes ellenőrző sorok összege."
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
 msgid "Total of the day"
-msgstr ""
+msgstr "Napi összesen"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
 msgid "Total paid"
-msgstr ""
+msgstr "Összes fizetett"
 
 #. module: point_of_sale
 #: view:pos.order.line:point_of_sale.view_pos_order_line
@@ -4005,19 +4113,19 @@ msgstr "Összesen:"
 #: code:addons/point_of_sale/point_of_sale.py:1214
 #, python-format
 msgid "Trade Receivables"
-msgstr ""
+msgstr "Vásárlókövetelések"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:653
 #, python-format
 msgid "Unable to Delete!"
-msgstr ""
+msgstr "Nem lehet törölni!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:841
 #, python-format
 msgid "Unable to cancel the picking."
-msgstr ""
+msgstr "Nem lehet visszavonni a kiszedést."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:399
@@ -4026,6 +4134,8 @@ msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
 "of sale."
 msgstr ""
+"Nem tudom megnyitni az értékesítési folyamatot. Egy értékesítési naplót kell "
+"rendelni az Ön értékesítési pontjához."
 
 #. module: point_of_sale
 #: field:pos.order.line,price_unit:0
@@ -4039,14 +4149,14 @@ msgstr "Egységár"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:686
 #, python-format
 msgid "Unknown Barcode"
-msgstr ""
+msgstr "Ismeretlen vonalkód"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:845
 #, python-format
 msgid "Unknown Product"
-msgstr ""
+msgstr "Ismeretlen termék"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4054,14 +4164,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:850
 #, python-format
 msgid "Unsent Orders"
-msgstr ""
+msgstr "El nem küldött rendelések"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:814
 #, python-format
 msgid "Unsupported File Format"
-msgstr ""
+msgstr "Nem támogatott fájlformátum"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_search
@@ -4077,7 +4187,7 @@ msgstr "Felhasználó"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.report_user_label
 msgid "User Labels"
-msgstr ""
+msgstr "Felhasználói címkék"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.action_report_pos_users_product
@@ -4091,7 +4201,7 @@ msgstr "Felhasználó termékei"
 #: view:website:point_of_sale.report_receipt
 #, python-format
 msgid "User:"
-msgstr ""
+msgstr "Felhasználó"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_users
@@ -4104,46 +4214,46 @@ msgstr "Felhasználók"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:527
 #, python-format
 msgid "VAT:"
-msgstr ""
+msgstr "ÁFA:"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1070
 #, python-format
 msgid "Validate"
-msgstr ""
+msgstr "Jóváhagyás"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Validate & Open Session"
-msgstr ""
+msgstr "Jóváhagyás és a értékesítési folyamat megnyitása"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Validate Closing & Post Entries"
-msgstr ""
+msgstr "Bezárás jóváhagyása és a tételek küldése"
 
 #. module: point_of_sale
 #: field:pos.config,iface_vkeyboard:0
 msgid "Virtual KeyBoard"
-msgstr ""
+msgstr "Virtuális billentyűzet"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.water
 msgid "Water"
-msgstr ""
+msgstr "Víz"
 
 #. module: point_of_sale
 #: field:pos.config,barcode_weight:0
 msgid "Weight Barcodes"
-msgstr ""
+msgstr "Súly vonalkódok"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:858
 #, python-format
 msgid "Weighting"
-msgstr ""
+msgstr "Súlyozás"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4151,7 +4261,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:953
 #, python-format
 msgid "With a"
-msgstr ""
+msgstr "Ezzel"
 
 #. module: point_of_sale
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
@@ -4161,7 +4271,7 @@ msgstr "Év"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_jaunes_product_template
 msgid "Yellow Peppers"
-msgstr ""
+msgstr "Sárga paprika"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
@@ -4169,11 +4279,13 @@ msgid ""
 "You can continue sales from the touchscreen interface by clicking on \"Start "
 "Selling\" or close the cash register session."
 msgstr ""
+"Folytathatja az eladást az érintőképernyőn lévő \"Értékesítés indítása\"-ra  "
+"kattintva, vagy bezárhatja a pénztárgép értékesítési folyamatát."
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "You can define another list of available currencies on the"
-msgstr ""
+msgstr "Meghatározhat egy másik listát az elérhető pénznemekről a"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:640
@@ -4182,6 +4294,8 @@ msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
 "already been issued."
 msgstr ""
+"Nem tudja megváltoztatni a partnert az PoS rendelésen, amelyre a számlát már "
+"kiadták."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:530
@@ -4190,17 +4304,22 @@ msgid ""
 "You cannot confirm all orders of this session, because they have not the "
 "'paid' status"
 msgstr ""
+"Nem tud minden megrendelést jóváhagyni ebben az értékesítési folyamatban, "
+"mert azok nem \"fizetett\" állapotúak"
 
 #. module: point_of_sale
 #: constraint:pos.session:0
 msgid ""
 "You cannot create two active sessions related to the same point of sale!"
 msgstr ""
+"Nem hozhat létre két aktív értékesítési folyamatot, melyek ugyan ahhoz az "
+"értékesítés ponthoz kapcsolódnak!"
 
 #. module: point_of_sale
 #: constraint:pos.session:0
 msgid "You cannot create two active sessions with the same responsible!"
 msgstr ""
+"Nem hozhat létre két aktív értékesítési folyamatot azonos felelőssel!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1434
@@ -4209,6 +4328,8 @@ msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
 msgstr ""
+"Nem törölhet egy eladható terméket az értékesítési pontban, miközben egy "
+"értékesítési folyamat még nyitott."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4218,11 +4339,13 @@ msgid ""
 "You cannot have a negative amount in a Bank payment. Use a cash payment "
 "method to return money to the customer."
 msgstr ""
+"Nem lehet negatív összeg a Banki fizetésnél. Használja a készpénzes fizetési "
+"módot, hogy visszaadhasson a vásárlónak."
 
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid "You cannot have two cash controls in one Point Of Sale !"
-msgstr ""
+msgstr "Nem lehet két készpénz kassza egy Értékésítési Pontban!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:545
@@ -4231,6 +4354,9 @@ msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
 "Please first close this one to use this point of sale."
 msgstr ""
+"Nem használhatja a értékesítési folyamatot egy másik felhasználó. Ennek az "
+"értékesítési folyamatnak a tulajdonosa %s. Kérjük, először zárja ezt be, "
+"hogy használhassa ezt az értékesítési pontot."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
@@ -4242,12 +4368,19 @@ msgid ""
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
 "methods directly from menu \"PoS Backend / Configuration / Payment Methods\"."
 msgstr ""
+"Meg kell határozni, hogy mely fizetési módoknak kell elérhetőnek lennie "
+"ennél az értékesítési pontnál felhasználva a meglévő bank és készpénz "
+"beállításokat a \"Könyvelés / Beállítások / Naplók  / Naplók \"-on "
+"keresztül. Válasszon ki egy naplót, és ellenőrizze a \"PoS fizetési mód \" "
+"mezőt , az \"Értékesítési Pont \" fülön. Új fizetési módokat is létrehozhat "
+"közvetlenül a \"Értékesítési pont háttér szolgáltató / Beállítások / "
+"Fizetési módok \" menüből."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:887
 #, python-format
 msgid "You have to open at least one cashbox."
-msgstr ""
+msgstr "Meg kell nyitni legalább egy kasszát."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1289
@@ -4256,6 +4389,8 @@ msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Az értékesítési űrlapon ki kell választania egy árlistát!\n"
+"Válasszon ki egyet, mielőtt terméket választana."
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
@@ -4264,32 +4399,36 @@ msgid ""
 "                          being able to start selling through the "
 "touchscreen interface."
 msgstr ""
+"Ellenőrizzék a készpénz összegét a pénztárgépben, mielőtt \n"
+"                           megkezdenék az értékesítést az érintőképernyőn "
+"keresztül."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:384
 #, python-format
 msgid "You should assign a Point of Sale to your session."
 msgstr ""
+"Hozzá kell rendelni az értékesítési folyamatot egy Értékesítési Ponthoz."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/widgets.js:985
 #, python-format
 msgid "You will lose any data associated with the current order"
-msgstr ""
+msgstr "El fogja veszíteni az aktuális rendeléshez tartozó adatok"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:758
 #, python-format
 msgid "Your Internet connection is probably down."
-msgstr ""
+msgstr "Az Internet kapcsolata valószínűleg megszakadt."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session_opening
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_opening
 msgid "Your Session"
-msgstr ""
+msgstr "Az Ön értékesítési folyamata"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:497
@@ -4299,46 +4438,49 @@ msgid ""
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
 msgstr ""
+"A záróegyenleg túlságosan eltér a elméleti záró készpénztől (%.2f), a "
+"maximálisan megengedett: %.2f. Lépjen kapcsolatba a menedzserrel, hogy "
+"megerősítse ezt."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/widgets.js:1240
 #, python-format
 msgid "Your internet connection is probably down."
-msgstr ""
+msgstr "Az internet kapcsolata valószínűleg megszakadt."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:804
 #, python-format
 msgid "Your shopping cart is empty"
-msgstr ""
+msgstr "Az Ön kosara üres"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:325
 #, python-format
 msgid "ZIP"
-msgstr ""
+msgstr "Irányítószám"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.courgette_product_template
 msgid "Zucchini"
-msgstr ""
+msgstr "Cukkini"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:778
 #, python-format
 msgid "at"
-msgstr ""
+msgstr "-nél"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1078
 #, python-format
 msgid "caps lock"
-msgstr ""
+msgstr "caps lock"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4346,7 +4488,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1147
 #, python-format
 msgid "close"
-msgstr ""
+msgstr "zárás"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4354,27 +4496,27 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1140
 #, python-format
 msgid "delete"
-msgstr ""
+msgstr "törlés"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:788
 #, python-format
 msgid "discount"
-msgstr ""
+msgstr "árengedmény"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:398
 #: code:addons/point_of_sale/point_of_sale.py:593
 #, python-format
 msgid "error!"
-msgstr ""
+msgstr "hiba!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:140
 #, python-format
 msgid "not used"
-msgstr ""
+msgstr "nem használt"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4387,12 +4529,12 @@ msgstr ""
 #: view:pos.open.statement:point_of_sale.view_pos_open_statement
 #, python-format
 msgid "or"
-msgstr ""
+msgstr "vagy"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "payment method."
-msgstr ""
+msgstr "fizetési mód."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4401,7 +4543,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1145
 #, python-format
 msgid "return"
-msgstr ""
+msgstr "Visszaküldés"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4409,24 +4551,24 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1102
 #, python-format
 msgid "shift"
-msgstr ""
+msgstr "shift"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1064
 #, python-format
 msgid "tab"
-msgstr ""
+msgstr "Tabulátor"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "tab of the"
-msgstr ""
+msgstr "a fülön"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
 msgid "transaction for the pos"
-msgstr ""
+msgstr "pos tranzakciók"
 
 #. module: point_of_sale
 #: field:account.bank.statement,pos_session_id:0
@@ -4435,7 +4577,7 @@ msgstr ""
 #: field:pos.session.opening,pos_session_name:0
 #: field:pos.session.opening,pos_session_username:0
 msgid "unknown"
-msgstr "Ismeretlen"
+msgstr "ismeretlen"
 
 #~ msgid "# of Qty"
 #~ msgstr "Mennyiség"

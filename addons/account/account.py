@@ -233,29 +233,36 @@ class account_account(osv.osv):
     _description = "Account"
     _parent_store = True
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        if context is None:
-            context = {}
+    def _where_calc(self, cr, uid, domain, active_test=True, context=None):
+        """ Convert domains to allow easier filtering:
+                code: force case insensitive and right side matching search
+                journal_id: restrict to the accounts sharing the same account.account.type
+        """
         pos = 0
-
-        while pos < len(args):
-
-            if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
-                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
-            if args[pos][0] == 'journal_id':
-                if not args[pos][2]:
-                    del args[pos]
+        while pos < len(domain):
+            if domain[pos][0] == 'code' and domain[pos][1] in ('like', 'ilike') and domain[pos][2]:
+                domain[pos] = ('code', '=like', tools.ustr(domain[pos][2].replace('%', '')) + '%')
+            if domain[pos][0] == 'journal_id':
+                if not domain[pos][2]:
+                    del domain[pos]
                     continue
-                jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2], context=context)
-                if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
-                    args[pos] = ('type','not in',('consolidation','view'))
+                jour = self.pool.get('account.journal').browse(cr, uid, domain[pos][2], context=context)
+                if (not (jour.account_control_ids or jour.type_control_ids)) or not domain[pos][2]:
+                    domain[pos] = ('type', 'not in', ('consolidation', 'view'))
                     continue
                 ids3 = map(lambda x: x.id, jour.type_control_ids)
                 ids1 = super(account_account, self).search(cr, uid, [('user_type', 'in', ids3)])
                 ids1 += map(lambda x: x.id, jour.account_control_ids)
-                args[pos] = ('id', 'in', ids1)
+                domain[pos] = ('id', 'in', ids1)
             pos += 1
+
+        return super(account_account, self)._where_calc(cr, uid, domain, active_test, context)
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        """ Check presence of key 'consolidate_children' in context to include also the Consolidated Children
+            of found accounts into the result of the search
+        """
 
         if context and context.has_key('consolidate_children'): #add consolidated children of accounts
             ids = super(account_account, self).search(cr, uid, args, offset, limit,
@@ -1731,7 +1738,7 @@ class account_tax_code(osv.osv):
         res2 = {}
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
-                amount = res.get(record.id, 0.0)
+                amount = res.get(record.id) or 0.0
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
@@ -1877,7 +1884,7 @@ class account_tax(osv.osv):
         'account_analytic_collected_id':fields.many2one('account.analytic.account', 'Invoice Tax Analytic Account', help="Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."),
         'account_analytic_paid_id':fields.many2one('account.analytic.account', 'Refund Tax Analytic Account', help="Set the analytic account that will be used by default on the invoice tax lines for refunds. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."),
         'parent_id':fields.many2one('account.tax', 'Parent Tax Account', select=True),
-        'child_ids':fields.one2many('account.tax', 'parent_id', 'Child Tax Accounts'),
+        'child_ids':fields.one2many('account.tax', 'parent_id', 'Child Tax Accounts', copy=True),
         'child_depend':fields.boolean('Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
         'python_compute':fields.text('Python Code'),
         'python_compute_inv':fields.text('Python Code (reverse)'),
@@ -2008,7 +2015,7 @@ class account_tax(osv.osv):
         for tax in taxes:
             # we compute the amount for the current tax object and append it to the result
             data = {'id':tax.id,
-                    'name':tax.description and tax.description + " - " + tax.name or tax.name,
+                    'name': tax.name,
                     'account_collected_id':tax.account_collected_id.id,
                     'account_paid_id':tax.account_paid_id.id,
                     'account_analytic_collected_id': tax.account_analytic_collected_id.id,

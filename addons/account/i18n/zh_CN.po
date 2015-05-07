@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-02-17 01:57+0000\n"
-"Last-Translator: Oliver Yuan <Unknown>\n"
+"PO-Revision-Date: 2015-04-09 03:16+0000\n"
+"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-17 06:34+0000\n"
-"X-Generator: Launchpad (build 17341)\n"
+"X-Launchpad-Export-Date: 2015-04-10 05:30+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 "Language: zh_CN\n"
 
 #. module: account
@@ -197,7 +197,7 @@ msgid ""
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
 " * 当用户编辑一张新的未确认的发票时为“草稿\"状态。            \n"
-"* 当一张发票无发票号码时为“形成”状态。             \n"
+"* 当一张发票无发票号码时为“形式”状态。             \n"
 "* 当发票已创建，发票号已生成，但仍未发出，则为“启用”状态。             \n"
 "* 当发票已收款，则会自动设置为“已收款”状态，发票的相关会计分录可以关联或不关联。            \n"
 "* 当用户删除发票时为“删除”状态。"
@@ -828,18 +828,17 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                点击这里创建新 文档</p><p>\n"
-"                单击添加一个新的分析科目.\n"
+"                单击添加一个新的辅助核算项.\n"
 "              </p><p>\n"
-"                正规的会计科目表有国家\n"
-"                法定要求的内容，帐户的分析\n"
+"                正规的会计科目表\n"
+"                有国家法定要求的内容，帐户的分析\n"
 "                科目应反映企业自身的业务\n"
-"                成本/收入分析和报告的需要。\n"
+"                成本/收入分析和报表的需要。\n"
 "              </p><p>\n"
 "                它们通常由合约、项目、产品或\n"
-"                部门构成，多数的OpenERP运用程序\n"
-"                （发票、时间表、费用等）会在\n"
-"                相关的帐户生成分析分录。\n"
+"                部门构成。多数的OpenERP运用程序（发票、\n"
+"                计工单、费用等）会在\n"
+"                相关的帐户生成辅助核算项。\n"
 "              </p>\n"
 "            "
 
@@ -4259,7 +4258,7 @@ msgstr "到期月份"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
 msgid "Due Payments"
-msgstr ""
+msgstr "到期付款"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -4865,7 +4864,7 @@ msgstr "替换规则"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Fiscal Position Remark:"
-msgstr ""
+msgstr "财务状况备注:"
 
 #. module: account
 #: view:account.fiscal.position.template:account.view_account_position_template_form
@@ -10609,8 +10608,8 @@ msgid ""
 "recalls.\n"
 "-This installs the module account_followup."
 msgstr ""
-"它允许为待支付的发票发出不同级别的催款信。\n"
-"你需要安装“account_followup”模块。"
+"这允许为待支付的发票发出不同级别的催款信。\n"
+"会安装“account_followup”模块。"
 
 #. module: account
 #: help:account.config.settings,module_account_check_writing:0
@@ -10618,8 +10617,8 @@ msgid ""
 "This allows you to check writing and printing.\n"
 "-This installs the module account_check_writing."
 msgstr ""
-"这允许你检查写入和打印。\n"
-"在此可安装模块“account_check_writing”。"
+"这允许您开支票和打印。\n"
+"会可安装模块“account_check_writing”。"
 
 #. module: account
 #: help:account.config.settings,module_account_payment:0
@@ -10630,10 +10629,10 @@ msgid ""
 "* provide a more efficient way to manage invoice payments.\n"
 "-This installs the module account_payment."
 msgstr ""
-"以服务为基础支持多种付款方式的一个简单插件\n"
-"*允许你创建和管理你的付款订单，\n"
-" * 并提供一个更有效的方式来管理发票的付款。\n"
-"-安装账户付款模块."
+"允许您创建和管理您的付款, 目的在于\n"
+"                    * 以服务为基础支持多种付款方式的一个简单插件,并\n"
+"                    * 提供一个更有效的方式来管理发票的付款。\n"
+"                会安装模块account_payment付款。"
 
 #. module: account
 #: help:account.config.settings,module_account_asset:0
@@ -12088,7 +12087,7 @@ msgstr "在生成开账分录之后必须设置分类账的结束年度。"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:68
 #, python-format
 msgid "You must balance the reconciliation"
-msgstr ""
+msgstr "核销必须平衡"
 
 #. module: account
 #. openerp-web
@@ -12303,7 +12302,7 @@ msgstr "按Ctrl + Enter 快捷方式来调节。"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
 #, python-format
 msgid "remaining)"
-msgstr ""
+msgstr "结余)"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart

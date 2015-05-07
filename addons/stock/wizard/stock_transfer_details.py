@@ -48,7 +48,8 @@ class stock_transfer_details(models.TransientModel):
         picking = self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context)
         items = []
         packs = []
-        picking.do_prepare_partial()
+        if not picking.pack_operation_ids:
+            picking.do_prepare_partial()
         for op in picking.pack_operation_ids:
             item = {
                 'packop_id': op.id,
