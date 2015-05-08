@@ -580,8 +580,6 @@ class account_bank_statement_line(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        if context is None:
-            context = {}
         default = default.copy()
         default['move_ids'] = []
         return super(account_bank_statement_line, self).copy(
