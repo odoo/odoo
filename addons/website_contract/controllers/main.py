@@ -171,7 +171,8 @@ class website_contract(http.Controller):
         account_templates = account_res.sudo().search([
             ('type', '=', 'template'),
             ('parent_id', '=', account.template_id.sudo().parent_id.id),
-            ('state', '=', 'open')
+            ('state', '=', 'open'),
+            ('user_selectable', '=', True),
         ])
         values = {
             'account': account,
