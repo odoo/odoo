@@ -214,7 +214,6 @@ class website(orm.Model):
     def sale_product_domain(self, cr, uid, ids, context=None):
         return [("sale_ok", "=", True)]
 
-    @openerp.tools.ormcache()
     def get_partner(self, cr, uid):
         return self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id
 
@@ -231,7 +230,8 @@ class website(orm.Model):
         """
         partner = self.get_partner(cr, uid)
         sale_order_obj = self.pool['sale.order']
-        sale_order_id = request.session.get('sale_order_id') or partner.last_website_so_id.id
+        sale_order_id = request.session.get('sale_order_id') or (partner.last_website_so_id.id if partner.last_website_so_id and partner.last_website_so_id.state == 'draft' else False)
+
         sale_order = None
         pricelist_id = request.session.get('website_sale_current_pl')
 
@@ -260,7 +260,8 @@ class website(orm.Model):
                 request.session['sale_order_id'] = sale_order_id
 
                 if request.website.partner_id.id != partner.id:
-                    partner.write({'last_website_so_id': sale_order_id})
+                    self.pool['res.partner'].write(cr, SUPERUSER_ID, partner.id, {'last_website_so_id': sale_order_id})
+
         if sale_order_id:
             sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
             if not sale_order.exists():
