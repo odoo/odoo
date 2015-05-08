@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="acquirer_form_alipay" model="ir.ui.view">
+            <field name="name">acquirer.form.alipay</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer_base"]' position='after'>
+                    <group attrs="{'invisible': [('provider', '!=', 'alipay')]}">
+                        <group>
+                            <group>
+                                <field name="alipay_partner_account"/>
+                                <field name="alipay_partner_key"/>
+                                <field name="alipay_seller_email"/>
+                                <field name="alipay_interface_type"/>
+                            </group> 
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="transaction_form_alipay" model="ir.ui.view">
+            <field name="name">acquirer.transaction.form.alipay</field>
+            <field name="model">payment.transaction</field>
+            <field name="inherit_id" ref="payment.transaction_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//notebook' position='inside'>
+                    <page string="Alipay TX Details">
+                        <group>
+                            <field name="alipay_txn_id"/>
+                            <field name="alipay_txn_type"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
