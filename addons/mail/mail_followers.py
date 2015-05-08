@@ -132,7 +132,7 @@ class mail_notification(osv.Model):
                     Administrator
                 </p>
                 <div>
-                    <small>Sent from <a ...>Your Company</a> using <a ...>OpenERP</a>.</small>
+                    <small>Sent from <a ...>Your Company</a> using <a ...>Odoo</a>.</small>
                 </div>
         """
         footer = ""
