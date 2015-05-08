@@ -523,12 +523,12 @@
             <field name="name">Leaves</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays</field>
-            <field name="src_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id}</field>
-            <field name="domain">[('type','=','remove')]</field>
-            <field name="view_id" eval="view_holiday"/>
+            <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id, 'search_default_group_type': 1,
+                'search_default_year': 1}</field>
+            <field name="domain">[('holiday_type','=','employee'), ('holiday_status_id.limit', '=', False)]</field>
+            <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
         <record id="act_hr_employee_holiday_request_approved" model="ir.actions.act_window">
@@ -538,7 +538,7 @@
             <field name="src_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_employee_id': [active_id], 'search_default_validated': True, 'search_default_gray': True}</field>
+            <field name="context">{'search_default_employee_id': [active_id], 'default_type': 'remove', 'search_default_todo': 1}</field>
             <field name="domain">[('date_from','&gt;=', context_today().strftime("%Y-%m-1")), ('date_from','&lt;', ((context_today() + relativedelta(months=1)).strftime('%Y-%m-1')) )]</field>
             <field name="view_id" eval="view_holiday_allocation_tree_customize"/>
         </record>
@@ -586,19 +586,21 @@
                     </group>
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
+                    <field name="show_leaves" invisible="1"/>
                     <button name="%(act_hr_employee_holiday_request_approved)d"
                             icon="fa-calendar"
                             class="oe_stat_button"
                             type="action"
-                            groups="base.group_hr_user">
-                        <field name="approved_leaves_count" widget="statinfo"/>
+                            groups="base.group_hr_user" help="Leaves to Process">
+                        <field string="To Approve" name="leaves_to_process_count" widget="statinfo"/>
                     </button>
                     <button name="%(act_hr_employee_holiday_request)d"
                             type="action"
                             class="oe_stat_button"
                             icon="fa-calendar"
-                            groups="base.group_hr_user">
-                        <field name="leaves_count" widget="statinfo"/>
+                            attrs="{'invisible': [('show_leaves','=', False)]}"
+                            groups="base.group_user" help="Remaining leaves">
+                        <field string="Leaves Left" name="leaves_count" widget="statinfo"/>
                     </button>
                 </xpath>
             </field>

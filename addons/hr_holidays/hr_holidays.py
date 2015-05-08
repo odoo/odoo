@@ -585,15 +585,39 @@ class hr_employee(osv.Model):
             result[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
         return result
 
-    def _leaves_count(self, cr, uid, ids, field_name, arg, context=None):
+    def _leaves_count(self, cr, uid, ids, fields, arg, context=None):
         res = {}
         Holidays = self.pool['hr.holidays']
         date_begin = date.today().replace(day=1)
         date_end = date_begin.replace(day=calendar.monthrange(date_begin.year, date_begin.month)[1])
         for employee_id in ids:
-            leaves = Holidays.search_count(cr, uid, [('employee_id', '=', employee_id), ('type', '=', 'remove')], context=context)
-            approved_leaves = Holidays.search_count(cr, uid, [('employee_id', '=', employee_id), ('type', '=', 'remove'), ('date_from', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)), ('date_from', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)), ('state', '=', 'validate'), ('payslip_status', '=', False)], context=context)
-            res[employee_id] = {'leaves_count': leaves, 'approved_leaves_count': approved_leaves}
+            res[employee_id] = {
+                'leaves_count': 0,
+                'leaves_to_process_count': 0
+            }
+        if 'leaves_count' in fields:
+            leaves = Holidays.read_group(cr, uid, [
+                ('employee_id', 'in', ids),
+                ('holiday_status_id.limit', '=', False)], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
+            for leave in leaves:
+                res[leave['employee_id'][0]].update({'leaves_count': leave['number_of_days']})
+
+        if 'leaves_to_process_count' in fields:
+            leaves_to_process = Holidays.read_group(cr, uid, [
+                ('employee_id', 'in', ids),
+                ('type', '=', 'remove'),
+                ('date_from', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)),
+                ('date_from', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)),
+                ('payslip_status', '=', False)], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
+            for leave in leaves_to_process:
+                res[leave['employee_id'][0]].update({'leaves_to_process_count': leave['number_of_days']})
+        return res
+
+
+    def _show_approved_remaining_leave(self, cr, uid, ids, name, args, context=None):
+        is_officer = self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user')
+        res = dict([(employee_id, is_officer) for employee_id in ids])
+        res.update(dict([(employee.id, True) for employee in self.browse(cr, uid, ids, context=context) if employee.user_id.id == uid]))
         return res
 
     def _absent_employee(self, cr, uid, ids, field_name, arg, context=None):
@@ -632,6 +656,7 @@ class hr_employee(osv.Model):
         'leave_date_from': fields.function(_get_leave_status, multi='leave_status', type='date', string='From Date'),
         'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),
         'leaves_count': fields.function(_leaves_count, multi='_leaves_count', type='integer', string='Number of Leaves (current month)'),
-        'approved_leaves_count': fields.function(_leaves_count, multi='_leaves_count', type='integer', string='Approved Leaves not in Payslip', help="These leaves are approved but not taken into account for payslip"),
+        'leaves_to_process_count': fields.function(_leaves_count, multi='_leaves_count', type='integer', string='Approved Leaves not in Payslip', help="These leaves are approved but not taken into account for payslip"),
+        'show_leaves': fields.function(_show_approved_remaining_leave, type='boolean', string="Able to see Remaining Leaves"),
         'is_absent_totay': fields.function(_absent_employee, fnct_search=_search_absent_employee, type="boolean", string="Absent Today", default=False)
     }
