@@ -360,7 +360,14 @@ exports.PosModel = Backbone.Model.extend({
             }
 
             self.cashregisters = self.cashregisters.sort(function(a,b){ 
-                return a.journal.sequence - b.journal.sequence; 
+		// prefer cashregisters to be first in the list
+		if (a.journal.type == "cash" && b.journal.type != "cash") {
+		    return -1;
+		} else if (a.journal.type != "cash" && b.journal.type == "cash") {
+		    return 1;
+		} else {
+                    return a.journal.sequence - b.journal.sequence;
+		}
             });
 
         },

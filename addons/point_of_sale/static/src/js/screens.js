@@ -1539,8 +1539,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
     },
     // handle both keyboard and numpad input. Accepts
     // a string that represents the key pressed.
-    payment_input: function(input) { return; },
-    /*
     payment_input: function(input) {
         var newbuf = this.gui.numpad_input(this.inputbuffer, input, {'firstinput': this.firstinput});
 
@@ -1562,12 +1560,22 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 this.$('.paymentline.selected .edit').text(this.inputbuffer);
             }
         }
-    },*/
+    },
     click_numpad: function(button) {
-            if (!this.pos.get_order().get_paymentlines().length) {
-                this.pos.get_order().add_paymentline( this.pos.cashregisters[0]);
-                this.render_paymentlines();
-            }
+	var paymentlines = this.pos.get_order().get_paymentlines();
+	var open_paymentline = false;
+
+	for (var i = 0; i < paymentlines.length; i++) {
+	    if (! paymentlines[i].paid) {
+		open_paymentline = true;
+	    }
+	}
+
+	if (! open_paymentline) {
+            this.pos.get_order().add_paymentline( this.pos.cashregisters[0]);
+            this.render_paymentlines();
+        }
+
         this.payment_input(button.data('action'));
     },
     render_numpad: function() {

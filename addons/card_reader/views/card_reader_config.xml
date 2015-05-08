@@ -59,17 +59,6 @@
             </field>
         </record>
 
-        <record id="res_users_form_view" model="ir.ui.view">
-            <field name="name">res.users.form.view</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="point_of_sale.res_users_form_view" />
-            <field name="arch" type="xml">
-            <xpath expr="//field[@name='pos_config']" position="after">
-                <field name="operator_id" />
-            </xpath>
-            </field>
-        </record>
-
         <menuitem parent="point_of_sale.menu_point_config_product" action="card_reader.action_configuration_form" id="menu_pos_card_reader_config"
             sequence="35"/>
     </data>

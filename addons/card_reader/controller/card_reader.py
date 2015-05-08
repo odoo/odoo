@@ -36,7 +36,7 @@ class CardReader(http.Controller):
         k['url_base_action'] = card_reader_config.url_base_action
         k['payment_server'] = card_reader_config.payment_server
         k['merchant_pwd'] = card_reader_config.merchant_pwd
-        k['operator_id'] = pos_session.user_id.operator_id
+        k['operator_id'] = pos_session.user_id.login
         k['merchant_id'] = card_reader_config.merchant_id
         k['config_id'] = config.id
         k['memo'] = card_reader_config.memo
@@ -48,6 +48,7 @@ class CardReader(http.Controller):
             'SOAPAction': k['url_base_action'] + '/' + k['action'],
         }
 
+        print xml_transaction
         xml_transaction = xml_transaction.replace("<", "&lt;")
         xml_transaction = xml_transaction.replace(">", "&gt;")
         xml_transaction = soap_header + xml_transaction + soap_footer

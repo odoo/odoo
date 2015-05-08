@@ -45,14 +45,30 @@ function getCashRegisterByJournalID (cashRegisters, journal_id) {
     var cashRegisterReturn;
 
     $.each(cashRegisters, function (index, cashRegister) {
-	if (cashRegister.journal_id[0] == journal_id) {
-	    cashRegisterReturn = cashRegister;
-	}
+        if (cashRegister.journal_id[0] == journal_id) {
+            cashRegisterReturn = cashRegister;
+        }
     });
 
     return cashRegisterReturn;
 }
 
+function getXMLTagContent (xml, tagName) {
+    var re = new RegExp("&lt;" + tagName + "&gt;(.*)&lt;/" + tagName + "&gt;");
+    var match = xml.match(re);
+    var tagContents = match ? match[1] : "";
+
+    return tagContents;
+}
+
+function decodeMercuryResponse (data) {
+    return {
+        status: getXMLTagContent(data, "CmdStatus"),
+        error: getXMLTagContent(data, "DSIXReturnCode"),
+        message: getXMLTagContent(data, "TextResponse"),
+        amount: parseFloat(getXMLTagContent(data, "Authorize")),
+    };
+}
 
 // Extends the payment line object with the "paid" property used to
 // know if the payment line is already paid
@@ -170,23 +186,26 @@ var PaymentTransactionPopupWidget = PopupWidget.extend({
         this._super(options);
         options.transaction.then(function (data) {
             // if the status and error code are known, use our custom message from the lookup table
-            if (!(!lookUpCodeTransaction[data.status] || !lookUpCodeTransaction[data.status][data.error])) {
+            if (lookUpCodeTransaction[data.status] && lookUpCodeTransaction[data.status][data.error]) {
                 data.message = lookUpCodeTransaction[data.status][data.error];
             }
 
-            data.error = (data.error != '000000') ? ' '+data.error : '';
-            self.$el.find('p.body').html(data.status+' '+data.error+'<br /><br />'+data.message);
+            data.error = (data.error != '000000') ? ' ' + data.error : '';
+            self.$el.find('p.body').html(data.status + ' ' + data.error + '<br /><br />' + data.message);
 
-            // If an error occure, allow user to close the popup
-            if(data.status != 'Approved') {
+            // If an error occured, allow user to close the popup
+            if (data.partial) {
+                self.close();
+                self.$el.find('p.body').html(data.status + ' ' + data.error + '<br /><br />' + 'Partially approved');
+                self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
+            } else if(data.status != 'Approved') {
                 self.close();
                 self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
             }
             // Else autoclose the popup
             else {
                 setTimeout(function () {
-                    self.close();
-                    self.hide();
+                    self.gui.close_popup();
                 }, 2000);
             }
 
@@ -199,21 +218,6 @@ var PaymentTransactionPopupWidget = PopupWidget.extend({
 
 gui.define_popup({name:'payment-confirm', widget: PaymentConfirmPopupWidget});
 gui.define_popup({name:'payment-transaction', widget: PaymentTransactionPopupWidget});
-
-BarcodeParser.include({
-    // returns true if the magnetic code string is encoded with the provided encoding.
-    check_encoding: function(barcode, encoding) {
-        if(!this._super(barcode, encoding)) {
-            if(encoding === 'magnetic_credit') {
-                return (barcode[0] == '%'); // need a better test to avoid errors
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
-});
 
 // On all screens, if a card is swipped, return a popup error.
 ScreenWidget.include({
@@ -305,7 +309,7 @@ PaymentScreenWidget.include({
         _.extend(transaction, {
             'transaction_type'  : 'Credit',
             'transaction_code'  : 'Sale',
-            'invoice_no'        : 'SLK423K',
+            'invoice_no'        : 'SLK423K', // todo don't hardcode
             'amount'            : parsed_result.total,
             'action'            : 'CreditTransaction',
             'journal_id'        : parsed_result.journal_id,
@@ -319,28 +323,24 @@ PaymentScreenWidget.include({
 
         session.rpc("/pos/send_payment_transaction", transaction)
             .done(function (data) {
-                console.log(data);
-                // Decode the response of the payment server
-                var status  = data.match(/&lt;CmdStatus&gt;(.*)&lt;\/CmdStatus&gt;/)[1];
-                var error   = data.match(/&lt;DSIXReturnCode&gt;(.*)&lt;\/DSIXReturnCode&gt;/)[1];
-                var message = data.match(/&lt;TextResponse&gt;(.*)&lt;\/TextResponse&gt;/)[1];
-                var amount  = data.match(/&lt;Authorize&gt;(.*)&lt;\/Authorize&gt;/)[1];
-
-                if (status === 'Approved') {
-                    // If the payment is approved, add a payment line and try to close the order
+                console.log(data); // todo
+                var response = decodeMercuryResponse(data);
+                
+                if (response.status === 'Approved') {
+                    // If the payment is approved, add a payment line
                     var order = self.pos.get_order();
                     order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
                     order.selected_paymentline.paid = true;
-                    order.selected_paymentline.amount = amount;
+                    order.selected_paymentline.amount = response.amount;
                     self.reset_input();
                     self.render_paymentlines();
-                    setTimeout(_.bind(self.validate_order, self), 3000);
                 }
 
                 def.resolve({
-                    status: status,
-                    error: error,
-                    message: message,
+                    status: response.status,
+                    error: response.error,
+                    message: response.message,
+                    partial: response.message === "PARTIAL AP" && response.amount < parsed_result.total
                 });
 
 
@@ -358,19 +358,18 @@ PaymentScreenWidget.include({
 
     credit_code_action: function (parsed_result) {
         self = this;
-        parsed_result.total = this.pos.get_order().get_due().toFixed(2);
+        parsed_result.total = this.pos.get_order().get_due();
 
         if (parsed_result.total) {
 
             this.gui.show_popup('selection',{
-                title:   'Pay ' + parsed_result.total + ' with : ',
+                title:   'Pay ' + parsed_result.total.toFixed(2) + ' with : ',
                 list:    onlinePaymentJournal,
                 confirm: function (item) {
                     parsed_result.journal_id = item;
                     self.credit_code_transaction(parsed_result);
                 },
                 cancel:  self.credit_code_cancel,
-                total:   parsed_result.total,
             });
         }
         else {

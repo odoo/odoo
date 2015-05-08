@@ -7,7 +7,7 @@
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
             <field name="sequence">85</field>
             <field name="type">Credit</field>
-            <field name="encoding">magnetic_credit</field>
+            <field name="encoding">any</field>
             <field name="pattern">%.*</field>
         </record>
 
@@ -18,12 +18,5 @@
             <field name="payment_server">https://w1.mercurypay.com/ws/ws.asmx</field>
             <field name="url_base_action">http://www.mercurypay.com</field>
         </record>
-
-        <record model="pos.config" id="point_of_sale.pos_config_main">
-            <field name="card_reader" eval="True" />
-            <field name="operator_id">Operator 1</field>
-            <field name="card_reader_config_id" ref="card_reader.card_reader_configuration" />
-        </record>
-
     </data>
 </openerp>

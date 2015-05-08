@@ -1,29 +1,31 @@
 <?xml version='1.0' encoding='utf-8'?>
 <openerp>
-    <data>
+  <data>
 
-<template id='mercury_transaction' name='Mercury Xml Transaction'>
-    <TStream>
+    <template id='mercury_transaction' name='Mercury Xml Transaction'>
+      <TStream>
         <Transaction>
-            <MerchantID><t t-esc='merchant_id' /></MerchantID>
-            <OperatorID><t t-esc='operator_id' /></OperatorID>
-            <TranType><t t-esc='transaction_type' /></TranType>
-            <TranCode><t t-esc='transaction_code' /></TranCode>
-            <InvoiceNo><t t-esc='invoice_no' /></InvoiceNo>
-            <LaneID><t t-esc='config_id' /></LaneID>
-            <TerminalID><t t-esc='config_id' /></TerminalID>
-            <PartialAuth>Allow</PartialAuth>
-            <Memo><t t-esc='memo' /></Memo>
-            <Account>
-                <AccountSource>Swiped</AccountSource>
-                <EncryptedBlock><t t-esc='encrypted_data["enc_track2"]'/></EncryptedBlock>
-                <EncryptedKey><t t-esc='encrypted_data["dukpt_serial_n"]' /></EncryptedKey>
-                <EncryptedFormat>MagneSafe</EncryptedFormat>
-            </Account>
-            <Amount><Purchase><t t-esc='amount' /></Purchase></Amount>
+          <MerchantID><t t-esc='merchant_id'/></MerchantID>
+          <OperatorID>test</OperatorID> <!-- TODO -->
+          <TranType><t t-esc='transaction_type'/></TranType>
+          <TranCode><t t-esc='transaction_code'/></TranCode>
+          <InvoiceNo><t t-esc='invoice_no'/></InvoiceNo>
+          <LaneID><t t-esc='config_id'/></LaneID>
+          <TerminalID><t t-esc='config_id'/></TerminalID>
+          <PartialAuth>Allow</PartialAuth>
+          <Memo><t t-esc='memo'/></Memo>
+          <Account>
+            <AccountSource>Swiped</AccountSource>
+            <EncryptedBlock><t t-esc='encrypted_data["enc_track2"]'/></EncryptedBlock>
+            <EncryptedKey><t t-esc='encrypted_data["dukpt_serial_n"]'/></EncryptedKey>
+            <EncryptedFormat>MagneSafe</EncryptedFormat>
+          </Account>
+          <Amount>
+            <Purchase><t t-esc='"%.2f" % amount'/></Purchase> <!-- format required by Mercury -->
+          </Amount>
         </Transaction>
-    </TStream>
-</template>
+      </TStream>
+    </template>
 
-    </data>
+  </data>
 </openerp>

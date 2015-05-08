@@ -8,14 +8,6 @@ _logger = logging.getLogger(__name__)
 class barcode_rule(models.Model):
     _inherit = 'barcode.rule'
 
-    def _encoding_selection_list(self):
-        selection = sets.Set(super(barcode_rule, self)._encoding_selection_list())
-        selection.update([
-            ('magnetic_credit', 'magnetic_credit'),
-        ])
-        print selection
-        return list(selection)
-
     def _get_type_selection(self):
         types = sets.Set(super(barcode_rule, self)._get_type_selection())
         types.update([
@@ -33,12 +25,6 @@ class card_reader_payment_data(models.Model):
     merchant_pwd = fields.Char(string='Merchant Password', required=True, help='Password of the merchant to authentify him on the payment provider server')
     payment_server = fields.Char(string='Payment Server', required=True, help='the URL the payment provider server')
     url_base_action = fields.Char(string='Base Action URL', required=True, help='the URL of the SOAP action')
-
-
-class res_users(models.Model):
-    _inherit = 'res.users'
-
-    operator_id = fields.Char(string='Default Operator', required=True, size=10, default='test', help='An ID used to identify the operator on transactions')
 
 
 class account_bank_statement_line(models.Model):
