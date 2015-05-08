@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		
+		<!-- 
+			Account Types 
+			// Kept for reference purposes it will be available when needed 
+		-->
+		<record id="account_type_view" model="account.account.type">
+			<field name="name">Görünüm</field>
+			<field name="code">gorunum</field>
+			<field name="report_type">/</field>
+			<field name="close_method">none</field>
+		</record>
+		
+		<record id="account_type_payable" model="account.account.type">
+			<field name="name">Borç</field>
+			<field name="code">borc</field>
+			<field name="report_type">liability</field>
+			<field name="close_method">unreconciled</field>
+		</record>
+		
+		<record id="account_type_receivable" model="account.account.type">
+			<field name="name">Alacak</field>
+			<field name="code">alacak</field>
+			<field name="report_type">asset</field>
+			<field name="close_method">unreconciled</field>
+		</record>
+		
+		<record id="account_type_liability" model="account.account.type">
+			<field name="name">Yükümlülük</field>
+			<field name="code">yukumluluk</field>
+			<field name="report_type">liability</field>
+			<field name="close_method">balance</field>
+		</record>
+		
+		<record id="account_type_asset" model="account.account.type">
+			<field name="name">Varlık</field>
+			<field name="code">varlik</field>
+			<field name="report_type">asset</field>
+			<field name="close_method">balance</field>
+		</record>
+		
+		<record id="account_type_income" model="account.account.type">
+			<field name="name">Gelir</field>
+			<field name="code">gelir</field>
+			<field name="report_type">income</field>
+			<field name="close_method">none</field>
+		</record>
+		
+		<record id="account_type_expense" model="account.account.type">
+			<field name="name">Gider</field>
+			<field name="code">gider</field>
+			<field name="report_type">expense</field>
+			<field name="close_method">none</field>
+		</record>
+		
+		<record id="account_type_cash" model="account.account.type">
+			<field name="name">Nakit</field>
+			<field name="code">nakit</field>
+			<field name="report_type">asset</field>
+			<field name="close_method">balance</field>
+		</record>
+		
+		<record id="account_type_bank" model="account.account.type">
+			<field name="name">Banka</field>
+			<field name="code">banka</field>
+			<field name="report_type">asset</field>
+			<field name="close_method">balance</field>
+		</record>
+		
+		<record id="account_type_check" model="account.account.type">
+			<field name="name">Çek</field>
+			<field name="code">cek</field>
+			<field name="report_type">asset</field>
+			<field name="close_method">unreconciled</field>
+		</record>
+		
+		<record id="account_type_equity" model="account.account.type">
+			<field name="name">Özkaynak</field>
+			<field name="code">ozkaynak</field>
+			<field name="report_type">liability</field>
+			<field name="close_method">unreconciled</field>
+		</record>
+		
+		<record id="account_type_tax" model="account.account.type">
+			<field name="name">Vergi</field>
+			<field name="code">vergi</field>
+			<field name="report_type">expense</field>
+			<field name="close_method">unreconciled</field>
+		</record>
+		
+		<record id="account_type_other" model="account.account.type">
+			<field name="name">Diğer</field>
+			<field name="code">diger</field>
+			<field name="report_type">/</field>
+			<field name="close_method">none</field>
+		</record>
+		
+	</data>
+ </openerp>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+		<record id="res_partner_form_vatdept" model="ir.ui.view">
+			<field name="name">res.partner.form.vatdept</field>
+			<field name="inherit_id" ref="base_vat.view_partner_form"/>
+			<field name="model">res.partner</field>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='vat']"
+						position="before">
+					<field name="vat_dept" placeholder="e.g. Beşiktaş" class="oe_inline" nolabel="1" style="padding-right:7px;"/>
+                </xpath>
+				
+				<xpath expr="//field[@name='vat']"
+						position="replace">
+					<field name="vat" placeholder="e.g. TR12345678901" class="oe_inline" nolabel="1"/>
+				</xpath>
+			</field>
+		</record>
+		
+	</data>
+</openerp>

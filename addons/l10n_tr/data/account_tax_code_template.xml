@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data noupdate="0">
+		
+		<!-- 
+			Account Tax Codes 
+			//
+		-->
+		<record id="tr_vergi" model="account.tax.code.template">
+			<field name="name">Vergiler</field>
+			<field name="sign">1</field>
+			<field name="notprintable" eval="0"/>
+		</record>
+		
+			<record id="tr_vergi_kdv" model="account.tax.code.template">
+				<field name="name">Katma Değer Vergisi (KDV)</field>
+				<field name="code">15</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+				<record id="tr_vergi_kdv_odenen" model="account.tax.code.template">
+					<field name="name">Ödenen (İndirilecek) KDV</field>
+					<field name="sign">1</field>
+					<field name="parent_id" ref="tr_vergi_kdv"/>
+				</record>
+		
+				<record id="tr_vergi_kdv_tahsil" model="account.tax.code.template">
+					<field name="name">Tahsil Edilen (Hesaplanan) KDV</field>
+					<field name="sign">1</field>
+					<field name="parent_id" ref="tr_vergi_kdv"/>
+				</record>
+		
+			<record id="tr_vergi_damga" model="account.tax.code.template">
+				<field name="name">Damga Vergisi</field>
+				<field name="code">1047</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+				<field name="notprintable" eval="0"/>
+			</record>
+		
+			<record id="tr_vergi_otv" model="account.tax.code.template">
+				<field name="name">Özel Tüketim Vergisi (ÖTV)</field>
+				<field name="code">4080</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_gumruk" model="account.tax.code.template">
+				<field name="name">Gümrük Vergisi</field>
+				<field name="code">9013</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_bsmv" model="account.tax.code.template">
+				<field name="name">4961 Banka Sigorta Muameleleri Vergisi (BSMV)</field>
+				<field name="code">9021</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_harc" model="account.tax.code.template">
+				<field name="name">Harçlar</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_emlak" model="account.tax.code.template">
+				<field name="name">Emlak Vergisi</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_mtv" model="account.tax.code.template">
+				<field name="name">Motorlu Taşıtlar Vergisi (MTV)</field>
+				<field name="code">9034</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_gelir" model="account.tax.code.template">
+				<field name="name">Gelir Vergisi</field>
+				<field name="code">12</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_kurumlar" model="account.tax.code.template">
+				<field name="name">Kurumlar Vergisi</field>
+				<field name="code">10</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_yillik_gelir" model="account.tax.code.template">
+				<field name="name">Yıllık Gelir Vergisi</field>
+				<field name="code">1</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_zirai_kazanc_gelir" model="account.tax.code.template">
+				<field name="name">Zirai Kazanç Gelir Vergisi</field>
+				<field name="code">2</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_muhtasar" model="account.tax.code.template">
+				<field name="name">Gelir Vergisi S. (Muhtasar)</field>
+				<field name="code">3</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_ticari_kazanc" model="account.tax.code.template">
+				<field name="name">Gelir Götürü Ticari Kazanç</field>
+				<field name="code">4</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_stopaj_dagitilmayan_kar" model="account.tax.code.template">
+				<field name="name">Dağıtılmayan Kar Stopajı</field>
+				<field name="code">7</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_stopaj_kurumlar" model="account.tax.code.template">
+				<field name="name">Kurumlar Vergisi Stopajı (KVKM24)</field>
+				<field name="code">11</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_banka_muameleleri" model="account.tax.code.template">
+				<field name="name">Banka Muameleleri Vergisi</field>
+				<field name="code">21</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_sigorta_muameleleri" model="account.tax.code.template">
+				<field name="name">Sigorta Muameleleri Vergisi</field>
+				<field name="code">22</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_varliklar_yurtdisi" model="account.tax.code.template">
+				<field name="name">5811 Yurt Dışında Sahip Olunan Varlıklar</field>
+				<field name="code">23</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_varliklar_turkiye" model="account.tax.code.template">
+				<field name="name">5811 Türkiye'de Sahip Olunan Varlıklar</field>
+				<field name="code">24</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_diger_ucretler" model="account.tax.code.template">
+				<field name="name">Diğer Ücretler</field>
+				<field name="code">51</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_ekatki" model="account.tax.code.template">
+				<field name="name">E. Katkı Payı</field>
+				<field name="code">1042</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_ozel_islem" model="account.tax.code.template">
+				<field name="name">Özel İşlem Vergisi</field>
+				<field name="code">1043</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_gecikme_faizi" model="account.tax.code.template">
+				<field name="name">Gecikme Faizi</field>
+				<field name="code">1084</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_gecikme_zammi" model="account.tax.code.template">
+				<field name="name">Gecikme Zammı</field>
+				<field name="code">1086</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_para_ceza_faiz" model="account.tax.code.template">
+				<field name="name">Para Cezası Faizi</field>
+				<field name="code">1085</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_erken_odeme_indirimi" model="account.tax.code.template">
+				<field name="name">Erken Ödeme İndirimi</field>
+				<field name="code">1087</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_pesin_odeme_indirimi" model="account.tax.code.template">
+				<field name="name">Peşin Ödeme İndirimi</field>
+				<field name="code">1088</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_diger_faiz" model="account.tax.code.template">
+				<field name="name">Alınan Diğer Faizler</field>
+				<field name="code">1089</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_kanuni_faiz" model="account.tax.code.template">
+				<field name="name">Kanuni Faiz</field>
+				<field name="code">1090</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_ic_borc_senedi_faizi" model="account.tax.code.template">
+				<field name="name">Devlet iç Borçlanma Senedi Faizi</field>
+				<field name="code">1097</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_usulsuzluk_ceza" model="account.tax.code.template">
+				<field name="name">Usulsüzlük Cezası</field>
+				<field name="code">3073</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_ek_gelir" model="account.tax.code.template">
+				<field name="name">Ek Gelir Vergisi</field>
+				<field name="code">4001</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_ticari_kazanc_ek_goturu" model="account.tax.code.template">
+				<field name="name">Ek Götürü Ticari Kazanç Vergisi</field>
+				<field name="code">4004</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_faiz" model="account.tax.code.template">
+				<field name="name">Faiz Vergisi</field>
+				<field name="code">4006</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_kurumlar_ek" model="account.tax.code.template">
+				<field name="name">Ek Kurumlar Vergisi</field>
+				<field name="code">4010</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_arge_harcamalari" model="account.tax.code.template">
+				<field name="name">Kurumlar Vergisi AR-GE Harcamaları</field>
+				<field name="code">4011</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_kanun_4705" model="account.tax.code.template">
+				<field name="name">4705 Sayılı Kanuna Göre Tahsil Edilen Özel İşlem Vergisi</field>
+				<field name="code">4021</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_mtv_ek" model="account.tax.code.template">
+				<field name="name">Motorlu Taşıtlar Ek Vergisi</field>
+				<field name="code">4034</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_kanun_5035" model="account.tax.code.template">
+				<field name="name">5035 Sayılı Kanuna Göre Finansal Faaliyet Harcı</field>
+				<field name="code">4049</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_noter" model="account.tax.code.template">
+				<field name="name">Noter Harçları</field>
+				<field name="code">4063</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_net_aktif" model="account.tax.code.template">
+				<field name="name">Net Aktif Vergisi</field>
+				<field name="code">4078</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_idari_ceza" model="account.tax.code.template">
+				<field name="name">İdari Para Cezası</field>
+				<field name="code">9000</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_kanun_6111_kdv" model="account.tax.code.template">
+				<field name="name">6111 Sayılı Kanunun 10. Maddesine Göre Verilecek KDV Beyannamesi</field>
+				<field name="code">4220</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_ihracat_iade" model="account.tax.code.template">
+				<field name="name">İhracatta Vergi İadesi Hesabı</field>
+				<field name="code">9025</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_destek_fon" model="account.tax.code.template">
+				<field name="name">Geliştirme ve Destekleme Fonu Hesabı</field>
+				<field name="code">9026</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_calisma_izin" model="account.tax.code.template">
+				<field name="name">Çalışma İzin Ücreti</field>
+				<field name="code">9027</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_islenmeyen_tahsilat" model="account.tax.code.template">
+				<field name="name">Hesap Kart ve Defterlerine İşlenmeyen Tahsilatlar</field>
+				<field name="code">9039</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_ozel_hesap" model="account.tax.code.template">
+				<field name="name">Özel Hesap Gelirleri</field>
+				<field name="code">9046</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_harc_ticaret_sicil" model="account.tax.code.template">
+				<field name="name">Ticaret Sicil Harcı</field>
+				<field name="code">9059</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_harc_pasaport" model="account.tax.code.template">
+				<field name="name">Pasaport Harcı</field>
+				<field name="code">9064</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_harc_diger" model="account.tax.code.template">
+				<field name="name">Diğer Harçlar</field>
+				<field name="code">9069</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_kagit_satis" model="account.tax.code.template">
+				<field name="name">Noter Kağıtları Satış Bedeli</field>
+				<field name="code">9070</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_baska_birim_tahsilat" model="account.tax.code.template">
+				<field name="name">Başka Muhasebe Birimi Adına Yapılan Tahsilat</field>
+				<field name="code">9076</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_diger_para_ceza" model="account.tax.code.template">
+				<field name="name">Diğer Para Cezaları</field>
+				<field name="code">9080</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_cesitli_gelir_9090" model="account.tax.code.template">
+				<field name="name">Çeşitli Gelirler</field>
+				<field name="code">9090</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_harc_yabanci_izin" model="account.tax.code.template">
+				<field name="name">Yabancılara Verilecek Çalışma İzin Belgesi Harcı</field>
+				<field name="code">9130</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_kanun_6111_otv" model="account.tax.code.template">
+				<field name="name">6111 Sayılı Kanunun 10. Maddesine Göre Verilecek ÖTV Beyannamesi</field>
+				<field name="code">9181</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_kanun_6113" model="account.tax.code.template">
+				<field name="name">6113 Sayılı Kanun Kapsamında Devir Tahakkukları</field>
+				<field name="code">9197</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_diger_hizmet_gelir" model="account.tax.code.template">
+				<field name="name">Diğer Hizmet Gelirleri</field>
+				<field name="code">9221</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_yeminli_mm_ruhsat" model="account.tax.code.template">
+				<field name="name">Yeminli Mali Müşavirlik Ruhsatı</field>
+				<field name="code">9227</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_denetci_belge" model="account.tax.code.template">
+				<field name="name">Bağımsız Denetçi Yetkilendirme Belgesi</field>
+				<field name="code">9228</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_smmm_ruhsat" model="account.tax.code.template">
+				<field name="name">Serbest Muhasebeci Mali Müşavirlik Ruhsatı</field>
+				<field name="code">9229</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_cesitli_gelir_9190" model="account.tax.code.template">
+				<field name="name">Çeşitli Gelirler</field>
+				<field name="code">9190</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_munferit_beyan" model="account.tax.code.template">
+				<field name="name">Gelir Belgesi Münferit Beyan</field>
+				<field name="code">9137</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+			<record id="tr_vergi_kurumlar_vergi_ozel_beyan" model="account.tax.code.template">
+				<field name="name">Kurumlar Vergisi Özel Beyanı</field>
+				<field name="code">9138</field>
+				<field name="sign">1</field>
+				<field name="parent_id" ref="tr_vergi"/>
+			</record>
+		
+	</data>
+</openerp>

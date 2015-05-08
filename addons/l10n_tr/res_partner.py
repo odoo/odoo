@@ -20,6 +20,15 @@
 #
 ##############################################################################
 
-import account_wizard
-import res_partner
-import res_company
+from openerp.osv import fields, osv
+
+class res_partner(osv.osv):
+    
+    _inherit = "res.partner"
+    
+    _columns = {
+        'vat_dept': fields.char('Tax Department', size=32, help="Tax Identification Department."),
+    }
+    
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['vat_dept']

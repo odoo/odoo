@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		
+        <record id="view_company_form_vatdept" model="ir.ui.view">
+            <field name="name">res.company.form.vatdept</field>
+            <field name="model">res.company</field>
+			<field name="inherit_id" ref="base.view_company_form"></field>
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='vat']"
+                        position="before">
+                    <field name="vat_dept" placeholder="e.g. Beşiktaş" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)" />
+                </xpath>
+				
+				<!-- Replace all the fields with new on_change method-->
+				<xpath expr="//field[@name='custom_footer']"
+						position="replace">
+					 <field name="custom_footer" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='phone']"
+						position="replace">
+					 <field name="phone" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='fax']"
+						position="replace">
+					 <field name="fax" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='email']"
+						position="replace">
+					 <field name="email" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='website']"
+						position="replace">
+					 <field name="website" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='vat']"
+						position="replace">
+					 <field name="vat" placeholder="e.g. TR12345678901" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='company_registry']"
+						position="replace">
+					 <field name="company_registry" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='bank_ids']"
+						position="replace">
+					 <field name="bank_ids" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)"/>
+				</xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

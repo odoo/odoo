@@ -20,6 +20,11 @@
 #
 ##############################################################################
 
-import account_wizard
-import res_partner
-import res_company
+from openerp.osv import osv
+
+class wizard_multi_charts_accounts(osv.osv_memory):
+	_inherit='wizard.multi.charts.accounts'
+	
+	_defaults = {
+		'code_digits' : 3,
+	}
