@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Top menu item -->
         <menuitem name="Manufacturing"
@@ -671,39 +670,55 @@
             </field>
         </record>
 
+        <template id="mrp_backend" name="mrp assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/mrp/static/src/js/mrp.js"></script>
+            </xpath>
+        </template>
+
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <button name="button_confirm" states="draft" string="Confirm Production" class="oe_highlight"/>
-                    <button name="%(act_mrp_product_produce)d" states="ready,in_production" string="Produce" type="action" class="oe_highlight"/>
-                    <button name="action_assign" states="confirmed,picking_except" string="Check Availability" type="object" class="oe_highlight"/>
-                    <button name="force_production" states="confirmed" string="Force Reservation" type="object"/>
+                    <button name="button_confirm" string="Confirm Production" class="oe_highlight" attrs="{'invisible':['|',('disassemble', '=', True),('state','!=','draft')]}"/>
+                    <button name="force_production" attrs="{'invisible':['|', ('disassemble', '!=', True), ('state','!=','draft')]}" string="Confirm Dismantling" type="object" class="oe_highlight"/>
+                    <button name="%(act_mrp_product_produce)d" string="Produce" type="action" class="oe_highlight" attrs="{'invisible':['|',('disassemble', '=', True),('state','not in',('ready', 'in_production'))]}"/>
+                    <button name="%(act_mrp_disassemble_product)d" string="Disassemble" type="action" class="oe_highlight" attrs="{'invisible':['|',('disassemble', '=', False),('state','not in',('ready', 'in_production'))]}"/>
+                    <button name="action_assign" string="Check Availability" type="object" class="oe_highlight" attrs="{'invisible':['|',('disassemble', '=', True),('state','not in',('confirmed','picking_except'))]}"/>
+                    <button name="force_production" states="confirmed" string="Force Reservation" type="object" class="oe_highlight"/>
                     <button name="button_produce" states="ready" string="Mark as Started"/>
-                    <button name="button_cancel" states="draft,ready,in_production" string="Cancel Production"/>
-                    <button name="action_cancel" type="object" states="confirmed" string="Cancel Production"/>
+                    <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
+                    <button name="button_cancel" string="Cancel Production" attrs="{'invisible':['|',('disassemble', '=', True),('state','not in',('draft','ready','in_production','picking_except'))]}"/>
+                    <button name="button_cancel" string="Cancel Dismantling" attrs="{'invisible':['|',('disassemble', '=', False),('state','not in',('draft','ready','in_production','picking_except'))]}"/>
+                    <button name="action_cancel" type="object" string="Cancel Production" attrs="{'invisible':['|',('disassemble', '=', True),('state','!=','confirmed')]}"/>
+                    <button name="action_cancel" type="object" string="Cancel Dismantling" attrs="{'invisible':['|',('disassemble', '=', False),('state','!=','confirmed')]}"/>
+                    <button name="%(action_change_disassemble_qty)d" type="action" string="Disassemble" attrs="{'invisible':['|','|', ('state','!=','done'), ('qty_to_disassemble','=',0)]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"confirmed":"blue"}'/>
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <h1>Manufacturing Order <field name="name" class="oe_inline"/></h1>
+                        <h1>
+                            <label string="Disassemble" attrs="{'invisible':[('disassemble','=',False)]}" class="oe_inline"/>Manufacturing Order
+                            <field name="name" class="oe_inline"/>
+                        </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" class="oe_inline" context='{"default_type": "product"}'/>
+                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.bom_line_ids','!=',False),('bom_ids.type','!=','phantom')]" class="oe_inline" context='{"default_type": "product"}'/>
                             <field name="product_tmpl_id" invisible="1"/>
+			    			<field name="qty_to_disassemble" invisible="1"/>
                             <label for="product_qty"/>
                             <div>
-                                <field name="product_qty" class="oe_inline" on_change="product_id_change(product_id, product_qty)"/>
+                                <field name="product_qty" widget="mrp_product_qty" class="oe_inline" on_change="onchange_product_qty(product_qty)"/>
                                 <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
                                     string="Update" states="confirmed" class="oe_edit_only oe_link"/>
                             </div>
-                            <label for="product_uos_qty" groups="product.group_uos"/>
-                            <div groups="product.group_uos">
+                            <label for="product_uos_qty" attrs="{'invisible':[('disassemble', '=', True)]}" groups="product.group_uos"/>
+                            <div attrs="{'invisible':[('disassemble', '=', True)]}" groups="product.group_uos">
                                 <field name="product_uos_qty" class="oe_inline"/>
                                 <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
                                 <field name="product_uos" class="oe_inline"/>
@@ -728,15 +743,16 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Consumed Products">
+                        <page string="Consumed Products" name="consumed_products">
                             <group>
-                                <group string="Products to Consume">
+                                <group string="Products to Consume" name="group_to_consume">
                                     <field name="move_lines" nolabel="1" options="{'reload_on_button': true}">
                                         <tree colors="blue:state == 'draft';black:state in ('ready','assigned','in_production');gray:state in ('cancel','done');red:state in ('confirmed','waiting')" string="Products to Consume">
                                             <field name="product_id"/>
                                             <field name="product_uom_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="state" invisible="1"/>
+                                            <field name="disassemble" invisible="1"/>
                                             <button name="%(mrp.move_consume)d"
                                                 string="Consume Products" type="action"
                                                 icon="gtk-go-forward" context="{'consume': True}"
@@ -745,11 +761,11 @@
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
                                                 icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                                                states="draft,waiting,confirmed,assigned"/>
+                                                attrs="{'invisible':['|',('disassemble', '=', True),('state', '=', 'cancel')]}"/>
                                         </tree>
                                     </field>
                                 </group>
-                                <group string="Consumed Products">
+                                <group string="Consumed Products" name="group_consumed">
                                     <field name="move_lines2" nolabel="1" options="{'reload_on_button': true}">
                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in ('confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
@@ -758,12 +774,17 @@
                                            <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
                                            <field name="state" invisible="1"/>
                                            <field name="scrapped" invisible="1"/>
+                                           <field name="disassemble" invisible="1"/>
+                                           <button name="%(stock.move_scrap)d"
+                                               string="Scrap Products" type="action"
+                                               icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                                               attrs="{'invisible':['|',('disassemble', '=', False),('state', '=', 'cancel')]}"/>
                                        </tree>
                                     </field>
                                 </group>
                             </group>
                         </page>
-                        <page string="Finished Products">
+                        <page string="Finished Products" attrs="{'invisible':[('disassemble', '=', True)]}">
                             <group>
                                 <group string="Products to Produce">
                                     <field name="move_created_ids" nolabel="1" options="{'reload_on_button': true}">
@@ -816,7 +837,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Scheduled Products">
+                        <page string="Scheduled Products" attrs="{'invisible':[('disassemble', '=', True)]}">
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"/>
@@ -828,10 +849,12 @@
                                     <field name="priority"/>
                                     <field name="date_start" invisible="1"/>
                                     <field name="date_finished" invisible="1"/>
+                                    <field name="disassemble" invisible="1"/>
+                                    <field name="disassemble_doc" attrs="{'invisible':[('disassemble_doc', '=', False)]}"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                    <field name="move_prod_id" groups="base.group_no_one"/>
+                                    <field name="move_prod_id" groups="base.group_no_one" attrs="{'invisible':[('disassemble', '=', True)]}"/>
                                 </group>
                             </group>
                         </page>
@@ -857,6 +880,10 @@
                         help="Manufacturing Orders which are ready to start production."/>
                     <filter icon="terp-check" string="In Production" name="inprogress" domain="[('state','=','in_production')]"
                         help="Manufacturing Orders which are currently in production."/>
+                    <filter string="Manufacturing" name="manufacturing" domain="[('disassemble', '=', False)]"
+                        help="Manufacturing Orders."/>
+                    <filter string="Disassemble" name="disassemble" domain="[('product_qty', '&lt;', 0)]"
+                        help="Disassemble Orders."/>
                     <separator/>
                     <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                         help="Production started late"/>
@@ -1108,5 +1135,4 @@
                 </xpath>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>

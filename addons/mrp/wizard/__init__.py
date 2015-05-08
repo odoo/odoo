@@ -22,3 +22,5 @@
 import mrp_product_produce
 import change_production_qty
 import stock_move
+import disassemble_qty
+#import mrp_change_standard_price
