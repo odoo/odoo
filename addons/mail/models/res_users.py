@@ -118,6 +118,7 @@ class Users(models.Model):
     def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
         return self.pool.get('mail.thread').message_get_partner_info_from_emails(cr, uid, emails, link_mail=link_mail, context=context)
 
+    @api.multi
     def message_get_suggested_recipients(self):
         return dict((res_id, list()) for res_id in self._ids)
 
