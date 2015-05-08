@@ -47,8 +47,8 @@ class account_statement_from_invoice_lines(osv.osv_memory):
         statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
         currency_obj = self.pool.get('res.currency')
-        line_date = time.strftime('%Y-%m-%d')
         statement = statement_obj.browse(cr, uid, statement_id, context=context)
+        line_date = statement.date
 
         # for each selected move lines
         for line in line_obj.browse(cr, uid, line_ids, context=context):
