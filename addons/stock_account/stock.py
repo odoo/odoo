@@ -151,6 +151,13 @@ class stock_move(osv.osv):
         if move.product_uos:
             uos_id = move.product_uos.id
             quantity = move.product_uos_qty
+
+        taxes_ids = []
+        if move.origin_returned_move_id.purchase_line_id.taxes_id:
+            taxes_ids = [tax.id for tax in move.origin_returned_move_id.purchase_line_id.taxes_id]
+        elif move.procurement_id.sale_line_id.tax_id:
+            taxes_ids = [tax.id for tax in move.procurement_id.sale_line_id.tax_id]
+
         return {
             'name': move.name,
             'account_id': account_id,
@@ -158,6 +165,7 @@ class stock_move(osv.osv):
             'uos_id': uos_id,
             'quantity': quantity,
             'price_unit': self._get_price_unit_invoice(cr, uid, move, inv_type),
+            'invoice_line_tax_id': [(6, 0, taxes_ids)],
             'discount': 0.0,
             'account_analytic_id': False,
         }
