@@ -6,6 +6,8 @@ var mixins = require('web.mixins');
 var Model = require('web.Model');
 var Widget = require('web.Widget');
 var website = require('website.website');
+var core = require('web.core');
+var ajax = require('web.ajax');
 
 website.add_template_file('/website/static/src/xml/website.seo.xml');
 
@@ -34,6 +36,7 @@ var Suggestion = Widget.extend({
     init: function (parent, options) {
         this.root = options.root;
         this.keyword = options.keyword;
+        this.language = options.language;
         this.htmlPage = options.page;
         this._super(parent);
     },
@@ -59,6 +62,7 @@ var SuggestionList = Widget.extend({
     template: 'website.seo_suggestion_list',
     init: function (parent, options) {
         this.root = options.root;
+        this.language = options.language;
         this.htmlPage = options.page;
         this._super(parent);
     },
@@ -68,29 +72,38 @@ var SuggestionList = Widget.extend({
     refresh: function () {
         var self = this;
         self.$el.append("Loading...");
-        function addSuggestions (list) {
-            self.$el.empty();
-            // TODO Improve algorithm + Ajust based on custom user keywords
-            var regex = new RegExp(self.root, "gi");
-            var cleanList = _.map(list, function (word) {
-                return word.replace(regex, "").trim();
-            });
-            // TODO Order properly ?
-            _.each(_.uniq(cleanList), function (keyword) {
-                if (keyword) {
-                    var suggestion = new Suggestion(self, {
-                        root: self.root,
-                        keyword: keyword,
-                        page: self.htmlPage,
-                    });
-                    suggestion.on('selected', self, function (word) {
-                        self.trigger('selected', word);
-                    });
-                    suggestion.appendTo(self.$el);
-                }
-            });
-        }
-        $.getJSON("/website/seo_suggest/" + encodeURIComponent(this.root + " "), addSuggestions);
+        var language = self.language || website.get_context().lang.toLowerCase();
+        ajax.jsonRpc('/website/seo_suggest', 'call', {
+            'keywords': self.root,
+            'lang': language,
+        }).then(function(list){
+            self.addSuggestions(list);
+        });
+    },
+    addSuggestions: function(list) {
+        list  = JSON.parse(list);
+        var self = this;
+        self.$el.empty();
+        // TODO Improve algorithm + Ajust based on custom user keywords
+        var regex = new RegExp(self.root, "gi");
+        var cleanList = _.map(list, function (word) {
+            return word.replace(regex, "").trim();
+        });
+        // TODO Order properly ?
+        _.each(_.uniq(cleanList), function (keyword) {
+            if (keyword) {
+                var suggestion = new Suggestion(self, {
+                    root: self.root,
+                    language: self.language,
+                    keyword: keyword,
+                    page: self.htmlPage,
+                });
+                suggestion.on('selected', self, function (word, language) {
+                    self.trigger('selected', word, language);
+                });
+                suggestion.appendTo(self.$el);
+            }
+        });
     },
 });
 
@@ -102,6 +115,7 @@ var Keyword = Widget.extend({
     maxWordsPerKeyword: 4, // TODO Check
     init: function (parent, options) {
         this.keyword = options.word;
+        this.language = options.language;
         this.htmlPage = options.page;
         this._super(parent);
     },
@@ -110,10 +124,11 @@ var Keyword = Widget.extend({
         this.htmlPage.on('description-changed', this, this.updateLabel);
         this.suggestionList = new SuggestionList(this, {
             root: this.keyword,
+            language: this.language,
             page: this.htmlPage,
         });
-        this.suggestionList.on('selected', this, function (word) {
-            this.trigger('selected', word);
+        this.suggestionList.on('selected', this, function (word, language) {
+            this.trigger('selected', word, language);
         });
         this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion'));
     },
@@ -151,11 +166,6 @@ var KeywordList = Widget.extend({
             _.each(existingKeywords, function (word) {
                 self.add.call(self, word);
             });
-        } else {
-            var companyName = self.htmlPage.company().toLowerCase();
-            if (companyName != 'yourcompany') {
-                self.add(companyName);
-            }
         }
     },
     keywords: function () {
@@ -171,21 +181,22 @@ var KeywordList = Widget.extend({
     exists: function (word) {
         return _.contains(this.keywords(), word);
     },
-    add: function (candidate) {
+    add: function (candidate, language) {
         var self = this;
         // TODO Refine
         var word = candidate ? candidate.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim().toLowerCase() : "";
         if (word && !self.isFull() && !self.exists(word)) {
             var keyword = new Keyword(self, {
                 word: word,
+                language: language,
                 page: this.htmlPage,
             });
             keyword.on('removed', self, function () {
                self.trigger('list-not-full');
                self.trigger('removed', word);
             });
-            keyword.on('selected', self, function (word) {
-                self.trigger('selected', word);
+            keyword.on('selected', self, function (word, language) {
+                self.trigger('selected', word, language);
             });
             keyword.appendTo(self.$el);
         }
@@ -203,7 +214,6 @@ var Image = Widget.extend({
         this._super(parent);
     },
 });
-
 
 var ImageList = Widget.extend({
     init: function (parent, options) {
@@ -334,6 +344,7 @@ var Configurator = Widget.extend({
     canEditTitle: false,
     canEditDescription: false,
     canEditKeywords: false,
+    canEditLanguage: false,
     maxTitleSize: 65,
     maxDescriptionSize: 150,
     start: function () {
@@ -364,13 +375,29 @@ var Configurator = Widget.extend({
             $modal.find('button[data-action=add]')
                 .prop('disabled', false).removeClass('disabled');
         });
-        self.keywordList.on('selected', self, function (word) {
-            self.keywordList.add(word);
+        self.keywordList.on('selected', self, function (word, language) {
+            self.keywordList.add(word, language);
         });
         self.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
         self.disableUnsavableFields();
         self.renderPreview();
         $modal.modal();
+        self.getLanguages();
+    },
+    getLanguages: function(){
+        var self = this;
+        ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+            model: 'website',
+            method: 'get_languages',
+            args: [],
+            kwargs: {
+                ids: [website.get_context().website_id],
+                context: website.get_context()
+            }
+        }).then( function(data) {
+            self.$('#language-box').html(core.qweb.render('Configurator.language_promot', {'language': data}));
+            $('#language-box').val(website.get_context().lang);
+        });
     },
     disableUnsavableFields: function () {
         var self = this;
@@ -423,8 +450,10 @@ var Configurator = Widget.extend({
     },
     addKeyword: function (word) {
         var $input = this.$('input[name=seo_page_keywords]');
+        var $language = this.$('select[name=seo_page_language]');
         var keyword = _.isString(word) ? word : $input.val();
-        this.keywordList.add(keyword);
+        var language = $language.val().toLowerCase();
+        this.keywordList.add(keyword, language);
         $input.val("");
     },
     update: function () {
@@ -499,7 +528,7 @@ var Configurator = Widget.extend({
     descriptionChanged: function () {
         var self = this;
         setTimeout(function () {
-            var description = self.$('textarea[name=seo_page_description]').attr('value');
+            var description = self.$('textarea[name=seo_page_description]').val();
             self.htmlPage.changeDescription(description);
             self.renderPreview();
         }, 0);
