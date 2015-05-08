@@ -240,7 +240,7 @@ POSTGRES_CONFDELTYPES = {
 }
 
 def intersect(la, lb):
-    return filter(lambda x: x in lb, la)
+    return list(set(lb).intersection(la))
 
 def fix_import_export_id_paths(fieldname):
     """
@@ -2480,7 +2480,7 @@ class BaseModel(object):
                     else:
                         res[lang][f] = self._columns[f].string
         for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), fields)
+            cols = list(set(fields).intersection(self._inherit_fields))
             res2 = self.pool.get(table).read_string(cr, uid, id, langs, cols, context)
         for lang in res2:
             if lang in res:
@@ -2498,7 +2498,7 @@ class BaseModel(object):
                     src = self._columns[field].string
                     self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field], src)
         for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), vals)
+            cols = list(set(vals).intersection(self._inherit_fields))
             if cols:
                 self.pool.get(table).write_string(cr, uid, id, langs, vals, context)
         return True
@@ -3782,7 +3782,7 @@ class BaseModel(object):
 
         for table in self._inherits:
             col = self._inherits[table]
-            cols = [x for x in intersect(self._inherit_fields.keys(), fields_to_read) if x not in self._columns.keys()]
+            cols = list(set(fields_to_read).intersection(self._inherit_fields).difference(self._columns))
             if not cols:
                 continue
             res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
