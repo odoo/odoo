@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import re
 from openerp.osv import fields, osv
 
 
@@ -84,6 +85,12 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
         if vals.get('code'):
             vals['code'] = vals['code'].upper()
         return super(Country, self).write(cursor, user, ids, vals, context=context)
+
+    def get_address_fields(self, cr, uid, ids, context=None):
+        res = {}
+        for country in self.browse(cr, uid, ids, context=context):
+            res[country.id] = re.findall('\((.+?)\)', country.address_format)
+        return res
 
 
 class CountryGroup(osv.osv):
