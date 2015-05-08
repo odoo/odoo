@@ -31,7 +31,7 @@ class table_compute(object):
                 self.table[posy+y].setdefault(x, None)
         return res
 
-    def process(self, products):
+    def process(self, products, ppg=PPG):
         # Compute products positions on the grid
         minpos = 0
         index = 0
@@ -39,7 +39,7 @@ class table_compute(object):
         for p in products:
             x = min(max(p.website_size_x, 1), PPR)
             y = min(max(p.website_size_y, 1), PPR)
-            if index>=PPG:
+            if index>=ppg:
                 x = y = 1
 
             pos = minpos
@@ -50,7 +50,7 @@ class table_compute(object):
             # maxy is the number of existing lines
             # + 1.0 is because pos begins at 0, thus pos 20 is actually the 21st block
             # and to force python to not round the division operation
-            if index >= PPG and ((pos + 1.0) / PPR) > maxy:
+            if index >= ppg and ((pos + 1.0) / PPR) > maxy:
                 break
 
             if x==1 and y==1:   # simple heuristic for CPU optimization
@@ -63,7 +63,7 @@ class table_compute(object):
                 'product': p, 'x':x, 'y': y,
                 'class': " ".join(map(lambda x: x.html_class or '', p.website_style_ids))
             }
-            if index<=PPG:
+            if index<=ppg:
                 maxy=max(maxy,y+(pos/PPR))
             index += 1
 
@@ -138,15 +138,26 @@ class website_sale(http.Controller):
             request.website.sale_get_order(force_pricelist=pl_id.id, context=request.context)
         return request.redirect(request.httprequest.referrer or '/shop')
 
-    @http.route(['/shop',
+    @http.route([
+        '/shop',
         '/shop/page/<int:page>',
         '/shop/category/<model("product.public.category"):category>',
         '/shop/category/<model("product.public.category"):category>/page/<int:page>'
     ], type='http', auth="public", website=True)
-    def shop(self, page=0, category=None, search='', **post):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+    def shop(self, page=0, category=None, search='', ppg=False, **post):
 
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         domain = request.website.sale_product_domain()
+
+        if ppg:
+            try:
+                ppg = int(ppg)
+            except ValueError:
+                ppg = PPG
+            post["ppg"] = ppg
+        else:
+            ppg = PPG
+
         if search:
             for srch in search.split(" "):
                 domain += ['|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
@@ -209,8 +220,8 @@ class website_sale(http.Controller):
                 current_category = current_category.parent_id
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
-        pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
-        product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
+        pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
+        product_ids = product_obj.search(cr, uid, domain, limit=ppg, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
 
         attributes_obj = request.registry['product.attribute']
@@ -229,7 +240,7 @@ class website_sale(http.Controller):
             'pager': pager,
             'pricelist': pricelist,
             'products': products,
-            'bins': table_compute().process(products),
+            'bins': table_compute().process(products, ppg),
             'rows': PPR,
             'styles': styles,
             'categories': categs,
