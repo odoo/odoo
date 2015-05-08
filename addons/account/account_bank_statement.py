@@ -577,6 +577,13 @@ class account_bank_statement_line(osv.osv):
         'type': 'general',
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = dict(default, move_ids=[])
+        return super(account_bank_statement_line, self).copy(
+            cr, uid, id, default=default, context=context)
+
 account_bank_statement_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
