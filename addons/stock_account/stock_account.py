@@ -442,14 +442,14 @@ class AccountChartTemplate(models.Model):
     def generate_properties(self, acc_template_ref, company, property_list=None):
         super(AccountChartTemplate, self).generate_properties(acc_template_ref=acc_template_ref, company=company)
         PropertyObj = self.env['ir.property']
-        value = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'STJ'), ('type', '=', 'general')]) or False
+        value = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'STJ'), ('type', '=', 'general')], limit=1)
         if value:
             field = self.env['ir.model.fields'].search([('name', '=', 'property_stock_journal'), ('model', '=', 'product.category'), ('relation', '=', 'account.journal')], limit=1)
             vals = {
                 'name': 'property_stock_journal',
                 'company_id': company.id,
                 'fields_id': field.id,
-                'value': 'account.journal,' + str(value),
+                'value': 'account.journal,%s' % value.id,
             }
             properties = PropertyObj.search([('name', '=', 'property_stock_journal'), ('company_id', '=', company.id)])
             if properties:
