@@ -6,6 +6,7 @@ import dateutil.relativedelta as relativedelta
 import logging
 import lxml
 import urlparse
+import openerp
 from urllib import urlencode, quote as quote
 
 from openerp import _, api, fields, models, SUPERUSER_ID
@@ -22,7 +23,7 @@ def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
         context['tz'] = tz or pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz'] or "UTC"
     timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
-    ts = fields.Datetime.context_timestamp(cr, uid, timestamp, context)
+    ts = openerp.osv.fields.datetime.context_timestamp(cr, uid, timestamp, context)
 
     if format:
         return ts.strftime(format)
