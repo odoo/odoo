@@ -80,6 +80,8 @@ class hr_timesheet_sheet(osv.osv):
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        if not context:
+            context = {}
         if 'employee_id' in vals:
             new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).user_id.id or False
             if not new_user_id:
@@ -94,6 +96,17 @@ class hr_timesheet_sheet(osv.osv):
             # If attendances, we sort them by date asc before writing them, to satisfy the alternance constraint
             # In addition to the date order, deleting attendances are done before inserting attendances
             vals['attendances_ids'] = self.sort_attendances(cr, uid, vals['attendances_ids'], context=context)
+        if vals.get('state') == 'done' or vals.get('timesheet_ids'):  # show warning on click "Approve" button.
+            analytic_timesheet_obj = self.pool.get('hr.analytic.timesheet')
+            for timesheet in self.browse(cr, uid, ids):
+                if timesheet.timesheet_ids and timesheet.state == 'confirm':
+                    context['analytic_account_status'] = True
+                    analytic_timesheet_obj._check_analytic_account_state(
+                        cr, uid, [timesheet_id.account_id.id for timesheet_id in timesheet.timesheet_ids], context=context)
+                elif timesheet.timesheet_ids and timesheet.state == 'draft':
+                    context['analytic_account_status'] = False
+                    analytic_timesheet_obj._check_analytic_account_state(
+                        cr, uid, [timesheet_id.account_id.id for timesheet_id in timesheet.timesheet_ids], context=context)
         res = super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, context=context)
         if vals.get('attendances_ids'):
             for timesheet in self.browse(cr, uid, ids):

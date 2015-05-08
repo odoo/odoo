@@ -28,6 +28,15 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
 
+ANALYTIC_ACCOUNT_STATE = [
+    ('template', 'Template'),
+    ('draft','New'),
+    ('open','In Progress'),
+    ('pending','To Renew'),
+    ('close','Closed'),
+    ('cancelled', 'Cancelled')
+]
+
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _inherit = ['mail.thread']
@@ -167,7 +176,7 @@ class account_analytic_account(osv.osv):
 
     _columns = {
         'name': fields.char('Account/Contract Name', required=True, track_visibility='onchange'),
-        'complete_name': fields.function(_get_full_name, type='char', string='Full Name'),
+        'complete_name': fields.function(_get_full_name, type='char', string='Full Name', store=True),
         'code': fields.char('Reference', select=True, track_visibility='onchange', copy=False),
         'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
@@ -191,14 +200,7 @@ class account_analytic_account(osv.osv):
         'date_start': fields.date('Start Date'),
         'date': fields.date('Expiration Date', select=True, track_visibility='onchange'),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),
-                                   ('draft','New'),
-                                   ('open','In Progress'),
-                                   ('pending','To Renew'),
-                                   ('close','Closed'),
-                                   ('cancelled', 'Cancelled')],
-                                  'Status', required=True,
-                                  track_visibility='onchange', copy=False),
+        'state': fields.selection(ANALYTIC_ACCOUNT_STATE, 'Status', required=True, track_visibility='onchange', copy=False),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
