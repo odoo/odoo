@@ -55,7 +55,7 @@
                             </div>
                             <div>
                                 <label for="time_unit"/>
-                                <field name="time_unit" class="oe_inline" domain="[('category_id.name','=','Working Time')]"/>
+                                <field name="time_unit" class="oe_inline" domain="[('category_id','=',%(product.uom_categ_wtime)d)]"/>
                             </div>
                             <div>
                                 <field name="group_tasks_work_on_tasks" class="oe_inline"/>
