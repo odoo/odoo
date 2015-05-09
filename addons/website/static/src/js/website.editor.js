@@ -1088,7 +1088,7 @@ var EditorBar = Widget.extend({
                     var data = msg.substring(3,msg.length-2).split(/', u'/);
                     failure.error.message = '<b>' + data[0] + '</b>' + dom.blank + data[1];
                 }
-                $(root).find('.' + failure.id)
+                $('body').find('.' + failure.id)
                     .removeClass(failure.id)
                     .popover({
                         html: html,
@@ -1097,7 +1097,8 @@ var EditorBar = Widget.extend({
                         placement: 'auto top',
                     })
                     // Force-show popovers so users will notice them.
-                    .popover('show');
+                    .popover('show')
+                    .attr("contentEditable", true);
             });
         });
     },
