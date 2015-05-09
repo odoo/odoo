@@ -81,6 +81,11 @@ Administrator</span>]]></field>
             <field eval="10" name="sequence"/>
         </record>
 
+        <record model="ir.module.category" id="module_category_extra">
+            <field name="name">Other Extra Rights</field>
+            <field name="sequence">102</field>
+        </record>
+
         <!--
             A group dedicated to the portal users, making groups
             restrictions more convenient.
@@ -89,6 +94,7 @@ Administrator</span>]]></field>
             <field name="name">Portal</field>
             <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual Odoo groups.</field>
+            <field name="category_id" ref="module_category_extra"/>
         </record>
         <!--
             A group dedicated to the public user only, making groups
@@ -98,6 +104,7 @@ Administrator</span>]]></field>
             <field name="name">Public</field>
             <field name="comment">Public users have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual Odoo groups.</field>
+            <field name="category_id" ref="module_category_extra"/>
         </record>
 
         <!-- Basic fonts family included in PDF standart, will always be in the font list -->
