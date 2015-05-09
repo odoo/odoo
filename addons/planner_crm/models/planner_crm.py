@@ -14,7 +14,7 @@ class PlannerCrm(models.Model):
 
     @api.model
     def _prepare_planner_crm_data(self):
-        sales_team = self.env.ref('sales_team.team_sales_department')
+        sales_team = self.sudo().env.ref('sales_team.team_sales_department')
         company_data = self.env['res.users'].browse(self._uid).company_id
         values = {
             'prepare_backend_url': self.prepare_backend_url,
