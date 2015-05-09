@@ -24,6 +24,7 @@ class website_config_settings(osv.osv_memory):
         'cdn_activated': fields.related('website_id', 'cdn_activated', type="boolean", string='Use CDN'),
         'cdn_url': fields.related('website_id', 'cdn_url', type="char", string='CDN Base URL'),
         'cdn_filters': fields.related('website_id', 'cdn_filters', type="text", string='CDN Filters'),
+        'module_website_mail_group': fields.boolean("Use the Discussion Group Mailing List Archives Snippet", help="This will install the module Website Mail"),
     }
 
     def on_change_website_id(self, cr, uid, ids, website_id, context=None):
