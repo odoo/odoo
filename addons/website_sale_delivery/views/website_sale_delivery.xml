@@ -3,16 +3,17 @@
 <data>
 
     <template id="cart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
-        <xpath expr="//tr[@id='order_total_taxes']" position="after">
-            <tr class="text-muted" id="order_delivery">
-                <td><abbr title="Delivery will be updated after choosing a new delivery method">Delivery:</abbr></td>
-                <td class="text-right">
-                    <span t-field="website_sale_order.amount_delivery" t-field-options='{
-                        "widget": "monetary",
-                        "display_currency": "website.pricelist_id.currency_id"
-                    }'/>
-                </td>
-            </tr>
+        <xpath expr="//div[@id='order_total_taxes']" position="after">
+            <div class="row" id="order_delivery">
+                  <span class="col-xs-6 text-right text-muted" title="Delivery will be updated after choosing a new delivery method"> Delivery:</span>
+                  <span class="col-xs-6 text-muted">
+                      <span t-field="website_sale_order.amount_delivery" style="white-space: nowrap;" t-field-options='{
+                              "widget": "monetary",
+                              "from_currency": "website_sale_order.pricelist_id.currency_id",
+                              "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                          }'/>
+                  </span>
+            </div>
         </xpath>
     </template>
 

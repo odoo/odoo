@@ -1225,7 +1225,8 @@
 
 <!-- Page Shop my cart and payment total -->
 <template id="total">
-        <div class="row">
+  <t t-if="website_sale_order">
+        <div class="row" id="order_total_untaxed">
               <span class="col-xs-6 text-right text-muted">Subtotal:</span>
               <span class="col-xs-6 text-muted">
                   <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-field-options='{
@@ -1235,7 +1236,7 @@
                       }'/>
               </span>
         </div>
-        <div class="row">
+        <div class="row" id="order_total_taxes">
               <span class="col-xs-6 text-right text-muted" title="Taxes may be updated after providing shipping address"> Taxes:</span>
               <span class="col-xs-6 text-muted">
                   <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-field-options='{
@@ -1245,7 +1246,7 @@
                       }'/>
               </span>
         </div>
-        <div class="row">
+        <div class="row" id="order_total">
               <span class="col-xs-6 text-right h4">Total:</span>
               <span class="col-xs-6 h4" style="white-space: nowrap;">
                   <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-field-options='{
@@ -1255,6 +1256,7 @@
                       }'/>
               </span>
         </div>
+  </t>
 </template>
 
 <!-- payment acquirer information -->
