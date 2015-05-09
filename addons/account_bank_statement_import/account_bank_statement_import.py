@@ -200,9 +200,13 @@ class account_bank_statement_import(osv.TransientModel):
         # while 'counterpart' bank accounts (from which statement transactions originate) don't.
         # Warning : if company_id is set, the method post_write of class bank will create a journal
         if journal_id:
-            vals_acc['partner_id'] = uid
+            company_id = self.pool['account.journal'].browse(
+                cr, uid, journal_id, context=context).company_id.id
+            vals = self.pool['res.partner.bank'].onchange_company_id(
+                cr, uid, None, company_id, context=None)
+            vals_acc.update(vals.get('value', {}))
             vals_acc['journal_id'] = journal_id
-            vals_acc['company_id'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            vals_acc['company_id'] = company_id
 
         return self.pool.get('res.partner.bank').create(cr, uid, vals_acc, context=context)
 
