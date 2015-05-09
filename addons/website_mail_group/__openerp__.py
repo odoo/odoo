@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name': 'Mailing List Archive',
     'category': 'Website',
@@ -8,12 +10,11 @@ OpenERP Mail Group : Mailing List Archives
 ==========================================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_mail'],
     'data': [
         'views/website_mail_group.xml',
         'views/snippets.xml',
     ],
-    'qweb': [],
     'installable': True,
 }
