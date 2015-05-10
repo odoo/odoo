@@ -44,7 +44,6 @@ class procurement_compute_all(osv.osv_memory):
         with Environment.manage():
             proc_obj = self.pool.get('procurement.order')
             #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
-
             new_cr = self.pool.cursor()
             scheduler_cron_id = self.pool['ir.model.data'].get_object_reference(new_cr, SUPERUSER_ID, 'procurement', 'ir_cron_scheduler_action')[1]
             # Avoid to run the scheduler multiple times in the same time
@@ -56,10 +55,14 @@ class procurement_compute_all(osv.osv_memory):
                 new_cr.rollback()
                 new_cr.close()
                 return {}
-            user = self.pool.get('res.users').browse(new_cr, uid, uid, context=context)
-            comps = [x.id for x in user.company_ids]
-            for comp in comps:
-                proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, company_id = comp, context=context)
+            # @api decorater hell in an untraceable way makes the company_id
+            # keyword argument of run_scheduler disappear. Therefore call
+            # without company selection:
+            # user = self.pool.get('res.users').browse(new_cr, uid, uid, context=context)
+            # comps = [x.id for x in user.company_ids]
+            # for comp in comps:
+            #     proc_obj.run_scheduler(new_cr, uid, use_new_cursor=True, company_id=comp, context=context)
+            proc_obj.run_scheduler(new_cr, uid)
             #close the new cursor
             new_cr.close()
             return {}
@@ -75,6 +78,5 @@ class procurement_compute_all(osv.osv_memory):
         threaded_calculation = threading.Thread(target=self._procure_calculation_all, args=(cr, uid, ids, context))
         threaded_calculation.start()
         return {'type': 'ir.actions.act_window_close'}
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
