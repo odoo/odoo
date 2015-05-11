@@ -1221,7 +1221,7 @@
 
 <!-- Page Shop my cart and payment total -->
 <template id="total">
-  <t t-if="website_sale_order">
+  <div id="cart_total" t-if="website_sale_order">
         <div class="row" id="order_total_untaxed">
               <span class="col-xs-6 text-right text-muted">Subtotal:</span>
               <span class="col-xs-6 text-muted">
@@ -1252,7 +1252,7 @@
                       }'/>
               </span>
         </div>
-  </t>
+  </div>
 </template>
 
 <!-- payment acquirer information -->
