@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-import openerp
 from openerp.osv import fields, osv
-from openerp import models, api, _
 
 
 class MailMailStats(osv.Model):
@@ -35,25 +33,24 @@ class MailMailStats(osv.Model):
     _rec_name = 'message_id'
     _order = 'message_id'
 
-    def _compute_state(self, cr, uid, stat_ids, field_names, arg, context=None):
-        stats = self.browse(cr, uid, stat_ids, context=context)
-        res = dict([(stat, False) for stat in stat_ids])
+    def _compute_state(self, cr, uid, ids, field_names, arg, context=None):
+        res = dict((i, {'state': 'outgoing', 'state_update': fields.datetime.now()}) for i in ids)
 
-        self.write(cr, uid, stat_ids, {'state_update': fields.datetime.now()}, context=context)
-
-        for stat in stats:
+        for stat in self.browse(cr, uid, ids, context=context):
             if stat.exception:
-                res[stat.id] = 'exception'
+                res[stat.id]['state'] = 'exception'
             if stat.sent:
-                res[stat.id] = 'sent'
+                res[stat.id]['state'] = 'sent'
             if stat.opened:
-                res[stat.id] = 'opened'
+                res[stat.id]['state'] = 'opened'
             if stat.replied:
-                res[stat.id] = 'replied'
+                res[stat.id]['state'] = 'replied'
             if stat.bounced:
-                res[stat.id] = 'bounced'
+                res[stat.id]['state'] = 'bounced'
 
         return res
+
+    __store = {_name: ((lambda s, c, u, i, t: i), ['exception', 'sent', 'opened', 'replied', 'bounced'], 10)}
 
     _columns = {
         'mail_mail_id': fields.many2one('mail.mail', 'Mail', ondelete='set null', select=True),
@@ -86,10 +83,17 @@ class MailMailStats(osv.Model):
         'replied': fields.datetime('Replied', help='Date when this email has been replied for the first time.'),
         'bounced': fields.datetime('Bounced', help='Date when this email has bounced.'),
         'links_click_ids': fields.one2many('website.links.click', 'mail_stat_id', 'Links click'),
-        'state': fields.function(_compute_state, string='State', type="selection", 
-                                 selection=[('outgoing', 'Outgoing'), ('exception', 'Exception'), ('sent', 'Sent'), ('opened', 'Opened'), ('replied', 'Replied'), ('bounced', 'Bounced')],
-                                 store={'mail.mail.statistics': (lambda self, cr, uid, ids, context=None: ids, ['exception', 'sent', 'opened', 'replied', 'bounced'], 10)}),
-        'state_update': fields.datetime('State Update', help='Last state update of the mail'),
+        'state': fields.function(_compute_state, string='State', type="selection", multi="state",
+                                 selection=[('outgoing', 'Outgoing'),
+                                            ('exception', 'Exception'),
+                                            ('sent', 'Sent'),
+                                            ('opened', 'Opened'),
+                                            ('replied', 'Replied'),
+                                            ('bounced', 'Bounced')],
+                                 store=__store),
+        'state_update': fields.function(_compute_state, string='State Update', type='datetime',
+                                        multi='state', help='Last state update of the mail',
+                                        store=__store),
     }
 
     _defaults = {
