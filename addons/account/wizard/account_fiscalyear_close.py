@@ -19,27 +19,70 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
+from dateutil.relativedelta import relativedelta
 
-class account_fiscalyear_close(osv.osv_memory):
+
+class account_fiscalyear_close(models.TransientModel):
     """
     Closes Account Fiscalyear and Generate Opening entries for New Fiscalyear
     """
     _name = "account.fiscalyear.close"
     _description = "Fiscalyear Close"
-    _columns = {
-       'fy_id': fields.many2one('account.fiscalyear', \
-                                 'Fiscal Year to close', required=True, help="Select a Fiscal year to close"),
-       'fy2_id': fields.many2one('account.fiscalyear', \
-                                 'New Fiscal Year', required=True),
-       'journal_id': fields.many2one('account.journal', 'Opening Entries Journal', domain="[('type','=','situation')]", required=True, help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts, of type \'situation\' and with a centralized counterpart.'),
-       'period_id': fields.many2one('account.period', 'Opening Entries Period', required=True),
-       'report_name': fields.char('Name of new entries', required=True, help="Give name of the new entries"),
-    }
-    _defaults = {
-        'report_name': lambda self, cr, uid, context: _('End of Fiscal Year Entry'),
-    }
+
+    def _default_fy_id(self):
+        '''Get the oldest draft FY in the company of the user'''
+        fy_ids = self.env['account.fiscalyear'].search([
+            ('company_id', '=', self.env.user.company_id.id),
+            ('state', '=', 'draft')], limit=1, order='date_start')
+        return fy_ids and fy_ids[0] or False
+
+    fy_id = fields.Many2one(
+        'account.fiscalyear', string='Fiscal Year to close',
+        required=True, help="Select a Fiscal year to close",
+        default=_default_fy_id)
+    fy2_id = fields.Many2one(
+        'account.fiscalyear', string='New Fiscal Year', required=True)
+    journal_id = fields.Many2one(
+        'account.journal', string='Opening Entries Journal',
+        domain=[('type', '=', 'situation')], required=True,
+        help="The best practice here is to use a journal dedicated to "
+        "contain the opening entries of all fiscal years. Note that you "
+        "should define it with default debit/credit accounts, of type "
+        "'situation' and with a centralized counterpart.")
+    period_id = fields.Many2one(
+        'account.period', string='Opening Entries Period', required=True)
+    report_name = fields.Char(
+        string='Name of new entries', required=True,
+        help="Give name of the new entries",
+        default="End of Fiscal Year Entry")
+
+    @api.onchange('fy2_id')
+    def onchange_fy2_id(self):
+        if self.fy2_id:
+            period_ids = self.env['account.period'].search([
+                ('special', '=', True),
+                ('fiscalyear_id', '=', self.fy2_id.id),
+                ])
+            self.period_id = len(period_ids) == 1 and period_ids[0] or False
+        else:
+            self.period_id = False
+
+    @api.onchange('fy_id')
+    def onchange_fy_id(self):
+        '''Set fy2_id as the next FY after fy_id'''
+        if self.fy_id:
+            date_start = fields.Date.from_string(self.fy_id.date_stop)\
+                + relativedelta(days=1)
+            new_fy_ids = self.env['account.fiscalyear'].search([
+                ('company_id', '=', self.fy_id.company_id.id),
+                ('date_start', '=', date_start),
+                ('state', '=', 'draft'),
+                ], limit=1)
+            if new_fy_ids:
+                self.fy2_id = new_fy_ids[0]
+        else:
+            self.fy2_id = False
 
     def data_save(self, cr, uid, ids, context=None):
         """
@@ -274,7 +317,15 @@ class account_fiscalyear_close(osv.osv_memory):
                     'WHERE id = %s', (ids[0], old_fyear.id))
         obj_acc_fiscalyear.invalidate_cache(cr, uid, ['end_journal_period_id'], [old_fyear.id], context=context)
 
-        return {'type': 'ir.actions.act_window_close'}
+        action = self.pool['ir.actions.act_window'].for_xml_id(
+            cr, uid, 'account', 'action_move_journal_line', context=context)
+        action.update({
+            'view_mode': 'form,tree',
+            'views': False,
+            'view_id': False,
+            'res_id': move_id,
+        })
+        return action
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
