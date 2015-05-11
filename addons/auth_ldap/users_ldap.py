@@ -105,7 +105,7 @@ class CompanyLDAP(osv.osv):
             if results and len(results) == 1:
                 dn = results[0][0]
                 conn = self.connect(conf)
-                conn.simple_bind_s(dn, password)
+                conn.simple_bind_s(dn, password.encode('utf-8'))
                 conn.unbind()
                 entry = results[0]
         except ldap.INVALID_CREDENTIALS:
