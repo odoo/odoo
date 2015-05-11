@@ -940,7 +940,8 @@ class view(osv.osv):
 
     def clear_cache(self):
         """ Deprecated, use `clear_caches` instead. """
-        self.clear_caches()
+        if not config['dev_mode']:
+	    self.clear_caches()
 
     def _contains_branded(self, node):
         return node.tag == 't'\
