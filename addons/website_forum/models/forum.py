@@ -256,7 +256,7 @@ class Post(osv.Model):
         'name': fields.char('Title'),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
         'content': fields.html('Content', strip_style=True),
-        'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tags'),
+        'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'post_id', 'tag_id', 'Tags'),
         'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status'),
         'views': fields.integer('Number of Views'),
         'active': fields.boolean('Active'),
