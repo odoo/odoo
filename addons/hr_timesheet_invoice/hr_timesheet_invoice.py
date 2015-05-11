@@ -325,8 +325,8 @@ class hr_analytic_timesheet(osv.osv):
         res['value']['to_invoice'] = st or False
         if acc.state=='pending':
             res['warning'] = {
-                'title': 'Warning',
-                'message': 'The analytic account is in pending state.\nYou should not work on this account !'
+                'title': _('Warning'),
+                'message': _('The analytic account is in pending state.\nYou should not work on this account !')
             }
         return res
 

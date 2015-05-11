@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.tools import float_is_zero
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.report import report_sxw
@@ -540,8 +541,8 @@ class account_bank_statement_line(osv.osv):
         # Look for structured communication
         if st_line.name:
             domain = self._domain_reconciliation_proposition(cr, uid, st_line, excluded_ids=excluded_ids, context=context)
-            match_id = mv_line_pool.search(cr, uid, domain, offset=0, limit=1, context=context)
-            if match_id:
+            match_id = mv_line_pool.search(cr, uid, domain, offset=0, limit=2, context=context)
+            if match_id and len(match_id) == 1:
                 mv_line_br = mv_line_pool.browse(cr, uid, match_id, context=context)
                 target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
                 mv_line = mv_line_pool.prepare_move_lines_for_reconciliation_widget(cr, uid, mv_line_br, target_currency=target_currency, target_date=st_line.date, context=context)[0]
@@ -571,8 +572,8 @@ class account_bank_statement_line(osv.osv):
 
         # Look for a matching amount
         domain_exact_amount = domain + [(amount_field, '=', float_round(sign * amount, precision_digits=precision_digits))]
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=domain_exact_amount)
-        if match_id:
+        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=2, additional_domain=domain_exact_amount)
+        if match_id and len(match_id) == 1:
             return match_id
 
         if not st_line.partner_id.id:
@@ -587,7 +588,7 @@ class account_bank_statement_line(osv.osv):
             domain += [(amount_field, '<', 0), (amount_field, '>', (sign * amount))]
         else:
             domain += [(amount_field, '>', 0), (amount_field, '<', (sign * amount))]
-        mv_lines = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=domain)
+        mv_lines = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=domain, context=context)
         ret = []
         total = 0
         for line in mv_lines:
@@ -793,8 +794,13 @@ class account_bank_statement_line(osv.osv):
                 if mv_line_dict.get('counterpart_move_line_id'):
                     #post an account line that use the same currency rate than the counterpart (to balance the account) and post the difference in another line
                     ctx['date'] = mv_line.date
-                    debit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
-                    credit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
+                    if mv_line.currency_id.id == mv_line_dict['currency_id'] \
+                            and float_is_zero(abs(mv_line.amount_currency) - abs(mv_line_dict['amount_currency']), precision_rounding=mv_line.currency_id.rounding):
+                        debit_at_old_rate = mv_line.credit
+                        credit_at_old_rate = mv_line.debit
+                    else:
+                        debit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
+                        credit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
                     mv_line_dict['credit'] = credit_at_old_rate
                     mv_line_dict['debit'] = debit_at_old_rate
                     if debit_at_old_rate - debit_at_current_rate:

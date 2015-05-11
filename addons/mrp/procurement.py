@@ -116,7 +116,7 @@ class procurement_order(osv.osv):
             if self.check_bom_exists(cr, uid, [procurement.id], context=context):
                 #create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
                 vals = self._prepare_mo_vals(cr, uid, procurement, context=context)
-                produce_id = production_obj.create(cr, SUPERUSER_ID, vals, context=context)
+                produce_id = production_obj.create(cr, SUPERUSER_ID, vals, context=dict(context, force_company=procurement.company_id.id))
                 res[procurement.id] = produce_id
                 self.write(cr, uid, [procurement.id], {'production_id': produce_id})
                 self.production_order_create_note(cr, uid, procurement, context=context)
