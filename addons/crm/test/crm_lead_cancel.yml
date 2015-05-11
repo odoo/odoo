@@ -12,13 +12,3 @@
 -
   !assert {model: crm.lead, id: crm.crm_case_1, string: Lead is in new stage}:
     - stage_id.sequence == 1
--
-  Salesman escalate the lead to parent team.
--
-  !python {model: crm.lead}: |
-    self.case_escalate(cr, uid, [ref("crm_case_1")])
--
-  Salesman check the lead is correctly escalated to the parent team.
--
-  !assert {model: crm.lead, id: crm.crm_case_1, string: Escalate lead to parent team}:
-    - team_id.name == "Marketing"

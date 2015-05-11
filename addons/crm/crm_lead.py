@@ -381,20 +381,6 @@ class crm_lead(format_address, osv.osv):
             self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
         return True
 
-    def case_escalate(self, cr, uid, ids, context=None):
-        """ Escalates case to parent level """
-        for case in self.browse(cr, uid, ids, context=context):
-            data = {'active': True}
-            if case.team_id.parent_id:
-                data['team_id'] = case.team_id.parent_id.id
-                if case.team_id.parent_id.change_responsible:
-                    if case.team_id.parent_id.user_id:
-                        data['user_id'] = case.team_id.parent_id.user_id.id
-            else:
-                raise UserError(_("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
-            self.write(cr, uid, [case.id], data, context=context)
-        return True
-
     def _merge_get_result_type(self, cr, uid, opps, context=None):
         """
         Define the type of the result of the merge.  If at least one of the

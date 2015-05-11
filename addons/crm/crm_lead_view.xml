@@ -167,9 +167,6 @@
                             <label for="team_id" groups="base.group_multi_salesteams"/>
                             <div class="o_row" groups="base.group_multi_salesteams">
                                 <field name="team_id"/>
-                                <button name="case_escalate" string="Escalate"
-                                        type="object" class="oe_link"
-                                        attrs="{'invisible': ['|', ('team_id','=',False), ('probability', '=', 100)]}"/>
                             </div>
                             <field name="type" invisible="1"/>
                         </group>
@@ -457,8 +454,6 @@
                                 <label for="team_id" groups="base.group_multi_salesteams"/>
                                 <div groups="base.group_multi_salesteams" class="o_row">
                                     <field name="team_id" widget="selection"/>
-                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link"
-                                            attrs="{'invisible': ['|', ('team_id','=',False), ('probability', '=', 100)]}"/>
                                 </div>
                             </group>
                             <group>

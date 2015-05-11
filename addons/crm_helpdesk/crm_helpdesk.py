@@ -130,3 +130,9 @@ class crm_helpdesk_category(osv.Model):
         'name': fields.char('Name', required=True, translate=True),
         'team_id': fields.many2one('crm.team', 'Sales Team'),
     }
+
+class sales_team(osv.Model):
+    _inherit = "crm.team"
+    _columns = {
+        'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team override the salesman with the team leader."),
+    }

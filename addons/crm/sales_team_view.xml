@@ -94,8 +94,8 @@
                                 <field name="stage_ids"/>
                         </page>
                    </xpath>
-                   <xpath expr="//group[@name='sales_team_escalation_group']" position="after">
-                        <group name="alias_info" string="Leads Email Alias" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                   <xpath expr="//field[@name='active']" position="before">
+                        <group name="alias_info" string="Leads Email Alias" class="oe_inline" attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <label for="alias_name" string="Email Alias"
                                 attrs="{'invisible': [('alias_domain', '=', False)]}"/>
                             <div name="alias_def"
