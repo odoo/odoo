@@ -143,10 +143,9 @@ class sale_order(osv.osv):
         return [('id', 'in', [x[0] for x in res])]
 
     def _get_order(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
-            result[line.order_id.id] = True
-        return result.keys()
+        line_obj = self.pool.get('sale.order.line')
+        return list(set(line['order_id'] for line in line_obj.read(
+            cr, uid, ids, ['order_id'], load='_classic_write', context=context)))
 
     def _get_default_company(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
