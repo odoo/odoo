@@ -59,15 +59,25 @@ $('.oe_website_sale').each(function () {
         $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");
     });
 
+    var clickwatch = (function(){
+          var timer = 0;
+          return function(callback, ms){
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+          };
+    })();
+
     $(oe_website_sale).on("change", ".oe_cart input.js_quantity", function (event) {
-        var $input = $(this);
-        var value = parseInt($input.val(), 10);
-        var $dom = $(event.target).closest('tr');
-        var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
-        var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
-        var line_id = parseInt($input.data('line-id'),10);
-        var product_id = parseInt($input.data('product-id'),10);
-        var product_ids = [product_id];
+      var $input = $(this);
+      var value = parseInt($input.val(), 10);
+      var $dom = $(event.target).closest('tr');
+      var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
+      var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
+      var line_id = parseInt($input.data('line-id'),10);
+      var product_id = parseInt($input.data('product-id'),10);
+      var product_ids = [product_id];
+      clickwatch(function(){
+
         $dom_optional.each(function(){
             product_ids.push($(this).find('span[data-product-id]').data('product-id'));
         });
@@ -124,6 +134,7 @@ $('.oe_website_sale').each(function () {
                 }
             });
         });
+      }, 500);
     });
 
     // hack to add and rome from cart with json
