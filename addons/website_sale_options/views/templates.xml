@@ -11,13 +11,13 @@
 </template>
 
 <template id="optional_products" inherit_id="website_sale.cart" name="Optional products">
-  <xpath expr="//table[@id='cart_products']/tbody//td[last()]/div" position="attributes">
+  <xpath expr="//table[@id='cart_products']/tbody//td[@id='td-qty']/div" position="attributes">
     <attribute name="t-if">not line.linked_line_id</attribute>
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//tr" position="attributes">
     <attribute name="t-att-class">'optional_product info' if line.linked_line_id else ''</attribute>
   </xpath>
-  <xpath expr="//table[@id='cart_products']/tbody//td[last()]" position="inside">
+  <xpath expr="//table[@id='cart_products']/tbody//td[@id='td-qty']" position="inside">
     <t t-if="line.linked_line_id">
       <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
     </t>

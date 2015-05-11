@@ -630,8 +630,8 @@
                       <thead>
                           <tr>
                               <th colspan="2" width="100">Product</th>
-                              <th width="100">Price</th>
                               <th width="120">Quantity</th>
+                              <th width="100">Price</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -650,20 +650,7 @@
                                   </div>
                                   <div class="text-muted" t-esc="'\n'.join(line.name.splitlines()[1:])"/>
                               </td>
-                              <td class="text-center" name="price">
-                                  <del class="text-danger" t-att-style="'' if (compute_currency(line.product_id.lst_price) - line.price_reduce) &gt; 1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
-                                    t-field="line.product_id.lst_price" t-field-options='{
-                                        "widget": "monetary",
-                                        "from_currency": "line.company_id.currency_id",
-                                        "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                                    }'/>&amp;nbsp;
-                                <span t-field="line.price_reduce" style="white-space: nowrap;" t-field-options='{
-                                     "widget": "monetary",
-                                     "from_currency": "website_sale_order.pricelist_id.currency_id",
-                                     "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                                 }'/>
-                              </td>
-                              <td class="text-center">
+                              <td class="text-center" id="td-qty">
                                   <div class="input-group oe_website_spinner">
                                       <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json" data-no-instant="">
                                           <i class="fa fa-minus"></i>
@@ -676,6 +663,19 @@
                                           <i class="fa fa-plus"></i>
                                       </a>
                                   </div>
+                              </td>
+                              <td class="text-center" id="td-price" name="price">
+                                  <del class="text-danger" t-att-style="'' if (compute_currency(line.product_id.lst_price) - line.price_reduce) &gt; 1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
+                                    t-field="line.product_id.lst_price" t-field-options='{
+                                        "widget": "monetary",
+                                        "from_currency": "line.company_id.currency_id",
+                                        "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                                    }'/>&amp;nbsp;
+                                <span t-field="line.price_reduce" style="white-space: nowrap;" t-field-options='{
+                                     "widget": "monetary",
+                                     "from_currency": "website_sale_order.pricelist_id.currency_id",
+                                     "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                                 }'/>
                               </td>
                           </tr>
                         </t>
@@ -987,8 +987,8 @@
                   <thead>
                       <tr>
                           <th colspan="2" width="80">Product</th>
-                          <th width="100">Price</th>
                           <th width="120">Quantity</th>
+                          <th width="100">Price</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -1003,15 +1003,15 @@
                           <td t-if="line.product_id.product_tmpl_id">
                              <strong t-field="line.product_id.with_context(display_default_code=False).display_name"/>
                           </td>
+                          <td>
+                             <div t-esc="line.product_uom_qty"/>
+                          </td>
                           <td class="text-center">
                              <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
                                  "widget": "monetary",
                                  "from_currency": "website_sale_order.pricelist_id.currency_id",
                                  "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                              }'/>
-                          </td>
-                          <td>
-                             <div t-esc="line.product_uom_qty"/>
                           </td>
                       </tr>
                   </tbody>
