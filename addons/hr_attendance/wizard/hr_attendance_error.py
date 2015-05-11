@@ -14,7 +14,8 @@ class hr_attendance_error(osv.osv_memory):
     _columns = {
         'init_date': fields.date('Starting Date', required=True),
         'end_date': fields.date('Ending Date', required=True),
-        'max_delay': fields.integer('Max. Delay (Min)', required=True)
+        'max_delay': fields.integer('Maximum Tolerance (in minutes)', required=True,
+            help="Allowed difference in minutes between the signin/signout and the timesheet computation for one sheet. Set this to 0 for no tolerance.")
     }
     _defaults = {
          'init_date': lambda *a: time.strftime('%Y-%m-%d'),
