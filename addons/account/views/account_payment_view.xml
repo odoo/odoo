@@ -76,8 +76,8 @@
                         <group>
                             <group>
                                 <field name="payment_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="partner_id" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="partner_type" widget="selection" string="" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_type" nolabel="1" widget="selection" string="" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_id" nolabel="1" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
@@ -91,7 +91,7 @@
                             <group>
                                 <field name="payment_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="date" attrs="{'invisible': [('state', '!=', 'draft'), ('date', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="communication" attrs="{'invisible': [('state', '!=', 'draft'), ('communication', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="communication" string="Memo" attrs="{'invisible': [('state', '!=', 'draft'), ('communication', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                     </sheet>

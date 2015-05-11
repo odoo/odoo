@@ -178,7 +178,7 @@ class AccountInvoice(models.Model):
         self.payment_move_line_ids = self.env['account.move.line'].browse(payment_lines).sorted()
 
     name = fields.Char(string='Reference/Description', index=True,
-        readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+        readonly=True, states={'draft': [('readonly', False)]}, copy=False, help='The name that will be used on account move lines')
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.",
         readonly=True, states={'draft': [('readonly', False)]})

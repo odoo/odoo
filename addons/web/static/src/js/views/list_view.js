@@ -2074,9 +2074,9 @@ var ColumnMonetary = Column.extend({
         var value = formats.format_value(row_data[this.id].value || 0, {type: this.type, digits: digits_precision}, options.value_if_empty);
         if (currency) {
             if (currency.position === "after") {
-                value += ' ' + currency.symbol;
+                value += '&nbsp;' + currency.symbol;
             } else {
-                value = currency.symbol + ' ' + value;
+                value = currency.symbol + '&nbsp;' + value;
             }
         }
         return value;
