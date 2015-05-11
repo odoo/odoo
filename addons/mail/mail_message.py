@@ -39,7 +39,7 @@ def decode(text):
     """Returns unicode() string conversion of the the given encoded smtp header text"""
     if text:
         text = decode_header(text.replace('\r', ''))
-        return ''.join([tools.ustr(x[0], x[1]) for x in text])
+        return ' '.join([tools.ustr(x[0], x[1]) for x in text])
 
 class MLStripper(HTMLParser):
     def __init__(self):
