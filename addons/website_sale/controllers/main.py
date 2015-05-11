@@ -347,6 +347,9 @@ class website_sale(http.Controller):
                 _order = order.with_context(pricelist=order.pricelist_id.id)
             values['suggested_products'] = _order._cart_accessories()
 
+        if post.get('type') == 'popover':
+            return request.website.render("website_sale.cart_popover", values)
+
         if post.get('code_not_available'):
             values['code_not_available'] = post.get('code_not_available')
 

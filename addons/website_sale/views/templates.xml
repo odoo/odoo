@@ -710,6 +710,35 @@
   </t>
 </template>
 
+<template id="cart_popover" name="Cart Popover">
+      <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="well well-lg">
+          Your cart is empty!
+      </div>
+      <t t-if="website_sale_order and website_sale_order.website_order_line">
+        <t t-foreach="website_sale_order.website_order_line" t-as="line">
+          <div class='row mb8 cart_line' >
+            <div class='col-xs-3'><span t-field="line.product_id.image_small"
+                              t-field-options='{"widget": "image", "class": "img-rounded"}'/></div>
+            <div class='col-xs-9'>
+                <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+                    <span t-esc="line.product_id.with_context(display_default_code=False).display_name" class="h6"/>
+                </a>
+                <br/><small>Qty: <t t-esc="int(line.product_uom_qty)"/></small>
+            </div>
+          </div>
+        </t>
+
+      <div class="text-center">
+        <span class="h5">
+          <t t-call="website_sale.total"/>
+        </span>
+         <a class="btn btn-primary" href="/shop/cart">
+           View Cart (<t t-esc="website_sale_order.cart_quantity"/> items)
+         </a>
+      </div>
+    </t>
+</template>
+
 <template id="suggested_products_list" inherit_id="website_sale.cart" customize_show="True" name="Suggested Products in my cart">
   <xpath expr="//table[@id='cart_products']" position="after">
       <table t-if="suggested_products" class='table table-striped table-condensed'>
@@ -1235,7 +1264,7 @@
   <div id="cart_total" t-if="website_sale_order">
         <div class="row" id="order_total_untaxed">
               <span class="col-xs-6 text-right text-muted">Subtotal:</span>
-              <span class="col-xs-6 text-muted">
+              <span class="col-xs-6 text-left text-muted">
                   <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-field-options='{
                           "widget": "monetary",
                           "from_currency": "website_sale_order.pricelist_id.currency_id",
@@ -1245,7 +1274,7 @@
         </div>
         <div class="row" id="order_total_taxes">
               <span class="col-xs-6 text-right text-muted" title="Taxes may be updated after providing shipping address"> Taxes:</span>
-              <span class="col-xs-6 text-muted">
+              <span class="col-xs-6 text-left text-muted">
                   <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-field-options='{
                           "widget": "monetary",
                           "from_currency": "website_sale_order.pricelist_id.currency_id",
@@ -1255,7 +1284,7 @@
         </div>
         <div class="row" id="order_total">
               <span class="col-xs-6 text-right h4">Total:</span>
-              <span class="col-xs-6 h4" style="white-space: nowrap;">
+              <span class="col-xs-6 text-left h4" style="white-space: nowrap;">
                   <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-field-options='{
                           "widget": "monetary",
                           "from_currency": "website_sale_order.pricelist_id.currency_id",
