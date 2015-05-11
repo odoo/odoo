@@ -293,6 +293,8 @@ class WebsiteForum(http.Controller):
     def post_create(self, forum, post_parent=None, post_type=None, **post):
         if not request.session.uid:
             return login_redirect()
+        if post_type == 'question' and not post.get('post_name', '').strip():
+            return request.website.render('website.http_error', {'status_code': 'Bad Request', 'status_message': 'Title should not be empty.'})
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
@@ -353,6 +355,8 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
+        if 'post_name' in kwargs and not kwargs.get('post_name').strip():
+            return request.website.render('website.http_error', {'status_code': 'Bad Request', 'status_message': 'Title should not be empty.'})
         post_tags = forum._tag_to_write_vals(kwargs.get('post_tag', ''))
         vals = {
             'tag_ids': post_tags,
