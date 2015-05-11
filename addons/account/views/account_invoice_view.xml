@@ -209,7 +209,7 @@
                             <field name="fiscal_position_id" options="{'no_create': True}"/>
                         </group>
                         <group>
-                            <field name="reference"/>
+                            <field name="reference" string="Supplier Reference"/>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
                             <field name="date_invoice" />
                             <field name="date_due"/>
@@ -342,7 +342,7 @@
                                 context="{'search_default_customer':1, 'show_address': 1}"
                                 options='{"always_reload": True}'
                                 domain="[('customer', '=', True)]"/>
-                            <field name="fiscal_position_id" options="{'no_create': True}" />
+                            <field name="payment_term_id" class="oe_inline"/>
                         </group>
                         <group>
                             <field name="date_invoice"/>
@@ -388,9 +388,6 @@
                                 <field name="reconciled" invisible="1"/>
                                 <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1" widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
                             </group>
-                            <group>
-                                    <field name="payment_term_id" class="oe_inline"/>
-                            </group>
                             <field name="comment" class="oe_inline" placeholder="Additional notes..."/>
                         </page>
                         <page string="Other Info">
@@ -399,7 +396,7 @@
                                     <field name="journal_id" groups="account.group_account_user"
                                     options="{'no_create': True}" attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"/>
+                                    <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id" invisible="1"/>
                                     <field name="date_due"/>
                                 </group>
                                 <group>
@@ -408,6 +405,7 @@
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
                                     <field name="name"/>
                                     <field name="move_id" groups="account.group_account_manager" attrs="{'invisible': [('move_id', '=', False)]}"/>
+                                    <field name="fiscal_position_id" options="{'no_create': True}" />
                                 </group>
                             </group>
                             <field name="tax_line_ids">

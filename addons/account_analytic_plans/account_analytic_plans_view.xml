@@ -187,15 +187,11 @@
         <field name="search_view_id" ref="account_analytic_plan_search"/>
     </record>
 
-    <menuitem
-        parent="account.menu_analytic_accounting"
-        name="Multi Plans"
-        id="menu_account_analytic_multi_plan_action"
-        groups="analytic.group_analytic_accounting"/>
      <menuitem
-         parent="menu_account_analytic_multi_plan_action"
+         parent="account.menu_analytic_accounting"
          id="menu_account_analytic_plan_action"
-         action="account_analytic_plan_form_action"/>
+         action="account_analytic_plan_form_action"
+         groups="analytic.group_analytic_accounting"/>
 
     <record model="ir.ui.view" id="account_analytic_plan_line_form">
         <field name="name">account.analytic.plan.line.form</field>
