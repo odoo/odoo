@@ -107,7 +107,7 @@
                     <group>
                         <group>
                             <field name="location_id" domain="[('usage','not in', ['supplier','production'])]"/>
-                            <field name="filter" string="Inventory of" widget='radio' attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="filter" string="Inventory of" widget='radio' attrs="{'readonly': [('state', '!=', 'draft')]}" on_change="onchange_filter(filter)"/>
                         </group>
                         <group>
                             <field name="date"/>

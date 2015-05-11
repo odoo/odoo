@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,27 +19,17 @@
 #
 ##############################################################################
 
+from openerp.osv import osv, fields
 
-{
-    'name': 'Weighting Scale Hardware Driver',
-    'version': '1.0',
-    'category': 'Hardware Drivers',
-    'sequence': 6,
-    'summary': 'Hardware Driver for Weighting Scales',
-    'website': 'https://www.odoo.com/page/point-of-sale',
-    'description': """
-Weighting Scale Hardware Driver
-================================
+class membership_membership_line(osv.Model):
+    _inherit = 'membership.membership_line'
 
-This module allows the point of sale to connect to a scale using a USB HSM Serial Scale Interface,
-such as the Mettler Toledo Ariva.
-
-""",
-    'author': 'OpenERP SA',
-    'depends': ['hw_proxy'],
-    'external_dependencies': {'python': ['serial']},
-    'test': [
-    ],
-    'installable': True,
-    'auto_install': False,
-}
+    def get_published_companies(self, cr, uid, ids, limit=None, context=None):
+        if not ids:
+            return []
+        limit_clause = '' if limit is None else ' LIMIT %d' % limit
+        cr.execute('SELECT DISTINCT p.id \
+                    FROM res_partner p INNER JOIN membership_membership_line m \
+                    ON  p.id = m.partner \
+                    WHERE website_published AND is_company AND m.id IN %s ' + limit_clause, (tuple(ids),))
+        return [partner_id[0] for partner_id in cr.fetchall()]

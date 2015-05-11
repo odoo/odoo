@@ -170,7 +170,7 @@ openerp.point_of_sale.load_db = function load_db(instance, module){
             for (var i = 0; i < packagings.length; i++) {
                 str += '|' + packagings[i].barcode;
             }
-            str  = product.id + ':' + str.replace(':','') + '\n';
+            str  = product.id + ':' + str.replace(/:/g,'') + '\n';
             return str;
         },
         add_products: function(products){

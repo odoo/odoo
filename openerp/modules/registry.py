@@ -173,6 +173,8 @@ class Registry(Mapping):
 
             :param partial: ``True`` if all models have not been loaded yet.
         """
+        lazy_property.reset_all(self)
+
         # load custom models
         ir_model = self['ir.model']
         cr.execute('select model from ir_model where state=%s', ('manual',))

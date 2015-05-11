@@ -4004,10 +4004,10 @@ class BaseModel(object):
                     recs.invalidate_cache(['parent_left', 'parent_right'])
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
-        result.sort()
 
         done = {}
-        for order, model_name, ids_to_update, fields_to_recompute in result:
+        recs.env.recompute_old.extend(result)
+        for order, model_name, ids_to_update, fields_to_recompute in sorted(recs.env.recompute_old):
             key = (model_name, tuple(fields_to_recompute))
             done.setdefault(key, {})
             # avoid to do several times the same computation
@@ -4018,6 +4018,7 @@ class BaseModel(object):
                     if id not in deleted_related[model_name]:
                         todo.append(id)
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
+        recs.env.clear_recompute_old()
 
         # recompute new-style fields
         if recs.env.recompute and context.get('recompute', True):
@@ -4267,16 +4268,18 @@ class BaseModel(object):
         # check Python constraints
         recs._validate_fields(vals)
 
-        if recs.env.recompute and context.get('recompute', True):
-            result += self._store_get_values(cr, user, [id_new],
+        result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
-            result.sort()
+        recs.env.recompute_old.extend(result)
+
+        if recs.env.recompute and context.get('recompute', True):
             done = []
-            for order, model_name, ids, fields2 in result:
+            for order, model_name, ids, fields2 in sorted(recs.env.recompute_old):
                 if not (model_name, ids, fields2) in done:
                     self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
                     done.append((model_name, ids, fields2))
+            recs.env.clear_recompute_old()
             # recompute new-style fields
             recs.recompute()
 
@@ -5677,7 +5680,11 @@ class BaseModel(object):
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
-            names = [f.name for f in field.computed_fields if f.store]
+            names = [
+                f.name
+                for f in field.computed_fields
+                if f.store and self.env.field_todo(f)
+            ]
             for rec in recs:
                 try:
                     values = rec._convert_to_write({

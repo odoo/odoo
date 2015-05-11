@@ -702,6 +702,9 @@ class calendar_event(osv.Model):
                 val = pytz.UTC.localize(val)
             return val.astimezone(timezone)
 
+        if context is None:
+            context = {}
+
         timezone = pytz.timezone(context.get('tz') or 'UTC')
         startdate = pytz.UTC.localize(datetime.strptime(event.start, DEFAULT_SERVER_DATETIME_FORMAT))  # Add "+hh:mm" timezone
         if not startdate:

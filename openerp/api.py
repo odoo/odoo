@@ -907,6 +907,13 @@ class Environment(object):
         finally:
             self.all.recompute = tmp
 
+    @property
+    def recompute_old(self):
+        return self.all.recompute_old
+
+    def clear_recompute_old(self):
+        del self.all.recompute_old[:]
+
 
 class Environments(object):
     """ A common object for all environments in a request. """
@@ -915,6 +922,7 @@ class Environments(object):
         self.todo = {}                  # recomputations {field: [records]}
         self.mode = False               # flag for draft/onchange
         self.recompute = True
+        self.recompute_old = []        # list of old api compute fields to recompute
 
     def add(self, env):
         """ Add the environment `env`. """

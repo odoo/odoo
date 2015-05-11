@@ -451,7 +451,7 @@ def content_disposition(filename):
     if browser == 'msie' and version < 9:
         return "attachment; filename=%s" % escaped
     elif browser == 'safari':
-        return "attachment; filename=%s" % filename
+        return "attachment; filename=\"%s\"" % filename
     else:
         return "attachment; filename*=UTF-8''%s" % escaped
 
