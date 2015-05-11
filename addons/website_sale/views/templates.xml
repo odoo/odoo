@@ -69,7 +69,7 @@
 
 <!-- Product item used by /shop and /shop/cart -->
 
-<template id="products_item" name="Product item">
+<template id="products_item" name="Products item">
   <form action="/shop/cart/update" method="post">
   <div itemscope="itemscope" itemtype="http://schema.org/Product">
   <div class="ribbon-wrapper">
@@ -80,6 +80,15 @@
           <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image" #{None if product_image_big else ", \"resize\": \"300x300\""}}'/>
       </a>
   </div>
+  <t t-if="show_publish">
+    <div id="website_published_button" class="" groups="base.group_sale_manager">
+        <t t-call="website.publish_management">
+          <t t-set="object" t-value="product"/>
+          <t t-set="publish_edit" t-value="True"/>
+          <t t-set="action" t-value="'product.product_template_action'"/>
+        </t>
+    </div>
+  </t>
   <section>
       <h5><strong><a itemprop="name" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))" t-field="product.name"/></strong></h5>
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
@@ -295,7 +304,9 @@
   <xpath expr="//div[@id='products_grid']//table" position="replace">
     <t t-foreach="products" t-as="product">
       <div class="oe_product oe_list oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
-        <t t-call="website_sale.products_item"/>
+        <t t-call="website_sale.products_item">
+           <t t-set="show_publish" t-value="True"/>
+        </t>
       </div>
     </t>
   </xpath>
