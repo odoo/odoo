@@ -355,6 +355,14 @@ class sale_order_line(osv.osv):
         res.update({'warning': warning})
         return res
 
+    def button_cancel(self, cr, uid, ids, context=None):
+        lines = self.browse(cr, uid, ids, context=context)
+        for procurement in lines.mapped('procurement_ids'):
+            for move in procurement.move_ids:
+                if move.state == 'done' and not move.scrapped:
+                    raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sale order line which is linked to a stock move already done.'))
+        return super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)
+
 class stock_move(osv.osv):
     _inherit = 'stock.move'
 
