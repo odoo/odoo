@@ -842,13 +842,13 @@ class account_bank_statement_line(osv.osv):
                     if mv_line_dict.get('counterpart_move_line_id'):
                         #post an account line that use the same currency rate than the counterpart (to balance the account) and post the difference in another line
                         ctx['date'] = mv_line.date
-                    if mv_line.currency_id.id == mv_line_dict['currency_id'] \
-                            and float_is_zero(abs(mv_line.amount_currency) - abs(mv_line_dict['amount_currency']), precision_rounding=mv_line.currency_id.rounding):
-                        debit_at_old_rate = mv_line.credit
-                        credit_at_old_rate = mv_line.debit
-                    else:
-                        debit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
-                        credit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
+                        if mv_line.currency_id.id == mv_line_dict['currency_id'] \
+                                and float_is_zero(abs(mv_line.amount_currency) - abs(mv_line_dict['amount_currency']), precision_rounding=mv_line.currency_id.rounding):
+                            debit_at_old_rate = mv_line.credit
+                            credit_at_old_rate = mv_line.debit
+                        else:
+                            debit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
+                            credit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
                         mv_line_dict['credit'] = credit_at_old_rate
                         mv_line_dict['debit'] = debit_at_old_rate
                         if debit_at_old_rate - debit_at_current_rate:
