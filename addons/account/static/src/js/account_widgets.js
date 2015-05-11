@@ -233,7 +233,7 @@ openerp.account = function (instance) {
     
                 // Display the reconciliations
                 return self.model_bank_statement_line
-                    .call("get_data_for_reconciliations", [reconciliations_to_show])
+                    .call("get_data_for_reconciliations", [reconciliations_to_show], {context:self.session.user_context})
                     .then(function (data) {
                         var child_promises = [];
                         while ((datum = data.shift()) !== undefined)
@@ -1594,7 +1594,7 @@ openerp.account = function (instance) {
             limit += 1; // Let's fetch 1 more item than requested
             if (limit > 0) {
                 return self.model_bank_statement_line
-                    .call("get_move_lines_for_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, offset, limit])
+                    .call("get_move_lines_for_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, offset, limit], {context:self.session.user_context})
                     .then(function (lines) {
                         _.each(lines, function(line) { self.decorateMoveLine(line, self.st_line.currency_id) }, self);
                         // If we could fetch 1 more item than what we'll display, that means there are move lines left to be displayed (so we enable the pager)
