@@ -4,7 +4,7 @@
 
     <template id="cart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
         <xpath expr="//div[@id='order_total_taxes']" position="after">
-            <div class="row" id="order_delivery">
+            <div class="row" id="order_delivery" t-if="website_sale_order and website_sale_order.has_delivery">
                   <span class="col-xs-6 text-right text-muted" title="Delivery will be updated after choosing a new delivery method"> Delivery:</span>
                   <span class="col-xs-6 text-muted">
                       <span t-field="website_sale_order.amount_delivery" style="white-space: nowrap;" t-field-options='{
