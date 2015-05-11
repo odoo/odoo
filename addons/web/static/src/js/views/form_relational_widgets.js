@@ -1062,7 +1062,7 @@ var One2ManyListView = ListView.extend({
     },
     _on_blur_one2many: function (force) {
         var self = this;
-        var def;
+        var def = $.when();
 
         if (this.__ignore_blur && !force) {
             this.__ignore_blur = false;
@@ -1074,7 +1074,7 @@ var One2ManyListView = ListView.extend({
 
         if (this.editor.form.is_dirty()) {
             def = this.ensure_saved();
-        } else {
+        } else if (this.editor.record) {
             def = this.cancel_edition();
         }
 
