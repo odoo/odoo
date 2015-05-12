@@ -242,6 +242,11 @@ var QuickCreate = Widget.extend({
 
 var KanbanRecord = Widget.extend({
     template: 'KanbanView.record',
+
+    events: {
+        'click .o_kanban_manage_toogle_button': 'toogle_manage_pane',
+    },
+
     init: function (parent, record) {
         this._super(parent);
         this.group = parent;
@@ -446,6 +451,12 @@ var KanbanRecord = Widget.extend({
             });
         }
     },
+    toogle_manage_pane: function(){
+        this.$('.o_kanban_card_content').toggleClass('o_visible o_invisible');
+        this.$('.o_kanban_card_manage_pane').toggleClass('o_visible o_invisible');
+        this.$('.o_kanban_manage_button_section').toggleClass(this.kanban_color(this.values['color'].value));
+    },
+
     do_action_delete: function($action) {
         var self = this;
         function do_it() {
