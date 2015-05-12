@@ -27,6 +27,19 @@ class crm_team(osv.Model):
             res[id] = json.dumps(values)
         return res
 
+    def _get_sales_to_invoice_amount(self, cr, uid, ids, field_name, arg, context=None):
+        obj = self.pool['sale.order']
+
+        res = dict.fromkeys(ids, 0)
+        domain = [
+            ('team_id', 'in', ids),
+            ('state', '=', 'manual'),
+        ]
+        amounts = obj.read_group(cr, uid, domain, ['amount_total', 'team_id'], ['team_id'], context=context)
+        for rec in amounts:
+            res[rec['team_id'][0]] = rec['amount_total']
+        return res
+
     _columns = {
         'use_quotations': fields.boolean('Quotations', help="Check this box to manage quotations in this sales team."),
         'invoiced_forecast': fields.integer(string='Invoice Forecast',
@@ -39,6 +52,9 @@ class crm_team(osv.Model):
         'monthly_invoiced': fields.function(_get_invoices_data,
             type='char', readonly=True,
             string='Rate of sent invoices per duration'),
+        'sales_to_invoice_amount': fields.function(_get_sales_to_invoice_amount,
+            type='integer', readonly=True,
+            string='Amount of sales to invoice'),
     }
 
     _defaults = {
