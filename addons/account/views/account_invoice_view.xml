@@ -145,6 +145,42 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="invoice_kanban">
+            <field name="name">account.invoice.kanban</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="number"/>
+                    <field name="partner_id"/>
+                    <field name="amount_total_signed"/>
+                    <field name="date_invoice"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><field name="partner_id"/></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <strong class="pull-right text-right"><field name="amount_total_signed"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 text-muted">
+                                        <field name="number"/> <field name="date_invoice"/>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['proforma', 'proforma2', 'open'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['paid'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><field name="state"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="invoice_supplier_tree" model="ir.ui.view">
             <field name="name">account.invoice.supplier.tree</field>
             <field name="model">account.invoice</field>
@@ -526,7 +562,7 @@
             <field name="name">Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,pivot,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','in',('out_invoice', 'out_refund'))]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
@@ -567,7 +603,7 @@
             <field name="name">Supplier Bills</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,pivot,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','in',('in_invoice', 'in_refund'))]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
