@@ -308,6 +308,8 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
+        if not vals.get('account_id',False):
+            raise UserError(_('Configuration error!\nCould not find any account to create the invoice, are you sure you have a chart of account installed?'))
         return super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
 
     @api.model
