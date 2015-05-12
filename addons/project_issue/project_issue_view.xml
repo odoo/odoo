@@ -35,8 +35,6 @@
                             <label for="project_id"/>
                             <div name="project">
                                 <field name="project_id" on_change="on_change_project(project_id)" class="oe_inline" context="{'default_use_issues':1}"/>
-                                <field name="can_escalate" invisible="1"/>
-                                <button name="case_escalate" string="Escalate" type="object" class="btn-default" attrs="{'invisible':[('can_escalate','=',False)]}" groups="base.group_user"/>
                             </div>
                         </group>
                         <group>
@@ -293,9 +291,6 @@
                 <xpath expr='//field[@name="use_tasks"]' position="attributes">
                     <attribute name="attrs">{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}</attribute>
                 </xpath>
-                <field name="sequence" position="before">
-                    <field name="project_escalation_id"/>
-                </field>
             </field>
        </record>
 

@@ -123,14 +123,6 @@ class project_issue(osv.Model):
 
         return res
 
-    def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for issue in self.browse(cr, uid, ids, context=context):
-            esc_proj = issue.project_id.project_escalation_id
-            if esc_proj and esc_proj.analytic_account_id.type == 'contract':
-                res[issue.id] = True
-        return res
-
     def on_change_project(self, cr, uid, ids, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
@@ -196,7 +188,6 @@ class project_issue(osv.Model):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
     }
 
     _defaults = {
@@ -311,22 +302,6 @@ class project_issue(osv.Model):
             return stage_ids[0]
         return False
 
-    def case_escalate(self, cr, uid, ids, context=None):        # FIXME rename this method to issue_escalate
-        for issue in self.browse(cr, uid, ids, context=context):
-            data = {}
-            esc_proj = issue.project_id.project_escalation_id
-            if not esc_proj:
-                raise UserError(_('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
-
-            data['project_id'] = esc_proj.id
-            if esc_proj.user_id:
-                data['user_id'] = esc_proj.user_id.id
-            issue.write(data)
-
-            if issue.task_id:
-                issue.task_id.write({'project_id': esc_proj.id, 'user_id': False})
-        return True
-
     # -------------------------------------------------------
     # Mail gateway
     # -------------------------------------------------------
@@ -411,24 +386,10 @@ class project(osv.Model):
         }
 
     _columns = {
-        'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
-            help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
-            states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
                                     domain=[('stage_id.fold', '=', False)]),
     }
-
-    def _check_escalation(self, cr, uid, ids, context=None):
-        project_obj = self.browse(cr, uid, ids[0], context=context)
-        if project_obj.project_escalation_id:
-            if project_obj.project_escalation_id.id == project_obj.id:
-                return False
-        return True
-
-    _constraints = [
-        (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
-    ]
 
 
 class account_analytic_account(osv.Model):
