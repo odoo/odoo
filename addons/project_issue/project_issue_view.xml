@@ -296,32 +296,6 @@
             </field>
        </record>
 
-        <record id="view_project_kanban_inherited" model="ir.ui.view">
-            <field name="name">project.project.kanban.inherited</field>
-            <field name="model">project.project</field>
-            <field name="inherit_id" ref="project.view_project_kanban"/>
-            <field name="arch" type="xml">
-                <field name="use_tasks" position="after">
-                    <field name="use_issues"/>
-                    <field name="issue_ids" invisible="1"/>
-                </field>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/div" position="after">
-                    <div t-if="record.use_issues.raw_value" class="col-md-6">
-                        <a name="%(act_project_project_2_project_issue_all)d" type="action">
-                            <t t-raw="record.issue_ids.raw_value.length"/>
-                            <field name="label_issues"/>
-                        </a>
-                    </div>
-                </xpath>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/div[contains(@class, 'col-md-12')]" position="replace">
-                     <div t-if="(record.use_tasks.raw_value or record.use_issues.raw_value) and !(record.use_tasks.raw_value and record.task_count.raw_value gt 0) and !(record.use_issues.raw_value and record.issue_ids.raw_value.length gt 0)" class="col-md-12">
-                         <img src="/project/static/src/img/top_left_arrow.png" style="margin-top: -8px; width: 22px;" />
-                         <span>No activity yet, click to enter in the project.</span>
-                     </div>
-                </xpath>
-            </field>
-        </record>
-
         <record id="analytic_account_inherited_issue_form" model="ir.ui.view">
             <field name="name">account.analytic.account.issue.form.inherit</field>
             <field name="model">account.analytic.account</field>

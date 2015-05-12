@@ -1,0 +1,73 @@
+<odoo>
+    <record model="ir.ui.view" id="view_project_kanban">
+        <field name="name">project.project.kanban</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban">
+                <field name="name"/>
+                <field name="members"/>
+                <field name="use_tasks"/>
+                <field name="user_id"/>
+                <field name="date"/>
+                <field name="color"/>
+                <field name="task_count"/>
+                <field name="task_ids"/>
+                <field name="alias_id"/>
+                <field name="alias_name"/>
+                <field name="alias_domain"/>
+                <field name="doc_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="o_kanban_flexbox #{kanban_color(record.color.raw_value)}">
+                            <div class="o_project_kanban_main">
+                                <div class="o_kanban_card_content o_visible">
+                                    <div class="o_kanban_primary_left">
+                                        <div class="o_primary">
+                                            <span><t t-esc="record.name.value"/></span>
+                                        </div>
+                                        <div t-if="record.alias_id.raw_value">
+                                            <span><i class="fa fa-envelope-o"></i> <t t-esc="record.alias_id.value"/></span>
+                                        </div>
+                                    </div>
+                                </div><div class="o_kanban_card_manage_pane o_invisible">
+                                    <div class="o_kanban_card_manage_section o_kanban_manage_view">
+                                        <div t-if="widget.view.is_action_enabled('edit')" groups="base.group_user">
+                                            <a type="edit">Edit Project</a>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_card_manage_section o_kanban_manage_reports">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>Reports</span>
+                                        </div>
+                                        <div>
+                                            <a name="%(dblc_proj)d" type="action">Tasks</a>
+                                        </div>
+                                        <div>
+                                            <a name="%(action_view_task_history_cumulative)d" type="action">Cumulative Flow</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_project_kanban_manage">
+                                    <div class="text-left">
+                                        <a class="o_kanban_manage_toogle_button">More <i class="fa fa-caret-down"/></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="o_project_kanban_boxes">
+                                <a t-if="record.use_tasks.raw_value" class="o_project_kanban_box" name="%(act_project_project_2_project_task_all)d" type="action">
+                                    <span class="o_value"><field name="task_count"/></span>
+                                    <span class="o_label"><field name="label_tasks"/></span>
+                                </a>
+                                <a t-if="record.doc_count.raw_value" class="o_project_kanban_box" name="attachment_tree_view" type="object">
+                                    <span class="o_value"><field name="doc_count"/></span>
+                                    <span class="o_label">Documents</span>
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

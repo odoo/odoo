@@ -163,6 +163,16 @@ class project_project(osv.osv):
         result['help'] = help
         return result
 
+    def open_contract(self, cr, uid, ids, context=None):
+        """ open Contract view """
+
+        res = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'project_timesheet', 'action_project_analytic_account', context=context)
+        contract_ids = self.browse(cr, uid, ids, context=context)
+        account_ids = [x.analytic_account_id.id for x in contract_ids]
+        res['res_id'] = account_ids and account_ids[0] or None
+        return res
+
+
 class task(osv.osv):
     _inherit = "project.task"
 
