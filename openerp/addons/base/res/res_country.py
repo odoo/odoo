@@ -43,7 +43,9 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
             \n%(country_code)s: the code of the country"""),
         'currency_id': fields.many2one('res.currency', 'Currency'),
         'image': fields.binary("Image"),
+        'phone_prefix': fields.integer('Phone Prefix'),
         'country_group_ids': fields.many2many('res.country.group', 'res_country_res_country_group_rel', 'res_country_id', 'res_country_group_id', string='Country Groups'),
+        'state_ids': fields.one2many('res.country.state', 'country_id', string='States'),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
