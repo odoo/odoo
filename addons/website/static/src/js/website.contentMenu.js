@@ -241,7 +241,7 @@ var EditMenuDialog = editor.Dialog.extend({
         var menu_id = $(ev.currentTarget).closest('[data-menu-id]').data('menu-id');
         var menu = self.flat[menu_id];
         if (menu) {
-            var dialog = new website.contentMenu.MenuEntryDialog(undefined, menu);
+            var dialog = new MenuEntryDialog(undefined, menu);
             dialog.on('save', this, function (link) {
                 var id = link.id;
                 var menu_obj = self.flat[id];
