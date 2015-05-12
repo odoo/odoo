@@ -484,56 +484,6 @@
             </field>
         </record>
 
-        <record id="hr_department_view_kanban" model="ir.ui.view" >
-            <field name="name">hr.department.kanban</field>
-            <field name="model">hr.department</field>
-            <field name="arch" type="xml">
-                <kanban class="oe_background_grey">
-                    <field name="name"/>
-                    <field name="manager_id"/>
-                    <field name="color"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_department">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                    <i class="fa fa-bars fa-lg"/>
-                                    <ul class="oe_dropdown_menu">
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Department Settings</a></li>
-                                        <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete</a></li>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                    </ul>
-                                </div>
-                                <div class="oe_kanban_content container">
-                                    <div class="row">
-                                        <a type="action" name="%(act_employee_from_department)d"/>
-                                        <t t-if="record.manager_id.raw_value">
-                                            <img t-att-src="kanban_image('hr.employee', 'image_small', record.manager_id.raw_value[0])" t-att-title="record.manager_id.value" class="oe_avatar oe_kanban_avatar_smallbox pull-right"/>
-                                        </t>
-                                        <t t-if="record.manager_id.raw_value === false">
-                                            <img t-att-src='_s + "/base/static/src/img/avatar.png"' title="No manager" class="oe_avatar oe_kanban_avatar_smallbox pull-right"/>
-                                        </t>
-                                        <h3 class="text-center oe_kanban_ellipsis"><field name="name"/></h3>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 col-xs-6 oe_form_invisible" name="to_approve">
-                                            <strong>To Approve</strong>
-                                        </div>
-                                        <div class="col-md-6 col-xs-6 oe_form_invisible" name="to_do">
-                                            <strong>To Do</strong>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div name="gauge_to_approve" class="col-md-6 col-xs-6 oe_form_invisible"/>
-                                        <div name="gauge_to_do" class="col-md-6 col-xs-6 oe_form_invisible"/>
-                                    </div>
-                                </div>
-                                <div class="oe_clear"/>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
         <record id="view_department_filter" model="ir.ui.view">
             <field name="name">Departments</field>
             <field name="model">hr.department</field>

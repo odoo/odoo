@@ -54,6 +54,7 @@ Key Features
         'survey_data_appraisal.xml',
         'hr_evaluation_data.xml',
         'hr_evaluation_installer.xml',
+        'hr_dashboard.xml',
     ],
     "demo": ["hr_evaluation_demo.xml"],
     # 'test': [

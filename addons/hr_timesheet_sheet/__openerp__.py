@@ -56,6 +56,7 @@ The validation can be configured in the company:
         'hr_timesheet_sheet_data.xml',
         'res_config_view.xml',
         'views/hr_timesheet_sheet.xml',
+        'hr_dashboard.xml',
     ],
     'demo': [
         'hr_timesheet_sheet_demo.xml',

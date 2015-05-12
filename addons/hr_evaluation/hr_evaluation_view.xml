@@ -436,35 +436,5 @@
             <field name="domain">[('employee_id.department_id', '=', active_id)]</field>
         </record>
 
-        <!--Hr Department Inherit Kanban view-->
-        <record id="hr_department_view_kanban" model="ir.ui.view">
-            <field name="name">hr.department.kanban.inherit</field>
-            <field name="model">hr.department</field>
-            <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//templates" position="before">
-                        <field name="appraisal_to_start_count"/>
-                        <field name="interview_request_count"/>
-                    </xpath>
-                    <xpath expr="//div[@name='to_do']" position="attributes">
-                        <attribute name="class">col-md-6 col-xs-6</attribute>
-                    </xpath>
-                    <xpath expr="//div[@name='to_do']" position="inside">
-                        <div>
-                            <a name="%(hr_evaluation_interview_action_from_department)d" type="action">
-                                <t t-esc="record.interview_request_count.raw_value or 0"/> Interview Requests
-                            </a>
-                        </div>
-                        <div>
-                            <a name="%(hr_appraisal_action_from_department)d" type="action">
-                                <t t-esc="record.appraisal_to_start_count.raw_value or 0"/> Appraisal to Start
-                            </a>
-                        </div>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
     </data>
 </openerp>
