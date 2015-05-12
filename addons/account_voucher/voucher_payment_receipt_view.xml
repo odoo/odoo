@@ -433,6 +433,7 @@
                         </group>
                         <group>
                             <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
+                            <field name="period_id"/>
                             <field name="reference" string="Payment Ref" placeholder="e.g. 003/10"/>
                             <field name="name" colspan="2" placeholder="e.g. Invoice SAJ/0042"/>
                             <field name="company_id" widget="selection" on_change="onchange_company(partner_id, journal_id, currency_id, company_id)"  groups="base.group_multi_company"/>
@@ -509,7 +510,6 @@
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
-                                <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
                             <field name="move_ids" readonly="1">

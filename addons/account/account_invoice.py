@@ -1414,10 +1414,10 @@ class account_invoice_line(models.Model):
             for tax in taxes:
                 if inv.type in ('out_invoice', 'in_invoice'):
                     tax_code_id = tax['base_code_id']
-                    tax_amount = line.price_subtotal * tax['base_sign']
+                    tax_amount = tax['price_unit'] * line.quantity * tax['base_sign']
                 else:
                     tax_code_id = tax['ref_base_code_id']
-                    tax_amount = line.price_subtotal * tax['ref_base_sign']
+                    tax_amount = tax['price_unit'] * line.quantity * tax['ref_base_sign']
 
                 if tax_code_found:
                     if not tax_code_id:
