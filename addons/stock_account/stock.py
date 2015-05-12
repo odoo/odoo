@@ -152,11 +152,7 @@ class stock_move(osv.osv):
             uos_id = move.product_uos.id
             quantity = move.product_uos_qty
 
-        taxes_ids = []
-        if move.origin_returned_move_id.purchase_line_id.taxes_id:
-            taxes_ids = [tax.id for tax in move.origin_returned_move_id.purchase_line_id.taxes_id]
-        elif move.procurement_id.sale_line_id.tax_id:
-            taxes_ids = [tax.id for tax in move.procurement_id.sale_line_id.tax_id]
+        taxes_ids = self._get_taxes(cr, uid, move, context=context)
 
         return {
             'name': move.name,

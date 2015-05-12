@@ -2555,6 +2555,8 @@ class stock_move(osv.osv):
             code = 'incoming'
         return code
 
+    def _get_taxes(self, cr, uid, move, context=None):
+        return []
 
 class stock_inventory(osv.osv):
     _name = "stock.inventory"

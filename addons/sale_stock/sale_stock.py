@@ -413,6 +413,10 @@ class stock_move(osv.osv):
                 extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.procurement_id.sale_line_id.tax_id])]
         return (is_extra_move, extra_move_tax)
 
+    def _get_taxes(self, cr, uid, move, context=None):
+        if move.procurement_id.sale_line_id.tax_id:
+            return [tax.id for tax in move.procurement_id.sale_line_id.tax_id]
+        return super(stock_move, self)._get_taxes(cr, uid, move, context=context)
 
 class stock_location_route(osv.osv):
     _inherit = "stock.location.route"
