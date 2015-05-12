@@ -92,6 +92,7 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_stockinventory.xml',
         'views/stock.xml',
         'report/report_stock_forecast.xml',
+        'stock_dashboard.xml',
     ],
     'test': [
         'test/inventory.yml',

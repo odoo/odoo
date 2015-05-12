@@ -37,7 +37,7 @@ European Union.""",
         'report_intrastat_view.xml',
         'intrastat_report.xml',
         'report_intrastat_data.xml',
-        'views/report_intrastatinvoice.xml'
+        'views/report_intrastatinvoice.xml',
     ],
     'demo': [],
     'test': ['../account/test/account_minimal_test.xml', 'test/report_intrastat_report.yml'],

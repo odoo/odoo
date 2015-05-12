@@ -626,6 +626,42 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="stock_picking_kanban">
+            <field name="name">stock.picking.kanban</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="location_dest_id"/>
+                    <field name="state"/>
+                    <field name="date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <strong class="pull-right text-right"><span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['waiting', 'confirmed', 'partially_available'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><field name="state"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row text-muted">
+                                    <div class="col-xs-6">
+                                        <span><field name="partner_id"/></span>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right text-right"><t t-esc="record.date.value and record.date.value.split(' ')[0] or False"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="vpicktree" model="ir.ui.view">
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
@@ -779,7 +815,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{
                     'contact_display': 'partner_address',
@@ -918,6 +954,23 @@
                 manual stock movements.
               </p>
             </field>
+        </record>
+
+        
+        <record id="action_picking_form" model="ir.actions.act_window">
+            <field name="name">New Transfer</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+            }
+            </field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
 
         <record id="view_move_pivot" model="ir.ui.view">
@@ -1365,72 +1418,6 @@
                         </group>
                     </sheet>
                 </form>
-            </field>
-        </record>
-
-        <record id="stock_picking_type_kanban" model="ir.ui.view">
-            <field name="name">stock.picking.type.kanban</field>
-            <field name="model">stock.picking.type</field>
-            <field name="arch" type="xml">
-                <kanban class="oe_background_grey" create="0">
-                    <field name="complete_name"/>
-                    <field name="color"/>
-                    <field name="count_picking_ready"/>
-                    <field name="count_picking_draft"/>
-                    <field name="count_picking_waiting"/>
-                    <field name="count_picking_late"/>
-                    <field name="count_picking_backorders"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_stock_picking_type">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="stock.group_stock_manager">
-                                    <i class="fa fa-bars fa-lg"/>
-                                    <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Warehouse</a></li></t>
-                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><ul class="oe_kanban_colorpicker" data-field="color"/></li></t>
-                                    </ul>
-                                </div>
-                                <div class="oe_stock_kanban_content">
-                                    <h4 class="text-center"><strong><field name="complete_name"/></strong></h4>
-                                    <div class="oe_right">
-                                        <a name="open_barcode_interface" type="object">
-                                            <img src="/stock/static/src/img/scan.png"
-                                                alt="Click to launch the barcode interface"
-                                                class="oe_stock_scan_image" title="Click to launch the barcode interface"/>
-                                        </a>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <a name="%(action_picking_tree_ready)d" type="action" class="col-md-9">
-                                                <field name="count_picking_ready"/> Ready
-                                            </a>
-                                            <a name="%(action_picking_tree_done)d" type="action" class="col-md-3">
-                                                <field name="last_done_picking" widget="sparkline_bar" options="{'type': 'tristate', 'colorMap': {'0': 'orange', '-1': 'red', '1': 'green'}}">Last 10 Done Operations</field>
-                                            </a>
-                                            <t t-if="record.count_picking_waiting.raw_value &gt; 0">
-                                                <a name="%(action_picking_tree_waiting)d" type="action" class="col-md-12">
-                                                    <field name="count_picking_waiting"/> Waiting
-                                                </a>
-                                            </t>
-                                            <a class="col-md-9 oe_kanban_stock_picking_type_list" id="transfers" name="%(action_picking_tree)d" type="action">Transfers</a>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                         <field name="rate_picking_late" widget="gauge" style="margin-left:15px; width:150px; height: 110px;" options="{'levelcolors': ['#a9d70b', '#f9c802', '#ff0000'], 'action_jump': '%(action_picking_tree_late)d'}">Late (%%)</field>
-                                         <field name="rate_picking_backorders" widget="gauge" style="margin-left:15px; width:150px; height: 110px;">Backorders (%%)</field>
-                                         <a name="%(action_picking_tree_late)d" type="action" class="text-center col-md-6">
-                                             <field name="count_picking_late"/> Late
-                                         </a>
-                                         <a name="%(action_picking_tree_backorder)d" type="action" class="text-center col-md-6">
-                                             <field name="count_picking_backorders"/> Backorders
-                                         </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
             </field>
         </record>
 
