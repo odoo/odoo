@@ -1,0 +1,60 @@
+<odoo>
+    <!-- Case Teams Salesteams dashboard view -->
+   <record id="crm_team_salesteams_view_kanban" model="ir.ui.view" >
+        <field name="name">crm.team.kanban</field>
+        <field name="model">crm.team</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_salesteam_kanban">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="member_ids"/>
+                <field name="note"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary"><field name="name"/></div>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toogle_button">More <i class="fa fa-caret-down"/></a>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content o_visible">
+                                <div class="row">
+                                    <div class="col-xs-6 o_kanban_primary_left">
+                                    </div>
+                                    <div class="col-xs-6 o_kanban_primary_right">
+                                    </div>
+                                </div>
+                            </div><div class="container o_kanban_card_manage_pane o_invisible">
+                                <div class="row">
+                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_view">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>View</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_new">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>New</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>Reports</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div t-if="widget.view.is_action_enabled('edit')" class="o_kanban_card_manage_settings row">
+                                    <a type="edit">Settings</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>
