@@ -181,9 +181,12 @@ class XMLTranslator(object):
         self.callback = callback        # callback function to translate terms
         self._done = []                 # translated strings
         self._todo = []                 # todo strings that come after _done
+        self.needs_trans = False        # whether todo needs translation
 
-    def todo(self, text):
+    def todo(self, text, needs_trans=True):
         self._todo.append(text)
+        if needs_trans and text.strip():
+            self.needs_trans = True
 
     def all_todo(self):
         return not self._done
@@ -194,8 +197,10 @@ class XMLTranslator(object):
     def flush(self):
         if self._todo:
             todo = "".join(self._todo)
-            self._done.append(self.process_text(todo))
+            done = self.process_text(todo) if self.needs_trans else todo
+            self._done.append(done)
             del self._todo[:]
+            self.needs_trans = False
 
     def done(self, text):
         self.flush()
@@ -231,7 +236,8 @@ class XMLTranslator(object):
                 node.tag in TRANSLATED_ELEMENTS and
                 not any(attr.startswith("t-") for attr in node.attrib)):
             # serialize the node element as todo
-            self.todo(serialize(node.tag, node.attrib, child_trans.get_todo()))
+            self.todo(serialize(node.tag, node.attrib, child_trans.get_todo()),
+                      child_trans.needs_trans)
         else:
             # complete translations and serialize result as done
             for attr in TRANSLATED_ATTRS:

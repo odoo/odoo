@@ -67,6 +67,23 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertItemsEqual(terms,
             ['Form stuff', 'Blah <i>blah</i> blah', 'Put <em>some <b>more text</b></em> here'])
 
+    def test_translate_xml_inline3(self):
+        """ Test xml_translate() with formatting elements without actual text. """
+        terms = []
+        source = """<form string="Form stuff">
+                        <div>
+                            <span class="before"/>
+                            <h1>Blah blah blah</h1>
+                            <span class="after">
+                                <i class="hack"/>
+                            </span>
+                        </div>
+                    </form>"""
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms,
+            ['Form stuff', 'Blah blah blah'])
+
     def test_translate_xml_t(self):
         """ Test xml_translate() with t-* attributes. """
         terms = []
