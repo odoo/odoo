@@ -36,6 +36,41 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="view_voucher_kanban">
+            <field name="name">account.voucher.kanban</field>
+            <field name="model">account.voucher</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="number"/>
+                    <field name="partner_id"/>
+                    <field name="amount"/>
+                    <field name="date"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><field name="partner_id"/></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <strong class="pull-right text-right"><field name="amount"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 text-muted">
+                                        <field name="number"/> <field name="date"/>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['proforma'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['posted'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><field name="state"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record model="ir.ui.view" id="view_voucher_line_form">
             <field name="name">account.voucher.line.form</field>
             <field name="model">account.voucher.line</field>

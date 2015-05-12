@@ -121,6 +121,7 @@
             <field name="name">Sales Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban</field>
             <field name="domain">[('journal_id.type','=','sale'), ('voucher_type','=','sale')]</field>
             <field name="context">{'default_voucher_type': 'sale', 'voucher_type': 'sale'}</field>
             <field name="view_id" eval="False"/>
@@ -237,6 +238,7 @@
             <field name="name">Purchase Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban</field>
             <field name="domain">[('journal_id.type','=','purchase'), ('voucher_type','=','purchase')]</field>
             <field name="context">{'default_voucher_type': 'purchase', 'voucher_type': 'purchase'}</field>
             <field name="view_id" eval="False"/>
