@@ -103,12 +103,3 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(task.name, 'Frogs', 'project_task: name should be the email subject')
         self.assertEqual(task.project_id.id, self.project_pigs.id, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, 1, 'project_task: should have a stage with sequence=1')
-        # Open the delegation wizard
-        self.env['project.task.delegate'].with_context({
-            'active_id': task.id}).sudo(self.user_projectuser).create({
-                'user_id': self.user_projectuser.id,
-                'planned_hours': 12.0,
-                'planned_hours_me': 2.0,
-            }).with_context({'active_id': task.id}).delegate()
-        # Check delegation details
-        self.assertEqual(task.planned_hours, 2, 'project_task_delegate: planned hours is not correct after delegation')

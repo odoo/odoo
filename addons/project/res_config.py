@@ -40,9 +40,6 @@ class project_configuration(osv.osv_memory):
         'group_time_work_estimation_tasks': fields.boolean("Manage time estimation on tasks",
             implied_group='project.group_time_work_estimation_tasks',
             help="Allows you to compute Time Estimation on tasks."),
-        'group_manage_delegation_task': fields.boolean("Allow task delegation",
-            implied_group='project.group_delegate_task',
-            help="Allows you to delegate tasks to other users."),
         'generate_project_alias': fields.boolean("Automatically generate an email alias at the project creation",
             help="Odoo will generate an email alias at the project creation from project name."),
     }
