@@ -225,7 +225,7 @@ class website_sale(http.Controller):
         products = product_obj.browse(cr, uid, product_ids, context=context)
 
         attributes_obj = request.registry['product.attribute']
-        attributes_ids = attributes_obj.search(cr, uid, [], context=context)
+        attributes_ids = attributes_obj.search(cr, uid, [('attribute_line_ids.product_tmpl_id', 'in', product_ids)], context=context)
         attributes = attributes_obj.browse(cr, uid, attributes_ids, context=context)
 
         from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)

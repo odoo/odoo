@@ -324,6 +324,7 @@ class product_attribute(osv.osv):
         'name': fields.char('Name', translate=True, required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values', copy=True),
         'sequence': fields.integer('Sequence', help="Determine the display order"),
+        'attribute_line_ids': fields.one2many('product.attribute.line', 'attribute_id', 'Lines'),
     }
 
 class product_attribute_value(osv.osv):
