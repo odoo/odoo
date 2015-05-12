@@ -27,13 +27,16 @@
                         <group>
                             <field name="name"/>
                             <field name="currency_id"/>
-                        </group>
-                        <group>
                             <field name="code"/>
                         </group>
+                        <group>
+                            <field name="address_format" groups="base.group_no_one" placeholder="Address format..."/>                            
+                            <field name="phone_prefix"/>
+                        </group>
                     </group>
-                    <label for="address_format"/>
-                    <field name="address_format" groups="base.group_no_one" placeholder="Address format..."/>
+                    <label for="state_ids"/>
+                    <field name="state_ids"/>
+                    
                 </form>
             </field>
         </record>
