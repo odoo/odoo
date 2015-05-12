@@ -7,6 +7,13 @@ var pyeval = require('web.pyeval');
 var Widget = require('web.Widget');
 
 var View = Widget.extend({
+    events: {
+        'click a[type=action]': function (ev) {
+            ev.preventDefault();
+            var action_data = $(ev.target).attr('name');
+            this.do_action(action_data);
+        }
+    },
     // name displayed in view switchers
     display_name: '',
     /**
