@@ -471,5 +471,6 @@ class stock_picking(osv.osv):
                 'user_id': sale.user_id.id,
                 'section_id': sale.section_id.id,
                 'name': sale.client_order_ref or '',
+                'comment': sale.note,
                 })
         return inv_vals
