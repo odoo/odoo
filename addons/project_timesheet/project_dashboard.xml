@@ -1,0 +1,29 @@
+<odoo>
+    <record id="action_project_analytic_account" model="ir.actions.act_window">
+        <field name="name">Analytic Account</field>
+        <field name="res_model">account.analytic.account</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!--Project Inherit Kanban view-->
+    <record id="view_project_kanban_inherit" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//div[contains(@class, 'o_kanban_manage_view')]" position="inside">
+                    <div>
+                        <a name="open_contract" type="object">Edit Contract</a>
+                    </div>
+                    <div>
+                        <a name="open_timesheets" type="object">Timesheets</a>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

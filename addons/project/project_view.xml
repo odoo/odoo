@@ -228,85 +228,12 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_project_kanban">
-            <field name="name">project.project.kanban</field>
-            <field name="model">project.project</field>
-            <field name="arch" type="xml">
-                <kanban class="oe_background_grey">
-                    <field name="name"/>
-                    <field name="members"/>
-                    <field name="use_tasks"/>
-                    <field name="user_id"/>
-                    <field name="date"/>
-                    <field name="color"/>
-                    <field name="task_count"/>
-                    <field name="task_ids"/>
-                    <field name="alias_id"/>
-                    <field name="alias_name"/>
-                    <field name="alias_domain"/>
-                    <field name="doc_count"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_no_auto_height">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
-                                    <i class="fa fa-bars fa-lg"/>
-                                    <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Project</a></li></t>
-                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                    </ul>
-                                </div>
-                                <div class="oe_project_kanban_content">
-                                    <div class="oe_kanban_content">
-                                        <h4 class="text-center">
-                                            <field name="name"/>
-                                        </h4>
-                                        <div t-if="record.alias_name.value and record.alias_domain.value" class="text-center text-muted">
-                                            <small>
-                                                <i class="fa fa-envelope-o"></i> <field name="alias_id"/>
-                                            </small>
-                                        </div>
-                                    </div>
-                                    <div class="row oe_margin_top_8 oe_kanban_project_list">
-                                        <div t-if="record.use_tasks.raw_value" class="col-md-6">
-                                            <a name="%(act_project_project_2_project_task_all)d" type="action">
-                                                <t t-raw="record.task_count.raw_value" />
-                                                <field name="label_tasks"/>
-                                            </a>
-                                        </div>
-                                        <div t-if="record.use_tasks.raw_value and record.task_count.raw_value == 0" class="col-md-12">
-                                            <img src="/project/static/src/img/top_left_arrow.png" style="margin-top: -8px; width: 22px;" />
-                                            <span>No activity yet, click to enter in the project.</span>
-                                        </div>
-                                        <div t-if="record.doc_count.raw_value" class="col-md-6">
-                                            <a name="attachment_tree_view" type="object">
-                                                <field name="doc_count"/> Documents
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="row oe_margin_top_8 oe_kanban_project_avatars">
-                                        <div class="col-md-12">
-                                            <t t-foreach="record.members.raw_value.slice(0,12)" t-as="member">
-                                                <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
-                                            </t>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"/>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current': 1}</field>
             <field name="help" type="html">
