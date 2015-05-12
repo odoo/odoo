@@ -66,6 +66,7 @@ You can manage:
         'mail_hr_view.xml',
         'res_users_view.xml',
         'views/hr.xml',
+        'hr_dashboard.xml',
     ],
     'demo': ['hr_demo.xml'],
     'test': [

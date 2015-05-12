@@ -58,6 +58,7 @@ You can define the different phases of interviews and easily rate the applicant 
         'survey_data_recruitment.xml',
         'hr_recruitment_data.xml',
         'views/hr_recruitment.xml',
+        'hr_dashboard.xml',
     ],
     'demo': ['hr_recruitment_demo.xml'],
     'test': ['test/recruitment_process.yml'],

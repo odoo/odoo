@@ -402,29 +402,5 @@
             </field>
         </record>
 
-        <!--Hr Department Inherit Kanban view-->
-        <record id="hr_department_view_kanban" model="ir.ui.view">
-            <field name="name">hr.department.kanban.inherit</field>
-            <field name="model">hr.department</field>
-            <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//templates" position="before">
-                        <field name="timesheet_to_approve_count"/>
-                    </xpath>
-                    <xpath expr="//div[@name='to_approve']" position="attributes">
-                        <attribute name="class">col-md-6 col-xs-6</attribute>
-                    </xpath>
-                    <xpath expr="//div[@name='to_approve']" position="inside">
-                        <div>
-                            <a name="%(hr_timesheet_action_from_department)d" type="action">
-                                <t t-esc="record.timesheet_to_approve_count.raw_value or 0"/> Timesheet
-                            </a>
-                        </div>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
     </data>
 </openerp>
