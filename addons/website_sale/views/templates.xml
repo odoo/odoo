@@ -1220,7 +1220,7 @@
       <p>The payment seems to have been canceled.</p>
     </t>
     <t t-if="tx_ids and state == 'pending' and validation == 'manual'">
-      <p>Your transaction is waiting confirmation.</p><br />
+      <p>Your transaction is waiting a manual confirmation.</p><br />
       <t t-if="tx_post_msg">
         <div class="hidden-print"><t t-raw="tx_post_msg"/></div>
       </t>
