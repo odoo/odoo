@@ -158,12 +158,19 @@ class ir_import(orm.TransientModel):
                   all the fields to traverse
         :rtype: list(Field)
         """
+        string_match = None
         for field in fields:
             # FIXME: should match all translations & original
             # TODO: use string distance (levenshtein? hamming?)
-            if header.lower() == field['name'].lower() \
-              or header.lower() == field['string'].lower():
+            if header.lower() == field['name'].lower():
                 return [field]
+            if header.lower() == field['string'].lower():
+                # matching string are not reliable way because
+                # strings have no unique constraint
+                string_match = field
+        if string_match:
+            # this behavior is only applied if there is no matching field['name']
+            return [string_match]
 
         if '/' not in header:
             return []
